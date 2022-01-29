@@ -47,7 +47,7 @@ partial class GraphicsDevice
     /// </remarks>
     public static IEnumerable<GraphicsDevice> QueryDevices(Predicate<GraphicsDeviceInfo> predicate)
     {
-        Guard.IsNotNull(predicate, nameof(predicate));
+        Guard.IsNotNull(predicate);
 
         return new DeviceHelper.DeviceQuery(predicate);
     }

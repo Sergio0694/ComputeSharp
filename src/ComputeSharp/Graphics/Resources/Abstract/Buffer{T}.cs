@@ -68,12 +68,12 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
 
         if (resourceType == ResourceType.Constant)
         {
-            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
+            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
         }
         else
         {
             // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255, nameof(length));
+            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
 
         if (TypeInfo<T>.IsDoubleOrContainsDoubles &&

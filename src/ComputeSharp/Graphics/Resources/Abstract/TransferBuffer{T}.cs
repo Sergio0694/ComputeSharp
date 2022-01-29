@@ -47,7 +47,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         device.ThrowIfDisposed();
 
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-        Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255, nameof(length));
+        Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
         GraphicsDevice = device;
         Length = length;
@@ -170,7 +170,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         /// <inheritdoc/>
         public override MemoryHandle Pin(int elementIndex = 0)
         {
-            Guard.IsEqualTo(elementIndex, 0, nameof(elementIndex));
+            Guard.IsEqualTo(elementIndex, 0);
 
             this.buffer.ThrowIfDisposed();
 

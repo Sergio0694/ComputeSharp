@@ -32,7 +32,7 @@ public sealed class MainViewModel : ObservableObject
     /// </summary>
     public MainViewModel(IAnalyticsService analyticsService)
     {
-        Guard.IsNotNull(analyticsService, nameof(analyticsService));
+        Guard.IsNotNull(analyticsService);
 
         this.analyticsService = analyticsService;
         this.isVerticalSyncEnabled = true;

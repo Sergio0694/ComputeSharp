@@ -20,8 +20,8 @@ public static class AssemblyExtensions
     /// <returns>The contents of the specified file.</returns>
     public static bool TryReadAllTextFromManifestFile(this Assembly assembly, string filename, out string? text)
     {
-        Guard.IsNotNull(assembly, nameof(assembly));
-        Guard.IsNotNull(filename, nameof(filename));
+        Guard.IsNotNull(assembly);
+        Guard.IsNotNull(filename);
 
         try
         {

@@ -34,7 +34,7 @@ internal readonly unsafe struct ShaderDispatchMetadataLoader : IDispatchMetadata
     /// <inheritdoc/>
     public unsafe void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result)
     {
-        Guard.HasSizeEqualTo(serializedMetadata, 5, nameof(serializedMetadata));
+        Guard.HasSizeEqualTo(serializedMetadata, 5);
 
         fixed (IntPtr* p = &result)
         {

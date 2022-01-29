@@ -29,7 +29,7 @@ partial class SwapChainManager<TOwner>
     {
         ThrowIfDisposed();
 
-        Guard.IsNotNull(shaderRunner, nameof(shaderRunner));
+        Guard.IsNotNull(shaderRunner);
 
         using (await this.setupSemaphore.LockAsync())
         {

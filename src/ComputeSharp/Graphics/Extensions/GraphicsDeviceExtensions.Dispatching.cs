@@ -18,7 +18,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -36,7 +36,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -55,7 +55,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -77,7 +77,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -95,8 +95,8 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device, nameof(device));
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(texture);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -115,8 +115,8 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device, nameof(device));
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(texture);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -148,7 +148,7 @@ public static partial class GraphicsDeviceExtensions
     /// </remarks>
     public static ComputeContext CreateComputeContext(this GraphicsDevice device)
     {
-        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(device);
 
         device.ThrowIfDisposed();
 

@@ -152,9 +152,9 @@ public readonly unsafe ref partial struct TextureView3D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            Guard.IsInRange(x, 0, this.width, nameof(x));
-            Guard.IsInRange(y, 0, this.height, nameof(y));
-            Guard.IsInRange(z, 0, this.depth, nameof(z));
+            Guard.IsInRange(x, 0, this.width);
+            Guard.IsInRange(y, 0, this.height);
+            Guard.IsInRange(z, 0, this.depth);
 
             return ref *((T*)((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes)) + x);
         }
@@ -336,8 +336,8 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y, int z)
     {
-        Guard.IsInRange(y, 0, this.height, nameof(y));
-        Guard.IsInRange(z, 0, this.depth, nameof(z));
+        Guard.IsInRange(y, 0, this.height);
+        Guard.IsInRange(z, 0, this.depth);
 
         return new((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes), this.width);
     }
@@ -350,7 +350,7 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// <returns>The resulting row <see cref="TextureView2D{T}"/>.</returns>
     public TextureView2D<T> GetDepthView(int z)
     {
-        Guard.IsInRange(z, 0, this.depth, nameof(z));
+        Guard.IsInRange(z, 0, this.depth);
 
         return new(
             (T*)((byte*)this.pointer + (z * this.height * this.strideInBytes)),
