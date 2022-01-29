@@ -78,7 +78,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     {
         if (typeof(TPixel) != typeof(ImageSharpRgba32))
         {
-            ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format");
+            ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format.");
         }
 
         var processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);

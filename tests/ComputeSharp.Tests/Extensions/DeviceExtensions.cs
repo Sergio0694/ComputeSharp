@@ -21,7 +21,7 @@ public static class DeviceExtensions
         {
             Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
             Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
-            _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device")
+            _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device.")
         };
 
         if (device is null)

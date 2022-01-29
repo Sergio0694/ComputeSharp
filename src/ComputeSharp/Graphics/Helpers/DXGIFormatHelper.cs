@@ -43,7 +43,7 @@ internal static class DXGIFormatHelper
         else if (typeof(T) == typeof(R16)) return DXGI_FORMAT_R16_UNORM;
         else if (typeof(T) == typeof(Rg16)) return DXGI_FORMAT_R8G8_UNORM;
         else if (typeof(T) == typeof(Rg32)) return DXGI_FORMAT_R16G16_UNORM;
-        else return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type");
+        else return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type.");
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ internal static class DXGIFormatHelper
             return true;
         }
         
-        return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type");
+        return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type.");
     }
 
     /// <summary>

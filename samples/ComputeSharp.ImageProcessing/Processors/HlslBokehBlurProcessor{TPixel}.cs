@@ -265,7 +265,7 @@ public sealed partial class HlslBokehBlurProcessor
         {
             if (!source.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> pixelSpan))
             {
-                ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory");
+                ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory.");
             }
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);

@@ -134,7 +134,7 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 
     /// <summary>
@@ -157,7 +157,7 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 
     /// <summary>
@@ -268,7 +268,7 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 
     /// <summary>
@@ -291,6 +291,6 @@ public static class GraphicsResourceHelper
             return *(ulong*)&d3D12GpuDescriptorHandle;
         }
 
-        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance");
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
     }
 }

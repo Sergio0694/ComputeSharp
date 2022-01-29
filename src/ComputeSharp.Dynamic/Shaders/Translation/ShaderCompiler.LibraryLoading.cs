@@ -28,7 +28,7 @@ internal sealed unsafe partial class ShaderCompiler
             {
                 Architecture.X64 => "win-x64",
                 Architecture.Arm64 => "win-arm64",
-                _ => ThrowHelper.ThrowNotSupportedException<string>("Invalid process architecture")
+                _ => ThrowHelper.ThrowNotSupportedException<string>("Invalid process architecture.")
             };
 
             // Test whether the native libraries are present in the same folder of the executable

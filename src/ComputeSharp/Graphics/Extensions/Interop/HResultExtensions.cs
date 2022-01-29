@@ -44,7 +44,7 @@ internal static class HResultExtensions
 
         if (hasErrorsOrWarnings)
         {
-            ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue");
+            ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
         }
 #else
         if (result < 0)

@@ -35,7 +35,7 @@ public sealed class UnsupportedTextureTypeException : NotSupportedException
         {
             2 => $"{nameof(GraphicsDevice.IsReadOnlyTexture2DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture2DSupportedForType)}<T>().",
             3 => $"{nameof(GraphicsDevice.IsReadOnlyTexture3DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture3DSupportedForType)}<T>().",
-            _ => ThrowHelper.ThrowArgumentException<string>("Invalid texture rank")
+            _ => ThrowHelper.ThrowArgumentException<string>("Invalid texture rank.")
         });
 
         builder.Append("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
