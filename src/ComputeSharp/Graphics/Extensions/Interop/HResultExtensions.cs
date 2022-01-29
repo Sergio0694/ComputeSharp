@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-#if DEBUG
 using ComputeSharp.Graphics.Helpers;
-#endif
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 
@@ -34,23 +32,36 @@ internal static class HResultExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(this int result)
     {
-#if DEBUG
-        bool hasErrorsOrWarnings = DeviceHelper.FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings();
+        // This forward branch is predicted taken by the JIT, and when tier-1 JIT kicks in
+        // it will just be removed if the IsDebugOutputEnabled flag is not set. The resulting
+        // single branch can then be inlined without bloating the code size in the caller.
+        if (!Configuration.IsDebugOutputEnabled)
+        {
+            if (result < 0)
+            {
+                ThrowHelper.ThrowWin32Exception(result);
+            }
+        }
+        else
+        {
+            // Move the extended debug logic into a non inlineable method to help the inliner in the standard case
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void AssertWithDebugInfo(int result)
+            {
+                bool hasErrorsOrWarnings = DeviceHelper.FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings();
 
-        if (result < 0)
-        {
-            ThrowHelper.ThrowWin32Exception(result);
-        }
+                if (result < 0)
+                {
+                    ThrowHelper.ThrowWin32Exception(result);
+                }
 
-        if (hasErrorsOrWarnings)
-        {
-            ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
+                if (hasErrorsOrWarnings)
+                {
+                    ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
+                }
+            }
+
+            AssertWithDebugInfo(result);
         }
-#else
-        if (result < 0)
-        {
-            ThrowHelper.ThrowWin32Exception(result);
-        }
-#endif
     }
 }

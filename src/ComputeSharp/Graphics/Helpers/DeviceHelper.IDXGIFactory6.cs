@@ -20,11 +20,11 @@ internal static partial class DeviceHelper
     /// <summary>
     /// The creation flags for <see cref="IDXGIFactory"/> instances.
     /// </summary>
-    private const uint IDXGIFactoryCreationFlags =
+    private static readonly uint IDXGIFactoryCreationFlags =
 #if DEBUG
         DXGI.DXGI_CREATE_FACTORY_DEBUG;
 #else
-        0;
+        Configuration.IsDebugOutputEnabled ? (uint)DXGI.DXGI_CREATE_FACTORY_DEBUG : 0;
 #endif
 
     /// <summary>
@@ -35,9 +35,10 @@ internal static partial class DeviceHelper
     {
         using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
-#if DEBUG
-        EnableDebugMode();
-#endif
+        if (Configuration.IsDebugOutputEnabled)
+        {
+            EnableDebugMode();
+        }
 
         DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
@@ -60,7 +61,6 @@ internal static partial class DeviceHelper
         return;
     }
 
-#if DEBUG
     /// <summary>
     /// Enables the debug layer for DirectX APIs.
     /// </summary>
@@ -79,7 +79,6 @@ internal static partial class DeviceHelper
             d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(Windows.TRUE);
         }
     }
-#endif
 
     /// <summary>
     /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.
