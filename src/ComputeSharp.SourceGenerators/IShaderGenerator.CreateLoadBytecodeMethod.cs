@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -138,11 +139,13 @@ public sealed partial class IShaderGenerator
         /// </summary>
         /// <param name="threadIds">The input <see cref="ThreadIdsInfo"/> instance to process.</param>
         /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
+        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
         public static unsafe ImmutableArray<byte> GetBytecode(
             ThreadIdsInfo threadIds,
             string hlslSource,
+            CancellationToken token,
             out DiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
@@ -160,6 +163,8 @@ public sealed partial class IShaderGenerator
                 // Try to load dxcompiler.dll and dxil.dll
                 LoadNativeDxcLibraries();
 
+                token.ThrowIfCancellationRequested();
+
                 // Replace the actual thread num values
                 hlslSource = hlslSource
                     .Replace("<THREADSX>", threadIds.X.ToString())
@@ -168,6 +173,8 @@ public sealed partial class IShaderGenerator
 
                 // Compile the shader bytecode
                 using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(hlslSource.AsSpan());
+
+                token.ThrowIfCancellationRequested();
 
                 byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
                 int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());

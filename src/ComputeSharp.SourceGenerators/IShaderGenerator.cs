@@ -91,12 +91,16 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     out int root32BitConstantCount,
                     out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
+                token.ThrowIfCancellationRequested();
+
                 DispatchDataInfo dispatchDataInfo = new(
                     item.Left.Left.Hierarchy,
                     item.Left.Left.Type,
                     fieldInfos,
                     resourceCount,
                     root32BitConstantCount);
+
+                token.ThrowIfCancellationRequested();
 
                 // BuildHlslString() info
                 HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
@@ -105,12 +109,16 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     item.Left.Left.Symbol,
                     out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
 
+                token.ThrowIfCancellationRequested();
+
                 // TryGetBytecode() info
                 ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
                     item.Left.Left.Symbol,
                     !hlslSourceInfo.Delegates.IsEmpty,
                     item.Left.Right,
                     out ImmutableArray<Diagnostic> threadIdsDiagnostics);
+
+                token.ThrowIfCancellationRequested();
 
                 return (
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
@@ -167,13 +175,18 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Get the dispatch metadata info
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo MetadataInfo)> dispatchMetadataInfo =
             shaderInfo
-            .Select(static (item, token) => (
-                item.Dispatch.Hierarchy,
-                LoadDispatchMetadata.GetInfo(
+            .Select(static (item, token) =>
+            {
+                DispatchMetadataInfo dispatchMetadataInfo = LoadDispatchMetadata.GetInfo(
                     item.Dispatch.Root32BitConstantCount,
                     item.Hlsl.ImplicitTextureType is not null,
                     item.Hlsl.IsSamplerUsed,
-                    item.Dispatch.FieldInfos)))
+                    item.Dispatch.FieldInfos);
+
+                token.ThrowIfCancellationRequested();
+
+                return (item.Dispatch.Hierarchy, dispatchMetadataInfo);
+            })
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchMetadataInfo.Comparer.Default);
 
         // Generate the LoadDispatchMetadata() methods
@@ -196,7 +209,9 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, out DiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, token, out DiagnosticInfo? diagnostic);
+
+                token.ThrowIfCancellationRequested();
 
                 EmbeddedBytecodeInfo bytecodeInfo = new(
                     item.ThreadIds.X,
