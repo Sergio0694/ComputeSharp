@@ -129,6 +129,24 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
                     .AddMembers(typeDeclarationSyntax);
             }
 
+            if (hierarchyInfo.Namespace is "")
+            {
+                // If there is no namespace, attach the pragma directly to the declared type,
+                // and skip the namespace declaration. This will produce code as follows:
+                //
+                // #pragma warning disable
+                // 
+                // <TYPE_HIERARCHY>
+                return
+                    CompilationUnit().AddMembers(
+                        typeDeclarationSyntax
+                        .WithModifiers(TokenList(Token(
+                            TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
+                            SyntaxKind.PartialKeyword,
+                            TriviaList()))))
+                    .NormalizeWhitespace(eol: "\n");
+            }
+
             // Create the compilation unit with disabled warnings, target namespace and generated type.
             // This will produce code as follows:
             //
