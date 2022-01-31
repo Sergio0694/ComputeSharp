@@ -37,6 +37,13 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
+    
+  <ItemGroup Label="Package">
+
+    <!-- Include the custom .targets file to check the source generator (.NET 6 is not needed as it guarantees Roslyn 4.x) -->
+    <None Include="ComputeSharp.targets" PackagePath="buildTransitive\netstandard2.0" Pack="true" />
+    <None Include="ComputeSharp.targets" PackagePath="build\netstandard2.0" Pack="true" />
+  </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

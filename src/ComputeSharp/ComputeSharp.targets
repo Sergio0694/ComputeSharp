@@ -1,0 +1,56 @@
+<Project>
+
+  <!-- Get the analyzer from the ComputeSharp NuGet package -->
+  <Target Name="_ComputeSharpGatherAnalyzers">
+    <ItemGroup>
+      <_ComputeSharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'ComputeSharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn 3.x (incremental generators require Roslyn 4.x) -->
+  <Target Name="_ComputeSharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_ComputeSharpGatherAnalyzers">
+
+    <!-- Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+         MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+         the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+         someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check. -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="CurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <CurrentCompilerVersion>@(CurrentCompilerAssemblyIdentity->'%(Version)')</CurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <CurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(CurrentCompilerVersion), 4.0))">true</CurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.0, disable the source generators -->
+    <ItemGroup Condition ="'$(CurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_ComputeSharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+         emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+         disabled, and that ComputeSharp will not work at all unless a more up to date IDE or compiler version are used. -->
+    <Error Condition ="'$(CurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp source generators have been disabled on the current configuration, as they need Roslyn 4.x in order to work. ComputeSharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS2022) or .NET SDK version."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_ComputeSharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_ComputeSharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_ComputeSharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+</Project>
