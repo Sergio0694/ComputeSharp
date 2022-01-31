@@ -479,7 +479,15 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <inheritdoc/>
     private unsafe partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager)
     {
-        int targetFramerate = GraphicsDevice.Default.DXGIAdapter->GetCompositionRefreshRate(DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM);
+        using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+
+        DeviceHelper.CreateDXGIFactory4(dxgiFactory4.GetAddressOf());
+
+        using ComPtr<IDXGIAdapter> dxgiAdapter = default;
+
+        dxgiFactory4.Get()->EnumAdapters(0, dxgiAdapter.GetAddressOf()).Assert();
+
+        int targetFramerate = dxgiAdapter.Get()->GetCompositionRefreshRate(DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM);
 
         resolutionManager = new DynamicResolutionManager(targetFramerate);
     }

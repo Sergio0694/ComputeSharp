@@ -28,6 +28,20 @@ internal static partial class DeviceHelper
 #endif
 
     /// <summary>
+    /// Creates a new <see cref="IDXGIFactory4"/> instance to be used to enumerate devices.
+    /// </summary>
+    /// <param name="dxgiFactory4">The resulting <see cref="IDXGIFactory4"/> instance.</param>
+    internal static unsafe void CreateDXGIFactory4(IDXGIFactory4** dxgiFactory4)
+    {
+        if (Configuration.IsDebugOutputEnabled)
+        {
+            EnableDebugMode();
+        }
+
+        DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), (void**)dxgiFactory4).Assert();
+    }
+
+    /// <summary>
     /// Creates a new <see cref="IDXGIFactory6"/> instance to be used to enumerate devices.
     /// </summary>
     /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
