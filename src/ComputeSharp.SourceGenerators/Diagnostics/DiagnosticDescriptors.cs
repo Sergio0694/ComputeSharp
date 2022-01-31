@@ -15,7 +15,7 @@ internal static class DiagnosticDescriptors
     /// Format: <c>"The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidShaderField = new(
+    public static readonly DiagnosticDescriptor InvalidShaderField = new DiagnosticDescriptor(
         id: "CMPS0001",
         title: "Invalid shader field",
         messageFormat: "The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}",
