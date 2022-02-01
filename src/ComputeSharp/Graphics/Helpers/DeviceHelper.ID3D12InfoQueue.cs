@@ -65,16 +65,7 @@ internal static partial class DeviceHelper
                         hasErrorsOrWarnings = true;
                     }
 
-                    string text = builder.ToString();
-
-                    if (Debugger.IsAttached)
-                    {
-                        Debug.WriteLine(text);
-                    }
-                    else
-                    {
-                        Trace.WriteLine(text);
-                    }
+                    Trace.WriteLine(builder);
                 }
 
                 queue->ClearStoredMessages();
@@ -94,21 +85,12 @@ internal static partial class DeviceHelper
                     };
 
                     builder.Clear();
-                    builder.AppendLine($"[D3D12 device remove \"{device}\" (HW: {device.IsHardwareAccelerated}, UMA: {device.IsCacheCoherentUMA})]");
+                    builder.AppendLine($"[D3D12 device \"{device}\" removed (HW: {device.IsHardwareAccelerated}, UMA: {device.IsCacheCoherentUMA})]");
                     builder.AppendLine($"[Reason]: {message}");
 
                     hasErrorsOrWarnings = true;
 
-                    string text = builder.ToString();
-
-                    if (Debugger.IsAttached)
-                    {
-                        Debug.WriteLine(text);
-                    }
-                    else
-                    {
-                        Trace.WriteLine(text);
-                    }
+                    Trace.WriteLine(builder);
                 }
             }
         }

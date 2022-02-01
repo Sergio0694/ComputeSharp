@@ -256,15 +256,17 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.QueryInterface(Windows.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
 
-        D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[3]
+        D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[2]
         {
-            D3D12_MESSAGE_ID_CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS,
+            // The map/unmap warnings when using null ranges are being suppressed due to
+            // them only being generated due to a bug in the DirectX runtime. using null
+            // ranges when calling Map()/Unmap() is allowed and perfeclty well defined.
             D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
             D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE
         };
 
         D3D12_INFO_QUEUE_FILTER d3D12InfoQueueFilter = default;
-        d3D12InfoQueueFilter.DenyList.NumIDs = 3;
+        d3D12InfoQueueFilter.DenyList.NumIDs = 2;
         d3D12InfoQueueFilter.DenyList.pIDList = d3D12MessageIds;
 
         d3D12InfoQueue.Get()->PushRetrievalFilter(&d3D12InfoQueueFilter).Assert();

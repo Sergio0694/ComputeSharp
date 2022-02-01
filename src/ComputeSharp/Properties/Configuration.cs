@@ -1,4 +1,7 @@
 ﻿using System;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 /// <summary>
 /// A container for all shared <see cref="AppContext"/> configuration switches for ComputeSharp.
@@ -22,6 +25,13 @@ internal static class Configuration
     /// <returns>The value of the specified configuration setting.</returns>
     private static bool GetConfigurationValue(string propertyName)
     {
+#if DEBUG
+        if (Debugger.IsAttached)
+        {
+            return true;
+        }
+#endif
+
         if (AppContext.TryGetSwitch(propertyName, out bool isEnabled))
         {
             return isEnabled;
