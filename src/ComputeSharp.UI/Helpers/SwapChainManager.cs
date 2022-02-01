@@ -218,11 +218,12 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
 #if WINDOWS_UWP
-        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(owner);
+        using (ComPtr<IUnknown> swapChainPanel = default)
+        {
+            swapChainPanel.Attach((IUnknown*)Marshal.GetIUnknownForObject(owner));
 
-        swapChainPanel->QueryInterface(
-            Win32.__uuidof<ISwapChainPanelNative>(),
-            (void**)&swapChainPanelNative).Assert();
+            swapChainPanel.CopyTo(swapChainPanelNative.GetAddressOf()).Assert();
+        }
 #else
         IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)owner).NativeObject.ThisPtr;
         Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
@@ -230,6 +231,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         swapChainPanel->QueryInterface(
             &iSwapChainPanelNativeUuid,
             (void**)&swapChainPanelNative).Assert();
+
+        GC.KeepAlive(owner);
 #endif
 
         // Get the underlying ID3D12Device in use
