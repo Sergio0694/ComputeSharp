@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+#if WINDOWS_UWP
+using System.Runtime.InteropServices;
+#else
+using System.Runtime.CompilerServices;
+#endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -17,7 +22,6 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
 #if WINDOWS_UWP
-using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.System;
@@ -217,23 +221,20 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
-#if WINDOWS_UWP
         using (ComPtr<IUnknown> swapChainPanel = default)
         {
+#if WINDOWS_UWP
             swapChainPanel.Attach((IUnknown*)Marshal.GetIUnknownForObject(owner));
 
             swapChainPanel.CopyTo(swapChainPanelNative.GetAddressOf()).Assert();
-        }
 #else
-        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)owner).NativeObject.ThisPtr;
-        Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
+            swapChainPanel.Attach((IUnknown*)((IWinRTObject)owner).NativeObject.GetRef());
 
-        swapChainPanel->QueryInterface(
-            &iSwapChainPanelNativeUuid,
-            (void**)&swapChainPanelNative).Assert();
-
-        GC.KeepAlive(owner);
+            swapChainPanel.CopyTo(
+                (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(new Guid(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25))),
+                (void**)swapChainPanelNative.GetAddressOf()).Assert();
 #endif
+        }
 
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
