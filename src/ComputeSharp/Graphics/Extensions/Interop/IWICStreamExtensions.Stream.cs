@@ -51,45 +51,59 @@ internal static unsafe partial class IWICStreamExtensions
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="QueryInterface"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int QueryInterfaceDelegate(IStreamWrapper* @this, Guid* riid, void** ppvObject);
 
         /// <inheritdoc cref="AddRef"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint AddRefDelegate(IStreamWrapper* @this);
 
         /// <inheritdoc cref="Release"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint ReleaseDelegate(IStreamWrapper* @this);
 
         /// <inheritdoc cref="Read"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT ReadDelegate(IStreamWrapper* @this, void* pv, uint cb, uint* pcbRead);
 
         /// <inheritdoc cref="Write"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT WriteDelegate(IStreamWrapper* @this, void* pv, uint cb, uint* pcbWritten);
 
         /// <inheritdoc cref="Seek"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT SeekDelegate(IStreamWrapper* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition);
 
         /// <inheritdoc cref="SetSize"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT SetSizeDelegate(IStreamWrapper* @this, ULARGE_INTEGER libNewSize);
 
         /// <inheritdoc cref="CopyTo"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CopyToDelegate(IStreamWrapper* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten);
 
         /// <inheritdoc cref="Commit"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CommitDelegate(IStreamWrapper* @this, uint grfCommitFlags);
 
         /// <inheritdoc cref="Revert"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT RevertDelegate(IStreamWrapper* @this);
 
         /// <inheritdoc cref="LockRegion"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT LockRegionDelegate(IStreamWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
 
         /// <inheritdoc cref="UnlockRegion"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT UnlockRegionDelegate(IStreamWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
 
         /// <inheritdoc cref="Stat"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT StatDelegate(IStreamWrapper* @this, STATSTG* pstatstg, uint grfStatFlag);
 
         /// <inheritdoc cref="Clone"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CloneDelegate(IStreamWrapper* @this, IStream** ppstm);
 
         /// <summary>

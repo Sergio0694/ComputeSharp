@@ -101,12 +101,15 @@ internal static partial class DeviceHelper
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Release"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint ReleaseDelegate(IDXGIFactory4As6Backcompat* @this);
 
         /// <inheritdoc cref="EnumWarpAdapter"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int EnumWarpAdapterDelegate(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter);
 
         /// <inheritdoc cref="EnumAdapterByGpuPreference"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int EnumAdapterByGpuPreferenceDelegate(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter);
 
         /// <summary>

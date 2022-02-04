@@ -48,45 +48,59 @@ internal static unsafe partial class IWICStreamExtensions
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="QueryInterface"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int QueryInterfaceDelegate(IBufferWriterWrapper* @this, Guid* riid, void** ppvObject);
 
         /// <inheritdoc cref="AddRef"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint AddRefDelegate(IBufferWriterWrapper* @this);
 
         /// <inheritdoc cref="Release"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint ReleaseDelegate(IBufferWriterWrapper* @this);
 
         /// <inheritdoc cref="Read"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT ReadDelegate(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbRead);
 
         /// <inheritdoc cref="Write"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT WriteDelegate(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbWritten);
 
         /// <inheritdoc cref="Seek"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT SeekDelegate(IBufferWriterWrapper* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition);
 
         /// <inheritdoc cref="SetSize"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT SetSizeDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libNewSize);
 
         /// <inheritdoc cref="CopyTo"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CopyToDelegate(IBufferWriterWrapper* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten);
 
         /// <inheritdoc cref="Commit"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CommitDelegate(IBufferWriterWrapper* @this, uint grfCommitFlags);
 
         /// <inheritdoc cref="Revert"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT RevertDelegate(IBufferWriterWrapper* @this);
 
         /// <inheritdoc cref="LockRegion"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT LockRegionDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
 
         /// <inheritdoc cref="UnlockRegion"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT UnlockRegionDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
 
         /// <inheritdoc cref="Stat"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT StatDelegate(IBufferWriterWrapper* @this, STATSTG* pstatstg, uint grfStatFlag);
 
         /// <inheritdoc cref="Clone"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate HRESULT CloneDelegate(IBufferWriterWrapper* @this, IStream** ppstm);
 
         /// <summary>

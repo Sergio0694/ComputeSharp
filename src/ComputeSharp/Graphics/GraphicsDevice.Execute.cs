@@ -27,6 +27,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     /// <param name="pContext">The input context.</param>
     /// <param name="timedOut">Whether the wait has timed out.</param>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate void WaitForSingleObjectCallbackDelegate(void* pContext, byte timedOut);
 
     /// <summary>
