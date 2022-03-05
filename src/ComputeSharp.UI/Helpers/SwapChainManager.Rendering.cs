@@ -424,8 +424,6 @@ partial class SwapChainManager<TOwner>
     /// <remarks>This method doesn't check for disposal.</remarks>
     private void UnsafeStopRenderLoopAndWait()
     {
-        ThrowIfDisposed();
-
         this.setupSemaphore.Wait();
 
         this.renderCancellationTokenSource?.Cancel();
