@@ -85,6 +85,29 @@ internal sealed unsafe partial class ShaderCompiler
     /// <returns>The bytecode for the compiled shader.</returns>
     public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
     {
+        fixed (char* optimization = "-O3")
+        fixed (char* rowMajor = "-Zpr")
+        fixed (char* warningsAsErrors = "-Werror")
+        {
+            const string profile = "cs_6_0";
+            const string entryPoint = nameof(IComputeShader.Execute);
+
+            ReadOnlySpan<IntPtr> arguments = stackalloc IntPtr[] { (IntPtr)optimization, (IntPtr)rowMajor, (IntPtr)warningsAsErrors };
+
+            return CompileShader(source, profile.AsSpan(), entryPoint.AsSpan(), arguments);
+        }
+    }
+
+    /// <summary>
+    /// Compiles a new HLSL shader from the input source code.
+    /// </summary>
+    /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="profile">The profile to use for compilation.</param>
+    /// <param name="entryPoint">The entry point for the shader.</param>
+    /// <param name="arguments">The arguments to use for compilation (each item must be a <see cref="char"/>* to an individual argument).</param>
+    /// <returns>The bytecode for the compiled shader.</returns>
+    public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source, ReadOnlySpan<char> profile, ReadOnlySpan<char> entryPoint, ReadOnlySpan<IntPtr> arguments)
+    {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
         using ComPtr<IDxcOperationResult> dxcOperationResult = default;
         using ComPtr<IDxcBlob> dxcBlobBytecode = default;
@@ -99,23 +122,19 @@ internal sealed unsafe partial class ShaderCompiler
                 dxcBlobEncoding.GetAddressOf()).Assert();
         }
 
-        // Try to compile the new compute shader
-        fixed (char* shaderName = "")
-        fixed (char* entryPoint = nameof(IComputeShader.Execute))
-        fixed (char* shaderProfile = "cs_6_0")
-        fixed (char* optimization = "-O3")
-        fixed (char* rowMajor = "-Zpr")
-        fixed (char* warningsAsErrors = "-Werror")
+        // Try to compile the new shader
+        fixed (char* shaderNamePtr = "")
+        fixed (char* entryPointPtr = entryPoint)
+        fixed (char* shaderProfilePtr = profile)
+        fixed (void* argumentsPtr = arguments)
         {
-            char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
-
             DxcCompiler.Get()->Compile(
                 (IDxcBlob*)dxcBlobEncoding.Get(),
-                (ushort*)shaderName,
-                (ushort*)entryPoint,
-                (ushort*)shaderProfile,
-                (ushort**)arguments,
-                3,
+                (ushort*)shaderNamePtr,
+                (ushort*)entryPointPtr,
+                (ushort*)shaderProfilePtr,
+                (ushort**)argumentsPtr,
+                (uint)arguments.Length,
                 null,
                 0,
                 DxcIncludeHandler.Get(),
