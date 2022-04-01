@@ -36,6 +36,10 @@
               Link="dxil.dll"
               Visible="False"
               CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Libraries\x64\d3dcompiler_47.dll"
+              Link="d3dcompiler_47.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest" />
       </ItemGroup>
     </When>
     <When Condition="'$(Platform)' == 'ARM64'">
