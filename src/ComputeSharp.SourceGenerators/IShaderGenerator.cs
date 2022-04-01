@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -72,7 +70,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", compilationUnit.ToFullString());
         });
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
@@ -153,7 +151,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 item.Left.Root32BitConstantCount);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.ToFullString());
         });
 
         // Get the filtered sequence to enable caching
@@ -169,7 +167,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", compilationUnit.ToFullString());
         });
 
         // Get the dispatch metadata info
@@ -195,7 +193,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Left.MetadataInfo);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", compilationUnit.ToFullString());
         });
 
         // Transform the raw HLSL source to compile
@@ -255,7 +253,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, false);
             string text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", SourceText.From(text, Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", text);
         });
     }
 }

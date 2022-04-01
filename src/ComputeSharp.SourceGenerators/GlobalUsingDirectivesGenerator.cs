@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using System.Text;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -24,7 +22,7 @@ public sealed class GlobalUsingDirectivesGenerator : IIncrementalGenerator
 
             string globalUsingDirectives = reader.ReadToEnd();
 
-            context.AddSource("GlobalUsingDirectives.cs", SourceText.From(globalUsingDirectives, Encoding.UTF8));
+            context.AddSource("GlobalUsingDirectives", globalUsingDirectives);
         });
     }
 }
