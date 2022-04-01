@@ -106,7 +106,7 @@ public static class ReflectionServices
     {
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(shaderSource.WrittenSpan);
 
         shaderSource.Dispose();
 
