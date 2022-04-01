@@ -172,7 +172,7 @@ public sealed partial class IShaderGenerator
                     .Replace("<THREADSZ>", threadIds.Z.ToString());
 
                 // Compile the shader bytecode
-                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(hlslSource.AsSpan());
+                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(hlslSource.AsSpan());
 
                 token.ThrowIfCancellationRequested();
 

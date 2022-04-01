@@ -83,7 +83,7 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
+    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source)
     {
         fixed (char* optimization = "-O3")
         fixed (char* rowMajor = "-Zpr")
@@ -94,7 +94,7 @@ internal sealed unsafe partial class ShaderCompiler
 
             ReadOnlySpan<IntPtr> arguments = stackalloc IntPtr[] { (IntPtr)optimization, (IntPtr)rowMajor, (IntPtr)warningsAsErrors };
 
-            return CompileShader(source, profile.AsSpan(), entryPoint.AsSpan(), arguments);
+            return Compile(source, profile.AsSpan(), entryPoint.AsSpan(), arguments);
         }
     }
 
@@ -106,7 +106,7 @@ internal sealed unsafe partial class ShaderCompiler
     /// <param name="entryPoint">The entry point for the shader.</param>
     /// <param name="arguments">The arguments to use for compilation (each item must be a <see cref="char"/>* to an individual argument).</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source, ReadOnlySpan<char> profile, ReadOnlySpan<char> entryPoint, ReadOnlySpan<IntPtr> arguments)
+    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source, ReadOnlySpan<char> profile, ReadOnlySpan<char> entryPoint, ReadOnlySpan<IntPtr> arguments)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
         using ComPtr<IDxcOperationResult> dxcOperationResult = default;

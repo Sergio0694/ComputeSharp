@@ -29,7 +29,7 @@ public static class ShaderCompiler
     {
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(builder.WrittenSpan);
 
         builder.Dispose();
 
