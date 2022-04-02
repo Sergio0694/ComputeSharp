@@ -27,7 +27,7 @@ public static class InteropServices
     /// If the shader was compiled at runtime, <paramref name="bytecode"/> will wrap a <see cref="byte"/> array with the bytecode.
     /// </remarks>
     public static unsafe void LoadShaderBytecode<T>(in T shader, out ReadOnlyMemory<byte> bytecode)
-        where T : struct, ID2D1Shader
+        where T : unmanaged, ID2D1PixelShader
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
@@ -56,7 +56,7 @@ public static class InteropServices
     /// <param name="d2D1DrawInfo">A pointer to the <c>ID2D1DrawInfo</c> instance to use.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setpixelshaderconstantbuffer"/>.</remarks>
     public static unsafe void SetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader, void* d2D1DrawInfo)
-        where T : struct, ID2D1Shader
+        where T : unmanaged, ID2D1PixelShader
     {
         D2D1DrawInfoDispatchDataLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
 
