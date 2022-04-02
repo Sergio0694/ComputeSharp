@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1Interop.__Internals;
 using ComputeSharp.D2D1Interop.Shaders.Dispatching;
 using ComputeSharp.D2D1Interop.Shaders.Interop.Buffers;
 using ComputeSharp.Shaders.Dispatching;
@@ -12,9 +11,9 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1Interop.Interop;
 
 /// <summary>
-/// Provides methods to extract reflection info on compute shaders generated using this library.
+/// Provides methods to extract reflection info on D2D1 shaders generated using this library.
 /// </summary>
-public static class InteropServices
+public static class D2D1InteropServices
 {
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.
