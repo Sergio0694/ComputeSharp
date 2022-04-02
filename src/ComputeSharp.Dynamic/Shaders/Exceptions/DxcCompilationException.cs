@@ -6,13 +6,13 @@ namespace ComputeSharp.Exceptions;
 /// <summary>
 /// A custom <see cref="Exception"/> type that indicates when a shader compilation with the DXC compiler has failed.
 /// </summary>
-public sealed class HlslCompilationException : Exception
+public sealed class DxcCompilationException : Exception
 {
     /// <summary>
-    /// Creates a new <see cref="HlslCompilationException"/> instance.
+    /// Creates a new <see cref="DxcCompilationException"/> instance.
     /// </summary>
     /// <param name="error">The error message produced by the DXC compiler.</param>
-    internal HlslCompilationException(string error)
+    internal DxcCompilationException(string error)
         : base(GetExceptionMessage(error))
     {
     }
@@ -21,7 +21,7 @@ public sealed class HlslCompilationException : Exception
     /// Gets a formatted exception message for a given compilation error.
     /// </summary>
     /// <param name="error">The input compilatin error message from the DXC compiler.</param>
-    /// <returns>A formatted error message for a new <see cref="HlslCompilationException"/> instance.</returns>
+    /// <returns>A formatted error message for a new <see cref="DxcCompilationException"/> instance.</returns>
     private static string GetExceptionMessage(string error)
     {
         StringBuilder builder = new(512);

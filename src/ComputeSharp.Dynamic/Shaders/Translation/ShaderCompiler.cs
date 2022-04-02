@@ -151,6 +151,6 @@ internal sealed unsafe partial class ShaderCompiler
 
         string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
 
-        throw new HlslCompilationException(message);
+        throw new DxcCompilationException(message);
     }
 }

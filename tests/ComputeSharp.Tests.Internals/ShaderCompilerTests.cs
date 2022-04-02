@@ -37,7 +37,7 @@ public class ShaderCompilerTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(HlslCompilationException))]
+    [ExpectedException(typeof(DxcCompilationException))]
     public void CompileTest_Fail()
     {
         var faultyShader = ShaderSource.Replace("ids.x", "ids.X");

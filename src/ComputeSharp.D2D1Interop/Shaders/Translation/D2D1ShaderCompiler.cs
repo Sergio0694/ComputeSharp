@@ -3,17 +3,14 @@ using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using ComputeSharp.Core.Extensions;
-using ComputeSharp.Exceptions;
+using ComputeSharp.D2D1Interop.Exceptions;
+using ComputeSharp.D2D1Interop.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using DirectX = TerraFX.Interop.DirectX.DirectX2;
-#endif
 
 #pragma warning disable IDE1006
 
-namespace ComputeSharp.Shaders.Translation;
+namespace ComputeSharp.D2D1Interop.Shaders.Translation;
 
 /// <summary>
 /// A <see langword="class"/> that uses the FXC APIs to compile D2D1 pixel shaders.
@@ -212,7 +209,7 @@ internal static unsafe class D2D1ShaderCompiler
     {
         string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
 
-        throw new HlslCompilationException(message);
+        throw new FxcCompilationException(message);
     }
 
     /// <summary>
