@@ -12,7 +12,7 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
-  <!-- Referece to the main non-dynamic library-->
+  <!-- Reference to the main non-dynamic library-->
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>

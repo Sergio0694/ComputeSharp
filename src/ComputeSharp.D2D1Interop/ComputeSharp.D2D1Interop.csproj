@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputPath>bin\Release</OutputPath>
+    <DocumentationFile>ComputeSharp.D2D1Interop.xml</DocumentationFile>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <!-- Enable trimming support on .NET 6 -->
+  <PropertyGroup>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.20348" />
+  </ItemGroup>
+</Project>

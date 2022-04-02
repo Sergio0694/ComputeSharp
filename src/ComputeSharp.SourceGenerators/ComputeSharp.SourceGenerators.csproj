@@ -73,7 +73,7 @@
     <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\MatrixIndex.cs" Link="ComputeSharp\Core\Primitives\MatrixIndex.cs" />
     <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
-    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Exceptions\HlslCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Exceptions\DxcCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\DxcCompilationException.cs" />
     <Compile Include="..\ComputeSharp.Dynamic\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
     <Compile Include="..\ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" />
   </ItemGroup>

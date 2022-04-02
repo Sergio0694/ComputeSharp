@@ -188,9 +188,9 @@ public sealed partial class IShaderGenerator
             {
                 diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, e.Message);
             }
-            catch (HlslCompilationException e)
+            catch (DxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithHlslCompilationException, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, e.Message);
             }
 
             End:
