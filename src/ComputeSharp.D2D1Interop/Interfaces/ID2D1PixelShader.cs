@@ -5,14 +5,13 @@
 namespace ComputeSharp.D2D1Interop;
 
 /// <summary>
-/// An <see langword="interface"/> representing a pixel shader.
+/// An <see langword="interface"/> representing a D2D1 pixel shader.
 /// </summary>
-public interface IPixelShader<TPixel> : ID2D1Shader
-    where TPixel : unmanaged
+public interface ID2D1PixelShader : ID2D1Shader
 {
     /// <summary>
     /// Executes the current pixel shader.
     /// </summary>
     /// <returns>The pixel value for the current invocation.</returns>
-    TPixel Execute();
+    Float4 Execute();
 }
