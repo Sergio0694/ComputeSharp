@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop.DirectX;
@@ -88,212 +85,6 @@ internal sealed unsafe partial class ShaderCompiler
     /// <returns>The bytecode for the compiled shader.</returns>
     public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source)
     {
-        fixed (char* optimization = "-O3")
-        fixed (char* rowMajor = "-Zpr")
-        fixed (char* warningsAsErrors = "-Werror")
-        {
-            const string profile = "cs_6_0";
-            const string entryPoint = nameof(IComputeShader.Execute);
-
-            ReadOnlySpan<IntPtr> arguments = stackalloc IntPtr[] { (IntPtr)optimization, (IntPtr)rowMajor, (IntPtr)warningsAsErrors };
-
-            return Compile(source, profile.AsSpan(), entryPoint.AsSpan(), arguments);
-        }
-    }
-
-#if NET6_0_OR_GREATER
-    public static ComPtr<ID3DBlob> SetPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
-    {
-        void* shaderPtr = shaderBlob->GetBufferPointer();
-        nuint shaderSize = shaderBlob->GetBufferSize();
-
-        void* exportPtr = exportBlob->GetBufferPointer();
-        nuint exportSize = exportBlob->GetBufferSize();
-
-        using ComPtr<ID3DBlob> resultBlob = default;
-
-        DirectX.D3DSetBlobPart(
-            pSrcData: shaderPtr,
-            SrcDataSize: shaderSize,
-            Part: D3D_BLOB_PART.D3D_BLOB_PRIVATE_DATA,
-            Flags: 0,
-            pPart: exportPtr,
-            PartSize: exportSize,
-            ppNewShader: resultBlob.GetAddressOf()).Assert();
-
-        return resultBlob.Move();
-    }
-
-    public static ComPtr<ID3DBlob> CompilePixelShaderFunction(ReadOnlySpan<char> source)
-    {
-        int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
-        int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
-
-        using ComPtr<ID3DBlob> d3DBlobBytecode = default;
-        using ComPtr<ID3DBlob> d3DBlobErrors = default;
-
-        fixed (byte* bufferPtr = buffer)
-        {
-            // D2D_FUNCTION
-            ReadOnlySpan<byte> d2DFunctionName = new[]
-            {
-                (byte)'D', (byte)'2', (byte)'D', (byte)'_',
-                (byte)'F', (byte)'U', (byte)'N', (byte)'C', (byte)'T', (byte)'I', (byte)'O', (byte)'N', (byte)'\0'
-            };
-
-            // (Empty)
-            ReadOnlySpan<byte> d2DFunctionValue = new[] { (byte)'\0' };
-
-            // D2D_ENTRY
-            ReadOnlySpan<byte> d2DEntryName = new[]
-            {
-                (byte)'D', (byte)'2', (byte)'D', (byte)'_',
-                (byte)'E', (byte)'N', (byte)'T', (byte)'R', (byte)'Y', (byte)'\0'
-            };
-
-            // Execute
-            ReadOnlySpan<byte> d2DEntryValue = new[]
-            {
-                (byte)'E', (byte)'x', (byte)'e', (byte)'c', (byte)'u', (byte)'t', (byte)'e', (byte)'\0'
-            };
-
-            D3D_SHADER_MACRO* macros = stackalloc D3D_SHADER_MACRO[]
-            {
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DFunctionName)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DFunctionValue))
-                },
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DEntryName)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DEntryValue))
-                },
-                new()
-            };
-
-            // ps_4_0
-            ReadOnlySpan<byte> shaderProfile = new[]
-            {
-                (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0'
-            };
-
-            _ = DirectX.D3DCompile(
-                pSrcData: bufferPtr,
-                SrcDataSize: (nuint)writtenBytes,
-                pSourceName: null,
-                pDefines: macros,
-                pInclude: null,
-                pEntrypoint: null,
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(shaderProfile)),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
-                Flags2: 0,
-                ppCode: d3DBlobBytecode.GetAddressOf(),
-                ppErrorMsgs: d3DBlobErrors.GetAddressOf());
-        }
-
-        ArrayPool<byte>.Shared.Return(buffer);
-
-        if (d3DBlobErrors.Get() is not null)
-        {
-            ThrowHslsCompilationException(d3DBlobErrors.Get());
-        }
-
-        return d3DBlobBytecode.Move();
-    }
-
-    public static ComPtr<ID3DBlob> CompilePixelShader(ReadOnlySpan<char> source)
-    {
-        int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
-        int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
-
-        using ComPtr<ID3DBlob> d3DBlobBytecode = default;
-        using ComPtr<ID3DBlob> d3DBlobErrors = default;
-
-        fixed (byte* bufferPtr = buffer)
-        {
-            // D2D_FULL_SHADER
-            ReadOnlySpan<byte> d2DFullShaderName = new[]
-            {
-                (byte)'D', (byte)'2', (byte)'D', (byte)'_',
-                (byte)'F', (byte)'U', (byte)'L', (byte)'L', (byte)'_',
-                (byte)'S', (byte)'H', (byte)'A', (byte)'D', (byte)'E', (byte)'R', (byte)'\0'
-            };
-
-            // (Empty)
-            ReadOnlySpan<byte> d2DFullShaderValue = new[] { (byte)'\0' };
-
-            // D2D_ENTRY
-            ReadOnlySpan<byte> d2DEntryName = new[]
-            {
-                (byte)'D', (byte)'2', (byte)'D', (byte)'_',
-                (byte)'E', (byte)'N', (byte)'T', (byte)'R', (byte)'Y', (byte)'\0'
-            };
-
-            // Execute
-            ReadOnlySpan<byte> d2DEntryValue = new[]
-            {
-                (byte)'E', (byte)'x', (byte)'e', (byte)'c', (byte)'u', (byte)'t', (byte)'e', (byte)'\0'
-            };
-
-            D3D_SHADER_MACRO* macros = stackalloc D3D_SHADER_MACRO[]
-            {
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DFullShaderName)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DFullShaderValue))
-                },
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DEntryName)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DEntryValue))
-                },
-                new()
-            };
-
-            // ps_5_0
-            ReadOnlySpan<byte> shaderProfile = new[]
-            {
-                (byte)'p', (byte)'s', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0'
-            };
-
-            DirectX.D3DCompile(
-                pSrcData: bufferPtr,
-                SrcDataSize: (nuint)writtenBytes,
-                pSourceName: null,
-                pDefines: macros,
-                pInclude: null,
-                pEntrypoint: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(d2DEntryValue)),
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(shaderProfile)),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
-                Flags2: 0,
-                ppCode: d3DBlobBytecode.GetAddressOf(),
-                ppErrorMsgs: d3DBlobErrors.GetAddressOf()).Assert();
-        }
-
-        ArrayPool<byte>.Shared.Return(buffer);
-
-        if (d3DBlobErrors.Get() is not null)
-        {
-            ThrowHslsCompilationException(d3DBlobErrors.Get());
-        }
-
-        return d3DBlobBytecode.Move();
-    }
-#endif
-
-    /// <summary>
-    /// Compiles a new HLSL shader from the input source code.
-    /// </summary>
-    /// <param name="source">The HLSL source code to compile.</param>
-    /// <param name="profile">The profile to use for compilation.</param>
-    /// <param name="entryPoint">The entry point for the shader.</param>
-    /// <param name="arguments">The arguments to use for compilation (each item must be a <see cref="char"/>* to an individual argument).</param>
-    /// <returns>The bytecode for the compiled shader.</returns>
-    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source, ReadOnlySpan<char> profile, ReadOnlySpan<char> entryPoint, ReadOnlySpan<IntPtr> arguments)
-    {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
         using ComPtr<IDxcOperationResult> dxcOperationResult = default;
         using ComPtr<IDxcBlob> dxcBlobBytecode = default;
@@ -308,19 +99,23 @@ internal sealed unsafe partial class ShaderCompiler
                 dxcBlobEncoding.GetAddressOf()).Assert();
         }
 
-        // Try to compile the new shader
-        fixed (char* shaderNamePtr = "")
-        fixed (char* entryPointPtr = entryPoint)
-        fixed (char* shaderProfilePtr = profile)
-        fixed (void* argumentsPtr = arguments)
+        // Try to compile the new compute shader
+        fixed (char* shaderName = "")
+        fixed (char* entryPoint = nameof(IComputeShader.Execute))
+        fixed (char* shaderProfile = "cs_6_0")
+        fixed (char* optimization = "-O3")
+        fixed (char* rowMajor = "-Zpr")
+        fixed (char* warningsAsErrors = "-Werror")
         {
+            char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
+
             DxcCompiler.Get()->Compile(
                 (IDxcBlob*)dxcBlobEncoding.Get(),
-                (ushort*)shaderNamePtr,
-                (ushort*)entryPointPtr,
-                (ushort*)shaderProfilePtr,
-                (ushort**)argumentsPtr,
-                (uint)arguments.Length,
+                (ushort*)shaderName,
+                (ushort*)entryPoint,
+                (ushort*)shaderProfile,
+                (ushort**)arguments,
+                3,
                 null,
                 0,
                 DxcIncludeHandler.Get(),
@@ -340,19 +135,6 @@ internal sealed unsafe partial class ShaderCompiler
         }
 
         return ThrowHslsCompilationException(dxcOperationResult);
-    }
-
-    /// <summary>
-    /// Throws an exception when a shader compilation fails.
-    /// </summary>
-    /// <param name="d3DOperationResult">The input (faulting) operation.</param>
-    /// <returns>This method always throws and never actually returs.</returns>
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static ComPtr<IDxcBlob> ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
-    {
-        string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
-
-        throw new HlslCompilationException(message);
     }
 
     /// <summary>
