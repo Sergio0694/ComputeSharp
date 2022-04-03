@@ -17,10 +17,6 @@ public static unsafe class D2D1InteropServices
 {
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.
-    /// <para>
-    /// This overload can be used for simplicity when the D2D1 shader does not rely on captured objects to
-    /// be processed correctly. This is the case when it does not contain any <see cref="Delegate"/>-s.
-    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
     /// <param name="bytecode">A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</param>
@@ -31,25 +27,9 @@ public static unsafe class D2D1InteropServices
     public static void LoadShaderBytecode<T>(out ReadOnlyMemory<byte> bytecode)
         where T : unmanaged, ID2D1PixelShader
     {
-        LoadShaderBytecode(default(T), out bytecode);
-    }
-
-    /// <summary>
-    /// Loads the bytecode from an input D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
-    /// <param name="shader">The input D2D1 pixel shader to load the bytecode for.</param>
-    /// <param name="bytecode">A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</param>
-    /// <remarks>
-    /// If the input shader was precompiled, <paramref name="bytecode"/> will wrap a pinned memory buffer (from the PE section).
-    /// If the shader was compiled at runtime, <paramref name="bytecode"/> will wrap a <see cref="byte"/> array with the bytecode.
-    /// </remarks>
-    public static void LoadShaderBytecode<T>(in T shader, out ReadOnlyMemory<byte> bytecode)
-        where T : unmanaged, ID2D1PixelShader
-    {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        Unsafe.AsRef(in shader).LoadBytecode(ref bytecodeLoader);
+        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, out _);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
