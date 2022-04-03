@@ -13,5 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\InterpolatedStringHandlerArgumentAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\InterpolatedStringHandlerAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\RuntimeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\SkipLocalsInitAttribute.cs" />
   </ItemGroup>
 </Project>

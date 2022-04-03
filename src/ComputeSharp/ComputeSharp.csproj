@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0-preview1" />
   </ItemGroup>
 
