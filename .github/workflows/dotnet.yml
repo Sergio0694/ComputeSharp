@@ -193,6 +193,14 @@ jobs:
       with:
         name: ComputeSharp.Dynamic.nupkg
         path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
+    - name: Build ComputeSharp.D2D1Interop package
+      run: dotnet build src\ComputeSharp.D2D1Interop.Package\ComputeSharp.D2D1Interop.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      shell: cmd
+    - name: Upload ComputeSharp.D2D1Interop package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.D2D1Interop.nupkg
+        path: src\ComputeSharp.D2D1Interop.Package\bin\Release\*.nupkg
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
