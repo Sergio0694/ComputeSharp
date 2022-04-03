@@ -1,7 +1,7 @@
 ﻿namespace ComputeSharp;
 
 /// <summary>
-/// A <see langword="enum"/> to be used with <see cref="EmbeddedBytecodeAttribute"/> to indicate the dispatch 
+/// A <see langword="enum"/> to be used with <see cref="EmbeddedBytecodeAttribute"/> to indicate the dispatch axis to precompile a shader for.
 /// </summary>
 public enum DispatchAxis
 {
