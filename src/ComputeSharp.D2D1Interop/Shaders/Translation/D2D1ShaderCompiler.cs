@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -204,8 +205,9 @@ internal static unsafe class D2D1ShaderCompiler
     /// </summary>
     /// <param name="d3DOperationResult">The input (faulting) operation.</param>
     /// <returns>This method always throws and never actually returs.</returns>
+    [DoesNotReturn]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static ComPtr<IDxcBlob> ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
+    private static void ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
     {
         string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
 
