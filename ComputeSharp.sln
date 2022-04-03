@@ -81,6 +81,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TerraFX.Interop.Windows.D2D
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.D2D1Interop.NetStandard", "src\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.shproj", "{2608EB41-F98B-4BE5-9F4D-68FED6115088}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Core", "src\ComputeSharp.Core\ComputeSharp.Core.csproj", "{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Core.NetStandard", "src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.shproj", "{3ACACF03-6B20-40BA-B8EC-11AC1624D2C9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
@@ -91,11 +95,13 @@ Global
 		src\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.projitems*{2608eb41-f98b-4be5-9f4d-68fed6115088}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
+		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{3acacf03-6b20-40ba-b8ec-11ac1624d2c9}*SharedItemsImports = 13
 		src\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.D2D1Interop\TerraFX.Interop.Windows.D2D1Interop.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{751bb05b-563d-4b3a-94c6-15e2d79d35ea}*SharedItemsImports = 13
+		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{764bc0f5-0c5e-49ad-abaa-e3874c0f3286}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{76c66257-fdaa-47ab-85e7-ef757eab10c0}*SharedItemsImports = 5
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{8cefc324-ca6c-4845-9ad9-70b92bd87057}*SharedItemsImports = 13
 		src\TerraFX.Interop.Windows.D2D1Interop\TerraFX.Interop.Windows.D2D1Interop.projitems*{9da1da9f-f8b2-4b25-be80-c21f773029e3}*SharedItemsImports = 13
@@ -359,6 +365,18 @@ Global
 		{4D7D9BA8-A821-4B1C-9EE2-CBCF5849906E}.Release|ARM64.Build.0 = Release|Any CPU
 		{4D7D9BA8-A821-4B1C-9EE2-CBCF5849906E}.Release|x64.ActiveCfg = Release|Any CPU
 		{4D7D9BA8-A821-4B1C-9EE2-CBCF5849906E}.Release|x64.Build.0 = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Debug|x64.Build.0 = Debug|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|ARM64.Build.0 = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|x64.ActiveCfg = Release|Any CPU
+		{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -385,6 +403,7 @@ Global
 		{158F984D-CD96-4062-BD02-2268946031A0} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{9DA1DA9F-F8B2-4B25-BE80-C21F773029E3} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{2608EB41-F98B-4BE5-9F4D-68FED6115088} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
+		{3ACACF03-6B20-40BA-B8EC-11AC1624D2C9} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
