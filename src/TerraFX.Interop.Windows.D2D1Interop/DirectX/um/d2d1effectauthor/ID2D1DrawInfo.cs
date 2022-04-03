@@ -23,7 +23,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(7)]
         public HRESULT SetPixelShaderConstantBuffer([NativeTypeName("const BYTE *")] byte* buffer, [NativeTypeName("UINT32")] uint bufferCount)
         {
-            return ((delegate* unmanaged<ID2D1DrawInfo*, byte*, uint, int>)(lpVtbl[7]))((ID2D1DrawInfo*)Unsafe.AsPointer(ref this), buffer, bufferCount);
+            return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfo*, byte*, uint, int>)(lpVtbl[7]))((ID2D1DrawInfo*)Unsafe.AsPointer(ref this), buffer, bufferCount);
         }
     }
 }

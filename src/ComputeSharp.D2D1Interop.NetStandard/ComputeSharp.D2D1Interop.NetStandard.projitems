@@ -9,6 +9,9 @@
     <Import_RootNamespace>ComputeSharp.D2D1Interop.NetStandard</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)\System.Runtime.CompilerServices\RuntimeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DoesNotReturnAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\RuntimeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\CompilerServices\IsExternalInit.cs" Link="System\Runtime.CompilerServices\IsExternalInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Text\EncodingExtensions.cs" />
   </ItemGroup>
 </Project>
