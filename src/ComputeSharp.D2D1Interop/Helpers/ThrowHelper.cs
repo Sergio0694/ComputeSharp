@@ -9,6 +9,20 @@ namespace ComputeSharp.D2D1Interop.Helpers;
 internal static partial class ThrowHelper
 {
     /// <summary>
+    /// Throws a new <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of expected result.</typeparam>
+    /// <param name="name">The argument name.</param>
+    /// <param name="message">The message to include in the exception.</param>
+    /// <exception cref="ArgumentException">Thrown with the specified parameters.</exception>
+    /// <returns>This method always throws, so it actually never returns a value.</returns>
+    [DoesNotReturn]
+    public static T ThrowArgumentException<T>(string? name, string? message)
+    {
+        throw new ArgumentException(message, name);
+    }
+
+    /// <summary>
     /// Throws a new <see cref="ArgumentOutOfRangeException"/>.
     /// </summary>
     /// <param name="name">The argument name.</param>

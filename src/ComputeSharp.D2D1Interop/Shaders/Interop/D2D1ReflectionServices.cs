@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1Interop;
 using ComputeSharp.D2D1Interop.Extensions;
 using ComputeSharp.Shaders.Dispatching;
 using TerraFX.Interop.DirectX;
@@ -9,7 +8,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.Interop;
+namespace ComputeSharp.D2D1Interop.Interop;
 
 /// <summary>
 /// Provides methods to extract reflection info on D2D1 shaders generated using this library.
