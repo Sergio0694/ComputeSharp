@@ -2,8 +2,8 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Models;
+using ComputeSharp.Core.SourceGenerators.Extensions;
+using ComputeSharp.Core.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
