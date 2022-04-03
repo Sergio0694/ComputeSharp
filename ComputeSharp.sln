@@ -31,6 +31,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{FB17EF84-9208-47AC-921F-680CB1DAD8BA}"
 	ProjectSection(SolutionItems) = preProject
 		src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj = src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj
+		src\ComputeSharp.D2D1Interop.Package\ComputeSharp.D2D1Interop.Package.msbuildproj = src\ComputeSharp.D2D1Interop.Package\ComputeSharp.D2D1Interop.Package.msbuildproj
 		src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj = src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj
 		src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj = src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj
 		src\ComputeSharp.Core.Package\icon.png = src\ComputeSharp.Core.Package\icon.png
