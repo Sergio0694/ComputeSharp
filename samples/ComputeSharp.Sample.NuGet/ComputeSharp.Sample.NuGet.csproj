@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ComputeSharp.Core" Version="2.0.0" />
     <PackageReference Include="ComputeSharp" Version="2.0.0" />
     <PackageReference Include="ComputeSharp.Dynamic" Version="2.0.0" />
   </ItemGroup>
