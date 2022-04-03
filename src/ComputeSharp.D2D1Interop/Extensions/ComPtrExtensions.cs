@@ -18,7 +18,7 @@ internal static class ComPtrExtensions
     /// <remarks>This method is only valid when the current <see cref="ComPtr{T}"/> instance is on the stack or pinned.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe void** GetVoidAddressOf<T>(this in ComPtr<T> ptr)
-        where T : unmanaged, IUnknown.Interface
+        where T : unmanaged
     {
         return (void**)Unsafe.AsPointer(ref Unsafe.AsRef(in ptr));
     }
@@ -31,7 +31,7 @@ internal static class ComPtrExtensions
     /// <returns>The moved <see cref="ComPtr{T}"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe ComPtr<T> Move<T>(this in ComPtr<T> ptr)
-        where T : unmanaged, IUnknown.Interface
+        where T : unmanaged
     {
         ComPtr<T> copy = default;
 
