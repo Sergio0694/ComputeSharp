@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace ComputeSharp.SourceGenerators;
+namespace ComputeSharp.Core.SourceGenerators;
 
 /// <summary>
 /// A source generator creating constructors for types annotated with <see cref="AutoConstructorAttribute"/>.

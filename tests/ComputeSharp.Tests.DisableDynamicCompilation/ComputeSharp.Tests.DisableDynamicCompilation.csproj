@@ -15,11 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false"
-                      PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
   <!-- When the .NET Standard 2.0 version of ComputeSharp is resolved, the TerraFX APIs are internal, as they
