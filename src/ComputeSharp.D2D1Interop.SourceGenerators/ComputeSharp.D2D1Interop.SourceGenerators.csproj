@@ -1,20 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackSymbols>false</PackSymbols>
-    <Description>ComputeSharp.Core.SourceGenerators</Description>
+    <Description>ComputeSharp.D2D1Interop.SourceGenerators</Description>
     <NoWarn>$(NoWarn);CS1591;CS0649;CS1574</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
-    
-  <!--The source generator cannot contain package references or project references, so instead we're just
-      manually linking the source files from ComputeSharp\Core in here. We only need them to extract metadata
-      and to match members based on full name, so the types being in the generator assembly are not an issue.-->
+
+  <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->
   <ItemGroup>
+
+    <!-- ComputeSharp.Core.SourceGenerator APIs -->
+    <Compile Include="..\ComputeSharp.Core.SourceGenerators\Helpers\HashCode.cs" Link="Helpers\HashCode.cs" />
+
+    <!-- ComputeSharp.Core APIs -->
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
@@ -57,6 +60,14 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt4.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
+
+    <!-- ComputeSharp.D2D1Interop APIs -->
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" Link="ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DEmbeddedBytecodeAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DEmbeddedBytecodeAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DInputComplexAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DInputComplexAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DInputCountAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DInputCountAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DInputSimpleAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DInputSimpleAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DRequiresScenePositionAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DRequiresScenePositionAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,13 +79,7 @@
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
-  <!-- Pregenerated file with global using directives -->
-  <ItemGroup>
-    <Compile Remove="EmbeddedResources\GlobalUsingDirectives.cs" />
-    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
-  </ItemGroup>
-
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
-    
+
 </Project>

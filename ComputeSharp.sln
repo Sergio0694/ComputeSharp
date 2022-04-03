@@ -89,6 +89,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Core.NetStanda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Core.SourceGenerators", "src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj", "{BFB003D1-788B-48DE-8065-39479C162CB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1Interop.SourceGenerators", "src\ComputeSharp.D2D1Interop.SourceGenerators\ComputeSharp.D2D1Interop.SourceGenerators.csproj", "{E44053BD-A761-47FB-AA78-087A599672EA}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
@@ -112,6 +114,7 @@ Global
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
+		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e91f4d24-922a-4921-a8d7-9c45a143c45d}*SharedItemsImports = 5
 		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
@@ -395,6 +398,18 @@ Global
 		{BFB003D1-788B-48DE-8065-39479C162CB0}.Release|ARM64.Build.0 = Release|Any CPU
 		{BFB003D1-788B-48DE-8065-39479C162CB0}.Release|x64.ActiveCfg = Release|Any CPU
 		{BFB003D1-788B-48DE-8065-39479C162CB0}.Release|x64.Build.0 = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|ARM64.Build.0 = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{E44053BD-A761-47FB-AA78-087A599672EA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
