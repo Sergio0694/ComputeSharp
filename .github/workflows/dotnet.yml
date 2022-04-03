@@ -156,9 +156,9 @@ jobs:
       run: dotnet build samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj -c Release
       shell: cmd
 
-  # Buils the .msbuildproj project to generate the NuGet package.
-  # This workflow also uploads the resulting package as an artifact.
-  build-package:
+  # Build the .msbuildproj projects to generate the NuGet packages.
+  # This workflow also uploads the resulting packages as artifacts.
+  build-packages:
     if: success()
     needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
@@ -169,6 +169,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+    - name: Build ComputeSharp.Core package
+      run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      shell: cmd
+    - name: Upload ComputeSharp.Core package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.Core.nupkg
+        path: src\ComputeSharp.Core.Package\bin\Release\*.nupkg
     - name: Build ComputeSharp package
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
@@ -186,12 +194,12 @@ jobs:
         name: ComputeSharp.Dynamic.nupkg
         path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
 
-  # Download the NuGet package generated in the previous job and use it
-  # to build and run the sample project referencing it. This is used as
-  # a test to ensure the NuGet package works in a consuming project.
-  verify-package:
+  # Download the NuGet packages generated in the previous job and use them
+  # to build and run the sample project referencing them. This is used as
+  # a test to ensure the NuGet packages work in a consuming project.
+  verify-packages:
     if: success()
-    needs: [build-package]
+    needs: [build-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -203,6 +211,11 @@ jobs:
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
+    - name: Download ComputeSharp.Core package artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: ComputeSharp.Core.nupkg
+        path: src\ComputeSharp.Core.Package\bin\Release\ComputeSharp.Core.nupkg
     - name: Download ComputeSharp package artifact
       uses: actions/download-artifact@v2
       with:
@@ -237,7 +250,7 @@ jobs:
   # regardless of whether the app is shipping with R2R, self-contained, etc.
   verify-package-native-libs:
     if: success()
-    needs: [verify-package]
+    needs: [verify-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -254,7 +267,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact.
   build-package-winui:
     if: success()
-    needs: [verify-package]
+    needs: [verify-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -281,7 +294,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact, like the WinUI one.
   build-package-uwp:
     if: success()
-    needs: [verify-package]
+    needs: [verify-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
