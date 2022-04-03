@@ -90,6 +90,7 @@ public interface IShader
     /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <exception cref="NotSupportedException">Thrown if the bytecode required runtime compilation and it wasn't supported on the current configuration.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     void LoadBytecode<TLoader>(ref TLoader loader, int threadsX, int threadsY, int threadsZ)

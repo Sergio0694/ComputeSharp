@@ -25,7 +25,7 @@ public static class D2D1ReflectionServices
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, out string hlslSource);
+        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50, out string hlslSource);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
