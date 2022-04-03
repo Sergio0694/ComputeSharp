@@ -19,32 +19,32 @@ public static unsafe class D2D1InteropServices
     /// Loads the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
-    /// <param name="bytecode">A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
     /// <remarks>
     /// This method will only run correctly if the input shader has been precompiled, or it will throw an exception.
-    /// The returned <paramref name="bytecode"/> will wrap a pinned memory buffer (from the PE section).
+    /// The returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
     /// </remarks>
-    public static void LoadShaderBytecode<T>(out ReadOnlyMemory<byte> bytecode)
+    public static ReadOnlyMemory<byte> LoadShaderBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        LoadOrCompileShaderBytecode<T>(null, out bytecode);
+        return LoadOrCompileShaderBytecode<T>(null);
     }
 
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
-    /// <param name="bytecode">A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</param>
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
     /// <remarks>
-    /// If the input shader was precompiled, <paramref name="bytecode"/> will wrap a pinned memory buffer (from the PE section).
-    /// If the shader was compiled at runtime, <paramref name="bytecode"/> will wrap a <see cref="byte"/> array with the bytecode.
+    /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
+    /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </remarks>
-    public static void LoadShaderBytecode<T>(D2D1ShaderProfile shaderProfile, out ReadOnlyMemory<byte> bytecode)
+    public static ReadOnlyMemory<byte> LoadShaderBytecode<T>(D2D1ShaderProfile shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
-        LoadOrCompileShaderBytecode<T>(shaderProfile, out bytecode);
+        return LoadOrCompileShaderBytecode<T>(shaderProfile);
     }
 
     /// <summary>
@@ -52,9 +52,9 @@ public static unsafe class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
-    /// <param name="bytecode">A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
-    private static void LoadOrCompileShaderBytecode<T>(D2D1ShaderProfile? shaderProfile, out ReadOnlyMemory<byte> bytecode)
+    private static ReadOnlyMemory<byte> LoadOrCompileShaderBytecode<T>(D2D1ShaderProfile? shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
@@ -66,14 +66,14 @@ public static unsafe class D2D1InteropServices
         // If a precompiled shader is available, return it
         if (!precompiledBytecode.IsEmpty)
         {
-            bytecode = new PinnedBufferMemoryManager(precompiledBytecode).Memory;
+            return new PinnedBufferMemoryManager(precompiledBytecode).Memory;
         }
 
         // Otherwise, return the dynamic shader instead
         byte* bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
         int bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
 
-        bytecode = new ReadOnlySpan<byte>(bytecodePtr, bytecodeSize).ToArray();
+        return new ReadOnlySpan<byte>(bytecodePtr, bytecodeSize).ToArray();
     }
 
     /// <summary>
@@ -81,18 +81,18 @@ public static unsafe class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
     /// <param name="shader">The input D2D1 pixel shader to retrieve info for.</param>
-    /// <param name="buffer">A <see cref="ReadOnlyMemory{T}"/> instance with the pixel shader constant buffer.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the pixel shader constant buffer.</returns>
     /// <remarks>
     /// This method will allocate a buffer every time it is invoked.
     /// For a zero-allocation alternative, use <see cref="SetPixelShaderConstantBufferForD2D1DrawInfo"/>.</remarks>
-    public static void GetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader, out ReadOnlyMemory<byte> buffer)
+    public static ReadOnlyMemory<byte> GetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ByteArrayDispatchDataLoader dataLoader = default;
 
         Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
 
-        buffer = dataLoader.GetResultingDispatchData();
+        return dataLoader.GetResultingDispatchData();
     }
 
     /// <summary>
