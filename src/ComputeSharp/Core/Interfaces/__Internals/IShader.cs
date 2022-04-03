@@ -16,7 +16,14 @@ public interface IShader
     /// <returns>The unique dispatch identifier for the shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    int GetDispatchId();
+    int GetDispatchId()
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads the dispatch data for the shader.
@@ -30,7 +37,14 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader, GraphicsDevice device, int x, int y, int z)
-        where TLoader : struct, IDispatchDataLoader;
+        where TLoader : struct, IDispatchDataLoader
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads an opaque metadata handle from the metadata of the current shader.
@@ -41,7 +55,14 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchMetadata<TLoader>(ref TLoader loader, out IntPtr result)
-        where TLoader : struct, IDispatchMetadataLoader;
+        where TLoader : struct, IDispatchMetadataLoader
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Builds the HLSL source code for the current shader instance.
@@ -52,7 +73,14 @@ public interface IShader
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ);
+    void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads the bytecode for the current shader.
@@ -65,5 +93,12 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     void LoadBytecode<TLoader>(ref TLoader loader, int threadsX, int threadsY, int threadsZ)
-        where TLoader : struct, IBytecodeLoader;
+        where TLoader : struct, IBytecodeLoader
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 }

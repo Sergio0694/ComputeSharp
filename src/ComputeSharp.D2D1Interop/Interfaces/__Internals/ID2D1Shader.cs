@@ -19,7 +19,14 @@ public interface ID2D1Shader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader)
-        where TLoader : struct, ID2D1DispatchDataLoader;
+        where TLoader : struct, ID2D1DispatchDataLoader
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads the bytecode for the current shader.
@@ -30,5 +37,12 @@ public interface ID2D1Shader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     void LoadBytecode<TLoader>(ref TLoader loader, out string hlslSource)
-        where TLoader : struct, ID2D1BytecodeLoader;
+        where TLoader : struct, ID2D1BytecodeLoader
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 }
