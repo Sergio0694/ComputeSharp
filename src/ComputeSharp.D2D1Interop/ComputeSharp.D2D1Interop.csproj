@@ -1,19 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.D2D1Interop.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 
+  <!-- .NET Standard 2.0 polyfill packages -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+  </ItemGroup>
+
   <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <IsTrimmable>true</IsTrimmable>
 
     <!-- Workaround for .NET 6.0.x regression (see https://github.com/dotnet/linker/issues/2642), enable again when fixed in SDK -->
     <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
   </PropertyGroup>
 
+  <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1Interop\TerraFX.Interop.Windows.D2D1Interop.projitems" Label="Shared" />
-  <Import Project="..\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.projitems" Label="Shared" />
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.projitems" Label="Shared" />
 </Project>

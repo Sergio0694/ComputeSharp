@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ComputeSharp.D2D1Interop.Exceptions;
 using ComputeSharp.D2D1Interop.Extensions;
+#if !NET6_0_OR_GREATER
+using ComputeSharp.D2D1Interop.NetStandard.System.Text;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
