@@ -1,5 +1,7 @@
 ﻿using System;
+#if !SOURCE_GENERATOR
 using ComputeSharp.D2D1Interop.Helpers;
+#endif
 
 namespace ComputeSharp.D2D1Interop;
 
@@ -30,6 +32,7 @@ public sealed class D2DEmbeddedBytecodeAttribute : Attribute
     /// <param name="shaderProfile">The target shader profile to use to compile the shader.</param>
     public D2DEmbeddedBytecodeAttribute(D2D1ShaderProfile shaderProfile)
     {
+#if !SOURCE_GENERATOR
         ShaderProfile = shaderProfile switch
         {
             D2D1ShaderProfile.PixelShader40 or
@@ -39,6 +42,7 @@ public sealed class D2DEmbeddedBytecodeAttribute : Attribute
             D2D1ShaderProfile.PixelShader50 => shaderProfile,
             _ => ThrowHelper.ThrowArgumentException<D2D1ShaderProfile>(nameof(shaderProfile), "Invalid shader profile value.")
         };
+#endif
     }
 
     /// <summary>
