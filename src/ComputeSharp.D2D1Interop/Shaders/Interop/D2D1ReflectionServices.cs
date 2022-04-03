@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.D2D1Interop;
-using ComputeSharp.D2D1Interop.Shaders.Translation;
+using ComputeSharp.Shaders.Dispatching;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -18,39 +18,37 @@ public static class D2D1ReflectionServices
 {
     /// <summary>
     /// Gets the shader info associated with a given D2D1 shader.
-    /// <para>
-    /// This overload can be used for simplicity when the D2D1 shader being inspected does not rely on captured
-    /// objects to be processed correctly. This is the case when it does not contain any <see cref="Delegate"/>-s.
-    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of D2D1 shader to retrieve info for.</typeparam>
     /// <returns>The resulting <see cref="D2D1ShaderInfo"/> instance.</returns>
-    public static D2D1ShaderInfo GetShaderInfo<T>()
+    public static unsafe D2D1ShaderInfo GetShaderInfo<T>()
         where T : struct, ID2D1PixelShader
     {
-        return GetShaderInfo(default(T));
-    }
+        D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-    /// <summary>
-    /// Gets the shader info associated with a given D2D1 shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 shader to retrieve info for.</typeparam>
-    /// <param name="shader">The input D2D1 shader to retrieve info for.</param>
-    /// <returns>The resulting <see cref="D2D1ShaderInfo"/> instance.</returns>
-    public static unsafe D2D1ShaderInfo GetShaderInfo<T>(in T shader)
-        where T : struct, ID2D1PixelShader
-    {
-        Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource);
+        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, out string hlslSource);
 
-        using ComPtr<ID3DBlob> d3DBlobBytecode = D2D1ShaderCompiler.Compile(shaderSource.WrittenSpan, enableLinkingSupport: false);
+        using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
-        shaderSource.Dispose();
+        byte* bytecodePtr;
+        int bytecodeSize;
+
+        if (!precompiledBytecode.IsEmpty)
+        {
+            bytecodePtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(precompiledBytecode));
+            bytecodeSize = precompiledBytecode.Length;
+        }
+        else
+        {
+            bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
+            bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
+        }        
 
         using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
 
         DirectX.D3DReflect(
-            pSrcData: d3DBlobBytecode.Get()->GetBufferPointer(),
-            SrcDataSize: d3DBlobBytecode.Get()->GetBufferSize(),
+            pSrcData: bytecodePtr,
+            SrcDataSize: (nuint)bytecodeSize,
             pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
             ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
 
@@ -60,7 +58,7 @@ public static class D2D1ReflectionServices
 
         return new(
             CompilerVersion: new string(d3D11ShaderDescription.Creator),
-            HlslSource: shaderSource.WrittenSpan.ToString(),
+            HlslSource: hlslSource,
             ConstantBufferCount: d3D11ShaderDescription.ConstantBuffers,
             BoundResourceCount: d3D11ShaderDescription.BoundResources,
             InstructionCount: d3D11ShaderDescription.InstructionCount,
