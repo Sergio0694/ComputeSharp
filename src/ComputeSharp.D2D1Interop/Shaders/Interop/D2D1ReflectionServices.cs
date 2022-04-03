@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Extensions;
 using ComputeSharp.D2D1Interop;
+using ComputeSharp.D2D1Interop.Extensions;
 using ComputeSharp.Shaders.Dispatching;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

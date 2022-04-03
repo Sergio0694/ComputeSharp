@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
-using ComputeSharp.Core.Extensions;
+using ComputeSharp.D2D1Interop.Extensions;
+using ComputeSharp.D2D1Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
