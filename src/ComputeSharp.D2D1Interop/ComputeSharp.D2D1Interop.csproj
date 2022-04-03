@@ -14,7 +14,4 @@
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.20348" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
-  </ItemGroup>
 </Project>
