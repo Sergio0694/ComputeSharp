@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.Core.SourceGenerators.Extensions;
 using ComputeSharp.Core.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace ComputeSharp.SourceGenerators;
+namespace ComputeSharp.Core.SourceGenerators;
 
 /// <summary>
 /// A source generator creating constructors for types annotated with <see cref="AutoConstructorAttribute"/>.
@@ -42,7 +40,7 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
         {
             CompilationUnitSyntax compilationUnit = Ctor.GetSyntax(item.Left, item.Right);
 
-            context.AddSource($"{item.Left.FilenameHint}.Ctor", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.FilenameHint}.Ctor", compilationUnit.ToFullString());
         });
     }
 

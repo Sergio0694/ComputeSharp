@@ -15,20 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
-                      OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false"
-                      PrivateAssets="contentfiles;build"/>
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
   <!-- When the .NET Standard 2.0 version of ComputeSharp is resolved, the TerraFX APIs are internal, as they
        are referenced from the shared project. The same reference is needed here to make all tests build fine. -->
-  <Import Condition="'$(TargetFramework)' != 'net6.0'"
-          Project="..\..\src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" />
-  <Import Condition="'$(TargetFramework)' != 'net6.0'"
-          Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
+  <Import Condition="'$(TargetFramework)' != 'net6.0'" Project="..\..\src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" />
+  <Import Condition="'$(TargetFramework)' != 'net6.0'" Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
 
   <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
 
