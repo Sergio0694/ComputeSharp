@@ -14,7 +14,7 @@ public interface ID2D1BytecodeLoader
     /// Loads a dynamic shader bytecode.
     /// </summary>
     /// <param name="handle">An opaque handle to the shader bytecode.</param>
-    /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized or a precompiled bytecode was requested when not available..</exception>
     void LoadDynamicBytecode(IntPtr handle);
 
     /// <summary>

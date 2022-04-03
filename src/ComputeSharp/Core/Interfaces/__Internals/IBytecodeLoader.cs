@@ -15,6 +15,7 @@ public interface IBytecodeLoader
     /// </summary>
     /// <param name="handle">An opaque handle to the shader bytecode.</param>
     /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized.</exception>
+    /// <exception cref="NotSupportedException">Thrown if <paramref name="handle"/> is <see langword="null"/> (indicating an unsupported configuration).</exception>
     void LoadDynamicBytecode(IntPtr handle);
 
     /// <summary>

@@ -33,10 +33,12 @@ public interface ID2D1Shader
     /// </summary>
     /// <typeparam name="TLoader">The type of bytecode loader being used.</typeparam>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the bytecode.</param>
+    /// <param name="shaderProfile">The shader profile to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
     /// <param name="hlslSource">The HLSL source that was compiled.</param>
+    /// <exception cref="InvalidOperationException">Thrown if a precompiled bytecode was requested (<paramref name="shaderProfile"/> is <see langword="null"/>), but it wasn't availablle.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadBytecode<TLoader>(ref TLoader loader, out string hlslSource)
+    void LoadBytecode<TLoader>(ref TLoader loader, D2D1ShaderProfile? shaderProfile, out string hlslSource)
         where TLoader : struct, ID2D1BytecodeLoader
 #if NET6_0_OR_GREATER
     {
