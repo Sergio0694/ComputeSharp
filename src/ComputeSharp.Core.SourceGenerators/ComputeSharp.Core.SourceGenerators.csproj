@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackSymbols>false</PackSymbols>
+    <Description>ComputeSharp.SourceGenerators</Description>
+    <NoWarn>$(NoWarn);CS1591;CS0649;CS1574</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);SOURCE_GENERATOR</DefineConstants>
+  </PropertyGroup>
+    
+  <!--The source generator cannot contain package references or project references, so instead we're just
+      manually linking the source files from ComputeSharp\Core in here. We only need them to extract metadata
+      and to match members based on full name, so the types being in the generator assembly are not an issue.-->
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
+    <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.cs" />
+    <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool4.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool4.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool4.g.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool4.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Bool\BoolMxN.g.cs" Link="ComputeSharp.Core\Primitives\Bool\BoolMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double2.cs" Link="ComputeSharp.Core\Primitives\Double\Double2.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double3.cs" Link="ComputeSharp.Core\Primitives\Double\Double3.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double4.cs" Link="ComputeSharp.Core\Primitives\Double\Double4.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double2.g.cs" Link="ComputeSharp.Core\Primitives\Double\Double2.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double3.g.cs" Link="ComputeSharp.Core\Primitives\Double\Double3.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\Double4.g.cs" Link="ComputeSharp.Core\Primitives\Double\Double4.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Double\DoubleMxN.g.cs" Link="ComputeSharp.Core\Primitives\Double\DoubleMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float2.cs" Link="ComputeSharp.Core\Primitives\Float\Float2.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float3.cs" Link="ComputeSharp.Core\Primitives\Float\Float3.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float4.cs" Link="ComputeSharp.Core\Primitives\Float\Float4.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float2.g.cs" Link="ComputeSharp.Core\Primitives\Float\Float2.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float3.g.cs" Link="ComputeSharp.Core\Primitives\Float\Float3.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\Float4.g.cs" Link="ComputeSharp.Core\Primitives\Float\Float4.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Float\FloatMxN.g.cs" Link="ComputeSharp.Core\Primitives\Float\FloatMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int2.cs" Link="ComputeSharp.Core\Primitives\Int\Int2.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.cs" Link="ComputeSharp.Core\Primitives\Int\Int3.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.cs" Link="ComputeSharp.Core\Primitives\Int\Int4.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int2.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int2.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int3.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int4.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" Link="ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt2.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt3.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt4.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt2.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt3.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt4.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <!-- Pregenerated file with global using directives -->
+  <ItemGroup>
+    <Compile Remove="EmbeddedResources\GlobalUsingDirectives.cs" />
+    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
+  </ItemGroup>
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
+    
+</Project>

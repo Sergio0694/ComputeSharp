@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\ComputeSharp.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+    <None Include="..\ComputeSharp.Core.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>
