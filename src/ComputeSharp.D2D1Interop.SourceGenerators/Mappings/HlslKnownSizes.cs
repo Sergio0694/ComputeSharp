@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ComputeSharp.SourceGenerators.Mappings;
+namespace ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 
 /// <summary>
 /// A <see langword="class"/> that contains and maps known HLSL types to their alignment sizes.
