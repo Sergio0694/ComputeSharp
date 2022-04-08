@@ -1,30 +1,27 @@
 ﻿using System.Collections.Generic;
-using ComputeSharp.D2D1Interop.__Internals;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
-
 namespace ComputeSharp.D2D1Interop.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class ID2D1ShaderGenerator
+partial class ID2D1ShaderGenerator
 {
     /// <summary>
     /// Gets the shader type for a given shader, if any.
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to check.</param>
-    /// <param name="d2D1ShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="ID2D1Shader"/>.</param>
-    /// <returns>Whether or not <paramref name="typeSymbol"/> implements <paramref name="d2D1ShaderSymbol"/>.</returns>
-    private static bool IsD2D1ShaderType(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1ShaderSymbol)
+    /// <param name="d2D1PixelShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="ID2D1PixelShader"/>.</param>
+    /// <returns>Whether or not <paramref name="typeSymbol"/> implements <paramref name="d2D1PixelShaderSymbol"/>.</returns>
+    private static bool IsD2D1PixelShaderType(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1PixelShaderSymbol)
     {
         foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.Interfaces)
         {
-            if (interfaceSymbol.Name == nameof(ID2D1Shader) &&
-                 SymbolEqualityComparer.Default.Equals(interfaceSymbol, d2D1ShaderSymbol))
+            if (interfaceSymbol.Name == nameof(ID2D1PixelShader) &&
+                 SymbolEqualityComparer.Default.Equals(interfaceSymbol, d2D1PixelShaderSymbol))
             {
                 return true;
             }

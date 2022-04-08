@@ -61,6 +61,9 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp.Core\Primitives\UInt\UIntMxN.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
 
+    <!-- ComputeSharp APIs -->
+    <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
+
     <!-- ComputeSharp.D2D1Interop APIs -->
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" Link="ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DEmbeddedBytecodeAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DEmbeddedBytecodeAttribute.cs" />
