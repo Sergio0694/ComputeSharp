@@ -48,7 +48,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
+        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> SourceInfo, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -68,23 +68,36 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
+                // Get HLSL source for LoadBytecode()
+                string hlslSource = LoadBytecode.GetHlslSource(
+                    item.Right,
+                    item.Left.Syntax,
+                    item.Left.Symbol,
+                    out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
+
+                token.ThrowIfCancellationRequested();
+
+                HlslShaderSourceInfo sourceInfo = new(
+                    item.Left.Hierarchy,
+                    hlslSource);
+
                 // TODO
 
                 return (
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
-                    new Result<HlslShaderSourceInfo>(null!, ImmutableArray<Diagnostic>.Empty),
+                    new Result<HlslShaderSourceInfo>(sourceInfo, ImmutableArray<Diagnostic>.Empty),
                     new Result<ThreadIdsInfo>(null!, ImmutableArray<Diagnostic>.Empty));
             });
 
         // Output the diagnostics
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Hlsl.Errors));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.SourceInfo.Errors));
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.ThreadIds.Errors));
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
+        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo SourceInfo, ThreadIdsInfo ThreadIds)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value))
+            .Select(static (item, token) => (item.Dispatch.Value, item.SourceInfo.Value, item.ThreadIds.Value))
             .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, ThreadIdsInfo.Comparer.Default);
 
         // Get a filtered sequence to enable caching
@@ -100,6 +113,21 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.ToFullString());
+        });
+
+        // Get a filtered sequence to enable caching
+        IncrementalValuesProvider<HlslShaderSourceInfo> hlslSourceInfo =
+            shaderInfo
+            .Select(static (item, token) => item.SourceInfo)
+            .WithComparer(HlslShaderSourceInfo.Comparer.Default);
+
+        // Generate the LoadBytecode() methods
+        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax loadBytecodeMethod = LoadBytecode.GetSyntax(item.HlslSource);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadBytecodeMethod, false);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", compilationUnit.ToFullString());
         });
     }
 }
