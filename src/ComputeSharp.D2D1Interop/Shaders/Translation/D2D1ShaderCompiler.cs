@@ -19,8 +19,13 @@ namespace ComputeSharp.D2D1Interop.Shaders.Translation;
 /// <summary>
 /// A <see langword="class"/> that uses the FXC APIs to compile D2D1 pixel shaders.
 /// </summary>
-internal static unsafe class D2D1ShaderCompiler
+internal static unsafe partial class D2D1ShaderCompiler
 {
+    /// <summary>
+    /// The <see cref="ID3DInclude"/> instance to load <c>d2d1effecthelpers.hlsli</c>.
+    /// </summary>
+    private static readonly ID3DIncludeForD2DHelpers* D3DIncludeForD2D1EffectHelpers = ID3DIncludeForD2DHelpers.Create();
+
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
@@ -88,7 +93,7 @@ internal static unsafe class D2D1ShaderCompiler
                 SrcDataSize: (nuint)writtenBytes,
                 pSourceName: null,
                 pDefines: macros,
-                pInclude: null,
+                pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute)),
                 pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.ps_5_0)),
                 Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
@@ -153,7 +158,7 @@ internal static unsafe class D2D1ShaderCompiler
                 SrcDataSize: (nuint)writtenBytes,
                 pSourceName: null,
                 pDefines: macros,
-                pInclude: null,
+                pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: null,
                 pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.lib_5_0)),
                 Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
