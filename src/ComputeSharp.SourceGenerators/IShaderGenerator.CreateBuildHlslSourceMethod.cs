@@ -20,7 +20,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>BuildHlslSource</c> method.

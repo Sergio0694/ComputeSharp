@@ -14,7 +14,7 @@ using static ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics.DiagnosticDes
 namespace ComputeSharp.D2D1Interop.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class ID2D1ShaderGenerator
+partial class ID2D1ShaderGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>LoadDispatchData</c> method.

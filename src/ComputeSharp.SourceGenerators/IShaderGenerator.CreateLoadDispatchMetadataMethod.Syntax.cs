@@ -11,10 +11,10 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial class LoadDispatchMetadata
+    partial class LoadDispatchMetadata
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.

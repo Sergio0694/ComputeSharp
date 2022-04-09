@@ -11,10 +11,10 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial class LoadBytecode
+    partial class LoadBytecode
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.

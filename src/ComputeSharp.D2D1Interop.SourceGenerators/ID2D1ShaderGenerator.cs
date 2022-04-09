@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators;
 /// <summary>
 /// A source generator creating data loaders for the <see cref="ID2D1PixelShader"/> type.
 /// </summary>
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
