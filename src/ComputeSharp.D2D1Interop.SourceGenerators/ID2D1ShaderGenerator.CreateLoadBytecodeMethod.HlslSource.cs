@@ -34,7 +34,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The resulting info on the processed shader.</returns>
-        public static string GetHlslSource(
+        public static (string HlslSource, D2D1ShaderProfile? ShaderProfile) GetHlslSource(
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -58,16 +58,31 @@ partial class ID2D1ShaderGenerator
             var definedConstants = GetDefinedConstants(constantDefinitions);
             var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
+            // Gather the shader metadata
+            GatherD2D1AttributeInfo(
+                structDeclarationSymbol,
+                out int inputCount,
+                out ImmutableArray<int> inputSimpleIndices,
+                out ImmutableArray<int> inputComplexIndices,
+                out bool requiresScenePosition,
+                out D2D1ShaderProfile? shaderProfile);
+
             diagnostics = builder.ToImmutable();
 
             // Get the HLSL source
-            return GetHlslSource(
+            string hlslSource = GetHlslSource(
                 definedConstants,
                 declaredTypes,
                 valueFields,
                 staticFields,
                 processedMethods,
-                entryPoint);
+                entryPoint,
+                inputCount,
+                inputSimpleIndices,
+                inputComplexIndices,
+                requiresScenePosition);
+
+            return (hlslSource, shaderProfile);
         }
 
         /// <summary>
@@ -351,6 +366,58 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
+        /// Extracts the metadata definition for the current shader.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="inputCount">The number of shader inputs to declare.</param>
+        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
+        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
+        /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
+        /// <param name="shaderProfile">The shader profile to use to precompile the shader, if requested.</param>
+        private static void GatherD2D1AttributeInfo(
+            INamedTypeSymbol structDeclarationSymbol,
+            out int inputCount,
+            out ImmutableArray<int> inputSimpleIndices,
+            out ImmutableArray<int> inputComplexIndices,
+            out bool requiresScenePosition,
+            out D2D1ShaderProfile? shaderProfile)
+        {
+            inputCount = 0;
+            requiresScenePosition = false;
+            shaderProfile = null;
+
+            ImmutableArray<int>.Builder inputSimpleIndicesBuilder = ImmutableArray.CreateBuilder<int>();
+            ImmutableArray<int>.Builder inputComplexIndicesBuilder = ImmutableArray.CreateBuilder<int>();
+
+            foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
+            {
+                switch (attributeData.AttributeClass?.GetFullMetadataName())
+                {
+                    case "ComputeSharp.D2D1Interop.D2DInputCountAttribute":
+                        inputCount = (int)attributeData.ConstructorArguments[0].Value!;
+                        break;
+                    case "ComputeSharp.D2D1Interop.D2DInputSimpleAttribute":
+                        inputSimpleIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
+                        break;
+                    case "ComputeSharp.D2D1Interop.D2DInputComplexAttribute":
+                        inputComplexIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
+                        break;
+                    case "ComputeSharp.D2D1Interop.D2DRequiresScenePositionAttribute":
+                        requiresScenePosition = true;
+                        break;
+                    case "ComputeSharp.D2D1Interop.D2DEmbeddedBytecodeAttribute":
+                        shaderProfile = (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            inputSimpleIndices = inputSimpleIndicesBuilder.ToImmutable();
+            inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
+        }
+
+        /// <summary>
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
         /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
@@ -359,6 +426,10 @@ partial class ID2D1ShaderGenerator
         /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
+        /// <param name="inputCount">The number of shader inputs to declare.</param>
+        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
+        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
+        /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static string GetHlslSource(
             ImmutableArray<(string Name, string Value)> definedConstants,
@@ -366,7 +437,11 @@ partial class ID2D1ShaderGenerator
             ImmutableArray<(string Name, string HlslType)> valueFields,
             ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
             ImmutableArray<(string Signature, string Definition)> processedMethods,
-            string executeMethod)
+            string executeMethod,
+            int inputCount,
+            ImmutableArray<int> inputSimpleIndices,
+            ImmutableArray<int> inputComplexIndices,
+            bool requiresScenePosition)
         {
             StringBuilder hlslBuilder = new();
 
@@ -389,12 +464,26 @@ partial class ID2D1ShaderGenerator
             AppendLineAndLF("// See: https://github.com/Sergio0694/ComputeSharp.");
             AppendLF();
 
-            // TODO: switch to discovered ones
-            AppendLineAndLF("#define D2D_INPUT_COUNT 1");
-            AppendLineAndLF("#define D2D_INPUT0_COMPLEX");
-            AppendLineAndLF("#define D2D_REQUIRES_SCENE_POSITION");
+            // Shader metadata
+            AppendLineAndLF($"#define D2D_INPUT_COUNT {inputCount}");
+
+            foreach (int simpleInput in inputSimpleIndices)
+            {
+                AppendLineAndLF($"#define D2D_INPUT{simpleInput}_SIMPLE");
+            }
+
+            foreach (int complexInput in inputComplexIndices)
+            {
+                AppendLineAndLF($"#define D2D_INPUT{complexInput}_COMPLEX");
+            }
+
+            if (requiresScenePosition)
+            {
+                AppendLineAndLF("#define D2D_REQUIRES_SCENE_POSITION");
+            }
 
             // Add the "d2d1effecthelpers.hlsli" header
+            AppendLF();
             AppendLineAndLF("#include \"d2d1effecthelpers.hlsli\"");
 
             // Define declarations
