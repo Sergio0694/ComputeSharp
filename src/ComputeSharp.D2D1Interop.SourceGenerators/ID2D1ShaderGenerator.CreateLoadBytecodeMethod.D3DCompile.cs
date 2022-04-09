@@ -48,7 +48,7 @@ partial class ID2D1ShaderGenerator
                 token.ThrowIfCancellationRequested();
 
                 // Compile the shader bytecode
-                using ComPtr<ID3DBlob> dxcBlobBytecode = D2D1ShaderCompiler.Compile(hlslSource.AsSpan(), false);
+                using ComPtr<ID3DBlob> dxcBlobBytecode = D2D1ShaderCompiler.Compile(hlslSource.AsSpan(), shaderProfile.Value, false);
 
                 token.ThrowIfCancellationRequested();
 
