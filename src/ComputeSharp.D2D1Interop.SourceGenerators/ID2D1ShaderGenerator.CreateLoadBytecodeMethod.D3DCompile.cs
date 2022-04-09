@@ -23,15 +23,25 @@ partial class ID2D1ShaderGenerator
         /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
         /// </summary>
         /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
+        /// <param name="shaderProfile">The shader profile to use to compile the shader, if requested.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
         public static unsafe ImmutableArray<byte> GetBytecode(
             string hlslSource,
+            D2D1ShaderProfile? shaderProfile,
             CancellationToken token,
             out DiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
+
+            // No embedded shader was requested
+            if (shaderProfile is null)
+            {
+                diagnostic = null;
+
+                goto End;
+            }
 
             try
             {
@@ -59,6 +69,7 @@ partial class ID2D1ShaderGenerator
                 diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, e.Message);
             }
 
+            End:
             return bytecode;
         }
     }

@@ -8,7 +8,8 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 /// </summary>
 /// <param name="Hierarchy">The hierarchy data for the shader.</param>
 /// <param name="HlslSource">The HLSL source.</param>
-internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string HlslSource)
+/// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
+internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string HlslSource, D2D1ShaderProfile? ShaderProfile)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderSourceInfo"/>.
@@ -40,7 +41,8 @@ internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string Hlsl
 
             return
                 HierarchyInfo.Comparer.Default.Equals(x.Hierarchy, y.Hierarchy) &&
-                x.HlslSource == y.HlslSource;
+                x.HlslSource == y.HlslSource &&
+                x.ShaderProfile == y.ShaderProfile;
         }
 
         /// <inheritdoc/>
@@ -50,6 +52,7 @@ internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string Hlsl
 
             hashCode.Add(HierarchyInfo.Comparer.Default.GetHashCode(obj.Hierarchy));
             hashCode.Add(obj.HlslSource);
+            hashCode.Add(obj.ShaderProfile);
 
             return hashCode.ToHashCode();
         }
