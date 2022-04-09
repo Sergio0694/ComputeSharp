@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1Interop.Shaders.Dispatching;
 using ComputeSharp.D2D1Interop.Shaders.Interop.Buffers;
-using ComputeSharp.Shaders.Dispatching;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -20,10 +19,12 @@ public static unsafe class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
     /// <remarks>
-    /// This method will only run correctly if the input shader has been precompiled, or it will throw an exception.
-    /// The returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
+    /// This method will only compile the shader using <see cref="D2D1ShaderProfile.PixelShader50"/> if no precompiled shader is available.
+    /// <para>
+    /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
+    /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
+    /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadShaderBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
@@ -59,7 +60,7 @@ public static unsafe class D2D1InteropServices
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, shaderProfile, out _);
+        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, shaderProfile ?? D2D1ShaderProfile.PixelShader50);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 

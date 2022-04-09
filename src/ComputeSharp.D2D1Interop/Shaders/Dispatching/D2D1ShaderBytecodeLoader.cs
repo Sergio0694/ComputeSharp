@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
+using ComputeSharp.D2D1Interop.__Internals;
 using ComputeSharp.D2D1Interop.Extensions;
 using ComputeSharp.D2D1Interop.Helpers;
 using TerraFX.Interop.DirectX;
@@ -9,7 +9,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.Shaders.Dispatching;
+namespace ComputeSharp.D2D1Interop.Shaders.Dispatching;
 
 /// <summary>
 /// A bytecode loader for D2D1 shaders.

@@ -171,11 +171,11 @@ public sealed partial class IShaderGenerator
                             IdentifierName("ComputeSharp.__Internals.ShaderCompiler"),
                             IdentifierName("LoadDynamicBytecode")))
                     .AddArgumentListArguments(
-                        Argument(IdentifierName("loader")).WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)),
+                        Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
                         Argument(IdentifierName("threadsX")),
                         Argument(IdentifierName("threadsY")),
                         Argument(IdentifierName("threadsZ")),
-                        Argument(ThisExpression()).WithRefOrOutKeyword(Token(SyntaxKind.InKeyword))));
+                        Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword))));
         }
 
         /// <summary>

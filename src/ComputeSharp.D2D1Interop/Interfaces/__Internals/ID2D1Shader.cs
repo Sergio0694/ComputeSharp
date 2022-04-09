@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using ComputeSharp.__Internals;
 
 namespace ComputeSharp.D2D1Interop.__Internals;
 

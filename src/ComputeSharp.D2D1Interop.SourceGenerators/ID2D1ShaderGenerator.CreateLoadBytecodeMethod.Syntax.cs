@@ -39,7 +39,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1Interop.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, global::ComputeSharp.D2D1Interop.D2D1ShaderProfile? shaderProfile, out string hlslSource)
+            // readonly void global::ComputeSharp.D2D1Interop.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, global::ComputeSharp.D2D1Interop.D2D1ShaderProfile? shaderProfile)
             // {
             //     <BODY>
             // }
@@ -52,8 +52,7 @@ partial class ID2D1ShaderGenerator
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")),
-                    Parameter(Identifier("shaderProfile")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1Interop.D2D1ShaderProfile"))),
-                    Parameter(Identifier("hlslSource")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(PredefinedType(Token(SyntaxKind.StringKeyword))))
+                    Parameter(Identifier("shaderProfile")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1Interop.D2D1ShaderProfile"))))
                 .WithBody(block);
         }
 
@@ -65,79 +64,83 @@ partial class ID2D1ShaderGenerator
         /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
         private static unsafe BlockSyntax GetShaderBytecodeBody(EmbeddedBytecodeInfo bytecodeInfo, out string? bytecodeLiterals)
         {
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
-
-            // This code produces a branch as follows:
+            // This code produces a method declaration as follows:
             //
-            // hlslSource = <HLSL_SOURCE>;
-            statements.Add(
+            // ComputeSharp.D2D1Interop.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile, <ENABLE_LINKING_SUPPORT>);
+            ExpressionStatementSyntax dynamicLoadingStatement =
                 ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        IdentifierName("hlslSource"),
-                        LiteralExpression(
-                            SyntaxKind.StringLiteralExpression,
-                            Literal(bytecodeInfo.HlslSource)))));
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("ComputeSharp.D2D1Interop.__Internals.D2D1ShaderCompiler"),
+                            IdentifierName("LoadDynamicBytecode")))
+                    .AddArgumentListArguments(
+                        Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
+                        Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
+                        Argument(IdentifierName("shaderProfile")),
+                        Argument(LiteralExpression(SyntaxKind.TrueLiteralExpression))));
 
-            // Load the bytecode literals, if available, otherwise emit the dynamic loading code
-            if (bytecodeInfo.Bytecode.IsEmpty)
+            // If there is no precompiled bytecode, just return the dynamic path
+            if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)
             {
                 bytecodeLiterals = null;
 
-                // This code produces a method declaration as follows:
-                //
-                // ComputeSharp.D2D1Interop.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, hlslSource);
-                statements.Add(
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("ComputeSharp.D2D1Interop.__Internals.D2D1ShaderCompiler"),
-                                IdentifierName("LoadDynamicBytecode")))
-                        .AddArgumentListArguments(
-                            Argument(IdentifierName("loader")).WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)),
-                            Argument(IdentifierName("hlslSource")))));
+                return Block(dynamicLoadingStatement);
             }
-            else
-            {
-                bytecodeLiterals = BuildShaderBytecodeExpressionString(bytecodeInfo.Bytecode.AsSpan());
 
-                // This code produces the following statements:
-                //
-                // global::System.ReadOnlySpan<byte> bytecode = new byte[] { __EMBEDDED_SHADER_BYTECODE };
-                //
-                // Note that the __EMBEDDED_SHADER_BYTECODE identifier will be replaced after the string
-                // is created by the generator. This greatly speeds up the code generation, as it avoids
-                // having to create/parse tens of thousands of literal expression nodes for every shader.
-                statements.Add(
-                    LocalDeclarationStatement(
-                        VariableDeclaration(
-                            GenericName(Identifier("global::System.ReadOnlySpan"))
-                            .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                        .AddVariables(
-                            VariableDeclarator(Identifier("bytecode"))
-                            .WithInitializer(
-                                EqualsValueClause(
-                                    ArrayCreationExpression(
-                                    ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
-                                    .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+
+            bytecodeLiterals = BuildShaderBytecodeExpressionString(bytecodeInfo.Bytecode.AsSpan());
+
+            // This code produces a branch as follows:
+            //
+            // if (shaderProfile is null or <SHADER_PROFILE>)
+            // {
+            //     global::System.ReadOnlySpan<byte> bytecode = new byte[] { __EMBEDDED_SHADER_BYTECODE };
+            //     loader.LoadEmbeddedBytecode(bytecode);
+            // }
+            //
+            // Note that the __EMBEDDED_SHADER_BYTECODE identifier will be replaced after the string
+            // is created by the generator. This greatly speeds up the code generation, as it avoids
+            // having to create/parse tens of thousands of literal expression nodes for every shader.
+            IfStatementSyntax embeddedBranch =
+                IfStatement(
+                    IsPatternExpression(
+                        IdentifierName("shaderProfile"),
+                        BinaryPattern(
+                            SyntaxKind.OrPattern,
+                            ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                            ConstantPattern(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName(nameof(D2D1ShaderProfile)),
+                                    IdentifierName(D2D1ShaderProfile.PixelShader50.ToString()))))),
+                    Block(
+                        LocalDeclarationStatement(
+                            VariableDeclaration(
+                                GenericName(Identifier("global::System.ReadOnlySpan"))
+                                .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                            .AddVariables(
+                                VariableDeclarator(Identifier("bytecode"))
                                 .WithInitializer(
-                                    InitializerExpression(
-                                        SyntaxKind.ArrayInitializerExpression,
-                                        SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_SHADER_BYTECODE")))))))));
+                                    EqualsValueClause(
+                                        ArrayCreationExpression(
+                                        ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
+                                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                                    .WithInitializer(
+                                        InitializerExpression(
+                                            SyntaxKind.ArrayInitializerExpression,
+                                            SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_SHADER_BYTECODE")))))))),
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("loader"),
+                                    IdentifierName("LoadEmbeddedBytecode")))
+                            .AddArgumentListArguments(Argument(IdentifierName("bytecode"))))));
 
-                // loader.LoadEmbeddedBytecode(bytecode);
-                statements.Add(
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("loader"),
-                                IdentifierName("LoadEmbeddedBytecode")))
-                        .AddArgumentListArguments(Argument(IdentifierName("bytecode")))));
-            }
-
-            return Block(statements);
+            // Return the combined block
+            return Block(embeddedBranch.WithElse(ElseClause(Block(dynamicLoadingStatement))));
         }
 
         /// <summary>
