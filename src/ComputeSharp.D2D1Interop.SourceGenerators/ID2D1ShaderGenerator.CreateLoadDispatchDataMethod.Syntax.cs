@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial class LoadDispatchData
+    partial class LoadDispatchData
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
