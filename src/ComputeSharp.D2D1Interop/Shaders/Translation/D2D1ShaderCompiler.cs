@@ -30,12 +30,13 @@ internal static unsafe partial class D2D1ShaderCompiler
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="enableLinkingSupport">Whether to enable linking support for the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, bool enableLinkingSupport)
+    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, bool enableLinkingSupport)
     {
         // Compile the standalone D2D1 full shader
-        using ComPtr<ID3DBlob> d3DBlobFullShader = CompileD2DFullShader(source);
+        using ComPtr<ID3DBlob> d3DBlobFullShader = CompileD2DFullShader(source, shaderProfile);
 
         if (!enableLinkingSupport)
         {
@@ -43,7 +44,7 @@ internal static unsafe partial class D2D1ShaderCompiler
         }
 
         // Compile the export function and embed it as private data if requested
-        using ComPtr<ID3DBlob> d3DBlobFunction = CompileD2DFunction(source);
+        using ComPtr<ID3DBlob> d3DBlobFunction = CompileD2DFunction(source, shaderProfile);
         using ComPtr<ID3DBlob> d3DBlobLinked = EmbedD2DFunctionPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
 
         return d3DBlobLinked.Move();
@@ -52,9 +53,10 @@ internal static unsafe partial class D2D1ShaderCompiler
     /// <summary>
     /// Compiles a D2D1 pixel shader with <c>D2D_FULL_SHADER</c>.
     /// </summary>
-    ///<param name="source">The HLSL source code to compile.</param>
+    /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    private static ComPtr<ID3DBlob> CompileD2DFullShader(ReadOnlySpan<char> source)
+    private static ComPtr<ID3DBlob> CompileD2DFullShader(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile)
     {
         // Encode the HLSL source to ASCII
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
@@ -95,7 +97,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 pDefines: macros,
                 pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute)),
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.ps_5_0)),
+                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetPixelShaderProfile(shaderProfile))),
                 Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),
@@ -118,9 +120,10 @@ internal static unsafe partial class D2D1ShaderCompiler
     /// <summary>
     /// Compiles a D2D1 pixel shader with <c>D2D_FUNCTION</c>.
     /// </summary>
-    ///<param name="source">The HLSL source code to compile.</param>
+    /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    private static ComPtr<ID3DBlob> CompileD2DFunction(ReadOnlySpan<char> source)
+    private static ComPtr<ID3DBlob> CompileD2DFunction(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile)
     {
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
@@ -160,7 +163,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 pDefines: macros,
                 pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: null,
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.lib_5_0)),
+                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetLibraryProfile(shaderProfile))),
                 Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),
@@ -183,8 +186,8 @@ internal static unsafe partial class D2D1ShaderCompiler
     /// <summary>
     /// Embeds the bytecode for an exported shader as private data into another shader bytecode.
     /// </summary>
-    /// <param name="shaderBlob">The bytecode produced by <see cref="CompileD2DFullShader(ReadOnlySpan{char})"/>.</param>
-    /// <param name="exportBlob">The bytecode produced by <see cref="CompileD2DFunction(ReadOnlySpan{char})"/>.</param>
+    /// <param name="shaderBlob">The bytecode produced by <see cref="CompileD2DFullShader(ReadOnlySpan{char}, D2D1ShaderProfile)"/>.</param>
+    /// <param name="exportBlob">The bytecode produced by <see cref="CompileD2DFunction(ReadOnlySpan{char}, D2D1ShaderProfile)"/>.</param>
     /// <returns>An <see cref="ID3DBlob"/> instance with the combined data of <paramref name="shaderBlob"/> and <paramref name="exportBlob"/>.</returns>
     private static ComPtr<ID3DBlob> EmbedD2DFunctionPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
     {
@@ -253,13 +256,87 @@ internal static unsafe partial class D2D1ShaderCompiler
         public static ReadOnlySpan<byte> Execute => new[] { (byte)'E', (byte)'x', (byte)'e', (byte)'c', (byte)'u', (byte)'t', (byte)'e', (byte)'\0' };
 
         /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0_level_9_1"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> lib_4_0_level_9_1 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'1', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0_level_9_3"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> lib_4_0_level_9_3 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'3', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> lib_4_0 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_1"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> lib_4_1 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'1', (byte)'\0' };
+
+        /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_5_0"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> lib_5_0 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
+        private static ReadOnlySpan<byte> lib_5_0 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0_level_9_1"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> ps_4_0_level_9_1 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'1', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0_level_9_3"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> ps_4_0_level_9_3 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'3', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> ps_4_0 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_1"</c> ASCII text.
+        /// </summary>
+        private static ReadOnlySpan<byte> ps_4_1 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'1', (byte)'\0' };
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_5_0"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> ps_5_0 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
+        private static ReadOnlySpan<byte> ps_5_0 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> for a given shader profile, for a library.
+        /// </summary>
+        /// <param name="shaderProfile">The input shaader profile to use.</param>
+        /// <returns>A <see cref="ReadOnlySpan{T}"/> for a given shader profile, for a library.</returns>
+        public static ReadOnlySpan<byte> GetLibraryProfile(D2D1ShaderProfile shaderProfile)
+        {
+            return shaderProfile switch
+            {
+                D2D1ShaderProfile.PixelShader40Level91 => lib_4_0_level_9_1,
+                D2D1ShaderProfile.PixelShader40Level93 => lib_4_0_level_9_3,
+                D2D1ShaderProfile.PixelShader40 => lib_4_0,
+                D2D1ShaderProfile.PixelShader41 => lib_4_1,
+                _ => lib_5_0
+            };
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ReadOnlySpan{T}"/> for a given shader profile, for a full shader.
+        /// </summary>
+        /// <param name="shaderProfile">The input shaader profile to use.</param>
+        /// <returns>A <see cref="ReadOnlySpan{T}"/> for a given shader profile, for a full shader.</returns>
+        public static ReadOnlySpan<byte> GetPixelShaderProfile(D2D1ShaderProfile shaderProfile)
+        {
+            return shaderProfile switch
+            {
+                D2D1ShaderProfile.PixelShader40Level91 => ps_4_0_level_9_1,
+                D2D1ShaderProfile.PixelShader40Level93 => ps_4_0_level_9_3,
+                D2D1ShaderProfile.PixelShader40 => ps_4_0,
+                D2D1ShaderProfile.PixelShader41 => ps_4_1,
+                _ => ps_5_0
+            };
+        }
     }
 }
