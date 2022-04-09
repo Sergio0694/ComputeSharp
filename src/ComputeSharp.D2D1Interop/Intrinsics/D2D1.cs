@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Exceptions;
+﻿using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp.D2D1Interop;
 
@@ -14,6 +15,7 @@ public static class D2D1
     /// <param name="index">The index of the input texture to get the input from.</param>
     /// <returns>The color from the target input at the current coordinate, in <c>INPUTN</c> format.</returns>
     /// <remarks>This method is only available for simple inputs.</remarks>
+    [HlslIntrinsicName("D2DGetInput")]
     public static Float4 GetInput(int index) => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(GetInput)}({typeof(int)})");
 
     /// <summary>
@@ -22,6 +24,7 @@ public static class D2D1
     /// <param name="index">The index of the input texture to get the coordinate for.</param>
     /// <returns>The input coordinate, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
+    [HlslIntrinsicName("D2DGetInputCoordinate")]
     public static Float4 GetInputCoordinate(int index) => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(GetInputCoordinate)}({typeof(int)})");
     
     /// <summary>
@@ -29,6 +32,7 @@ public static class D2D1
     /// </summary>
     /// <returns>The current scene position, in <c>SCENE_POSITION</c> format.</returns>
     /// <remarks>This method is only available when <see cref="D2DRequiresScenePositionAttribute"/> is used on the shader type.</remarks>
+    [HlslIntrinsicName("D2DGetScenePosition")]
     public static Float4 GetScenePosition() => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(GetScenePosition)}()");
 
     /// <summary>
@@ -38,6 +42,7 @@ public static class D2D1
     /// <param name="uv">The normalized coordinate to use to sample the texture.</param>
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
+    [HlslIntrinsicName("D2DSampleInput")]
     public static Float4 SampleInput(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(SampleInput)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
@@ -47,6 +52,7 @@ public static class D2D1
     /// <param name="offset">The normalized offset to use to sample the texture.</param>
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for simple inputs.</remarks>
+    [HlslIntrinsicName("D2DSampleInputAtOffset")]
     public static Float4 SampleInputAtOffset(int index, Float2 offset) => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(SampleInputAtOffset)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
@@ -56,5 +62,6 @@ public static class D2D1
     /// <param name="uv">The normalized coordinate to use to sample the texture.</param>
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for complex inputs.</remarks>
+    [HlslIntrinsicName("D2DSampleInputAtPosition")]
     public static Float4 SampleInputAtPosition(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D1)}.{nameof(SampleInputAtPosition)}({typeof(int)}, {typeof(Float2)})");
 }

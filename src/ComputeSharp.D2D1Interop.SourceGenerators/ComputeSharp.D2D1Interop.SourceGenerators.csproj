@@ -63,6 +63,7 @@
 
     <!-- ComputeSharp APIs -->
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
+    <Compile Include="..\ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" />
 
     <!-- ComputeSharp.D2D1Interop APIs -->
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" Link="ComputeSharp.D2D1Interop\Attributes\Profiles\D2D1ShaderProfile.cs" />
@@ -71,11 +72,17 @@
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DInputCountAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DInputCountAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DInputSimpleAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DInputSimpleAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Attributes\D2DRequiresScenePositionAttribute.cs" Link="ComputeSharp.D2D1Interop\Attributes\D2DRequiresScenePositionAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Extensions\ComPtrExtensions.cs" Link="ComputeSharp.D2D1Interop\Extensions\ComPtrExtensions.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Extensions\HResultExtensions.cs" Link="ComputeSharp.D2D1Interop\Extensions\HResultExtensions.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Interfaces\ID2D1PixelShader.cs" Link="ComputeSharp.D2D1Interop\Interfaces\ID2D1PixelShader.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1BytecodeLoader.cs" Link="ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1BytecodeLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" Link="ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1Shader.cs" Link="ComputeSharp.D2D1Interop\Interfaces\__Internals\ID2D1Shader.cs" />
     <Compile Include="..\ComputeSharp.D2D1Interop\Intrinsics\D2D1.cs" Link="ComputeSharp.D2D1Interop\Intrinsics\D2D1.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1Interop\Shaders\Exceptions\FxcCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Shaders\Translation\D2D1ShaderCompiler.cs" Link="ComputeSharp.D2D1Interop\Shaders\Translation\D2D1ShaderCompiler.cs" />
+    <Compile Include="..\ComputeSharp.D2D1Interop\Shaders\Translation\D2D1ShaderCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1Interop\Shaders\Translation\D2D1ShaderCompiler.ID3DInclude.cs" />
+    <EmbeddedResource Include="..\ComputeSharp.D2D1Interop\Shaders\Translation\Headers\d2d1effecthelpers.hlsli" Link="ComputeSharp.D2D1Interop\Shaders\Translation\Headers\d2d1effecthelpers.hlsli" />
   </ItemGroup>
 
   <ItemGroup>
@@ -90,4 +97,7 @@
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
 
+  <!-- Shared project with TerraFX.Interop.Windows fork -->
+  <Import Project="..\TerraFX.Interop.Windows.D2D1Interop\TerraFX.Interop.Windows.D2D1Interop.projitems" Label="Shared" />
+  <Import Project="..\ComputeSharp.D2D1Interop.NetStandard\ComputeSharp.D2D1Interop.NetStandard.projitems" Label="Shared" />
 </Project>
