@@ -23,7 +23,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="bytecodeInfo">The input bytecode info.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
+        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, out Func<SyntaxNode, string> fixup)
         {
             BlockSyntax block = GetShaderBytecodeBody(bytecodeInfo, out string? bytecodeLiterals);

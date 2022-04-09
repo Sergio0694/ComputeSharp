@@ -22,7 +22,7 @@ public sealed partial class IShaderGenerator
         /// <param name="bytecodeInfo">The input <see cref="EmbeddedBytecodeInfo"/> instance.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
+        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, bool supportsDynamicShaders, out Func<SyntaxNode, string> fixup)
         {
             BlockSyntax block = GetShaderBytecodeBody(bytecodeInfo, supportsDynamicShaders, out string? bytecodeLiterals);

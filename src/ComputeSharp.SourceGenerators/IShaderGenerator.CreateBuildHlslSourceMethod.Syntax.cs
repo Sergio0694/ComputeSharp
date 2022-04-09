@@ -15,14 +15,14 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    internal static partial class BuildHlslString
+    internal static partial class BuildHlslSource
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.
+        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
+        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
@@ -32,14 +32,14 @@ public sealed partial class IShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.BuildHlslString(out global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+            // readonly void global::ComputeSharp.__Internals.IShader.BuildHlslSource(out global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
             // {
             //     <BODY>
             // }
             return
                 MethodDeclaration(
                     PredefinedType(Token(SyntaxKind.VoidKeyword)),
-                    Identifier("BuildHlslString"))
+                    Identifier("BuildHlslSource"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddParameterListParameters(

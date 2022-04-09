@@ -23,9 +23,9 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>BuildHlslString</c> method.
+    /// A helper with all logic to generate the <c>BuildHlslSource</c> method.
     /// </summary>
-    internal static partial class BuildHlslString
+    internal static partial class BuildHlslSource
     {
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
