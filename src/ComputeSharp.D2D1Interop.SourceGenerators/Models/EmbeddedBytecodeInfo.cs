@@ -9,8 +9,9 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 /// A model representing a shared and its compiled bytecode, if available.
 /// </summary>
 /// <param name="HlslSource">The HLSL source for the shader.</param>
+/// <param name="isLinkingSupported">Whether linking is supported for the current shader.</param>
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
-internal sealed record EmbeddedBytecodeInfo(string HlslSource, ImmutableArray<byte> Bytecode)
+internal sealed record EmbeddedBytecodeInfo(string HlslSource, bool isLinkingSupported, ImmutableArray<byte> Bytecode)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
@@ -42,6 +43,7 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, ImmutableArray<by
 
             return
                 x.HlslSource == y.HlslSource &&
+                x.isLinkingSupported == y.isLinkingSupported &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
         }
 
@@ -51,6 +53,7 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, ImmutableArray<by
             HashCode hashCode = default;
 
             hashCode.Add(obj.HlslSource);
+            hashCode.Add(obj.isLinkingSupported);
             hashCode.AddBytes(obj.Bytecode.AsSpan());
 
             return hashCode.ToHashCode();

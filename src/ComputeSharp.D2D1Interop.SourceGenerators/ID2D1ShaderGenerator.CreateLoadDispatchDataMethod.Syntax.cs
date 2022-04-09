@@ -18,10 +18,9 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
         /// </summary>
-        /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
-        /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
+        /// <param name="dispatchInfo">The dispatch info gathered for the current shader.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(ImmutableArray<FieldInfo> fieldInfos, int root32BitConstantsCount)
+        public static MethodDeclarationSyntax GetSyntax(DispatchDataInfo dispatchInfo)
         {
             // This code produces a method declaration as follows:
             //
@@ -35,7 +34,7 @@ partial class ID2D1ShaderGenerator
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")))
-                .WithBody(Block(GetDispatchDataLoadingStatements(fieldInfos, root32BitConstantsCount)));
+                .WithBody(Block(GetDispatchDataLoadingStatements(dispatchInfo.FieldInfos, dispatchInfo.Root32BitConstantCount)));
         }
 
         /// <summary>

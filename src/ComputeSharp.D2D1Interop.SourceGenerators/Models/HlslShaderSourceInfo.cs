@@ -6,10 +6,10 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 /// <summary>
 /// A model for extracted info on a processed HLSL shader.
 /// </summary>
-/// <param name="Hierarchy">The hierarchy data for the shader.</param>
 /// <param name="HlslSource">The HLSL source.</param>
 /// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
-internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string HlslSource, D2D1ShaderProfile? ShaderProfile)
+/// <param name="IsLinkingSupported">Whether the shader supports linking.</param>
+internal sealed record HlslShaderSourceInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, bool IsLinkingSupported)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderSourceInfo"/>.
@@ -40,9 +40,9 @@ internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string Hlsl
             }
 
             return
-                HierarchyInfo.Comparer.Default.Equals(x.Hierarchy, y.Hierarchy) &&
                 x.HlslSource == y.HlslSource &&
-                x.ShaderProfile == y.ShaderProfile;
+                x.ShaderProfile == y.ShaderProfile &&
+                x.IsLinkingSupported == y.IsLinkingSupported;
         }
 
         /// <inheritdoc/>
@@ -50,9 +50,9 @@ internal sealed record HlslShaderSourceInfo(HierarchyInfo Hierarchy, string Hlsl
         {
             HashCode hashCode = default;
 
-            hashCode.Add(HierarchyInfo.Comparer.Default.GetHashCode(obj.Hierarchy));
             hashCode.Add(obj.HlslSource);
             hashCode.Add(obj.ShaderProfile);
+            hashCode.Add(obj.IsLinkingSupported);
 
             return hashCode.ToHashCode();
         }

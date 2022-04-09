@@ -51,7 +51,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<string> SourceInfo, Result<D2D1ShaderProfile?> ProfileInfo)> shaderInfoWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Source)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -64,12 +64,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
-                DispatchDataInfo dispatchDataInfo = new(
-                    item.Left.Hierarchy,
-                    fieldInfos,
-                    root32BitConstantCount);
-
-                token.ThrowIfCancellationRequested();
+                DispatchDataInfo dispatchDataInfo = new(fieldInfos, root32BitConstantCount);
 
                 // Get HLSL source for BuildHlslSource()
                 string hlslSource = BuildHlslSource.GetHlslSource(
@@ -80,35 +75,43 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
-                // Get the shader profile
+                // Get the shader profile and linking info for LoadBytecode()
                 D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(item.Left.Symbol);
+                bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(item.Left.Symbol);
+
+                HlslShaderSourceInfo sourceInfo = new(
+                    hlslSource,
+                    shaderProfile,
+                    isLinkingSupported);
+
+                token.ThrowIfCancellationRequested();
 
                 return (
+                    item.Left.Hierarchy,
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
-                    new Result<string>(hlslSource, hlslSourceDiagnostics),
-                    new Result<D2D1ShaderProfile?>(shaderProfile, ImmutableArray<Diagnostic>.Empty));
+                    new Result<HlslShaderSourceInfo>(sourceInfo, hlslSourceDiagnostics));
             });
 
         // Output the diagnostics
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.SourceInfo.Errors));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Source.Errors));
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(DispatchDataInfo Dispatch, string HlslSource, D2D1ShaderProfile? ShaderProfile)> shaderInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, HlslShaderSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Dispatch.Value, item.SourceInfo.Value, item.ProfileInfo.Value))
-            .WithComparers(DispatchDataInfo.Comparer.Default, EqualityComparer<string>.Default, EqualityComparer<D2D1ShaderProfile?>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch.Value, item.Source.Value))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
 
         // Get a filtered sequence to enable caching
-        IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
+        IncrementalValuesProvider< (HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
             shaderInfo
-            .Select(static (item, token) => item.Dispatch)
-            .WithComparer(DispatchDataInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default);
 
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Left.FieldInfos, item.Left.Root32BitConstantCount);
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Left.Dispatch);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.ToFullString());
@@ -117,7 +120,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, item.HlslSource))
+            .Select(static (item, token) => (item.Hierarchy, item.Source.HlslSource))
             .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default);
 
         // Generate the BuildHlslSource() methods
@@ -130,21 +133,21 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get a filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource, D2D1ShaderProfile? ShaderProfile)> shaderBytecodeInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo Source)> shaderBytecodeInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, item.HlslSource, item.ShaderProfile))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, EqualityComparer<D2D1ShaderProfile?>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Source))
+            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.HlslSource, item.ShaderProfile, token, out DiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.Source, token, out DiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
-                EmbeddedBytecodeInfo bytecodeInfo = new(item.HlslSource, bytecode);
+                EmbeddedBytecodeInfo bytecodeInfo = new(item.Source.HlslSource, item.Source.IsLinkingSupported, bytecode);
 
                 return (item.Hierarchy, bytecodeInfo, diagnostic);
             });
