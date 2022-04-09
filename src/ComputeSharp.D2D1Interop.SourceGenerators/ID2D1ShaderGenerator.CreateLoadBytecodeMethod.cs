@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
         public static D2D1ShaderProfile? GetShaderProfile(INamedTypeSymbol structDeclarationSymbol)
         {
-            if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedName("ComputeSharp.D2D1Interop.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
+            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1Interop.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
@@ -44,7 +44,7 @@ partial class ID2D1ShaderGenerator
         /// <returns>Whether the shader only has simple inputs.</returns>
         public static bool IsSimpleInputShader(INamedTypeSymbol structDeclarationSymbol)
         {
-            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedName("ComputeSharp.D2D1Interop.D2DInputCountAttribute", out AttributeData? inputCountAttribute))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1Interop.D2DInputCountAttribute", out AttributeData? inputCountAttribute))
             {
                 return false;
             }
