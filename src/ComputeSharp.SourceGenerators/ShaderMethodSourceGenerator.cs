@@ -96,8 +96,8 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             // Explore the syntax tree and extract the processed info
             var semanticModel = new SemanticModelProvider(compilation);
             var (entryPoint, dependentMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, constantDefinitions, out diagnostics);
-            var definedTypes = IShaderGenerator.BuildHlslString.GetDeclaredTypes(discoveredTypes);
-            var definedConstants = IShaderGenerator.BuildHlslString.GetDefinedConstants(constantDefinitions);
+            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(discoveredTypes);
+            var definedConstants = IShaderGenerator.BuildHlslSource.GetDefinedConstants(constantDefinitions);
 
             return new(
                 methodSymbol.GetFullMetadataName(includeParameters: true),

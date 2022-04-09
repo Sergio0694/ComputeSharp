@@ -73,7 +73,7 @@ public interface IShader
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+    void BuildHlslSource(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
 #if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
