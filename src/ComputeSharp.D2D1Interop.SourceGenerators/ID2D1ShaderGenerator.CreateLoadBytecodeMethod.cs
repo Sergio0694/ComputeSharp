@@ -5,7 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using ComputeSharp.D2D1Interop.Exceptions;
 using ComputeSharp.D2D1Interop.Shaders.Translation;
+using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -19,6 +21,21 @@ partial class ID2D1ShaderGenerator
     /// <inheritodoc/>
     internal static partial class LoadBytecode
     {
+        /// <summary>
+        /// Extracts the shader profile for the current shader.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <returns>The shader profile to use to compile the shader, if present.</returns>
+        public static D2D1ShaderProfile? GetShaderProfile(INamedTypeSymbol structDeclarationSymbol)
+        {
+            if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedName("ComputeSharp.D2D1Interop.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
+            {
+                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
         /// </summary>

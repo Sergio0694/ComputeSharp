@@ -22,9 +22,9 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadBytecode</c> method.
+    /// A helper with all logic to generate the <c>BuildHlslSource</c> method.
     /// </summary>
-    internal static partial class LoadBytecode
+    internal static partial class BuildHlslSource
     {
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
@@ -33,8 +33,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
-        /// <returns>The resulting info on the processed shader.</returns>
-        public static (string HlslSource, D2D1ShaderProfile? ShaderProfile) GetHlslSource(
+        /// <returns>The HLSL source for the shader.</returns>
+        public static string GetHlslSource(
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -64,13 +64,12 @@ partial class ID2D1ShaderGenerator
                 out int inputCount,
                 out ImmutableArray<int> inputSimpleIndices,
                 out ImmutableArray<int> inputComplexIndices,
-                out bool requiresScenePosition,
-                out D2D1ShaderProfile? shaderProfile);
+                out bool requiresScenePosition);
 
             diagnostics = builder.ToImmutable();
 
             // Get the HLSL source
-            string hlslSource = GetHlslSource(
+            return GetHlslSource(
                 definedConstants,
                 declaredTypes,
                 valueFields,
@@ -81,8 +80,6 @@ partial class ID2D1ShaderGenerator
                 inputSimpleIndices,
                 inputComplexIndices,
                 requiresScenePosition);
-
-            return (hlslSource, shaderProfile);
         }
 
         /// <summary>
@@ -373,18 +370,15 @@ partial class ID2D1ShaderGenerator
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
         /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
-        /// <param name="shaderProfile">The shader profile to use to precompile the shader, if requested.</param>
         private static void GatherD2D1AttributeInfo(
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,
             out ImmutableArray<int> inputComplexIndices,
-            out bool requiresScenePosition,
-            out D2D1ShaderProfile? shaderProfile)
+            out bool requiresScenePosition)
         {
             inputCount = 0;
             requiresScenePosition = false;
-            shaderProfile = null;
 
             ImmutableArray<int>.Builder inputSimpleIndicesBuilder = ImmutableArray.CreateBuilder<int>();
             ImmutableArray<int>.Builder inputComplexIndicesBuilder = ImmutableArray.CreateBuilder<int>();
@@ -404,9 +398,6 @@ partial class ID2D1ShaderGenerator
                         break;
                     case "ComputeSharp.D2D1Interop.D2DRequiresScenePositionAttribute":
                         requiresScenePosition = true;
-                        break;
-                    case "ComputeSharp.D2D1Interop.D2DEmbeddedBytecodeAttribute":
-                        shaderProfile = (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
                         break;
                     default:
                         break;
