@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 using ComputeSharp.__Internals;
 using ComputeSharp.D2D1Interop.__Internals;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
@@ -78,7 +77,7 @@ partial class ID2D1ShaderGenerator
                         Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
                         Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
                         Argument(IdentifierName("shaderProfile")),
-                        Argument(LiteralExpression(bytecodeInfo.isLinkingSupported ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression))));
+                        Argument(LiteralExpression(bytecodeInfo.IsLinkingSupported ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression))));
 
             // If there is no precompiled bytecode, just return the dynamic path
             if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)
@@ -87,8 +86,6 @@ partial class ID2D1ShaderGenerator
 
                 return Block(dynamicLoadingStatement);
             }
-
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
 
             bytecodeLiterals = BuildShaderBytecodeExpressionString(bytecodeInfo.Bytecode.AsSpan());
 
@@ -113,8 +110,8 @@ partial class ID2D1ShaderGenerator
                             ConstantPattern(
                                 MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName(nameof(D2D1ShaderProfile)),
-                                    IdentifierName(D2D1ShaderProfile.PixelShader50.ToString()))))),
+                                    IdentifierName("global::ComputeSharp.D2D1Interop.D2D1ShaderProfile"),
+                                    IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString()))))),
                     Block(
                         LocalDeclarationStatement(
                             VariableDeclaration(

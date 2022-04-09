@@ -147,7 +147,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
-                EmbeddedBytecodeInfo bytecodeInfo = new(item.Source.HlslSource, item.Source.IsLinkingSupported, bytecode);
+                EmbeddedBytecodeInfo bytecodeInfo = new(item.Source.HlslSource, item.Source.ShaderProfile, item.Source.IsLinkingSupported, bytecode);
 
                 return (item.Hierarchy, bytecodeInfo, diagnostic);
             });

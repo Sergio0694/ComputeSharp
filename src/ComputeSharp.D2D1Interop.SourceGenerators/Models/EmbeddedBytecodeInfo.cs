@@ -9,9 +9,10 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 /// A model representing a shared and its compiled bytecode, if available.
 /// </summary>
 /// <param name="HlslSource">The HLSL source for the shader.</param>
-/// <param name="isLinkingSupported">Whether linking is supported for the current shader.</param>
+/// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
+/// <param name="IsLinkingSupported">Whether linking is supported for the current shader.</param>
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
-internal sealed record EmbeddedBytecodeInfo(string HlslSource, bool isLinkingSupported, ImmutableArray<byte> Bytecode)
+internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, bool IsLinkingSupported, ImmutableArray<byte> Bytecode)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
@@ -43,7 +44,8 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, bool isLinkingSup
 
             return
                 x.HlslSource == y.HlslSource &&
-                x.isLinkingSupported == y.isLinkingSupported &&
+                x.ShaderProfile == y.ShaderProfile &&
+                x.IsLinkingSupported == y.IsLinkingSupported &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
         }
 
@@ -53,7 +55,8 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, bool isLinkingSup
             HashCode hashCode = default;
 
             hashCode.Add(obj.HlslSource);
-            hashCode.Add(obj.isLinkingSupported);
+            hashCode.Add(obj.ShaderProfile);
+            hashCode.Add(obj.IsLinkingSupported);
             hashCode.AddBytes(obj.Bytecode.AsSpan());
 
             return hashCode.ToHashCode();
