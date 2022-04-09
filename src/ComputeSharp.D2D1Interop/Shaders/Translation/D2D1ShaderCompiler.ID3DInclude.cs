@@ -128,7 +128,11 @@ partial class D2D1ShaderCompiler
         /// <returns>A pointer to a buffer with the contents of <c>d2d1effecthelpers.hlsli</c>.</returns>
         private static void* LoadD2D1EffectHelpersHeader(out int size)
         {
+#if SOURCE_GENERATOR
+            const string headerFilename = "ComputeSharp.D2D1Interop.SourceGenerators.ComputeSharp.D2D1Interop.Shaders.Translation.Headers.d2d1effecthelpers.hlsli";
+#else
             const string headerFilename = "ComputeSharp.D2D1Interop.Shaders.Translation.Headers.d2d1effecthelpers.hlsli";
+#endif
 
             using Stream source = Assembly.GetExecutingAssembly().GetManifestResourceStream(headerFilename)!;
             using MemoryStream destination = new();

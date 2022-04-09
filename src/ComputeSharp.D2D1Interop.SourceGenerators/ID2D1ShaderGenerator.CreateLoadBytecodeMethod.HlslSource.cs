@@ -249,7 +249,7 @@ partial class ID2D1ShaderGenerator
                 if (isShaderEntryPoint)
                 {
                     string entryPointDeclaration = processedMethod.NormalizeWhitespace(eol: "\n").ToFullString();
-                    string adjustedEntryPointDeclaration = entryPointDeclaration.Replace("float4 Execute()", "D2D_ENTRY(Execute)");
+                    string adjustedEntryPointDeclaration = entryPointDeclaration.Replace("float4 Execute()", "D2D_PS_ENTRY(Execute)");
 
                     entryPoint = adjustedEntryPointDeclaration;
                 }
@@ -388,6 +388,14 @@ partial class ID2D1ShaderGenerator
             AppendLineAndLF("// This shader was created by ComputeSharp.");
             AppendLineAndLF("// See: https://github.com/Sergio0694/ComputeSharp.");
             AppendLF();
+
+            // TODO: switch to discovered ones
+            AppendLineAndLF("#define D2D_INPUT_COUNT 1");
+            AppendLineAndLF("#define D2D_INPUT0_COMPLEX");
+            AppendLineAndLF("#define D2D_REQUIRES_SCENE_POSITION");
+
+            // Add the "d2d1effecthelpers.hlsli" header
+            AppendLineAndLF("#include \"d2d1effecthelpers.hlsli\"");
 
             // Define declarations
             foreach (var (name, value) in definedConstants)

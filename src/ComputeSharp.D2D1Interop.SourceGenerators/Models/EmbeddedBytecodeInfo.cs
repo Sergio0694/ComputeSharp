@@ -6,13 +6,11 @@ using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 
 /// <summary>
-/// A model representing a compiled shader bytecode, or none.
+/// A model representing a shared and its compiled bytecode, if available.
 /// </summary>
-/// <param name="X">The thread ids value for the X axis.</param>
-/// <param name="Y">The thread ids value for the Y axis.</param>
-/// <param name="Z">The thread ids value for the Z axis.</param>
+/// <param name="HlslSource">The HLSL source for the shader.</param>
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
-internal sealed record EmbeddedBytecodeInfo(int X, int Y, int Z, ImmutableArray<byte> Bytecode)
+internal sealed record EmbeddedBytecodeInfo(string HlslSource, ImmutableArray<byte> Bytecode)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
@@ -43,9 +41,7 @@ internal sealed record EmbeddedBytecodeInfo(int X, int Y, int Z, ImmutableArray<
             }
 
             return
-                x.X == y.X &&
-                x.Y == y.Y &&
-                x.Z == y.Z &&
+                x.HlslSource == y.HlslSource &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
         }
 
@@ -54,9 +50,7 @@ internal sealed record EmbeddedBytecodeInfo(int X, int Y, int Z, ImmutableArray<
         {
             HashCode hashCode = default;
 
-            hashCode.Add(obj.X);
-            hashCode.Add(obj.Y);
-            hashCode.Add(obj.Z);
+            hashCode.Add(obj.HlslSource);
             hashCode.AddBytes(obj.Bytecode.AsSpan());
 
             return hashCode.ToHashCode();

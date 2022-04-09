@@ -1,4 +1,6 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 using ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics;
 using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
@@ -121,13 +123,54 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => item.SourceInfo)
             .WithComparer(HlslShaderSourceInfo.Comparer.Default);
 
-        // Generate the LoadBytecode() methods
-        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
-        {
-            MethodDeclarationSyntax loadBytecodeMethod = LoadBytecode.GetSyntax(item.HlslSource);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadBytecodeMethod, false);
+        // Compile the requested shader bytecodes
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+            hlslSourceInfo
+            .Select(static (item, token) =>
+            {
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.HlslSource, token, out DiagnosticInfo? diagnostic);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", compilationUnit.ToFullString());
+                token.ThrowIfCancellationRequested();
+
+                EmbeddedBytecodeInfo bytecodeInfo = new(item.HlslSource, bytecode);
+
+                return (item.Hierarchy, bytecodeInfo, diagnostic);
+            });
+
+        // Gather the diagnostics
+        IncrementalValuesProvider<ImmutableArray<Diagnostic>> embeddedBytecodeDiagnostics =
+            embeddedBytecodeWithErrors
+            .Select(static (item, token) => (item.Hierarchy.MetadataName, item.Diagnostic))
+            .Where(static item => item.Diagnostic is not null)
+            .Combine(context.CompilationProvider)
+            .Select(static (item, token) =>
+            {
+                INamedTypeSymbol? typeSymbol = item.Right.GetTypeByMetadataName(item.Left.MetadataName)!;
+                Diagnostic diagnostic = Diagnostic.Create(
+                    item.Left.Diagnostic!.Descriptor,
+                    typeSymbol.Locations.FirstOrDefault(),
+                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return ImmutableArray.Create(diagnostic);
+            });
+
+        // Output the diagnostics
+        context.ReportDiagnostics(embeddedBytecodeDiagnostics);
+
+        // Get the filtered sequence to enable caching
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
+            embeddedBytecodeWithErrors
+            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
+            .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
+
+        // Generate the LoadBytecode() methods
+        context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
+        {
+            MethodDeclarationSyntax loadBytecodeMethod = LoadBytecode.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, string> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadBytecodeMethod, false);
+            string text = fixup(compilationUnit);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", text);
         });
     }
 }
