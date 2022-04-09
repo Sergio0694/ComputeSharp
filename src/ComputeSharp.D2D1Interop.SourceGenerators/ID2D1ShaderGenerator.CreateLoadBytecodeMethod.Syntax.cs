@@ -78,7 +78,7 @@ partial class ID2D1ShaderGenerator
                         Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
                         Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
                         Argument(IdentifierName("shaderProfile")),
-                        Argument(LiteralExpression(SyntaxKind.TrueLiteralExpression))));
+                        Argument(LiteralExpression(bytecodeInfo.isLinkingSupported ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression))));
 
             // If there is no precompiled bytecode, just return the dynamic path
             if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)

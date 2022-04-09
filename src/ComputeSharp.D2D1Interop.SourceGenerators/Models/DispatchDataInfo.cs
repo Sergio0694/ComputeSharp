@@ -8,13 +8,9 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 /// <summary>
 /// A model representing gathered info on a shader dispatch data.
 /// </summary>
-/// <param name="Hierarchy">The hierarchy data for the shader.</param>
 /// <param name="FieldInfos">The description on shader instance fields.</param>
 /// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
-internal sealed record DispatchDataInfo(
-    HierarchyInfo Hierarchy,
-    ImmutableArray<FieldInfo> FieldInfos,
-    int Root32BitConstantCount)
+internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, int Root32BitConstantCount)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
@@ -45,7 +41,6 @@ internal sealed record DispatchDataInfo(
             }
 
             return
-                HierarchyInfo.Comparer.Default.Equals(x.Hierarchy, y.Hierarchy) &&
                 x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
                 x.Root32BitConstantCount == y.Root32BitConstantCount;
         }
@@ -55,7 +50,6 @@ internal sealed record DispatchDataInfo(
         {
             HashCode hashCode = default;
 
-            hashCode.Add(HierarchyInfo.Comparer.Default.GetHashCode(obj.Hierarchy));
             hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
             hashCode.Add(obj.Root32BitConstantCount);
 
