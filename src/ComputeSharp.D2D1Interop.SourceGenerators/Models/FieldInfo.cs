@@ -11,14 +11,6 @@ namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 internal abstract record FieldInfo
 {
     /// <summary>
-    /// A captured resource (either a buffer or a texture).
-    /// </summary>
-    /// <param name="FieldName">The name of the resource field.</param>
-    /// <param name="TypeName">The full metadata name for the resource type.</param>
-    /// <param name="Offset">The offset for the resource within the root signature.</param>
-    public sealed record Resource(string FieldName, string TypeName, int Offset) : FieldInfo;
-
-    /// <summary>
     /// A captured primitive value (either a scalar, a vector, or a linear matrix).
     /// </summary>
     /// <param name="FieldPath">The path of the field with respect to the shader instance.</param>
@@ -71,14 +63,7 @@ internal abstract record FieldInfo
                 return true;
             }
 
-            if (x is Resource resourceX && y is Resource resourceY)
-            {
-                return
-                    resourceX.FieldName == resourceY.FieldName &&
-                    resourceX.TypeName == resourceY.TypeName &&
-                    resourceX.Offset == resourceY.Offset;
-            }
-            else if (x is Primitive primitiveX && y is Primitive primitiveY)
+            if (x is Primitive primitiveX && y is Primitive primitiveY)
             {
                 return
                     primitiveX.FieldPath.SequenceEqual(primitiveY.FieldPath) &&
@@ -104,8 +89,6 @@ internal abstract record FieldInfo
         {
             switch (obj)
             {
-                case Resource resource:
-                    return HashCode.Combine(resource.FieldName, resource.TypeName, resource.Offset);
                 case Primitive primitive:
                 {
                     HashCode hashCode = default;
