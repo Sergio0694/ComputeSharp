@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
@@ -28,6 +29,17 @@ internal static class ISymbolExtensions
         FullyQualifiedWithoutGlobalFormat
         .WithMemberOptions(SymbolDisplayMemberOptions.IncludeContainingType)
         .WithParameterOptions(SymbolDisplayParameterOptions.None);
+
+    /// <summary>
+    /// Checks whether or not a given type symbol has a specified full name.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="name">The full name to check.</param>
+    /// <returns>Whether <paramref name="symbol"/> has a full name equals to <paramref name="name"/>.</returns>
+    public static bool HasFullyQualifiedName(this ISymbol symbol, string name)
+    {
+        return symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == name;
+    }
 
     /// <summary>
     /// Gets the full metadata name for a given <see cref="ITypeSymbol"/> instance.
@@ -130,5 +142,31 @@ internal static class ISymbolExtensions
         }
 
         return ParseTypeName(typeName.ToHlslIdentifierName());
+    }
+
+    /// <summary>
+    /// Tries to get an attribute with the specified full name.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="name">The attribute name to look for.</param>
+    /// <param name="attributeData">The resulting attribute data, if found.</param>
+    /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
+    public static bool TryGetAttributeWithFullyQualifiedName(this ISymbol symbol, string name, out AttributeData? attributeData)
+    {
+        ImmutableArray<AttributeData> attributes = symbol.GetAttributes();
+
+        foreach (AttributeData attribute in attributes)
+        {
+            if (attribute.AttributeClass?.HasFullyQualifiedName(name) == true)
+            {
+                attributeData = attribute;
+
+                return true;
+            }
+        }
+
+        attributeData = null;
+
+        return false;
     }
 }
