@@ -16,7 +16,7 @@ namespace ComputeSharp.SourceGenerators;
 /// <summary>
 /// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IPixelShader{TPixel}"/> types.
 /// </summary>
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public sealed partial class IShaderGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
@@ -102,8 +102,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
-                // BuildHlslString() info
-                HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
+                // BuildHlslSource() info
+                HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
                     item.Right,
                     item.Left.Left.Syntax,
                     item.Left.Left.Symbol,
@@ -163,13 +163,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
             .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
 
-        // Generate the BuildHlslString() methods
+        // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
         // Get the dispatch metadata info
@@ -201,7 +201,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Transform the raw HLSL source to compile
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslString.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
+            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
             .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, ThreadIdsInfo.Comparer.Default);
 
         // Compile the requested shader bytecodes

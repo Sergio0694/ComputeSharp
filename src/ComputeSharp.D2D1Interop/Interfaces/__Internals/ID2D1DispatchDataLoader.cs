@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ComputeSharp.__Internals;
+namespace ComputeSharp.D2D1Interop.__Internals;
 
 /// <summary>
 /// A base <see langword="interface"/> representing a data loader for a D2D1 shader being dispatched.

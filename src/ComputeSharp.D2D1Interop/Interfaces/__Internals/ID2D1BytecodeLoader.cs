@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ComputeSharp.__Internals;
+namespace ComputeSharp.D2D1Interop.__Internals;
 
 /// <summary>
 /// A base <see langword="interface"/> representing a bytecode loader for a D2D1 shader.
@@ -14,7 +14,7 @@ public interface ID2D1BytecodeLoader
     /// Loads a dynamic shader bytecode.
     /// </summary>
     /// <param name="handle">An opaque handle to the shader bytecode.</param>
-    /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized or a precompiled bytecode was requested when not available..</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized or a precompiled bytecode was requested when not available.</exception>
     void LoadDynamicBytecode(IntPtr handle);
 
     /// <summary>
