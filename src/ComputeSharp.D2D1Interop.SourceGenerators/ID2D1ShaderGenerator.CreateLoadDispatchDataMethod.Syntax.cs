@@ -30,9 +30,7 @@ partial class ID2D1ShaderGenerator
             //     <BODY>
             // }
             return
-                MethodDeclaration(
-                    PredefinedType(Token(SyntaxKind.VoidKeyword)),
-                    Identifier("LoadDispatchData"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("LoadDispatchData"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1Interop.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
@@ -125,14 +123,14 @@ partial class ID2D1ShaderGenerator
                                         SyntaxKind.NumericLiteralExpression,
                                         Literal(0))))))))));
 
-            // loader.LoadCapturedValues(span0);
+            // loader.LoadConstantBuffer(span0);
             statements.Add(
                 ExpressionStatement(
                     InvocationExpression(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
                             IdentifierName("loader"),
-                            IdentifierName("LoadCapturedValues")))
+                            IdentifierName("LoadConstantBuffer")))
                     .AddArgumentListArguments(Argument(IdentifierName("span0")))));
 
             return statements.ToImmutable();
