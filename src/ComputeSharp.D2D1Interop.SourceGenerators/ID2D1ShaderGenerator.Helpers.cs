@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ComputeSharp.D2D1Interop.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

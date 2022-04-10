@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;

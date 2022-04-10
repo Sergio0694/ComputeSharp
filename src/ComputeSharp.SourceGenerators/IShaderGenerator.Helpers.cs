@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ComputeSharp.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

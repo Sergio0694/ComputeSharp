@@ -17,5 +17,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Result{T}.cs" />
   </ItemGroup>
 </Project>

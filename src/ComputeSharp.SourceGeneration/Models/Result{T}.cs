@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.SourceGenerators.Models;
+namespace ComputeSharp.SourceGeneration.Models;
 
 /// <summary>
 /// A model representing a value and an associated set of diagnostic errors.
