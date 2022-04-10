@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using ComputeSharp.D2D1Interop.Exceptions;
 using ComputeSharp.D2D1Interop.Extensions;
 #if !NET6_0_OR_GREATER
@@ -221,6 +222,18 @@ internal static unsafe partial class D2D1ShaderCompiler
     private static void ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
     {
         string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
+
+        // The error message will be in a format like this:
+        // "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\Roslyn\Shader@0x0000019AD1B4BA70(22,32-35): error X3004: undeclared identifier 'this'"
+        // This regex tries to match the unnecessary header and remove it, if present. This doesn't need to be bulletproof, and this regex should match all cases anyway.
+        message = Regex.Replace(message, @"^[A-Z]:\\(?:[^\\]+\\)+Shader@0x[0-9A-F]+\([\d,-]+\): ", "");
+
+        // Add a trailing '.' if not present
+        if (message is { Length: > 0 } &&
+            message[message.Length - 1] != '.')
+        {
+            message += '.';
+        }
 
         throw new FxcCompilationException(message);
     }
