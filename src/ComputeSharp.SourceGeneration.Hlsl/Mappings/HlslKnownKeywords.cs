@@ -42,7 +42,7 @@ internal static partial class HlslKnownKeywords
         }
 
         // Let other types inject additional keywords
-        AddKnownKeyword(knownKeywords);
+        AddKnownKeywords(knownKeywords);
 
         return knownKeywords;
     }
@@ -51,7 +51,7 @@ internal static partial class HlslKnownKeywords
     /// Adds more known keywords to the collection to use.
     /// </summary>
     /// <param name="knownKeywords">The collection of known keywords being built.</param>
-    static partial void AddKnownKeyword(ICollection<string> knownKeywords);
+    static partial void AddKnownKeywords(ICollection<string> knownKeywords);
 
     /// <summary>
     /// Tries to get the mapped HLSL-compatible identifier name for the input identifier name.

@@ -6,7 +6,7 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 internal static partial class HlslKnownKeywords
 {
     /// <inheritdoc/>
-    static partial void AddKnownKeyword(ICollection<string> knownKeywords)
+    static partial void AddKnownKeywords(ICollection<string> knownKeywords)
     {
         // Dispatch type names
         knownKeywords.Add(nameof(ThreadIds));
