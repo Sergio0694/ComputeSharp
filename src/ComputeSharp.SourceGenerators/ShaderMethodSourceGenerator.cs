@@ -5,7 +5,7 @@ using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGenerators.Diagnostics;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
+namespace ComputeSharp.SourceGeneration.Models;
 
 /// <summary>
 /// A model for a serializeable diagnostic provider.

@@ -5,7 +5,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
-namespace ComputeSharp.Core.SourceGenerators.Models;
+namespace ComputeSharp.SourceGeneration.Models;
 
 /// <summary>
 /// A model describing the hierarchy info for a specific type.

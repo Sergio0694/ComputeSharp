@@ -8,6 +8,7 @@ using ComputeSharp.D2D1Interop.Exceptions;
 using ComputeSharp.D2D1Interop.Shaders.Translation;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
