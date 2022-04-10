@@ -18,7 +18,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Comparer{T,TSelf}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Result{T}.cs" />
