@@ -214,6 +214,25 @@ namespace ComputeSharp.Tests
                 buffer[ThreadIds.X] *= factor + 3.14;
             }
         }
+
+        [TestMethod]
+        public void FieldAccessWithThisExpression()
+        {
+            _ = ReflectionServices.GetShaderInfo<FieldAccessWithThisExpressionShader>();
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct FieldAccessWithThisExpressionShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float number;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                this.buffer[ThreadIds.X] *= this.number;
+            }
+        }
     }
 }
 
