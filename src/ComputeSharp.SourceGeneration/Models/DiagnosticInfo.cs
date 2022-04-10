@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Models;
@@ -15,49 +16,25 @@ internal sealed record DiagnosticInfo(DiagnosticDescriptor Descriptor, params ob
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DiagnosticInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<DiagnosticInfo>
+    public sealed class Comparer : Comparer<DiagnosticInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
-
         /// <inheritdoc/>
-        public bool Equals(DiagnosticInfo? x, DiagnosticInfo? y)
+        protected override void AddToHashCode(ref HashCode hashCode, DiagnosticInfo obj)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            return
-                x.Descriptor.Equals(y.Descriptor) &&
-                x.Args.SequenceEqual(y.Args);
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(DiagnosticInfo obj)
-        {
-            HashCode hashCode = default;
-
             hashCode.Add(obj.Descriptor);
-            
+
             foreach (object arg in obj.Args)
             {
                 hashCode.Add(arg);
             }
+        }
 
-            return hashCode.ToHashCode();
+        /// <inheritdoc/>
+        protected override bool AreEqual(DiagnosticInfo x, DiagnosticInfo y)
+        {
+            return
+                x.Descriptor.Equals(y.Descriptor) &&
+                x.Args.SequenceEqual(y.Args);
         }
     }
 }

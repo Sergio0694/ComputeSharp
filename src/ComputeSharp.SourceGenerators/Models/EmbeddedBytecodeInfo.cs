@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -17,49 +18,25 @@ internal sealed record EmbeddedBytecodeInfo(int X, int Y, int Z, ImmutableArray<
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<EmbeddedBytecodeInfo>
+    public sealed class Comparer : Comparer<EmbeddedBytecodeInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
+        /// <inheritdoc/>
+        protected override void AddToHashCode(ref HashCode hashCode, EmbeddedBytecodeInfo obj)
+        {
+            hashCode.Add(obj.X);
+            hashCode.Add(obj.Y);
+            hashCode.Add(obj.Z);
+            hashCode.AddBytes(obj.Bytecode.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public bool Equals(EmbeddedBytecodeInfo? x, EmbeddedBytecodeInfo? y)
+        protected override bool AreEqual(EmbeddedBytecodeInfo x, EmbeddedBytecodeInfo y)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
             return
                 x.X == y.X &&
                 x.Y == y.Y &&
                 x.Z == y.Z &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(EmbeddedBytecodeInfo obj)
-        {
-            HashCode hashCode = default;
-
-            hashCode.Add(obj.X);
-            hashCode.Add(obj.Y);
-            hashCode.Add(obj.Z);
-            hashCode.AddBytes(obj.Bytecode.AsSpan());
-
-            return hashCode.ToHashCode();
         }
     }
 }
