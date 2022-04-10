@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
