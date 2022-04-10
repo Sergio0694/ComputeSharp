@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using ComputeSharp.SourceGenerators.Mappings;
+using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Models;
 
 namespace ComputeSharp.SourceGenerators;
