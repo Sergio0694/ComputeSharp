@@ -8,6 +8,7 @@ using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using ComputeSharp.D2D1Interop.SourceGenerators.Helpers;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 using ComputeSharp.D2D1Interop.SourceGenerators.SyntaxRewriters;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

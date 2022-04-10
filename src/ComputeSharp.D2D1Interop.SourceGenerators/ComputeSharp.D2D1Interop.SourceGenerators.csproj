@@ -15,7 +15,6 @@
   <ItemGroup>
 
     <!-- ComputeSharp.Core.SourceGenerator APIs -->
-    <Compile Include="..\ComputeSharp.Core.SourceGenerators\Helpers\HashCode.cs" Link="Helpers\HashCode.cs" />
 
     <!-- ComputeSharp.Core APIs -->
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
@@ -93,6 +92,9 @@
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
+
+  <!-- Shared project with common helpers -->
+  <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />

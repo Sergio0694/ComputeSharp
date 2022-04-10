@@ -15,7 +15,6 @@
   <ItemGroup>
 
     <!-- ComputeSharp.Core.SourceGenerator APIs -->
-    <Compile Include="..\ComputeSharp.Core.SourceGenerators\Helpers\HashCode.cs" Link="Helpers\HashCode.cs" />
 
     <!-- ComputeSharp.Core APIs -->
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
@@ -98,6 +97,9 @@
     <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
     <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
+
+  <!-- Shared project with common helpers -->
+  <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
 
   <!-- Shared projects with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />

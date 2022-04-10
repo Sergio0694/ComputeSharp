@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="ISymbol"/> types.
@@ -36,10 +36,10 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Gets the full metadata name for a given <see cref="ITypeSymbol"/> instance.
+    /// Gets a valid filename for a given <see cref="ITypeSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
+    /// <returns>The full metadata name for <paramref name="symbol"/> that is also a valid filename.</returns>
     public static string GetFullMetadataName(this ITypeSymbol symbol)
     {
         static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
