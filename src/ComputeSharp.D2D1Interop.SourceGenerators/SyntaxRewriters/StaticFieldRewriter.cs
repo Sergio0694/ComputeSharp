@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;

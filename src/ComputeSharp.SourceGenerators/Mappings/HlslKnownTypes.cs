@@ -4,7 +4,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using ComputeSharp.SourceGeneration.Extensions;
-using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
 #pragma warning disable RS1024

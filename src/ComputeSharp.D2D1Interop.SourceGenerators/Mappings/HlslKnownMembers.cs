@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using ComputeSharp.SourceGenerators.Mappings;
 
 namespace ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 

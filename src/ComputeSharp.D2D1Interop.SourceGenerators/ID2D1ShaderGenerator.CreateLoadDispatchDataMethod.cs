@@ -8,6 +8,7 @@ using ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
