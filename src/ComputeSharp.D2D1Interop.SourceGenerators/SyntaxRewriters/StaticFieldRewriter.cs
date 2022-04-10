@@ -5,6 +5,7 @@ using System.Globalization;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

@@ -5,12 +5,12 @@ using System.Numerics;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 
-namespace ComputeSharp.SourceGenerators.Mappings;
+namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <summary>
 /// A <see langword="class"/> that contains and maps known HLSL method names to common .NET methods.
 /// </summary>
-internal static class HlslKnownMethods
+internal static partial class HlslKnownMethods
 {
     /// <summary>
     /// The mapping of supported known methods to HLSL names.
@@ -137,8 +137,17 @@ internal static class HlslKnownMethods
             knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{method.Name}", hlslName);
         }
 
+        // Let other types inject additional methods
+        AddKnownMethods(knownMethods);
+
         return knownMethods;
     }
+
+    /// <summary>
+    /// Adds more known methods to the mapping to use.
+    /// </summary>
+    /// <param name="knownMethods">The mapping of known methods being built.</param>
+    static partial void AddKnownMethods(IDictionary<string, string> knownMethods);
 
     /// <summary>
     /// Tries to get the mapped HLSL-compatible method name for the input method name.
