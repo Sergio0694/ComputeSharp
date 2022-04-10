@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
-using ComputeSharp.SourceGenerators.Diagnostics;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

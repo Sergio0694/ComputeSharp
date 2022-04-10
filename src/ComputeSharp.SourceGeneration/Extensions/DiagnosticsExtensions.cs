@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.SourceGenerators.Diagnostics;
+namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="GeneratorExecutionContext"/>, specifically for reporting diagnostics.
