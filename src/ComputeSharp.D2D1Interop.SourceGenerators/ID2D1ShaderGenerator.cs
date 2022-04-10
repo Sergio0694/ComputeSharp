@@ -100,7 +100,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, HlslShaderSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
             .Select(static (item, token) => (item.Hierarchy, item.Dispatch.Value, item.Source.Value))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider< (HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
@@ -136,7 +136,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo Source)> shaderBytecodeInfo =
             shaderInfo
             .Select(static (item, token) => (item.Hierarchy, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =

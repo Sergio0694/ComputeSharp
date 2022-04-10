@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -46,31 +47,39 @@ internal abstract record FieldInfo
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="FieldInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<FieldInfo>
+    public sealed class Comparer : Comparer<FieldInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
+        /// <inheritdoc/>
+        protected override void AddToHashCode(ref HashCode hashCode, FieldInfo obj)
+        {
+            switch (obj)
+            {
+                case Resource resource:
+                    hashCode.Add(resource.FieldName);
+                    hashCode.Add(resource.TypeName);
+                    hashCode.Add(resource.Offset);
+                    break;
+                case Primitive primitive:
+                    hashCode.AddRange(primitive.FieldPath);
+                    hashCode.Add(primitive.TypeName);
+                    hashCode.Add(primitive.Offset);
+                    break;
+                case NonLinearMatrix matrix:
+                    hashCode.AddRange(matrix.FieldPath);
+                    hashCode.Add(matrix.TypeName);
+                    hashCode.Add(matrix.ElementName);
+                    hashCode.Add(matrix.Rows);
+                    hashCode.Add(matrix.Columns);
+                    hashCode.AddRange(matrix.Offsets);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <inheritdoc/>
-        public bool Equals(FieldInfo? x, FieldInfo? y)
+        protected override bool AreEqual(FieldInfo x, FieldInfo y)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
             if (x is Resource resourceX && y is Resource resourceY)
             {
                 return
@@ -97,41 +106,6 @@ internal abstract record FieldInfo
             }
 
             return false;
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(FieldInfo obj)
-        {
-            switch (obj)
-            {
-                case Resource resource:
-                    return HashCode.Combine(resource.FieldName, resource.TypeName, resource.Offset);
-                case Primitive primitive:
-                {
-                    HashCode hashCode = default;
-
-                    hashCode.AddRange(primitive.FieldPath);
-                    hashCode.Add(primitive.TypeName);
-                    hashCode.Add(primitive.Offset);
-
-                    return hashCode.ToHashCode();
-                }
-                case NonLinearMatrix matrix:
-                {
-                    HashCode hashCode = default;
-
-                    hashCode.AddRange(matrix.FieldPath);
-                    hashCode.Add(matrix.TypeName);
-                    hashCode.Add(matrix.ElementName);
-                    hashCode.Add(matrix.Rows);
-                    hashCode.Add(matrix.Columns);
-                    hashCode.AddRange(matrix.Offsets);
-
-                    return hashCode.ToHashCode();
-                }
-                default:
-                    return 0;
-            }
         }
     }
 }

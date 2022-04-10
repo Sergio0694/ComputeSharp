@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -19,47 +20,23 @@ internal sealed record DispatchMetadataInfo(
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchMetadataInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<DispatchMetadataInfo>
+    public sealed class Comparer : Comparer<DispatchMetadataInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
-
         /// <inheritdoc/>
-        public bool Equals(DispatchMetadataInfo? x, DispatchMetadataInfo? y)
+        protected override void AddToHashCode(ref HashCode hashCode, DispatchMetadataInfo obj)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            return
-                x.Root32BitConstantCount == y.Root32BitConstantCount &&
-                x.IsSamplerUsed == y.IsSamplerUsed &&
-                x.ResourceDescriptors.SequenceEqual(y.ResourceDescriptors, ResourceDescriptor.Comparer.Default);
+            hashCode.Add(obj.Root32BitConstantCount);
+            hashCode.Add(obj.IsSamplerUsed);
+            hashCode.AddRange(obj.ResourceDescriptors);
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(DispatchMetadataInfo obj)
+        protected override bool AreEqual(DispatchMetadataInfo x, DispatchMetadataInfo y)
         {
-            HashCode hashCode = default;
-
-            hashCode.Add(obj.Root32BitConstantCount);
-            hashCode.Add(obj.IsSamplerUsed);
-            hashCode.AddRange(obj.ResourceDescriptors, ResourceDescriptor.Comparer.Default);
-
-            return hashCode.ToHashCode();
+            return
+                x.Root32BitConstantCount == y.Root32BitConstantCount &&
+                x.IsSamplerUsed == y.IsSamplerUsed &&
+                x.ResourceDescriptors.SequenceEqual(y.ResourceDescriptors);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -41,31 +42,30 @@ internal sealed record HlslShaderSourceInfo(
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<HlslShaderSourceInfo>
+    public sealed class Comparer : Comparer<HlslShaderSourceInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
+        /// <inheritdoc/>
+        protected override void AddToHashCode(ref HashCode hashCode, HlslShaderSourceInfo obj)
+        {
+            hashCode.Add(obj.HeaderAndThreadsX);
+            hashCode.Add(obj.ThreadsY);
+            hashCode.Add(obj.ThreadsZ);
+            hashCode.Add(obj.Defines);
+            hashCode.Add(obj.StaticFieldsAndDeclaredTypes);
+            hashCode.Add(obj.CapturedFieldsAndResourcesAndForwardDeclarations);
+            hashCode.Add(obj.CapturedMethods);
+            hashCode.Add(obj.EntryPoint);
+            hashCode.Add(obj.ImplicitTextureType);
+            hashCode.Add(obj.IsSamplerUsed);
+            hashCode.AddRange(obj.DefinedTypes);
+            hashCode.AddRange(obj.DefinedConstants);
+            hashCode.AddRange(obj.MethodSignatures);
+            hashCode.AddRange(obj.Delegates);
+        }
 
         /// <inheritdoc/>
-        public bool Equals(HlslShaderSourceInfo? x, HlslShaderSourceInfo? y)
+        protected override bool AreEqual(HlslShaderSourceInfo x, HlslShaderSourceInfo y)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
             return
                 x.HeaderAndThreadsX == y.HeaderAndThreadsX &&
                 x.ThreadsY == y.ThreadsY &&
@@ -81,29 +81,6 @@ internal sealed record HlslShaderSourceInfo(
                 x.DefinedConstants.SequenceEqual(y.DefinedTypes) &&
                 x.MethodSignatures.SequenceEqual(y.MethodSignatures) &&
                 x.Delegates.SequenceEqual(y.Delegates);
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(HlslShaderSourceInfo obj)
-        {
-            HashCode hashCode = default;
-
-            hashCode.Add(obj.HeaderAndThreadsX);
-            hashCode.Add(obj.ThreadsY);
-            hashCode.Add(obj.ThreadsZ);
-            hashCode.Add(obj.Defines);
-            hashCode.Add(obj.StaticFieldsAndDeclaredTypes);
-            hashCode.Add(obj.CapturedFieldsAndResourcesAndForwardDeclarations);
-            hashCode.Add(obj.CapturedMethods);
-            hashCode.Add(obj.EntryPoint);
-            hashCode.Add(obj.ImplicitTextureType);
-            hashCode.Add(obj.IsSamplerUsed);
-            hashCode.AddRange(obj.DefinedTypes);
-            hashCode.AddRange(obj.DefinedConstants);
-            hashCode.AddRange(obj.MethodSignatures);
-            hashCode.AddRange(obj.Delegates);
-
-            return hashCode.ToHashCode();
         }
     }
 }
