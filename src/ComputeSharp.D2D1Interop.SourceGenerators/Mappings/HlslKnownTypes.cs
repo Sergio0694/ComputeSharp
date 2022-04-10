@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
 #pragma warning disable RS1024
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
+namespace ComputeSharp.SourceGenerators.Mappings;
 
 /// <summary>
 /// A <see langword="class"/> that contains and maps known HLSL type names to common .NET types.
