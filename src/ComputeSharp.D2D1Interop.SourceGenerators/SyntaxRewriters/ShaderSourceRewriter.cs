@@ -318,7 +318,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
         // Track and rewrite the discarded declaration
         if (SemanticModel.For(node).GetOperation(node.Expression) is IDiscardOperation operation)
         {
-            TypeSyntax typeSyntax = operation.Type!.TrackType(DiscoveredTypes);
+            TypeSyntax typeSyntax = ParseTypeName(HlslKnownTypes.TrackType(operation.Type!, DiscoveredTypes));
             string identifier = $"__implicit{this.implicitVariables.Count}";
 
             // Add the variable to the list of implicit declarations

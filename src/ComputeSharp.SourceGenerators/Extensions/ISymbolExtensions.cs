@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
-using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGenerators.Extensions;
 
@@ -16,10 +12,9 @@ internal static class ISymbolExtensions
     /// <summary>
     /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global::.
     /// </summary>
-    public static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
-        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+    public static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat =
+        SymbolDisplayFormat.FullyQualifiedFormat
+        .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
     /// <summary>
     /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
@@ -28,6 +23,16 @@ internal static class ISymbolExtensions
         FullyQualifiedWithoutGlobalFormat
         .WithMemberOptions(SymbolDisplayMemberOptions.IncludeContainingType)
         .WithParameterOptions(SymbolDisplayParameterOptions.None);
+
+    /// <summary>
+    /// Gets the fully qualified name for a given symbol.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
+    /// <returns>The fully qualified name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedName(this ISymbol symbol)
+    {
+        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+    }
 
     /// <summary>
     /// Gets the full metadata name for a given <see cref="ITypeSymbol"/> instance.
@@ -110,25 +115,5 @@ internal static class ISymbolExtensions
     public static string GetGeneratedFileName(this INamedTypeSymbol symbol)
     {
         return symbol.GetFullMetadataName().Replace('`', '-').Replace('+', '.');
-    }
-
-    /// <summary>
-    /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible <see cref="TypeSyntax"/> object.
-    /// </summary>
-    /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    public static TypeSyntax TrackType(this ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
-    {
-        string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
-
-        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
-
-        if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
-        {
-            return ParseTypeName(mappedName!);
-        }
-
-        return ParseTypeName(typeName.ToHlslIdentifierName());
     }
 }
