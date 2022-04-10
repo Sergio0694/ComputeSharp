@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 
@@ -17,49 +18,25 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<EmbeddedBytecodeInfo>
+    public sealed class Comparer : Comparer<EmbeddedBytecodeInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
+        /// <inheritdoc/>
+        protected override void AddToHashCode(ref HashCode hashCode, EmbeddedBytecodeInfo obj)
+        {
+            hashCode.Add(obj.HlslSource);
+            hashCode.Add(obj.ShaderProfile);
+            hashCode.Add(obj.IsLinkingSupported);
+            hashCode.AddBytes(obj.Bytecode.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public bool Equals(EmbeddedBytecodeInfo? x, EmbeddedBytecodeInfo? y)
+        protected override bool AreEqual(EmbeddedBytecodeInfo x, EmbeddedBytecodeInfo y)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
             return
                 x.HlslSource == y.HlslSource &&
                 x.ShaderProfile == y.ShaderProfile &&
                 x.IsLinkingSupported == y.IsLinkingSupported &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(EmbeddedBytecodeInfo obj)
-        {
-            HashCode hashCode = default;
-
-            hashCode.Add(obj.HlslSource);
-            hashCode.Add(obj.ShaderProfile);
-            hashCode.Add(obj.IsLinkingSupported);
-            hashCode.AddBytes(obj.Bytecode.AsSpan());
-
-            return hashCode.ToHashCode();
         }
     }
 }

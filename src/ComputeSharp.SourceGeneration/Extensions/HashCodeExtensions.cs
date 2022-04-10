@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="HashCode"/>.

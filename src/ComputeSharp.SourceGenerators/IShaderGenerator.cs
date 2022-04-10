@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Diagnostics;
-using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -135,7 +136,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
             shaderInfoWithErrors
             .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value))
-            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, ThreadIdsInfo.Comparer.Default);
+            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<ThreadIdsInfo>.Default);
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
@@ -202,7 +203,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
             shaderInfo
             .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, ThreadIdsInfo.Comparer.Default);
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, EqualityComparer<ThreadIdsInfo>.Default);
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -61,7 +62,7 @@ internal static class SyntaxNodeExtensions
             return node;
         }
 
-        string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
+        string typeName = typeSymbol.GetFullyQualifiedName();
 
         discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 
@@ -85,7 +86,7 @@ internal static class SyntaxNodeExtensions
     public static TypeSyntax TrackType(this SyntaxNode node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
     {
         ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
-        string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
+        string typeName = typeSymbol.GetFullyQualifiedName();
 
         discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 

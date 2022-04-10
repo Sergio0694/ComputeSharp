@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -23,51 +24,27 @@ internal sealed record HlslMethodSourceInfo(
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslMethodSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<HlslMethodSourceInfo>
+    public sealed class Comparer : Comparer<HlslMethodSourceInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
+        /// <inheritdoc/>
+        protected override void AddToHashCode(ref HashCode hashCode, HlslMethodSourceInfo obj)
+        {
+            hashCode.Add(obj.MetadataName);
+            hashCode.Add(obj.EntryPoint);
+            hashCode.AddRange(obj.DefinedTypes);
+            hashCode.AddRange(obj.DefinedConstants);
+            hashCode.AddRange(obj.DependentMethods);
+        }
 
         /// <inheritdoc/>
-        public bool Equals(HlslMethodSourceInfo? x, HlslMethodSourceInfo? y)
+        protected override bool AreEqual(HlslMethodSourceInfo x, HlslMethodSourceInfo y)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
             return
                 x.MetadataName == y.MetadataName &&
                 x.EntryPoint == y.EntryPoint &&
                 x.DefinedTypes.SequenceEqual(y.DefinedTypes) &&
                 x.DefinedConstants.SequenceEqual(y.DefinedConstants) &&
                 x.DependentMethods.SequenceEqual(y.DependentMethods);
-        }
-
-        /// <inheritdoc/>
-        public int GetHashCode(HlslMethodSourceInfo obj)
-        {
-            HashCode hashCode = default;
-
-            hashCode.Add(obj.MetadataName);
-            hashCode.Add(obj.EntryPoint);
-            hashCode.AddRange(obj.DefinedTypes);
-            hashCode.AddRange(obj.DefinedConstants);
-            hashCode.AddRange(obj.DependentMethods);
-
-            return hashCode.ToHashCode();
         }
     }
 }

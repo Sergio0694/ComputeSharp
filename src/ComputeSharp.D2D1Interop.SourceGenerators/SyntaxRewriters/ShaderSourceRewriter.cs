@@ -5,8 +5,9 @@ using System.Globalization;
 using System.Linq;
 using ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics;
 using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
-using ComputeSharp.D2D1Interop.SourceGenerators.Helpers;
 using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -318,7 +319,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
         // Track and rewrite the discarded declaration
         if (SemanticModel.For(node).GetOperation(node.Expression) is IDiscardOperation operation)
         {
-            TypeSyntax typeSyntax = operation.Type!.TrackType(DiscoveredTypes);
+            TypeSyntax typeSyntax = ParseTypeName(HlslKnownTypes.TrackType(operation.Type!, DiscoveredTypes));
             string identifier = $"__implicit{this.implicitVariables.Count}";
 
             // Add the variable to the list of implicit declarations

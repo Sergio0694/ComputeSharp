@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1Interop.SourceGenerators.Models;
 
@@ -15,45 +16,21 @@ internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, in
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<DispatchDataInfo>
+    public sealed class Comparer : Comparer<DispatchDataInfo, Comparer>
     {
-        /// <summary>
-        /// The singleton <see cref="Comparer"/> instance.
-        /// </summary>
-        public static Comparer Default { get; } = new();
-
         /// <inheritdoc/>
-        public bool Equals(DispatchDataInfo? x, DispatchDataInfo? y)
+        protected override void AddToHashCode(ref HashCode hashCode, DispatchDataInfo obj)
         {
-            if (x is null && y is null)
-            {
-                return true;
-            }
-
-            if (x is null || y is null)
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-
-            return
-                x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
-                x.Root32BitConstantCount == y.Root32BitConstantCount;
+            hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
+            hashCode.Add(obj.Root32BitConstantCount);
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(DispatchDataInfo obj)
+        protected override bool AreEqual(DispatchDataInfo x, DispatchDataInfo y)
         {
-            HashCode hashCode = default;
-
-            hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
-            hashCode.Add(obj.Root32BitConstantCount);
-
-            return hashCode.ToHashCode();
+            return
+                x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
+                x.Root32BitConstantCount == y.Root32BitConstantCount;
         }
     }
 }

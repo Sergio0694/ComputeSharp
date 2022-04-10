@@ -1,4 +1,4 @@
-﻿using ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics;
+﻿using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

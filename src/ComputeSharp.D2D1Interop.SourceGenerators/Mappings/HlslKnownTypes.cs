@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
 #pragma warning disable RS1024
@@ -197,6 +198,26 @@ internal static class HlslKnownTypes
     public static bool TryGetMappedName(string originalName, out string? mappedName)
     {
         return KnownHlslTypes.TryGetValue(originalName, out mappedName);
+    }
+
+    /// <summary>
+    /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible type name.
+    /// </summary>
+    /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
+    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
+    /// <returns>A type name that represents a type compatible with HLSL.</returns>
+    public static string TrackType(ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
+    {
+        string typeName = typeSymbol.GetFullyQualifiedName();
+
+        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
+
+        if (TryGetMappedName(typeName, out string? mappedName))
+        {
+            return mappedName!;
+        }
+
+        return typeName.ToHlslIdentifierName();
     }
 
     /// <summary>

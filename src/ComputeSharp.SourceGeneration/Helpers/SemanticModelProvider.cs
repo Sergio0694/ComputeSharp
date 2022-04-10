@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Helpers;
+namespace ComputeSharp.SourceGeneration.Helpers;
 
 /// <summary>
 /// A type providing <see cref="SemanticModel"/> instances for nodes.

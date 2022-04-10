@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace ComputeSharp.SourceGenerators.Extensions;
+namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="ISymbol"/> types.
@@ -19,21 +16,35 @@ internal static class ISymbolExtensions
     public static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
         globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
         typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
 
     /// <summary>
     /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
     /// </summary>
-    private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat =
-        FullyQualifiedWithoutGlobalFormat
-        .WithMemberOptions(SymbolDisplayMemberOptions.IncludeContainingType)
-        .WithParameterOptions(SymbolDisplayParameterOptions.None);
+    private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat = new(
+        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers,
+        memberOptions: SymbolDisplayMemberOptions.IncludeContainingType,
+        parameterOptions: SymbolDisplayParameterOptions.None);
 
     /// <summary>
-    /// Gets the full metadata name for a given <see cref="ITypeSymbol"/> instance.
+    /// Gets the fully qualified name for a given symbol.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
+    /// <returns>The fully qualified name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedName(this ISymbol symbol)
+    {
+        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+    }
+
+    /// <summary>
+    /// Gets a valid filename for a given <see cref="ITypeSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
+    /// <returns>The full metadata name for <paramref name="symbol"/> that is also a valid filename.</returns>
     public static string GetFullMetadataName(this ITypeSymbol symbol)
     {
         static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
@@ -113,22 +124,28 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible <see cref="TypeSyntax"/> object.
+    /// Tries to get an attribute with the specified full metadata name.
     /// </summary>
-    /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
-    /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-    /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    public static TypeSyntax TrackType(this ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="name">The attribute name to look for.</param>
+    /// <param name="attributeData">The resulting attribute data, if found.</param>
+    /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
+    public static bool TryGetAttributeWithFullMetadataName(this ISymbol symbol, string name, out AttributeData? attributeData)
     {
-        string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+        ImmutableArray<AttributeData> attributes = symbol.GetAttributes();
 
-        discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
-
-        if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
+        foreach (AttributeData attribute in attributes)
         {
-            return ParseTypeName(mappedName!);
+            if (attribute.AttributeClass?.GetFullMetadataName() == name)
+            {
+                attributeData = attribute;
+
+                return true;
+            }
         }
 
-        return ParseTypeName(typeName.ToHlslIdentifierName());
+        attributeData = null;
+
+        return false;
     }
 }
