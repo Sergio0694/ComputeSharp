@@ -12,5 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SyntaxNodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
   </ItemGroup>
 </Project>
