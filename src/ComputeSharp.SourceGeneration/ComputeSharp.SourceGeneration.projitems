@@ -15,5 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IncrementalValuesProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
   </ItemGroup>
 </Project>
