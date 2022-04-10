@@ -14,8 +14,6 @@
   <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->
   <ItemGroup>
 
-    <!-- ComputeSharp.Core.SourceGenerator APIs -->
-
     <!-- ComputeSharp.Core APIs -->
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />

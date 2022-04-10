@@ -254,17 +254,25 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
             SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
         {
-            // If the member access is a constant, track it and replace the tree with the processed constant name
-            if (operation is IFieldReferenceOperation fieldOperation &&
-                fieldOperation.Field.IsConst &&
-                fieldOperation.Type!.TypeKind != TypeKind.Enum)
+            if (operation is IFieldReferenceOperation fieldOperation)
             {
-                ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
+                // If the member access is a constant, track it and replace the tree with the processed constant name
+                if (fieldOperation.Field.IsConst &&
+                    fieldOperation.Type!.TypeKind != TypeKind.Enum)
+                {
+                    ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-                var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-                var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+                    var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
 
-                return IdentifierName(constantName);
+                    return IdentifierName(constantName);
+                }
+
+                // If the member access is a this.<FIELD> access, rewrite it to strip "this."
+                if (node.Expression.IsKind(SyntaxKind.ThisExpression))
+                {
+                    return node.Name;
+                }
             }
 
             // If the current member access is a field or property access, check the lookup table
