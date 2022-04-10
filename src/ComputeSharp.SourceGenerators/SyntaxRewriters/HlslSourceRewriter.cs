@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGenerators.Diagnostics;
+using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
