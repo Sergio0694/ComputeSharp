@@ -74,6 +74,9 @@
     <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
   </ItemGroup>
 
+  <!-- Shared project with common helpers -->
+  <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
+
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
     

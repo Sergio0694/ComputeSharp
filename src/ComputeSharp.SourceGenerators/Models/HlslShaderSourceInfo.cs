@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 
 namespace ComputeSharp.SourceGenerators.Models;
 

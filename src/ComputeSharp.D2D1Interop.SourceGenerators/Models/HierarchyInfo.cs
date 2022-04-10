@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
