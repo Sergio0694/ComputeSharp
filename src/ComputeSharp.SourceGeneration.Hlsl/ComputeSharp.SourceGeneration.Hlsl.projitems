@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ComputeSharp.SourceGeneration.Hlsl</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SyntaxNodeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownMembers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
+  </ItemGroup>
+</Project>

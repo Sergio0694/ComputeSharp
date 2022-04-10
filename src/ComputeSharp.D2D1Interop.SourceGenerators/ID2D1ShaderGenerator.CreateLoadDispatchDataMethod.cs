@@ -4,10 +4,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
-using ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics;
-using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
 using ComputeSharp.D2D1Interop.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.D2D1Interop.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 

@@ -1,5 +1,4 @@
-﻿
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+﻿namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="string"/> types.

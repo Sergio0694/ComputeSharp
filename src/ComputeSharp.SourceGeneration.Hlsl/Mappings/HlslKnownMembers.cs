@@ -6,12 +6,12 @@ using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
+namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <summary>
 /// A <see langword="class"/> that contains and maps known HLSL member names to common .NET members.
 /// </summary>
-internal static class HlslKnownMembers
+internal static partial class HlslKnownMembers
 {
     /// <summary>
     /// The mapping of supported known members to HLSL names.
@@ -161,8 +161,17 @@ internal static class HlslKnownMembers
             knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"_m{row}{column}");
         }
 
+        // Let other types inject additional members
+        AddKnownMembers(knownMembers);
+
         return knownMembers;
     }
+
+    /// <summary>
+    /// Adds more known members to the mapping to use.
+    /// </summary>
+    /// <param name="knownMembers">The mapping of known members being built.</param>
+    static partial void AddKnownMembers(IDictionary<string, string> knownMembers);
 
     /// <summary>
     /// The mapping of supported known members to HLSL names.

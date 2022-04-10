@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ComputeSharp.D2D1Interop.SourceGenerators.Mappings;
-using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace ComputeSharp.D2D1Interop.SourceGenerators.Extensions;
+namespace ComputeSharp.SourceGeneration.Extensions;
 
 /// <summary>
 /// A <see langword="class"/> with some extension methods for C# syntax nodes.
