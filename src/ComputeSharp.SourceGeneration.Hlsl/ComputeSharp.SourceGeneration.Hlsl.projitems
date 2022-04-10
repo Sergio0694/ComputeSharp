@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
   </ItemGroup>
 </Project>
