@@ -14,8 +14,8 @@ namespace ComputeSharp.SourceGeneration.Models;
 /// <param name="FilenameHint">The filename hint for the current type.</param>
 /// <param name="MetadataName">The metadata name for the current type.</param>
 /// <param name="Namespace">Gets the namespace for the current type.</param>
-/// <param name="Names">Gets the sequence of type definitions containing the current type.</param>
-internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, string Namespace, ImmutableArray<string> Names)
+/// <param name="Hierarchy">Gets the sequence of type definitions containing the current type.</param>
+internal sealed partial record HierarchyInfo(string FilenameHint, string MetadataName, string Namespace, ImmutableArray<TypeInfo> Hierarchy)
 {
     /// <summary>
     /// Creates a new <see cref="HierarchyInfo"/> instance from a given <see cref="INamedTypeSymbol"/>.
@@ -24,20 +24,23 @@ internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, s
     /// <returns>A <see cref="HierarchyInfo"/> instance describing <paramref name="typeSymbol"/>.</returns>
     public static HierarchyInfo From(INamedTypeSymbol typeSymbol)
     {
-        ImmutableArray<string>.Builder names = ImmutableArray.CreateBuilder<string>();
+        ImmutableArray<TypeInfo>.Builder hierarchy = ImmutableArray.CreateBuilder<TypeInfo>();
 
         for (INamedTypeSymbol? parent = typeSymbol;
              parent is not null;
              parent = parent.ContainingType)
         {
-            names.Add(parent.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
+            hierarchy.Add(new TypeInfo(
+                parent.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
+                parent.TypeKind,
+                parent.IsRecord));
         }
 
         return new(
             typeSymbol.GetGeneratedFileName(),
             typeSymbol.MetadataName,
             typeSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces)),
-            names.ToImmutable());
+            hierarchy.ToImmutable());
     }
 
     /// <summary>
@@ -51,7 +54,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, s
             hashCode.Add(obj.FilenameHint);
             hashCode.Add(obj.MetadataName);
             hashCode.Add(obj.Namespace);
-            hashCode.AddRange(obj.Names);
+            hashCode.AddRange(obj.Hierarchy);
         }
 
         /// <inheritdoc/>
@@ -61,7 +64,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, s
                 x.FilenameHint == y.FilenameHint &&
                 x.MetadataName == y.MetadataName &&
                 x.Namespace == y.Namespace &&
-                x.Names.SequenceEqual(y.Names);
+                x.Hierarchy.SequenceEqual(y.Hierarchy);
         }
     }
 }
