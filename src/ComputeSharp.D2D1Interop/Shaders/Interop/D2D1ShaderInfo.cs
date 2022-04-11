@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1Interop.Interop;
+﻿namespace ComputeSharp.D2D1Interop;
 
 /// <summary>
 /// A model representing reflection info for a given D2D1 shader.

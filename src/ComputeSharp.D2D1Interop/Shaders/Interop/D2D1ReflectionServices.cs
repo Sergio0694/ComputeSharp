@@ -8,7 +8,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.D2D1Interop.Interop;
+namespace ComputeSharp.D2D1Interop;
 
 /// <summary>
 /// Provides methods to extract reflection info on D2D1 shaders generated using this library.
