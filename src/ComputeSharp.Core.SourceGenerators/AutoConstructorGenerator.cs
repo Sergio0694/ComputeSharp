@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using TypeInfo = ComputeSharp.SourceGeneration.Models.TypeInfo;
 
 namespace ComputeSharp.Core.SourceGenerators;
 
@@ -106,62 +105,7 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
                 AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))))
             };
 
-            // Create the partial shader type declaration with the given method implementation.
-            // This code produces a struct declaration as follows:
-            //
-            // partial struct <SHADER_TYPE>
-            // {
-            //     <METHOD>
-            // }
-            TypeDeclarationSyntax typeDeclarationSyntax =
-                StructDeclaration(hierarchyInfo.Hierarchy[0].QualifiedName)
-                .AddModifiers(Token(SyntaxKind.PartialKeyword))
-                .AddMembers(constructorDeclaration.AddAttributeLists(attributes));
-
-            // Add all parent types in ascending order, if any
-            foreach (TypeInfo parentType in hierarchyInfo.Hierarchy.AsSpan().Slice(1))
-            {
-                typeDeclarationSyntax =
-                    parentType.GetSyntax()
-                    .AddModifiers(Token(SyntaxKind.PartialKeyword))
-                    .AddMembers(typeDeclarationSyntax);
-            }
-
-            if (hierarchyInfo.Namespace is "")
-            {
-                // If there is no namespace, attach the pragma directly to the declared type,
-                // and skip the namespace declaration. This will produce code as follows:
-                //
-                // #pragma warning disable
-                // 
-                // <TYPE_HIERARCHY>
-                return
-                    CompilationUnit().AddMembers(
-                        typeDeclarationSyntax
-                        .WithModifiers(TokenList(Token(
-                            TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
-                            SyntaxKind.PartialKeyword,
-                            TriviaList()))))
-                    .NormalizeWhitespace(eol: "\n");
-            }
-
-            // Create the compilation unit with disabled warnings, target namespace and generated type.
-            // This will produce code as follows:
-            //
-            // #pragma warning disable
-            //
-            // namespace <NAMESPACE>;
-            // 
-            // <TYPE_HIERARCHY>
-            return
-                CompilationUnit().AddMembers(
-                FileScopedNamespaceDeclaration(IdentifierName(hierarchyInfo.Namespace))
-                .AddMembers(typeDeclarationSyntax)
-                .WithNamespaceKeyword(Token(TriviaList(
-                    Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
-                    SyntaxKind.NamespaceKeyword,
-                    TriviaList())))
-                .NormalizeWhitespace(eol: "\n");
+            return hierarchyInfo.GetSyntax(constructorDeclaration.AddAttributeLists(attributes));
         }
     }
 }

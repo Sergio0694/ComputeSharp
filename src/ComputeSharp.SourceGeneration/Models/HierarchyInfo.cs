@@ -4,6 +4,9 @@ using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 namespace ComputeSharp.SourceGeneration.Models;
@@ -41,6 +44,71 @@ internal sealed partial record HierarchyInfo(string FilenameHint, string Metadat
             typeSymbol.MetadataName,
             typeSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces)),
             hierarchy.ToImmutable());
+    }
+
+    /// <summary>
+    /// Creates a <see cref="CompilationUnitSyntax"/> instance for the current hierarchy.
+    /// </summary>
+    /// <param name="memberDeclarations">The member declarations to add to the generated type.</param>
+    /// <returns>A <see cref="CompilationUnitSyntax"/> instance for the current hierarchy.</returns>
+    public CompilationUnitSyntax GetSyntax(params MemberDeclarationSyntax[] memberDeclarations)
+    {
+        // Create the partial type declaration with for the current hierarchy.
+        // This code produces a type declaration as follows:
+        //
+        // partial <TYPE_KIND> <TYPE_NAME>
+        // {
+        //     <MEMBER_DECLARATIONS>
+        // }
+        TypeDeclarationSyntax typeDeclarationSyntax =
+            Hierarchy[0].GetSyntax()
+            .AddModifiers(Token(SyntaxKind.PartialKeyword))
+            .AddMembers(memberDeclarations);
+
+        // Add all parent types in ascending order, if any
+        foreach (TypeInfo parentType in Hierarchy.AsSpan().Slice(1))
+        {
+            typeDeclarationSyntax =
+                parentType.GetSyntax()
+                .AddModifiers(Token(SyntaxKind.PartialKeyword))
+                .AddMembers(typeDeclarationSyntax);
+        }
+
+        if (Namespace is "")
+        {
+            // If there is no namespace, attach the pragma directly to the declared type,
+            // and skip the namespace declaration. This will produce code as follows:
+            //
+            // #pragma warning disable
+            // 
+            // <TYPE_HIERARCHY>
+            return
+                CompilationUnit().AddMembers(
+                    typeDeclarationSyntax
+                    .WithModifiers(TokenList(Token(
+                        TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
+                        SyntaxKind.PartialKeyword,
+                        TriviaList()))))
+                .NormalizeWhitespace(eol: "\n");
+        }
+
+        // Create the compilation unit with disabled warnings, target namespace and generated type.
+        // This will produce code as follows:
+        //
+        // #pragma warning disable
+        //
+        // namespace <NAMESPACE>;
+        // 
+        // <TYPE_HIERARCHY>
+        return
+            CompilationUnit().AddMembers(
+            FileScopedNamespaceDeclaration(IdentifierName(Namespace))
+            .AddMembers(typeDeclarationSyntax)
+            .WithNamespaceKeyword(Token(TriviaList(
+                Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
+                SyntaxKind.NamespaceKeyword,
+                TriviaList())))
+            .NormalizeWhitespace(eol: "\n");
     }
 
     /// <summary>
