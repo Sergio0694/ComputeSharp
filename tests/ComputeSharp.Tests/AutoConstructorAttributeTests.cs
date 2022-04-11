@@ -26,4 +26,32 @@ public unsafe partial class AutoConstructorAttributeTests
         Assert.AreEqual(instance.b, 3.14f);
         Assert.IsTrue(instance.c == &c);
     }
+
+    public partial interface ISomeInterface
+    {
+        public partial record SomeRecord
+        {
+            public partial struct SomeStruct
+            {
+                [AutoConstructor]
+                public partial struct AnotherStruct
+                {
+                    public int a;
+                    public float b;
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    public void GenerateConstructorWithNestedTypes()
+    {
+        int a = 42;
+        float b = 3.14f;
+
+        ISomeInterface.SomeRecord.SomeStruct.AnotherStruct instance = new(a, b);
+
+        Assert.AreEqual(instance.a, a);
+        Assert.AreEqual(instance.b, b);
+    }
 }

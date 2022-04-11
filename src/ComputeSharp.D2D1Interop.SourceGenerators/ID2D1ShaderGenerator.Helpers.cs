@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using TypeInfo = ComputeSharp.SourceGeneration.Models.TypeInfo;
 
 namespace ComputeSharp.D2D1Interop.SourceGenerators;
 
@@ -74,18 +75,16 @@ partial class ID2D1ShaderGenerator
         // {
         //     <METHOD>
         // }
-        StructDeclarationSyntax structDeclarationSyntax =
-            StructDeclaration(hierarchyInfo.Names[0])
+        TypeDeclarationSyntax typeDeclarationSyntax =
+            StructDeclaration(hierarchyInfo.Hierarchy[0].QualifiedName)
             .AddModifiers(Token(SyntaxKind.PartialKeyword))
             .AddMembers(methodDeclaration.AddAttributeLists(attributes.ToArray()));
 
-        TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
-
         // Add all parent types in ascending order, if any
-        foreach (string parentType in hierarchyInfo.Names.AsSpan().Slice(1))
+        foreach (TypeInfo parentType in hierarchyInfo.Hierarchy.AsSpan().Slice(1))
         {
             typeDeclarationSyntax =
-                ClassDeclaration(parentType)
+                parentType.GetSyntax()
                 .AddModifiers(Token(SyntaxKind.PartialKeyword))
                 .AddMembers(typeDeclarationSyntax);
         }

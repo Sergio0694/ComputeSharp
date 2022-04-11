@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using TypeInfo = ComputeSharp.SourceGeneration.Models.TypeInfo;
 
 namespace ComputeSharp.Core.SourceGenerators;
 
@@ -83,7 +84,7 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
             //     ...
             // }
             ConstructorDeclarationSyntax constructorDeclaration =
-                ConstructorDeclaration(hierarchyInfo.Names[0])
+                ConstructorDeclaration(hierarchyInfo.Hierarchy[0].QualifiedName)
                 .AddModifiers(Token(SyntaxKind.PublicKeyword))
                 .AddParameterListParameters(parameters.Select(field => Parameter(Identifier(field.Name)).WithType(IdentifierName(field.Type))).ToArray())
                 .AddBodyStatements(parameters.Select(field => ParseStatement($"this.{field.Name} = {field.Name};")).ToArray());
@@ -112,18 +113,16 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
             // {
             //     <METHOD>
             // }
-            StructDeclarationSyntax structDeclarationSyntax =
-                StructDeclaration(hierarchyInfo.Names[0])
+            TypeDeclarationSyntax typeDeclarationSyntax =
+                StructDeclaration(hierarchyInfo.Hierarchy[0].QualifiedName)
                 .AddModifiers(Token(SyntaxKind.PartialKeyword))
                 .AddMembers(constructorDeclaration.AddAttributeLists(attributes));
 
-            TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
-
             // Add all parent types in ascending order, if any
-            foreach (string parentType in hierarchyInfo.Names.AsSpan().Slice(1))
+            foreach (TypeInfo parentType in hierarchyInfo.Hierarchy.AsSpan().Slice(1))
             {
                 typeDeclarationSyntax =
-                    ClassDeclaration(parentType)
+                    parentType.GetSyntax()
                     .AddModifiers(Token(SyntaxKind.PartialKeyword))
                     .AddMembers(typeDeclarationSyntax);
             }
