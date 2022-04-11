@@ -190,7 +190,7 @@ public sealed partial class IShaderGenerator
             }
             catch (HlslCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithHlslCompilationException, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithHlslCompilationException, e.Message.Replace("\n", "\n    ");
             }
 
             End:
