@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using ComputeSharp.D2D1Interop.Tests.Extensions;
 using ComputeSharp.D2D1Interop.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CA1416
 
 namespace ComputeSharp.D2D1Interop.Tests;
 
@@ -75,117 +73,9 @@ public class EndToEndTests
             options: D2D1_DEVICE_CONTEXT_OPTIONS.D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
             deviceContext: d2D1DeviceContext.GetAddressOf()).Assert();
 
-        using ComPtr<IWICImagingFactory2> wicImagingFactory2 = default;
-
-        // Create a Windows Imaging Component (WIC) factory
-        Windows.CoCreateInstance(
-            rclsid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_WICImagingFactory2)),
-            pUnkOuter: null,
-            dwClsContext: (uint)CLSCTX.CLSCTX_INPROC_SERVER,
-            riid: Windows.__uuidof<IWICImagingFactory2>(),
-            ppv: (void**)wicImagingFactory2.GetAddressOf()).Assert();
-
         const string imagePathSource = @"C:\Users\Sergi\Pictures\crysis2.png";
 
-        using ComPtr<IWICBitmapDecoder> wicBitmapDecoder = default;
-
-        // Get the bitmap decoder for the target file
-        fixed (char* p = imagePathSource)
-        {
-            wicImagingFactory2.Get()->CreateDecoderFromFilename(
-                wzFilename: (ushort*)p,
-                pguidVendor: null,
-                dwDesiredAccess: Windows.GENERIC_READ,
-                metadataOptions: WICDecodeOptions.WICDecodeMetadataCacheOnDemand,
-                ppIDecoder: wicBitmapDecoder.GetAddressOf()).Assert();
-        }
-
-        using ComPtr<IWICBitmapFrameDecode> wicBitmapFrameDecode = default;
-
-        // Get the first frame of the loaded image (if more are present, they will be ignored)
-        wicBitmapDecoder.Get()->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
-
-        uint width;
-        uint height;
-
-        // Extract the image size info
-        wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
-
-        Guid wicTargetPixelFormatGuid = GUID.GUID_WICPixelFormat32bppPBGRA;
-        Guid wicActualPixelFormatGuid;
-
-        // Get the current and target pixel format info
-        wicBitmapFrameDecode.Get()->GetPixelFormat(&wicActualPixelFormatGuid).Assert();
-
-        using ComPtr<IWICBitmap> wicBitmap = default;
-
-        // Create the target bitmap
-        wicImagingFactory2.Get()->CreateBitmap(
-            uiWidth: width,
-            uiHeight: height,
-            pixelFormat: &wicTargetPixelFormatGuid,
-            option: WICBitmapCreateCacheOption.WICBitmapCacheOnLoad,
-            ppIBitmap: wicBitmap.GetAddressOf()).Assert();
-
-        WICRect wicRect;
-        wicRect.X = 0;
-        wicRect.Y = 0;
-        wicRect.Width = (int)width;
-        wicRect.Height = (int)height;
-
-        using (ComPtr<IWICBitmapLock> wicBitmapLock = default)
-        {
-            // Lock the bitmap
-            wicBitmap.Get()->Lock(
-                prcLock: &wicRect,
-                flags: (uint)WICBitmapLockFlags.WICBitmapLockWrite,
-                ppILock: wicBitmapLock.GetAddressOf()).Assert();
-
-            uint wicBitmapStride;
-
-            // Get the stride
-            wicBitmapLock.Get()->GetStride(&wicBitmapStride).Assert();
-
-            uint wicBitmapSize;
-            byte* wicBitmapPointer;
-
-            // Get the bitmap size and pointer
-            wicBitmapLock.Get()->GetDataPointer(&wicBitmapSize, &wicBitmapPointer).Assert();
-
-            // Check if a pixel format conversion is needed
-            if (wicTargetPixelFormatGuid == wicActualPixelFormatGuid)
-            {
-                // No conversion is needed, just copy the pixels directly
-                wicBitmapFrameDecode.Get()->CopyPixels(
-                    prc: &wicRect,
-                    cbStride: wicBitmapStride,
-                    cbBufferSize: wicBitmapSize,
-                    pbBuffer: wicBitmapPointer).Assert();
-            }
-            else
-            {
-                using ComPtr<IWICFormatConverter> wicFormatConverter = default;
-
-                // Create a format converter
-                wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
-
-                // Get a format converter to decode the pixel data
-                wicFormatConverter.Get()->Initialize(
-                    pISource: (IWICBitmapSource*)wicBitmapFrameDecode.Get(),
-                    dstFormat: &wicTargetPixelFormatGuid,
-                    dither: WICBitmapDitherType.WICBitmapDitherTypeNone,
-                    pIPalette: null,
-                    alphaThresholdPercent: 0,
-                    paletteTranslate: WICBitmapPaletteType.WICBitmapPaletteTypeCustom).Assert();
-
-                // Decode the pixel data into the upload buffer
-                wicFormatConverter.Get()->CopyPixels(
-                    prc: &wicRect,
-                    cbStride: wicBitmapStride,
-                    cbBufferSize: wicBitmapSize,
-                    pbBuffer: wicBitmapPointer).Assert();
-            }
-        }
+        using ComPtr<IWICBitmap> wicBitmap = WICHelper.LoadBitmapFromFile(imagePathSource, out uint width, out uint height);
 
         D2D_SIZE_U d2DSize;
         d2DSize.width = width;
@@ -291,52 +181,9 @@ public class EndToEndTests
             options: D2D1_MAP_OPTIONS.D2D1_MAP_OPTIONS_READ,
             mappedRect: &d2D1MappedRect).Assert();
 
-        using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
-
-        // Create the image encoder
-        wicImagingFactory2.Get()->CreateEncoder(
-            guidContainerFormat: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in GUID.GUID_ContainerFormatPng)),
-            pguidVendor: null,
-            ppIEncoder: wicBitmapEncoder.GetAddressOf()).Assert();
-
-        using ComPtr<IWICStream> wicStream = default;
-
-        // Create and initialize a stream to the target file
-        wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
-
         const string imagePathDestination = @"C:\Users\Sergi\Pictures\crysis2_inverted.png";
 
-        fixed (char* p = imagePathDestination)
-        {
-            // Initialize the stream to the target file
-            wicStream.Get()->InitializeFromFilename((ushort*)p, Windows.GENERIC_WRITE);
-        }
-
-        // Initialize the encoder
-        wicBitmapEncoder.Get()->Initialize(
-            pIStream: (IStream*)wicStream.Get(),
-            cacheOption: WICBitmapEncoderCacheOption.WICBitmapEncoderNoCache).Assert();
-
-        using ComPtr<IWICBitmapFrameEncode> wicBitmapFrameEncode = default;
-
-        // Create the image frame and initialize it
-        wicBitmapEncoder.Get()->CreateNewFrame(wicBitmapFrameEncode.GetAddressOf(), null).Assert();
-
-        // Set the encoding properties
-        wicBitmapFrameEncode.Get()->Initialize(null).Assert();
-        wicBitmapFrameEncode.Get()->SetSize(width, height).Assert();
-        wicBitmapFrameEncode.Get()->SetPixelFormat(&wicTargetPixelFormatGuid).Assert();
-
-        // Encode the target image
-        wicBitmapFrameEncode.Get()->WritePixels(
-            lineCount: height,
-            cbStride: d2D1MappedRect.pitch,
-            cbBufferSize: d2D1MappedRect.pitch * height,
-            pbPixels: d2D1MappedRect.bits).Assert();
-
-        // Flush the changes
-        wicBitmapFrameEncode.Get()->Commit();
-        wicBitmapEncoder.Get()->Commit();
+        WICHelper.SaveBitmapToFile(imagePathDestination, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
     }
 }
 
@@ -351,16 +198,5 @@ public readonly partial struct InvertShader : ID2D1PixelShader
         float3 rgb = Hlsl.Saturate(1 - color.RGB);
 
         return new(rgb, 1);
-    }
-}
-
-internal static class Extensions
-{
-    public static void Assert(this HRESULT hresult)
-    {
-        if (hresult != 0)
-        {
-            Marshal.ThrowExceptionForHR(hresult);
-        }
     }
 }
