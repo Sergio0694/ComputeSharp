@@ -127,15 +127,19 @@ public class EndToEndTests
         {
             D2D1_PROPERTY_BINDING d2D1PropertyBinding;
             d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
-            d2D1PropertyBinding.getFunction = (delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)(delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)&PixelShaderEffect.GetConstantBuffer;
-            d2D1PropertyBinding.setFunction = (delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)(delegate* unmanaged<IUnknown*, byte*, uint, int>)&PixelShaderEffect.SetConstantBuffer;
+            d2D1PropertyBinding.getFunction =
+                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)
+                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)&PixelShaderEffect.GetConstantBuffer;
+            d2D1PropertyBinding.setFunction =
+                (delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)
+                (delegate* unmanaged<IUnknown*, byte*, uint, int>)&PixelShaderEffect.SetConstantBuffer;
 
             d2D1Factory2.Get()->RegisterEffectFromString(
                 classId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(typeof(InvertShader).GUID)),
                 propertyXml: (ushort*)pXml,
                 bindings: &d2D1PropertyBinding,
                 bindingsCount: 1,
-                effectFactory: (delegate* unmanaged<IUnknown**, HRESULT>)(delegate* unmanaged<IUnknown**, int>)&PixelShaderEffect.Factory).Assert();
+                effectFactory: PixelShaderEffect.For<InvertShader>.Factory).Assert();
         }
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
@@ -144,6 +148,10 @@ public class EndToEndTests
         d2D1DeviceContext.Get()->CreateEffect(
             effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(typeof(InvertShader).GUID)),
             effect: d2D1Effect.GetAddressOf()).Assert();
+
+        float number = 1;
+
+        d2D1Effect.Get()->SetValue(0, D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB, (byte*)&number, sizeof(float)).Assert();
 
         d2D1Effect.Get()->SetInput(0, (ID2D1Image*)d2D1BitmapSource.Get());
 
@@ -199,12 +207,14 @@ public class EndToEndTests
 [D2DInputCount(1)]
 [D2DInputSimple(0)]
 [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
-public readonly partial struct InvertShader : ID2D1PixelShader
+public partial struct InvertShader : ID2D1PixelShader
 {
+    public float number;
+
     public float4 Execute()
     {
         float4 color = D2D1.GetInput(0);
-        float3 rgb = Hlsl.Saturate(1 - color.RGB);
+        float3 rgb = Hlsl.Saturate(this.number - color.RGB);
 
         return new(rgb, 1);
     }

@@ -61,6 +61,16 @@ partial struct PixelShaderEffect
         private ID2D1DrawInfo* d2D1DrawInfo;
 
         /// <summary>
+        /// The <see cref="Guid"/> for the shader.
+        /// </summary>
+        private Guid shaderId;
+
+        /// <summary>
+        /// The number of inputs for the shader.
+        /// </summary>
+        private int numberOfInputs;
+
+        /// <summary>
         /// Gets the <see cref="ID2D1DrawInfo"/> instance currently in use.
         /// </summary>
         public ID2D1DrawInfo* D2D1DrawInfo => this.d2D1DrawInfo;
@@ -68,8 +78,10 @@ partial struct PixelShaderEffect
         /// <summary>
         /// Creates and initializes a new <see cref="PixelShaderTransform"/> instance.
         /// </summary>
+        /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+        /// <param name="numberOfInpputs">The number of inputs for the shader.</param>
         /// <returns>A new <see cref="PixelShaderTransform"/> instance.</returns>
-        public static PixelShaderTransform* Create()
+        public static PixelShaderTransform* Create(Guid shaderId, int numberOfInpputs)
         {
             PixelShaderTransform* @this = (PixelShaderTransform*)NativeMemory.Alloc((nuint)sizeof(PixelShaderTransform));
 
@@ -77,6 +89,8 @@ partial struct PixelShaderEffect
             @this->referenceCount = 1;
             @this->inputRect = default;
             @this->d2D1DrawInfo = null;
+            @this->shaderId = shaderId;
+            @this->numberOfInputs = numberOfInpputs;
 
             return @this;
         }
@@ -132,7 +146,7 @@ partial struct PixelShaderEffect
         [UnmanagedCallersOnly]
         private static uint GetInputCount(PixelShaderTransform* @this)
         {
-            return 1;
+            return (uint)@this->numberOfInputs;
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapOutputRectToInputRects"/>
@@ -182,7 +196,7 @@ partial struct PixelShaderEffect
         {
             @this->d2D1DrawInfo = drawInfo;
 
-            return drawInfo->SetPixelShader((Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(typeof(InvertShader).GUID)));
+            return drawInfo->SetPixelShader(&@this->shaderId);
         }
     }
 }
