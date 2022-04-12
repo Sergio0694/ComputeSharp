@@ -70,6 +70,11 @@ internal unsafe partial struct PixelShaderEffect
             get => (delegate* unmanaged<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
         }
 
+        /// <summary>
+        /// Gets the number of inputs for the effect.
+        /// </summary>
+        public static int NumberOfInputs => numberOfInputs;
+
         /// <inheritdoc cref="FactoryDelegate"/>
         private static int CreateEffect(IUnknown** effectImpl)
         {
