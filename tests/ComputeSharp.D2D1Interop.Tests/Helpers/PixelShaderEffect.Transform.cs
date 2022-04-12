@@ -56,12 +56,12 @@ partial struct PixelShaderEffect
         private RECT inputRect;
 
         /// <summary>
-        /// The <c>ID2D1DrawInfo</c> instance currently in use.
+        /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
         /// </summary>
         private ID2D1DrawInfo* d2D1DrawInfo;
 
         /// <summary>
-        /// Gets the <c>ID2D1DrawInfo</c> instance currently in use.
+        /// Gets the <see cref="ID2D1DrawInfo"/> instance currently in use.
         /// </summary>
         public ID2D1DrawInfo* D2D1DrawInfo => this.d2D1DrawInfo;
 
