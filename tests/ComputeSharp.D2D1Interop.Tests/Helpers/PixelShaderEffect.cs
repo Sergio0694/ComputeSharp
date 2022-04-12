@@ -51,6 +51,16 @@ internal unsafe partial struct PixelShaderEffect
     private PixelShaderTransform* pixelShaderTransform;
 
     /// <summary>
+    /// The constant buffer data, if set.
+    /// </summary>
+    private byte* constantBuffer;
+
+    /// <summary>
+    /// The size of <see cref="constantBuffer"/>, if set.
+    /// </summary>
+    private int constantBufferSize;
+
+    /// <summary>
     /// Creates and initializes a new <see cref="PixelShaderEffect"/> instance.
     /// </summary>
     /// <returns>A new <see cref="PixelShaderEffect"/> instance.</returns>
@@ -61,6 +71,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->lpVtbl = Vtbl;
         @this->referenceCount = 1;
         @this->pixelShaderTransform = null;
+        @this->constantBuffer = null;
+        @this->constantBufferSize = 0;
 
         return @this;
     }
@@ -79,6 +91,49 @@ internal unsafe partial struct PixelShaderEffect
         pixelShaderEffect->pixelShaderTransform = pixelShaderTransform;
 
         *effectImpl = (IUnknown*)pixelShaderEffect;
+
+        return S.S_OK;
+    }
+
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly]
+    public static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    {
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        if (@this->constantBufferSize == 0)
+        {
+            *actualSize = 0;
+        }
+        else
+        {
+            int bytesToCopy = Math.Min((int)dataSize, @this->constantBufferSize);
+
+            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, bytesToCopy);
+
+            *actualSize = (uint)bytesToCopy;
+        }
+
+        return S.S_OK;
+    }
+
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly]
+    public static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
+    {
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        if (@this->constantBuffer is not null)
+        {
+            NativeMemory.Free(@this->constantBuffer);
+        }
+
+        void* buffer = NativeMemory.Alloc(dataSize);
+
+        Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
+
+        @this->constantBuffer = (byte*)buffer;
+        @this->constantBufferSize = (int)dataSize;
 
         return S.S_OK;
     }
@@ -124,6 +179,11 @@ internal unsafe partial struct PixelShaderEffect
         {
             ((IUnknown*)@this->pixelShaderTransform)->Release();
 
+            if (@this->constantBuffer is not null)
+            {
+                NativeMemory.Free(@this->constantBuffer);
+            }
+
             NativeMemory.Free(@this);
         }
 
@@ -158,6 +218,13 @@ internal unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly]
     private static int PrepareForRender(PixelShaderEffect* @this, D2D1_CHANGE_TYPE changeType)
     {
+        if (@this->constantBuffer is not null)
+        {
+            return @this->pixelShaderTransform->D2D1DrawInfo->SetPixelShaderConstantBuffer(
+                buffer: @this->constantBuffer,
+                bufferCount: (uint)@this->constantBufferSize);
+        }
+
         return S.S_OK;
     }
 

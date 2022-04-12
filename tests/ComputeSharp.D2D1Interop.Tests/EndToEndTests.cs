@@ -117,15 +117,24 @@ public class EndToEndTests
     <Inputs>
         <Input name='Source'/>
     </Inputs>
+    <Property name='Buffer' type='blob'>
+        <Property name='DisplayName' type='string' value='Buffer'/>
+    </Property>
 </Effect>";
 
-        fixed (char* p = xml)
+        fixed (char* pXml = xml)
+        fixed (char* pPropertyName = "Buffer")
         {
+            D2D1_PROPERTY_BINDING d2D1PropertyBinding;
+            d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
+            d2D1PropertyBinding.getFunction = (delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)(delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)&PixelShaderEffect.GetConstantBuffer;
+            d2D1PropertyBinding.setFunction = (delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)(delegate* unmanaged<IUnknown*, byte*, uint, int>)&PixelShaderEffect.SetConstantBuffer;
+
             d2D1Factory2.Get()->RegisterEffectFromString(
                 classId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(typeof(InvertShader).GUID)),
-                propertyXml: (ushort*)p,
-                bindings: null,
-                bindingsCount: 0,
+                propertyXml: (ushort*)pXml,
+                bindings: &d2D1PropertyBinding,
+                bindingsCount: 1,
                 effectFactory: (delegate* unmanaged<IUnknown**, HRESULT>)(delegate* unmanaged<IUnknown**, int>)&PixelShaderEffect.Factory).Assert();
         }
 
