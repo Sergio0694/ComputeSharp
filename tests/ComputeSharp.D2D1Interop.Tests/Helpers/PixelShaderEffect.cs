@@ -13,6 +13,71 @@ namespace ComputeSharp.D2D1Interop.Tests.Helpers;
 internal unsafe partial struct PixelShaderEffect
 {
     /// <summary>
+    /// A generic pixel shader implementation.
+    /// </summary>
+    /// <typeparam name="T">The type of shader.</typeparam>
+    public static class For<T>
+        where T : unmanaged, ID2D1PixelShader
+    {
+        /// <summary>
+        /// The <see cref="Guid"/> for the shader.
+        /// </summary>
+        private static readonly Guid shaderId;
+
+        /// <summary>
+        /// The shader bytecode.
+        /// </summary>
+        private static readonly byte* bytecode;
+
+        /// <summary>
+        /// The size of <see cref="bytecode"/>.
+        /// </summary>
+        private static readonly int bytecodeSize;
+
+        /// <summary>
+        /// The number of inputs for the shader.
+        /// </summary>
+        private static readonly int numberOfInputs;
+
+        /// <summary>
+        /// The <see cref="FactoryDelegate"/> wrapper for the shader factory.
+        /// </summary>
+        private static readonly FactoryDelegate EffectFactory = CreateEffect;
+
+        /// <summary>
+        /// The static constructor for <see cref="For{T}"/>.
+        /// </summary>
+        static For()
+        {
+            shaderId = typeof(T).GUID;
+
+            ReadOnlyMemory<byte> buffer = D2D1InteropServices.LoadShaderBytecode<T>();
+
+            bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), buffer.Length);
+
+            buffer.Span.CopyTo(new Span<byte>(bytecode, buffer.Length));
+
+            bytecodeSize = buffer.Length;
+
+            numberOfInputs = ((D2DInputCountAttribute[])typeof(T).GetCustomAttributes(typeof(D2DInputCountAttribute), false))[0].Count;
+        }
+
+        /// <summary>
+        /// Gets the factory for the current effect.
+        /// </summary>
+        public static delegate* unmanaged<IUnknown**, HRESULT> Factory
+        {
+            get => (delegate* unmanaged<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
+        }
+
+        /// <inheritdoc cref="FactoryDelegate"/>
+        private static int CreateEffect(IUnknown** effectImpl)
+        {
+            return PixelShaderEffect.Factory(shaderId, bytecode, bytecodeSize, numberOfInputs, effectImpl);
+        }
+    }
+
+    /// <summary>
     /// The shared vtable pointer for <see cref="PixelShaderEffect"/> instances.
     /// </summary>
     private static readonly void** Vtbl = InitVtbl();
@@ -61,6 +126,26 @@ internal unsafe partial struct PixelShaderEffect
     private int constantBufferSize;
 
     /// <summary>
+    /// The <see cref="Guid"/> for the shader.
+    /// </summary>
+    private Guid shaderId;
+
+    /// <summary>
+    /// The shader bytecode.
+    /// </summary>
+    private byte* bytecode;
+
+    /// <summary>
+    /// The size of <see cref="bytecode"/>.
+    /// </summary>
+    private int bytecodeSize;
+
+    /// <summary>
+    /// The number of inputs for the shader.
+    /// </summary>
+    private int numberOfInputs;
+
+    /// <summary>
     /// Creates and initializes a new <see cref="PixelShaderEffect"/> instance.
     /// </summary>
     /// <returns>A new <see cref="PixelShaderEffect"/> instance.</returns>
@@ -78,17 +163,32 @@ internal unsafe partial struct PixelShaderEffect
     }
 
     /// <summary>
+    /// A wrapper for an effect factory.
+    /// </summary>
+    /// <param name="effectImpl">The resulting effect factory.</param>
+    /// <returns>The <c>HRESULT</c> for the operation.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate int FactoryDelegate(IUnknown** effectImpl);
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory2.RegisterEffectFromString"/>.
     /// </summary>
+    /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+    /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
+    /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
+    /// <param name="numberOfInpputs">The number of inputs for the shader.</param>
     /// <returns>This always returns <c>0</c>.</returns>
-    [UnmanagedCallersOnly]
-    public static int Factory(IUnknown** effectImpl)
+    private static int Factory(Guid shaderId, byte* bytecode, int bytecodeSize, int numberOfInpputs,  IUnknown** effectImpl)
     {
         PixelShaderEffect* pixelShaderEffect = Create();
-        PixelShaderTransform* pixelShaderTransform = PixelShaderTransform.Create();
+        PixelShaderTransform* pixelShaderTransform = PixelShaderTransform.Create(shaderId, numberOfInpputs);
 
         pixelShaderEffect->pixelShaderTransform = pixelShaderTransform;
+        pixelShaderEffect->shaderId = shaderId;
+        pixelShaderEffect->bytecode = bytecode;
+        pixelShaderEffect->bytecodeSize = bytecodeSize;
+        pixelShaderEffect->numberOfInputs = numberOfInpputs;
 
         *effectImpl = (IUnknown*)pixelShaderEffect;
 
@@ -194,17 +294,10 @@ internal unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly]
     private static int Initialize(PixelShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph)
     {
-        ReadOnlyMemory<byte> bytecode = D2D1InteropServices.LoadShaderBytecode<InvertShader>();
-
-        int hresult;
-
-        fixed (byte* bytecodePtr = bytecode.Span)
-        {
-            hresult = effectContext->LoadPixelShader(
-                shaderId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(typeof(InvertShader).GUID)),
-                shaderBuffer: bytecodePtr,
-                shaderBufferCount: (uint)bytecode.Length);
-        }
+        int hresult = effectContext->LoadPixelShader(
+            shaderId: &@this->shaderId,
+            shaderBuffer: @this->bytecode,
+            shaderBufferCount: (uint)@this->bytecodeSize);
 
         if (Windows.SUCCEEDED(hresult))
         {
