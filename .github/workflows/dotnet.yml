@@ -44,8 +44,8 @@ jobs:
       run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=x64
       shell: cmd
 
-  # Run all the unit tests referencing the ComputeSharp project directly
-  run-tests:
+  # Run all the DX12 unit tests referencing the ComputeSharp project directly
+  run-dx12-tests:
     if: success()
     needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
@@ -91,10 +91,26 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the local samples to ensure they build and run with no errors
-  run-samples:
+  # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1Interop)
+  run-d2d1-tests:
     if: success()
-    needs: [run-tests]
+    needs: [build-solution-debug, build-solution-release]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Run ComputeSharp.D2D1Interop.Tests
+      run: dotnet test tests\ComputeSharp.D2D1Interop.Tests\ComputeSharp.D2D1Interop.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
+      shell: cmd
+
+  # Run all the local samples to ensure they build and run with no errors
+  run-dx12-samples:
+    if: success()
+    needs: [run-dx12-tests]
     runs-on: windows-2022
     steps:
     - name: Git checkout
