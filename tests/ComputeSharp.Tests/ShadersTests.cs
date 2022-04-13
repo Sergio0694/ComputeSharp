@@ -6,6 +6,7 @@ using ComputeSharp.Interop;
 using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
+using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
@@ -196,7 +197,7 @@ public class ShadersTests
 
         image.SaveAsPng(actualPath, new PngEncoder() { CompressionLevel = PngCompressionLevel.BestCompression, ColorType = PngColorType.Rgb });
 
-        ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, delta);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, delta);
     }
 
     /// <summary>
@@ -256,6 +257,6 @@ public class ShadersTests
 
         image.SaveAsPng(actualPath, new PngEncoder() { CompressionLevel = PngCompressionLevel.BestCompression, ColorType = PngColorType.Rgb });
 
-        ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, delta);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, delta);
     }
 }

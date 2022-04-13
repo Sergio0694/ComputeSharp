@@ -12,17 +12,15 @@ namespace ComputeSharp.D2D1Interop.Tests.Helpers;
 internal static class D2D1ShaderTestHelper
 {
     /// <summary>
-    /// Executes a pixel shader and compares the results.
+    /// Executes a pixel shader to produce an image.
     /// </summary>
     /// <typeparam name="T">The shader type to execute.</typeparam>
     /// <param name="sourcePath">The source path for the image to run the shader on.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
-    /// <param name="expectedPath">The path of the image with the expected output.</param>
     /// <param name="shader">The shader to run.</param>
     public static unsafe void ExecutePixelShaderAndCompareResults<T>(
         string sourcePath,
         string destinationPath,
-        string expectedPath,
         in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
@@ -224,6 +222,7 @@ internal static class D2D1ShaderTestHelper
             options: D2D1_MAP_OPTIONS.D2D1_MAP_OPTIONS_READ,
             mappedRect: &d2D1MappedRect).Assert();
 
+        // Save the image
         WICHelper.SaveBitmapToFile(destinationPath, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
     }
 }

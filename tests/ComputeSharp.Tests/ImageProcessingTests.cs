@@ -3,6 +3,7 @@ using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
+using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -37,7 +38,7 @@ public class ImageProcessingTests
         cpu.Save(expectedPath);
         gpu.Save(actualPath);
 
-        ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000009f);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000009f);
     }
 
     [CombinatorialTestMethod]
@@ -61,6 +62,6 @@ public class ImageProcessingTests
         cpu.Save(expectedPath);
         gpu.Save(actualPath);
 
-        ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.0000046f);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.0000046f);
     }
 }
