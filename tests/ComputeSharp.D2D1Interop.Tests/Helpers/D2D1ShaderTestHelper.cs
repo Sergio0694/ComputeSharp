@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using ComputeSharp.D2D1Interop.Tests.Extensions;
+﻿using ComputeSharp.D2D1Interop.Tests.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -24,8 +22,6 @@ internal static class D2D1ShaderTestHelper
         in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
-        Guid runId = Guid.NewGuid();
-
         using ComPtr<ID2D1Factory2> d2D1Factory2 = default;
 
         D2D1_FACTORY_OPTIONS d2D1FactoryOptions = default;
@@ -116,66 +112,15 @@ internal static class D2D1ShaderTestHelper
             wicBitmapSource: (IWICBitmapSource*)wicBitmap.Get(),
             bitmap: d2D1BitmapSource.GetAddressOf()).Assert();
 
-        // Prepare the XML with a variable number of inputs
-        string xml = @$"<?xml version='1.0'?>
-<Effect>
-    <!-- System Properties -->
-    <Property name='DisplayName' type='string' value='Ripple'/>
-    <Property name='Author' type='string' value='Microsoft Corporation'/>
-    <Property name='Category' type='string' value='Stylize'/>
-    <Property name='Description' type='string' value='Adds a ripple effect that can be animated'/>
-    <Inputs>
-        {string.Join("", Enumerable.Range(0, PixelShaderEffect.For<T>.NumberOfInputs).Select(static i => $"<Input name='Source{i}'/>"))}
-    </Inputs>
-    <Property name='Buffer' type='blob'>
-        <Property name='DisplayName' type='string' value='Buffer'/>
-    </Property>
-</Effect>";
-
-        fixed (char* pXml = xml)
-        fixed (char* pPropertyName = "Buffer")
-        {
-            // Prepare the effect binding functions
-            D2D1_PROPERTY_BINDING d2D1PropertyBinding;
-            d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
-            d2D1PropertyBinding.getFunction =
-                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)
-                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)&PixelShaderEffect.GetConstantBuffer;
-            d2D1PropertyBinding.setFunction =
-                (delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)
-                (delegate* unmanaged<IUnknown*, byte*, uint, int>)&PixelShaderEffect.SetConstantBuffer;
-
-            // Register the effect
-            d2D1Factory2.Get()->RegisterEffectFromString(
-                classId: &runId,
-                propertyXml: (ushort*)pXml,
-                bindings: &d2D1PropertyBinding,
-                bindingsCount: 1,
-                effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
-        }
+        D2D1InteropServices2.RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
-        // Create a the pixel shader effect
-        d2D1DeviceContext.Get()->CreateEffect(
-            effectId: &runId,
-            effect: d2D1Effect.GetAddressOf()).Assert();
+        D2D1InteropServices2.CreatePixelShaderEffectFromD2D1DeviceContext<T>(
+            d2D1DeviceContext.Get(),
+            (void**)d2D1Effect.GetAddressOf());
 
-        // Get the shader state
-        ReadOnlyMemory<byte> buffer = D2D1InteropServices.GetPixelShaderConstantBufferForD2D1DrawInfo(in shader);
-
-        if (buffer.Length > 0)
-        {
-            fixed (byte* p = buffer.Span)
-            {
-                // Load the effect buffer
-                d2D1Effect.Get()->SetValue(
-                    index: 0,
-                    type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
-                    data: p,
-                    dataSize: (uint)buffer.Length).Assert();
-            }
-        }    
+        D2D1InteropServices2.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
 
         d2D1Effect.Get()->SetInput(0, (ID2D1Image*)d2D1BitmapSource.Get());
 
