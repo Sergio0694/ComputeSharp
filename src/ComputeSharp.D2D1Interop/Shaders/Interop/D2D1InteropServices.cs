@@ -99,8 +99,8 @@ public static unsafe class D2D1InteropServices
     /// <summary>
     /// Sets the constant buffer from an input D2D1 pixel shader, by calling <c>ID2D1DrawInfo::SetPixelShaderConstantBuffer</c>.
     /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
-    /// <param name="shader">The input D2D1 pixel shader to retrieve info for.</param>
+    /// <typeparam name="T">The type of D2D1 pixel shader to set the constant buffer for.</typeparam>
+    /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1DrawInfo">A pointer to the <c>ID2D1DrawInfo</c> instance to use.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setpixelshaderconstantbuffer"/>.</remarks>
     public static void SetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader, void* d2D1DrawInfo)
