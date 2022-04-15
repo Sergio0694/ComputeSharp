@@ -4,8 +4,14 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#if NET6_0_OR_GREATER
+using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
+#else
+using RuntimeHelpers = ComputeSharp.D2D1Interop.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
+#endif
 
-namespace ComputeSharp.D2D1Interop.Tests.Helpers;
+namespace ComputeSharp.D2D1Interop.Interop.Effects;
 
 /// <summary>
 /// A simple <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/> implementation for a given pixel shader.
@@ -19,6 +25,38 @@ internal unsafe partial struct PixelShaderEffect
     /// <returns>The <c>HRESULT</c> for the operation.</returns>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int FactoryDelegate(IUnknown** effectImpl);
+
+#if !NET6_0_OR_GREATER
+    /// <inheritdoc cref="QueryInterface"/>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    private delegate int QueryInterfaceDelegate(PixelShaderEffect* @this, Guid* riid, void** ppvObject);
+
+    /// <inheritdoc cref="AddRef"/>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    private delegate uint AddRefDelegate(PixelShaderEffect* @this);
+
+    /// <inheritdoc cref="Release"/>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    private delegate uint ReleaseDelegate(PixelShaderEffect* @this);
+
+    /// <inheritdoc cref="GetConstantBuffer"/>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    public delegate int GetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize, uint* actualSize);
+
+    /// <inheritdoc cref="SetConstantBuffer"/>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    public delegate int SetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize);
+
+    /// <summary>
+    /// A cached <see cref="GetConstantBufferDelegate"/> instance wrapping <see cref="GetConstantBuffer"/>.
+    /// </summary>
+    public static readonly GetConstantBufferDelegate GetConstantBufferWrapper = GetConstantBuffer;
+
+    /// <summary>
+    /// A cached <see cref="SetConstantBufferDelegate"/> instance wrapping <see cref="SetConstantBuffer"/>.
+    /// </summary>
+    public static readonly SetConstantBufferDelegate SetConstantBufferWrapper = SetConstantBuffer;
+#endif
 
     /// <summary>
     /// A generic pixel shader implementation.
@@ -108,14 +146,24 @@ internal unsafe partial struct PixelShaderEffect
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(PixelShaderEffect), sizeof(void*) * 14);
 
         // ID2D1EffectImpl
+#if NET6_0_OR_GREATER
         lpVtbl[0] = (delegate* unmanaged<PixelShaderEffect*, Guid*, void**, int>)&ID2D1EffectImplMethods.QueryInterface;
         lpVtbl[1] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.AddRef;
         lpVtbl[2] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.Release;
         lpVtbl[3] = (delegate* unmanaged<PixelShaderEffect*, ID2D1EffectContext*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.Initialize;
         lpVtbl[4] = (delegate* unmanaged<PixelShaderEffect*, D2D1_CHANGE_TYPE, int>)&ID2D1EffectImplMethods.PrepareForRender;
         lpVtbl[5] = (delegate* unmanaged<PixelShaderEffect*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.SetGraph;
+#else
+        lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.QueryInterfaceWrapper);
+        lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.AddRefWrapper);
+        lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.ReleaseWrapper);
+        lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.InitializeWrapper);
+        lpVtbl[4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.PrepareForRenderWrapper);
+        lpVtbl[5] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1EffectImplMethods.SetGraphWrapper);
+#endif
 
         // ID2D1DrawTransform
+#if NET6_0_OR_GREATER
         lpVtbl[6 + 0] = (delegate* unmanaged<PixelShaderEffect*, Guid*, void**, int>)&ID2D1DrawTransformMethods.QueryInterface;
         lpVtbl[6 + 1] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.AddRef;
         lpVtbl[6 + 2] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.Release;
@@ -124,6 +172,16 @@ internal unsafe partial struct PixelShaderEffect
         lpVtbl[6 + 5] = (delegate* unmanaged<PixelShaderEffect*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1DrawTransformMethods.MapInputRectsToOutputRect;
         lpVtbl[6 + 6] = (delegate* unmanaged<PixelShaderEffect*, uint, RECT, RECT*, int>)&ID2D1DrawTransformMethods.MapInvalidRect;
         lpVtbl[6 + 7] = (delegate* unmanaged<PixelShaderEffect*, ID2D1DrawInfo*, int>)&ID2D1DrawTransformMethods.SetDrawInfo;
+#else
+        lpVtbl[6 + 0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.QueryInterfaceWrapper);
+        lpVtbl[6 + 1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.AddRefWrapper);
+        lpVtbl[6 + 2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.ReleaseWrapper);
+        lpVtbl[6 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.GetInputCountWrapper);
+        lpVtbl[6 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.MapOutputRectToInputRectsWrapper);
+        lpVtbl[6 + 5] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.MapInputRectsToOutputRectWrapper);
+        lpVtbl[6 + 6] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.MapInvalidRectWrapper);
+        lpVtbl[6 + 7] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.SetDrawInfoWrapper);
+#endif
 
         VtblForID2D1EffectImpl = lpVtbl;
         VtblForID2D1DrawTransform = &lpVtbl[6];
@@ -213,7 +271,7 @@ internal unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    [UnmanagedCallersOnly]
     public static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
@@ -235,7 +293,7 @@ internal unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    [UnmanagedCallersOnly]
     public static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;

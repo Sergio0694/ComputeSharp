@@ -2,8 +2,11 @@
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
+#endif
 
-namespace ComputeSharp.D2D1Interop.Tests.Helpers;
+namespace ComputeSharp.D2D1Interop.Interop.Effects;
 
 /// <summary>
 /// A simple <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/> implementation for a given pixel shader.
@@ -15,6 +18,50 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     private static class ID2D1EffectImplMethods
     {
+#if !NET6_0_OR_GREATER
+        /// <inheritdoc cref="Initialize"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int InitializeDelegate(PixelShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph);
+
+        /// <inheritdoc cref="PrepareForRender"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int PrepareForRenderDelegate(PixelShaderEffect* @this, D2D1_CHANGE_TYPE changeType);
+
+        /// <inheritdoc cref="SetGraph"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int SetGraphDelegate(PixelShaderEffect* @this, ID2D1TransformGraph* transformGraph);
+
+        /// <summary>
+        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
+        /// </summary>
+        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
+
+        /// <summary>
+        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
+        /// </summary>
+        public static readonly AddRefDelegate AddRefWrapper = AddRef;
+
+        /// <summary>
+        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
+        /// </summary>
+        public static readonly ReleaseDelegate ReleaseWrapper = Release;
+
+        /// <summary>
+        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
+        /// </summary>
+        public static readonly InitializeDelegate InitializeWrapper = Initialize;
+
+        /// <summary>
+        /// A cached <see cref="PrepareForRenderDelegate"/> instance wrapping <see cref="PrepareForRender"/>.
+        /// </summary>
+        public static readonly PrepareForRenderDelegate PrepareForRenderWrapper = PrepareForRender;
+
+        /// <summary>
+        /// A cached <see cref="SetGraphDelegate"/> instance wrapping <see cref="SetGraph"/>.
+        /// </summary>
+        public static readonly SetGraphDelegate SetGraphWrapper = SetGraph;
+#endif
+
         /// <inheritdoc cref="ID2D1EffectImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(PixelShaderEffect* @this, Guid* riid, void** ppvObject)

@@ -2,8 +2,11 @@
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
+#endif
 
-namespace ComputeSharp.D2D1Interop.Tests.Helpers;
+namespace ComputeSharp.D2D1Interop.Interop.Effects;
 
 /// <inheritdoc/>
 partial struct PixelShaderEffect
@@ -13,6 +16,68 @@ partial struct PixelShaderEffect
     /// </summary>
     private unsafe static class ID2D1DrawTransformMethods
     {
+#if !NET6_0_OR_GREATER
+        /// <inheritdoc cref="GetInputCount"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate uint GetInputCountDelegate(PixelShaderEffect* @this);
+
+        /// <inheritdoc cref="MapOutputRectToInputRects"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int MapOutputRectToInputRectsDelegate(PixelShaderEffect* @this, RECT* outputRect, RECT* inputRects, uint inputRectsCount);
+
+        /// <inheritdoc cref="MapInputRectsToOutputRect"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int MapInputRectsToOutputRectDelegate(PixelShaderEffect* @this, RECT* inputRects, RECT* inputOpaqueSubRects, uint inputRectCount, RECT* outputRect, RECT* outputOpaqueSubRect);
+
+        /// <inheritdoc cref="MapInvalidRect"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int MapInvalidRectDelegate(PixelShaderEffect* @this, uint inputIndex, RECT invalidInputRect, RECT* invalidOutputRect);
+
+        /// <inheritdoc cref="SetDrawInfo"/>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate int SetDrawInfoDelegate(PixelShaderEffect* @this, ID2D1DrawInfo* drawInfo);
+
+        /// <summary>
+        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
+        /// </summary>
+        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
+
+        /// <summary>
+        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
+        /// </summary>
+        public static readonly AddRefDelegate AddRefWrapper = AddRef;
+
+        /// <summary>
+        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
+        /// </summary>
+        public static readonly ReleaseDelegate ReleaseWrapper = Release;
+
+        /// <summary>
+        /// A cached <see cref="GetInputCountDelegate"/> instance wrapping <see cref="GetInputCount"/>.
+        /// </summary>
+        public static readonly GetInputCountDelegate GetInputCountWrapper = GetInputCount;
+
+        /// <summary>
+        /// A cached <see cref="MapOutputRectToInputRectsDelegate"/> instance wrapping <see cref="MapOutputRectToInputRects"/>.
+        /// </summary>
+        public static readonly MapOutputRectToInputRectsDelegate MapOutputRectToInputRectsWrapper = MapOutputRectToInputRects;
+
+        /// <summary>
+        /// A cached <see cref="MapInputRectsToOutputRectDelegate"/> instance wrapping <see cref="MapInputRectsToOutputRect"/>.
+        /// </summary>
+        public static readonly MapInputRectsToOutputRectDelegate MapInputRectsToOutputRectWrapper = MapInputRectsToOutputRect;
+
+        /// <summary>
+        /// A cached <see cref="MapInvalidRectDelegate"/> instance wrapping <see cref="MapInvalidRect"/>.
+        /// </summary>
+        public static readonly MapInvalidRectDelegate MapInvalidRectWrapper = MapInvalidRect;
+
+        /// <summary>
+        /// A cached <see cref="SetDrawInfoDelegate"/> instance wrapping <see cref="SetDrawInfo"/>.
+        /// </summary>
+        public static readonly SetDrawInfoDelegate SetDrawInfoWrapper = SetDrawInfo;
+#endif
+
         /// <inheritdoc cref="ID2D1DrawTransform.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(PixelShaderEffect* @this, Guid* riid, void** ppvObject)
