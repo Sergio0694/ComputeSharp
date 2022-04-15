@@ -10,6 +10,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\DirectX\um\d3d11shader\D3D.cs" Link="DirectX\um\d3d11shader\D3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_CHANGE_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_PIXEL_OPTIONS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_PROPERTY_BINDING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1DrawTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectImpl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1Transform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformGraph.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\D2D1_PROPERTY_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1DeviceContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1Effect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1Factory1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_INCLUDE_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_SHADER_MACRO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11shadeer\D3D11_SHADER_DESC.cs" />
@@ -33,5 +46,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\Windows\other\helper-types\NativeTypeNameAttribute.cs" Link="Windows\other\helper-types\NativeTypeNameAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\Windows\shared\winerror\S.cs" Link="Windows\shared\winerror\S.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\Windows\other\helper-types\VtblIndexAttribute.cs" Link="Windows\other\helper-types\VtblIndexAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\windef\RECT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\E.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\Windows.cs" />
   </ItemGroup>
 </Project>

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Text;
-using ComputeSharp.D2D1Interop.Tests.Extensions;
+using ComputeSharp.D2D1Interop.Extensions;
+using ComputeSharp.D2D1Interop.Tests.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.D2D1Interop.Tests.Helpers;
+namespace ComputeSharp.D2D1Interop;
 
-/// <summary>
-/// Provides methods to extract reflection info on D2D1 shaders generated using this library.
-/// </summary>
-internal static class D2D1InteropServices2
+/// <inheritdoc/>
+unsafe partial class D2D1InteropServices
 {
     /// <summary>
     /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
@@ -56,12 +55,12 @@ internal static class D2D1InteropServices2
             D2D1_PROPERTY_BINDING d2D1PropertyBinding;
             d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
             d2D1PropertyBinding.getFunction =
-                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)
-                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)
+                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, HRESULT>)
+                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)
                 &PixelShaderEffect.GetConstantBuffer;
             d2D1PropertyBinding.setFunction =
-                (delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)
-                (delegate* unmanaged<IUnknown*, byte*, uint, int>)
+                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, HRESULT>)
+                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)
                 &PixelShaderEffect.SetConstantBuffer;
 
             Guid shaderId = typeof(T).GUID;
