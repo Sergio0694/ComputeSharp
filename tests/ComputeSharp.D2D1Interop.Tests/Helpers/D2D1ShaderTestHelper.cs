@@ -112,15 +112,15 @@ internal static class D2D1ShaderTestHelper
             wicBitmapSource: (IWICBitmapSource*)wicBitmap.Get(),
             bitmap: d2D1BitmapSource.GetAddressOf()).Assert();
 
-        D2D1InteropServices2.RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
+        D2D1InteropServices.RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
-        D2D1InteropServices2.CreatePixelShaderEffectFromD2D1DeviceContext<T>(
+        D2D1InteropServices.CreatePixelShaderEffectFromD2D1DeviceContext<T>(
             d2D1DeviceContext.Get(),
             (void**)d2D1Effect.GetAddressOf());
 
-        D2D1InteropServices2.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1InteropServices.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
 
         d2D1Effect.Get()->SetInput(0, (ID2D1Image*)d2D1BitmapSource.Get());
 

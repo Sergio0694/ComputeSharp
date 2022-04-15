@@ -12,7 +12,7 @@ namespace ComputeSharp.D2D1Interop;
 /// <summary>
 /// Provides methods to extract reflection info on D2D1 shaders generated using this library.
 /// </summary>
-public static unsafe class D2D1InteropServices
+public static unsafe partial class D2D1InteropServices
 {
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.

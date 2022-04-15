@@ -17,7 +17,7 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     /// <param name="effectImpl">The resulting effect factory.</param>
     /// <returns>The <c>HRESULT</c> for the operation.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int FactoryDelegate(IUnknown** effectImpl);
 
     /// <summary>
@@ -73,9 +73,9 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// Gets the factory for the current effect.
         /// </summary>
-        public static delegate* unmanaged<IUnknown**, HRESULT> Factory
+        public static delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
         {
-            get => (delegate* unmanaged<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
+            get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ internal unsafe partial struct PixelShaderEffect
     private ID2D1DrawInfo* d2D1DrawInfo;
 
     /// <summary>
-    /// The factory method for <see cref="ID2D1Factory2.RegisterEffectFromString"/>.
+    /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
@@ -213,7 +213,7 @@ internal unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     public static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
@@ -235,7 +235,7 @@ internal unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     public static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
@@ -255,7 +255,7 @@ internal unsafe partial struct PixelShaderEffect
         return S.S_OK;
     }
 
-    /// <inheritdoc cref="ID2D1EffectImpl.QueryInterface"/>
+    /// <inheritdoc cref="IUnknown.QueryInterface"/>
     private int QueryInterface(Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
@@ -291,13 +291,13 @@ internal unsafe partial struct PixelShaderEffect
         return E.E_NOINTERFACE;
     }
 
-    /// <inheritdoc cref="ID2D1EffectImpl.AddRef"/>
+    /// <inheritdoc cref="IUnknown.AddRef"/>
     private uint AddRef()
     {
         return (uint)Interlocked.Increment(ref this.referenceCount);
     }
 
-    /// <inheritdoc cref="ID2D1EffectImpl.Release"/>
+    /// <inheritdoc cref="IUnknown.Release"/>
     private uint Release()
     {
         uint referenceCount = (uint)Interlocked.Decrement(ref this.referenceCount);
