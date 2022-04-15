@@ -1,7 +1,10 @@
 ﻿using System;
+#if !NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 using System.Text;
 using ComputeSharp.D2D1Interop.Extensions;
-using ComputeSharp.D2D1Interop.Tests.Helpers;
+using ComputeSharp.D2D1Interop.Interop.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -56,12 +59,20 @@ unsafe partial class D2D1InteropServices
             d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
             d2D1PropertyBinding.getFunction =
                 (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, HRESULT>)
-                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)
+#if NET6_0_OR_GREATER
+                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)
                 &PixelShaderEffect.GetConstantBuffer;
+#else
+                (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.GetConstantBufferWrapper);
+#endif
             d2D1PropertyBinding.setFunction =
                 (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, HRESULT>)
-                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)
+#if NET6_0_OR_GREATER
+                (delegate* unmanaged<IUnknown*, byte*, uint, int>)
                 &PixelShaderEffect.SetConstantBuffer;
+#else
+                (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.SetConstantBufferWrapper);
+#endif
 
             Guid shaderId = typeof(T).GUID;
 
