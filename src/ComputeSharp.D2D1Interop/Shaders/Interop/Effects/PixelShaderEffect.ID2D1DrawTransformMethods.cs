@@ -120,12 +120,15 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectsCount != 1)
+            if (inputRectsCount != @this->numberOfInputs)
             {
                 return E.E_INVALIDARG;
             }
 
-            inputRects[0] = *outputRect;
+            for (int i = 0; i < @this->numberOfInputs; i++)
+            {
+                inputRects[i] = *outputRect;
+            }
 
             return S.S_OK;
         }
@@ -136,7 +139,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectCount != 1)
+            if (inputRectCount != @this->numberOfInputs)
             {
                 return E.E_INVALIDARG;
             }
