@@ -91,7 +91,7 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1Interop)
+  # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
   run-d2d1-tests:
     if: success()
     needs: [build-solution-debug, build-solution-release]
@@ -103,8 +103,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Run ComputeSharp.D2D1Interop.Tests
-      run: dotnet test tests\ComputeSharp.D2D1Interop.Tests\ComputeSharp.D2D1Interop.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.D2D1.Tests
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors
@@ -209,14 +209,14 @@ jobs:
       with:
         name: ComputeSharp.Dynamic.nupkg
         path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
-    - name: Build ComputeSharp.D2D1Interop package
-      run: dotnet build src\ComputeSharp.D2D1Interop.Package\ComputeSharp.D2D1Interop.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+    - name: Build ComputeSharp.D2D1 package
+      run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
-    - name: Upload ComputeSharp.D2D1Interop package artifact
+    - name: Upload ComputeSharp.D2D1 package artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ComputeSharp.D2D1Interop.nupkg
-        path: src\ComputeSharp.D2D1Interop.Package\bin\Release\*.nupkg
+        name: ComputeSharp.D2D1.nupkg
+        path: src\ComputeSharp.D2D1.Package\bin\Release\*.nupkg
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
