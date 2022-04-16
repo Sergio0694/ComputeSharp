@@ -459,7 +459,7 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to an HLSL compilation exception.
     /// <para>
-    /// Format: <c>"The shader of type {{0}} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
+    /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithDxcCompilationException = new DiagnosticDescriptor(
@@ -470,5 +470,85 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "The embedded bytecode for a shader failed to be compiled due to an HLSL compiler error.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a invalid D2D input count value.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [1, 8] range)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DInputCount = new DiagnosticDescriptor(
+        id: "CMPSD2D0035",
+        title: "Invalid D2D1 shader input count",
+        messageFormat: "The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [1, 8] range)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must have a number of inputs in the [1, 8] range.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for repeated indices for D2D simple indices.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputSimple] attributes"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor RepeatedD2DInputSimpleIndices = new DiagnosticDescriptor(
+        id: "CMPSD2D0036",
+        title: "Repeated D2D1 shader simple input indices",
+        messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputSimple] attributes",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must only have unique indices for all of its [D2DInputSimple] attributes.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for repeated indices for D2D complex indices.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputComplex] attributes"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor RepeatedD2DInputComplexIndices = new DiagnosticDescriptor(
+        id: "CMPSD2D0037",
+        title: "Repeated D2D1 shader complex input indices",
+        messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputComplex] attributes",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must only have unique indices for all of its [D2DInputComplex] attributes.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for invalid combination of simple and complex indices.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using some indices in common for simple and complex input indices"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidSimpleAndComplexIndicesCombination = new DiagnosticDescriptor(
+        id: "CMPSD2D0038",
+        title: "Invalid D2D1 shader simple and complex indices combination",
+        messageFormat: "The D2D1 shader of type {0} is using some indices in common for simple and complex input indices",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader cannot use the same indices to indicate both simple and complex inputs.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range input index (or more).
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using some out of range input indices"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor OutOfRangeInputIndex = new DiagnosticDescriptor(
+        id: "CMPSD2D0039",
+        title: "Our of range D2D1 shader input indices",
+        messageFormat: "The D2D1 shader of type {0} is using some out of range input indices",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must have all the indices of its simple and complex inputs in the valid range (between 1 and the number of declared inputs).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

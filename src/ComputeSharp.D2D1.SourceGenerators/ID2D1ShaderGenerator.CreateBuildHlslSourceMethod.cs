@@ -60,6 +60,7 @@ partial class ID2D1ShaderGenerator
 
             // Gather the shader metadata
             GatherD2D1AttributeInfo(
+                builder,
                 structDeclarationSymbol,
                 out int inputCount,
                 out ImmutableArray<int> inputSimpleIndices,
@@ -365,18 +366,25 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the metadata definition for the current shader.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
         /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
         private static void GatherD2D1AttributeInfo(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,
             out ImmutableArray<int> inputComplexIndices,
             out bool requiresScenePosition)
         {
+            // We need a separate local here so we can keep the original value to apply
+            // diagnostics to, but without returning invalid values to the caller which
+            // might cause generator errors (eg. -1 would cause other code to just throw).
+            int rawInputCount = 0;
+
             inputCount = 0;
             requiresScenePosition = false;
 
@@ -388,7 +396,8 @@ partial class ID2D1ShaderGenerator
                 switch (attributeData.AttributeClass?.GetFullMetadataName())
                 {
                     case "ComputeSharp.D2D1.D2DInputCountAttribute":
-                        inputCount = (int)attributeData.ConstructorArguments[0].Value!;
+                        rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
+                        inputCount = Math.Max(rawInputCount, 0);
                         break;
                     case "ComputeSharp.D2D1.D2DInputSimpleAttribute":
                         inputSimpleIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
@@ -406,6 +415,49 @@ partial class ID2D1ShaderGenerator
 
             inputSimpleIndices = inputSimpleIndicesBuilder.ToImmutable();
             inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
+
+            // Validate the input count
+            if (rawInputCount is not (>= 1 and <= 8))
+            {
+                diagnostics.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
+            }
+
+            HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
+            HashSet<int> inputComplexIndicesAsSet = new(inputComplexIndicesBuilder);
+
+            // All simple indices must be unique
+            if (inputSimpleIndicesAsSet.Count != inputSimpleIndicesBuilder.Count)
+            {
+                diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
+            }
+
+            // All complex indices must be unique
+            if (inputComplexIndicesAsSet.Count != inputComplexIndicesBuilder.Count)
+            {
+                diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
+            }
+
+            // Simple and complex indices can't have indices in common
+            if (inputSimpleIndicesAsSet.Intersect(inputComplexIndicesAsSet).Any())
+            {
+                diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
+            }
+
+            int maxAllowedInputIndex = rawInputCount - 1;
+
+            // All simple indices must be in range
+            if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => i < 0 || i > maxAllowedInputIndex))
+            {
+                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+            }
         }
 
         /// <summary>
