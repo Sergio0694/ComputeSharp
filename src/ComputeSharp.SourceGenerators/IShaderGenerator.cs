@@ -121,6 +121,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
+                // Ensure the bytecode generation is disabled if any errors are present
+                if (!dispatchDataDiagnostics.IsDefaultOrEmpty ||
+                    !hlslSourceDiagnostics.IsDefaultOrEmpty)
+                {
+                    threadIds = new ThreadIdsInfo(true, 0, 0, 0);
+                }
+
                 return (
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
                     new Result<HlslShaderSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
