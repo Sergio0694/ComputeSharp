@@ -78,8 +78,11 @@ partial class ID2D1ShaderGenerator
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
-            // No embedded shader was requested
-            if (sourceInfo.ShaderProfile is null)
+            // No embedded shader was requested, or there were some errors earlier in the pipeline.
+            // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
+            // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
+            if (sourceInfo.HasErrors ||
+                sourceInfo.ShaderProfile is null)
             {
                 diagnostic = null;
 

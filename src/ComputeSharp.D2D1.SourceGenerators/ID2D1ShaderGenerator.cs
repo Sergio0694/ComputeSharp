@@ -78,11 +78,13 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 // Get the shader profile and linking info for LoadBytecode()
                 D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(item.Left.Symbol);
                 bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(item.Left.Symbol);
+                bool hasErrors = !dispatchDataDiagnostics.IsDefaultOrEmpty || !hlslSourceDiagnostics.IsDefaultOrEmpty;
 
                 HlslShaderSourceInfo sourceInfo = new(
                     hlslSource,
                     shaderProfile,
-                    isLinkingSupported);
+                    isLinkingSupported,
+                    hasErrors);
 
                 token.ThrowIfCancellationRequested();
 
