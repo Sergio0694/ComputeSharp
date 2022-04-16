@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 #if !NET6_0_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
 using System.Text;
 using ComputeSharp.D2D1Interop.Extensions;
 using ComputeSharp.D2D1Interop.Interop.Effects;
+using ComputeSharp.D2D1Interop.Shaders.Dispatching;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1Interop;
 
@@ -115,22 +119,8 @@ unsafe partial class D2D1InteropServices
     public static unsafe void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
-        // Get the shader state
-        ReadOnlyMemory<byte> buffer = D2D1InteropServices.GetPixelShaderConstantBufferForD2D1DrawInfo(in shader);
+        D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
 
-        if (buffer.Length > 0)
-        {
-            fixed (byte* p = buffer.Span)
-            {
-                // Load the effect buffer
-                ((ID2D1Effect*)d2D1Effect)->SetValue(
-                    index: 0,
-                    type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
-                    data: p,
-                    dataSize: (uint)buffer.Length).Assert();
-            }
-        }
-
-        // TODO: optimize with a custom dispatch data loader
+        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
     }
 }
