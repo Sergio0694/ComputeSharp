@@ -109,17 +109,15 @@ unsafe partial class D2D1InteropServices
                 (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.SetConstantBufferWrapper);
 #endif
 
-            Guid shaderId = typeof(T).GUID;
-
             // Register the effect
             ((ID2D1Factory1*)d2D1Factory1)->RegisterEffectFromString(
-                classId: &shaderId,
+                classId: PixelShaderEffect.For<T>.Id,
                 propertyXml: (ushort*)pXml,
                 bindings: &d2D1PropertyBinding,
                 bindingsCount: 1,
                 effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
 
-            effectId = shaderId;
+            effectId = *PixelShaderEffect.For<T>.Id;
         }
     }
 
