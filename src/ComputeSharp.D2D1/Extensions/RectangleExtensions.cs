@@ -1,29 +1,39 @@
 ﻿using System.Drawing;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.D2D1.Extensions;
+namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// Helper methods for <see cref="Rectangle"/>.
 /// </summary>
-internal static class RectangleExtensions
+public static class RectangleExtensions
 {
     /// <summary>
-    /// Creates a <see cref="RECT"/> from a <see cref="Rectangle"/> value.
+    /// Modifies a target <see cref="Rectangle"/> instance to be a D2D1 infinite rectangle.
     /// </summary>
-    /// <param name="rectangle">The input <see cref="Rectangle"/> value.</param>
-    /// <returns>The resulting <see cref="RECT"/> value.</returns>
+    /// <param name="rectangle">The target <see cref="Rectangle"/> instance to modify.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static RECT ToRECT(this in Rectangle rectangle)
+    public static void ToD2D1Infinite(this ref Rectangle rectangle)
     {
-        RECT result;
+        rectangle = new Rectangle(
+            int.MinValue / 2,
+            int.MinValue / 2,
+            int.MaxValue,
+            int.MaxValue);
+    }
 
-        result.left = rectangle.Left;
-        result.top = rectangle.Top;
-        result.right = rectangle.Right;
-        result.bottom = rectangle.Bottom;
-
-        return result;
+    /// <summary>
+    /// Checks whether a given <see cref="Rectangle"/> instance represents a D2D1 infinite rectangle.
+    /// </summary>
+    /// <param name="rectangle">The input <see cref="Rectangle"/> instance to check.</param>
+    /// <returns>Whether or not <paramref name="rectangle"/> represents a D2D1 infinite rectangle.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsD2D1Infinite(this in Rectangle rectangle)
+    {
+        return rectangle == new Rectangle(
+            int.MinValue / 2,
+            int.MinValue / 2,
+            int.MaxValue,
+            int.MaxValue);
     }
 }
