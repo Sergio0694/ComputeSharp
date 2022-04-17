@@ -417,11 +417,17 @@ partial class ID2D1ShaderGenerator
             inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
 
             // Validate the input count
-            if (rawInputCount is not (>= 1 and <= 8))
+            if (rawInputCount is not (>= 0 and <= 8))
             {
                 diagnostics.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
 
                 return;
+            }
+
+            // All simple indices must be in range
+            if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => (uint)i >= rawInputCount))
+            {
+                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
             }
 
             HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
@@ -449,14 +455,6 @@ partial class ID2D1ShaderGenerator
                 diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
 
                 return;
-            }
-
-            int maxAllowedInputIndex = rawInputCount - 1;
-
-            // All simple indices must be in range
-            if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => i < 0 || i > maxAllowedInputIndex))
-            {
-                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
             }
         }
 
