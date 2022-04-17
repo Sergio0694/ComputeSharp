@@ -1,4 +1,5 @@
-﻿using ComputeSharp.D2D1.Interop;
+﻿using System;
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -14,13 +15,15 @@ internal static class D2D1ShaderTestHelper
     /// Executes a pixel shader to produce an image.
     /// </summary>
     /// <typeparam name="T">The shader type to execute.</typeparam>
+    /// <param name="shader">The shader to run.</param>
+    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
     /// <param name="sourcePath">The source path for the image to run the shader on.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
-    /// <param name="shader">The shader to run.</param>
     public static unsafe void ExecutePixelShaderAndCompareResults<T>(
+        in T shader,
+        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
         string sourcePath,
-        string destinationPath,
-        in T shader)
+        string destinationPath)
         where T : unmanaged, ID2D1PixelShader
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = default;
@@ -113,7 +116,7 @@ internal static class D2D1ShaderTestHelper
             wicBitmapSource: (IWICBitmapSource*)wicBitmap.Get(),
             bitmap: d2D1BitmapSource.GetAddressOf()).Assert();
 
-        D2D1InteropServices.RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
+        D2D1InteropServices.RegisterPixelShaderEffectForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
