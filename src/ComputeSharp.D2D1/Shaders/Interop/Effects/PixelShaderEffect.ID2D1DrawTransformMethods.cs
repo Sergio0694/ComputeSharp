@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -125,9 +127,38 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            for (int i = 0; i < @this->numberOfInputs; i++)
+            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
             {
-                inputRects[i] = *outputRect;
+                Rectangle output = outputRect->ToRectangle();
+                Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectsCount);
+
+                for (int i = 0; i < (int)inputRectsCount; i++)
+                {
+                    inputs[i] = inputRects[i].ToRectangle();
+                }
+
+                // Invoke MapOutputToInputs and handle exceptions so they don't cross the ABI boundary
+                try
+                {
+                    d2D1DrawTransformMapper.MapOutputToInputs(in output, inputs);
+                }
+                catch (Exception e)
+                {
+                    return e.HResult;
+                }
+
+                for (int i = 0; i < (int)inputRectsCount; i++)
+                {
+                    inputRects[i] = inputs[i].ToRECT();
+                }
+            }
+            else
+            {
+                // Default mapping
+                for (int i = 0; i < (int)inputRectsCount; i++)
+                {
+                    inputRects[i] = *outputRect;
+                }
             }
 
             return S.S_OK;
@@ -144,11 +175,51 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            *outputRect = inputRects[0];
+            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
+            {
+                Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
+                Span<Rectangle> opaqueInputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
 
-            @this->inputRect = inputRects[0];
+                for (int i = 0; i < (int)inputRectCount; i++)
+                {
+                    inputs[i] = inputRects[i].ToRectangle();
+                    opaqueInputs[i] = inputOpaqueSubRects[i].ToRectangle();
+                }
 
-            *outputOpaqueSubRect = default;
+                Rectangle output;
+                Rectangle opaqueOutput;
+
+                // Handle exceptions, as mentioned above
+                try
+                {
+                    d2D1DrawTransformMapper.MapInputsToOutput(inputs, opaqueInputs, out output, out opaqueOutput);
+                }
+                catch (Exception e)
+                {
+                    return e.HResult;
+                }
+
+                *outputRect = output.ToRECT();
+                *outputOpaqueSubRect = opaqueOutput.ToRECT();
+            }
+            else if (inputRectCount == 0)
+            {
+                // If there are no inputs, just ignore (users will need a custom mapping)
+                *outputRect = default;
+
+                @this->inputRect = default;
+
+                *outputOpaqueSubRect = default;
+            }
+            else
+            {
+                // Default mapping
+                *outputRect = inputRects[0];
+
+                @this->inputRect = inputRects[0];
+
+                *outputOpaqueSubRect = default;
+            }
 
             return S.S_OK;
         }
@@ -159,7 +230,28 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            *invalidOutputRect = @this->inputRect;
+            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
+            {
+                Rectangle invalidInput = invalidInputRect.ToRectangle();
+                Rectangle invalidOutput;
+
+                // Handle exceptions once again
+                try
+                {
+                    d2D1DrawTransformMapper.MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
+                }
+                catch (Exception e)
+                {
+                    return e.HResult;
+                }
+
+                *invalidOutputRect = invalidOutput.ToRECT();
+            }
+            else
+            {
+                // Default mapping
+                *invalidOutputRect = @this->inputRect;
+            }
 
             return S.S_OK;
         }
