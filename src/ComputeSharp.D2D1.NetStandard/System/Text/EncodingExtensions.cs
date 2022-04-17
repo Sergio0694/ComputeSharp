@@ -24,4 +24,18 @@ internal static class EncodingExtensions
             return encoding.GetBytes(charsPtr, chars.Length, bytesPtr, bytes.Length);
         }
     }
+
+    /// <summary>
+    /// Decodes a text from a sequence of bytes.
+    /// </summary>
+    /// <param name="encoding">The input <see cref="Encoding"/> instance to use.</param>
+    /// <param name="bytes">The byte span that holds the encoded bytes.</param>
+    /// <returns>The resulting text.</returns>
+    public static unsafe string GetString(this Encoding encoding, ReadOnlySpan<byte> bytes)
+    {
+        fixed (byte* bytesPtr = &MemoryMarshal.GetReference(bytes))
+        {
+            return encoding.GetString(bytesPtr, bytes.Length);
+        }
+    }
 }
