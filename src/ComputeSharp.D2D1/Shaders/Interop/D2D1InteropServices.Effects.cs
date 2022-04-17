@@ -155,6 +155,14 @@ unsafe partial class D2D1InteropServices
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>
     /// <para>
+    /// This blob can be useful to marshal registration data across an app domain boundary without having assembly references cross this boundary as well.
+    /// </para>
+    /// <para>
+    /// For instance, an application could allow plugins to create effects through the <c>ComputeSharp.D2D1</c> APIs, and to then create an effect registration
+    /// blob to pass to the main application, which could then use it to register the effect. This way, even if a plugin was loaded with a separate assembly load
+    /// context and using a different (potentially incompatible) version of <c>ComputeSharp.D2D1</c>, the two could still work side by side with no issues.
+    /// </para>
+    /// <para>
     /// The binary blob contains information with the following format:
     /// <list type="bullet">
     ///   <item>The effect id (a <see cref="Guid"/>).</item>
@@ -167,6 +175,9 @@ unsafe partial class D2D1InteropServices
     ///   <item>The effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, byte*, uint, HRESULT&gt;"/>).</item>
     /// </list>
     /// The property name, getter and setter are grouped together after the number of bindings.
+    /// </para>
+    /// <para>
+    /// To make the deserialization easier, the <see cref="D2D1EffectRegistrationData"/> type can be used to read and validate the returned blob.
     /// </para>
     /// <para>
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
