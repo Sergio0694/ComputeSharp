@@ -161,14 +161,30 @@ internal unsafe partial struct PixelShaderEffect
         /// <inheritdoc cref="FactoryDelegate"/>
         private static int CreateEffect(IUnknown** effectImpl)
         {
-            ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Invoke();
+            D2D1TransformMapper? d2D1TransformMapper;
+
+            // If there is a custom draw transform factory, run it in a try block and handle exceptions. This
+            // is needed because the factory will be running user code from a method that's invoked by COM,
+            // and managed exceptions should never cross the ABI boundary. If it throws, just return the HRESULT.
+            try
+            {
+                ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Invoke();
+
+                d2D1TransformMapper = D2D1TransformMapper.For<T>.Get(d2D1DrawTransformMapper);
+            }
+            catch (Exception e)
+            {
+                *effectImpl = null;
+
+                return e.HResult;
+            }
 
             return PixelShaderEffect.Factory(
                 shaderId,
                 numberOfInputs,
                 bytecode,
                 bytecodeSize,
-                D2D1TransformMapper.For<T>.Get(d2D1DrawTransformMapper),
+                d2D1TransformMapper,
                 effectImpl);
         }
     }
