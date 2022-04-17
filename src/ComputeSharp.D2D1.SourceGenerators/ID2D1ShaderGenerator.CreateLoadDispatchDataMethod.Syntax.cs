@@ -79,7 +79,7 @@ partial class ID2D1ShaderGenerator
                         // This will result in the following (assuming Float2x3 m):
                         //
                         // ref global::ComputeSharp.Float3 __m__row0 = ref global::System.Runtime.CompilerServices.Unsafe.As<global::ComputeSharp.Float2x3, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in m));
-                        // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) =, global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0);
+                        // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0);
                         // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 1);
                         for (int j = 0; j < matrix.Rows; j++)
                         {
@@ -93,14 +93,14 @@ partial class ID2D1ShaderGenerator
                 }
             }
 
-            // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];
+            // global::System.Span<uint> data = stackalloc uint[<VARIABLES>];
             statements.Insert(0,
                 LocalDeclarationStatement(
                     VariableDeclaration(
                         GenericName(Identifier("global::System.Span"))
                         .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
                     .AddVariables(
-                        VariableDeclarator(Identifier("span0"))
+                        VariableDeclarator(Identifier("data"))
                         .WithInitializer(EqualsValueClause(
                             StackAllocArrayCreationExpression(
                                 ArrayType(PredefinedType(Token(SyntaxKind.UIntKeyword)))
@@ -108,7 +108,7 @@ partial class ID2D1ShaderGenerator
                                     ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
                                         LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(root32BitConstantsCount)))))))))));
 
-            // ref uint r0 = ref span0[0];
+            // ref uint r0 = ref data[0];
             statements.Insert(1,
                 LocalDeclarationStatement(
                     VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
@@ -116,13 +116,13 @@ partial class ID2D1ShaderGenerator
                         VariableDeclarator(Identifier("r0"))
                         .WithInitializer(EqualsValueClause(
                             RefExpression(
-                                ElementAccessExpression(IdentifierName("span0"))
+                                ElementAccessExpression(IdentifierName("data"))
                                 .AddArgumentListArguments(Argument(
                                     LiteralExpression(
                                         SyntaxKind.NumericLiteralExpression,
                                         Literal(0))))))))));
 
-            // loader.LoadConstantBuffer(span0);
+            // loader.LoadConstantBuffer(data);
             statements.Add(
                 ExpressionStatement(
                     InvocationExpression(
@@ -130,7 +130,7 @@ partial class ID2D1ShaderGenerator
                             SyntaxKind.SimpleMemberAccessExpression,
                             IdentifierName("loader"),
                             IdentifierName("LoadConstantBuffer")))
-                    .AddArgumentListArguments(Argument(IdentifierName("span0")))));
+                    .AddArgumentListArguments(Argument(IdentifierName("data")))));
 
             return statements.ToImmutable();
         }

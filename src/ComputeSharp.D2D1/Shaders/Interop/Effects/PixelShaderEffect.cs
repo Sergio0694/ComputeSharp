@@ -97,16 +97,16 @@ internal unsafe partial struct PixelShaderEffect
         private static int bytecodeSize;
 
         /// <summary>
-        /// The factory of <see cref="ID2D1DrawTransformMapper"/> instances to use for each created effect.
+        /// The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.
         /// </summary>
-        private static Func<ID2D1DrawTransformMapper>? d2D1DrawTransformMapperFactory;
+        private static Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory;
 
         /// <summary>
         /// Initializes the <see cref="For{T}"/> shared state.
         /// </summary>
-        /// <param name="factory">The factory of <see cref="ID2D1DrawTransformMapper"/> instances to use for each created effect.</param>
+        /// <param name="factory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
         /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
-        public static void Initialize(Func<ID2D1DrawTransformMapper>? factory)
+        public static void Initialize(Func<ID2D1TransformMapper<T>>? factory)
         {
             // This conceptually acts as a static constructor, and this type is
             // internal, so in this very specific case locking on the type is fine.
@@ -161,9 +161,15 @@ internal unsafe partial struct PixelShaderEffect
         /// <inheritdoc cref="FactoryDelegate"/>
         private static int CreateEffect(IUnknown** effectImpl)
         {
-            ID2D1DrawTransformMapper? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Invoke();
+            ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Invoke();
 
-            return PixelShaderEffect.Factory(shaderId, numberOfInputs, bytecode, bytecodeSize, d2D1DrawTransformMapper, effectImpl);
+            return PixelShaderEffect.Factory(
+                shaderId,
+                numberOfInputs,
+                bytecode,
+                bytecodeSize,
+                D2D1TransformMapper.For<T>.Get(d2D1DrawTransformMapper),
+                effectImpl);
         }
     }
 
@@ -272,9 +278,9 @@ internal unsafe partial struct PixelShaderEffect
     private int bytecodeSize;
 
     /// <summary>
-    /// The handle for the <see cref="ID2D1DrawTransformMapper"/> instance in use, if any.
+    /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
     /// </summary>
-    private GCHandle d2D1DrawTransformMapperFactoryHandle;
+    private GCHandle d2D1TransformMapperHandle;
 
     /// <summary>
     /// The current input rectangle.
@@ -293,7 +299,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="numberOfInputs">The number of inputs for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
-    /// <param name="d2D1DrawTransformMapper">The <see cref="ID2D1DrawTransformMapper"/> instance to use for the effect.</param>
+    /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
@@ -301,7 +307,7 @@ internal unsafe partial struct PixelShaderEffect
         int numberOfInputs,
         byte* bytecode,
         int bytecodeSize,
-        ID2D1DrawTransformMapper? d2D1DrawTransformMapper,
+        D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
@@ -315,7 +321,7 @@ internal unsafe partial struct PixelShaderEffect
         @this->numberOfInputs = numberOfInputs;
         @this->bytecode = bytecode;
         @this->bytecodeSize = bytecodeSize;
-        @this->d2D1DrawTransformMapperFactoryHandle = GCHandle.Alloc(d2D1DrawTransformMapper);
+        @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
 
         *effectImpl = (IUnknown*)@this;
 
@@ -419,7 +425,7 @@ internal unsafe partial struct PixelShaderEffect
                 NativeMemory.Free(this.constantBuffer);
             }
 
-            this.d2D1DrawTransformMapperFactoryHandle.Free();
+            this.d2D1TransformMapperHandle.Free();
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }

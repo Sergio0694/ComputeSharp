@@ -11,6 +11,22 @@ namespace ComputeSharp.D2D1.__Internals;
 public interface ID2D1Shader
 {
     /// <summary>
+    /// Initializes the current shader from a buffer with the serialized dispatch data.
+    /// </summary>
+    /// <param name="data">The input buffer with the serialized dispatch data.</param>
+    /// <remarks>The input buffer must be retrieved from <see cref="LoadDispatchData"/>.</remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be called directly by user code")]
+    void InitializeFromDispatchData(ReadOnlySpan<byte> data)
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>

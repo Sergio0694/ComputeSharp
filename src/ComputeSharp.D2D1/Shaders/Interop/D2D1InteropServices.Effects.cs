@@ -34,13 +34,13 @@ unsafe partial class D2D1InteropServices
     /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
-    /// <typeparam name="TMapper">The type of <see cref="ID2D1DrawTransformMapper"/> implementation to register.</typeparam>
+    /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
     public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
-        where TMapper : class, ID2D1DrawTransformMapper, new()
+        where TMapper : class, ID2D1TransformMapper<T>, new()
     {
         RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory1, static () => new TMapper(), out effectId);
     }
@@ -50,10 +50,10 @@ unsafe partial class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
-    /// <param name="mapperFactory">An optional factory of <see cref="ID2D1DrawTransformMapper"/> instances to use for the transform.</param>
+    /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1DrawTransformMapper>? mapperFactory, out Guid effectId)
+    public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;

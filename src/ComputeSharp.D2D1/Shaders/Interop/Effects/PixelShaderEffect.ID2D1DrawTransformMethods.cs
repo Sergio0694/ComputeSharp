@@ -127,7 +127,7 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
+            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Rectangle output = outputRect->ToRectangle();
                 Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectsCount);
@@ -137,10 +137,12 @@ partial struct PixelShaderEffect
                     inputs[i] = inputRects[i].ToRectangle();
                 }
 
+                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
+
                 // Invoke MapOutputToInputs and handle exceptions so they don't cross the ABI boundary
                 try
                 {
-                    d2D1DrawTransformMapper.MapOutputToInputs(in output, inputs);
+                    d2D1TransformMapper.MapOutputToInputs(buffer, in output, inputs);
                 }
                 catch (Exception e)
                 {
@@ -175,7 +177,7 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
+            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
                 Span<Rectangle> opaqueInputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
@@ -186,13 +188,15 @@ partial struct PixelShaderEffect
                     opaqueInputs[i] = inputOpaqueSubRects[i].ToRectangle();
                 }
 
+                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
+
                 Rectangle output;
                 Rectangle opaqueOutput;
 
                 // Handle exceptions, as mentioned above
                 try
                 {
-                    d2D1DrawTransformMapper.MapInputsToOutput(inputs, opaqueInputs, out output, out opaqueOutput);
+                    d2D1TransformMapper.MapInputsToOutput(buffer, inputs, opaqueInputs, out output, out opaqueOutput);
                 }
                 catch (Exception e)
                 {
@@ -230,15 +234,17 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (@this->d2D1DrawTransformMapperFactoryHandle.Target is ID2D1DrawTransformMapper d2D1DrawTransformMapper)
+            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Rectangle invalidInput = invalidInputRect.ToRectangle();
                 Rectangle invalidOutput;
 
+                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
+
                 // Handle exceptions once again
                 try
                 {
-                    d2D1DrawTransformMapper.MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
+                    d2D1TransformMapper.MapInvalidOutput(buffer, (int)inputIndex, invalidInput, out invalidOutput);
                 }
                 catch (Exception e)
                 {
