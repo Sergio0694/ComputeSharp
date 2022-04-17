@@ -79,6 +79,7 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// The <see cref="Guid"/> for the shader.
         /// </summary>
+        [FixedAddressValueType]
         private static Guid shaderId;
 
         /// <summary>
@@ -125,7 +126,7 @@ internal unsafe partial struct PixelShaderEffect
                 else
                 {
                     // Load all shader properties
-                    Guid guid = Guid.NewGuid();
+                    Guid guid = typeof(T).GUID;
                     int inputCount = ((D2DInputCountAttribute[])typeof(T).GetCustomAttributes(typeof(D2DInputCountAttribute), false))[0].Count;
                     ReadOnlyMemory<byte> buffer = D2D1InteropServices.LoadShaderBytecode<T>();
                     byte* typeAssociatedMemory = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), buffer.Length);
@@ -146,10 +147,20 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <summary>
+        /// Gets a pointer to the id of the effect.
+        /// </summary>
+        public static Guid* Id
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (Guid*)Unsafe.AsPointer(ref shaderId);
+        }
+
+        /// <summary>
         /// Gets the factory for the current effect.
         /// </summary>
         public static delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
         }
 
