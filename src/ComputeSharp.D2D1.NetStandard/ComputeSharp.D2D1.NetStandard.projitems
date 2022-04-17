@@ -9,6 +9,7 @@
     <Import_RootNamespace>ComputeSharp.D2D1.NetStandard</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)System\Buffers\BitOperations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DoesNotReturnAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />

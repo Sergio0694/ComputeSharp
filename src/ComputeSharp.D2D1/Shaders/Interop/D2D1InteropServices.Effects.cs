@@ -7,6 +7,7 @@ using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Dispatching;
+using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -65,15 +66,14 @@ unsafe partial class D2D1InteropServices
 
         for (int i = 0; i < PixelShaderEffect.For<T>.NumberOfInputs; i++)
         {
-            effectInputsBuilder.Append($"<Input name='Source");
+            effectInputsBuilder.Append("<Input name='Source");
             effectInputsBuilder.Append(i);
-            effectInputsBuilder.Append($"'/>");
+            effectInputsBuilder.Append("'/>");
         }
 
         // Prepare the XML with a variable number of inputs
         string xml = @$"<?xml version='1.0'?>
 <Effect>
-    <!-- System Properties -->
     <Property name='DisplayName' type='string' value='{typeof(T).FullName}'/>
     <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
     <Property name='Category' type='string' value='Stylize'/>
@@ -119,6 +119,125 @@ unsafe partial class D2D1InteropServices
 
             effectId = *PixelShaderEffect.For<T>.Id;
         }
+    }
+
+    /// <summary>
+    /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
+    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetPixelShaderEffectRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T>(out Guid effectId)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        return GetPixelShaderEffectRegistrationBlob<T>(null, out effectId);
+    }
+
+    /// <summary>
+    /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
+    /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
+    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetPixelShaderEffectRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T, TMapper>(out Guid effectId)
+        where T : unmanaged, ID2D1PixelShader
+        where TMapper : class, ID2D1TransformMapper<T>, new()
+    {
+        return GetPixelShaderEffectRegistrationBlob(static () => new TMapper(), out effectId);
+    }
+
+    /// <summary>
+    /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the registration blob for.</typeparam>
+    /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
+    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <remarks>
+    /// <para>
+    /// The binary blob contains information with the following format:
+    /// <list type="bullet">
+    ///   <item>The effect id (a <see cref="Guid"/>).</item>
+    ///   <item>The number of inputs for the effect (an <see cref="int"/>).</item>
+    ///   <item>The effect XML description (as null-terminated UTF8 text).</item>
+    ///   <item>The number of property bindings (an <see cref="int"/>).</item>
+    ///     <item>The property name (as null-terminated UTF8 text).</item>
+    ///     <item>The property getter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, uint*, HRESULT&gt;"/>).</item>
+    ///     <item>The property setter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, HRESULT&gt;"/>).</item>
+    ///   <item>The effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, byte*, uint, HRESULT&gt;"/>).</item>
+    /// </list>
+    /// The property name, getter and setter are grouped together after the number of bindings.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
+    /// </para>
+    /// </remarks>
+    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        effectId = default;
+
+        PixelShaderEffect.For<T>.Initialize(mapperFactory);
+
+        using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+
+        // Effect id and number of inputs
+        writer.Write(*PixelShaderEffect.For<T>.Id);
+        writer.Write(PixelShaderEffect.For<T>.NumberOfInputs);
+        
+        // Build the XML text
+        writer.WriteAsUtf8(@"<?xml version='1.0'?>
+<Effect>
+    <Property name='DisplayName' type='string' value='");
+        writer.WriteAsUtf8(typeof(T).FullName!);
+        writer.WriteAsUtf8(@"'/>
+    <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
+    <Property name='Category' type='string' value='Stylize'/>
+    <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
+    <Inputs>
+        ");
+
+        // Add the input nodes
+        for (int i = 0; i < PixelShaderEffect.For<T>.NumberOfInputs; i++)
+        {
+            writer.WriteAsUtf8("<Input name='Source");
+            writer.WriteAsUtf8(i.ToString());
+            writer.WriteAsUtf8($"'/>");
+        }
+
+        // Write the last part of the XML (including the buffer property)
+        writer.WriteAsUtf8(@"
+    </Inputs>
+    <Property name='Buffer' type='blob'>
+        <Property name='DisplayName' type='string' value='Buffer'/>
+    </Property>
+</Effect>");
+
+        // Null terminator for the text
+        writer.Write((byte)'\0');
+
+        // Property accessors
+#if NET6_0_OR_GREATER
+        nint getBufferPointer = (nint)(delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)&PixelShaderEffect.GetConstantBuffer;
+        nint setBufferPointer = (nint)(delegate* unmanaged<IUnknown*, byte*, uint, int>)&PixelShaderEffect.SetConstantBuffer;
+#else
+        nint getBufferPointer = Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.GetConstantBufferWrapper);
+        nint setBufferPointer = Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.SetConstantBufferWrapper);
+#endif
+
+        // Bindings
+        writer.Write(1);
+        writer.WriteAsUtf8("Buffer");
+        writer.Write((byte)'\0');
+        writer.Write(getBufferPointer);
+        writer.Write(setBufferPointer);
+
+        // Effect factory
+        writer.Write((nint)PixelShaderEffect.For<T>.Factory);
+
+        effectId = *PixelShaderEffect.For<T>.Id;
+
+        return writer.WrittenSpan.ToArray();
     }
 
     /// <summary>
