@@ -11,26 +11,35 @@ namespace ComputeSharp.D2D1.Interop;
 /// A helper type used to read and validate effect registration blobs produced by
 /// <see cref="D2D1InteropServices.GetPixelShaderEffectRegistrationBlob{T}(out Guid)"/>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// The values in a <see cref="D2D1EffectRegistrationData"/> instance contain all necessary
+/// information to register a new D2D1 effect by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
+/// </para>
+/// <para>
+/// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
+/// </para>
+/// </remarks>
 public unsafe readonly struct D2D1EffectRegistrationData
 {
     /// <summary>
     /// Creates a new <see cref="D2D1EffectRegistrationData"/> instance with the specified parameters.
     /// </summary>
-    /// <param name="effectId">The effect id.</param>
+    /// <param name="classId">The effect class id.</param>
     /// <param name="numberOfInputs">The number of inputs for the effect.</param>
-    /// <param name="xml">The XML text that can be used to register the effect.</param>
+    /// <param name="propertyXml">The XML text that can be used to register the effect.</param>
     /// <param name="propertyBindings">The <see cref="D2D1PropertyBinding"/> values for the effect.</param>
     /// <param name="effectFactory">A pointer to the effect factory callback.</param>
     private D2D1EffectRegistrationData(
-        Guid effectId,
+        Guid classId,
         int numberOfInputs,
-        string xml,
+        string propertyXml,
         D2D1PropertyBinding[] propertyBindings,
         nint effectFactory)
     {
-        EffectId = effectId;
+        ClassId = classId;
         NumberOfInputs = numberOfInputs;
-        Xml = xml;
+        PropertyXml = propertyXml;
         PropertyBindings = propertyBindings;
         EffectFactory = (void*)effectFactory;
     }
@@ -38,7 +47,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
     /// <summary>
     /// Gets the id to use to register the effect.
     /// </summary>
-    public Guid EffectId { get; }
+    public Guid ClassId { get; }
 
     /// <summary>
     /// Gets the number of inputs for the effect.
@@ -48,7 +57,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
     /// <summary>
     /// Gets the XML text with the effect description, that can be used to register it.
     /// </summary>
-    public string Xml { get; }
+    public string PropertyXml { get; }
 
     /// <summary>
     /// Gets the sequence of <see cref="D2D1PropertyBinding"/> values for the effect.
@@ -56,7 +65,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
     public ReadOnlyMemory<D2D1PropertyBinding> PropertyBindings { get; }
 
     /// <summary>
-    /// Gets a callback to an effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, byte*, uint, HRESULT&gt;"/>).
+    /// Gets a callback to an effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, HRESULT&gt;"/>).
     /// </summary>
     public void* EffectFactory { get; }
 
@@ -81,7 +90,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
 
         ReadOnlySpan<byte> span = blob.Span;
 
-        // Effect id
+        // Effect class id
         if (!MemoryMarshal.TryRead(span, out Guid effectId))
         {
             return false;
@@ -98,7 +107,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
 
         span = span.Slice(sizeof(int));
 
-        // Effect XML
+        // Effect property XML
         int lengthOfXml = span.IndexOf((byte)'\0');
 
         if (lengthOfXml == -1)
@@ -136,23 +145,23 @@ public unsafe readonly struct D2D1EffectRegistrationData
 
             span = span.Slice(lengthOfName + 1);
 
-            // Property getter
-            if (!MemoryMarshal.TryRead(span, out nint getter))
+            // Property get function
+            if (!MemoryMarshal.TryRead(span, out nint getFunction))
             {
                 return false;
             }
 
             span = span.Slice(sizeof(nint));
 
-            // Property setter
-            if (!MemoryMarshal.TryRead(span, out nint setter))
+            // Property set function
+            if (!MemoryMarshal.TryRead(span, out nint setFunction))
             {
                 return false;
             }
 
             span = span.Slice(sizeof(nint));
 
-            propertyBindings[i] = new D2D1PropertyBinding(name, (void*)getter, (void*)setter);
+            propertyBindings[i] = new D2D1PropertyBinding(name, (void*)getFunction, (void*)setFunction);
         }
 
         // Effect factory

@@ -172,7 +172,7 @@ unsafe partial class D2D1InteropServices
     ///     <item>The property name (as null-terminated UTF8 text).</item>
     ///     <item>The property getter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, uint*, HRESULT&gt;"/>).</item>
     ///     <item>The property setter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, HRESULT&gt;"/>).</item>
-    ///   <item>The effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, byte*, uint, HRESULT&gt;"/>).</item>
+    ///   <item>The effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, HRESULT&gt;"/>).</item>
     /// </list>
     /// The property name, getter and setter are grouped together after the number of bindings.
     /// </para>
