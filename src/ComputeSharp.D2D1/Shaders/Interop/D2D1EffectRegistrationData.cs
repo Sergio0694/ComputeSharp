@@ -19,13 +19,13 @@ public unsafe readonly struct D2D1EffectRegistrationData
     /// <param name="effectId">The effect id.</param>
     /// <param name="numberOfInputs">The number of inputs for the effect.</param>
     /// <param name="xml">The XML text that can be used to register the effect.</param>
-    /// <param name="propertyBindings">The <see cref="PropertyBinding"/> values for the effect.</param>
+    /// <param name="propertyBindings">The <see cref="D2D1PropertyBinding"/> values for the effect.</param>
     /// <param name="effectFactory">A pointer to the effect factory callback.</param>
     private D2D1EffectRegistrationData(
         Guid effectId,
         int numberOfInputs,
         string xml,
-        PropertyBinding[] propertyBindings,
+        D2D1PropertyBinding[] propertyBindings,
         nint effectFactory)
     {
         EffectId = effectId;
@@ -51,9 +51,9 @@ public unsafe readonly struct D2D1EffectRegistrationData
     public string Xml { get; }
 
     /// <summary>
-    /// Gets the sequence of <see cref="PropertyBinding"/> values for the effect.
+    /// Gets the sequence of <see cref="D2D1PropertyBinding"/> values for the effect.
     /// </summary>
-    public ReadOnlyMemory<PropertyBinding> PropertyBindings { get; }
+    public ReadOnlyMemory<D2D1PropertyBinding> PropertyBindings { get; }
 
     /// <summary>
     /// Gets a callback to an effect factory (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown**, byte*, uint, HRESULT&gt;"/>).
@@ -119,7 +119,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
 
         span = span.Slice(sizeof(int));
 
-        PropertyBinding[] propertyBindings = new PropertyBinding[numberOfBindings];
+        D2D1PropertyBinding[] propertyBindings = new D2D1PropertyBinding[numberOfBindings];
 
         // Property bindings
         for (int i = 0; i < numberOfBindings; i++)
@@ -152,7 +152,7 @@ public unsafe readonly struct D2D1EffectRegistrationData
 
             span = span.Slice(sizeof(nint));
 
-            propertyBindings[i] = new PropertyBinding(name, getter, setter);
+            propertyBindings[i] = new D2D1PropertyBinding(name, (void*)getter, (void*)setter);
         }
 
         // Effect factory
@@ -177,39 +177,5 @@ public unsafe readonly struct D2D1EffectRegistrationData
             effectFactory);
 
         return true;
-    }
-
-    /// <summary>
-    /// A model representing a property binding for an effect.
-    /// </summary>
-    public readonly struct PropertyBinding
-    {
-        /// <summary>
-        /// Creates a new <see cref="PropertyBinding"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="name">The property name.</param>
-        /// <param name="getter">A pointer to the property getter callback</param>
-        /// <param name="setter">A pointer to the property setter callback</param>
-        internal PropertyBinding(string name, nint getter, nint setter)
-        {
-            Name = name;
-            Getter = (void*)getter;
-            Setter = (void*)setter;
-        }
-
-        /// <summary>
-        /// Gets the name of the property.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the property getter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, uint*, HRESULT&gt;"/>).
-        /// </summary>
-        public void* Getter { get; }
-
-        /// <summary>
-        /// Gets the property setter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, HRESULT&gt;"/>).
-        /// </summary>
-        public void* Setter { get; }
     }
 }
