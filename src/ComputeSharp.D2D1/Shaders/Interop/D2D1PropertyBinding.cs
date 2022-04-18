@@ -9,27 +9,27 @@ public unsafe readonly struct D2D1PropertyBinding
     /// Creates a new <see cref="D2D1PropertyBinding"/> instance with the specified parameters.
     /// </summary>
     /// <param name="name">The property name.</param>
-    /// <param name="getter">A pointer to the property getter callback</param>
-    /// <param name="setter">A pointer to the property setter callback</param>
-    internal D2D1PropertyBinding(string name, void* getter, void* setter)
+    /// <param name="getFunction">A pointer to the property get function callback</param>
+    /// <param name="setFunction">A pointer to the property set function callback</param>
+    internal D2D1PropertyBinding(string name, void* getFunction, void* setFunction)
     {
-        Name = name;
-        Getter = getter;
-        Setter = setter;
+        PropertyName = name;
+        GetFunction = getFunction;
+        SetFunction = setFunction;
     }
 
     /// <summary>
     /// Gets the name of the property.
     /// </summary>
-    public string Name { get; }
+    public string PropertyName { get; }
 
     /// <summary>
-    /// Gets the property getter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, uint*, HRESULT&gt;"/>).
+    /// Gets the property get function (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, uint*, HRESULT&gt;"/>).
     /// </summary>
-    public void* Getter { get; }
+    public void* GetFunction { get; }
 
     /// <summary>
-    /// Gets the property setter (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, HRESULT&gt;"/>).
+    /// Gets the property set function (a <see langword="delegate* unmanaged[Stdcall]&lt;IUnknown*, byte*, uint, HRESULT&gt;"/>).
     /// </summary>
-    public void* Setter { get; }
+    public void* SetFunction { get; }
 }
