@@ -56,7 +56,7 @@ public class EndToEndTests
         string destinationPath = Path.Combine(temporaryPath, $"{destinationFileName}.png");
 
         // Run the shader
-        D2D1ShaderTestHelper.ExecutePixelShaderAndCompareResults(
+        D2D1TestRunner.ExecutePixelShaderAndCompareResults(
             in shader,
             transformMapperFactory,
             originalPath,
