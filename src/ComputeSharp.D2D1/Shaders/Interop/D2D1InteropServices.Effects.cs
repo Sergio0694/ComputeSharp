@@ -109,15 +109,18 @@ unsafe partial class D2D1InteropServices
                 (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.SetConstantBufferWrapper);
 #endif
 
-            // Register the effect
-            ((ID2D1Factory1*)d2D1Factory1)->RegisterEffectFromString(
-                classId: PixelShaderEffect.For<T>.Id,
-                propertyXml: (ushort*)pXml,
-                bindings: &d2D1PropertyBinding,
-                bindingsCount: 1,
-                effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
+            fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Id)
+            {
+                // Register the effect
+                ((ID2D1Factory1*)d2D1Factory1)->RegisterEffectFromString(
+                    classId: pGuid,
+                    propertyXml: (ushort*)pXml,
+                    bindings: &d2D1PropertyBinding,
+                    bindingsCount: 1,
+                    effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
+            }
 
-            effectId = *PixelShaderEffect.For<T>.Id;
+            effectId = PixelShaderEffect.For<T>.Id;
         }
     }
 
@@ -193,7 +196,7 @@ unsafe partial class D2D1InteropServices
         using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Effect id and number of inputs
-        writer.Write(*PixelShaderEffect.For<T>.Id);
+        writer.Write(PixelShaderEffect.For<T>.Id);
         writer.Write(PixelShaderEffect.For<T>.NumberOfInputs);
         
         // Build the XML text
@@ -246,7 +249,7 @@ unsafe partial class D2D1InteropServices
         // Effect factory
         writer.Write((nint)PixelShaderEffect.For<T>.Factory);
 
-        effectId = *PixelShaderEffect.For<T>.Id;
+        effectId = PixelShaderEffect.For<T>.Id;
 
         return writer.WrittenSpan.ToArray();
     }

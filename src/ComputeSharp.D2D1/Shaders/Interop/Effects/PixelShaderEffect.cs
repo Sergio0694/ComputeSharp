@@ -79,7 +79,11 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// The <see cref="Guid"/> for the shader.
         /// </summary>
-        [FixedAddressValueType]
+        /// <remarks>
+        /// This field could have used <see cref="FixedAddressValueTypeAttribute"/> to reduce some verbosity where it is
+        /// being used to pass its address to a native API, but the attribute is incompatible with collectible assemblies.
+        /// Because of that, it can't be used, as this project is explicitly meant to support plugin-like scenarios.
+        /// </remarks>
         private static Guid shaderId;
 
         /// <summary>
@@ -147,12 +151,12 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <summary>
-        /// Gets a pointer to the id of the effect.
+        /// Gets a reference to the id of the effect.
         /// </summary>
-        public static Guid* Id
+        public static ref Guid Id
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (Guid*)Unsafe.AsPointer(ref shaderId);
+            get => ref shaderId;
         }
 
         /// <summary>
