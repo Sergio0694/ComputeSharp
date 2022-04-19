@@ -44,10 +44,4 @@ public sealed partial class MainWindow : Window
     {
         ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
     }
-
-    // Closes the app
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-    {
-        Application.Current.Exit();
-    }
 }

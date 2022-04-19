@@ -217,22 +217,10 @@
             </Button>
         </StackPanel>
 
-        <!--  Close button  -->
-        <Button
-            Margin="48"
-            Padding="20"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Click="CloseButton_Click"
-            CornerRadius="9999"
-            ToolTipService.ToolTip="Close">
-            <SymbolIcon Symbol="Cancel" />
-        </Button>
-
         <!--  Invisible title bar  -->
         <Rectangle
             x:Name="TitleBarRectangle"
-            Height="32"
+            Height="28"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Fill="Transparent" />
