@@ -29,12 +29,18 @@ public class EndToEndTests
             "Landscape_Pixelate.png");
     }
 
+    [TestMethod]
+    public unsafe void ZonePlate()
+    {
+        RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), null, 1280, 720, "ZonePlate.png");
+    }
+
     /// <summary>
     /// Executes a pixel shader and compares the expected results.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-    /// <param name="originalFileName">The name of the source image.</param>
     /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
+    /// <param name="originalFileName">The name of the source image.</param>
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
     /// <param name="shader">The shader to run.</param>
@@ -60,6 +66,45 @@ public class EndToEndTests
             in shader,
             transformMapperFactory,
             originalPath,
+            destinationPath);
+
+        // Compare the results
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+    }
+
+    /// <summary>
+    /// Executes a pixel shader and compares the expected results.
+    /// </summary>
+    /// <typeparam name="T">The type of pixel shader to run.</typeparam>
+    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
+    /// <param name="width">The resulting width.</param>
+    /// <param name="height">The resulting height.</param>
+    /// <param name="expectedFileName">The name of the expected result image.</param>
+    /// <param name="destinationFileName">The name of the destination image to save results to.</param>
+    /// <param name="shader">The shader to run.</param>
+    private static void RunAndCompareShader<T>(
+        in T shader,
+        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
+        int width,
+        int height,
+        string expectedFileName,
+        [CallerMemberName] string destinationFileName = "")
+        where T : unmanaged, ID2D1PixelShader
+    {
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+        string temporaryPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "temp");
+
+        _ = Directory.CreateDirectory(temporaryPath);
+
+        string expectedPath = Path.Combine(assetsPath, expectedFileName);
+        string destinationPath = Path.Combine(temporaryPath, $"{destinationFileName}.png");
+
+        // Run the shader
+        D2D1TestRunner.ExecutePixelShaderAndCompareResults(
+            in shader,
+            transformMapperFactory,
+            width,
+            height,
             destinationPath);
 
         // Compare the results
