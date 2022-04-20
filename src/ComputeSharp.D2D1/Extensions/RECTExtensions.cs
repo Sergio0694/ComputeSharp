@@ -15,6 +15,19 @@ namespace ComputeSharp.D2D1.Extensions;
 internal static class RECTExtensions
 {
     /// <summary>
+    /// Modifies a target <see cref="RECT"/> instance to be a D2D1 infinite rectangle.
+    /// </summary>
+    /// <param name="rect">The target <see cref="RECT"/> instance to modify.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void MakeD2D1Infinite(this ref RECT rect)
+    {
+        rect.left = int.MinValue;
+        rect.top = int.MinValue;
+        rect.right = int.MaxValue;
+        rect.bottom = int.MaxValue;
+    }
+
+    /// <summary>
     /// Creates a <see cref="Rectangle"/> from a <see cref="RECT"/> value.
     /// </summary>
     /// <param name="rect">The input <see cref="RECT"/> value.</param>

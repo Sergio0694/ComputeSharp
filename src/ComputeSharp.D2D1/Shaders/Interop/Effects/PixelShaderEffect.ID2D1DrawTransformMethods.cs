@@ -208,8 +208,10 @@ partial struct PixelShaderEffect
             }
             else if (inputRectCount == 0)
             {
-                // If there are no inputs, just ignore (users will need a custom mapping)
-                *outputRect = default;
+                // If there are no inputs, make the output rectangle infinite. This is useful
+                // to make output-only effects work fine by default, without needing a custom
+                // transform. In this case, the target area will be the output node anyway.
+                outputRect->MakeD2D1Infinite();
 
                 @this->inputRect = default;
 
