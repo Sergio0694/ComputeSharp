@@ -170,6 +170,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <para>
     /// The binary blob contains information with the following format:
     /// <list type="bullet">
+    ///   <item>The blob version id (a <see cref="Guid"/>).</item>
     ///   <item>The effect id (a <see cref="Guid"/>).</item>
     ///   <item>The number of inputs for the effect (an <see cref="int"/>).</item>
     ///   <item>The effect XML description (as null-terminated UTF8 text).</item>
@@ -183,6 +184,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// </para>
     /// <para>
     /// To make the deserialization easier, the <see cref="D2D1EffectRegistrationData"/> type can be used to read and validate the returned blob.
+    /// The leading blob id will determine what subtype should be used to deserialize the blob (eg. <see cref="D2D1EffectRegistrationData.V1"/>).
     /// </para>
     /// <para>
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
@@ -196,6 +198,9 @@ public static unsafe class D2D1PixelShaderEffect
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
         using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+
+        // Blob id
+        writer.Write(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
         writer.Write(PixelShaderEffect.For<T>.Id);
