@@ -46,6 +46,7 @@ The sample app is available in the Microsoft Store, showcasing several pixel sha
 | **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Dynamic.svg)](https://www.nuget.org/packages/ComputeSharp.Dynamic/) |
 | **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Uwp.svg)](https://www.nuget.org/packages/ComputeSharp.Uwp/) |
 | **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.WinUI.svg)](https://www.nuget.org/packages/ComputeSharp.WinUI/) |
+| **ComputeSharp.D2D1** | A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.D2D1.svg)](https://www.nuget.org/packages/ComputeSharp.D2D1/) |
 
 # Installing from NuGet
 
