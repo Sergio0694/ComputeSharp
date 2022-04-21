@@ -29,15 +29,13 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1InteropServices.RegisterPixelShaderEffectForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
-        D2D1InteropServices.CreatePixelShaderEffectFromD2D1DeviceContext<T>(
-            d2D1DeviceContext.Get(),
-            (void**)d2D1Effect.GetAddressOf());
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1InteropServices.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBuffer(in shader, d2D1Effect.Get());
 
         using ComPtr<IWICBitmap> wicBitmap = WICHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
         using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), wicBitmap.Get(), d2D1Effect.Get());
@@ -72,15 +70,13 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1InteropServices.RegisterPixelShaderEffectForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
-        D2D1InteropServices.CreatePixelShaderEffectFromD2D1DeviceContext<T>(
-            d2D1DeviceContext.Get(),
-            (void**)d2D1Effect.GetAddressOf());
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1InteropServices.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBuffer(in shader, d2D1Effect.Get());
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)width, (uint)height);
 

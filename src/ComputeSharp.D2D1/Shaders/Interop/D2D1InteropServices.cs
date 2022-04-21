@@ -10,9 +10,9 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
-/// Provides methods to extract reflection info on D2D1 shaders generated using this library.
+/// Provides methods to interop with D2D1 APIs and compile shaders or extract their constant buffer data.
 /// </summary>
-public static unsafe partial class D2D1InteropServices
+public static unsafe class D2D1InteropServices
 {
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.

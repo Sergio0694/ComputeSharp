@@ -15,8 +15,10 @@ using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Interop;
 
-/// <inheritdoc/>
-unsafe partial class D2D1InteropServices
+/// <summary>
+/// An implementation of a D2D1 pixel shader effect that can be used to instantiate <c>ID2D1Effect</c> objects.
+/// </summary>
+public static unsafe class D2D1PixelShaderEffect
 {
     /// <summary>
     /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
@@ -25,10 +27,10 @@ unsafe partial class D2D1InteropServices
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
+    public static unsafe void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
-        RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory1, null, out effectId);
+        RegisterForD2D1Factory1<T>(d2D1Factory1, null, out effectId);
     }
 
     /// <summary>
@@ -39,11 +41,11 @@ unsafe partial class D2D1InteropServices
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
+    public static unsafe void RegisterForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
-        RegisterPixelShaderEffectForD2D1Factory1<T>(d2D1Factory1, static () => new TMapper(), out effectId);
+        RegisterForD2D1Factory1<T>(d2D1Factory1, static () => new TMapper(), out effectId);
     }
 
     /// <summary>
@@ -54,7 +56,7 @@ unsafe partial class D2D1InteropServices
     /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterPixelShaderEffectForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static unsafe void RegisterForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;
@@ -129,11 +131,11 @@ unsafe partial class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetPixelShaderEffectRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
-    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T>(out Guid effectId)
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
-        return GetPixelShaderEffectRegistrationBlob<T>(null, out effectId);
+        return GetRegistrationBlob<T>(null, out effectId);
     }
 
     /// <summary>
@@ -142,12 +144,12 @@ unsafe partial class D2D1InteropServices
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
     /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetPixelShaderEffectRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
-    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T, TMapper>(out Guid effectId)
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T, TMapper>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
-        return GetPixelShaderEffectRegistrationBlob(static () => new TMapper(), out effectId);
+        return GetRegistrationBlob(static () => new TMapper(), out effectId);
     }
 
     /// <summary>
@@ -186,7 +188,7 @@ unsafe partial class D2D1InteropServices
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
     /// </para>
     /// </remarks>
-    public static unsafe ReadOnlyMemory<byte> GetPixelShaderEffectRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;
@@ -261,7 +263,7 @@ unsafe partial class D2D1InteropServices
     /// <param name="d2D1DeviceContext">A pointer to the <c>ID2D1DeviceContext</c> instance to use.</param>
     /// <param name="d2D1Effect">A pointer to the resulting <c>ID2D1Effect*</c> pointer to produce.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1devicecontext-createeffect"/>.</remarks>
-    public static unsafe void CreatePixelShaderEffectFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
+    public static unsafe void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
         Guid shaderId = typeof(T).GUID;
@@ -278,7 +280,7 @@ unsafe partial class D2D1InteropServices
     /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static unsafe void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
+    public static unsafe void SetConstantBuffer<T>(in T shader, void* d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
