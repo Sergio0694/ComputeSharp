@@ -8,8 +8,8 @@ using ComputeSharp.D2D1.NetStandard.System.Text;
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
-/// A helper type used to read and validate effect registration blobs produced by
-/// <see cref="D2D1InteropServices.GetPixelShaderEffectRegistrationBlob{T}(out Guid)"/>.
+/// A helper type used to read and validate effect registration blobs produced
+/// by <see cref="D2D1PixelShaderEffect.GetRegistrationBlob{T}(out Guid)"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -76,8 +76,8 @@ public unsafe readonly struct D2D1EffectRegistrationData
     /// <param name="data">The resulting <see cref="D2D1EffectRegistrationData"/> instance, if successful.</param>
     /// <returns>Whether or not the input blob has been correctly deserialized (if it was not malformed).</returns>
     /// <remarks>
-    /// The input blob should have been created by a call to any of the overloads of
-    /// <see cref="D2D1InteropServices.GetPixelShaderEffectRegistrationBlob{T}(out Guid)"/>.
+    /// The input blob should have been created by a call to any of the overloads
+    /// of <see cref="D2D1PixelShaderEffect.GetRegistrationBlob{T}(out Guid)"/>.
     /// </remarks>
     public static unsafe bool TryLoad(ReadOnlyMemory<byte> blob, out D2D1EffectRegistrationData data)
     {
