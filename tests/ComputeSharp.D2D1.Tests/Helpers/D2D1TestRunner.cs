@@ -35,7 +35,7 @@ internal static class D2D1TestRunner
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBuffer(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
 
         using ComPtr<IWICBitmap> wicBitmap = WICHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
         using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), wicBitmap.Get(), d2D1Effect.Get());
@@ -76,7 +76,7 @@ internal static class D2D1TestRunner
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBuffer(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)width, (uint)height);
 

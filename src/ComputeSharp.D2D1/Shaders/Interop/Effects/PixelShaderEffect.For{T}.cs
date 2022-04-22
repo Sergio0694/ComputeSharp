@@ -131,6 +131,28 @@ internal unsafe partial struct PixelShaderEffect
         /// </summary>
         public static int NumberOfInputs => numberOfInputs;
 
+        /// <summary>
+        /// Tries to get the effect id, if it has been initialized.
+        /// </summary>
+        /// <param name="id">The resulting effect id.</param>
+        /// <returns>Whether or not the effect had been initialized.</returns>
+        public static bool TryGetId(out Guid id)
+        {
+            lock (typeof(For<T>))
+            {
+                if (isInitialized)
+                {
+                    id = Id;
+
+                    return true;
+                }
+            }
+
+            id = default;
+
+            return false;
+        }
+
         /// <inheritdoc cref="FactoryDelegate"/>
         private static int CreateEffect(IUnknown** effectImpl)
         {
