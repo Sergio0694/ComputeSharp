@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <summary>
-/// A <see langword="class"/> that contains and maps known HLSL properties names to common .NET members.
+/// A <see langword="class"/> that contains and maps known HLSL properties names to common .NET properties.
 /// </summary>
 internal static partial class HlslKnownProperties
 {
