@@ -2,6 +2,10 @@ name: .NET
 
 on: [push, pull_request]
 
+env:
+  EXCLUDE_RUN_ID_FROM_PACKAGE: false
+  EXCLUDE_SUFFIX_FROM_VERSION: false
+
 jobs:
 
   # Build the whole ComputeSharp solution, in Debug
