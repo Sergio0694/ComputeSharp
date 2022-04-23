@@ -9,21 +9,21 @@ using System.Text.RegularExpressions;
 namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <summary>
-/// A <see langword="class"/> that contains and maps known HLSL member names to common .NET members.
+/// A <see langword="class"/> that contains and maps known HLSL properties names to common .NET members.
 /// </summary>
-internal static partial class HlslKnownMembers
+internal static partial class HlslKnownProperties
 {
     /// <summary>
-    /// The mapping of supported known members to HLSL names.
+    /// The mapping of supported known properties to HLSL names.
     /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownMembers = BuildKnownMembersMap();
+    private static readonly IReadOnlyDictionary<string, string> KnownProperties = BuildKnownPropertiesMap();
 
     /// <summary>
-    /// Builds the mapping of supported known members to HLSL names.
+    /// Builds the mapping of supported known properties to HLSL names.
     /// </summary>
-    private static IReadOnlyDictionary<string, string> BuildKnownMembersMap()
+    private static IReadOnlyDictionary<string, string> BuildKnownPropertiesMap()
     {
-        Dictionary<string, string> knownMembers = new()
+        Dictionary<string, string> knownProperties = new()
         {
             [$"{typeof(Vector2).FullName}.{nameof(Vector2.X)}"] = "x",
             [$"{typeof(Vector2).FullName}.{nameof(Vector2.Y)}"] = "y",
@@ -145,7 +145,7 @@ internal static partial class HlslKnownMembers
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             select (Type: type, Property: property))
         {
-            knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
+            knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
         }
 
         // Load mappings for the matrix properties as well
@@ -158,23 +158,23 @@ internal static partial class HlslKnownMembers
             char row = (char)(item.Property.Name[1] - 1);
             char column = (char)(item.Property.Name[2] - 1);
 
-            knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"_m{row}{column}");
+            knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"_m{row}{column}");
         }
 
-        // Let other types inject additional members
-        AddKnownMembers(knownMembers);
+        // Let other types inject additional properties
+        AddKnownProperties(knownProperties);
 
-        return knownMembers;
+        return knownProperties;
     }
 
     /// <summary>
     /// Adds more known members to the mapping to use.
     /// </summary>
-    /// <param name="knownMembers">The mapping of known members being built.</param>
-    static partial void AddKnownMembers(IDictionary<string, string> knownMembers);
+    /// <param name="knownProperties">The mapping of known properties being built.</param>
+    static partial void AddKnownProperties(IDictionary<string, string> knownProperties);
 
     /// <summary>
-    /// The mapping of supported known members to HLSL names.
+    /// The mapping of supported known properties to HLSL names.
     /// </summary>
     private static readonly IReadOnlyCollection<string> KnownMatrixIndexers = BuildKnownMatrixIndexers();
 
@@ -230,13 +230,13 @@ internal static partial class HlslKnownMembers
     }
 
     /// <summary>
-    /// Tries to get the mapped HLSL-compatible member name for the input member name.
+    /// Tries to get the mapped HLSL-compatible property name for the input property name.
     /// </summary>
-    /// <param name="name">The input fully qualified member name.</param>
+    /// <param name="name">The input fully qualified property name.</param>
     /// <param name="mapped">The mapped name, if one is found.</param>
-    /// <returns>The HLSL-compatible member name that can be used in an HLSL shader.</returns>
+    /// <returns>The HLSL-compatible property name that can be used in an HLSL shader.</returns>
     public static bool TryGetMappedName(string name, out string? mapped)
     {
-        return KnownMembers.TryGetValue(name, out mapped);
+        return KnownProperties.TryGetValue(name, out mapped);
     }
 }

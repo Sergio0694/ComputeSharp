@@ -226,7 +226,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
             // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite
             // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
-            if (HlslKnownMembers.IsKnownMatrixIndexer(propertyName))
+            if (HlslKnownProperties.IsKnownMatrixIndexer(propertyName))
             {
                 bool isValid = true;
 
@@ -234,7 +234,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                 foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                 {
                     if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
-                        !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
+                        !HlslKnownProperties.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
                     {
                         Diagnostics.Add(NonConstantMatrixSwizzledIndex, argument);
 

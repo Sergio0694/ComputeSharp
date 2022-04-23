@@ -245,7 +245,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
             // If the current member access is a field or property access, check the lookup table
             // to see if the member should be rewritten for HLSL compliance, and rewrite if needed.
-            if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
+            if (HlslKnownProperties.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
             {
                 // Static and instance members are handled differently, with static members being
                 // converted into a literal expression, and instance getting an updated identifier.
