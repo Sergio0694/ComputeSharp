@@ -211,13 +211,26 @@ internal static partial class HlslKnownTypes
     /// Gets the sequence of unique custom types from a collection of discovered types.
     /// </summary>
     /// <param name="discoveredTypes">The input collection of discovered types.</param>
+    /// <param name="invalidTypes">The collection of discovered invalid types, if any.</param>
     /// <returns>The list of unique custom types.</returns>
-    public static IEnumerable<INamedTypeSymbol> GetCustomTypes(IEnumerable<INamedTypeSymbol> discoveredTypes)
+    public static IEnumerable<INamedTypeSymbol> GetCustomTypes(IEnumerable<INamedTypeSymbol> discoveredTypes, out IReadOnlyCollection<INamedTypeSymbol> invalidTypes)
     {
         // Local function to recursively gather nested types
-        static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes)
+        static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes, HashSet<INamedTypeSymbol> invalidTypes)
         {
             if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
+
+            // Check if the type is unsupported
+            if (!type.IsUnmanagedType ||
+                type.TypeKind is TypeKind.Enum ||
+                type.IsGenericType ||
+                type.IsRefLikeType ||
+                type.GetFullyQualifiedName().StartsWith("System."))
+            {
+                invalidTypes.Add(type);
+
+                return;
+            }
 
             if (!customTypes.Add(type)) return;
 
@@ -225,27 +238,31 @@ internal static partial class HlslKnownTypes
             {
                 if (field.IsStatic) continue;
 
-                ExploreTypes((INamedTypeSymbol)field.Type, customTypes);
+                ExploreTypes((INamedTypeSymbol)field.Type, customTypes, invalidTypes);
             }
         }
 
         HashSet<INamedTypeSymbol> customTypes = new(SymbolEqualityComparer.Default);
+        HashSet<INamedTypeSymbol> invalidTypes2 = new(SymbolEqualityComparer.Default);
 
         // Explore all input types and their nested types
         foreach (INamedTypeSymbol type in discoveredTypes)
         {
-            ExploreTypes(type, customTypes);
+            ExploreTypes(type, customTypes, invalidTypes2);
         }
 
-        return OrderByDependency(customTypes);
+        invalidTypes = invalidTypes2;
+
+        return OrderByDependency(customTypes, invalidTypes2);
     }
 
     /// <summary>
     /// Orders the input sequence of types so that they can be declared in HLSL successfully.
     /// </summary>
     /// <param name="types">The input collection of types to declare.</param>
+    /// <param name="invalidTypes">The collection of discovered invalid types, if any.</param>
     /// <returns>The same list as input, but in a valid HLSL declaration order.</returns>
-    private static IEnumerable<INamedTypeSymbol> OrderByDependency(IEnumerable<INamedTypeSymbol> types)
+    private static IEnumerable<INamedTypeSymbol> OrderByDependency(IEnumerable<INamedTypeSymbol> types, IReadOnlyCollection<INamedTypeSymbol> invalidTypes)
     {
         Queue<(INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields)> queue = new();
 
@@ -267,7 +284,8 @@ internal static partial class HlslKnownTypes
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
-                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullMetadataName()))
+                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullMetadataName()) &&
+                    !invalidTypes.Contains(fieldType))
                 {
                     _ = dependencies.Add(fieldType);
                 }

@@ -555,16 +555,32 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a method invocation that is not valid from a shader.
     /// <para>
-    /// Format: <c>"The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
+    /// Format: <c>"The method {0} cannot be used in a D2D1 shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidMethodCall = new DiagnosticDescriptor(
         id: "CMPSD2D0040",
         title: "Invalid method invocation from a D2D1 shader",
-        messageFormat: "The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)",
+        messageFormat: "The method {0} cannot be used in a D2D1 shader (methods need to either be HLSL intrinsics or with source available for analysis)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "A D2D1 shader can only invoke methods that are either HLSL intrinsics or with source available for analysis.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid discovered type.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} uses the invalid type {1}"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidDiscoveredType = new DiagnosticDescriptor(
+        id: "CMPSD2D0041",
+        title: "Invalid discovered type",
+        messageFormat: "The D2D1 shader of type {0} uses the invalid type {1} (only some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "D2D1 shaders can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

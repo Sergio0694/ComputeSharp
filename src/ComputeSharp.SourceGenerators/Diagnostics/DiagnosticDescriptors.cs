@@ -696,4 +696,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shaders can only invoke methods that are either HLSL intrinsics or with source available for analysis.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid discovered type.
+    /// <para>
+    /// Format: <c>"The compute shader or method {0} uses the invalid type {1}"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidDiscoveredType = new DiagnosticDescriptor(
+        id: "CMPS0050",
+        title: "Invalid discovered type",
+        messageFormat: "The compute shader or method {0} uses the invalid type {1} (only some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Shaders and shader methods can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

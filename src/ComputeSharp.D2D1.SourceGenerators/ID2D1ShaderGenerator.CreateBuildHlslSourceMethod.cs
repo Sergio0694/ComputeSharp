@@ -56,7 +56,7 @@ partial class ID2D1ShaderGenerator
             var semanticModelProvider = new SemanticModelProvider(compilation);
             var valueFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes);
             var (entryPoint, processedMethods) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions);
-            var declaredTypes = GetDeclaredTypes(discoveredTypes);
+            var declaredTypes = GetDeclaredTypes(builder, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
             var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
@@ -310,13 +310,20 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets the sequence of processed discovered custom types.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-        private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(IEnumerable<INamedTypeSymbol> types)
+        private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
+            INamedTypeSymbol structDeclarationSymbol,
+            IEnumerable<INamedTypeSymbol> types)
         {
             ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>();
+            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
-            foreach (var type in HlslKnownTypes.GetCustomTypes(types))
+            // Process the discovered types
+            foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
             {
                 var structType = type.GetFullMetadataName().ToHlslIdentifierName();
                 var structDeclaration = StructDeclaration(structType);
@@ -347,6 +354,12 @@ partial class ID2D1ShaderGenerator
                         .NormalizeWhitespace(eol: "\n")
                         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                         .ToFullString()));
+            }
+
+            // Process the invalid types
+            foreach (INamedTypeSymbol invalidType in invalidTypes)
+            {
+                diagnostics.Add(InvalidDiscoveredType, structDeclarationSymbol, structDeclarationSymbol, invalidType);
             }
 
             return builder.ToImmutable();
