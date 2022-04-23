@@ -166,12 +166,12 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Gather the diagnostics
         IncrementalValuesProvider<ImmutableArray<Diagnostic>> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy.MetadataName, item.Diagnostic))
+            .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
-                INamedTypeSymbol? typeSymbol = item.Right.GetTypeByMetadataName(item.Left.MetadataName)!;
+                INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
                 Diagnostic diagnostic = Diagnostic.Create(
                     item.Left.Diagnostic!.Descriptor,
                     typeSymbol.Locations.FirstOrDefault(),
