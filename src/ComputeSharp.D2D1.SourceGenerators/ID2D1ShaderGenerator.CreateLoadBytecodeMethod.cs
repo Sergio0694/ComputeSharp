@@ -43,16 +43,11 @@ partial class ID2D1ShaderGenerator
         /// Extracts the metadata definition for the current shader.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <returns>Whether the shader only has simple inputs.</returns>
-        public static bool IsSimpleInputShader(INamedTypeSymbol structDeclarationSymbol)
+        public static bool IsSimpleInputShader(INamedTypeSymbol structDeclarationSymbol, int inputCount)
         {
-            if (!structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DInputCountAttribute", out AttributeData? inputCountAttribute))
-            {
-                return false;
-            }
-
             // Build a map of all simple inputs (unmarked inputs default to being complex)
-            int inputCount = (int)inputCountAttribute!.ConstructorArguments[0].Value!;
             bool[] simpleInputsMap = new bool[inputCount];
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
