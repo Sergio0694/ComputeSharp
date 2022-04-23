@@ -32,12 +32,14 @@ partial class ID2D1ShaderGenerator
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
+            out int inputCount,
             out ImmutableArray<Diagnostic> diagnostics)
         {
             ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
@@ -62,7 +64,7 @@ partial class ID2D1ShaderGenerator
             GatherD2D1AttributeInfo(
                 builder,
                 structDeclarationSymbol,
-                out int inputCount,
+                out inputCount,
                 out ImmutableArray<int> inputSimpleIndices,
                 out ImmutableArray<int> inputComplexIndices,
                 out bool requiresScenePosition);
@@ -428,6 +430,8 @@ partial class ID2D1ShaderGenerator
             if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => (uint)i >= rawInputCount))
             {
                 diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
             }
 
             HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
