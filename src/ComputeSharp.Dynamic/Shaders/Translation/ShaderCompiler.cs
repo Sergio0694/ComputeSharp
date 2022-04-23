@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop.DirectX;
@@ -150,6 +151,22 @@ internal sealed unsafe partial class ShaderCompiler
         dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
 
         string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
+
+        // The error message will be in a format like this:
+        // "hlsl.hlsl:11:20: error: redefinition of 'float1' as different kind of symbol
+        //     static const float float1 = asfloat(0xFFC00000);
+        //                        ^
+        // note: previous definition is here"
+        // These regex-s try to match the unnecessary headers and remove them, if present.
+        // This doesn't need to be bulletproof, and these regex-s should match all cases anyway.
+        message = Regex.Replace(message, @"^hlsl\.hlsl:\d+:\d+: (\w+:)", static m => m.Groups[1].Value, RegexOptions.Multiline);
+
+        // Add a trailing '.' if not present
+        if (message is { Length: > 0 } &&
+            message[message.Length - 1] != '.')
+        {
+            message += '.';
+        }
 
         throw new DxcCompilationException(message);
     }

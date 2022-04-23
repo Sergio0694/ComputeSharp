@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
@@ -187,15 +188,34 @@ partial class IShaderGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (DxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:
             return bytecode;
+        }
+
+        /// <summary>
+        /// Fixes up an exception message to improve the way it's displayed in VS.
+        /// </summary>
+        /// <param name="message">The input exception message.</param>
+        /// <returns>The updated exception message.</returns>
+        private static string FixupExceptionMessage(string message)
+        {
+            // Add square brackets around error headers
+            message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+
+            // Remove lines with notes
+            message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+
+            // Remove syntax error indicators
+            message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
+
+            return message.NormalizeToSingleLine();
         }
 
         /// <summary>
