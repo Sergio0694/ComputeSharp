@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
@@ -111,15 +113,62 @@ partial class ID2D1ShaderGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:
             return bytecode;
+        }
+
+        /// <summary>
+        /// Fixes up an exception message to improve the way it's displayed in VS.
+        /// </summary>
+        /// <param name="message">The input exception message.</param>
+        /// <returns>The updated exception message.</returns>
+        private static string FixupExceptionMessage(string message)
+        {
+            // Add square brackets around error headers
+            message = Regex.Replace(message, @"((?:error|warning) \w+):", static m => $"[{m.Groups[1].Value}]:");
+
+            char[] buffer = ArrayPool<char>.Shared.Rent(message.Length);
+            int index = 0;
+            char lastCharacter = '\0';
+
+            foreach (char newCharacter in message)
+            {
+                char pendingCharacter = newCharacter;
+
+                // Ignore '\r' characters
+                if (pendingCharacter is '\r')
+                {
+                    continue;
+                }
+
+                // Convert newlines to spaces (this avoids VS droppping multiline diagnostics)
+                if (pendingCharacter is '\n')
+                {
+                    pendingCharacter = ' ';
+                }
+
+                // Drop duplicate spaces
+                if (pendingCharacter is ' ' &&
+                    lastCharacter is ' ')
+                {
+                    continue;
+                }
+
+                buffer[index++] = lastCharacter = pendingCharacter;
+            }
+
+            string text = buffer.AsSpan(0, index).ToString();
+
+            ArrayPool<char>.Shared.Return(buffer);
+
+            return text;
         }
     }
 }

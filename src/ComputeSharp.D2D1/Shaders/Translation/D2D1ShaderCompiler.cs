@@ -226,7 +226,7 @@ internal static unsafe partial class D2D1ShaderCompiler
         // The error message will be in a format like this:
         // "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\Roslyn\Shader@0x0000019AD1B4BA70(22,32-35): error X3004: undeclared identifier 'this'"
         // This regex tries to match the unnecessary header and remove it, if present. This doesn't need to be bulletproof, and this regex should match all cases anyway.
-        message = Regex.Replace(message, @"^[A-Z]:\\(?:[^\\]+\\)+Shader@0x[0-9A-F]+\([\d,-]+\): ", "");
+        message = Regex.Replace(message, @"[A-Z]:\\[^:]+: (\w+ \w+:)", static m => m.Groups[1].Value).Trim();
 
         // Add a trailing '.' if not present
         if (message is { Length: > 0 } &&
