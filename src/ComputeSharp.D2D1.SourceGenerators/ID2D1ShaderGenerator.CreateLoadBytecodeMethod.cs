@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
@@ -134,41 +133,7 @@ partial class ID2D1ShaderGenerator
             // Add square brackets around error headers
             message = Regex.Replace(message, @"((?:error|warning) \w+):", static m => $"[{m.Groups[1].Value}]:");
 
-            char[] buffer = ArrayPool<char>.Shared.Rent(message.Length);
-            int index = 0;
-            char lastCharacter = '\0';
-
-            foreach (char newCharacter in message)
-            {
-                char pendingCharacter = newCharacter;
-
-                // Ignore '\r' characters
-                if (pendingCharacter is '\r')
-                {
-                    continue;
-                }
-
-                // Convert newlines to spaces (this avoids VS droppping multiline diagnostics)
-                if (pendingCharacter is '\n')
-                {
-                    pendingCharacter = ' ';
-                }
-
-                // Drop duplicate spaces
-                if (pendingCharacter is ' ' &&
-                    lastCharacter is ' ')
-                {
-                    continue;
-                }
-
-                buffer[index++] = lastCharacter = pendingCharacter;
-            }
-
-            string text = buffer.AsSpan(0, index).ToString();
-
-            ArrayPool<char>.Shared.Return(buffer);
-
-            return text;
+            return message.NormalizeToSingleLine();
         }
     }
 }
