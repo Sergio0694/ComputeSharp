@@ -551,4 +551,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A D2D1 shader must have all the indices of its simple and complex inputs in the valid range (between 0 and the number of declared inputs).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a method invocation that is not valid from a shader.
+    /// <para>
+    /// Format: <c>"The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidMethodCall = new DiagnosticDescriptor(
+        id: "CMPSD2D0040",
+        title: "Invalid method invocation from a D2D1 shader",
+        messageFormat: "The method {0} cannot be used in a shader (methods need to either be HLSL intrinsics or with source available for analysis)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader can only invoke methods that are either HLSL intrinsics or with source available for analysis.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
