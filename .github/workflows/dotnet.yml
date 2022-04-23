@@ -190,7 +190,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build ComputeSharp.Core package
-      run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release
       shell: cmd
     - name: Upload ComputeSharp.Core package artifact
       uses: actions/upload-artifact@v2
@@ -198,7 +198,7 @@ jobs:
         name: ComputeSharp.Core.nupkg
         path: src\ComputeSharp.Core.Package\bin\Release\*.nupkg
     - name: Build ComputeSharp package
-      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
       shell: cmd
     - name: Upload ComputeSharp package artifact
       uses: actions/upload-artifact@v2
@@ -206,7 +206,7 @@ jobs:
         name: ComputeSharp.nupkg
         path: src\ComputeSharp.Package\bin\Release\*.nupkg
     - name: Build ComputeSharp.Dynamic package
-      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release
       shell: cmd
     - name: Upload ComputeSharp.Dynamic package artifact
       uses: actions/upload-artifact@v2
@@ -214,7 +214,7 @@ jobs:
         name: ComputeSharp.Dynamic.nupkg
         path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
     - name: Build ComputeSharp.D2D1 package
-      run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release
       shell: cmd
     - name: Upload ComputeSharp.D2D1 package artifact
       uses: actions/upload-artifact@v2
@@ -307,10 +307,10 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release
       shell: cmd
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
       shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
@@ -334,7 +334,7 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
       shell: cmd
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
