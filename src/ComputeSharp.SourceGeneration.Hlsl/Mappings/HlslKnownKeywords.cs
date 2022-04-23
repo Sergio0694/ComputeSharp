@@ -30,8 +30,15 @@ internal static partial class HlslKnownKeywords
             "pixelfragment", "point", "precise", "register", "row_major", "sample",
             "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
             "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
-            "unsigned", "vector", "vertexfragment", "zero"
+            "unsigned", "vector", "vertexfragment", "zero", "float1", "double1",
+            "int1", "uint1", "bool1"
         });
+
+        // HLSL primitive names
+        foreach (var type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
+        {
+            knownKeywords.Add(type.Name.ToLower());
+        }
 
         // HLSL intrinsics method names
         foreach (var method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static))

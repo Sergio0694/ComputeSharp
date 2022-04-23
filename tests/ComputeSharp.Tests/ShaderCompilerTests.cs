@@ -20,13 +20,15 @@ namespace ComputeSharp.Tests
         {
             public readonly ReadWriteBuffer<float> row_major;
             public readonly float dword;
+            public readonly float float2;
+            public readonly int int2x2;
 
             public void Execute()
             {
                 float exp = Hlsl.Exp(dword * row_major[ThreadIds.X]);
                 float log = Hlsl.Log(1 + exp);
 
-                row_major[ThreadIds.X] = log / dword;
+                row_major[ThreadIds.X] = log / dword + float2 + int2x2;
             }
         }
 
