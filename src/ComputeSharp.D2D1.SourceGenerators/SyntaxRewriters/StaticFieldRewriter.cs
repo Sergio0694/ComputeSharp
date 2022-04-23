@@ -58,6 +58,11 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
                 fieldOperation.Field.IsConst &&
                 fieldOperation.Type!.TypeKind != TypeKind.Enum)
             {
+                if (HlslKnownFields.TryGetMappedName(fieldOperation.Member.ToDisplayString(), out string? constantLiteral))
+                {
+                    return ParseExpression(constantLiteral!);
+                }
+
                 ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
                 var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
