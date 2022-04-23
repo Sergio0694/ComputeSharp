@@ -7,6 +7,11 @@
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
   </PropertyGroup>
 
+  <!-- Centralized location for all generated artifacts -->
+  <PropertyGroup>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
+  </PropertyGroup>
+
   <PropertyGroup>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <VersionPrefix>2.0.0</VersionPrefix>
