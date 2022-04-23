@@ -9,6 +9,17 @@
     MSBuildAllProjects, as that is done by the file that imports us.
   -->
 
+  <!--
+    Manually set the version if null. This is copied from Microsoft.NET.DefaultAssemblyInfo.targets and is needed
+    for cases where that target is not being automatically imported (which happens because MSBuild is used instead
+    of dotnet build for some cases, due to the solution having some UWP and WinUI 3 projects, and non SDK-style too).
+  -->
+  <PropertyGroup Condition=" '$(Version)' == '' ">
+    <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">2.0.0</VersionPrefix>
+    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+    <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
+  </PropertyGroup>
+
   <!-- Settings that are only set for CI builds -->
   <PropertyGroup Condition="'$(GITHUB_RUN_ID)' != ''">
     <PackageVersion Condition="'$(EXCLUDE_RUN_ID_FROM_PACKAGE)' != 'true'">$(Version).$(GITHUB_RUN_ID)</PackageVersion>
