@@ -305,8 +305,14 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
                 if (!this.staticMethods.ContainsKey(method))
                 {
+                    if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
+                    {
+                        Diagnostics.Add(InvalidMethodCall, node, method);
+
+                        return updatedNode;
+                    }
+
                     ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Diagnostics);
-                    MethodDeclarationSyntax methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax();
                     MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
 
                     this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
