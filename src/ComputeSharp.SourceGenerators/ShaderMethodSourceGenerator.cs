@@ -89,15 +89,19 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             IMethodSymbol methodSymbol,
             out ImmutableArray<Diagnostic> diagnostics)
         {
+            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Explore the syntax tree and extract the processed info
             var semanticModel = new SemanticModelProvider(compilation);
-            var (entryPoint, dependentMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, constantDefinitions, out diagnostics);
-            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(discoveredTypes);
+            var (entryPoint, dependentMethods) = GetProcessedMethods(builder, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
+            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(builder, methodSymbol, discoveredTypes);
             var definedConstants = IShaderGenerator.BuildHlslSource.GetDefinedConstants(constantDefinitions);
+
+            diagnostics = builder.ToImmutable();
 
             return new(
                 methodSymbol.GetFullMetadataName(includeParameters: true),
@@ -110,25 +114,22 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// <summary>
         /// Gets a sequence of processed methods from a target method declaration.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> instance for the current method.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
         private static (string TargetMethod, ImmutableArray<(string Signature, string Definition)> DependentMethods) GetProcessedMethods(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
             MethodDeclarationSyntax methodDeclaration,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IFieldSymbol, string> constantDefinitions,
-            out ImmutableArray<Diagnostic> diagnostics)
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
-            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, builder);
-
-            diagnostics = builder.ToImmutable();
+            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, diagnostics);
 
             // Rewrite the method syntax tree
             var targetMethod = shaderSourceRewriter
