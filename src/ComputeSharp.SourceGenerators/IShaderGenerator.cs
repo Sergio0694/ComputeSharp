@@ -231,7 +231,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<ImmutableArray<Diagnostic>> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
             .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
@@ -239,12 +239,11 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) =>
             {
                 INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-                Diagnostic diagnostic = Diagnostic.Create(
+                
+                return Diagnostic.Create(
                     item.Left.Diagnostic!.Descriptor,
                     typeSymbol.Locations.FirstOrDefault(),
                     new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
-
-                return ImmutableArray.Create(diagnostic);
             });
 
         // Output the diagnostics
