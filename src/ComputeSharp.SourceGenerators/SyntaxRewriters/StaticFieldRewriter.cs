@@ -67,7 +67,7 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
                 return IdentifierName(constantName);
             }
 
-            if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
+            if (HlslKnownProperties.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
             {
                 if (operation.Member.IsStatic)
                 {

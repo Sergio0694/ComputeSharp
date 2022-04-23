@@ -6,7 +6,7 @@ using System.Reflection;
 namespace ComputeSharp.SourceGeneration.Mappings;
 
 /// <inheritdoc/>
-partial class HlslKnownMembers
+partial class HlslKnownProperties
 {
     /// <summary>
     /// The mapping of supported known indexers to HLSL resource type names.
@@ -79,7 +79,7 @@ partial class HlslKnownMembers
     };
 
     /// <inheritdoc/>
-    static partial void AddKnownMembers(IDictionary<string, string> knownMembers)
+    static partial void AddKnownProperties(IDictionary<string, string> knownProperties)
     {
         // Store GroupIds.Index for a quicker comparison afterwards
         PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
@@ -94,11 +94,11 @@ partial class HlslKnownMembers
             {
                 // The thread group index is a standalone parameter, so if this property is used, we
                 // just map the access directly to that implicit and hidden parameter name instead.
-                knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"__{nameof(GroupIds)}__get_Index");
+                knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"__{nameof(GroupIds)}__get_Index");
             }
             else
             {
-                knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
+                knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
             }
         }
 
@@ -110,14 +110,14 @@ partial class HlslKnownMembers
             switch (property.Name)
             {
                 case string name when name.Length == 1:
-                    knownMembers.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLower(name[0])} / (float)__{char.ToLower(name[0])}");
+                    knownProperties.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLower(name[0])} / (float)__{char.ToLower(name[0])}");
                     break;
                 case string name when name.Length == 2:
                 {
                     string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})";
                     string denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
 
-                    knownMembers.Add(key, $"{numerator} / {denominator}");
+                    knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;
                 }
                 case string name when name.Length == 3:
@@ -125,7 +125,7 @@ partial class HlslKnownMembers
                     string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})";
                     string denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
 
-                    knownMembers.Add(key, $"{numerator} / {denominator}");
+                    knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;
                 }
             }
@@ -139,16 +139,16 @@ partial class HlslKnownMembers
             switch (property.Name)
             {
                 case nameof(GroupSize.Count):
-                    knownMembers.Add(key, "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z");
+                    knownProperties.Add(key, "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z");
                     break;
                 case string name when name.Length == 1:
-                    knownMembers.Add(key, $"__GroupSize__get_{name}");
+                    knownProperties.Add(key, $"__GroupSize__get_{name}");
                     break;
                 case string name when name.Length == 2:
-                    knownMembers.Add(key, $"int2(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]})");
+                    knownProperties.Add(key, $"int2(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]})");
                     break;
                 case string name when name.Length == 3:
-                    knownMembers.Add(key, $"int3(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]}, __GroupSize__get_{name[2]})");
+                    knownProperties.Add(key, $"int3(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]}, __GroupSize__get_{name[2]})");
                     break;
             }
         }
@@ -161,16 +161,16 @@ partial class HlslKnownMembers
             switch (property.Name)
             {
                 case nameof(DispatchSize.Count):
-                    knownMembers.Add(key, "__x * __y * __z");
+                    knownProperties.Add(key, "__x * __y * __z");
                     break;
                 case string name when name.Length == 1:
-                    knownMembers.Add(key, $"__{char.ToLower(name[0])}");
+                    knownProperties.Add(key, $"__{char.ToLower(name[0])}");
                     break;
                 case string name when name.Length == 2:
-                    knownMembers.Add(key, $"int2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})");
+                    knownProperties.Add(key, $"int2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})");
                     break;
                 case string name when name.Length == 3:
-                    knownMembers.Add(key, $"int3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})");
+                    knownProperties.Add(key, $"int3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})");
                     break;
             }
         }
