@@ -60,7 +60,7 @@ public static unsafe class D2D1InteropServices
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, shaderProfile ?? D2D1ShaderProfile.PixelShader50);
+        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, shaderProfile);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
