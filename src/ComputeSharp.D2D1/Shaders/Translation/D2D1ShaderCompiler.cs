@@ -90,7 +90,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 new()
             };
 
-            // Compile the shader with -ps_5_0 -O3 -We
+            // Compile the shader with -ps_5_0 -O3 -We -Zpr
             hResult = DirectX.D3DCompile(
                 pSrcData: bufferPtr,
                 SrcDataSize: (nuint)writtenBytes,
@@ -99,7 +99,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute)),
                 pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetPixelShaderProfile(shaderProfile))),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
+                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),
                 ppErrorMsgs: d3DBlobErrors.GetAddressOf());
@@ -156,7 +156,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 new()
             };
 
-            // Compile the shader with -lib_5_0 -O3 -We
+            // Compile the shader with -lib_5_0 -O3 -We -Zpr
             hResult = DirectX.D3DCompile(
                 pSrcData: bufferPtr,
                 SrcDataSize: (nuint)writtenBytes,
@@ -165,7 +165,7 @@ internal static unsafe partial class D2D1ShaderCompiler
                 pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: null,
                 pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetLibraryProfile(shaderProfile))),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
+                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),
                 ppErrorMsgs: d3DBlobErrors.GetAddressOf());
