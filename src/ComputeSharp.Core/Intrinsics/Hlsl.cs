@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Exceptions;
+﻿using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp;
 
@@ -7,6 +8,13 @@ namespace ComputeSharp;
 /// </summary>
 public static partial class Hlsl
 {
+    /// <summary>
+    /// Submits an error message to the information queue and terminates the current draw or dispatch call being executed.
+    /// </summary>
+    /// <remarks>This operation does nothing on rasterizers that do not support it.</remarks>
+    [HlslIntrinsicName("abort")]
+    public static void Abort() => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Abort)}()");
+
     /// <summary>
     /// Blocks execution of all threads in a group until all memory accesses have been completed.
     /// </summary>
@@ -316,4 +324,24 @@ public static partial class Hlsl
     /// <param name="original">The original value.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static void InterlockedXor(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Returns a lighting coefficient vector.
+    /// </summary>
+    /// <param name="nDotL">The dot product of the normalized surface normal and the light vector.</param>
+    /// <param name="nDotH">The dot product of the half-angle vector and the surface normal.</param>
+    /// <param name="m">A specular exponent.</param>
+    /// <returns>The lighting coefficient vector.</returns>
+    /// <remarks>
+    /// This function returns a lighting coefficient vector (ambient, diffuse, specular, 1) where:
+    /// <list type="bullet">
+    ///     <item>Ambient: <c>1</c>.</item>
+    ///     <item>Diffuse: <c>n * l &lt; 0 ? 0 : n * l</c>.</item>
+    ///     <item>Specular: <c>n * l &lt; 0 || n * h &lt; 0 ? 0 : (n * h) ^ m</c>.</item>
+    /// </list>
+    /// Where the vector <c>n</c> is the normal vector, <c>l</c> is the direction to light and <c>h</c> is the half vector.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("lit")]
+    public static float Lit(float nDotL, float nDotH, float m) => default;
 }

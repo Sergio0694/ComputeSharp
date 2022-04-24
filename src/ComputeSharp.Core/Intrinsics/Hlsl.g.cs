@@ -4493,6 +4493,510 @@ partial class Hlsl
     public static Float3 Cross(Float3 x, Float3 y) => default;
 
     /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static float DerivativeOfDx(float x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float2 DerivativeOfDx(Float2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float3 DerivativeOfDx(Float3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float4 DerivativeOfDx(Float4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float1x1 DerivativeOfDx(Float1x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float1x2 DerivativeOfDx(Float1x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float1x3 DerivativeOfDx(Float1x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float1x4 DerivativeOfDx(Float1x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float2x1 DerivativeOfDx(Float2x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float2x2 DerivativeOfDx(Float2x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float2x3 DerivativeOfDx(Float2x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float2x4 DerivativeOfDx(Float2x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float3x1 DerivativeOfDx(Float3x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float3x2 DerivativeOfDx(Float3x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float3x3 DerivativeOfDx(Float3x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float3x4 DerivativeOfDx(Float3x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float4x1 DerivativeOfDx(Float4x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float4x2 DerivativeOfDx(Float4x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float4x3 DerivativeOfDx(Float4x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx")]
+    public static Float4x4 DerivativeOfDx(Float4x4 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_coarse")]
+    public static float DerivativeOfDxLowPrecision(float x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_coarse")]
+    public static Float2 DerivativeOfDxLowPrecision(Float2 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_coarse")]
+    public static Float3 DerivativeOfDxLowPrecision(Float3 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_coarse")]
+    public static Float4 DerivativeOfDxLowPrecision(Float4 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_fine")]
+    public static float DerivativeOfDxHighPrecision(float x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_fine")]
+    public static Float2 DerivativeOfDxHighPrecision(Float2 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_fine")]
+    public static Float3 DerivativeOfDxHighPrecision(Float3 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space x-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddx_fine")]
+    public static Float4 DerivativeOfDxHighPrecision(Float4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static float DerivativeOfDy(float x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float2 DerivativeOfDy(Float2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float3 DerivativeOfDy(Float3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float4 DerivativeOfDy(Float4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float1x1 DerivativeOfDy(Float1x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float1x2 DerivativeOfDy(Float1x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float1x3 DerivativeOfDy(Float1x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float1x4 DerivativeOfDy(Float1x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float2x1 DerivativeOfDy(Float2x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float2x2 DerivativeOfDy(Float2x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float2x3 DerivativeOfDy(Float2x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float2x4 DerivativeOfDy(Float2x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float3x1 DerivativeOfDy(Float3x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float3x2 DerivativeOfDy(Float3x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float3x3 DerivativeOfDy(Float3x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float3x4 DerivativeOfDy(Float3x4 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float4x1 DerivativeOfDy(Float4x1 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float4x2 DerivativeOfDy(Float4x2 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float4x3 DerivativeOfDy(Float4x3 x) => default;
+
+    /// <summary>
+    /// Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy")]
+    public static Float4x4 DerivativeOfDy(Float4x4 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_coarse")]
+    public static float DerivativeOfDyLowPrecision(float x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_coarse")]
+    public static Float2 DerivativeOfDyLowPrecision(Float2 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_coarse")]
+    public static Float3 DerivativeOfDyLowPrecision(Float3 x) => default;
+
+    /// <summary>
+    /// Computes a low precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The low precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_coarse")]
+    public static Float4 DerivativeOfDyLowPrecision(Float4 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_fine")]
+    public static float DerivativeOfDyHighPrecision(float x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_fine")]
+    public static Float2 DerivativeOfDyHighPrecision(Float2 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_fine")]
+    public static Float3 DerivativeOfDyHighPrecision(Float3 x) => default;
+
+    /// <summary>
+    /// Computes a high precision partial derivative with respect to the screen-space y-coordinate.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The high precision partial derivative with respect to the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("ddy_fine")]
+    public static Float4 DerivativeOfDyHighPrecision(Float4 x) => default;
+
+    /// <summary>
     /// Converts the specified value from radians to degrees.
     /// </summary>
     /// <param name="x">The specified value.</param>
@@ -6281,6 +6785,186 @@ partial class Hlsl
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("frexp")]
     public static Float4x4 Frexp(Float4x4 x, out Float4x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x4)}, {typeof(Float4x4)})");
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static float Fwidth(float x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float2 Fwidth(Float2 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float3 Fwidth(Float3 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float4 Fwidth(Float4 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float1x1 Fwidth(Float1x1 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float1x2 Fwidth(Float1x2 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float1x3 Fwidth(Float1x3 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float1x4 Fwidth(Float1x4 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float2x1 Fwidth(Float2x1 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float2x2 Fwidth(Float2x2 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float2x3 Fwidth(Float2x3 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float2x4 Fwidth(Float2x4 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float3x1 Fwidth(Float3x1 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float3x2 Fwidth(Float3x2 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float3x3 Fwidth(Float3x3 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float3x4 Fwidth(Float3x4 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float4x1 Fwidth(Float4x1 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float4x2 Fwidth(Float4x2 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float4x3 Fwidth(Float4x3 x) => default;
+
+    /// <summary>
+    /// Returns the absolute value of the partial derivatives of the specified value.
+    /// </summary>
+    /// <param name="x">The specified value.</param>
+    /// <returns>The absolute value of the partial derivatives of the input parameter.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("fwidth")]
+    public static Float4x4 Fwidth(Float4x4 x) => default;
 
     /// <summary>
     /// Determines if the specified floating-point value is finite.
