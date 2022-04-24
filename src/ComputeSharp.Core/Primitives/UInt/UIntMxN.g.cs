@@ -5,6 +5,8 @@ using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServ
 using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
+#pragma warning disable CS0660, CS0661
+
 namespace ComputeSharp;
 
 /// <inheritdoc cref="UInt1x1"/>
@@ -85,6 +87,7 @@ public unsafe partial struct UInt1x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x1"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt1x1"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator +(UInt1x1 left, UInt1x1 right) => default;
 
@@ -93,14 +96,25 @@ public unsafe partial struct UInt1x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x1"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt1x1"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator /(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt1x1"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt1x1 operator %(UInt1x1 left, UInt1x1 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt1x1"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x1"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt1x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator *(UInt1x1 left, UInt1x1 right) => default;
 
@@ -109,8 +123,63 @@ public unsafe partial struct UInt1x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x1"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt1x1"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator -(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator >(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator >=(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator <(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator <=(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator ==(UInt1x1 left, UInt1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator !=(UInt1x1 left, UInt1x1 right) => default;
 }
 
 /// <inheritdoc cref="UInt1x2"/>
@@ -202,6 +271,7 @@ public unsafe partial struct UInt1x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x2"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt1x2"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator +(UInt1x2 left, UInt1x2 right) => default;
 
@@ -210,14 +280,25 @@ public unsafe partial struct UInt1x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x2"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt1x2"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator /(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt1x2"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt1x2 operator %(UInt1x2 left, UInt1x2 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt1x2"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x2"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt1x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator *(UInt1x2 left, UInt1x2 right) => default;
 
@@ -226,8 +307,63 @@ public unsafe partial struct UInt1x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x2"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt1x2"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator -(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator >(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator >=(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator <(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator <=(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator ==(UInt1x2 left, UInt1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator !=(UInt1x2 left, UInt1x2 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt2"/> value to a <see cref="UInt1x2"/> one.
@@ -336,6 +472,7 @@ public unsafe partial struct UInt1x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x3"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt1x3"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator +(UInt1x3 left, UInt1x3 right) => default;
 
@@ -344,14 +481,25 @@ public unsafe partial struct UInt1x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x3"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt1x3"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator /(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt1x3"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt1x3 operator %(UInt1x3 left, UInt1x3 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt1x3"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x3"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt1x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator *(UInt1x3 left, UInt1x3 right) => default;
 
@@ -360,8 +508,63 @@ public unsafe partial struct UInt1x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x3"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt1x3"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator -(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator >(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator >=(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator <(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator <=(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator ==(UInt1x3 left, UInt1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator !=(UInt1x3 left, UInt1x3 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt3"/> value to a <see cref="UInt1x3"/> one.
@@ -481,6 +684,7 @@ public unsafe partial struct UInt1x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x4"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt1x4"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator +(UInt1x4 left, UInt1x4 right) => default;
 
@@ -489,14 +693,25 @@ public unsafe partial struct UInt1x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x4"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt1x4"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator /(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt1x4"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt1x4 operator %(UInt1x4 left, UInt1x4 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt1x4"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x4"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt1x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator *(UInt1x4 left, UInt1x4 right) => default;
 
@@ -505,8 +720,63 @@ public unsafe partial struct UInt1x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt1x4"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt1x4"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator -(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator >(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator >=(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator <(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator <=(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator ==(UInt1x4 left, UInt1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt1x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator !=(UInt1x4 left, UInt1x4 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt4"/> value to a <see cref="UInt1x4"/> one.
@@ -604,6 +874,7 @@ public unsafe partial struct UInt2x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x1"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt2x1"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator +(UInt2x1 left, UInt2x1 right) => default;
 
@@ -612,14 +883,25 @@ public unsafe partial struct UInt2x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x1"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt2x1"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator /(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt2x1"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2x1 operator %(UInt2x1 left, UInt2x1 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt2x1"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x1"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt2x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator *(UInt2x1 left, UInt2x1 right) => default;
 
@@ -628,8 +910,63 @@ public unsafe partial struct UInt2x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x1"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt2x1"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator -(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator >(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator >=(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator <(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator <=(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator ==(UInt2x1 left, UInt2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator !=(UInt2x1 left, UInt2x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt2x1"/> value to a <see cref="UInt2"/> one.
@@ -762,6 +1099,7 @@ public unsafe partial struct UInt2x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x2"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt2x2"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator +(UInt2x2 left, UInt2x2 right) => default;
 
@@ -770,14 +1108,25 @@ public unsafe partial struct UInt2x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x2"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt2x2"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator /(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt2x2"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2x2 operator %(UInt2x2 left, UInt2x2 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt2x2"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x2"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt2x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator *(UInt2x2 left, UInt2x2 right) => default;
 
@@ -786,8 +1135,63 @@ public unsafe partial struct UInt2x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x2"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt2x2"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator -(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator >(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator >=(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator <(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator <=(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator ==(UInt2x2 left, UInt2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator !=(UInt2x2 left, UInt2x2 right) => default;
 }
 
 /// <inheritdoc cref="UInt2x3"/>
@@ -938,6 +1342,7 @@ public unsafe partial struct UInt2x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x3"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt2x3"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator +(UInt2x3 left, UInt2x3 right) => default;
 
@@ -946,14 +1351,25 @@ public unsafe partial struct UInt2x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x3"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt2x3"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator /(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt2x3"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2x3 operator %(UInt2x3 left, UInt2x3 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt2x3"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x3"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt2x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator *(UInt2x3 left, UInt2x3 right) => default;
 
@@ -962,8 +1378,63 @@ public unsafe partial struct UInt2x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x3"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt2x3"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator -(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator >(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator >=(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator <(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator <=(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator ==(UInt2x3 left, UInt2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator !=(UInt2x3 left, UInt2x3 right) => default;
 }
 
 /// <inheritdoc cref="UInt2x4"/>
@@ -1138,6 +1609,7 @@ public unsafe partial struct UInt2x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x4"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt2x4"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator +(UInt2x4 left, UInt2x4 right) => default;
 
@@ -1146,14 +1618,25 @@ public unsafe partial struct UInt2x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x4"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt2x4"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator /(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt2x4"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2x4 operator %(UInt2x4 left, UInt2x4 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt2x4"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x4"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt2x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator *(UInt2x4 left, UInt2x4 right) => default;
 
@@ -1162,8 +1645,63 @@ public unsafe partial struct UInt2x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt2x4"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt2x4"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator -(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator >(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator >=(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator <(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator <=(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator ==(UInt2x4 left, UInt2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt2x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator !=(UInt2x4 left, UInt2x4 right) => default;
 }
 
 /// <inheritdoc cref="UInt3x1"/>
@@ -1266,6 +1804,7 @@ public unsafe partial struct UInt3x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x1"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt3x1"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator +(UInt3x1 left, UInt3x1 right) => default;
 
@@ -1274,14 +1813,25 @@ public unsafe partial struct UInt3x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x1"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt3x1"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator /(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt3x1"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3x1 operator %(UInt3x1 left, UInt3x1 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt3x1"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x1"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt3x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator *(UInt3x1 left, UInt3x1 right) => default;
 
@@ -1290,8 +1840,63 @@ public unsafe partial struct UInt3x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x1"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt3x1"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator -(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator >(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator >=(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator <(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator <=(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator ==(UInt3x1 left, UInt3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator !=(UInt3x1 left, UInt3x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt3x1"/> value to a <see cref="UInt3"/> one.
@@ -1449,6 +2054,7 @@ public unsafe partial struct UInt3x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x2"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt3x2"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator +(UInt3x2 left, UInt3x2 right) => default;
 
@@ -1457,14 +2063,25 @@ public unsafe partial struct UInt3x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x2"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt3x2"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator /(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt3x2"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3x2 operator %(UInt3x2 left, UInt3x2 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt3x2"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x2"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt3x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator *(UInt3x2 left, UInt3x2 right) => default;
 
@@ -1473,8 +2090,63 @@ public unsafe partial struct UInt3x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x2"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt3x2"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator -(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator >(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator >=(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator <(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator <=(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator ==(UInt3x2 left, UInt3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator !=(UInt3x2 left, UInt3x2 right) => default;
 }
 
 /// <inheritdoc cref="UInt3x3"/>
@@ -1662,6 +2334,7 @@ public unsafe partial struct UInt3x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x3"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt3x3"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator +(UInt3x3 left, UInt3x3 right) => default;
 
@@ -1670,14 +2343,25 @@ public unsafe partial struct UInt3x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x3"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt3x3"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator /(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt3x3"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3x3 operator %(UInt3x3 left, UInt3x3 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt3x3"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x3"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt3x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator *(UInt3x3 left, UInt3x3 right) => default;
 
@@ -1686,8 +2370,63 @@ public unsafe partial struct UInt3x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x3"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt3x3"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator -(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator >(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator >=(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator <(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator <=(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator ==(UInt3x3 left, UInt3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator !=(UInt3x3 left, UInt3x3 right) => default;
 }
 
 /// <inheritdoc cref="UInt3x4"/>
@@ -1911,6 +2650,7 @@ public unsafe partial struct UInt3x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x4"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt3x4"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator +(UInt3x4 left, UInt3x4 right) => default;
 
@@ -1919,14 +2659,25 @@ public unsafe partial struct UInt3x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x4"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt3x4"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator /(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt3x4"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt3x4 operator %(UInt3x4 left, UInt3x4 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt3x4"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x4"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt3x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator *(UInt3x4 left, UInt3x4 right) => default;
 
@@ -1935,8 +2686,63 @@ public unsafe partial struct UInt3x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt3x4"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt3x4"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator -(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator >(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator >=(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator <(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator <=(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator ==(UInt3x4 left, UInt3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt3x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator !=(UInt3x4 left, UInt3x4 right) => default;
 }
 
 /// <inheritdoc cref="UInt4x1"/>
@@ -2050,6 +2856,7 @@ public unsafe partial struct UInt4x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x1"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt4x1"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator +(UInt4x1 left, UInt4x1 right) => default;
 
@@ -2058,14 +2865,25 @@ public unsafe partial struct UInt4x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x1"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt4x1"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator /(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt4x1"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4x1 operator %(UInt4x1 left, UInt4x1 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt4x1"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x1"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt4x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator *(UInt4x1 left, UInt4x1 right) => default;
 
@@ -2074,8 +2892,63 @@ public unsafe partial struct UInt4x1
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x1"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt4x1"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator -(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator >(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator >=(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator <(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator <=(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator ==(UInt4x1 left, UInt4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator !=(UInt4x1 left, UInt4x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="UInt4x1"/> value to a <see cref="UInt4"/> one.
@@ -2258,6 +3131,7 @@ public unsafe partial struct UInt4x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x2"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt4x2"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator +(UInt4x2 left, UInt4x2 right) => default;
 
@@ -2266,14 +3140,25 @@ public unsafe partial struct UInt4x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x2"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt4x2"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator /(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt4x2"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4x2 operator %(UInt4x2 left, UInt4x2 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt4x2"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x2"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt4x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator *(UInt4x2 left, UInt4x2 right) => default;
 
@@ -2282,8 +3167,63 @@ public unsafe partial struct UInt4x2
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x2"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt4x2"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator -(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator >(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator >=(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator <(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator <=(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator ==(UInt4x2 left, UInt4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator !=(UInt4x2 left, UInt4x2 right) => default;
 }
 
 /// <inheritdoc cref="UInt4x3"/>
@@ -2508,6 +3448,7 @@ public unsafe partial struct UInt4x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x3"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt4x3"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator +(UInt4x3 left, UInt4x3 right) => default;
 
@@ -2516,14 +3457,25 @@ public unsafe partial struct UInt4x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x3"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt4x3"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator /(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt4x3"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4x3 operator %(UInt4x3 left, UInt4x3 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt4x3"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x3"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt4x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator *(UInt4x3 left, UInt4x3 right) => default;
 
@@ -2532,8 +3484,63 @@ public unsafe partial struct UInt4x3
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x3"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt4x3"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator -(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator >(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator >=(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator <(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator <=(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator ==(UInt4x3 left, UInt4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator !=(UInt4x3 left, UInt4x3 right) => default;
 }
 
 /// <inheritdoc cref="UInt4x4"/>
@@ -2806,6 +3813,7 @@ public unsafe partial struct UInt4x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x4"/> value to sum.</param>
     /// <param name="right">The second <see cref="UInt4x4"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator +(UInt4x4 left, UInt4x4 right) => default;
 
@@ -2814,14 +3822,25 @@ public unsafe partial struct UInt4x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x4"/> value to divide.</param>
     /// <param name="right">The second <see cref="UInt4x4"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator /(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="UInt4x4"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to divide.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt4x4 operator %(UInt4x4 left, UInt4x4 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="UInt4x4"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x4"/> value to multiply.</param>
     /// <param name="right">The second <see cref="UInt4x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator *(UInt4x4 left, UInt4x4 right) => default;
 
@@ -2830,6 +3849,61 @@ public unsafe partial struct UInt4x4
     /// </summary>
     /// <param name="left">The first <see cref="UInt4x4"/> value to subtract.</param>
     /// <param name="right">The second <see cref="UInt4x4"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator -(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator >(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator >=(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator <(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator <=(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator ==(UInt4x4 left, UInt4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="UInt4x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="UInt4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="UInt4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator !=(UInt4x4 left, UInt4x4 right) => default;
 }

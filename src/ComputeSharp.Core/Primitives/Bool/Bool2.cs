@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp;
+﻿#pragma warning disable CS0660, CS0661
+
+namespace ComputeSharp;
 
 /// <summary>
 /// A <see langword="struct"/> that maps the <see langword="bool2"/> HLSL type.
