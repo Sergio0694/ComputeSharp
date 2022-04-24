@@ -5995,7 +5995,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static double FusedMultiplyAccumulate(double a, double b, double c) => default;
+    public static double FusedMultiplyAdd(double a, double b, double c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6006,7 +6006,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double2 FusedMultiplyAccumulate(Double2 a, Double2 b, Double2 c) => default;
+    public static Double2 FusedMultiplyAdd(Double2 a, Double2 b, Double2 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6017,7 +6017,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double3 FusedMultiplyAccumulate(Double3 a, Double3 b, Double3 c) => default;
+    public static Double3 FusedMultiplyAdd(Double3 a, Double3 b, Double3 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6028,7 +6028,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double4 FusedMultiplyAccumulate(Double4 a, Double4 b, Double4 c) => default;
+    public static Double4 FusedMultiplyAdd(Double4 a, Double4 b, Double4 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6039,7 +6039,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double1x1 FusedMultiplyAccumulate(Double1x1 a, Double1x1 b, Double1x1 c) => default;
+    public static Double1x1 FusedMultiplyAdd(Double1x1 a, Double1x1 b, Double1x1 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6050,7 +6050,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double1x2 FusedMultiplyAccumulate(Double1x2 a, Double1x2 b, Double1x2 c) => default;
+    public static Double1x2 FusedMultiplyAdd(Double1x2 a, Double1x2 b, Double1x2 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6061,7 +6061,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double1x3 FusedMultiplyAccumulate(Double1x3 a, Double1x3 b, Double1x3 c) => default;
+    public static Double1x3 FusedMultiplyAdd(Double1x3 a, Double1x3 b, Double1x3 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6072,7 +6072,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double1x4 FusedMultiplyAccumulate(Double1x4 a, Double1x4 b, Double1x4 c) => default;
+    public static Double1x4 FusedMultiplyAdd(Double1x4 a, Double1x4 b, Double1x4 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6083,7 +6083,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double2x1 FusedMultiplyAccumulate(Double2x1 a, Double2x1 b, Double2x1 c) => default;
+    public static Double2x1 FusedMultiplyAdd(Double2x1 a, Double2x1 b, Double2x1 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6094,7 +6094,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double2x2 FusedMultiplyAccumulate(Double2x2 a, Double2x2 b, Double2x2 c) => default;
+    public static Double2x2 FusedMultiplyAdd(Double2x2 a, Double2x2 b, Double2x2 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6105,7 +6105,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double2x3 FusedMultiplyAccumulate(Double2x3 a, Double2x3 b, Double2x3 c) => default;
+    public static Double2x3 FusedMultiplyAdd(Double2x3 a, Double2x3 b, Double2x3 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6116,7 +6116,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double2x4 FusedMultiplyAccumulate(Double2x4 a, Double2x4 b, Double2x4 c) => default;
+    public static Double2x4 FusedMultiplyAdd(Double2x4 a, Double2x4 b, Double2x4 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6127,7 +6127,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double3x1 FusedMultiplyAccumulate(Double3x1 a, Double3x1 b, Double3x1 c) => default;
+    public static Double3x1 FusedMultiplyAdd(Double3x1 a, Double3x1 b, Double3x1 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6138,7 +6138,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double3x2 FusedMultiplyAccumulate(Double3x2 a, Double3x2 b, Double3x2 c) => default;
+    public static Double3x2 FusedMultiplyAdd(Double3x2 a, Double3x2 b, Double3x2 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6149,7 +6149,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double3x3 FusedMultiplyAccumulate(Double3x3 a, Double3x3 b, Double3x3 c) => default;
+    public static Double3x3 FusedMultiplyAdd(Double3x3 a, Double3x3 b, Double3x3 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6160,7 +6160,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double3x4 FusedMultiplyAccumulate(Double3x4 a, Double3x4 b, Double3x4 c) => default;
+    public static Double3x4 FusedMultiplyAdd(Double3x4 a, Double3x4 b, Double3x4 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6171,7 +6171,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double4x1 FusedMultiplyAccumulate(Double4x1 a, Double4x1 b, Double4x1 c) => default;
+    public static Double4x1 FusedMultiplyAdd(Double4x1 a, Double4x1 b, Double4x1 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6182,7 +6182,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double4x2 FusedMultiplyAccumulate(Double4x2 a, Double4x2 b, Double4x2 c) => default;
+    public static Double4x2 FusedMultiplyAdd(Double4x2 a, Double4x2 b, Double4x2 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6193,7 +6193,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double4x3 FusedMultiplyAccumulate(Double4x3 a, Double4x3 b, Double4x3 c) => default;
+    public static Double4x3 FusedMultiplyAdd(Double4x3 a, Double4x3 b, Double4x3 c) => default;
 
     /// <summary>
     /// Returns the double-precision fused multiply-addition of a * b + c.
@@ -6204,7 +6204,7 @@ partial class Hlsl
     /// <returns>The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("fma")]
-    public static Double4x4 FusedMultiplyAccumulate(Double4x4 a, Double4x4 b, Double4x4 c) => default;
+    public static Double4x4 FusedMultiplyAdd(Double4x4 a, Double4x4 b, Double4x4 c) => default;
 
     /// <summary>
     /// Returns the floating-point remainder of x / y.
