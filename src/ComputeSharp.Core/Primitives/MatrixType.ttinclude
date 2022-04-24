@@ -17,6 +17,8 @@ using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServ
 using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
+#pragma warning disable CS0660, CS0661
+
 namespace ComputeSharp;
 
 <#
@@ -221,6 +223,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// </summary>
     /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to sum.</param>
     /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator +(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
@@ -229,14 +232,25 @@ public unsafe partial struct <#=fullTypeName#>
     /// </summary>
     /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to divide.</param>
     /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator /(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to divide.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator %(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="<#=fullTypeName#>"/> values (elementwise product).
     /// </summary>
     /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to multiply.</param>
     /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
@@ -245,11 +259,68 @@ public unsafe partial struct <#=fullTypeName#>
     /// </summary>
     /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to subtract.</param>
     /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator -(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator >(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator >=(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator <(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator <=(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 <#
     }
 
+    WriteLine("");
+#>
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator ==(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="<#=fullTypeName#>"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool<#=rows#>x<#=columns#> operator !=(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+<#
     // Generate the casting operators for row/column vectors
     if (rows == 1 && columns > 1)
     {

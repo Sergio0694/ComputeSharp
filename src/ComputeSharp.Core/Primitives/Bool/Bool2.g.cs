@@ -6,6 +6,7 @@ using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServic
 #endif
 
 #nullable enable
+#pragma warning disable CS0660, CS0661
 
 namespace ComputeSharp;
 
@@ -405,6 +406,25 @@ public unsafe partial struct Bool2
     /// Negates a <see cref="Bool2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Bool2"/> value to negate.</param>
+    /// <returns>The negated value of <paramref name="xy"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool2 operator !(Bool2 xy) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator ==(Bool2 left, Bool2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator !=(Bool2 left, Bool2 right) => default;
 }

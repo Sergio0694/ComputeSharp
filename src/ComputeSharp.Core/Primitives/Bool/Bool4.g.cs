@@ -6,6 +6,7 @@ using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServic
 #endif
 
 #nullable enable
+#pragma warning disable CS0660, CS0661
 
 namespace ComputeSharp;
 
@@ -4127,6 +4128,25 @@ public unsafe partial struct Bool4
     /// Negates a <see cref="Bool4"/> value.
     /// </summary>
     /// <param name="xyzw">The <see cref="Bool4"/> value to negate.</param>
+    /// <returns>The negated value of <paramref name="xyzw"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool4 operator !(Bool4 xyzw) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4 operator ==(Bool4 left, Bool4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4 operator !=(Bool4 left, Bool4 right) => default;
 }

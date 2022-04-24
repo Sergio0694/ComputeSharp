@@ -5,6 +5,8 @@ using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServ
 using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
+#pragma warning disable CS0660, CS0661
+
 namespace ComputeSharp;
 
 /// <inheritdoc cref="Bool1x1"/>
@@ -86,6 +88,24 @@ public unsafe partial struct Bool1x1
     /// <param name="matrix">The <see cref="Bool1x1"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool1x1 operator !(Bool1x1 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator ==(Bool1x1 left, Bool1x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x1 operator !=(Bool1x1 left, Bool1x1 right) => default;
 }
 
 /// <inheritdoc cref="Bool1x2"/>
@@ -178,6 +198,24 @@ public unsafe partial struct Bool1x2
     /// <param name="matrix">The <see cref="Bool1x2"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool1x2 operator !(Bool1x2 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator ==(Bool1x2 left, Bool1x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x2 operator !=(Bool1x2 left, Bool1x2 right) => default;
 
     /// <summary>
     /// Casts a <see cref="Bool2"/> value to a <see cref="Bool1x2"/> one.
@@ -287,6 +325,24 @@ public unsafe partial struct Bool1x3
     /// <param name="matrix">The <see cref="Bool1x3"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool1x3 operator !(Bool1x3 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator ==(Bool1x3 left, Bool1x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x3 operator !=(Bool1x3 left, Bool1x3 right) => default;
 
     /// <summary>
     /// Casts a <see cref="Bool3"/> value to a <see cref="Bool1x3"/> one.
@@ -409,6 +465,24 @@ public unsafe partial struct Bool1x4
     public static Bool1x4 operator !(Bool1x4 matrix) => default;
 
     /// <summary>
+    /// Compares two <see cref="Bool1x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator ==(Bool1x4 left, Bool1x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool1x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool1x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool1x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool1x4 operator !=(Bool1x4 left, Bool1x4 right) => default;
+
+    /// <summary>
     /// Casts a <see cref="Bool4"/> value to a <see cref="Bool1x4"/> one.
     /// </summary>
     /// <param name="vector">The input <see cref="Bool4"/> value to cast.</param>
@@ -505,6 +579,24 @@ public unsafe partial struct Bool2x1
     /// <param name="matrix">The <see cref="Bool2x1"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool2x1 operator !(Bool2x1 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator ==(Bool2x1 left, Bool2x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x1 operator !=(Bool2x1 left, Bool2x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="Bool2x1"/> value to a <see cref="Bool2"/> one.
@@ -638,6 +730,24 @@ public unsafe partial struct Bool2x2
     /// <param name="matrix">The <see cref="Bool2x2"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool2x2 operator !(Bool2x2 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator ==(Bool2x2 left, Bool2x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x2 operator !=(Bool2x2 left, Bool2x2 right) => default;
 }
 
 /// <inheritdoc cref="Bool2x3"/>
@@ -789,6 +899,24 @@ public unsafe partial struct Bool2x3
     /// <param name="matrix">The <see cref="Bool2x3"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool2x3 operator !(Bool2x3 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator ==(Bool2x3 left, Bool2x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x3 operator !=(Bool2x3 left, Bool2x3 right) => default;
 }
 
 /// <inheritdoc cref="Bool2x4"/>
@@ -964,6 +1092,24 @@ public unsafe partial struct Bool2x4
     /// <param name="matrix">The <see cref="Bool2x4"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool2x4 operator !(Bool2x4 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator ==(Bool2x4 left, Bool2x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool2x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool2x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool2x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2x4 operator !=(Bool2x4 left, Bool2x4 right) => default;
 }
 
 /// <inheritdoc cref="Bool3x1"/>
@@ -1067,6 +1213,24 @@ public unsafe partial struct Bool3x1
     /// <param name="matrix">The <see cref="Bool3x1"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool3x1 operator !(Bool3x1 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator ==(Bool3x1 left, Bool3x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x1 operator !=(Bool3x1 left, Bool3x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="Bool3x1"/> value to a <see cref="Bool3"/> one.
@@ -1225,6 +1389,24 @@ public unsafe partial struct Bool3x2
     /// <param name="matrix">The <see cref="Bool3x2"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool3x2 operator !(Bool3x2 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator ==(Bool3x2 left, Bool3x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x2 operator !=(Bool3x2 left, Bool3x2 right) => default;
 }
 
 /// <inheritdoc cref="Bool3x3"/>
@@ -1413,6 +1595,24 @@ public unsafe partial struct Bool3x3
     /// <param name="matrix">The <see cref="Bool3x3"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool3x3 operator !(Bool3x3 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator ==(Bool3x3 left, Bool3x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x3 operator !=(Bool3x3 left, Bool3x3 right) => default;
 }
 
 /// <inheritdoc cref="Bool3x4"/>
@@ -1637,6 +1837,24 @@ public unsafe partial struct Bool3x4
     /// <param name="matrix">The <see cref="Bool3x4"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool3x4 operator !(Bool3x4 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator ==(Bool3x4 left, Bool3x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool3x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool3x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool3x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3x4 operator !=(Bool3x4 left, Bool3x4 right) => default;
 }
 
 /// <inheritdoc cref="Bool4x1"/>
@@ -1751,6 +1969,24 @@ public unsafe partial struct Bool4x1
     /// <param name="matrix">The <see cref="Bool4x1"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool4x1 operator !(Bool4x1 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x1"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator ==(Bool4x1 left, Bool4x1 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x1"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x1"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x1"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x1 operator !=(Bool4x1 left, Bool4x1 right) => default;
 
     /// <summary>
     /// Casts a <see cref="Bool4x1"/> value to a <see cref="Bool4"/> one.
@@ -1934,6 +2170,24 @@ public unsafe partial struct Bool4x2
     /// <param name="matrix">The <see cref="Bool4x2"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool4x2 operator !(Bool4x2 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator ==(Bool4x2 left, Bool4x2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x2 operator !=(Bool4x2 left, Bool4x2 right) => default;
 }
 
 /// <inheritdoc cref="Bool4x3"/>
@@ -2159,6 +2413,24 @@ public unsafe partial struct Bool4x3
     /// <param name="matrix">The <see cref="Bool4x3"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool4x3 operator !(Bool4x3 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x3"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator ==(Bool4x3 left, Bool4x3 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x3"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x3"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x3"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x3 operator !=(Bool4x3 left, Bool4x3 right) => default;
 }
 
 /// <inheritdoc cref="Bool4x4"/>
@@ -2432,4 +2704,22 @@ public unsafe partial struct Bool4x4
     /// <param name="matrix">The <see cref="Bool4x4"/> value to negate.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool4x4 operator !(Bool4x4 matrix) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x4"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator ==(Bool4x4 left, Bool4x4 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Bool4x4"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Bool4x4"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Bool4x4"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool4x4 operator !=(Bool4x4 left, Bool4x4 right) => default;
 }

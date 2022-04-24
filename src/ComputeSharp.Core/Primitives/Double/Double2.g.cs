@@ -8,6 +8,7 @@ using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServic
 #endif
 
 #nullable enable
+#pragma warning disable CS0660, CS0661
 
 namespace ComputeSharp;
 
@@ -437,6 +438,7 @@ public unsafe partial struct Double2
     /// Negates a <see cref="Double2"/> value.
     /// </summary>
     /// <param name="xy">The <see cref="Double2"/> value to negate.</param>
+    /// <returns>The negated value of <paramref name="xy"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Double2 operator -(Double2 xy) => default;
 
@@ -445,6 +447,7 @@ public unsafe partial struct Double2
     /// </summary>
     /// <param name="left">The first <see cref="Double2"/> value to sum.</param>
     /// <param name="right">The second <see cref="Double2"/> value to sum.</param>
+    /// <returns>The result of adding <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Double2 operator +(Double2 left, Double2 right) => default;
 
@@ -453,14 +456,25 @@ public unsafe partial struct Double2
     /// </summary>
     /// <param name="left">The first <see cref="Double2"/> value to divide.</param>
     /// <param name="right">The second <see cref="Double2"/> value to divide.</param>
+    /// <returns>The result of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Double2 operator /(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Calculates the remainder of the division between two <see cref="Double2"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to divide.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to divide.</param>
+    /// <returns>The remainder of dividing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Double2 operator %(Double2 left, Double2 right) => default;
 
     /// <summary>
     /// Multiplies two <see cref="Double2"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Double2"/> value to multiply.</param>
     /// <param name="right">The second <see cref="Double2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Double2 operator *(Double2 left, Double2 right) => default;
 
@@ -469,6 +483,61 @@ public unsafe partial struct Double2
     /// </summary>
     /// <param name="left">The first <see cref="Double2"/> value to subtract.</param>
     /// <param name="right">The second <see cref="Double2"/> value to subtract.</param>
+    /// <returns>The result of subtracting <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Double2 operator -(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if the first is greater than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator >(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if the first is greater than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator >=(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if the first is lower than the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator <(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if the first is lower than or equal to the second.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator <=(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if they are equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator ==(Double2 left, Double2 right) => default;
+
+    /// <summary>
+    /// Compares two <see cref="Double2"/> values to see if they are not equal.
+    /// </summary>
+    /// <param name="left">The first <see cref="Double2"/> value to compare.</param>
+    /// <param name="right">The second <see cref="Double2"/> value to compare.</param>
+    /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool2 operator !=(Double2 left, Double2 right) => default;
 }
