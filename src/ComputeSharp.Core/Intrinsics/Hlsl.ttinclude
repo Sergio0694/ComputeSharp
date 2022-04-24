@@ -1117,7 +1117,7 @@ var Intrinsics = new[]
     },
     new
     {
-        Name = "FusedMultiplyAccumulate",
+        Name = "FusedMultiplyAdd",
         HlslName = "fma",
         Summary = "Returns the double-precision fused multiply-addition of a * b + c.",
         Parameters = new[]
