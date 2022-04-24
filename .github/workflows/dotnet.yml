@@ -232,13 +232,13 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Create local NuGet feed
-      run: mkdir nuget_preview
+      run: mkdir artifacts
       shell: cmd
     - name: Download package artifacts
       uses: actions/download-artifact@v2
       with:
         name: nuget_preview
-        path: nuget_preview
+        path: artifacts
     - name: Build ComputeSharp.Sample.NuGet (.NET 6)
       run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net6.0
       shell: cmd
