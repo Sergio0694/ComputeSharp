@@ -4,7 +4,7 @@ using ComputeSharp.Exceptions;
 namespace ComputeSharp;
 
 /// <inheritdoc cref="Hlsl"/>
-public static partial class Hlsl
+partial class Hlsl
 {
     /// <summary>
     /// Returns the absolute value of the specified value.

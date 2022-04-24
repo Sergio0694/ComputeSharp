@@ -5,7 +5,7 @@ using ComputeSharp.Exceptions;
 namespace ComputeSharp;
 
 /// <inheritdoc cref="Hlsl"/>
-public static partial class Hlsl
+partial class Hlsl
 {
 <#
 PushIndent("    ");
