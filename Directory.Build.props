@@ -12,9 +12,18 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
   </PropertyGroup>
 
+  <!--
+    The target version being built (this is referenced by all build steps).
+    This version will set the package version prefix and the assembly version.
+    As such, this needs to be changed before a new release as well.
+  -->
   <PropertyGroup>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <ComputeSharpPackageVersion>2.0.0</ComputeSharpPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>$(ComputeSharpPackageVersion).0</AssemblyVersion>
+    <VersionPrefix>$(ComputeSharpPackageVersion)</VersionPrefix>
     <VersionSuffix Condition="'$(EXCLUDE_SUFFIX_FROM_VERSION)' != 'true'">alpha</VersionSuffix>
     <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request'">pr</VersionSuffix>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
