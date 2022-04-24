@@ -82,4 +82,50 @@ public partial class ShaderRewriterTests
             buffer2[5] = double3;
         }
     }
+
+    // See: https://github.com/Sergio0694/ComputeSharp/issues/233
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void CustomHlslOperators(Device device)
+    {
+        float[] data = { 1, 6, 7, 3, 5, 2, 8, 4 };
+
+        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(data);
+
+        device.Get().For(1, new ModAndComparisonOperatorsShader(buffer));
+
+        float[] results = buffer.ToArray();
+
+        Assert.AreEqual(results[0], 1);
+        Assert.AreEqual(results[1], 0);
+        Assert.AreEqual(results[2], 7);
+        Assert.AreEqual(results[3], 3);
+        Assert.AreEqual(results[4], 0);
+        Assert.AreEqual(results[5], 1);
+        Assert.AreEqual(results[6], 0);
+        Assert.AreEqual(results[7], 0);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ModAndComparisonOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer;
+
+        public void Execute()
+        {
+            float4 a = new(buffer[0], buffer[1], buffer[2], buffer[3]);
+            int4 b = (int4)new float4(buffer[4], buffer[5], buffer[6], buffer[7]);
+            float4 mod = a % b;
+            bool4 greaterThan = a > b;
+
+            buffer[0] = mod.X;
+            buffer[1] = mod.Y;
+            buffer[2] = mod.Z;
+            buffer[3] = mod.W;
+            buffer[4] = greaterThan.X ? 1 : 0;
+            buffer[5] = greaterThan.Y ? 1 : 0;;
+            buffer[6] = greaterThan.Z ? 1 : 0;;
+            buffer[7] = greaterThan.W ? 1 : 0; ;
+        }
+    }
 }
