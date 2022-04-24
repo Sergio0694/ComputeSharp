@@ -23,6 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Intrinsics\Hlsl.Void.g.cs">
+      <DependentUpon>Hlsl.Void.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Intrinsics\Hlsl.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -131,6 +136,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Intrinsics\Hlsl.Void.tt">
+      <LastGenOutput>Hlsl.Void.g.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
     <None Update="Intrinsics\Hlsl.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Hlsl.g.cs</LastGenOutput>
