@@ -86,7 +86,7 @@ public static unsafe class D2D1InteropServices
     /// <remarks>
     /// This method will allocate a buffer every time it is invoked.
     /// For a zero-allocation alternative, use <see cref="SetPixelShaderConstantBufferForD2D1DrawInfo"/>.</remarks>
-    public static ReadOnlyMemory<byte> GetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader)
+    public static ReadOnlyMemory<byte> GetPixelShaderConstantBuffer<T>(in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ByteArrayDispatchDataLoader dataLoader = default;
