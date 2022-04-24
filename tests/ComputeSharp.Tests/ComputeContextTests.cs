@@ -912,7 +912,7 @@ public partial class ComputeContextTests
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
-        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.00000174f);
+        TolerantImageComparer.AssertEqual(sampled, processed, 0.00000174f);
     }
 
     [CombinatorialTestMethod]
@@ -938,7 +938,7 @@ public partial class ComputeContextTests
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
-        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
 
     [CombinatorialTestMethod]
@@ -989,7 +989,7 @@ public partial class ComputeContextTests
         {
             using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
 
-            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+            TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
     }
 
@@ -1033,7 +1033,7 @@ public partial class ComputeContextTests
         {
             using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
 
-            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+            TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
     }
 
@@ -1062,7 +1062,7 @@ public partial class ComputeContextTests
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
-        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
 
         Rgba32[,] clear = source.ToArray();
 
@@ -1114,7 +1114,7 @@ public partial class ComputeContextTests
         {
             using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
             
-            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+            TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
 
         Rgba32[,,] clear = source.ToArray();

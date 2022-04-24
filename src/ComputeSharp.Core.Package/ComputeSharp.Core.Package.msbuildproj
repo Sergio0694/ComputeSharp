@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp.Core</PackageId>
+    <Title>ComputeSharp.Core</Title>
+    <Description>A library containing basic primitives to support ComputeSharp (this package is not supposed to be referenced directly by developers)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.png" PackFolder="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" PackFolder="analyzers\dotnet\cs" />
+  </ItemGroup>
+
+</Project>

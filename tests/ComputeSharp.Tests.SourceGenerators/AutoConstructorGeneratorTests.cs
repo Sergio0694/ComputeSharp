@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ComputeSharp.SourceGenerators;
+using ComputeSharp.Core.SourceGenerators;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -53,7 +53,7 @@ public class AutoConstructorGeneratorTests
             {{
                 partial struct Test
                 {{
-                    [global::System.CodeDom.Compiler.GeneratedCode(""ComputeSharp.SourceGenerators.AutoConstructorGenerator"", ""{typeof(AutoConstructorGenerator).Assembly.GetName().Version}"")]
+                    [global::System.CodeDom.Compiler.GeneratedCode(""ComputeSharp.Core.SourceGenerators.AutoConstructorGenerator"", ""{typeof(AutoConstructorGenerator).Assembly.GetName().Version}"")]
                     [global::System.Diagnostics.DebuggerNonUserCode]
                     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public Test(float a, global::System.Numerics.Vector2 b, global::ComputeSharp.ReadWriteBuffer<global::System.Numerics.Vector4> c, global::ComputeSharp.ReadWriteBuffer<int> d)

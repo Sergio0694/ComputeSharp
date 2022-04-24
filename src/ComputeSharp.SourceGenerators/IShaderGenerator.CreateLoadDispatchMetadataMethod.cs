@@ -1,11 +1,11 @@
 ﻿using System.Collections.Immutable;
-using ComputeSharp.SourceGenerators.Mappings;
+using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Models;
 
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>LoadDispatchMetadata</c> method.

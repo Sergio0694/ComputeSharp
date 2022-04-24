@@ -4,9 +4,8 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
-using ComputeSharp.SourceGenerators.Diagnostics;
-using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Mappings;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
@@ -14,7 +13,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>LoadDispatchData</c> method.

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>51d5a422-d3a5-4c4d-8a6d-a048940bf279</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ComputeSharp.SourceGeneration</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\DiagnosticsExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\HashCodeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IEqualityComparerExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImmutableArrayExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IncrementalValuesProviderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Comparer{T,TSelf}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Result{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\TypeInfo.cs" />
+  </ItemGroup>
+</Project>

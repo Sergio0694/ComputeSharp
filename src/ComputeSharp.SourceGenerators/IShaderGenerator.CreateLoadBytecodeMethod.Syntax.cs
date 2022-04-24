@@ -11,10 +11,10 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial class LoadBytecode
+    partial class LoadBytecode
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.
@@ -22,7 +22,7 @@ public sealed partial class IShaderGenerator
         /// <param name="bytecodeInfo">The input <see cref="EmbeddedBytecodeInfo"/> instance.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
+        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, bool supportsDynamicShaders, out Func<SyntaxNode, string> fixup)
         {
             BlockSyntax block = GetShaderBytecodeBody(bytecodeInfo, supportsDynamicShaders, out string? bytecodeLiterals);
@@ -171,11 +171,11 @@ public sealed partial class IShaderGenerator
                             IdentifierName("ComputeSharp.__Internals.ShaderCompiler"),
                             IdentifierName("LoadDynamicBytecode")))
                     .AddArgumentListArguments(
-                        Argument(IdentifierName("loader")).WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)),
+                        Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
                         Argument(IdentifierName("threadsX")),
                         Argument(IdentifierName("threadsY")),
                         Argument(IdentifierName("threadsZ")),
-                        Argument(ThisExpression()).WithRefOrOutKeyword(Token(SyntaxKind.InKeyword))));
+                        Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword))));
         }
 
         /// <summary>

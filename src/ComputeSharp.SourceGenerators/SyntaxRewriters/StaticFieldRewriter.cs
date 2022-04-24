@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using ComputeSharp.SourceGenerators.Diagnostics;
-using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Helpers;
-using ComputeSharp.SourceGenerators.Mappings;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
+using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -60,6 +59,11 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
                 fieldOperation.Field.IsConst &&
                 fieldOperation.Type!.TypeKind != TypeKind.Enum)
             {
+                if (HlslKnownFields.TryGetMappedName(fieldOperation.Member.ToDisplayString(), out string? constantLiteral))
+                {
+                    return ParseExpression(constantLiteral!);
+                }
+
                 ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
                 var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
@@ -68,7 +72,7 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
                 return IdentifierName(constantName);
             }
 
-            if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
+            if (HlslKnownProperties.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
             {
                 if (operation.Member.IsStatic)
                 {

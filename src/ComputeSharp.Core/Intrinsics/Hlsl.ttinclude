@@ -1,0 +1,2849 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+var Intrinsics = new[]
+{
+    new
+    {
+        Name = "Abs",
+        HlslName = "abs",
+        Summary = "Returns the absolute value of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The absolute value of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "int", Params = new[] { "int" } },
+            new { Return = "Int2", Params = new[] { "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4" } },
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } },
+            new { Return = "double", Params = new[] { "double" } },
+            new { Return = "Double2", Params = new[] { "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Acos",
+        HlslName = "acos",
+        Summary = "Returns the arccosine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value. Each component should be a floating-point within the range [-1, 1]." }
+        },
+        Returns = "The arccosine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "All",
+        HlslName = "all",
+        Summary = "Determines if all components of the specified value are non-zero.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Whether or not all components of the {x} parameter are non-zero.",
+        Overloads = new[]
+        {
+            new { Return = "bool", Params = new[] { "int" } },
+            new { Return = "bool", Params = new[] { "Int2" } },
+            new { Return = "bool", Params = new[] { "Int3" } },
+            new { Return = "bool", Params = new[] { "Int4" } },
+            new { Return = "bool", Params = new[] { "Int1x1" } },
+            new { Return = "bool", Params = new[] { "Int1x2" } },
+            new { Return = "bool", Params = new[] { "Int1x3" } },
+            new { Return = "bool", Params = new[] { "Int1x4" } },
+            new { Return = "bool", Params = new[] { "Int2x1" } },
+            new { Return = "bool", Params = new[] { "Int2x2" } },
+            new { Return = "bool", Params = new[] { "Int2x3" } },
+            new { Return = "bool", Params = new[] { "Int2x4" } },
+            new { Return = "bool", Params = new[] { "Int3x1" } },
+            new { Return = "bool", Params = new[] { "Int3x2" } },
+            new { Return = "bool", Params = new[] { "Int3x3" } },
+            new { Return = "bool", Params = new[] { "Int3x4" } },
+            new { Return = "bool", Params = new[] { "Int4x1" } },
+            new { Return = "bool", Params = new[] { "Int4x2" } },
+            new { Return = "bool", Params = new[] { "Int4x3" } },
+            new { Return = "bool", Params = new[] { "Int4x4" } },
+            new { Return = "bool", Params = new[] { "float" } },
+            new { Return = "bool", Params = new[] { "Float2" } },
+            new { Return = "bool", Params = new[] { "Float3" } },
+            new { Return = "bool", Params = new[] { "Float4" } },
+            new { Return = "bool", Params = new[] { "Float1x1" } },
+            new { Return = "bool", Params = new[] { "Float1x2" } },
+            new { Return = "bool", Params = new[] { "Float1x3" } },
+            new { Return = "bool", Params = new[] { "Float1x4" } },
+            new { Return = "bool", Params = new[] { "Float2x1" } },
+            new { Return = "bool", Params = new[] { "Float2x2" } },
+            new { Return = "bool", Params = new[] { "Float2x3" } },
+            new { Return = "bool", Params = new[] { "Float2x4" } },
+            new { Return = "bool", Params = new[] { "Float3x1" } },
+            new { Return = "bool", Params = new[] { "Float3x2" } },
+            new { Return = "bool", Params = new[] { "Float3x3" } },
+            new { Return = "bool", Params = new[] { "Float3x4" } },
+            new { Return = "bool", Params = new[] { "Float4x1" } },
+            new { Return = "bool", Params = new[] { "Float4x2" } },
+            new { Return = "bool", Params = new[] { "Float4x3" } },
+            new { Return = "bool", Params = new[] { "Float4x4" } },
+            new { Return = "bool", Params = new[] { "bool" } },
+            new { Return = "bool", Params = new[] { "Bool2" } },
+            new { Return = "bool", Params = new[] { "Bool3" } },
+            new { Return = "bool", Params = new[] { "Bool4" } },
+            new { Return = "bool", Params = new[] { "Bool1x1" } },
+            new { Return = "bool", Params = new[] { "Bool1x2" } },
+            new { Return = "bool", Params = new[] { "Bool1x3" } },
+            new { Return = "bool", Params = new[] { "Bool1x4" } },
+            new { Return = "bool", Params = new[] { "Bool2x1" } },
+            new { Return = "bool", Params = new[] { "Bool2x2" } },
+            new { Return = "bool", Params = new[] { "Bool2x3" } },
+            new { Return = "bool", Params = new[] { "Bool2x4" } },
+            new { Return = "bool", Params = new[] { "Bool3x1" } },
+            new { Return = "bool", Params = new[] { "Bool3x2" } },
+            new { Return = "bool", Params = new[] { "Bool3x3" } },
+            new { Return = "bool", Params = new[] { "Bool3x4" } },
+            new { Return = "bool", Params = new[] { "Bool4x1" } },
+            new { Return = "bool", Params = new[] { "Bool4x2" } },
+            new { Return = "bool", Params = new[] { "Bool4x3" } },
+            new { Return = "bool", Params = new[] { "Bool4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Any",
+        HlslName = "any",
+        Summary = "Determines if any components of the specified value are non-zero.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Whether or not any components of the {x} parameter are non-zero.",
+        Overloads = new[]
+        {
+            new { Return = "bool", Params = new[] { "int" } },
+            new { Return = "bool", Params = new[] { "Int2" } },
+            new { Return = "bool", Params = new[] { "Int3" } },
+            new { Return = "bool", Params = new[] { "Int4" } },
+            new { Return = "bool", Params = new[] { "Int1x1" } },
+            new { Return = "bool", Params = new[] { "Int1x2" } },
+            new { Return = "bool", Params = new[] { "Int1x3" } },
+            new { Return = "bool", Params = new[] { "Int1x4" } },
+            new { Return = "bool", Params = new[] { "Int2x1" } },
+            new { Return = "bool", Params = new[] { "Int2x2" } },
+            new { Return = "bool", Params = new[] { "Int2x3" } },
+            new { Return = "bool", Params = new[] { "Int2x4" } },
+            new { Return = "bool", Params = new[] { "Int3x1" } },
+            new { Return = "bool", Params = new[] { "Int3x2" } },
+            new { Return = "bool", Params = new[] { "Int3x3" } },
+            new { Return = "bool", Params = new[] { "Int3x4" } },
+            new { Return = "bool", Params = new[] { "Int4x1" } },
+            new { Return = "bool", Params = new[] { "Int4x2" } },
+            new { Return = "bool", Params = new[] { "Int4x3" } },
+            new { Return = "bool", Params = new[] { "Int4x4" } },
+            new { Return = "bool", Params = new[] { "float" } },
+            new { Return = "bool", Params = new[] { "Float2" } },
+            new { Return = "bool", Params = new[] { "Float3" } },
+            new { Return = "bool", Params = new[] { "Float4" } },
+            new { Return = "bool", Params = new[] { "Float1x1" } },
+            new { Return = "bool", Params = new[] { "Float1x2" } },
+            new { Return = "bool", Params = new[] { "Float1x3" } },
+            new { Return = "bool", Params = new[] { "Float1x4" } },
+            new { Return = "bool", Params = new[] { "Float2x1" } },
+            new { Return = "bool", Params = new[] { "Float2x2" } },
+            new { Return = "bool", Params = new[] { "Float2x3" } },
+            new { Return = "bool", Params = new[] { "Float2x4" } },
+            new { Return = "bool", Params = new[] { "Float3x1" } },
+            new { Return = "bool", Params = new[] { "Float3x2" } },
+            new { Return = "bool", Params = new[] { "Float3x3" } },
+            new { Return = "bool", Params = new[] { "Float3x4" } },
+            new { Return = "bool", Params = new[] { "Float4x1" } },
+            new { Return = "bool", Params = new[] { "Float4x2" } },
+            new { Return = "bool", Params = new[] { "Float4x3" } },
+            new { Return = "bool", Params = new[] { "Float4x4" } },
+            new { Return = "bool", Params = new[] { "bool" } },
+            new { Return = "bool", Params = new[] { "Bool2" } },
+            new { Return = "bool", Params = new[] { "Bool3" } },
+            new { Return = "bool", Params = new[] { "Bool4" } },
+            new { Return = "bool", Params = new[] { "Bool1x1" } },
+            new { Return = "bool", Params = new[] { "Bool1x2" } },
+            new { Return = "bool", Params = new[] { "Bool1x3" } },
+            new { Return = "bool", Params = new[] { "Bool1x4" } },
+            new { Return = "bool", Params = new[] { "Bool2x1" } },
+            new { Return = "bool", Params = new[] { "Bool2x2" } },
+            new { Return = "bool", Params = new[] { "Bool2x3" } },
+            new { Return = "bool", Params = new[] { "Bool2x4" } },
+            new { Return = "bool", Params = new[] { "Bool3x1" } },
+            new { Return = "bool", Params = new[] { "Bool3x2" } },
+            new { Return = "bool", Params = new[] { "Bool3x3" } },
+            new { Return = "bool", Params = new[] { "Bool3x4" } },
+            new { Return = "bool", Params = new[] { "Bool4x1" } },
+            new { Return = "bool", Params = new[] { "Bool4x2" } },
+            new { Return = "bool", Params = new[] { "Bool4x3" } },
+            new { Return = "bool", Params = new[] { "Bool4x4" } }
+        }
+    },
+    new
+    {
+        Name = "AsDouble",
+        HlslName = "asdouble",
+        Summary = "Reinterprets a cast value (two 32-bit values) into a double precision floating-point value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "lowbits", Info = "The low 32-bit pattern of the input value." },
+            new { IsOut = false, Name = "highbits", Info = "The high 32-bit pattern of the input value." }
+        },
+        Returns = "The input (two 32-bit values) recast as a double precision floating-point number.",
+        Overloads = new[]
+        {
+            new { Return = "double", Params = new[] { "uint", "uint" } },
+            new { Return = "Double2", Params = new[] { "UInt2", "UInt2" } }
+        }
+    },
+    new
+    {
+        Name = "AsFloat",
+        HlslName = "asfloat",
+        Summary = "Interprets the bit pattern of an input value as a floating-point number.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The input interpreted as a floating-point number.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "int" } },
+            new { Return = "Float2", Params = new[] { "Int2" } },
+            new { Return = "Float3", Params = new[] { "Int3" } },
+            new { Return = "Float4", Params = new[] { "Int4" } },
+            new { Return = "Float1x1", Params = new[] { "Int1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Int1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Int1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Int1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Int2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Int2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Int2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Int2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Int3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Int3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Int3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Int3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Int4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Int4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Int4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Int4x4" } },
+            new { Return = "float", Params = new[] { "uint" } },
+            new { Return = "Float2", Params = new[] { "UInt2" } },
+            new { Return = "Float3", Params = new[] { "UInt3" } },
+            new { Return = "Float4", Params = new[] { "UInt4" } },
+            new { Return = "Float1x1", Params = new[] { "UInt1x1" } },
+            new { Return = "Float1x2", Params = new[] { "UInt1x2" } },
+            new { Return = "Float1x3", Params = new[] { "UInt1x3" } },
+            new { Return = "Float1x4", Params = new[] { "UInt1x4" } },
+            new { Return = "Float2x1", Params = new[] { "UInt2x1" } },
+            new { Return = "Float2x2", Params = new[] { "UInt2x2" } },
+            new { Return = "Float2x3", Params = new[] { "UInt2x3" } },
+            new { Return = "Float2x4", Params = new[] { "UInt2x4" } },
+            new { Return = "Float3x1", Params = new[] { "UInt3x1" } },
+            new { Return = "Float3x2", Params = new[] { "UInt3x2" } },
+            new { Return = "Float3x3", Params = new[] { "UInt3x3" } },
+            new { Return = "Float3x4", Params = new[] { "UInt3x4" } },
+            new { Return = "Float4x1", Params = new[] { "UInt4x1" } },
+            new { Return = "Float4x2", Params = new[] { "UInt4x2" } },
+            new { Return = "Float4x3", Params = new[] { "UInt4x3" } },
+            new { Return = "Float4x4", Params = new[] { "UInt4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Asin",
+        HlslName = "asin",
+        Summary = "Returns the arcsine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The arcsine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "AsInt",
+        HlslName = "asint",
+        Summary = "Interprets the bit pattern of an input value as an integer number.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The input interpreted as an integer number.",
+        Overloads = new[]
+        {
+            new { Return = "int", Params = new[] { "float" } },
+            new { Return = "Int2", Params = new[] { "Float2" } },
+            new { Return = "Int3", Params = new[] { "Float3" } },
+            new { Return = "Int4", Params = new[] { "Float4" } },
+            new { Return = "Int1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Float4x4" } },
+            new { Return = "int", Params = new[] { "uint" } },
+            new { Return = "Int2", Params = new[] { "UInt2" } },
+            new { Return = "Int3", Params = new[] { "UInt3" } },
+            new { Return = "Int4", Params = new[] { "UInt4" } },
+            new { Return = "Int1x1", Params = new[] { "UInt1x1" } },
+            new { Return = "Int1x2", Params = new[] { "UInt1x2" } },
+            new { Return = "Int1x3", Params = new[] { "UInt1x3" } },
+            new { Return = "Int1x4", Params = new[] { "UInt1x4" } },
+            new { Return = "Int2x1", Params = new[] { "UInt2x1" } },
+            new { Return = "Int2x2", Params = new[] { "UInt2x2" } },
+            new { Return = "Int2x3", Params = new[] { "UInt2x3" } },
+            new { Return = "Int2x4", Params = new[] { "UInt2x4" } },
+            new { Return = "Int3x1", Params = new[] { "UInt3x1" } },
+            new { Return = "Int3x2", Params = new[] { "UInt3x2" } },
+            new { Return = "Int3x3", Params = new[] { "UInt3x3" } },
+            new { Return = "Int3x4", Params = new[] { "UInt3x4" } },
+            new { Return = "Int4x1", Params = new[] { "UInt4x1" } },
+            new { Return = "Int4x2", Params = new[] { "UInt4x2" } },
+            new { Return = "Int4x3", Params = new[] { "UInt4x3" } },
+            new { Return = "Int4x4", Params = new[] { "UInt4x4" } }
+        }
+    },
+    new
+    {
+        Name = "AsUInt",
+        HlslName = "asuint",
+        Summary = "Interprets the bit pattern of an input value as an unsigned integer number.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The input interpreted as an unsigned integer number.",
+        Overloads = new[]
+        {
+            new { Return = "uint", Params = new[] { "float" } },
+            new { Return = "UInt2", Params = new[] { "Float2" } },
+            new { Return = "UInt3", Params = new[] { "Float3" } },
+            new { Return = "UInt4", Params = new[] { "Float4" } },
+            new { Return = "UInt1x1", Params = new[] { "Float1x1" } },
+            new { Return = "UInt1x2", Params = new[] { "Float1x2" } },
+            new { Return = "UInt1x3", Params = new[] { "Float1x3" } },
+            new { Return = "UInt1x4", Params = new[] { "Float1x4" } },
+            new { Return = "UInt2x1", Params = new[] { "Float2x1" } },
+            new { Return = "UInt2x2", Params = new[] { "Float2x2" } },
+            new { Return = "UInt2x3", Params = new[] { "Float2x3" } },
+            new { Return = "UInt2x4", Params = new[] { "Float2x4" } },
+            new { Return = "UInt3x1", Params = new[] { "Float3x1" } },
+            new { Return = "UInt3x2", Params = new[] { "Float3x2" } },
+            new { Return = "UInt3x3", Params = new[] { "Float3x3" } },
+            new { Return = "UInt3x4", Params = new[] { "Float3x4" } },
+            new { Return = "UInt4x1", Params = new[] { "Float4x1" } },
+            new { Return = "UInt4x2", Params = new[] { "Float4x2" } },
+            new { Return = "UInt4x3", Params = new[] { "Float4x3" } },
+            new { Return = "UInt4x4", Params = new[] { "Float4x4" } },
+            new { Return = "uint", Params = new[] { "int" } },
+            new { Return = "UInt2", Params = new[] { "Int2" } },
+            new { Return = "UInt3", Params = new[] { "Int3" } },
+            new { Return = "UInt4", Params = new[] { "Int4" } },
+            new { Return = "UInt1x1", Params = new[] { "Int1x1" } },
+            new { Return = "UInt1x2", Params = new[] { "Int1x2" } },
+            new { Return = "UInt1x3", Params = new[] { "Int1x3" } },
+            new { Return = "UInt1x4", Params = new[] { "Int1x4" } },
+            new { Return = "UInt2x1", Params = new[] { "Int2x1" } },
+            new { Return = "UInt2x2", Params = new[] { "Int2x2" } },
+            new { Return = "UInt2x3", Params = new[] { "Int2x3" } },
+            new { Return = "UInt2x4", Params = new[] { "Int2x4" } },
+            new { Return = "UInt3x1", Params = new[] { "Int3x1" } },
+            new { Return = "UInt3x2", Params = new[] { "Int3x2" } },
+            new { Return = "UInt3x3", Params = new[] { "Int3x3" } },
+            new { Return = "UInt3x4", Params = new[] { "Int3x4" } },
+            new { Return = "UInt4x1", Params = new[] { "Int4x1" } },
+            new { Return = "UInt4x2", Params = new[] { "Int4x2" } },
+            new { Return = "UInt4x3", Params = new[] { "Int4x3" } },
+            new { Return = "UInt4x4", Params = new[] { "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Atan",
+        HlslName = "atan",
+        Summary = "Returns the arctangent of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The arctangent of the {x} parameter. This value is within the range [-π/2, π/2].",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Atan2",
+        HlslName = "atan2",
+        Summary = "Returns the arctangent of two values (y, x).",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "y", Info = "The y value." },
+            new { IsOut = false, Name = "x", Info = "The x value." }
+        },
+        Returns = "The arctangent of ({y}, {x}).",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Ceil",
+        HlslName = "ceil",
+        Summary = "Returns the smallest integer value that is greater than or equal to the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The smallest integer value (returned as a floating-point type) that is greater than or equal to the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Clamp",
+        HlslName = "clamp",
+        Summary = "Clamps the specified value to the specified minimum and maximum range.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The value to clamp." },
+            new { IsOut = false, Name = "min", Info = "The specified minimum range." },
+            new { IsOut = false, Name = "max", Info = "The specified maximum range." }
+        },
+        Returns = "The clamped value for the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } },
+            new { Return = "int", Params = new[] { "int", "int", "int" } },
+            new { Return = "Int2", Params = new[] { "Int2", "Int2", "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3", "Int3", "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4", "Int4", "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "Int1x1", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "Int1x2", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "Int1x3", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "Int1x4", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "Int2x1", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "Int2x2", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "Int2x3", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "Int2x4", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "Int3x1", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "Int3x2", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "Int3x3", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "Int3x4", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "Int4x1", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4", "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Cos",
+        HlslName = "cos",
+        Summary = "Returns the cosine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The cosine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Cosh",
+        HlslName = "cosh",
+        Summary = "Returns the hyperbolic cosine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The hyperbolic cosine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "CountBits",
+        HlslName = "countbits",
+        Summary = "Counts the number of bits (per component) in the input integer.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The number of bits.",
+        Overloads = new[]
+        {
+            new { Return = "uint", Params = new[] { "uint" } },
+            new { Return = "UInt2", Params = new[] { "UInt2" } },
+            new { Return = "UInt3", Params = new[] { "UInt3" } },
+            new { Return = "UInt4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
+        Name = "Cross",
+        HlslName = "cross",
+        Summary = "Returns the cross product of two floating-point, 3D vectors.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first floating-point, 3D vector." },
+            new { IsOut = false, Name = "y", Info = "The second floating-point, 3D vector." }
+        },
+        Returns = "The number of bits.",
+        Overloads = new[]
+        {
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDx",
+        HlslName = "ddx",
+        Summary = "Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDxLowPrecision",
+        HlslName = "ddx_coarse",
+        Summary = "Computes a low precision partial derivative with respect to the screen-space x-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The low precision partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDxHighPrecision",
+        HlslName = "ddx_fine",
+        Summary = "Computes a high precision partial derivative with respect to the screen-space x-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The high precision partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDy",
+        HlslName = "ddy",
+        Summary = "Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDyLowPrecision",
+        HlslName = "ddy_coarse",
+        Summary = "Computes a low precision partial derivative with respect to the screen-space y-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The low precision partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "DerivativeOfDyHighPrecision",
+        HlslName = "ddy_fine",
+        Summary = "Computes a high precision partial derivative with respect to the screen-space y-coordinate.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The high precision partial derivative with respect to the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "Degrees",
+        HlslName = "degrees",
+        Summary = "Converts the specified value from radians to degrees.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The result of converting the {x} parameter from radians to degrees.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Determinant",
+        HlslName = "determinant",
+        Summary = "Returns the determinant of the specified floating-point, square matrix.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "m", Info = "The specified value." }
+        },
+        Returns = "The floating-point, scalar value that represents the determinant of the {m} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "Float1x1" } },
+            new { Return = "float", Params = new[] { "Float2x2" } },
+            new { Return = "float", Params = new[] { "Float3x3" } },
+            new { Return = "float", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Distance",
+        HlslName = "distance",
+        Summary = "Returns a distance scalar between two vectors.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first floating-point vector to compare." },
+            new { IsOut = false, Name = "y", Info = "The second floating-point vector to compare." }
+        },
+        Returns = "A floating-point, scalar value that represents the distance between the {x} parameter and the {y} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "Float2", "Float2" } },
+            new { Return = "float", Params = new[] { "Float3", "Float3" } },
+            new { Return = "float", Params = new[] { "Float4", "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "Dot",
+        HlslName = "dot",
+        Summary = "Returns the dot product of two vectors.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first vector." },
+            new { IsOut = false, Name = "y", Info = "The second vector." }
+        },
+        Returns = "The dot product of the {x} parameter and the {y} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "Float2", "Float2" } },
+            new { Return = "float", Params = new[] { "Float3", "Float3" } },
+            new { Return = "float", Params = new[] { "Float4", "Float4" } },
+            new { Return = "int", Params = new[] { "Int2", "Int2" } },
+            new { Return = "int", Params = new[] { "Int3", "Int3" } },
+            new { Return = "int", Params = new[] { "Int4", "Int4" } }
+        }
+    },
+    new
+    {
+        Name = "Exp",
+        HlslName = "exp",
+        Summary = "Returns the base-e exponential of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The base-e exponential of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Exp2",
+        HlslName = "exp2",
+        Summary = "Returns the base-2 exponential of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The base-2 exponential of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "FirstBitHigh",
+        HlslName = "firstbithigh",
+        Summary = "Gets the location of the first set bit starting from the highest order bit and working downward, per component.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "value", Info = "The input value." }
+        },
+        Returns = "The location of the first set bit.",
+        Overloads = new[]
+        {
+            new { Return = "int", Params = new[] { "int" } },
+            new { Return = "Int2", Params = new[] { "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4" } },
+            new { Return = "uint", Params = new[] { "uint" } },
+            new { Return = "UInt2", Params = new[] { "UInt2" } },
+            new { Return = "UInt3", Params = new[] { "UInt3" } },
+            new { Return = "UInt4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
+        Name = "FirstBitLow",
+        HlslName = "firstbitlow",
+        Summary = "Returns the location of the first set bit starting from the lowest order bit and working upward, per component.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "value", Info = "The input value." }
+        },
+        Returns = "The location of the first set bit.",
+        Overloads = new[]
+        {
+            new { Return = "int", Params = new[] { "int" } },
+            new { Return = "Int2", Params = new[] { "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4" } },
+            new { Return = "uint", Params = new[] { "uint" } },
+            new { Return = "UInt2", Params = new[] { "UInt2" } },
+            new { Return = "UInt3", Params = new[] { "UInt3" } },
+            new { Return = "UInt4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
+        Name = "Floor",
+        HlslName = "floor",
+        Summary = "Returns the largest integer that is less than or equal to the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The largest integer value (returned as a floating-point type) that is less than or equal to the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "FusedMultiplyAdd",
+        HlslName = "fma",
+        Summary = "Returns the double-precision fused multiply-addition of a * b + c.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "a", Info = "The first value in the fused multiply-addition." },
+            new { IsOut = false, Name = "b", Info = "The second value in the fused multiply-addition." },
+            new { IsOut = false, Name = "c", Info = "The third value in the fused multiply-addition." }
+        },
+        Returns = "The double-precision fused multiply-addition of parameters a * b + c. The returned value must be accurate to 0.5 units of least precision (ULP).",
+        Overloads = new[]
+        {
+            new { Return = "double", Params = new[] { "double", "double", "double" } },
+            new { Return = "Double2", Params = new[] { "Double2", "Double2", "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3", "Double3", "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4", "Double4", "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1", "Double1x1", "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2", "Double1x2", "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3", "Double1x3", "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4", "Double1x4", "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1", "Double2x1", "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2", "Double2x2", "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3", "Double2x3", "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4", "Double2x4", "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1", "Double3x1", "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2", "Double3x2", "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3", "Double3x3", "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4", "Double3x4", "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1", "Double4x1", "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2", "Double4x2", "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3", "Double4x3", "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4", "Double4x4", "Double4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Fmod",
+        HlslName = "fmod",
+        Summary = "Returns the floating-point remainder of x / y.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The floating-point dividend." },
+            new { IsOut = false, Name = "y", Info = "The floating-point divisor." }
+        },
+        Returns = "The floating-point remainder of the x parameter divided by the y parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Frac",
+        HlslName = "frac",
+        Summary = "Returns the fractional (or decimal) part of the input which is greater than or equal to 0 and less than 1.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The fractional part of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Frexp",
+        HlslName = "frexp",
+        Summary = "Returns the mantissa and exponent of the specified floating-point value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified floating-point value." },
+            new { IsOut = true, Name = "exp", Info = "The returned exponent of the input parameter." }
+        },
+        Returns = "The mantissa of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Fwidth",
+        HlslName = "fwidth",
+        Summary = "Returns the absolute value of the partial derivatives of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The absolute value of the partial derivatives of the input parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "IsFinite",
+        HlslName = "isfinite",
+        Summary = "Determines if the specified floating-point value is finite.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Returns a value of the same size as {x}, indicaating whether each component is finite.",
+        Overloads = new[]
+        {
+            new { Return = "bool", Params = new[] { "float" } },
+            new { Return = "Bool2", Params = new[] { "Float2" } },
+            new { Return = "Bool3", Params = new[] { "Float3" } },
+            new { Return = "Bool4", Params = new[] { "Float4" } },
+            new { Return = "Bool1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Bool1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Bool1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Bool1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Bool2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Bool2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Bool2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Bool2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Bool3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Bool3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Bool3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Bool3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Bool4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "IsInfinite",
+        HlslName = "isinf",
+        Summary = "Determines if the specified value is infinite.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Returns a value of the same size as {x}, indicaating whether each component is infinite.",
+        Overloads = new[]
+        {
+            new { Return = "bool", Params = new[] { "float" } },
+            new { Return = "Bool2", Params = new[] { "Float2" } },
+            new { Return = "Bool3", Params = new[] { "Float3" } },
+            new { Return = "Bool4", Params = new[] { "Float4" } },
+            new { Return = "Bool1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Bool1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Bool1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Bool1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Bool2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Bool2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Bool2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Bool2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Bool3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Bool3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Bool3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Bool3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Bool4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "IsNaN",
+        HlslName = "isnan",
+        Summary = "Determines if the specified value is NAN or QNAN.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Returns a value of the same size as {x}, indicaating whether each component is NAN or QNAN.",
+        Overloads = new[]
+        {
+            new { Return = "bool", Params = new[] { "float" } },
+            new { Return = "Bool2", Params = new[] { "Float2" } },
+            new { Return = "Bool3", Params = new[] { "Float3" } },
+            new { Return = "Bool4", Params = new[] { "Float4" } },
+            new { Return = "Bool1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Bool1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Bool1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Bool1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Bool2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Bool2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Bool2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Bool2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Bool3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Bool3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Bool3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Bool3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Bool4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Ldexp",
+        HlslName = "ldexp",
+        Summary = "Returns the result of multiplying the specified value by two, raised to the power of the specified exponent.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." },
+            new { IsOut = false, Name = "exp", Info = "The specified exponent." }
+        },
+        Returns = "The result of multiplying the {x} parameter by two, raised to the power of the {exp} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Length",
+        HlslName = "length",
+        Summary = "Returns the length of the specified floating-point vector.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
+        },
+        Returns = "A floating-point scalar that represents the length of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "Float2" } },
+            new { Return = "float", Params = new[] { "Float3" } },
+            new { Return = "float", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "Lerp",
+        HlslName = "lerp",
+        Summary = "Performs a linear interpolation.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first-floating point value." },
+            new { IsOut = false, Name = "y", Info = "The second-floating point value." },
+            new { IsOut = false, Name = "s", Info = "A value that linearly interpolates between the two inputs." }
+        },
+        Returns = "The result of the linear interpolation.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Log",
+        HlslName = "log",
+        Summary = "Returns the base-e logarithm of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The base-e logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Log10",
+        HlslName = "log10",
+        Summary = "Returns the base-10 logarithm of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The base-10 logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Log2",
+        HlslName = "log2",
+        Summary = "Returns the base-2 logarithm of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The base-2 logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Max",
+        HlslName = "max",
+        Summary = "Selects the greater between two inputs.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first input value." },
+            new { IsOut = false, Name = "y", Info = "The second input value." }
+        },
+        Returns = "The {x} or {y} parameter, whichever is the largest value.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } },
+            new { Return = "double", Params = new[] { "double", "double" } },
+            new { Return = "Double2", Params = new[] { "Double2", "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3", "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4", "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1", "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2", "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3", "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4", "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1", "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2", "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3", "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4", "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1", "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2", "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3", "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4", "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1", "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2", "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3", "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4", "Double4x4" } },
+            new { Return = "int", Params = new[] { "int", "int" } },
+            new { Return = "Int2", Params = new[] { "Int2", "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3", "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4", "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Min",
+        HlslName = "min",
+        Summary = "Selects the lesser between two inputs.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first input value." },
+            new { IsOut = false, Name = "y", Info = "The second input value." }
+        },
+        Returns = "The {x} or {y} parameter, whichever is the smallest value.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } },
+            new { Return = "double", Params = new[] { "double", "double" } },
+            new { Return = "Double2", Params = new[] { "Double2", "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3", "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4", "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1", "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2", "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3", "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4", "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1", "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2", "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3", "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4", "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1", "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2", "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3", "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4", "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1", "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2", "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3", "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4", "Double4x4" } },
+            new { Return = "int", Params = new[] { "int", "int" } },
+            new { Return = "Int2", Params = new[] { "Int2", "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3", "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4", "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Modf",
+        HlslName = "modf",
+        Summary = "Splits a value into fractional and integer parts, each with the same sign as the input value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." },
+            new { IsOut = true, Name = "y", Info = "The resulting integer portion." }
+        },
+        Returns = "The signed-fractional portion of {x}.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } },
+            new { Return = "int", Params = new[] { "int", "int" } },
+            new { Return = "Int2", Params = new[] { "Int2", "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3", "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4", "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Mul",
+        HlslName = "mul",
+        Summary = "Multiplies two values using matrix math.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first input value." },
+            new { IsOut = false, Name = "y", Info = "The second input value." }
+        },
+        Returns = "The result of {x} times {y}. The result has the dimension {x}-rows by {y}-columns.",
+        Overloads = new[]
+        {
+            // 1 (scalars)
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "int", Params = new[] { "int", "int" } },
+
+            // 2 (scalar by vector)
+            new { Return = "Float2", Params = new[] { "float", "Float2" } },
+            new { Return = "Float3", Params = new[] { "float", "Float3" } },
+            new { Return = "Float4", Params = new[] { "float", "Float4" } },
+            new { Return = "Int2", Params = new[] { "int", "Int2" } },
+            new { Return = "Int3", Params = new[] { "int", "Int3" } },
+            new { Return = "Int4", Params = new[] { "int", "Int4" } },
+
+            // 3 (scalar by matrix)
+            new { Return = "Float1x1", Params = new[] { "float", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "float", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "float", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "float", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "float", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "float", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "float", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "float", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "float", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "float", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "float", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "float", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "float", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "float", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "float", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "float", "Float4x4" } },
+            new { Return = "Int1x1", Params = new[] { "int", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "int", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "int", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "int", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "int", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "int", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "int", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "int", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "int", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "int", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "int", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "int", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "int", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "int", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "int", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "int", "Int4x4" } },
+
+            // 4 (vector by scalar)
+            new { Return = "Float2", Params = new[] { "Float2", "float" } },
+            new { Return = "Float3", Params = new[] { "Float3", "float" } },
+            new { Return = "Float4", Params = new[] { "Float4", "float" } },
+            new { Return = "Int2", Params = new[] { "Int2", "int" } },
+            new { Return = "Int3", Params = new[] { "Int3", "int" } },
+            new { Return = "Int4", Params = new[] { "Int4", "int" } },
+
+            // 5 (vector by vector)
+            new { Return = "float", Params = new[] { "Float2", "Float2" } },
+            new { Return = "float", Params = new[] { "Float3", "Float3" } },
+            new { Return = "float", Params = new[] { "Float4", "Float4" } },
+            new { Return = "int", Params = new[] { "Int2", "Int2" } },
+            new { Return = "int", Params = new[] { "Int3", "Int3" } },
+            new { Return = "int", Params = new[] { "Int4", "Int4" } },
+
+            // 6 (vector by matrix)
+            new { Return = "float", Params = new[] { "Float2", "Float2x1" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2x2" } },
+            new { Return = "Float3", Params = new[] { "Float2", "Float2x3" } },
+            new { Return = "Float4", Params = new[] { "Float2", "Float2x4" } },
+            new { Return = "float", Params = new[] { "Float3", "Float3x1" } },
+            new { Return = "Float2", Params = new[] { "Float3", "Float3x2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3x3" } },
+            new { Return = "Float4", Params = new[] { "Float3", "Float3x4" } },
+            new { Return = "float", Params = new[] { "Float4", "Float4x1" } },
+            new { Return = "Float2", Params = new[] { "Float4", "Float4x2" } },
+            new { Return = "Float3", Params = new[] { "Float4", "Float4x3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4x4" } },
+            new { Return = "int", Params = new[] { "Int2", "Int2x1" } },
+            new { Return = "Int2", Params = new[] { "Int2", "Int2x2" } },
+            new { Return = "Int3", Params = new[] { "Int2", "Int2x3" } },
+            new { Return = "Int4", Params = new[] { "Int2", "Int2x4" } },
+            new { Return = "int", Params = new[] { "Int3", "Int3x1" } },
+            new { Return = "Int2", Params = new[] { "Int3", "Int3x2" } },
+            new { Return = "Int3", Params = new[] { "Int3", "Int3x3" } },
+            new { Return = "Int4", Params = new[] { "Int3", "Int3x4" } },
+            new { Return = "int", Params = new[] { "Int4", "Int4x1" } },
+            new { Return = "Int2", Params = new[] { "Int4", "Int4x2" } },
+            new { Return = "Int3", Params = new[] { "Int4", "Int4x3" } },
+            new { Return = "Int4", Params = new[] { "Int4", "Int4x4" } },
+
+            // 7 (matrix by scalar)
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "float" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "float" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "float" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "float" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "float" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "float" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "float" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "float" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "float" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "float" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "float" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "float" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "float" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "float" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "float" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "float" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "int" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "int" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "int" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "int" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "int" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "int" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "int" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "int" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "int" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "int" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "int" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "int" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "int" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "int" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "int" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "int" } },
+
+            // 8 (matrix by vector)
+            new { Return = "float", Params = new[] { "Float1x2", "Float2" } },
+            new { Return = "float", Params = new[] { "Float1x3", "Float3" } },
+            new { Return = "float", Params = new[] { "Float1x4", "Float4" } },
+            new { Return = "Float2", Params = new[] { "Float2x2", "Float2" } },
+            new { Return = "Float2", Params = new[] { "Float2x3", "Float3" } },
+            new { Return = "Float2", Params = new[] { "Float2x4", "Float4" } },
+            new { Return = "Float3", Params = new[] { "Float3x2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3x3", "Float3" } },
+            new { Return = "Float3", Params = new[] { "Float3x4", "Float4" } },
+            new { Return = "Float4", Params = new[] { "Float4x2", "Float2" } },
+            new { Return = "Float4", Params = new[] { "Float4x3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4x4", "Float4" } },
+            new { Return = "int", Params = new[] { "Int1x2", "Int2" } },
+            new { Return = "int", Params = new[] { "Int1x3", "Int3" } },
+            new { Return = "int", Params = new[] { "Int1x4", "Int4" } },
+            new { Return = "Int2", Params = new[] { "Int2x2", "Int2" } },
+            new { Return = "Int2", Params = new[] { "Int2x3", "Int3" } },
+            new { Return = "Int2", Params = new[] { "Int2x4", "Int4" } },
+            new { Return = "Int3", Params = new[] { "Int3x2", "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3x3", "Int3" } },
+            new { Return = "Int3", Params = new[] { "Int3x4", "Int4" } },
+            new { Return = "Int4", Params = new[] { "Int4x2", "Int2" } },
+            new { Return = "Int4", Params = new[] { "Int4x3", "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4x4", "Int4" } },
+
+            // 9 (matrix by matrix)
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x1", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x1", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x1", "Float1x4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x2", "Float2x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float2x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x2", "Float2x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x2", "Float2x4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x3", "Float3x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x3", "Float3x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float3x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x3", "Float3x4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x4", "Float4x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x4", "Float4x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x4", "Float4x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float4x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float1x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x1", "Float1x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x1", "Float1x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x1", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x2", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x2", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x2", "Float2x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x3", "Float3x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x3", "Float3x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float3x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x3", "Float3x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x4", "Float4x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x4", "Float4x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x4", "Float4x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float4x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float1x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x1", "Float1x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x1", "Float1x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x1", "Float1x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x2", "Float2x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float2x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x2", "Float2x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x2", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x3", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x3", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x3", "Float3x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x4", "Float4x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x4", "Float4x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x4", "Float4x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float4x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float1x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x1", "Float1x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x1", "Float1x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x1", "Float1x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x2", "Float2x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float2x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x2", "Float2x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x2", "Float2x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x3", "Float3x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x3", "Float3x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float3x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x3", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x4", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x4", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x4", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1", "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x1", "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x1", "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x1", "Int1x4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x2", "Int2x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2", "Int2x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x2", "Int2x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x2", "Int2x4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x3", "Int3x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x3", "Int3x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3", "Int3x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x3", "Int3x4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x4", "Int4x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x4", "Int4x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x4", "Int4x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4", "Int4x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1", "Int1x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x1", "Int1x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x1", "Int1x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x1", "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x2", "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2", "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x2", "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x2", "Int2x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x3", "Int3x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x3", "Int3x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3", "Int3x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x3", "Int3x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x4", "Int4x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x4", "Int4x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x4", "Int4x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4", "Int4x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1", "Int1x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x1", "Int1x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x1", "Int1x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x1", "Int1x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x2", "Int2x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2", "Int2x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x2", "Int2x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x2", "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x3", "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x3", "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3", "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x3", "Int3x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x4", "Int4x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x4", "Int4x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x4", "Int4x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4", "Int4x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1", "Int1x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x1", "Int1x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x1", "Int1x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x1", "Int1x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x2", "Int2x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2", "Int2x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x2", "Int2x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x2", "Int2x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x3", "Int3x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x3", "Int3x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3", "Int3x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x3", "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x4", "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x4", "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x4", "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } },
+        }
+    },
+    new
+    {
+        Name = "Normalize",
+        HlslName = "normalize",
+        Summary = "Normalizes the specified floating-point vector according to x / length(x).",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
+        },
+        Returns = "The normalized {x} parameter. If the length of the {x} parameter is 0, the result is indefinite.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
+        }
+    },
+    new
+    {
+        Name = "Pow",
+        HlslName = "pow",
+        Summary = "Returns the specified value raised to the specified power.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." },
+            new { IsOut = false, Name = "y", Info = "The specified power." }
+        },
+        Returns = "The {x} parameter raised to the power of the {y} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Radians",
+        HlslName = "radians",
+        Summary = "Converts the specified value from degrees to radians.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The {x} parameter converted from degrees to radians.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Rcp",
+        HlslName = "rcp",
+        Summary = "Calculates a fast, approximate, per-component reciprocal.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The reciprocal of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } },
+            new { Return = "double", Params = new[] { "double" } },
+            new { Return = "Double2", Params = new[] { "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Reflect",
+        HlslName = "reflect",
+        Summary = "Returns a reflection vector using an incident ray and a surface normal.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "i", Info = "A floating-point, incident vector." },
+            new { IsOut = false, Name = "n", Info = "A floating-point, normal vector." }
+        },
+        Returns = "A floating-point, reflection vector.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Refract",
+        HlslName = "refract",
+        Summary = "Returns a refraction vector using an entering ray, a surface normal, and a refraction index.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "i", Info = "A floating-point, ray direction vector." },
+            new { IsOut = false, Name = "n", Info = "A floating-point, surface normal vector." },
+            new { IsOut = false, Name = "f", Info = "A floating-point, refraction index scalar." }
+        },
+        Returns = "A floating-point, refraction vector. If the angle between the entering ray {i} and the surface normal {n} is too great for a given refraction index {f}, the return value is 0.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2", "float" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3", "float" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4", "float" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1", "float" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2", "float" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3", "float" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4", "float" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1", "float" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2", "float" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3", "float" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4", "float" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1", "float" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2", "float" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3", "float" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4", "float" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1", "float" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "float" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "float" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "float" } }
+        }
+    },
+    new
+    {
+        Name = "ReverseBits",
+        HlslName = "reversebits",
+        Summary = "Reverses the order of the bits, per component.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The input value, with the bit order reversed.",
+        Overloads = new[]
+        {
+            new { Return = "uint", Params = new[] { "uint" } },
+            new { Return = "UInt2", Params = new[] { "UInt2" } },
+            new { Return = "UInt3", Params = new[] { "UInt3" } },
+            new { Return = "UInt4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
+        Name = "Round",
+        HlslName = "round",
+        Summary = "Rounds the specified value to the nearest integer. Halfway cases are rounded to the nearest even.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The {x} parameter, rounded to the nearest integer within a floating-point type.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Rsqrt",
+        HlslName = "rsqrt",
+        Summary = "Returns the reciprocal of the square root of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The reciprocal of the square root of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Saturate",
+        HlslName = "saturate",
+        Summary = "Clamps the specified value within the range of 0 to 1.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "The {x} parameter, clamped within the range of 0 to 1.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } },
+            new { Return = "double", Params = new[] { "double" } },
+            new { Return = "Double2", Params = new[] { "Double2" } },
+            new { Return = "Double3", Params = new[] { "Double3" } },
+            new { Return = "Double4", Params = new[] { "Double4" } },
+            new { Return = "Double1x1", Params = new[] { "Double1x1" } },
+            new { Return = "Double1x2", Params = new[] { "Double1x2" } },
+            new { Return = "Double1x3", Params = new[] { "Double1x3" } },
+            new { Return = "Double1x4", Params = new[] { "Double1x4" } },
+            new { Return = "Double2x1", Params = new[] { "Double2x1" } },
+            new { Return = "Double2x2", Params = new[] { "Double2x2" } },
+            new { Return = "Double2x3", Params = new[] { "Double2x3" } },
+            new { Return = "Double2x4", Params = new[] { "Double2x4" } },
+            new { Return = "Double3x1", Params = new[] { "Double3x1" } },
+            new { Return = "Double3x2", Params = new[] { "Double3x2" } },
+            new { Return = "Double3x3", Params = new[] { "Double3x3" } },
+            new { Return = "Double3x4", Params = new[] { "Double3x4" } },
+            new { Return = "Double4x1", Params = new[] { "Double4x1" } },
+            new { Return = "Double4x2", Params = new[] { "Double4x2" } },
+            new { Return = "Double4x3", Params = new[] { "Double4x3" } },
+            new { Return = "Double4x4", Params = new[] { "Double4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Sign",
+        HlslName = "sign",
+        Summary = "Returns the sign of the input value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value." }
+        },
+        Returns = "Returns -1 if {x} is less than zero; 0 if {x} equals zero; and 1 if {x} is greater than zero.",
+        Overloads = new[]
+        {
+            new { Return = "int", Params = new[] { "float" } },
+            new { Return = "Int2", Params = new[] { "Float2" } },
+            new { Return = "Int3", Params = new[] { "Float3" } },
+            new { Return = "Int4", Params = new[] { "Float4" } },
+            new { Return = "Int1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Float4x4" } },
+            new { Return = "int", Params = new[] { "int" } },
+            new { Return = "Int2", Params = new[] { "Int2" } },
+            new { Return = "Int3", Params = new[] { "Int3" } },
+            new { Return = "Int4", Params = new[] { "Int4" } },
+            new { Return = "Int1x1", Params = new[] { "Int1x1" } },
+            new { Return = "Int1x2", Params = new[] { "Int1x2" } },
+            new { Return = "Int1x3", Params = new[] { "Int1x3" } },
+            new { Return = "Int1x4", Params = new[] { "Int1x4" } },
+            new { Return = "Int2x1", Params = new[] { "Int2x1" } },
+            new { Return = "Int2x2", Params = new[] { "Int2x2" } },
+            new { Return = "Int2x3", Params = new[] { "Int2x3" } },
+            new { Return = "Int2x4", Params = new[] { "Int2x4" } },
+            new { Return = "Int3x1", Params = new[] { "Int3x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int3x2" } },
+            new { Return = "Int3x3", Params = new[] { "Int3x3" } },
+            new { Return = "Int3x4", Params = new[] { "Int3x4" } },
+            new { Return = "Int4x1", Params = new[] { "Int4x1" } },
+            new { Return = "Int4x2", Params = new[] { "Int4x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int4x3" } },
+            new { Return = "Int4x4", Params = new[] { "Int4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Sin",
+        HlslName = "sin",
+        Summary = "Returns the sine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The sine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "SinCos",
+        HlslName = "sincos",
+        Summary = "Returns the sine and cosine of a specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." },
+            new { IsOut = true, Name = "sin", Info = "The resulting sine." },
+            new { IsOut = true, Name = "cos", Info = "The resulting cosine." }
+        },
+        Returns = string.Empty,
+        Overloads = new[]
+        {
+            new { Return = "void", Params = new[] { "float", "float", "float" } },
+            new { Return = "void", Params = new[] { "Float2", "Float2", "Float2" } },
+            new { Return = "void", Params = new[] { "Float3", "Float3", "Float3" } },
+            new { Return = "void", Params = new[] { "Float4", "Float4", "Float4" } },
+            new { Return = "void", Params = new[] { "Float1x1", "Float1x1", "Float1x1" } },
+            new { Return = "void", Params = new[] { "Float1x2", "Float1x2", "Float1x2" } },
+            new { Return = "void", Params = new[] { "Float1x3", "Float1x3", "Float1x3" } },
+            new { Return = "void", Params = new[] { "Float1x4", "Float1x4", "Float1x4" } },
+            new { Return = "void", Params = new[] { "Float2x1", "Float2x1", "Float2x1" } },
+            new { Return = "void", Params = new[] { "Float2x2", "Float2x2", "Float2x2" } },
+            new { Return = "void", Params = new[] { "Float2x3", "Float2x3", "Float2x3" } },
+            new { Return = "void", Params = new[] { "Float2x4", "Float2x4", "Float2x4" } },
+            new { Return = "void", Params = new[] { "Float3x1", "Float3x1", "Float3x1" } },
+            new { Return = "void", Params = new[] { "Float3x2", "Float3x2", "Float3x2" } },
+            new { Return = "void", Params = new[] { "Float3x3", "Float3x3", "Float3x3" } },
+            new { Return = "void", Params = new[] { "Float3x4", "Float3x4", "Float3x4" } },
+            new { Return = "void", Params = new[] { "Float4x1", "Float4x1", "Float4x1" } },
+            new { Return = "void", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
+            new { Return = "void", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
+            new { Return = "void", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Sinh",
+        HlslName = "sinh",
+        Summary = "Returns the hyperbolic sine of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The hyperbolic sine of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "SmoothStep",
+        HlslName = "smoothstep",
+        Summary = "Returns a smooth Hermite interpolation between 0 and 1 if the specified value is in the input range.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "min", Info = "The specified minimum range." },
+            new { IsOut = false, Name = "max", Info = "The specified maximum range." },
+            new { IsOut = false, Name = "x", Info = "The specified value to be interpolated." }
+        },
+        Returns = "Returns 0 if {x} is less than {min}; 1 if {x} is greater than {max}; otherwise, a value between 0 and 1 if {x} is in the range [{min}, {max}].",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Sqrt",
+        HlslName = "sqrt",
+        Summary = "Returns the square root of the specified floating-point value, per component.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified floating-point value." }
+        },
+        Returns = "The square root of the {x} parameter, per component.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Step",
+        HlslName = "step",
+        Summary = "Compares two values, returning 0 or 1 based on which value is greater.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "y", Info = "The first specified floating-point value." },
+            new { IsOut = false, Name = "x", Info = "The second specified floating-point value." }
+        },
+        Returns = "1 if the {x} parameter is greater than or equal to the {y} parameter; otherwise, 0.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float", "float" } },
+            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4", "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1", "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2", "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3", "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4", "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1", "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2", "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3", "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4", "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1", "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2", "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3", "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4", "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1", "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Tan",
+        HlslName = "tan",
+        Summary = "Returns the tangent of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The tangent of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Tanh",
+        HlslName = "tanh",
+        Summary = "Returns the hyperbolic tangent of the specified value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
+        },
+        Returns = "The hyperbolic tangent of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    },
+    new
+    {
+        Name = "Transpose",
+        HlslName = "transpose",
+        Summary = "Transposes the specified input matrix.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified matrix." }
+        },
+        Returns = "The transposed value of the {x} parameter.",
+        Overloads = new[]
+        {
+            new { Return = "Float2x1", Params = new[] { "Float1x2" } },
+            new { Return = "Float3x1", Params = new[] { "Float1x3" } },
+            new { Return = "Float4x1", Params = new[] { "Float1x4" } },
+            new { Return = "Float1x2", Params = new[] { "Float2x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float2x3" } },
+            new { Return = "Float4x2", Params = new[] { "Float2x4" } },
+            new { Return = "Float1x3", Params = new[] { "Float3x1" } },
+            new { Return = "Float2x3", Params = new[] { "Float3x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float3x4" } },
+            new { Return = "Float1x4", Params = new[] { "Float4x1" } },
+            new { Return = "Float2x4", Params = new[] { "Float4x2" } },
+            new { Return = "Float3x4", Params = new[] { "Float4x3" } },
+            new { Return = "Int2x1", Params = new[] { "Int1x2" } },
+            new { Return = "Int3x1", Params = new[] { "Int1x3" } },
+            new { Return = "Int4x1", Params = new[] { "Int1x4" } },
+            new { Return = "Int1x2", Params = new[] { "Int2x1" } },
+            new { Return = "Int3x2", Params = new[] { "Int2x3" } },
+            new { Return = "Int4x2", Params = new[] { "Int2x4" } },
+            new { Return = "Int1x3", Params = new[] { "Int3x1" } },
+            new { Return = "Int2x3", Params = new[] { "Int3x2" } },
+            new { Return = "Int4x3", Params = new[] { "Int3x4" } },
+            new { Return = "Int1x4", Params = new[] { "Int4x1" } },
+            new { Return = "Int2x4", Params = new[] { "Int4x2" } },
+            new { Return = "Int3x4", Params = new[] { "Int4x3" } },
+            new { Return = "Bool2x1", Params = new[] { "Bool1x2" } },
+            new { Return = "Bool3x1", Params = new[] { "Bool1x3" } },
+            new { Return = "Bool4x1", Params = new[] { "Bool1x4" } },
+            new { Return = "Bool1x2", Params = new[] { "Bool2x1" } },
+            new { Return = "Bool3x2", Params = new[] { "Bool2x3" } },
+            new { Return = "Bool4x2", Params = new[] { "Bool2x4" } },
+            new { Return = "Bool1x3", Params = new[] { "Bool3x1" } },
+            new { Return = "Bool2x3", Params = new[] { "Bool3x2" } },
+            new { Return = "Bool4x3", Params = new[] { "Bool3x4" } },
+            new { Return = "Bool1x4", Params = new[] { "Bool4x1" } },
+            new { Return = "Bool2x4", Params = new[] { "Bool4x2" } },
+            new { Return = "Bool3x4", Params = new[] { "Bool4x3" } },
+        }
+    },
+    new
+    {
+        Name = "Trunc",
+        HlslName = "trunc",
+        Summary = "Truncates a floating-point value to the integer component.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The specified input." }
+        },
+        Returns = "The input value truncated to an integer component.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } },
+            new { Return = "Float1x1", Params = new[] { "Float1x1" } },
+            new { Return = "Float1x2", Params = new[] { "Float1x2" } },
+            new { Return = "Float1x3", Params = new[] { "Float1x3" } },
+            new { Return = "Float1x4", Params = new[] { "Float1x4" } },
+            new { Return = "Float2x1", Params = new[] { "Float2x1" } },
+            new { Return = "Float2x2", Params = new[] { "Float2x2" } },
+            new { Return = "Float2x3", Params = new[] { "Float2x3" } },
+            new { Return = "Float2x4", Params = new[] { "Float2x4" } },
+            new { Return = "Float3x1", Params = new[] { "Float3x1" } },
+            new { Return = "Float3x2", Params = new[] { "Float3x2" } },
+            new { Return = "Float3x3", Params = new[] { "Float3x3" } },
+            new { Return = "Float3x4", Params = new[] { "Float3x4" } },
+            new { Return = "Float4x1", Params = new[] { "Float4x1" } },
+            new { Return = "Float4x2", Params = new[] { "Float4x2" } },
+            new { Return = "Float4x3", Params = new[] { "Float4x3" } },
+            new { Return = "Float4x4", Params = new[] { "Float4x4" } }
+        }
+    }
+};
+#>

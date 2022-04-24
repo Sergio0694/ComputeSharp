@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public static partial class D3D
+    internal static partial class D3D
     {
         [NativeTypeName("#define D3D_SHADER_REQUIRES_DOUBLES 0x00000001")]
         public const int D3D_SHADER_REQUIRES_DOUBLES = 0x00000001;

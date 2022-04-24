@@ -12,15 +12,13 @@
     <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
-  <!-- Referece to the main non-dynamic library-->
+  <!-- Reference to the main non-dynamic library-->
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
 
   <!-- Shared project with .NET Standard 2.0 polyfills for Dxc -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'"
-          Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems"
-          Label="Shared" />
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems" Label="Shared" />
 
   <Choose>
 

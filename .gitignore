@@ -27,6 +27,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+# Include the bundled libraries
+!**/Libraries/x64/
+!**/Libraries/arm64/
+
 # Debug view types
 !**/Resources/Debug
 

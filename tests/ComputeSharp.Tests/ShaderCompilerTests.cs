@@ -20,13 +20,15 @@ namespace ComputeSharp.Tests
         {
             public readonly ReadWriteBuffer<float> row_major;
             public readonly float dword;
+            public readonly float float2;
+            public readonly int int2x2;
 
             public void Execute()
             {
                 float exp = Hlsl.Exp(dword * row_major[ThreadIds.X]);
                 float log = Hlsl.Log(1 + exp);
 
-                row_major[ThreadIds.X] = log / dword;
+                row_major[ThreadIds.X] = log / dword + float2 + int2x2;
             }
         }
 
@@ -212,6 +214,25 @@ namespace ComputeSharp.Tests
             public void Execute()
             {
                 buffer[ThreadIds.X] *= factor + 3.14;
+            }
+        }
+
+        [TestMethod]
+        public void FieldAccessWithThisExpression()
+        {
+            _ = ReflectionServices.GetShaderInfo<FieldAccessWithThisExpressionShader>();
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct FieldAccessWithThisExpressionShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float number;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                this.buffer[ThreadIds.X] *= this.number;
             }
         }
     }

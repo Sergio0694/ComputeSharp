@@ -33,6 +33,7 @@ The sample app is available in the Microsoft Store, showcasing several pixel sha
   - [Inspecting shaders](#inspecting-shaders)
   - [DirectX interop](#directx-interop)
   - [Precompiled shaders](#precompiled-shaders)
+  - [D2D1 support](#d2d1-support)
 - [Requirements](#requirements)
 - [F# support](#f-support)
 - [Sponsors](#sponsors)
@@ -46,6 +47,7 @@ The sample app is available in the Microsoft Store, showcasing several pixel sha
 | **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Dynamic.svg)](https://www.nuget.org/packages/ComputeSharp.Dynamic/) |
 | **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Uwp.svg)](https://www.nuget.org/packages/ComputeSharp.Uwp/) |
 | **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.WinUI.svg)](https://www.nuget.org/packages/ComputeSharp.WinUI/) |
+| **ComputeSharp.D2D1** | A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.D2D1.svg)](https://www.nuget.org/packages/ComputeSharp.D2D1/) |
 
 # Installing from NuGet
 
@@ -377,6 +379,41 @@ public readonly partial struct MultiplyByTwo : IPixelShader<float4>
 ```
 
 The values in the `[EmbeddedBytecode]` attribute map to the [`[numthreads]` HLSL attribute](https://docs.microsoft.com/windows/win32/direct3dhlsl/sm5-attributes-numthreads) for the shader entry point. Make sure to use the same values when dispatching the shader at runtime (either using the `GraphicsDevice.For` overload with explicit parameters for the tread numbers, or by relying on `GraphicsDevice.ForEach` to always use `(8, 8, 1)` for thread numbers, as it will be dispatching shaders on a 2D texture).
+
+## D2D1 support
+
+**ComputeSharp** also offers [D2D1 support](https://docs.microsoft.com/en-us/windows/win32/direct2d/d2d1-namespace), through the dedicated package. This shares the same base APIs (primitives, intrinsics, etc.) from **ComputeSharp.Core**, but then adds D2D1 specific support, instead of using DX12 like the main package. This means it offers the ability to implement D2D1 pixel shaders, and to then either load them manually, or to register a D2D1 effect using them, optionally with a custom draw transform as well.
+
+For instance, here's a simple D2D1 pixel shader:
+
+```csharp
+[D2DInputCount(1)]
+[D2DInputSimple(0)]
+[D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
+[AutoConstructor]
+public partial struct DifferenceEffect : ID2D1PixelShader
+{
+    public float amount;
+
+    /// <inheritdoc/>
+    public float4 Execute()
+    {
+        float4 color = D2D.GetInput(0);
+        float3 rgb = Hlsl.Saturate(this.amount - color.RGB);
+
+        return new(rgb, 1);
+    }
+}
+```
+
+This can then be used directly to get the shader bytecode and the buffer, like so:
+
+```csharp
+ReadOnlyMemory<byte> bytecode = D2D1InteropServices.LoadShaderBytecode<DifferenceEffect>();
+ReadOnlyMemory<byte> buffer = D2D1InteropServices.GetPixelShaderConstantBuffer(new DifferenceEffect(1));
+```
+
+There are also several other APIs to easily register a pixel shader effect from a shader written using **ComputeSharp.D2D1**, and to then create an `ID2D1Effect` instance from it (from the `D2D1PixelShaderEffect` type), as well as for reflecting into a shader and extract information about it, such as its HLSL source code (from the `D2D1ReflectionServices` type).
 
 # Requirements
 

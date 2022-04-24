@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Diagnostics;
-using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -14,7 +15,7 @@ namespace ComputeSharp.SourceGenerators;
 /// <summary>
 /// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IPixelShader{TPixel}"/> types.
 /// </summary>
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public sealed partial class IShaderGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
@@ -100,8 +101,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
-                // BuildHlslString() info
-                HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
+                // BuildHlslSource() info
+                HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
                     item.Right,
                     item.Left.Left.Syntax,
                     item.Left.Left.Symbol,
@@ -118,6 +119,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 token.ThrowIfCancellationRequested();
 
+                // Ensure the bytecode generation is disabled if any errors are present
+                if (!dispatchDataDiagnostics.IsDefaultOrEmpty ||
+                    !hlslSourceDiagnostics.IsDefaultOrEmpty)
+                {
+                    threadIds = new ThreadIdsInfo(true, 0, 0, 0);
+                }
+
                 return (
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
                     new Result<HlslShaderSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
@@ -133,7 +141,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
             shaderInfoWithErrors
             .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value))
-            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, ThreadIdsInfo.Comparer.Default);
+            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<ThreadIdsInfo>.Default);
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
@@ -161,13 +169,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
             .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
 
-        // Generate the BuildHlslString() methods
+        // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.ToFullString());
         });
 
         // Get the dispatch metadata info
@@ -199,8 +207,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Transform the raw HLSL source to compile
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslString.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, ThreadIdsInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, EqualityComparer<ThreadIdsInfo>.Default);
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
@@ -221,20 +229,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<ImmutableArray<Diagnostic>> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy.MetadataName, item.Diagnostic))
+            .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
-                INamedTypeSymbol? typeSymbol = item.Right.GetTypeByMetadataName(item.Left.MetadataName)!;
-                Diagnostic diagnostic = Diagnostic.Create(
+                INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
+                
+                return Diagnostic.Create(
                     item.Left.Diagnostic!.Descriptor,
                     typeSymbol.Locations.FirstOrDefault(),
                     new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
-
-                return ImmutableArray.Create(diagnostic);
             });
 
         // Output the diagnostics

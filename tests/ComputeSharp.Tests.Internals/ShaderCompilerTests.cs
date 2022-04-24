@@ -33,15 +33,15 @@ public class ShaderCompilerTests
     [TestMethod]
     public void CompileTest_Ok()
     {
-        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(ShaderSource.AsSpan());
+        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.Compile(ShaderSource.AsSpan());
     }
 
     [TestMethod]
-    [ExpectedException(typeof(HlslCompilationException))]
+    [ExpectedException(typeof(DxcCompilationException))]
     public void CompileTest_Fail()
     {
         var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
 
-        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(faultyShader.AsSpan());
+        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.Compile(faultyShader.AsSpan());
     }
 }

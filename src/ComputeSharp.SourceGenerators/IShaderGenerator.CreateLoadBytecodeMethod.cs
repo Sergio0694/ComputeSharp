@@ -6,10 +6,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
-using ComputeSharp.SourceGenerators.Diagnostics;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -20,7 +22,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+partial class IShaderGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>LoadBytecode</c> method.
@@ -172,7 +174,7 @@ public sealed partial class IShaderGenerator
                     .Replace("<THREADSZ>", threadIds.Z.ToString());
 
                 // Compile the shader bytecode
-                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(hlslSource.AsSpan());
+                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(hlslSource.AsSpan());
 
                 token.ThrowIfCancellationRequested();
 
@@ -186,15 +188,34 @@ public sealed partial class IShaderGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
-            catch (HlslCompilationException e)
+            catch (DxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithHlslCompilationException, e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:
             return bytecode;
+        }
+
+        /// <summary>
+        /// Fixes up an exception message to improve the way it's displayed in VS.
+        /// </summary>
+        /// <param name="message">The input exception message.</param>
+        /// <returns>The updated exception message.</returns>
+        private static string FixupExceptionMessage(string message)
+        {
+            // Add square brackets around error headers
+            message = Regex.Replace(message, @"^(error|warning):", static m => $"[{m.Groups[1].Value}]:", RegexOptions.Multiline);
+
+            // Remove lines with notes
+            message = Regex.Replace(message, @"^note:.+", string.Empty, RegexOptions.Multiline);
+
+            // Remove syntax error indicators
+            message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
+
+            return message.NormalizeToSingleLine();
         }
 
         /// <summary>

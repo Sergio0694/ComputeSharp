@@ -1,0 +1,51 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+var Intrinsics = new[]
+{
+    new
+    {
+        Name = "Clip",
+        HlslName = "clip",
+        Summary = "Discards the current pixel if the specified value is less than zero.",
+        Remarks = @"
+            <para>Use the clip HLSL intrinsic function to simulate clipping planes if each component of the x parameter represents the distance from a plane.</para>
+            <para>Also, use the clip function to test for alpha behavior, as shown in the following example:</para>
+            <code>
+            Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
+            </code>",
+        Parameters = new[]
+        {
+            new { IsOut = false, IsRef = false, Name = "x", Info = "The specified value." }
+        },
+        Overloads = new[]
+        {
+            new[] { "float" },
+            new[] { "Float2" },
+            new[] { "Float3" },
+            new[] { "Float4" },
+            new[] { "Float1x1" },
+            new[] { "Float1x2" },
+            new[] { "Float1x3" },
+            new[] { "Float1x4" },
+            new[] { "Float2x1" },
+            new[] { "Float2x2" },
+            new[] { "Float2x3" },
+            new[] { "Float2x4" },
+            new[] { "Float3x1" },
+            new[] { "Float3x2" },
+            new[] { "Float3x3" },
+            new[] { "Float3x4" },
+            new[] { "Float4x1" },
+            new[] { "Float4x2" },
+            new[] { "Float4x3" },
+            new[] { "Float4x4" }
+        }
+    }
+};
+#>

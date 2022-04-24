@@ -27,9 +27,9 @@ public static class ShaderCompiler
         where TLoader : struct, IBytecodeLoader
         where T : struct, IShader
     {
-        Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
+        Unsafe.AsRef(in shader).BuildHlslSource(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(builder.WrittenSpan);
 
         builder.Dispose();
 

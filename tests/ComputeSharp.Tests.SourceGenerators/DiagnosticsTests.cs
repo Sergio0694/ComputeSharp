@@ -283,7 +283,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -310,7 +310,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -337,7 +337,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -867,7 +867,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -894,7 +894,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -956,7 +956,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -983,7 +983,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1194,7 +1194,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037", "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1572,6 +1572,96 @@ public class DiagnosticsTests
         }}";
 
         VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+    }
+
+    [TestMethod]
+    public void InvalidMethodCall()
+    {
+        string source = @"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public class ReadWriteBuffer<T> { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            public struct MyShader : IComputeShader
+            {
+                public readonly ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                    buffer[0] = Convert.ToSingle(42);
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0049", "CMPS0047");
+    }
+
+    [TestMethod]
+    public void InvalidDiscoveredType_Primitive()
+    {
+        string source = @"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public class ReadWriteBuffer<T> { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            public struct MyShader : IComputeShader
+            {
+                public readonly ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                    buffer[0] = (byte)42;
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
+    }
+
+    [TestMethod]
+    public void InvalidDiscoveredType_CustomType()
+    {
+        string source = @"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public class ReadWriteBuffer<T> { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            public struct Foo
+            {
+                public DateTime bar;
+            }
+
+            public struct MyShader : IComputeShader
+            {
+                public readonly ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {
+                    Foo foo = default;
+                    buffer[0] = 42;
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
     /// <summary>

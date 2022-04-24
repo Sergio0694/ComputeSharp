@@ -68,7 +68,7 @@ public partial class Texture2DTests
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
-        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
 
     [AutoConstructor]
@@ -101,7 +101,7 @@ public partial class Texture2DTests
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
-        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
 
     [AutoConstructor]

@@ -2,6 +2,10 @@ name: .NET
 
 on: [push, pull_request]
 
+env:
+  EXCLUDE_RUN_ID_FROM_PACKAGE: false
+  EXCLUDE_SUFFIX_FROM_VERSION: false
+
 jobs:
 
   # Build the whole ComputeSharp solution, in Debug
@@ -44,8 +48,49 @@ jobs:
       run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=x64
       shell: cmd
 
-  # Run all the unit tests referencing the ComputeSharp project directly
-  run-tests:
+  # Build the .msbuildproj projects and the UWP/WinUI projects to generate all the NuGet packages.
+  # This workflow also uploads the resulting packages as artifacts.
+  build-packages:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build ComputeSharp.Core package
+      run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp package
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp.Dynamic package
+      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp.D2D1 package
+      run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp.Uwp package
+      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
+      shell: cmd
+    - name: Restore ComputeSharp.WinUI project
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release
+      shell: cmd
+    - name: Build ComputeSharp.WinUI package
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
+      shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: nuget_preview
+        path: artifacts\*.nupkg
+        if-no-files-found: error
+
+  # Run all the DX12 unit tests referencing the ComputeSharp project directly
+  run-dx12-tests:
     if: success()
     needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
@@ -91,10 +136,26 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the local samples to ensure they build and run with no errors
-  run-samples:
+  # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
+  run-d2d1-tests:
     if: success()
-    needs: [run-tests]
+    needs: [build-solution-debug, build-solution-release]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Run ComputeSharp.D2D1.Tests
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
+      shell: cmd
+
+  # Run all the local samples to ensure they build and run with no errors
+  run-dx12-samples:
+    if: success()
+    needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -156,42 +217,12 @@ jobs:
       run: dotnet build samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj -c Release
       shell: cmd
 
-  # Buils the .msbuildproj project to generate the NuGet package.
-  # This workflow also uploads the resulting package as an artifact.
-  build-package:
+  # Download the NuGet packages generated in the previous job and use them
+  # to build and run the sample project referencing them. This is used as
+  # a test to ensure the NuGet packages work in a consuming project.
+  verify-packages:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v2
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Build ComputeSharp package
-      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
-      shell: cmd
-    - name: Upload ComputeSharp package artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ComputeSharp.nupkg
-        path: src\ComputeSharp.Package\bin\Release\*.nupkg
-    - name: Build ComputeSharp.Dynamic package
-      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
-      shell: cmd
-    - name: Upload ComputeSharp.Dynamic package artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ComputeSharp.Dynamic.nupkg
-        path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
-
-  # Download the NuGet package generated in the previous job and use it
-  # to build and run the sample project referencing it. This is used as
-  # a test to ensure the NuGet package works in a consuming project.
-  verify-package:
-    if: success()
-    needs: [build-package]
+    needs: [build-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -201,18 +232,13 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
+      run: mkdir artifacts
       shell: cmd
-    - name: Download ComputeSharp package artifact
+    - name: Download package artifacts
       uses: actions/download-artifact@v2
       with:
-        name: ComputeSharp.nupkg
-        path: src\ComputeSharp.Package\bin\Release\ComputeSharp.nupkg
-    - name: Download ComputeSharp.Dynamic package artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: ComputeSharp.Dynamic.nupkg
-        path: src\ComputeSharp.Dynamic.Package\bin\Release\ComputeSharp.Dynamic.nupkg
+        name: nuget_preview
+        path: artifacts
     - name: Build ComputeSharp.Sample.NuGet (.NET 6)
       run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net6.0
       shell: cmd
@@ -237,7 +263,7 @@ jobs:
   # regardless of whether the app is shipping with R2R, self-contained, etc.
   verify-package-native-libs:
     if: success()
-    needs: [verify-package]
+    needs: [build-packages]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -249,54 +275,3 @@ jobs:
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
-
-  # Build the WinUI project again to generate a NuGet package from it.
-  # This workflow also uploads the resulting package as an artifact.
-  build-package-winui:
-    if: success()
-    needs: [verify-package]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:ContinuousIntegrationBuild=True
-      shell: cmd
-    - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
-      shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
-    - name: Upload package artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ComputeSharp.WinUI.nupkg
-        path: src\ComputeSharp.WinUI\bin\Release\*.nupkg
-
-  # Build the UWP project again to generate a NuGet package from it.
-  # This workflow also uploads the resulting package as an artifact, like the WinUI one.
-  build-package-uwp:
-    if: success()
-    needs: [verify-package]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v2
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Build
-      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
-      shell: cmd
-    - name: Upload package artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ComputeSharp.Uwp.nupkg
-        path: src\ComputeSharp.Uwp\bin\Release\*.nupkg
