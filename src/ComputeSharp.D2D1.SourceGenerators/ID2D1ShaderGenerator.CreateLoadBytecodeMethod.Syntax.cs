@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ComputeSharp.__Internals;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -111,7 +112,7 @@ partial class ID2D1ShaderGenerator
                                 MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
                                     IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                                    IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString()))))),
+                                    IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString(CultureInfo.InvariantCulture)))))),
                     Block(
                         LocalDeclarationStatement(
                             VariableDeclaration(

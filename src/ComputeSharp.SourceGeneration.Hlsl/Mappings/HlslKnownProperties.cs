@@ -145,7 +145,7 @@ internal static partial class HlslKnownProperties
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             select (Type: type, Property: property))
         {
-            knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
+            knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLowerInvariant()}");
         }
 
         // Load mappings for the matrix properties as well
