@@ -1083,6 +1083,42 @@ var Intrinsics = new[]
     },
     new
     {
+        Name = "Float32ToFloat16",
+        HlslName = "f32tof16",
+        Summary = "Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The converted value, stored in the low-half of the uint.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "uint" } },
+            new { Return = "Float2", Params = new[] { "UInt2" } },
+            new { Return = "Float3", Params = new[] { "UInt3" } },
+            new { Return = "Float4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
+        Name = "Float16ToFloat32",
+        HlslName = "f16tof32",
+        Summary = "Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The input value." }
+        },
+        Returns = "The converted value.",
+        Overloads = new[]
+        {
+            new { Return = "float", Params = new[] { "uint" } },
+            new { Return = "Float2", Params = new[] { "UInt2" } },
+            new { Return = "Float3", Params = new[] { "UInt3" } },
+            new { Return = "Float4", Params = new[] { "UInt4" } }
+        }
+    },
+    new
+    {
         Name = "Floor",
         HlslName = "floor",
         Summary = "Returns the largest integer that is less than or equal to the specified value.",

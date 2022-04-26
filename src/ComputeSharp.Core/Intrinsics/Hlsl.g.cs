@@ -5807,6 +5807,78 @@ partial class Hlsl
     public static UInt4 FirstBitLow(UInt4 value) => default;
 
     /// <summary>
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value, stored in the low-half of the uint.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f32tof16")]
+    public static float Float32ToFloat16(uint x) => default;
+
+    /// <summary>
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value, stored in the low-half of the uint.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f32tof16")]
+    public static Float2 Float32ToFloat16(UInt2 x) => default;
+
+    /// <summary>
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value, stored in the low-half of the uint.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f32tof16")]
+    public static Float3 Float32ToFloat16(UInt3 x) => default;
+
+    /// <summary>
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value, stored in the low-half of the uint.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f32tof16")]
+    public static Float4 Float32ToFloat16(UInt4 x) => default;
+
+    /// <summary>
+    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f16tof32")]
+    public static float Float16ToFloat32(uint x) => default;
+
+    /// <summary>
+    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f16tof32")]
+    public static Float2 Float16ToFloat32(UInt2 x) => default;
+
+    /// <summary>
+    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f16tof32")]
+    public static Float3 Float16ToFloat32(UInt3 x) => default;
+
+    /// <summary>
+    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// </summary>
+    /// <param name="x">The input value.</param>
+    /// <returns>The converted value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("f16tof32")]
+    public static Float4 Float16ToFloat32(UInt4 x) => default;
+
+    /// <summary>
     /// Returns the largest integer that is less than or equal to the specified value.
     /// </summary>
     /// <param name="x">The specified value.</param>
