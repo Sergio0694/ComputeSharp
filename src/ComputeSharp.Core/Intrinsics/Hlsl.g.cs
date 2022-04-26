@@ -5807,7 +5807,7 @@ partial class Hlsl
     public static UInt4 FirstBitLow(UInt4 value) => default;
 
     /// <summary>
-    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value, stored in the low-half of the uint.</returns>
@@ -5816,7 +5816,7 @@ partial class Hlsl
     public static float Float32ToFloat16(uint x) => default;
 
     /// <summary>
-    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value, stored in the low-half of the uint.</returns>
@@ -5825,7 +5825,7 @@ partial class Hlsl
     public static Float2 Float32ToFloat16(UInt2 x) => default;
 
     /// <summary>
-    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value, stored in the low-half of the uint.</returns>
@@ -5834,7 +5834,7 @@ partial class Hlsl
     public static Float3 Float32ToFloat16(UInt3 x) => default;
 
     /// <summary>
-    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.
+    /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value, stored in the low-half of the uint.</returns>
@@ -5843,7 +5843,7 @@ partial class Hlsl
     public static Float4 Float32ToFloat16(UInt4 x) => default;
 
     /// <summary>
-    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// Converts the 16-bit floating point value stored in the lower half of the input <see langword="uint"/> value to a <see langword="float"/>.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value.</returns>
@@ -5852,7 +5852,7 @@ partial class Hlsl
     public static float Float16ToFloat32(uint x) => default;
 
     /// <summary>
-    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// Converts the 16-bit floating point value stored in the lower half of the input <see langword="uint"/> value to a <see langword="float"/>.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value.</returns>
@@ -5861,7 +5861,7 @@ partial class Hlsl
     public static Float2 Float16ToFloat32(UInt2 x) => default;
 
     /// <summary>
-    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// Converts the 16-bit floating point value stored in the lower half of the input <see langword="uint"/> value to a <see langword="float"/>.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value.</returns>
@@ -5870,7 +5870,7 @@ partial class Hlsl
     public static Float3 Float16ToFloat32(UInt3 x) => default;
 
     /// <summary>
-    /// Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.
+    /// Converts the 16-bit floating point value stored in the lower half of the input <see langword="uint"/> value to a <see langword="float"/>.
     /// </summary>
     /// <param name="x">The input value.</param>
     /// <returns>The converted value.</returns>

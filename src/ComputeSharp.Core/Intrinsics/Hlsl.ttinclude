@@ -17,7 +17,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The absolute value of the {x} parameter.",
+        Returns = "The absolute value of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "int", Params = new[] { "int" } },
@@ -91,7 +91,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value. Each component should be a floating-point within the range [-1, 1]." }
         },
-        Returns = "The arccosine of the {x} parameter.",
+        Returns = "The arccosine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -125,7 +125,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Whether or not all components of the {x} parameter are non-zero.",
+        Returns = "Whether or not all components of the {param=x} parameter are non-zero.",
         Overloads = new[]
         {
             new { Return = "bool", Params = new[] { "int" } },
@@ -199,7 +199,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Whether or not any components of the {x} parameter are non-zero.",
+        Returns = "Whether or not any components of the {param=x} parameter are non-zero.",
         Overloads = new[]
         {
             new { Return = "bool", Params = new[] { "int" } },
@@ -344,7 +344,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The arcsine of the {x} parameter.",
+        Returns = "The arcsine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -486,7 +486,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The arctangent of the {x} parameter. This value is within the range [-π/2, π/2].",
+        Returns = "The arctangent of the {param=x} parameter. This value is within the range [-π/2, π/2].",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -521,7 +521,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "y", Info = "The y value." },
             new { IsOut = false, Name = "x", Info = "The x value." }
         },
-        Returns = "The arctangent of ({y}, {x}).",
+        Returns = "The arctangent of ({param=y}, {param=x}).",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -555,7 +555,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The smallest integer value (returned as a floating-point type) that is greater than or equal to the {x} parameter.",
+        Returns = "The smallest integer value (returned as a floating-point type) that is greater than or equal to the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -591,7 +591,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "min", Info = "The specified minimum range." },
             new { IsOut = false, Name = "max", Info = "The specified maximum range." }
         },
-        Returns = "The clamped value for the {x} parameter.",
+        Returns = "The clamped value for the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float", "float" } },
@@ -645,7 +645,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The cosine of the {x} parameter.",
+        Returns = "The cosine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -679,7 +679,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The hyperbolic cosine of the {x} parameter.",
+        Returns = "The hyperbolic cosine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -887,7 +887,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The result of converting the {x} parameter from radians to degrees.",
+        Returns = "The result of converting the {param=x} parameter from radians to degrees.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -921,7 +921,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "m", Info = "The specified value." }
         },
-        Returns = "The floating-point, scalar value that represents the determinant of the {m} parameter.",
+        Returns = "The floating-point, scalar value that represents the determinant of the {param=m} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "Float1x1" } },
@@ -940,7 +940,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The first floating-point vector to compare." },
             new { IsOut = false, Name = "y", Info = "The second floating-point vector to compare." }
         },
-        Returns = "A floating-point, scalar value that represents the distance between the {x} parameter and the {y} parameter.",
+        Returns = "A floating-point, scalar value that represents the distance between the {param=x} parameter and the {param=y} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "Float2", "Float2" } },
@@ -958,7 +958,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The first vector." },
             new { IsOut = false, Name = "y", Info = "The second vector." }
         },
-        Returns = "The dot product of the {x} parameter and the {y} parameter.",
+        Returns = "The dot product of the {param=x} parameter and the {param=y} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "Float2", "Float2" } },
@@ -978,7 +978,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The base-e exponential of the {x} parameter.",
+        Returns = "The base-e exponential of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1012,7 +1012,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The base-2 exponential of the {x} parameter.",
+        Returns = "The base-2 exponential of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1085,7 +1085,7 @@ var Intrinsics = new[]
     {
         Name = "Float32ToFloat16",
         HlslName = "f32tof16",
-        Summary = "Converts the input float value into a 16-bit floating point value stored in the lower half of the returned uint value.",
+        Summary = "Converts the input float value into a 16-bit floating point value stored in the lower half of the returned {keyword=uint} value.",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -1103,7 +1103,7 @@ var Intrinsics = new[]
     {
         Name = "Float16ToFloat32",
         HlslName = "f16tof32",
-        Summary = "Converts the 16-bit floating point value stored in the lower half of the input uint value to a float.",
+        Summary = "Converts the 16-bit floating point value stored in the lower half of the input {keyword=uint} value to a {keyword=float}.",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -1126,7 +1126,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The largest integer value (returned as a floating-point type) that is less than or equal to the {x} parameter.",
+        Returns = "The largest integer value (returned as a floating-point type) that is less than or equal to the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1231,7 +1231,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The fractional part of the {x} parameter.",
+        Returns = "The fractional part of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1266,7 +1266,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The specified floating-point value." },
             new { IsOut = true, Name = "exp", Info = "The returned exponent of the input parameter." }
         },
-        Returns = "The mantissa of the {x} parameter.",
+        Returns = "The mantissa of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -1334,7 +1334,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Returns a value of the same size as {x}, indicaating whether each component is finite.",
+        Returns = "Returns a value of the same size as {param=x}, indicaating whether each component is finite.",
         Overloads = new[]
         {
             new { Return = "bool", Params = new[] { "float" } },
@@ -1368,7 +1368,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Returns a value of the same size as {x}, indicaating whether each component is infinite.",
+        Returns = "Returns a value of the same size as {param=x}, indicaating whether each component is infinite.",
         Overloads = new[]
         {
             new { Return = "bool", Params = new[] { "float" } },
@@ -1402,7 +1402,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Returns a value of the same size as {x}, indicaating whether each component is NAN or QNAN.",
+        Returns = "Returns a value of the same size as {param=x}, indicaating whether each component is NAN or QNAN.",
         Overloads = new[]
         {
             new { Return = "bool", Params = new[] { "float" } },
@@ -1437,7 +1437,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The specified value." },
             new { IsOut = false, Name = "exp", Info = "The specified exponent." }
         },
-        Returns = "The result of multiplying the {x} parameter by two, raised to the power of the {exp} parameter.",
+        Returns = "The result of multiplying the {param=x} parameter by two, raised to the power of the {param=exp} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -1471,7 +1471,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
         },
-        Returns = "A floating-point scalar that represents the length of the {x} parameter.",
+        Returns = "A floating-point scalar that represents the length of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "Float2" } },
@@ -1524,7 +1524,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The base-e logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Returns = "The base-e logarithm of the {param=x} parameter. If the {param=x} parameter is negative, this function returns indefinite. If the {param=x} parameter is 0, this function returns negative infinity.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1558,7 +1558,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The base-10 logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Returns = "The base-10 logarithm of the {param=x} parameter. If the {param=x} parameter is negative, this function returns indefinite. If the {param=x} parameter is 0, this function returns negative infinity.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1592,7 +1592,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The base-2 logarithm of the {x} parameter. If the {x} parameter is negative, this function returns indefinite. If the {x} parameter is 0, this function returns negative infinity.",
+        Returns = "The base-2 logarithm of the {param=x} parameter. If the {param=x} parameter is negative, this function returns indefinite. If the {param=x} parameter is 0, this function returns negative infinity.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -1627,7 +1627,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The first input value." },
             new { IsOut = false, Name = "y", Info = "The second input value." }
         },
-        Returns = "The {x} or {y} parameter, whichever is the largest value.",
+        Returns = "The {param=x} or {param=y} parameter, whichever is the largest value.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -1702,7 +1702,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The first input value." },
             new { IsOut = false, Name = "y", Info = "The second input value." }
         },
-        Returns = "The {x} or {y} parameter, whichever is the smallest value.",
+        Returns = "The {param=x} or {param=y} parameter, whichever is the smallest value.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -1777,7 +1777,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The input value." },
             new { IsOut = true, Name = "y", Info = "The resulting integer portion." }
         },
-        Returns = "The signed-fractional portion of {x}.",
+        Returns = "The signed-fractional portion of {param=x}.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -1832,7 +1832,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The first input value." },
             new { IsOut = false, Name = "y", Info = "The second input value." }
         },
-        Returns = "The result of {x} times {y}. The result has the dimension {x}-rows by {y}-columns.",
+        Returns = "The result of {param=x} times {param=y}. The result has the dimension {param=x}-rows by {param=y}-columns.",
         Overloads = new[]
         {
             // 1 (scalars)
@@ -2123,7 +2123,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
         },
-        Returns = "The normalized {x} parameter. If the length of the {x} parameter is 0, the result is indefinite.",
+        Returns = "The normalized {param=x} parameter. If the length of the {param=x} parameter is 0, the result is indefinite.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2142,7 +2142,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "x", Info = "The specified value." },
             new { IsOut = false, Name = "y", Info = "The specified power." }
         },
-        Returns = "The {x} parameter raised to the power of the {y} parameter.",
+        Returns = "The {param=x} parameter raised to the power of the {param=y} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -2176,7 +2176,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The {x} parameter converted from degrees to radians.",
+        Returns = "The {param=x} parameter converted from degrees to radians.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2210,7 +2210,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
         },
-        Returns = "The reciprocal of the {x} parameter.",
+        Returns = "The reciprocal of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2301,7 +2301,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "n", Info = "A floating-point, surface normal vector." },
             new { IsOut = false, Name = "f", Info = "A floating-point, refraction index scalar." }
         },
-        Returns = "A floating-point, refraction vector. If the angle between the entering ray {i} and the surface normal {n} is too great for a given refraction index {f}, the return value is 0.",
+        Returns = "A floating-point, refraction vector. If the angle between the entering ray {param=i} and the surface normal {param=n} is too great for a given refraction index {param=f}, the return value is 0.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float", "float" } },
@@ -2353,7 +2353,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The {x} parameter, rounded to the nearest integer within a floating-point type.",
+        Returns = "The {param=x} parameter, rounded to the nearest integer within a floating-point type.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2387,7 +2387,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The reciprocal of the square root of the {x} parameter.",
+        Returns = "The reciprocal of the square root of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2421,7 +2421,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "The {x} parameter, clamped within the range of 0 to 1.",
+        Returns = "The {param=x} parameter, clamped within the range of 0 to 1.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2475,7 +2475,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
         },
-        Returns = "Returns -1 if {x} is less than zero; 0 if {x} equals zero; and 1 if {x} is greater than zero.",
+        Returns = "Returns -1 if {param=x} is less than zero; 0 if {param=x} equals zero; and 1 if {param=x} is greater than zero.",
         Overloads = new[]
         {
             new { Return = "int", Params = new[] { "float" } },
@@ -2529,7 +2529,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The sine of the {x} parameter.",
+        Returns = "The sine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2599,7 +2599,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The hyperbolic sine of the {x} parameter.",
+        Returns = "The hyperbolic sine of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2635,7 +2635,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "max", Info = "The specified maximum range." },
             new { IsOut = false, Name = "x", Info = "The specified value to be interpolated." }
         },
-        Returns = "Returns 0 if {x} is less than {min}; 1 if {x} is greater than {max}; otherwise, a value between 0 and 1 if {x} is in the range [{min}, {max}].",
+        Returns = "Returns 0 if {param=x} is less than {param=min}; 1 if {param=x} is greater than {param=max}; otherwise, a value between 0 and 1 if {param=x} is in the range [{param=min}, {param=max}].",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float", "float" } },
@@ -2669,7 +2669,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point value." }
         },
-        Returns = "The square root of the {x} parameter, per component.",
+        Returns = "The square root of the {param=x} parameter, per component.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2704,7 +2704,7 @@ var Intrinsics = new[]
             new { IsOut = false, Name = "y", Info = "The first specified floating-point value." },
             new { IsOut = false, Name = "x", Info = "The second specified floating-point value." }
         },
-        Returns = "1 if the {x} parameter is greater than or equal to the {y} parameter; otherwise, 0.",
+        Returns = "1 if the {param=x} parameter is greater than or equal to the {param=y} parameter; otherwise, 0.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float", "float" } },
@@ -2738,7 +2738,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The tangent of the {x} parameter.",
+        Returns = "The tangent of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2772,7 +2772,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
         },
-        Returns = "The hyperbolic tangent of the {x} parameter.",
+        Returns = "The hyperbolic tangent of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "float", Params = new[] { "float" } },
@@ -2806,7 +2806,7 @@ var Intrinsics = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified matrix." }
         },
-        Returns = "The transposed value of the {x} parameter.",
+        Returns = "The transposed value of the {param=x} parameter.",
         Overloads = new[]
         {
             new { Return = "Float2x1", Params = new[] { "Float1x2" } },

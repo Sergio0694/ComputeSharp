@@ -19,8 +19,10 @@ foreach (var intrinsic in Intrinsics)
         if (isFirst) isFirst = false;
         else WriteLine("");
 
+        var summary = Regex.Replace(intrinsic.Summary, @"{keyword=(\w+)}", m => $"<see langword=\"{m.Groups[1].Value}\"/>");
+
         WriteLine("/// <summary>");
-        WriteLine($"/// {intrinsic.Summary}");
+        WriteLine($"/// {summary}");
         WriteLine("/// </summary>");
 
         foreach (var param in intrinsic.Parameters)
@@ -30,7 +32,7 @@ foreach (var intrinsic in Intrinsics)
 
         if (intrinsic.Returns.Length > 0)
         {
-            var returns = Regex.Replace(intrinsic.Returns, @"{(\w+)}", m => $"<paramref name=\"{m.Groups[1].Value}\"/>");
+            var returns = Regex.Replace(intrinsic.Returns, @"{param=(\w+)}", m => $"<paramref name=\"{m.Groups[1].Value}\"/>");
 
             WriteLine($"/// <returns>{returns}</returns>");
         }
