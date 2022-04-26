@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -169,9 +170,9 @@ partial class IShaderGenerator
 
                 // Replace the actual thread num values
                 hlslSource = hlslSource
-                    .Replace("<THREADSX>", threadIds.X.ToString())
-                    .Replace("<THREADSY>", threadIds.Y.ToString())
-                    .Replace("<THREADSZ>", threadIds.Z.ToString());
+                    .Replace("<THREADSX>", threadIds.X.ToString(CultureInfo.InvariantCulture))
+                    .Replace("<THREADSY>", threadIds.Y.ToString(CultureInfo.InvariantCulture))
+                    .Replace("<THREADSZ>", threadIds.Z.ToString(CultureInfo.InvariantCulture));
 
                 // Compile the shader bytecode
                 using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(hlslSource.AsSpan());

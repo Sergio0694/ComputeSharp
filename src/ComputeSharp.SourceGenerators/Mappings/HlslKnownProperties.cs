@@ -98,7 +98,7 @@ partial class HlslKnownProperties
             }
             else
             {
-                knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
+                knownProperties.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLowerInvariant()}");
             }
         }
 
@@ -110,20 +110,20 @@ partial class HlslKnownProperties
             switch (property.Name)
             {
                 case string name when name.Length == 1:
-                    knownProperties.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLower(name[0])} / (float)__{char.ToLower(name[0])}");
+                    knownProperties.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])} / (float)__{char.ToLowerInvariant(name[0])}");
                     break;
                 case string name when name.Length == 2:
                 {
-                    string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})";
-                    string denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
+                    string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])})";
+                    string denominator = $"float2(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])})";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;
                 }
                 case string name when name.Length == 3:
                 {
-                    string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})";
-                    string denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
+                    string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[2])})";
+                    string denominator = $"float3(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}, __{char.ToLowerInvariant(name[2])})";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;
@@ -164,13 +164,13 @@ partial class HlslKnownProperties
                     knownProperties.Add(key, "__x * __y * __z");
                     break;
                 case string name when name.Length == 1:
-                    knownProperties.Add(key, $"__{char.ToLower(name[0])}");
+                    knownProperties.Add(key, $"__{char.ToLowerInvariant(name[0])}");
                     break;
                 case string name when name.Length == 2:
-                    knownProperties.Add(key, $"int2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})");
+                    knownProperties.Add(key, $"int2(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])})");
                     break;
                 case string name when name.Length == 3:
-                    knownProperties.Add(key, $"int3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})");
+                    knownProperties.Add(key, $"int3(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}, __{char.ToLowerInvariant(name[2])})");
                     break;
             }
         }

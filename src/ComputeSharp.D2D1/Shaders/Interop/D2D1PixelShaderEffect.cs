@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 #if !NET6_0_OR_GREATER
 using System.Runtime.InteropServices;
@@ -232,7 +233,7 @@ public static unsafe class D2D1PixelShaderEffect
         for (int i = 0; i < PixelShaderEffect.For<T>.NumberOfInputs; i++)
         {
             writer.WriteAsUtf8("<Input name='Source");
-            writer.WriteAsUtf8(i.ToString());
+            writer.WriteAsUtf8(i.ToString(CultureInfo.InvariantCulture));
             writer.WriteAsUtf8($"'/>");
         }
 

@@ -79,13 +79,13 @@ internal static partial class HlslKnownTypes
         // Add all the vector types
         foreach (var type in KnownVectorTypes)
         {
-            knownTypes.Add(type.FullName, type.Name.ToLower());
+            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
 
         // Add all the matrix types
         foreach (var type in KnownMatrixTypes)
         {
-            knownTypes.Add(type.FullName, type.Name.ToLower());
+            knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
 
         return knownTypes;
