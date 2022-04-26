@@ -275,3 +275,38 @@ jobs:
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
+
+  # Publish the packages to GitHub packages
+  publish-nightlies-github:
+    needs: [ run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-package-native-libs ]
+    runs-on: windows-2022
+    if: ${{github.event_name == 'push'}}
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: nuget_preview
+        path: artifacts
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - run: dotnet nuget push "artifacts\*.nupkg" --source "https://nuget.pkg.github.com/ComputeSharp/index.json" --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
+      shell: cmd
+
+  # Publish the packages to Azure DevOps
+  publish-nightlies-azure-devops:
+    needs: [ run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-package-native-libs ]
+    runs-on: windows-2022
+    if: ${{github.event_name == 'push'}}
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: nuget_preview
+        path: artifacts
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        source-url: "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json"
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN }}
+    - run: dotnet nuget push "artifacts\*.nupkg" --api-key AzureDevOps --skip-duplicate
+      shell: cmd
