@@ -51,7 +51,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Source)> shaderInfoWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Source, int InputCount)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -92,12 +92,28 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 return (
                     item.Left.Hierarchy,
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
-                    new Result<HlslShaderSourceInfo>(sourceInfo, hlslSourceDiagnostics));
+                    new Result<HlslShaderSourceInfo>(sourceInfo, hlslSourceDiagnostics),
+                    inputCount);
             });
 
         // Output the diagnostics
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Source.Errors));
+
+        // Filter items to enable caching for the input count methods
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
+            shaderInfoWithErrors
+            .Select(static (item, token) => (item.Hierarchy, item.InputCount))
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<int>.Default);
+
+        // Generate the GetInputCount() methods
+        context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax getInputCountMethod = GetInputCount.GetSyntax(item.InputCount);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputCountMethod, false);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetInputCount)}", compilationUnit.ToFullString());
+        });
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, HlslShaderSourceInfo Source)> shaderInfo =
@@ -106,7 +122,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
 
         // Get a filtered sequence to enable caching
-        IncrementalValuesProvider< (HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
             shaderInfo
             .Select(static (item, token) => (item.Hierarchy, item.Dispatch))
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default);
