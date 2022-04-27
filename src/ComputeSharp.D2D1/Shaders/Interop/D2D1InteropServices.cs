@@ -26,10 +26,10 @@ public static unsafe class D2D1InteropServices
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </para>
     /// </remarks>
-    public static ReadOnlyMemory<byte> LoadShaderBytecode<T>()
+    public static ReadOnlyMemory<byte> LoadPixelShaderBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileShaderBytecode<T>(null);
+        return LoadOrCompilePixelShaderBytecode<T>(null);
     }
 
     /// <summary>
@@ -42,10 +42,10 @@ public static unsafe class D2D1InteropServices
     /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </remarks>
-    public static ReadOnlyMemory<byte> LoadShaderBytecode<T>(D2D1ShaderProfile shaderProfile)
+    public static ReadOnlyMemory<byte> LoadPixelShaderBytecode<T>(D2D1ShaderProfile shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileShaderBytecode<T>(shaderProfile);
+        return LoadOrCompilePixelShaderBytecode<T>(shaderProfile);
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public static unsafe class D2D1InteropServices
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
-    private static ReadOnlyMemory<byte> LoadOrCompileShaderBytecode<T>(D2D1ShaderProfile? shaderProfile)
+    private static ReadOnlyMemory<byte> LoadOrCompilePixelShaderBytecode<T>(D2D1ShaderProfile? shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;

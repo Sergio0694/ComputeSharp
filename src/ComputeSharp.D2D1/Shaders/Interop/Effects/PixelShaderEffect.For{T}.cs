@@ -90,7 +90,7 @@ internal unsafe partial struct PixelShaderEffect
                     // Load all shader properties
                     Guid guid = typeof(T).GUID;
                     int inputCount = (int)D2D1InteropServices.GetPixelShaderInputCount<T>();
-                    ReadOnlyMemory<byte> buffer = D2D1InteropServices.LoadShaderBytecode<T>();
+                    ReadOnlyMemory<byte> buffer = D2D1InteropServices.LoadPixelShaderBytecode<T>();
                     byte* typeAssociatedMemory = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), buffer.Length);
 
                     // Copy the bytecode to the target buffer
