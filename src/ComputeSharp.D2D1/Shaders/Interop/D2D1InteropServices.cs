@@ -80,6 +80,19 @@ public static unsafe class D2D1InteropServices
     }
 
     /// <summary>
+    /// Gets the number of inputs from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
+    /// <returns>The number of inputs for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static uint GetPixelShaderInputCount<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.GetInputCount();
+    }
+
+    /// <summary>
     /// Gets the constant buffer from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
