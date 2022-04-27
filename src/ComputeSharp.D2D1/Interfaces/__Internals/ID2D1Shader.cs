@@ -17,14 +17,7 @@ public interface ID2D1Shader
     /// <remarks>The input buffer must be retrieved from <see cref="LoadDispatchData"/>.</remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void InitializeFromDispatchData(ReadOnlySpan<byte> data)
-#if NET6_0_OR_GREATER
-    {
-        throw new NotImplementedException();
-    }
-#else
-    ;
-#endif
+    void InitializeFromDispatchData(ReadOnlySpan<byte> data);
 
     /// <summary>
     /// Loads the dispatch data for the shader.
@@ -34,14 +27,7 @@ public interface ID2D1Shader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader)
-        where TLoader : struct, ID2D1DispatchDataLoader
-#if NET6_0_OR_GREATER
-    {
-        throw new NotImplementedException();
-    }
-#else
-    ;
-#endif
+        where TLoader : struct, ID2D1DispatchDataLoader;
 
     /// <summary>
     /// Builds the HLSL source code for the current shader instance.
@@ -49,14 +35,7 @@ public interface ID2D1Shader
     /// <param name="hlslSource">The resulting HLSL source.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out string hlslSource)
-#if NET6_0_OR_GREATER
-    {
-        throw new NotImplementedException();
-    }
-#else
-    ;
-#endif
+    void BuildHlslSource(out string hlslSource);
 
     /// <summary>
     /// Loads the bytecode for the current shader.
@@ -68,12 +47,5 @@ public interface ID2D1Shader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     void LoadBytecode<TLoader>(ref TLoader loader, D2D1ShaderProfile? shaderProfile)
-        where TLoader : struct, ID2D1BytecodeLoader
-#if NET6_0_OR_GREATER
-    {
-        throw new NotImplementedException();
-    }
-#else
-    ;
-#endif
+        where TLoader : struct, ID2D1BytecodeLoader;
 }
