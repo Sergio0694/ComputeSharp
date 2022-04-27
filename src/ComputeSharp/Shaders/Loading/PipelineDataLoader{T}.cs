@@ -89,7 +89,9 @@ internal static class PipelineDataLoader<T>
 
         ShaderDispatchMetadataLoader metadataLoader = new(device.D3D12Device);
 
-        Unsafe.NullRef<T>().LoadDispatchMetadata(ref metadataLoader, out *(IntPtr*)&d3D12RootSignature);
+        Unsafe.SkipInit(out T shader);
+
+        shader.LoadDispatchMetadata(ref metadataLoader, out *(IntPtr*)&d3D12RootSignature);
         
         using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.D3D12ShaderBytecode);
 
