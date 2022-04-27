@@ -20,6 +20,14 @@ public interface ID2D1Shader
     void InitializeFromDispatchData(ReadOnlySpan<byte> data);
 
     /// <summary>
+    /// Gets the number of inputs for the current shader.
+    /// </summary>
+    /// <returns>The number of inputs for the current shader.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    uint GetInputCount();
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
