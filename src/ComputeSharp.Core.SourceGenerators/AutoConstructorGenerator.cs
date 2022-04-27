@@ -59,7 +59,7 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
         {
             return (
                 from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
-                where fieldSymbol is { IsConst: false, IsStatic: false, IsFixedSizeBuffer: false }
+                where fieldSymbol is { IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
                 let typeName = fieldSymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 select new ParameterInfo(typeName, fieldSymbol.Name)).ToImmutableArray();
         }

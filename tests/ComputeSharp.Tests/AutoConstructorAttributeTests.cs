@@ -54,4 +54,35 @@ public unsafe partial class AutoConstructorAttributeTests
         Assert.AreEqual(instance.a, a);
         Assert.AreEqual(instance.b, b);
     }
+
+    public partial interface IAnotherInterface
+    {
+        public int B { get; }
+
+        public void Foo();
+    }
+
+    public partial struct AnotherStruct : IAnotherInterface
+    {
+        public int a;
+        public float b;
+
+        int IAnotherInterface.B { get; }
+
+        void IAnotherInterface.Foo()
+        {
+        }
+    }
+
+    [TestMethod]
+    public void GenerateConstructorWithExplicitInterfaceMembers()
+    {
+        int a = 42;
+        float b = 3.14f;
+
+        AnotherStruct instance = new(a, b);
+
+        Assert.AreEqual(instance.a, a);
+        Assert.AreEqual(instance.b, b);
+    }
 }
