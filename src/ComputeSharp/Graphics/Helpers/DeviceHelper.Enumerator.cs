@@ -203,7 +203,7 @@ internal static partial class DeviceHelper
             /// <inheritdoc/>
             public void Reset()
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             /// <inheritdoc/>
