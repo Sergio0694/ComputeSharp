@@ -354,6 +354,12 @@ partial class IShaderGenerator
                      methodDeclarationSymbol.TypeParameters.Length == 0 &&
                      methodDeclarationSymbol.Parameters.Length == 0);
 
+                // Except for the entry point, ignore explicit interface implementations
+                if (!isShaderEntryPoint && !methodDeclarationSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                {
+                    continue;
+                }
+
                 // Create the source rewriter for the current method
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     structDeclarationSymbol,
@@ -495,6 +501,12 @@ partial class IShaderGenerator
         {
             foreach (var propertySymbol in structDeclarationSymbol.GetMembers().OfType<IPropertySymbol>())
             {
+                // Ignore explicit interface implementations
+                if (!propertySymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                {
+                    return;
+                }
+
                 diagnostics.Add(DiagnosticDescriptors.PropertyDeclaration, propertySymbol);
             }
         }
