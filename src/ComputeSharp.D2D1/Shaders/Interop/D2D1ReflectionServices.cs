@@ -23,11 +23,13 @@ public static class D2D1ReflectionServices
     public static unsafe D2D1ShaderInfo GetShaderInfo<T>()
         where T : struct, ID2D1PixelShader
     {
-        Unsafe.NullRef<T>().BuildHlslSource(out string hlslSource);
+        Unsafe.SkipInit(out T shader);
+
+        shader.BuildHlslSource(out string hlslSource);
 
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        Unsafe.NullRef<T>().LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50);
+        shader.LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
