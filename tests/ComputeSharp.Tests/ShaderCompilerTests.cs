@@ -272,6 +272,70 @@ namespace ComputeSharp.Tests
                 this.buffer[ThreadIds.X] *= this.number;
             }
         }
+
+        [TestMethod]
+        public void ComputeShaderWithInheritedShaderInterface()
+        {
+            _ = ReflectionServices.GetShaderInfo<ComputeShaderWithInheritedShaderInterfaceShader>();
+        }
+
+        public interface IMyBaseShader : IComputeShader
+        {
+            public int A { get; }
+
+            public void B();
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct ComputeShaderWithInheritedShaderInterfaceShader : IMyBaseShader
+        {
+            int IMyBaseShader.A { get; }
+
+            void IMyBaseShader.B()
+            {
+            }
+
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float number;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                this.buffer[ThreadIds.X] *= this.number;
+            }
+        }
+
+        [TestMethod]
+        public void PixelShaderWithInheritedShaderInterface()
+        {
+            _ = ReflectionServices.GetShaderInfo<PixelShaderWithInheritedShaderInterfaceShader, float4>();
+        }
+
+        public interface IMyBaseShader<T> : IPixelShader<T>
+            where T : unmanaged
+        {
+            public int A { get; }
+
+            public void B();
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct PixelShaderWithInheritedShaderInterfaceShader : IMyBaseShader<float4>
+        {
+            int IMyBaseShader<float4>.A { get; }
+
+            void IMyBaseShader<float4>.B()
+            {
+            }
+
+            public readonly float number;
+
+            /// <inheritdoc/>
+            public float4 Execute()
+            {
+                return default;
+            }
+        }
     }
 }
 
