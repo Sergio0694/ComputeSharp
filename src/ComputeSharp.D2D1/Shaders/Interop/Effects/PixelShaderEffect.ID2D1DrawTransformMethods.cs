@@ -137,12 +137,10 @@ partial struct PixelShaderEffect
                     inputs[i] = inputRects[i].ToRectangle();
                 }
 
-                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
-
                 // Invoke MapOutputToInputs and handle exceptions so they don't cross the ABI boundary
                 try
                 {
-                    d2D1TransformMapper.MapOutputToInputs(buffer, in output, inputs);
+                    d2D1TransformMapper.MapOutputToInputs(in output, inputs);
                 }
                 catch (Exception e)
                 {
@@ -241,12 +239,10 @@ partial struct PixelShaderEffect
                 Rectangle invalidInput = invalidInputRect.ToRectangle();
                 Rectangle invalidOutput;
 
-                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
-
                 // Handle exceptions once again
                 try
                 {
-                    d2D1TransformMapper.MapInvalidOutput(buffer, (int)inputIndex, invalidInput, out invalidOutput);
+                    d2D1TransformMapper.MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
                 }
                 catch (Exception e)
                 {

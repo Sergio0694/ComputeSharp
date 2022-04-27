@@ -13,13 +13,13 @@ public sealed partial class PixelateEffect : ID2D1TransformMapper<PixelateEffect
     }
 
     /// <inheritdoc/>
-    void ID2D1TransformMapper<Shader>.MapInvalidOutput(in Shader shader, int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
+    void ID2D1TransformMapper<Shader>.MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
     {
         invalidOutput = invalidInput;
     }
 
     /// <inheritdoc/>
-    void ID2D1TransformMapper<Shader>.MapOutputToInputs(in Shader shader, in Rectangle output, Span<Rectangle> inputs)
+    void ID2D1TransformMapper<Shader>.MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
     {
         inputs.Fill(output);
     }

@@ -25,17 +25,15 @@ internal abstract class D2D1TransformMapper
         out Rectangle opaqueOutput);
 
     /// <inheritdoc cref="ID2D1TransformMapper{T}.MapOutputToInputs"/>
-    /// <param name="buffer">The buffer with the serialized shader dispatch data, if any.</param>
     /// <param name="output">The output rectangle from which the inputs must be mapped.</param>
     /// <param name="inputs">The corresponding set of inputs. The inputs will directly correspond to the transform inputs.</param>
-    public abstract void MapOutputToInputs(ReadOnlySpan<byte> buffer, in Rectangle output, Span<Rectangle> inputs);
+    public abstract void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs);
 
     /// <inheritdoc cref="ID2D1TransformMapper{T}.MapInvalidOutput"/>
-    /// <param name="buffer">The buffer with the serialized shader dispatch data, if any.</param>
     /// <param name="inputIndex">The index of the input rectangle.</param>
     /// <param name="invalidInput">The invalid input rectangle.</param>
     /// <param name="invalidOutput">The output rectangle to which the input rectangle must be mapped.</param>
-    public abstract void MapInvalidOutput(ReadOnlySpan<byte> buffer, int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
+    public abstract void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
 
     /// <summary>
     /// A generic <see cref="D2D1TransformMapper"/> implementation for a specific shader type.
@@ -84,23 +82,15 @@ internal abstract class D2D1TransformMapper
         }
 
         /// <inheritdoc/>
-        public override void MapOutputToInputs(ReadOnlySpan<byte> buffer, in Rectangle output, Span<Rectangle> inputs)
+        public override void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
         {
-            Unsafe.SkipInit(out T shader);
-
-            shader.InitializeFromDispatchData(buffer);
-
-            this.transformMapper.MapOutputToInputs(in shader, in output, inputs);
+            this.transformMapper.MapOutputToInputs(in output, inputs);
         }
 
         /// <inheritdoc/>
-        public override void MapInvalidOutput(ReadOnlySpan<byte> buffer, int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
+        public override void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
         {
-            Unsafe.SkipInit(out T shader);
-
-            shader.InitializeFromDispatchData(buffer);
-
-            this.transformMapper.MapInvalidOutput(in shader, inputIndex, invalidInput, out invalidOutput);
+            this.transformMapper.MapInvalidOutput(inputIndex, invalidInput, out invalidOutput);
         }
     }
 }

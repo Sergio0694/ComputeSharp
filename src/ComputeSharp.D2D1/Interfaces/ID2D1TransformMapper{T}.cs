@@ -43,7 +43,6 @@ public interface ID2D1TransformMapper<T>
     /// <summary>
     /// Allows a transform to state how it would map a rectangle requested on its output to a set of sample rectangles on its input.
     /// </summary>
-    /// <param name="shader">The input D2D1 pixel shader being executed on the current effect (this can be used to retrieve shader properties).</param>
     /// <param name="output">The output rectangle from which the inputs must be mapped.</param>
     /// <param name="inputs">The corresponding set of inputs. The inputs will directly correspond to the transform inputs.</param>
     /// <remarks>
@@ -56,12 +55,11 @@ public interface ID2D1TransformMapper<T>
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapoutputrecttoinputrects"/>.
     /// </para>
     /// </remarks>
-    void MapOutputToInputs(in T shader, in Rectangle output, Span<Rectangle> inputs);
+    void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs);
 
     /// <summary>
     /// Sets the input rectangles for this rendering pass into the transform.
     /// </summary>
-    /// <param name="shader">The input D2D1 pixel shader being executed on the current effect (this can be used to retrieve shader properties).</param>
     /// <param name="inputIndex">The index of the input rectangle.</param>
     /// <param name="invalidInput">The invalid input rectangle.</param>
     /// <param name="invalidOutput">The output rectangle to which the input rectangle must be mapped.</param>
@@ -76,5 +74,5 @@ public interface ID2D1TransformMapper<T>
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinvalidrect"/>.
     /// </para>
     /// </remarks>
-    void MapInvalidOutput(in T shader, int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
+    void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
 }
