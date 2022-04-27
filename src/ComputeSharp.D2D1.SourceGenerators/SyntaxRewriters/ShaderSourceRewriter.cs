@@ -244,7 +244,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
                 // If the member access is a this.<FIELD> access, rewrite it to strip "this."
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
                 {
-                    return node.Name;
+                    return updatedNode.Name;
                 }
             }
 

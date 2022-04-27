@@ -33,6 +33,43 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        public void ReservedKeywordsPrecompiled()
+        {
+            _ = ReflectionServices.GetShaderInfo<ReservedKeywordsPrecompiledShader>();
+        }
+
+        [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.X)]
+        public readonly partial struct ReservedKeywordsPrecompiledShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> row_major;
+            public readonly float dword;
+            public readonly float float2;
+            public readonly int int2x2;
+            private readonly float sin;
+            private readonly float cos;
+            private readonly float scale;
+            private readonly float intensity;
+
+            public void Execute()
+            {
+                float exp = Hlsl.Exp(dword * row_major[ThreadIds.X]);
+                float log = Hlsl.Log(1 + exp);
+
+                float s1 = this.cos * exp * this.sin * log;
+                float t1 = -this.sin * exp * this.cos * log;
+
+                float s2 = s1 + this.intensity + Hlsl.Tan(s1 * this.scale);
+                float t2 = t1 + this.intensity + Hlsl.Tan(t1 * this.scale);
+
+                float u2 = this.cos * s2 - this.sin * t2;
+                float v2 = this.sin * s2 - this.cos * t2;
+
+                row_major[ThreadIds.X] = log / dword + float2 + int2x2 + u2 + v2;
+            }
+        }
+
+        [TestMethod]
         public void SpecialTypeAsReturnType()
         {
             _ = ReflectionServices.GetShaderInfo<SpecialTypeAsReturnTypeShader>();
