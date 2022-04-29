@@ -542,15 +542,18 @@ internal static class DiagnosticDescriptors
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
+    /// <para>
+    /// Format: <c>"The compute shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
+    /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor PropertyDeclaration = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new DiagnosticDescriptor(
         id: "CMPS0040",
-        title: "Property declaration",
-        messageFormat: "Property declarations cannot be used in a compute shader",
+        title: "Invalid property declaration",
+        messageFormat: "The compute shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Property declarations cannot be used in a compute shader.",
+        description: "Property declarations (except for stateless properties explicitly implementing an interface property) cannot be used in a compute shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

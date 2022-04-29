@@ -413,31 +413,34 @@ internal static class DiagnosticDescriptors
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
+    /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor PropertyDeclaration = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new DiagnosticDescriptor(
         id: "CMPSD2D0031",
-        title: "Property declaration",
-        messageFormat: "Property declarations cannot be used in a compute shader",
+        title: "Invalid property declaration",
+        messageFormat: "The D2D1 shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "Property declarations cannot be used in a compute shader.",
+        description: "Property declarations (except for stateless properties explicitly implementing an interface property) cannot be used in a D2D1 shader.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with a root signature that is too large.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values and resources"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new DiagnosticDescriptor(
         id: "CMPSD2D0032",
         title: "Shader dispatch data size exceeded",
-        messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources",
+        messageFormat: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values and resources",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
+        description: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

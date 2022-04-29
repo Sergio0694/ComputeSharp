@@ -23,7 +23,7 @@ partial class IShaderGenerator
         INamedTypeSymbol iComputeShaderSymbol,
         INamedTypeSymbol iPixelShaderSymbol)
     {
-        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.Interfaces)
+        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {
             if (interfaceSymbol.Name == nameof(IComputeShader) &&
                  SymbolEqualityComparer.Default.Equals(interfaceSymbol, iComputeShaderSymbol))

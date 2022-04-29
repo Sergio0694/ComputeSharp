@@ -45,7 +45,7 @@ partial class ID2D1ShaderGenerator
             ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
             // Properties are not supported
-            DetectAndReportPropertyDeclarations(builder, structDeclarationSymbol);
+            DetectAndReportInvalidPropertyDeclarations(builder, structDeclarationSymbol);
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -240,6 +240,12 @@ partial class ID2D1ShaderGenerator
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
                     methodDeclarationSymbol.Parameters.Length == 0;
 
+                // Except for the entry point, ignore explicit interface implementations
+                if (!isShaderEntryPoint && !methodDeclarationSymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                {
+                    continue;
+                }
+
                 // Create the source rewriter for the current method
                 ShaderSourceRewriter shaderSourceRewriter = new(
                     structDeclarationSymbol,
@@ -366,15 +372,25 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Finds and reports all declared properties in a shader.
+        /// Finds and reports all invalid declared properties in a shader.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (var propertySymbol in structDeclarationSymbol.GetMembers().OfType<IPropertySymbol>())
+            foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                diagnostics.Add(DiagnosticDescriptors.PropertyDeclaration, propertySymbol);
+                // Detect properties that are not explicit interface implementations
+                if (memberSymbol is IPropertySymbol { ExplicitInterfaceImplementations.IsEmpty: true })
+                {
+                    diagnostics.Add(InvalidPropertyDeclaration, memberSymbol, structDeclarationSymbol, memberSymbol);
+                }
+
+                // Detect properties causing a field to be generated
+                if (memberSymbol is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedProperty })
+                {
+                    diagnostics.Add(InvalidPropertyDeclaration, associatedProperty, structDeclarationSymbol, associatedProperty);
+                }
             }
         }
 

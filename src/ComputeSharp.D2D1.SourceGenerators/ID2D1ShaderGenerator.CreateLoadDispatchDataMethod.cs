@@ -43,9 +43,7 @@ partial class ID2D1ShaderGenerator
                 foreach (
                    IFieldSymbol fieldSymbol in
                    from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
-                   where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
-                         !fieldSymbol.IsConst && !fieldSymbol.IsStatic &&
-                         !fieldSymbol.IsFixedSizeBuffer
+                   where fieldSymbol is { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
                    select fieldSymbol)
                 {
                     string fieldName = fieldSymbol.Name;

@@ -18,7 +18,7 @@ partial class ID2D1ShaderGenerator
     /// <returns>Whether or not <paramref name="typeSymbol"/> implements <paramref name="d2D1PixelShaderSymbol"/>.</returns>
     private static bool IsD2D1PixelShaderType(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1PixelShaderSymbol)
     {
-        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.Interfaces)
+        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {
             if (interfaceSymbol.Name == nameof(ID2D1PixelShader) &&
                  SymbolEqualityComparer.Default.Equals(interfaceSymbol, d2D1PixelShaderSymbol))
