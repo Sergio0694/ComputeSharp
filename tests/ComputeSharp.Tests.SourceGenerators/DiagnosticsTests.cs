@@ -1254,6 +1254,39 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
+    public void PropertyDeclaration_AutoProp_WithExplicitInterfaceImplementation()
+    {
+        string source = @"
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public class ReadWriteBuffer<T> { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            public interface IFoo
+            {
+                float Pi { get; }
+            }
+
+            public struct MyShader : IComputeShader, IFoo
+            {
+                public ReadWriteBuffer<float> buffer;
+
+                float IFoo.Pi { get; } = 3.14f;
+
+                public void Execute()
+                {
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+    }
+
+    [TestMethod]
     public void PropertyDeclaration_GetterBlock()
     {
         string source = @"

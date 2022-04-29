@@ -43,8 +43,8 @@ partial class IShaderGenerator
         {
             ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
-            // Properties are not supported
-            DetectAndReportPropertyDeclarations(builder, structDeclarationSymbol);
+            // Detect invalid properties
+            DetectAndReportInvalidPropertyDeclarations(builder, structDeclarationSymbol);
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -493,21 +493,25 @@ partial class IShaderGenerator
         }
 
         /// <summary>
-        /// Finds and reports all declared properties in a shader.
+        /// Finds and reports all invalid declared properties in a shader.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (var propertySymbol in structDeclarationSymbol.GetMembers().OfType<IPropertySymbol>())
+            foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                // Ignore explicit interface implementations
-                if (!propertySymbol.ExplicitInterfaceImplementations.IsDefaultOrEmpty)
+                // Detect properties that are not explicit interface implementations
+                if (memberSymbol is IPropertySymbol { ExplicitInterfaceImplementations.IsEmpty: true })
                 {
-                    return;
+                    diagnostics.Add(InvalidPropertyDeclaration, memberSymbol, structDeclarationSymbol, memberSymbol);
                 }
 
-                diagnostics.Add(DiagnosticDescriptors.PropertyDeclaration, propertySymbol);
+                // Detect properties causing a field to be generated
+                if (memberSymbol is IFieldSymbol { AssociatedSymbol: IPropertySymbol associatedProperty })
+                {
+                    diagnostics.Add(InvalidPropertyDeclaration, associatedProperty, structDeclarationSymbol, associatedProperty);
+                }
             }
         }
 

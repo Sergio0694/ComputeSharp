@@ -62,12 +62,13 @@ public unsafe partial class AutoConstructorAttributeTests
         public void Foo();
     }
 
+    [AutoConstructor]
     public partial struct AnotherStruct : IAnotherInterface
     {
         public int a;
         public float b;
 
-        int IAnotherInterface.B { get; }
+        int IAnotherInterface.B => 100;
 
         void IAnotherInterface.Foo()
         {

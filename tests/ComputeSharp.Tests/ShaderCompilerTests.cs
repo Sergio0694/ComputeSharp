@@ -289,7 +289,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         internal readonly partial struct ComputeShaderWithInheritedShaderInterfaceShader : IMyBaseShader
         {
-            int IMyBaseShader.A { get; }
+            int IMyBaseShader.A => 42;
 
             void IMyBaseShader.B()
             {
@@ -322,7 +322,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         internal readonly partial struct PixelShaderWithInheritedShaderInterfaceShader : IMyBaseShader<float4>
         {
-            int IMyBaseShader<float4>.A { get; }
+            int IMyBaseShader<float4>.A => 42;
 
             void IMyBaseShader<float4>.B()
             {
