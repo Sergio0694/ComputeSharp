@@ -14,9 +14,15 @@ namespace ComputeSharp.D2D1.Tests;
 public class EndToEndTests
 {
     [TestMethod]
-    public unsafe void InvertWithCustomThreshold()
+    public unsafe void Invert()
     {
-        RunAndCompareShader(new InvertEffect(1), null, "Landscape.png", "Landscape_Inverted.png");
+        RunAndCompareShader(new InvertEffect(), null, "Landscape.png", "Landscape_Inverted.png");
+    }
+
+    [TestMethod]
+    public unsafe void InvertWithThreshold()
+    {
+        RunAndCompareShader(new InvertWithThresholdEffect(1), null, "Landscape.png", "Landscape_Inverted.png");
     }
 
     [TestMethod]

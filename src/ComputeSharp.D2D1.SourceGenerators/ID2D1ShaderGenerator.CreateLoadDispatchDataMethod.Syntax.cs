@@ -45,6 +45,24 @@ partial class ID2D1ShaderGenerator
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(ImmutableArray<FieldInfo> fieldInfos, int root32BitConstantsCount)
         {
+            // If there are no fields, just load an empty buffer
+            if (fieldInfos.IsEmpty)
+            {
+                // loader.LoadConstantBuffer(default);
+                return
+                    ImmutableArray.Create<StatementSyntax>(
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("loader"),
+                                    IdentifierName("LoadConstantBuffer")))
+                            .AddArgumentListArguments(Argument(
+                                LiteralExpression(
+                                    SyntaxKind.DefaultLiteralExpression,
+                                    Token(SyntaxKind.DefaultKeyword))))));
+            }
+
             ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
 
             // Generate loading statements for each captured field
