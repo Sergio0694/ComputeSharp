@@ -23,7 +23,7 @@ partial class IShaderGenerator
                 structDeclarationSymbol
                 .GetMembers()
                 .OfType<IFieldSymbol>()
-                .Where(static member => member.Type is INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false })
+                .Where(static member => member is { Type: INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false }, IsImplicitlyDeclared: false })
                 .Select(static member => member.Name)
                 .ToImmutableArray();
         }
