@@ -32,6 +32,11 @@ internal readonly unsafe struct D2D1EffectDispatchDataLoader : ID2D1DispatchData
     /// <inheritdoc/>
     public void LoadConstantBuffer(ReadOnlySpan<uint> data)
     {
+        if (data.IsEmpty)
+        {
+            return;
+        }
+
         this.d2D1Effect->SetValue(
             index: 0,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
