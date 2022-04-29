@@ -44,6 +44,12 @@ partial class ID2D1ShaderGenerator
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to initialize a shader from the serialized dispatch data buffer.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchDataUnloadingStatements(ImmutableArray<FieldInfo> fieldInfos)
         {
+            // If there are no fields, just return no statements
+            if (fieldInfos.IsEmpty)
+            {
+                return ImmutableArray<StatementSyntax>.Empty;
+            }
+
             ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
 
             // Insert the fallback for empty shaders. This will generate the following code:
