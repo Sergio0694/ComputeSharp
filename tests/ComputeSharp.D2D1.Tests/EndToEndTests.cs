@@ -29,7 +29,7 @@ public class EndToEndTests
     public unsafe void Pixelate()
     {
         RunAndCompareShader(
-            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 720, 16)),
+            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 840, 16)),
             static () => new PixelateEffect(),
             "Landscape.png",
             "Landscape_Pixelate.png");

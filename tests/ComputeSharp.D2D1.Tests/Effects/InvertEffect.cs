@@ -3,7 +3,6 @@
 [D2DInputCount(1)]
 [D2DInputSimple(0)]
 [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
-[AutoConstructor]
 public partial struct InvertEffect : ID2D1PixelShader
 {
     /// <inheritdoc/>
