@@ -315,4 +315,268 @@ partial class Hlsl
     /// </remarks>
     [HlslIntrinsicName("clip")]
     public static void Clip(Float4x4 x) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Clip)}({typeof(Float4x4)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic add of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAdd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic add of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAdd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic add of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAdd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic add of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAdd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic and of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAnd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic and of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAnd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic and of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAnd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic and of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedAnd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Atomically compares the destination with the comparison value. If they are identical, the destination
+    /// is overwritten with the input value. The original value is set to the destination's original value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="comparison">The comparison value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedCompareExchange(int destination, int comparison, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Atomically compares the destination with the comparison value. If they are identical, the destination
+    /// is overwritten with the input value. The original value is set to the destination's original value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="comparison">The comparison value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedCompareExchange(uint destination, uint comparison, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Atomically compares the destination to the comparison value. If they
+    /// are identical, the destination is overwritten with the input value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="comparison">The comparison value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedCompareStore(int destination, int comparison, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Atomically compares the destination to the comparison value. If they
+    /// are identical, the destination is overwritten with the input value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="comparison">The comparison value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedCompareStore(uint destination, uint comparison, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Assigns value to dest and returns the original value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedExchange(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Assigns value to dest and returns the original value.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedExchange(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic max.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMax(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic max.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMax(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic max.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMax(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic max.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMax(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic min.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMin(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic min.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMin(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic min.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMin(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic min.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedMin(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic or.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedOr(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic or.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedOr(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic or.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedOr(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic or.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedOr(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic xor.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedXor(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic xor.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedXor(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic xor.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedXor(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic xor.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static void InterlockedXor(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 }
