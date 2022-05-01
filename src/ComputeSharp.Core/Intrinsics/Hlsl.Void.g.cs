@@ -7,6 +7,16 @@ namespace ComputeSharp;
 partial class Hlsl
 {
     /// <summary>
+    /// Submits an error message to the information queue and terminates the current draw or dispatch call being executed.
+    /// </summary>
+    /// <remarks>
+    /// This operation does nothing on rasterizers that do not support it.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("abort")]
+    public static void Abort() => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Abort)}()");
+
+    /// <summary>
     /// Discards the current pixel if the specified value is less than zero.
     /// </summary>
     /// <param name="x">The specified value.</param>

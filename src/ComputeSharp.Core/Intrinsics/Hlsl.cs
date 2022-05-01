@@ -9,13 +9,6 @@ namespace ComputeSharp;
 public static partial class Hlsl
 {
     /// <summary>
-    /// Submits an error message to the information queue and terminates the current draw or dispatch call being executed.
-    /// </summary>
-    /// <remarks>This operation does nothing on rasterizers that do not support it.</remarks>
-    [HlslIntrinsicName("abort")]
-    public static void Abort() => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Abort)}()");
-
-    /// <summary>
     /// Blocks execution of all threads in a group until all memory accesses have been completed.
     /// </summary>
     /// <remarks>

@@ -10,6 +10,21 @@ var Intrinsics = new[]
 {
     new
     {
+        Name = "Abort",
+        HlslName = "abort",
+        Summary = "Submits an error message to the information queue and terminates the current draw or dispatch call being executed.",
+        Remarks = "This operation does nothing on rasterizers that do not support it.",
+        Parameters = new[]
+        {
+            new { IsOut = false, IsRef = false, Name = "", Info = "" }
+        },
+        Overloads = new[]
+        {
+            new string[0]
+        }
+    },
+    new
+    {
         Name = "Clip",
         HlslName = "clip",
         Summary = "Discards the current pixel if the specified value is less than zero.",
