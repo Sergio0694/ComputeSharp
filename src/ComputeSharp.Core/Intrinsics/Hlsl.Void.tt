@@ -54,12 +54,16 @@ foreach (var intrinsic in Intrinsics)
                 }
             }
 
+            WriteLine($"/// <para>For more info, see <see href=\"{intrinsic.Url}\"/>.</para>");
             WriteLine("/// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>");
             WriteLine("/// </remarks>");
         }
         else
         {
-            WriteLine("/// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>");
+            WriteLine("/// <remarks>");
+            WriteLine($"/// For more info, see <see href=\"{intrinsic.Url}\"/>.");
+            WriteLine("/// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>");
+            WriteLine("/// </remarks>");
         }
 
         if (intrinsic.Name != intrinsic.HlslName)

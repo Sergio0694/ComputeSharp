@@ -11,6 +11,7 @@ partial class Hlsl
     /// </summary>
     /// <remarks>
     /// This operation does nothing on rasterizers that do not support it.
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/abort"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("abort")]
@@ -26,6 +27,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -41,6 +43,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -56,6 +59,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -71,6 +75,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -86,6 +91,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -101,6 +107,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -116,6 +123,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -131,6 +139,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -146,6 +155,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -161,6 +171,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -176,6 +187,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -191,6 +203,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -206,6 +219,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -221,6 +235,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -236,6 +251,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -251,6 +267,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -266,6 +283,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -281,6 +299,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -296,6 +315,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -311,6 +331,7 @@ partial class Hlsl
     /// <code>
     /// Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
     /// </code>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("clip")]
@@ -321,7 +342,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAdd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -329,7 +353,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAdd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -338,7 +365,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAdd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -347,7 +377,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAdd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -355,7 +388,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAnd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -363,7 +399,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAnd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -372,7 +411,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAnd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -381,7 +423,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedAnd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -392,7 +437,10 @@ partial class Hlsl
     /// <param name="comparison">The comparison value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcompareexchange"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedCompareExchange(int destination, int comparison, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -403,7 +451,10 @@ partial class Hlsl
     /// <param name="comparison">The comparison value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcompareexchange"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedCompareExchange(uint destination, uint comparison, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -413,7 +464,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="comparison">The comparison value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcomparestore"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedCompareStore(int destination, int comparison, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -423,7 +477,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="comparison">The comparison value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcomparestore"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedCompareStore(uint destination, uint comparison, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -432,7 +489,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedexchange"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedExchange(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -441,7 +501,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedexchange"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedExchange(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -449,7 +512,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMax(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -457,7 +523,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMax(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -466,7 +535,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMax(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -475,7 +547,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMax(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -483,7 +558,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMin(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -491,7 +569,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMin(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -500,7 +581,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMin(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -509,7 +593,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedMin(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -517,7 +604,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedOr(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -525,7 +615,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedOr(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -534,7 +627,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedOr(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -543,7 +639,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedOr(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -551,7 +650,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedXor(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -559,7 +661,10 @@ partial class Hlsl
     /// </summary>
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedXor(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
@@ -568,7 +673,10 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedXor(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
@@ -577,6 +685,9 @@ partial class Hlsl
     /// <param name="destination">The destination value.</param>
     /// <param name="value">The input value.</param>
     /// <param name="original">The original input value.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     public static void InterlockedXor(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 }
