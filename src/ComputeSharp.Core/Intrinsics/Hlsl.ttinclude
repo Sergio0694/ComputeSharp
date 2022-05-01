@@ -13,6 +13,7 @@ var Intrinsics = new[]
         Name = "Abs",
         HlslName = "abs",
         Summary = "Returns the absolute value of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-abs",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -87,6 +88,7 @@ var Intrinsics = new[]
         Name = "Acos",
         HlslName = "acos",
         Summary = "Returns the arccosine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-acos",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value. Each component should be a floating-point within the range [-1, 1]." }
@@ -121,6 +123,7 @@ var Intrinsics = new[]
         Name = "All",
         HlslName = "all",
         Summary = "Determines if all components of the specified value are non-zero.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-all",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -195,6 +198,7 @@ var Intrinsics = new[]
         Name = "Any",
         HlslName = "any",
         Summary = "Determines if any components of the specified value are non-zero.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-any",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -269,6 +273,7 @@ var Intrinsics = new[]
         Name = "AsDouble",
         HlslName = "asdouble",
         Summary = "Reinterprets a cast value (two 32-bit values) into a double precision floating-point value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/asdouble",
         Parameters = new[]
         {
             new { IsOut = false, Name = "lowbits", Info = "The low 32-bit pattern of the input value." },
@@ -286,6 +291,7 @@ var Intrinsics = new[]
         Name = "AsFloat",
         HlslName = "asfloat",
         Summary = "Interprets the bit pattern of an input value as a floating-point number.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-asfloat",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -340,6 +346,7 @@ var Intrinsics = new[]
         Name = "Asin",
         HlslName = "asin",
         Summary = "Returns the arcsine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-asin",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -374,6 +381,7 @@ var Intrinsics = new[]
         Name = "AsInt",
         HlslName = "asint",
         Summary = "Interprets the bit pattern of an input value as an integer number.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-asint",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -428,6 +436,7 @@ var Intrinsics = new[]
         Name = "AsUInt",
         HlslName = "asuint",
         Summary = "Interprets the bit pattern of an input value as an unsigned integer number.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-asuint",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -482,6 +491,7 @@ var Intrinsics = new[]
         Name = "Atan",
         HlslName = "atan",
         Summary = "Returns the arctangent of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-atan",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -516,6 +526,7 @@ var Intrinsics = new[]
         Name = "Atan2",
         HlslName = "atan2",
         Summary = "Returns the arctangent of two values (y, x).",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-atan2",
         Parameters = new[]
         {
             new { IsOut = false, Name = "y", Info = "The y value." },
@@ -551,6 +562,7 @@ var Intrinsics = new[]
         Name = "Ceil",
         HlslName = "ceil",
         Summary = "Returns the smallest integer value that is greater than or equal to the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-ceil",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -585,6 +597,7 @@ var Intrinsics = new[]
         Name = "Clamp",
         HlslName = "clamp",
         Summary = "Clamps the specified value to the specified minimum and maximum range.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clamp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The value to clamp." },
@@ -641,6 +654,7 @@ var Intrinsics = new[]
         Name = "Cos",
         HlslName = "cos",
         Summary = "Returns the cosine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-cos",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -675,6 +689,7 @@ var Intrinsics = new[]
         Name = "Cosh",
         HlslName = "cosh",
         Summary = "Returns the hyperbolic cosine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-cosh",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -709,6 +724,7 @@ var Intrinsics = new[]
         Name = "CountBits",
         HlslName = "countbits",
         Summary = "Counts the number of bits (per component) in the input integer.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/countbits",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -727,6 +743,7 @@ var Intrinsics = new[]
         Name = "Cross",
         HlslName = "cross",
         Summary = "Returns the cross product of two floating-point, 3D vectors.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-cross",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first floating-point, 3D vector." },
@@ -743,6 +760,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDx",
         HlslName = "ddx",
         Summary = "Returns the partial derivative of the specified value with respect to the screen-space x-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-ddx",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -777,6 +795,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDxLowPrecision",
         HlslName = "ddx_coarse",
         Summary = "Computes a low precision partial derivative with respect to the screen-space x-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-ddx",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -795,6 +814,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDxHighPrecision",
         HlslName = "ddx_fine",
         Summary = "Computes a high precision partial derivative with respect to the screen-space x-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/ddx-fine",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -813,6 +833,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDy",
         HlslName = "ddy",
         Summary = "Returns the partial derivative of the specified value with respect to the screen-space y-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-ddy",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -847,6 +868,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDyLowPrecision",
         HlslName = "ddy_coarse",
         Summary = "Computes a low precision partial derivative with respect to the screen-space y-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/ddy-coarse",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -865,6 +887,7 @@ var Intrinsics = new[]
         Name = "DerivativeOfDyHighPrecision",
         HlslName = "ddy_fine",
         Summary = "Computes a high precision partial derivative with respect to the screen-space y-coordinate.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/ddy-fine",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -883,6 +906,7 @@ var Intrinsics = new[]
         Name = "Degrees",
         HlslName = "degrees",
         Summary = "Converts the specified value from radians to degrees.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-degrees",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -917,6 +941,7 @@ var Intrinsics = new[]
         Name = "Determinant",
         HlslName = "determinant",
         Summary = "Returns the determinant of the specified floating-point, square matrix.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-determinant",
         Parameters = new[]
         {
             new { IsOut = false, Name = "m", Info = "The specified value." }
@@ -935,6 +960,7 @@ var Intrinsics = new[]
         Name = "Distance",
         HlslName = "distance",
         Summary = "Returns a distance scalar between two vectors.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-distance",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first floating-point vector to compare." },
@@ -953,6 +979,7 @@ var Intrinsics = new[]
         Name = "Dot",
         HlslName = "dot",
         Summary = "Returns the dot product of two vectors.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-dot",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first vector." },
@@ -974,6 +1001,7 @@ var Intrinsics = new[]
         Name = "Exp",
         HlslName = "exp",
         Summary = "Returns the base-e exponential of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-exp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1008,6 +1036,7 @@ var Intrinsics = new[]
         Name = "Exp2",
         HlslName = "exp2",
         Summary = "Returns the base-2 exponential of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-exp2",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1042,6 +1071,7 @@ var Intrinsics = new[]
         Name = "FirstBitHigh",
         HlslName = "firstbithigh",
         Summary = "Gets the location of the first set bit starting from the highest order bit and working downward, per component.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/firstbithigh",
         Parameters = new[]
         {
             new { IsOut = false, Name = "value", Info = "The input value." }
@@ -1064,6 +1094,7 @@ var Intrinsics = new[]
         Name = "FirstBitLow",
         HlslName = "firstbitlow",
         Summary = "Returns the location of the first set bit starting from the lowest order bit and working upward, per component.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/firstbitlow",
         Parameters = new[]
         {
             new { IsOut = false, Name = "value", Info = "The input value." }
@@ -1086,6 +1117,7 @@ var Intrinsics = new[]
         Name = "Float32ToFloat16",
         HlslName = "f32tof16",
         Summary = "Converts the input float value into a 16-bit floating point value stored in the lower half of the returned {keyword=uint} value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/f32tof16",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -1104,6 +1136,7 @@ var Intrinsics = new[]
         Name = "Float16ToFloat32",
         HlslName = "f16tof32",
         Summary = "Converts the 16-bit floating point value stored in the lower half of the input {keyword=uint} value to a {keyword=float}.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/f16tof32",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -1122,6 +1155,7 @@ var Intrinsics = new[]
         Name = "Floor",
         HlslName = "floor",
         Summary = "Returns the largest integer that is less than or equal to the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-floor",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1156,6 +1190,7 @@ var Intrinsics = new[]
         Name = "FusedMultiplyAdd",
         HlslName = "fma",
         Summary = "Returns the double-precision fused multiply-addition of a * b + c.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-fma",
         Parameters = new[]
         {
             new { IsOut = false, Name = "a", Info = "The first value in the fused multiply-addition." },
@@ -1192,6 +1227,7 @@ var Intrinsics = new[]
         Name = "Fmod",
         HlslName = "fmod",
         Summary = "Returns the floating-point remainder of x / y.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-fmod",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The floating-point dividend." },
@@ -1227,6 +1263,7 @@ var Intrinsics = new[]
         Name = "Frac",
         HlslName = "frac",
         Summary = "Returns the fractional (or decimal) part of the input which is greater than or equal to 0 and less than 1.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-frac",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1261,6 +1298,7 @@ var Intrinsics = new[]
         Name = "Frexp",
         HlslName = "frexp",
         Summary = "Returns the mantissa and exponent of the specified floating-point value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-frexp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point value." },
@@ -1296,6 +1334,7 @@ var Intrinsics = new[]
         Name = "Fwidth",
         HlslName = "fwidth",
         Summary = "Returns the absolute value of the partial derivatives of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-fwidth",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1330,6 +1369,7 @@ var Intrinsics = new[]
         Name = "IsFinite",
         HlslName = "isfinite",
         Summary = "Determines if the specified floating-point value is finite.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-isfinite",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1364,6 +1404,7 @@ var Intrinsics = new[]
         Name = "IsInfinite",
         HlslName = "isinf",
         Summary = "Determines if the specified value is infinite.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-isinf",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1398,6 +1439,7 @@ var Intrinsics = new[]
         Name = "IsNaN",
         HlslName = "isnan",
         Summary = "Determines if the specified value is NAN or QNAN.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-isnan",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1432,6 +1474,7 @@ var Intrinsics = new[]
         Name = "Ldexp",
         HlslName = "ldexp",
         Summary = "Returns the result of multiplying the specified value by two, raised to the power of the specified exponent.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-ldexp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." },
@@ -1467,6 +1510,7 @@ var Intrinsics = new[]
         Name = "Length",
         HlslName = "length",
         Summary = "Returns the length of the specified floating-point vector.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-length",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
@@ -1484,6 +1528,7 @@ var Intrinsics = new[]
         Name = "Lerp",
         HlslName = "lerp",
         Summary = "Performs a linear interpolation.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-lerp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first-floating point value." },
@@ -1520,6 +1565,7 @@ var Intrinsics = new[]
         Name = "Log",
         HlslName = "log",
         Summary = "Returns the base-e logarithm of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-log",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1554,6 +1600,7 @@ var Intrinsics = new[]
         Name = "Log10",
         HlslName = "log10",
         Summary = "Returns the base-10 logarithm of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-log10",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1588,6 +1635,7 @@ var Intrinsics = new[]
         Name = "Log2",
         HlslName = "log2",
         Summary = "Returns the base-2 logarithm of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-log2",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -1622,6 +1670,7 @@ var Intrinsics = new[]
         Name = "Max",
         HlslName = "max",
         Summary = "Selects the greater between two inputs.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-max",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first input value." },
@@ -1697,6 +1746,7 @@ var Intrinsics = new[]
         Name = "Min",
         HlslName = "min",
         Summary = "Selects the lesser between two inputs.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-min",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first input value." },
@@ -1772,6 +1822,7 @@ var Intrinsics = new[]
         Name = "Modf",
         HlslName = "modf",
         Summary = "Splits a value into fractional and integer parts, each with the same sign as the input value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-modf",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." },
@@ -1827,6 +1878,7 @@ var Intrinsics = new[]
         Name = "Mul",
         HlslName = "mul",
         Summary = "Multiplies two values using matrix math.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first input value." },
@@ -2119,6 +2171,7 @@ var Intrinsics = new[]
         Name = "Normalize",
         HlslName = "normalize",
         Summary = "Normalizes the specified floating-point vector according to x / length(x).",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-normalize",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point vector." }
@@ -2137,6 +2190,7 @@ var Intrinsics = new[]
         Name = "Pow",
         HlslName = "pow",
         Summary = "Returns the specified value raised to the specified power.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-pow",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." },
@@ -2172,6 +2226,7 @@ var Intrinsics = new[]
         Name = "Radians",
         HlslName = "radians",
         Summary = "Converts the specified value from degrees to radians.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-radians",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -2206,6 +2261,7 @@ var Intrinsics = new[]
         Name = "Rcp",
         HlslName = "rcp",
         Summary = "Calculates a fast, approximate, per-component reciprocal.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/rcp",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -2260,6 +2316,7 @@ var Intrinsics = new[]
         Name = "Reflect",
         HlslName = "reflect",
         Summary = "Returns a reflection vector using an incident ray and a surface normal.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-reflect",
         Parameters = new[]
         {
             new { IsOut = false, Name = "i", Info = "A floating-point, incident vector." },
@@ -2295,6 +2352,7 @@ var Intrinsics = new[]
         Name = "Refract",
         HlslName = "refract",
         Summary = "Returns a refraction vector using an entering ray, a surface normal, and a refraction index.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-refract",
         Parameters = new[]
         {
             new { IsOut = false, Name = "i", Info = "A floating-point, ray direction vector." },
@@ -2331,6 +2389,7 @@ var Intrinsics = new[]
         Name = "ReverseBits",
         HlslName = "reversebits",
         Summary = "Reverses the order of the bits, per component.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/reversebits",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The input value." }
@@ -2349,6 +2408,7 @@ var Intrinsics = new[]
         Name = "Round",
         HlslName = "round",
         Summary = "Rounds the specified value to the nearest integer. Halfway cases are rounded to the nearest even.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-round",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -2383,6 +2443,7 @@ var Intrinsics = new[]
         Name = "Rsqrt",
         HlslName = "rsqrt",
         Summary = "Returns the reciprocal of the square root of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-rsqrt",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -2417,6 +2478,7 @@ var Intrinsics = new[]
         Name = "Saturate",
         HlslName = "saturate",
         Summary = "Clamps the specified value within the range of 0 to 1.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-saturate",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -2471,6 +2533,7 @@ var Intrinsics = new[]
         Name = "Sign",
         HlslName = "sign",
         Summary = "Returns the sign of the input value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-sign",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value." }
@@ -2525,6 +2588,7 @@ var Intrinsics = new[]
         Name = "Sin",
         HlslName = "sin",
         Summary = "Returns the sine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-sin",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -2559,6 +2623,7 @@ var Intrinsics = new[]
         Name = "SinCos",
         HlslName = "sincos",
         Summary = "Returns the sine and cosine of a specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-sincos",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." },
@@ -2595,6 +2660,7 @@ var Intrinsics = new[]
         Name = "Sinh",
         HlslName = "sinh",
         Summary = "Returns the hyperbolic sine of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-sinh",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -2629,6 +2695,7 @@ var Intrinsics = new[]
         Name = "SmoothStep",
         HlslName = "smoothstep",
         Summary = "Returns a smooth Hermite interpolation between 0 and 1 if the specified value is in the input range.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-smoothstep",
         Parameters = new[]
         {
             new { IsOut = false, Name = "min", Info = "The specified minimum range." },
@@ -2665,6 +2732,7 @@ var Intrinsics = new[]
         Name = "Sqrt",
         HlslName = "sqrt",
         Summary = "Returns the square root of the specified floating-point value, per component.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-sqrt",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified floating-point value." }
@@ -2699,6 +2767,7 @@ var Intrinsics = new[]
         Name = "Step",
         HlslName = "step",
         Summary = "Compares two values, returning 0 or 1 based on which value is greater.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-step",
         Parameters = new[]
         {
             new { IsOut = false, Name = "y", Info = "The first specified floating-point value." },
@@ -2734,6 +2803,7 @@ var Intrinsics = new[]
         Name = "Tan",
         HlslName = "tan",
         Summary = "Returns the tangent of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-tan",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -2768,6 +2838,7 @@ var Intrinsics = new[]
         Name = "Tanh",
         HlslName = "tanh",
         Summary = "Returns the hyperbolic tangent of the specified value.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-tanh",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified value, in radians." }
@@ -2802,6 +2873,7 @@ var Intrinsics = new[]
         Name = "Transpose",
         HlslName = "transpose",
         Summary = "Transposes the specified input matrix.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-transpose",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified matrix." }
@@ -2852,6 +2924,7 @@ var Intrinsics = new[]
         Name = "Trunc",
         HlslName = "trunc",
         Summary = "Truncates a floating-point value to the integer component.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-trunc",
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The specified input." }
