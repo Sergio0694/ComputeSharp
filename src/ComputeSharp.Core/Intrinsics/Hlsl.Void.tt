@@ -20,10 +20,20 @@ foreach (var intrinsic in Intrinsics)
         else WriteLine("");
 
         WriteLine("/// <summary>");
-        WriteLine($"/// {intrinsic.Summary}");
+        
+        foreach (var line in intrinsic.Summary.Replace("\r", "").Split('\n'))
+        {
+            string trimmedLine = line.Trim();
+
+            if (trimmedLine.Length > 0)
+            {
+                WriteLine($"/// {line.Trim()}");
+            }
+        }
+
         WriteLine("/// </summary>");
 
-        foreach (var param in intrinsic.Parameters)
+        foreach (var param in intrinsic.Parameters.Where(p => p.Name is not ""))
         {
             WriteLine($"/// <param name=\"{param.Name}\">{param.Info}</param>");
         }
@@ -52,15 +62,18 @@ foreach (var intrinsic in Intrinsics)
             WriteLine("/// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>");
         }
 
-        WriteLine($"[HlslIntrinsicName(\"{intrinsic.HlslName}\")]");
+        if (intrinsic.Name != intrinsic.HlslName)
+        {
+            WriteLine($"[HlslIntrinsicName(\"{intrinsic.HlslName}\")]");
+        }
 
         Write($"public static void {intrinsic.Name}(");
-        Write(string.Join(", ", intrinsic.Parameters.Zip(overload, (a, b) => $"{(a.IsOut ? "out " : "")}{b} {a.Name}")));
+        Write(string.Join(", ", intrinsic.Parameters.Where(p => p.Name is not "").Zip(overload, (a, b) => $"{(a.IsOut ? "out " : "")}{b} {a.Name}")));
         Write(")");
 
         Write(" => throw new InvalidExecutionContextException(");
 
-        var parameters = string.Join(", ", overload.Select(t => $"{{typeof({t})}}"));
+        var parameters = string.Join(", ", overload.Where(o => o.Length > 0).Select(t => $"{{typeof({t})}}"));
 
         WriteLine($"$\"{{typeof(Hlsl)}}.{{nameof({intrinsic.Name})}}({parameters})\");");    
     }

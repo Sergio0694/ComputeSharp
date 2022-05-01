@@ -29,7 +29,7 @@ public class EndToEndTests
     public unsafe void Pixelate()
     {
         RunAndCompareShader(
-            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 720, 16)),
+            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 840, 16)),
             static () => new PixelateEffect(),
             "Landscape.png",
             "Landscape_Pixelate.png");
@@ -39,6 +39,12 @@ public class EndToEndTests
     public unsafe void ZonePlate()
     {
         RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), null, 1280, 720, "ZonePlate.png");
+    }
+
+    [TestMethod]
+    public unsafe void CheckerboardClip()
+    {
+        RunAndCompareShader(new CheckerboardClipEffect(1280, 840, 32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
     }
 
     /// <summary>
