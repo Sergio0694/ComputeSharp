@@ -41,6 +41,12 @@ public class EndToEndTests
         RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), null, 1280, 720, "ZonePlate.png");
     }
 
+    [TestMethod]
+    public unsafe void CheckerboardClip()
+    {
+        RunAndCompareShader(new CheckerboardClipEffect(1280, 840, 32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
+    }
+
     /// <summary>
     /// Executes a pixel shader and compares the expected results.
     /// </summary>
