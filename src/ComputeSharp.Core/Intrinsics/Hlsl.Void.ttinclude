@@ -14,6 +14,7 @@ var Intrinsics = new[]
         HlslName = "abort",
         Summary = "Submits an error message to the information queue and terminates the current draw or dispatch call being executed.",
         Remarks = "This operation does nothing on rasterizers that do not support it.",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/abort",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = false, Name = "", Info = "" }
@@ -31,6 +32,7 @@ var Intrinsics = new[]
             <code>
             Hlsl.Clip(color.A &lt; 0.1f ? -1 : 1);
             </code>",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-clip",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = false, Name = "x", Info = "The specified value." }
@@ -65,6 +67,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedAdd",
         Summary = "Performs a guaranteed atomic add of a value to a destination.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -82,6 +85,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedAdd",
         Summary = "Performs a guaranteed atomic add of a value to a destination.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -100,6 +104,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedAnd",
         Summary = "Performs a guaranteed atomic and of a value to a destination.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -117,6 +122,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedAnd",
         Summary = "Performs a guaranteed atomic and of a value to a destination.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -137,6 +143,7 @@ var Intrinsics = new[]
             Atomically compares the destination with the comparison value. If they are identical, the destination
             is overwritten with the input value. The original value is set to the destination's original value.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcompareexchange",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -158,6 +165,7 @@ var Intrinsics = new[]
             Atomically compares the destination to the comparison value. If they
             are identical, the destination is overwritten with the input value.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcomparestore",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -176,6 +184,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedExchange",
         Summary = "Assigns value to dest and returns the original value.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedexchange",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -194,6 +203,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedMax",
         Summary = "Performs a guaranteed atomic max.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -211,6 +221,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedMax",
         Summary = "Performs a guaranteed atomic max.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -229,6 +240,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedMin",
         Summary = "Performs a guaranteed atomic min.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -246,6 +258,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedMin",
         Summary = "Performs a guaranteed atomic min.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -264,6 +277,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedOr",
         Summary = "Performs a guaranteed atomic or.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -281,6 +295,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedOr",
         Summary = "Performs a guaranteed atomic or.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -299,6 +314,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedXor",
         Summary = "Performs a guaranteed atomic xor.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
@@ -316,6 +332,7 @@ var Intrinsics = new[]
         HlslName = "InterlockedXor",
         Summary = "Performs a guaranteed atomic xor.",
         Remarks = "",
+        Url = "https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor",
         Parameters = new[]
         {
             new { IsOut = false, IsRef = true, Name = "destination", Info = "The destination value." },
