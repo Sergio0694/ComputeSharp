@@ -145,6 +145,8 @@ public partial class ShaderRewriterTests
         Assert.AreEqual(results[1], ConstantsInShaderConstantFieldsShader.rot_angle2, 0.0001f);
         Assert.AreEqual(results[2], (float)Math.Cos(ConstantsInShaderConstantFieldsShader.rot_angle), 0.0001f);
         Assert.AreEqual(results[3], -(float)Math.Sin((float)(137.2 / 180.0 * Constants.PI2)), 0.0001f);
+        Assert.AreEqual(results[4], (float)Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin)), 0.0001f);
+        Assert.AreEqual(results[5], (float)(Math.Sin(ConstantsInShaderConstantFieldsShader.sin) + Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin))), 0.0001f);
     }
 
     private static class Constants
@@ -157,9 +159,12 @@ public partial class ShaderRewriterTests
     {
         public const float rot_angle = (float)(137.2 / 180.0 * Math.PI);
         public const float rot_angle2 = rot_angle + (float)Math.E * 100;
+        public const float sin = 42;
 
         private static readonly float rot_11 = Hlsl.Cos(rot_angle);
         private static readonly float rot_12 = -Hlsl.Sin((float)(137.2 / 180.0 * Constants.PI2));
+        private static readonly float cos = Hlsl.Cos(Hlsl.Sin(sin));
+        private static readonly float lerp = Hlsl.Sin(sin) + cos;
 
         public readonly ReadWriteBuffer<float> buffer;
 
@@ -169,6 +174,8 @@ public partial class ShaderRewriterTests
             buffer[1] = rot_angle2;
             buffer[2] = rot_11;
             buffer[3] = rot_12;
+            buffer[4] = cos;
+            buffer[5] = lerp;
         }
     }
 }
