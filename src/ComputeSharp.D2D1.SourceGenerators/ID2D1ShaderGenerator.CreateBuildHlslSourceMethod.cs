@@ -56,9 +56,11 @@ partial class ID2D1ShaderGenerator
             var semanticModelProvider = new SemanticModelProvider(compilation);
             var valueFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes);
             var (entryPoint, processedMethods) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions);
+            var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+
+            // Process the discovered types and constants
             var declaredTypes = GetDeclaredTypes(builder, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
-            var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Gather the shader metadata
             GatherD2D1AttributeInfo(
