@@ -67,9 +67,11 @@ partial class IShaderGenerator
             var sharedBuffers = GetSharedBuffers(builder, structDeclarationSymbol, discoveredTypes);
             var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
             var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
+            var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+
+            // Process the discovered types and constants
             var declaredTypes = GetDeclaredTypes(builder, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
-            var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             diagnostics = builder.ToImmutable();
 

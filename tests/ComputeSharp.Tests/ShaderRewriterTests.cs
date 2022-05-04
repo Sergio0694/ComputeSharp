@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Tests.Attributes;
+﻿using System;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -90,7 +91,7 @@ public partial class ShaderRewriterTests
     {
         float[] data = { 1, 6, 7, 3, 5, 2, 8, 4 };
 
-        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(data);
+        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer(data);
 
         device.Get().For(1, new ModAndComparisonOperatorsShader(buffer));
 
@@ -123,9 +124,58 @@ public partial class ShaderRewriterTests
             buffer[2] = mod.Z;
             buffer[3] = mod.W;
             buffer[4] = greaterThan.X ? 1 : 0;
-            buffer[5] = greaterThan.Y ? 1 : 0;;
-            buffer[6] = greaterThan.Z ? 1 : 0;;
-            buffer[7] = greaterThan.W ? 1 : 0; ;
+            buffer[5] = greaterThan.Y ? 1 : 0;
+            buffer[6] = greaterThan.Z ? 1 : 0;
+            buffer[7] = greaterThan.W ? 1 : 0;
+        }
+    }
+
+    // See: https://github.com/Sergio0694/ComputeSharp/issues/259
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void ConstantsInShaderConstantFields(Device device)
+    {
+        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(16);
+
+        device.Get().For(1, new ConstantsInShaderConstantFieldsShader(buffer));
+
+        float[] results = buffer.ToArray();
+
+        Assert.AreEqual(results[0], ConstantsInShaderConstantFieldsShader.rot_angle, 0.0001f);
+        Assert.AreEqual(results[1], ConstantsInShaderConstantFieldsShader.rot_angle2, 0.0001f);
+        Assert.AreEqual(results[2], (float)Math.Cos(ConstantsInShaderConstantFieldsShader.rot_angle), 0.0001f);
+        Assert.AreEqual(results[3], -(float)Math.Sin((float)(137.2 / 180.0 * Constants.PI2)), 0.0001f);
+        Assert.AreEqual(results[4], (float)Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin)), 0.0001f);
+        Assert.AreEqual(results[5], (float)(Math.Sin(ConstantsInShaderConstantFieldsShader.sin) + Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin))), 0.0001f);
+    }
+
+    private static class Constants
+    {
+        public const float PI2 = (float)(Math.PI * 2);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ConstantsInShaderConstantFieldsShader : IComputeShader
+    {
+        public const float rot_angle = (float)(137.2 / 180.0 * Math.PI);
+        public const float rot_angle2 = rot_angle + (float)Math.E * 100;
+        public const float sin = 42;
+
+        private static readonly float rot_11 = Hlsl.Cos(rot_angle);
+        private static readonly float rot_12 = -Hlsl.Sin((float)(137.2 / 180.0 * Constants.PI2));
+        private static readonly float cos = Hlsl.Cos(Hlsl.Sin(sin));
+        private static readonly float lerp = Hlsl.Sin(sin) + cos;
+
+        public readonly ReadWriteBuffer<float> buffer;
+
+        public void Execute()
+        {
+            buffer[0] = rot_angle;
+            buffer[1] = rot_angle2;
+            buffer[2] = rot_11;
+            buffer[3] = rot_12;
+            buffer[4] = cos;
+            buffer[5] = lerp;
         }
     }
 }
