@@ -13,7 +13,7 @@ partial class ID2D1ShaderGenerator
     /// <summary>
     /// A helper with all logic to generate the <c>GetInputCount</c> method.
     /// </summary>
-    partial class GetInputCount
+    private static partial class GetInputCount
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetInputCount</c> method.

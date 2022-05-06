@@ -22,7 +22,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritodoc/>
-    internal static partial class LoadBytecode
+    private static partial class LoadBytecode
     {
         /// <summary>
         /// Extracts the shader profile for the current shader.
