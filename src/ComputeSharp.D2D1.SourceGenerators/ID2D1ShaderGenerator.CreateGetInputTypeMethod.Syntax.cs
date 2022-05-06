@@ -23,15 +23,15 @@ partial class ID2D1ShaderGenerator
         {
             // This code produces a method declaration as follows:
             //
-            // readonly uint global::ComputeSharp.D2D1.__Internals.ID2D1Shader.GetInputType(uint index)
+            // readonly byte global::ComputeSharp.D2D1.__Internals.ID2D1Shader.GetInputType(byte index)
             // {
             //     return <INPUT_TYPE>;
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier("GetInputType"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.ByteKeyword)), Identifier("GetInputType"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddParameterListParameters(Parameter(Identifier("index")).WithType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                .AddParameterListParameters(Parameter(Identifier("index")).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
                 .WithBody(Block(ReturnStatement(GetInputTypesSwitchExpression(inputTypes))));
         }
 
@@ -54,18 +54,18 @@ partial class ID2D1ShaderGenerator
             {
                 // Add a switch branch to map a given input to its serialized type, as follows:
                 //
-                // 0u => 1u
+                // 0 => 1
                 switches.Add(
                     SwitchExpressionArm(
-                        ConstantPattern(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((uint)i))),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputTypes[i]))));
+                        ConstantPattern(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i))),
+                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)inputTypes[i]))));
             }
 
             // Add a default arm
             switches.Add(
                 SwitchExpressionArm(
                     DiscardPattern(),
-                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0u))));
+                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))));
 
             // Build a switch expression as follows:
             //

@@ -25,7 +25,7 @@ public interface ID2D1Shader
     /// <returns>The number of inputs for the current shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetInputCount();
+    byte GetInputCount();
 
     /// <summary>
     /// Gets the input type for the input at the input index.
@@ -35,7 +35,7 @@ public interface ID2D1Shader
     /// <remarks>The return value if the input is out of range is undefined.</remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetInputType(uint index);
+    byte GetInputType(byte index);
 
     /// <summary>
     /// Loads the dispatch data for the shader.

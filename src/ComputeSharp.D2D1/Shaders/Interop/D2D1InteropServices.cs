@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Dispatching;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using TerraFX.Interop.DirectX;
@@ -90,6 +91,26 @@ public static unsafe class D2D1InteropServices
         Unsafe.SkipInit(out T shader);
 
         return shader.GetInputCount();
+    }
+
+    /// <summary>
+    /// Gets the type of a given input for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input type for.</typeparam>
+    /// <param name="index">The index of the input to get the type for.</param>
+    /// <returns>The type of the input of the target D2D1 pixel shader at the specified index.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not in range for the available inputs for the shader type.</exception>
+    public static D2D1PixelShaderInputType GetPixelShaderInputType<T>(uint index)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        if (index >= shader.GetInputCount())
+        {
+            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is outside of range for the target pixel shader type.");
+        }
+
+        return (D2D1PixelShaderInputType)shader.GetInputType((byte)index);
     }
 
     /// <summary>

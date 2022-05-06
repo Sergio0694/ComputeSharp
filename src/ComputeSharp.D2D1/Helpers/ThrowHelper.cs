@@ -46,6 +46,18 @@ internal static partial class ThrowHelper
     }
 
     /// <summary>
+    /// Throws a new <see cref="ArgumentOutOfRangeException"/>.
+    /// </summary>
+    /// <param name="name">The argument name.</param>
+    /// <param name="message">The message to include in the exception.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameter.</exception>
+    [DoesNotReturn]
+    public static void ThrowArgumentOutOfRangeException(string? name, string? message)
+    {
+        throw new ArgumentOutOfRangeException(name, message);
+    }
+
+    /// <summary>
     /// Throws a new <see cref="InvalidOperationException"/>.
     /// </summary>
     /// <param name="message">The message to include in the exception.</param>
