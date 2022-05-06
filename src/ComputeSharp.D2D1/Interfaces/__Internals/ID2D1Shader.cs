@@ -28,6 +28,16 @@ public interface ID2D1Shader
     uint GetInputCount();
 
     /// <summary>
+    /// Gets the input type for the input at the input index.
+    /// </summary>
+    /// <param name="index">The index of the shader input to get the type for.</param>
+    /// <returns>The type of input at the specified index.</returns>
+    /// <remarks>The return value if the input is out of range is undefined.</remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    uint GetInputType(uint index);
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
