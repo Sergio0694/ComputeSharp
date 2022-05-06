@@ -23,15 +23,15 @@ partial class ID2D1ShaderGenerator
         {
             // This code produces a method declaration as follows:
             //
-            // readonly byte global::ComputeSharp.D2D1.__Internals.ID2D1Shader.GetInputType(byte index)
+            // readonly uint global::ComputeSharp.D2D1.__Internals.ID2D1Shader.GetInputType(uint index)
             // {
             //     return <INPUT_TYPE>;
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.ByteKeyword)), Identifier("GetInputType"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier("GetInputType"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddParameterListParameters(Parameter(Identifier("index")).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                .AddParameterListParameters(Parameter(Identifier("index")).WithType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
                 .WithBody(Block(ReturnStatement(GetInputTypesSwitchExpression(inputTypes))));
         }
 
@@ -48,34 +48,34 @@ partial class ID2D1ShaderGenerator
                 return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0));
             }
 
-            ImmutableArray<SwitchExpressionArmSyntax>.Builder switches = ImmutableArray.CreateBuilder<SwitchExpressionArmSyntax>();
+            // In order to avoid repeated branches, we can build a bitmask that stores in each
+            // bit whether the corresponding pixel shader input is simple or complex. This will
+            // allow the logic to be branchless and to just extract the target bit from the mask.
+            uint bitmask = 0;
 
             for (int i = 0; i < inputTypes.Length; i++)
             {
-                // Add a switch branch to map a given input to its serialized type, as follows:
-                //
-                // 0 => 1
-                switches.Add(
-                    SwitchExpressionArm(
-                        ConstantPattern(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i))),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)inputTypes[i]))));
+                bitmask |= inputTypes[i] << i;
             }
 
-            // Add a default arm
-            switches.Add(
-                SwitchExpressionArm(
-                    DiscardPattern(),
-                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))));
+            // If all inputs are simple, also just return 0
+            if (bitmask == 0)
+            {
+                return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0));
+            }
 
-            // Build a switch expression as follows:
+            // This code produces a bitmask flag extraction expression as follows:
             //
-            // index switch
-            // {
-            //     <SWITCH_ARMS>
-            // }
+            // (<BITMASK> >> (int)index) & 1;
             return
-                SwitchExpression(IdentifierName("index"))
-                .AddArms(switches.ToArray());
+                BinaryExpression(
+                    SyntaxKind.BitwiseAndExpression,
+                    ParenthesizedExpression(
+                        BinaryExpression(
+                            SyntaxKind.RightShiftExpression,
+                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(bitmask)),
+                            CastExpression(PredefinedType(Token(SyntaxKind.IntKeyword)), IdentifierName("index")))),
+                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)));
         }
     }
 }

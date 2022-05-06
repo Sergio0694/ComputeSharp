@@ -110,7 +110,7 @@ public static unsafe class D2D1InteropServices
             ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is outside of range for the target pixel shader type.");
         }
 
-        return (D2D1PixelShaderInputType)shader.GetInputType((byte)index);
+        return (D2D1PixelShaderInputType)shader.GetInputType(index);
     }
 
     /// <summary>
