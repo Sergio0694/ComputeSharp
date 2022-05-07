@@ -21,7 +21,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 /// <inheritdoc/>
 partial class ID2D1ShaderGenerator
 {
-    /// <inheritodoc/>
+    /// <summary>
+    /// A helper with all logic to generate the <c>LoadBytecode</c> method.
+    /// </summary>
     private static partial class LoadBytecode
     {
         /// <summary>

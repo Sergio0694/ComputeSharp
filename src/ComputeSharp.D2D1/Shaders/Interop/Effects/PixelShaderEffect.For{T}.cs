@@ -65,6 +65,16 @@ internal unsafe partial struct PixelShaderEffect
         private static int bytecodeSize;
 
         /// <summary>
+        /// The buffer precision for the resulting output buffer.
+        /// </summary>
+        private static D2D1BufferPrecision bufferPrecision;
+
+        /// <summary>
+        /// The channel depth for the resulting output buffer.
+        /// </summary>
+        private static D2D1ChannelDepth channelDepth;
+
+        /// <summary>
         /// The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.
         /// </summary>
         private static Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory;
@@ -97,6 +107,8 @@ internal unsafe partial struct PixelShaderEffect
                     ReadOnlyMemory<byte> buffer = D2D1PixelShader.LoadBytecode<T>();
                     int bytecodeSize = buffer.Length;
                     byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
+                    D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
+                    D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
 
                     // Prepare the inputs info
                     int inputCount = D2D1PixelShader.GetInputCount<T>();
@@ -116,6 +128,8 @@ internal unsafe partial struct PixelShaderEffect
                     For<T>.inputTypes = inputTypes;
                     For<T>.bytecode = bytecode;
                     For<T>.bytecodeSize = bytecodeSize;
+                    For<T>.bufferPrecision = bufferPrecision;
+                    For<T>.channelDepth = channelDepth;
                     For<T>.d2D1DrawTransformMapperFactory = d2D1DrawTransformMapperFactory;
 
                     isInitialized = true;
@@ -195,6 +209,8 @@ internal unsafe partial struct PixelShaderEffect
                 inputTypes,
                 bytecode,
                 bytecodeSize,
+                bufferPrecision,
+                channelDepth,
                 d2D1TransformMapper,
                 effectImpl);
         }

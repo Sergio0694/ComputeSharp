@@ -9,7 +9,8 @@ namespace ComputeSharp.D2D1;
 /// </summary>
 /// <remarks>
 /// <para>This attribute directly maps to <c>#define D2D_REQUIRES_SCENE_POSITION</c>.</para>
-/// <para>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct2d/hlsl-helpers"/>.</para></remarks>
+/// <para>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct2d/hlsl-helpers"/>.</para>
+/// </remarks>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
 public sealed class D2DRequiresScenePositionAttribute : Attribute
 {

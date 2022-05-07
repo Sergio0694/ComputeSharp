@@ -323,7 +323,24 @@ partial struct PixelShaderEffect
 
             @this->d2D1DrawInfo = drawInfo;
 
-            return drawInfo->SetPixelShader(&@this->shaderId);
+            // Set the pixel shader for the effect
+            HRESULT hresult = drawInfo->SetPixelShader(&@this->shaderId);
+
+            if (hresult != S.S_OK)
+            {
+                return hresult;
+            }
+
+            // If a custom buffer precision or channel depth is requested, set it
+            if (@this->bufferPrecision != D2D1BufferPrecision.Unknown ||
+                @this->channelDepth != D2D1ChannelDepth.Default)
+            {
+                return drawInfo->SetOutputBuffer(
+                    (D2D1_BUFFER_PRECISION)@this->bufferPrecision,
+                    (D2D1_CHANNEL_DEPTH)@this->channelDepth);
+            }
+
+            return S.S_OK;
         }
     }
 }

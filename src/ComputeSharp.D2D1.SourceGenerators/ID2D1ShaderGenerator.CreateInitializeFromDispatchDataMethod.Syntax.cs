@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
             //     <BODY>
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("InitializeFromDispatchData"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(InitializeFromDispatchData)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddParameterListParameters(Parameter(Identifier("data")).WithType(
                     GenericName(Identifier("global::System.ReadOnlySpan"))

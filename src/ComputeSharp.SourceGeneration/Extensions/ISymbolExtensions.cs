@@ -41,6 +41,17 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
+    /// Checks whether or not a given type symbol has a specified full name.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="name">The full name to check.</param>
+    /// <returns>Whether <paramref name="symbol"/> has a full name equals to <paramref name="name"/>.</returns>
+    public static bool HasFullyQualifiedName(this ISymbol symbol, string name)
+    {
+        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat) == name;
+    }
+
+    /// <summary>
     /// Gets a valid filename for a given <see cref="ITypeSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>

@@ -172,6 +172,16 @@ internal unsafe partial struct PixelShaderEffect
     private int bytecodeSize;
 
     /// <summary>
+    /// The buffer precision for the resulting output buffer.
+    /// </summary>
+    private D2D1BufferPrecision bufferPrecision;
+
+    /// <summary>
+    /// The channel depth for the resulting output buffer.
+    /// </summary>
+    private D2D1ChannelDepth channelDepth;
+
+    /// <summary>
     /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
     /// </summary>
     private GCHandle d2D1TransformMapperHandle;
@@ -189,6 +199,8 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
+    /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
+    /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
     /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
@@ -198,6 +210,8 @@ internal unsafe partial struct PixelShaderEffect
         D2D1PixelShaderInputType* inputTypes,
         byte* bytecode,
         int bytecodeSize,
+        D2D1BufferPrecision bufferPrecision,
+        D2D1ChannelDepth channelDepth,
         D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
@@ -213,6 +227,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->inputTypes = inputTypes;
         @this->bytecode = bytecode;
         @this->bytecodeSize = bytecodeSize;
+        @this->bufferPrecision = bufferPrecision;
+        @this->channelDepth = channelDepth;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
 
         *effectImpl = (IUnknown*)@this;

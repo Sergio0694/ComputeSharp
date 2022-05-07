@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
             //     return <INPUT_COUNT>;
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier("GetInputCount"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier(nameof(GetInputCount)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithBody(Block(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputCount)))));

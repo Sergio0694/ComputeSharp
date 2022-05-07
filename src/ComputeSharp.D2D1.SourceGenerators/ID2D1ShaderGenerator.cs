@@ -243,5 +243,31 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", text);
         });
+
+        // Get the output buffer data, which can be computed separately from all other generation steps.
+        // Caching at a fine grained level can be enabled immediately, as both models are comparable.
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, OutputBufferInfo Info)> outputBufferInfo =
+            shaderDeclarations
+            .Select(static (item, token) =>
+            {
+                // GetOutputBuffer() info
+                GetOutputBuffer.GetInfo(item.Symbol, out D2D1BufferPrecision bufferPrecision, out D2D1ChannelDepth channelDepth);
+
+                token.ThrowIfCancellationRequested();
+
+                OutputBufferInfo outputBufferInfo = new(bufferPrecision, channelDepth);
+
+                return (item.Hierarchy, outputBufferInfo);
+            })
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<OutputBufferInfo>.Default);
+
+        // Generate the GetOutputBuffer() methods
+        context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax getOutputBufferMethod = GetOutputBuffer.GetSyntax(item.Info);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getOutputBufferMethod, false);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetOutputBuffer)}", compilationUnit.ToFullString());
+        });
     }
 }

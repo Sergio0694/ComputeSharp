@@ -27,7 +27,7 @@ partial class ID2D1ShaderGenerator
             //     hlslSource = <HLSL_SOURCE>;
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("BuildHlslSource"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(BuildHlslSource)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddParameterListParameters(

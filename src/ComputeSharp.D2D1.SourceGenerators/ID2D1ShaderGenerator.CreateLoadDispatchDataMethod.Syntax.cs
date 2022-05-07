@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
             //     <BODY>
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("LoadDispatchData"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(LoadDispatchData)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
