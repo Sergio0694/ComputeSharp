@@ -150,7 +150,16 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The number of inputs for the shader.
     /// </summary>
-    private int numberOfInputs;
+    private int inputCount;
+
+    /// <summary>
+    /// The buffer with the types of inputs for the shader.
+    /// </summary>
+    /// <remarks>
+    /// This buffer is shared among effect instances, so it should not be released. It is
+    /// owned by <see cref="For{T}"/>, which will release it when the target type is unloaded.
+    /// </remarks>
+    private D2D1PixelShaderInputType* inputTypes;
 
     /// <summary>
     /// The shader bytecode.
@@ -168,11 +177,6 @@ internal unsafe partial struct PixelShaderEffect
     private GCHandle d2D1TransformMapperHandle;
 
     /// <summary>
-    /// The current input rectangle.
-    /// </summary>
-    private RECT inputRect;
-
-    /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
     /// </summary>
     private ID2D1DrawInfo* d2D1DrawInfo;
@@ -181,7 +185,8 @@ internal unsafe partial struct PixelShaderEffect
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
-    /// <param name="numberOfInputs">The number of inputs for the shader.</param>
+    /// <param name="inputCount">The number of inputs for the shader.</param>
+    /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
     /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
@@ -189,7 +194,8 @@ internal unsafe partial struct PixelShaderEffect
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
         Guid shaderId,
-        int numberOfInputs,
+        int inputCount,
+        D2D1PixelShaderInputType* inputTypes,
         byte* bytecode,
         int bytecodeSize,
         D2D1TransformMapper? d2D1TransformMapper,
@@ -203,7 +209,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
         @this->referenceCount = 1;
         @this->shaderId = shaderId;
-        @this->numberOfInputs = numberOfInputs;
+        @this->inputCount = inputCount;
+        @this->inputTypes = inputTypes;
         @this->bytecode = bytecode;
         @this->bytecodeSize = bytecodeSize;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);

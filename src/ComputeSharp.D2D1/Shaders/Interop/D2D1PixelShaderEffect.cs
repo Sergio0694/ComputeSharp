@@ -71,7 +71,7 @@ public static unsafe class D2D1PixelShaderEffect
         // Setup the input string
         StringBuilder effectInputsBuilder = new();
 
-        for (int i = 0; i < PixelShaderEffect.For<T>.NumberOfInputs; i++)
+        for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
         {
             effectInputsBuilder.Append("<Input name='Source");
             effectInputsBuilder.Append(i);
@@ -215,7 +215,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         // Effect id and number of inputs
         writer.Write(PixelShaderEffect.For<T>.Id);
-        writer.Write(PixelShaderEffect.For<T>.NumberOfInputs);
+        writer.Write(PixelShaderEffect.For<T>.InputCount);
         
         // Build the XML text
         writer.WriteAsUtf8(@"<?xml version='1.0'?>
@@ -230,7 +230,7 @@ public static unsafe class D2D1PixelShaderEffect
         ");
 
         // Add the input nodes
-        for (int i = 0; i < PixelShaderEffect.For<T>.NumberOfInputs; i++)
+        for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
         {
             writer.WriteAsUtf8("<Input name='Source");
             writer.WriteAsUtf8(i.ToString(CultureInfo.InvariantCulture));

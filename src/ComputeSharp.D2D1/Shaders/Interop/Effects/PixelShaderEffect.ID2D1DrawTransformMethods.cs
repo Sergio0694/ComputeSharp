@@ -113,7 +113,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            return (uint)@this->numberOfInputs;
+            return (uint)@this->inputCount;
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapOutputRectToInputRects"/>
@@ -122,7 +122,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectsCount != @this->numberOfInputs)
+            if (inputRectsCount != @this->inputCount)
             {
                 return E.E_INVALIDARG;
             }
@@ -154,10 +154,24 @@ partial struct PixelShaderEffect
             }
             else
             {
-                // Default mapping
-                for (int i = 0; i < (int)inputRectsCount; i++)
+                // If no custom transform is used, apply the default mapping. In this case, the loop will
+                // automatically handle cases where no inputs are defined. If inputs are present instead,
+                // the default mapping will set the input rect for a simple input to be the same as the
+                // output rect, and the input rect for a complex rect to be infinite. In both cases, D2D
+                // will handle clipping the inputs to the actual output rect area, if needed.
+                for (uint i = 0; i < inputRectsCount; i++)
                 {
-                    inputRects[i] = *outputRect;
+                    switch (@this->inputTypes[i])
+                    {
+                        case D2D1PixelShaderInputType.Simple:
+                            inputRects[i] = *outputRect;
+                            break;
+                        case D2D1PixelShaderInputType.Complex:
+                            inputRects[i].MakeD2D1Infinite();
+                            break;
+                        default:
+                            return E.E_FAIL;
+                    }
                 }
             }
 
@@ -170,7 +184,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectCount != @this->numberOfInputs)
+            if (inputRectCount != @this->inputCount)
             {
                 return E.E_INVALIDARG;
             }
@@ -211,16 +225,41 @@ partial struct PixelShaderEffect
                 // transform. In this case, the target area will be the output node anyway.
                 outputRect->MakeD2D1Infinite();
 
-                @this->inputRect = default;
-
                 *outputOpaqueSubRect = default;
             }
             else
             {
-                // Default mapping
-                *outputRect = inputRects[0];
+                // If at least one input is present and no custom mapper is available, apply the default
+                // mapping. In this case, the output rect should be the union of the input rects for all
+                // the simple shader inputs, or infinite if there are no simple inputs. The input rects
+                // for complex inputs, if present, are not needed in this scenario, so they're ignored.
+                RECT unionOfSimpleRects = default;
+                bool isUnionOfSimpleRectsEmpty = true;
 
-                @this->inputRect = inputRects[0];
+                for (uint i = 0; i < inputRectCount; i++)
+                {
+                    if (@this->inputTypes[i] == D2D1PixelShaderInputType.Simple)
+                    {
+                        if (isUnionOfSimpleRectsEmpty)
+                        {
+                            unionOfSimpleRects = inputRects[i];
+                            isUnionOfSimpleRectsEmpty = false;
+                        }
+                        else
+                        {
+                            unionOfSimpleRects = unionOfSimpleRects.Union(inputRects[i]);
+                        }
+                    }
+                }
+
+                if (isUnionOfSimpleRectsEmpty)
+                {
+                    outputRect->MakeD2D1Infinite();
+                }
+                else
+                {
+                    *outputRect = unionOfSimpleRects;
+                }
 
                 *outputOpaqueSubRect = default;
             }
@@ -233,6 +272,11 @@ partial struct PixelShaderEffect
         public static int MapInvalidRect(PixelShaderEffect* @this, uint inputIndex, RECT invalidInputRect, RECT* invalidOutputRect)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
+
+            if (inputIndex >= (uint)@this->inputCount)
+            {
+                return E.E_INVALIDARG;
+            }
 
             if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
@@ -253,8 +297,19 @@ partial struct PixelShaderEffect
             }
             else
             {
-                // Default mapping
-                *invalidOutputRect = @this->inputRect;
+                // The default mapping in this scenario just needs to set the invalid output rect for simple inputs to
+                // be the invalid input rect, and to set the invalid output rect for complex inputs to an infinite rect.
+                switch (@this->inputTypes[inputIndex])
+                {
+                    case D2D1PixelShaderInputType.Simple:
+                        *invalidOutputRect = invalidInputRect;
+                        break;
+                    case D2D1PixelShaderInputType.Complex:
+                        invalidOutputRect->MakeD2D1Infinite();
+                        break;
+                    default:
+                        return E.E_FAIL;
+                }
             }
 
             return S.S_OK;
