@@ -47,9 +47,9 @@ public partial class D2D1InteropServicesTests
     public unsafe void GetOutputBufferPrecision()
     {
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<ShaderWithMultipleInputs>(), D2D1BufferPrecision.Unknown);
-        Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<OnlyBufferPrecisionShader>(), D2D1BufferPrecision.Int16Normalized);
+        Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<OnlyBufferPrecisionShader>(), D2D1BufferPrecision.UInt16Normalized);
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<OnlyChannelDepthShader>(), D2D1BufferPrecision.Unknown);
-        Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<CustomBufferOutputShader>(), D2D1BufferPrecision.Int8NormalizedSRGB);
+        Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<CustomBufferOutputShader>(), D2D1BufferPrecision.UInt8NormalizedSrgb);
     }
 
     [TestMethod]
@@ -71,7 +71,7 @@ public partial class D2D1InteropServicesTests
     }
 
     [D2DInputCount(0)]
-    [D2DOutputBuffer(D2D1BufferPrecision.Int16Normalized)]
+    [D2DOutputBuffer(D2D1BufferPrecision.UInt16Normalized)]
     partial struct OnlyBufferPrecisionShader : ID2D1PixelShader
     {
         public Float4 Execute()
@@ -91,7 +91,7 @@ public partial class D2D1InteropServicesTests
     }
 
     [D2DInputCount(0)]
-    [D2DOutputBuffer(D2D1BufferPrecision.Int8NormalizedSRGB, D2D1ChannelDepth.One)]
+    [D2DOutputBuffer(D2D1BufferPrecision.UInt8NormalizedSrgb, D2D1ChannelDepth.One)]
     partial struct CustomBufferOutputShader : ID2D1PixelShader
     {
         public Float4 Execute()
