@@ -28,7 +28,7 @@ partial class ID2D1ShaderGenerator
             //     return <INPUT_TYPE>;
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier("GetInputType"))
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier(nameof(GetInputType)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddParameterListParameters(Parameter(Identifier("index")).WithType(PredefinedType(Token(SyntaxKind.UIntKeyword))))

@@ -400,15 +400,7 @@ partial class ID2D1ShaderGenerator
         /// <remarks>Whether <paramref name="structDeclarationSymbol"/> requires the scene position.</remarks>
         private static bool GetRequiresScenePositionInfo(INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
-            {
-                if (attributeData.AttributeClass?.GetFullMetadataName() is "ComputeSharp.D2D1.D2DRequiresScenePositionAttribute")
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DRequiresScenePositionAttribute", out _);
         }
 
         /// <summary>
