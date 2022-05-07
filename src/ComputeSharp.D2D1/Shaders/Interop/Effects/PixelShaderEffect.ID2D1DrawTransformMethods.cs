@@ -233,23 +233,32 @@ partial struct PixelShaderEffect
                 // mapping. In this case, the output rect should be the union of the input rects for all
                 // the simple shader inputs, or infinite if there are no simple inputs. The input rects
                 // for complex inputs, if present, are not needed in this scenario, so they're ignored.
-                RECT? unionOfSimpleRects = null;
+                RECT unionOfSimpleRects = default;
+                bool isUnionOfSimpleRectsEmpty = true;
 
                 for (uint i = 0; i < inputRectCount; i++)
                 {
                     if (@this->inputTypes[i] == D2D1PixelShaderInputType.Simple)
                     {
-                        unionOfSimpleRects = (unionOfSimpleRects ?? default).Union(inputRects[i]);
+                        if (isUnionOfSimpleRectsEmpty)
+                        {
+                            unionOfSimpleRects = inputRects[i];
+                            isUnionOfSimpleRectsEmpty = false;
+                        }
+                        else
+                        {
+                            unionOfSimpleRects = unionOfSimpleRects.Union(inputRects[i]);
+                        }
                     }
                 }
 
-                if (unionOfSimpleRects.HasValue)
+                if (isUnionOfSimpleRectsEmpty)
                 {
-                    *outputRect = unionOfSimpleRects.Value;
+                    outputRect->MakeD2D1Infinite();
                 }
                 else
                 {
-                    outputRect->MakeD2D1Infinite();
+                    *outputRect = unionOfSimpleRects;
                 }
 
                 *outputOpaqueSubRect = default;
