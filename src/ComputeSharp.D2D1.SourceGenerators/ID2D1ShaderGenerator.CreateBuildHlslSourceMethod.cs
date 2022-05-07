@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ComputeSharp.D2D1.SourceGenerators.Diagnostics;
 using ComputeSharp.D2D1.SourceGenerators.SyntaxRewriters;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -24,7 +23,7 @@ partial class ID2D1ShaderGenerator
     /// <summary>
     /// A helper with all logic to generate the <c>BuildHlslSource</c> method.
     /// </summary>
-    internal static partial class BuildHlslSource
+    private static partial class BuildHlslSource
     {
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
@@ -33,13 +32,17 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
+        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
+        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
-            out int inputCount,
+            int inputCount,
+            ImmutableArray<int> inputSimpleIndices,
+            ImmutableArray<int> inputComplexIndices,
             out ImmutableArray<Diagnostic> diagnostics)
         {
             ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
@@ -62,14 +65,8 @@ partial class ID2D1ShaderGenerator
             var declaredTypes = GetDeclaredTypes(builder, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
 
-            // Gather the shader metadata
-            GatherD2D1AttributeInfo(
-                builder,
-                structDeclarationSymbol,
-                out inputCount,
-                out ImmutableArray<int> inputSimpleIndices,
-                out ImmutableArray<int> inputComplexIndices,
-                out bool requiresScenePosition);
+            // Check whether the scene position is required
+            bool requiresScenePosition = GetRequiresScenePositionInfo(structDeclarationSymbol);
 
             diagnostics = builder.ToImmutable();
 
@@ -397,100 +394,21 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Extracts the metadata definition for the current shader.
+        /// Gets whether or not a given shader requires the scene position.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="inputCount">The number of shader inputs to declare.</param>
-        /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
-        /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
-        /// <param name="requiresScenePosition">Whether the shader requires the scene position.</param>
-        private static void GatherD2D1AttributeInfo(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
-            INamedTypeSymbol structDeclarationSymbol,
-            out int inputCount,
-            out ImmutableArray<int> inputSimpleIndices,
-            out ImmutableArray<int> inputComplexIndices,
-            out bool requiresScenePosition)
+        /// <remarks>Whether <paramref name="structDeclarationSymbol"/> requires the scene position.</remarks>
+        private static bool GetRequiresScenePositionInfo(INamedTypeSymbol structDeclarationSymbol)
         {
-            // We need a separate local here so we can keep the original value to apply
-            // diagnostics to, but without returning invalid values to the caller which
-            // might cause generator errors (eg. -1 would cause other code to just throw).
-            int rawInputCount = 0;
-
-            inputCount = 0;
-            requiresScenePosition = false;
-
-            ImmutableArray<int>.Builder inputSimpleIndicesBuilder = ImmutableArray.CreateBuilder<int>();
-            ImmutableArray<int>.Builder inputComplexIndicesBuilder = ImmutableArray.CreateBuilder<int>();
-
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
-                switch (attributeData.AttributeClass?.GetFullMetadataName())
+                if (attributeData.AttributeClass?.GetFullMetadataName() is "ComputeSharp.D2D1.D2DRequiresScenePositionAttribute")
                 {
-                    case "ComputeSharp.D2D1.D2DInputCountAttribute":
-                        rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
-                        inputCount = Math.Max(rawInputCount, 0);
-                        break;
-                    case "ComputeSharp.D2D1.D2DInputSimpleAttribute":
-                        inputSimpleIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
-                        break;
-                    case "ComputeSharp.D2D1.D2DInputComplexAttribute":
-                        inputComplexIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
-                        break;
-                    case "ComputeSharp.D2D1.D2DRequiresScenePositionAttribute":
-                        requiresScenePosition = true;
-                        break;
-                    default:
-                        break;
+                    return true;
                 }
             }
 
-            inputSimpleIndices = inputSimpleIndicesBuilder.ToImmutable();
-            inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
-
-            // Validate the input count
-            if (rawInputCount is not (>= 0 and <= 8))
-            {
-                diagnostics.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
-
-            // All simple indices must be in range
-            if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => (uint)i >= rawInputCount))
-            {
-                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
-
-            HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
-            HashSet<int> inputComplexIndicesAsSet = new(inputComplexIndicesBuilder);
-
-            // All simple indices must be unique
-            if (inputSimpleIndicesAsSet.Count != inputSimpleIndicesBuilder.Count)
-            {
-                diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
-
-            // All complex indices must be unique
-            if (inputComplexIndicesAsSet.Count != inputComplexIndicesBuilder.Count)
-            {
-                diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
-
-            // Simple and complex indices can't have indices in common
-            if (inputSimpleIndicesAsSet.Intersect(inputComplexIndicesAsSet).Any())
-            {
-                diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
-
-                return;
-            }
+            return false;
         }
 
         /// <summary>

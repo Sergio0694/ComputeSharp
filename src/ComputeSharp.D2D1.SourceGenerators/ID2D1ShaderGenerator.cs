@@ -49,9 +49,9 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Where(static item => IsD2D1PixelShaderType(item.Left.Symbol, item.Right))
             .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol)));
 
-        // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
-        // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Source, int InputCount)> shaderInfoWithErrors =
+        // Get the dispatch data, input types, HLSL source and embedded bytecode info. This info is computed
+        // on the same step as parts are shared in following sub-branches in the incremental generator pipeline.
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<DispatchDataInfo> Dispatch, Result<InputTypesInfo> InputTypes, Result<HlslShaderSourceInfo> Source)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -66,12 +66,25 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                 DispatchDataInfo dispatchDataInfo = new(fieldInfos, root32BitConstantCount);
 
+                // Get the input info for GetInputInfo()
+                GetInputType.GetInfo(
+                    item.Left.Symbol,
+                    out int inputCount,
+                    out ImmutableArray<int> inputSimpleIndices,
+                    out ImmutableArray<int> inputComplexIndices,
+                    out ImmutableArray<uint> inputTypes,
+                    out ImmutableArray<Diagnostic> inputTypesDiagnostics);
+
+                InputTypesInfo inputTypesInfo = new(inputTypes);
+
                 // Get HLSL source for BuildHlslSource()
                 string hlslSource = BuildHlslSource.GetHlslSource(
                     item.Right,
                     item.Left.Syntax,
                     item.Left.Symbol,
-                    out int inputCount,
+                    inputCount,
+                    inputSimpleIndices,
+                    inputComplexIndices,
                     out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
 
                 token.ThrowIfCancellationRequested();
@@ -92,18 +105,19 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 return (
                     item.Left.Hierarchy,
                     new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
-                    new Result<HlslShaderSourceInfo>(sourceInfo, hlslSourceDiagnostics),
-                    inputCount);
+                    new Result<InputTypesInfo>(inputTypesInfo, inputTypesDiagnostics),
+                    new Result<HlslShaderSourceInfo>(sourceInfo, hlslSourceDiagnostics));
             });
 
         // Output the diagnostics
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.InputTypes.Errors));
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Source.Errors));
 
         // Filter items to enable caching for the input count methods
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.InputCount))
+            .Select(static (item, token) => (item.Hierarchy, item.InputTypes.Value.InputTypes.Length))
             .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<int>.Default);
 
         // Generate the GetInputCount() methods
@@ -116,10 +130,25 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, HlslShaderSourceInfo Source)> shaderInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, HlslShaderSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch.Value, item.Source.Value))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch.Value, item.InputTypes.Value, item.Source.Value))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, InputTypesInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+
+        // Get a filtered sequence to enable caching
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputTypesInfo InputTypes)> inputTypesInfo =
+            shaderInfo
+            .Select(static (item, token) => (item.Hierarchy, item.InputTypes))
+            .WithComparers(HierarchyInfo.Comparer.Default, InputTypesInfo.Comparer.Default);
+
+        // Generate the GetInputType() methods
+        context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax getInputTypeMethod = GetInputType.GetSyntax(item.InputTypes.InputTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, false);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetInputType)}", compilationUnit.ToFullString());
+        });
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =

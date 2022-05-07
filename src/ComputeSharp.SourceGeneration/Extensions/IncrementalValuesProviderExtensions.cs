@@ -47,6 +47,29 @@ internal static class IncrementalValuesProviderExtensions
     }
 
     /// <summary>
+    /// Creates a new <see cref="IncrementalValuesProvider{TValues}"/> instance with a gven pair of comparers.
+    /// </summary>
+    /// <typeparam name="T1">The type of first items in each tuple.</typeparam>
+    /// <typeparam name="T2">The type of second items in each tuple.</typeparam>
+    /// <typeparam name="T3">The type of third items in each tuple.</typeparam>
+    /// <typeparam name="T4">The type of fourth items in each tuple.</typeparam>
+    /// <param name="source">The input <see cref="IncrementalValuesProvider{TValues}"/> instance.</param>
+    /// <param name="comparer1">An <see cref="IEqualityComparer{T}"/> instance for <typeparamref name="T1"/> items.</param>
+    /// <param name="comparer2">An <see cref="IEqualityComparer{T}"/> instance for <typeparamref name="T2"/> items.</param>
+    /// <param name="comparer3">An <see cref="IEqualityComparer{T}"/> instance for <typeparamref name="T3"/> items.</param>
+    /// <param name="comparer4">An <see cref="IEqualityComparer{T}"/> instance for <typeparamref name="T4"/> items.</param>
+    /// <returns>An <see cref="IncrementalValuesProvider{TValues}"/> with the specified comparers applied to each item.</returns>
+    public static IncrementalValuesProvider<(T1, T2, T3, T4)> WithComparers<T1, T2, T3, T4>(
+        this IncrementalValuesProvider<(T1, T2, T3, T4)> source,
+        IEqualityComparer<T1> comparer1,
+        IEqualityComparer<T2> comparer2,
+        IEqualityComparer<T3> comparer3,
+        IEqualityComparer<T4> comparer4)
+    {
+        return source.WithComparer(new Comparer<T1, T2, T3, T4>(comparer1, comparer2, comparer3, comparer4));
+    }
+
+    /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for a value tuple.
     /// </summary>
     public sealed class Comparer<TLeft, TRight> : IEqualityComparer<(TLeft Left, TRight Right)>
@@ -138,6 +161,67 @@ internal static class IncrementalValuesProviderExtensions
                 this.comparer1.GetHashCode(obj.Item1),
                 this.comparer2.GetHashCode(obj.Item2),
                 this.comparer3.GetHashCode(obj.Item3));
+        }
+    }
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> implementation for a value tuple.
+    /// </summary>
+    public sealed class Comparer<T1, T2, T3, T4> : IEqualityComparer<(T1, T2, T3, T4)>
+    {
+        /// <summary>
+        /// The <typeparamref name="T1"/> comparer.
+        /// </summary>
+        private readonly IEqualityComparer<T1> comparer1;
+
+        /// <summary>
+        /// The <typeparamref name="T2"/> comparer.
+        /// </summary>
+        private readonly IEqualityComparer<T2> comparer2;
+
+        /// <summary>
+        /// The <typeparamref name="T3"/> comparer.
+        /// </summary>
+        private readonly IEqualityComparer<T3> comparer3;
+
+        /// <summary>
+        /// The <typeparamref name="T4"/> comparer.
+        /// </summary>
+        private readonly IEqualityComparer<T4> comparer4;
+
+        /// <summary>
+        /// Creates a new <see cref="Comparer{T1, T2, T3, T4}"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="comparer1">The <typeparamref name="T1"/> comparer.</param>
+        /// <param name="comparer2">The <typeparamref name="T2"/> comparer.</param>
+        /// <param name="comparer3">The <typeparamref name="T3"/> comparer.</param>
+        /// <param name="comparer4">The <typeparamref name="T4"/> comparer.</param>
+        public Comparer(IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4)
+        {
+            this.comparer1 = comparer1;
+            this.comparer2 = comparer2;
+            this.comparer3 = comparer3;
+            this.comparer4 = comparer4;
+        }
+
+        /// <inheritdoc/>
+        public bool Equals((T1, T2, T3, T4) x, (T1, T2, T3, T4) y)
+        {
+            return
+                this.comparer1.Equals(x.Item1, y.Item1) &&
+                this.comparer2.Equals(x.Item2, y.Item2) &&
+                this.comparer3.Equals(x.Item3, y.Item3) &&
+                this.comparer4.Equals(x.Item4, y.Item4);
+        }
+
+        /// <inheritdoc/>
+        public int GetHashCode((T1, T2, T3, T4) obj)
+        {
+            return HashCode.Combine(
+                this.comparer1.GetHashCode(obj.Item1),
+                this.comparer2.GetHashCode(obj.Item2),
+                this.comparer3.GetHashCode(obj.Item3),
+                this.comparer4.GetHashCode(obj.Item4));
         }
     }
 }
