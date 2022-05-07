@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <summary>
 /// Provides methods to interop with D2D1 APIs and compile shaders or extract their constant buffer data.
 /// </summary>
-public static unsafe class D2D1InteropServices
+public static class D2D1PixelShader
 {
     /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.
@@ -27,10 +27,10 @@ public static unsafe class D2D1InteropServices
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </para>
     /// </remarks>
-    public static ReadOnlyMemory<byte> LoadPixelShaderBytecode<T>()
+    public static ReadOnlyMemory<byte> LoadBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompilePixelShaderBytecode<T>(null);
+        return LoadOrCompileBytecode<T>(null);
     }
 
     /// <summary>
@@ -43,10 +43,10 @@ public static unsafe class D2D1InteropServices
     /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </remarks>
-    public static ReadOnlyMemory<byte> LoadPixelShaderBytecode<T>(D2D1ShaderProfile shaderProfile)
+    public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompilePixelShaderBytecode<T>(shaderProfile);
+        return LoadOrCompileBytecode<T>(shaderProfile);
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public static unsafe class D2D1InteropServices
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
-    private static ReadOnlyMemory<byte> LoadOrCompilePixelShaderBytecode<T>(D2D1ShaderProfile? shaderProfile)
+    private static unsafe ReadOnlyMemory<byte> LoadOrCompileBytecode<T>(D2D1ShaderProfile? shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
@@ -85,7 +85,7 @@ public static unsafe class D2D1InteropServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
     /// <returns>The number of inputs for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static uint GetPixelShaderInputCount<T>()
+    public static uint GetInputCount<T>()
         where T : unmanaged, ID2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
@@ -100,7 +100,7 @@ public static unsafe class D2D1InteropServices
     /// <param name="index">The index of the input to get the type for.</param>
     /// <returns>The type of the input of the target D2D1 pixel shader at the specified index.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not in range for the available inputs for the shader type.</exception>
-    public static D2D1PixelShaderInputType GetPixelShaderInputType<T>(uint index)
+    public static D2D1PixelShaderInputType GetInputType<T>(uint index)
         where T : unmanaged, ID2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
@@ -121,8 +121,8 @@ public static unsafe class D2D1InteropServices
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the pixel shader constant buffer.</returns>
     /// <remarks>
     /// This method will allocate a buffer every time it is invoked.
-    /// For a zero-allocation alternative, use <see cref="SetPixelShaderConstantBufferForD2D1DrawInfo"/>.</remarks>
-    public static ReadOnlyMemory<byte> GetPixelShaderConstantBuffer<T>(in T shader)
+    /// For a zero-allocation alternative, use <see cref="SetConstantBufferForD2D1DrawInfo"/>.</remarks>
+    public static ReadOnlyMemory<byte> GetConstantBuffer<T>(in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1ByteArrayDispatchDataLoader dataLoader = default;
@@ -139,7 +139,7 @@ public static unsafe class D2D1InteropServices
     /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1DrawInfo">A pointer to the <c>ID2D1DrawInfo</c> instance to use.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setpixelshaderconstantbuffer"/>.</remarks>
-    public static void SetPixelShaderConstantBufferForD2D1DrawInfo<T>(in T shader, void* d2D1DrawInfo)
+    public static unsafe void SetConstantBufferForD2D1DrawInfo<T>(in T shader, void* d2D1DrawInfo)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1DrawInfoDispatchDataLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
