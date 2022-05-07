@@ -11,10 +11,10 @@ public partial class D2D1InteropServicesTests
     [TestMethod]
     public unsafe void GetInputCount()
     {
-        Assert.AreEqual(D2D1PixelShader.GetInputCount<InvertEffect>(), 1u);
-        Assert.AreEqual(D2D1PixelShader.GetInputCount<PixelateEffect.Shader>(), 1u);
-        Assert.AreEqual(D2D1PixelShader.GetInputCount<ZonePlateEffect>(), 0u);
-        Assert.AreEqual(D2D1PixelShader.GetInputCount<ShaderWithMultipleInputs>(), 7u);
+        Assert.AreEqual(D2D1PixelShader.GetInputCount<InvertEffect>(), 1);
+        Assert.AreEqual(D2D1PixelShader.GetInputCount<PixelateEffect.Shader>(), 1);
+        Assert.AreEqual(D2D1PixelShader.GetInputCount<ZonePlateEffect>(), 0);
+        Assert.AreEqual(D2D1PixelShader.GetInputCount<ShaderWithMultipleInputs>(), 7);
     }
 
     [TestMethod]
