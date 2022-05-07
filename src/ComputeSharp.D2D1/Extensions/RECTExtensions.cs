@@ -75,4 +75,27 @@ internal static class RECTExtensions
             bottom = rectangle.Bottom
         };
     }
+
+    /// <summary>
+    /// Creates a <see cref="RECT"/> with the area being the union of two other values.
+    /// </summary>
+    /// <param name="rect">The first input <see cref="RECT"/> instance to read.</param>
+    /// <param name="other">The second input <see cref="RECT"/> instance to read.</param>
+    /// <returns>A <see cref="RECT"/> with the area being the union of that of <paramref name="rect"/> and <paramref name="other"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static RECT Union(this in RECT rect, in RECT other)
+    {
+        int left = Math.Min(rect.left, other.left);
+        int top = Math.Min(rect.top, other.top);
+        int right = Math.Max(rect.right, other.right);
+        int bottom = Math.Max(rect.bottom, other.bottom);
+
+        return new()
+        {
+            left = left,
+            top = top,
+            right = right,
+            bottom = bottom
+        };
+    }
 }

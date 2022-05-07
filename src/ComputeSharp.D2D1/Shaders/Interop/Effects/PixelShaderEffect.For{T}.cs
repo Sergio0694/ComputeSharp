@@ -47,7 +47,12 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// The number of inputs for the shader.
         /// </summary>
-        private static int numberOfInputs;
+        private static int inputCount;
+
+        /// <summary>
+        /// The buffer with the types of inputs for the shader.
+        /// </summary>
+        private static D2D1PixelShaderInputType* inputTypes;
 
         /// <summary>
         /// The shader bytecode.
@@ -67,9 +72,9 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// Initializes the <see cref="For{T}"/> shared state.
         /// </summary>
-        /// <param name="factory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
+        /// <param name="d2D1DrawTransformMapperFactory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
         /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
-        public static void Initialize(Func<ID2D1TransformMapper<T>>? factory)
+        public static void Initialize(Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory)
         {
             // This conceptually acts as a static constructor, and this type is
             // internal, so in this very specific case locking on the type is fine.
@@ -78,7 +83,7 @@ internal unsafe partial struct PixelShaderEffect
                 if (isInitialized)
                 {
                     // If the factory is already initialized, ensure the draw transform mapper is the same
-                    if (d2D1DrawTransformMapperFactory != factory)
+                    if (For<T>.d2D1DrawTransformMapperFactory != d2D1DrawTransformMapperFactory)
                     {
                         ThrowHelper.ThrowInvalidOperationException(
                             "Cannot initialize an ID2D1Effect factory for the same shader type with two different transform mappings. " +
@@ -88,20 +93,30 @@ internal unsafe partial struct PixelShaderEffect
                 else
                 {
                     // Load all shader properties
-                    Guid guid = typeof(T).GUID;
-                    int inputCount = (int)D2D1PixelShader.GetInputCount<T>();
+                    Guid shaderId = typeof(T).GUID;
                     ReadOnlyMemory<byte> buffer = D2D1PixelShader.LoadBytecode<T>();
-                    byte* typeAssociatedMemory = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), buffer.Length);
+                    int bytecodeSize = buffer.Length;
+                    byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
+
+                    // Prepare the inputs info
+                    int inputCount = D2D1PixelShader.GetInputCount<T>();
+                    D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), inputCount);
+
+                    for (int i = 0; i < inputCount; i++)
+                    {
+                        inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
+                    }
 
                     // Copy the bytecode to the target buffer
-                    buffer.Span.CopyTo(new Span<byte>(typeAssociatedMemory, buffer.Length));
+                    buffer.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
 
                     // Set the shared state and mark the type as initialized
-                    shaderId = guid;
-                    numberOfInputs = inputCount;
-                    bytecode = typeAssociatedMemory;
-                    bytecodeSize = buffer.Length;
-                    d2D1DrawTransformMapperFactory = factory;
+                    For<T>.shaderId = shaderId;
+                    For<T>.inputCount = inputCount;
+                    For<T>.inputTypes = inputTypes;
+                    For<T>.bytecode = bytecode;
+                    For<T>.bytecodeSize = bytecodeSize;
+                    For<T>.d2D1DrawTransformMapperFactory = d2D1DrawTransformMapperFactory;
 
                     isInitialized = true;
                 }
@@ -129,7 +144,7 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// Gets the number of inputs for the effect.
         /// </summary>
-        public static int NumberOfInputs => numberOfInputs;
+        public static int InputCount => inputCount;
 
         /// <summary>
         /// Tries to get the effect id, if it has been initialized.
@@ -176,7 +191,8 @@ internal unsafe partial struct PixelShaderEffect
 
             return PixelShaderEffect.Factory(
                 shaderId,
-                numberOfInputs,
+                inputCount,
+                inputTypes,
                 bytecode,
                 bytecodeSize,
                 d2D1TransformMapper,

@@ -18,5 +18,8 @@ namespace TerraFX.Interop.Windows
 
         [NativeTypeName("#define E_POINTER _HRESULT_TYPEDEF_(0x80004003L)")]
         public const int E_POINTER = unchecked((int)(0x80004003));
+
+        [NativeTypeName("#define E_FAIL _HRESULT_TYPEDEF_(0x80004005L)")]
+        public const int E_FAIL = unchecked((int)(0x80004005));
     }
 }
