@@ -12,15 +12,15 @@ public enum D2D1ChannelDepth
     /// <summary>
     /// The channel depth is the default, and it will be inherited by the inputs.
     /// </summary>
-    Default,
+    Default = 0,
 
     /// <summary>
     /// The channel depth is 1.
     /// </summary>
-    One,
+    One = 1,
 
     /// <summary>
     /// The channel depth is 4.
     /// </summary>
-    Four
+    Four = 4
 }
