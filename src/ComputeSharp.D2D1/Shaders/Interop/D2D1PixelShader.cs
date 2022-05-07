@@ -114,6 +114,36 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the buffer precision for the output buffer of a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer precision for.</typeparam>
+    /// <returns>The output buffer precision for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1BufferPrecision GetOutputBufferPrecision<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        shader.GetOutputBuffer(out uint precision, out _);
+
+        return (D2D1BufferPrecision)precision;
+    }
+
+    /// <summary>
+    /// Gets the channel depth for the output buffer of a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer channel depth for.</typeparam>
+    /// <returns>The output buffer channel depth for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1ChannelDepth GetOutputBufferChannelDepth<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        shader.GetOutputBuffer(out _, out uint depth);
+
+        return (D2D1ChannelDepth)depth;
+    }
+
+    /// <summary>
     /// Gets the constant buffer from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>

@@ -38,6 +38,15 @@ public interface ID2D1Shader
     uint GetInputType(uint index);
 
     /// <summary>
+    /// Gets the output buffer precision and depth for the shader.
+    /// </summary>
+    /// <param name="precision">The output buffer precision.</param>
+    /// <param name="depth">The output buffer channel depth.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    void GetOutputBuffer(out uint precision, out uint depth);
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
