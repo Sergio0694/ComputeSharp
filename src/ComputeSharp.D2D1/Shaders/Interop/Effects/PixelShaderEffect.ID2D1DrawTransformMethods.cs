@@ -324,7 +324,7 @@ partial struct PixelShaderEffect
             @this->d2D1DrawInfo = drawInfo;
 
             // Set the pixel shader for the effect
-            HRESULT hresult = drawInfo->SetPixelShader(&@this->shaderId);
+            HRESULT hresult = drawInfo->SetPixelShader(&@this->shaderId, (D2D1_PIXEL_OPTIONS)@this->pixelOptions);
 
             if (hresult != S.S_OK)
             {
