@@ -20,6 +20,14 @@ public interface ID2D1Shader
     void InitializeFromDispatchData(ReadOnlySpan<byte> data);
 
     /// <summary>
+    /// Gets the pixel options for the current shader.
+    /// </summary>
+    /// <returns>The pixel options for the current shader.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    uint GetPixelOptions();
+
+    /// <summary>
     /// Gets the number of inputs for the current shader.
     /// </summary>
     /// <returns>The number of inputs for the current shader.</returns>

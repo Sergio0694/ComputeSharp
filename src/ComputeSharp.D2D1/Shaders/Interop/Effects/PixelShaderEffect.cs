@@ -176,6 +176,11 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1InputDescription* inputDescriptions;
 
     /// <summary>
+    /// The pixel options for the shader.
+    /// </summary>
+    private D2D1PixelOptions pixelOptions;
+
+    /// <summary>
     /// The shader bytecode.
     /// </summary>
     private byte* bytecode;
@@ -213,6 +218,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
     /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
     /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
+    /// <param name="pixelOptions">The pixel options for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
     /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
@@ -226,6 +232,7 @@ internal unsafe partial struct PixelShaderEffect
         D2D1PixelShaderInputType* inputTypes,
         int inputDescriptionCount,
         D2D1InputDescription* inputDescriptions,
+        D2D1PixelOptions pixelOptions,
         byte* bytecode,
         int bytecodeSize,
         D2D1BufferPrecision bufferPrecision,
@@ -245,6 +252,7 @@ internal unsafe partial struct PixelShaderEffect
         @this->inputTypes = inputTypes;
         @this->inputDescriptionCount = inputDescriptionCount;
         @this->inputDescriptions = inputDescriptions;
+        @this->pixelOptions = pixelOptions;
         @this->bytecode = bytecode;
         @this->bytecodeSize = bytecodeSize;
         @this->bufferPrecision = bufferPrecision;

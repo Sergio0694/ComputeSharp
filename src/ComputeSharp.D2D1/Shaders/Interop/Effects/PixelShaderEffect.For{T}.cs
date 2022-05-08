@@ -65,6 +65,11 @@ internal unsafe partial struct PixelShaderEffect
         private static D2D1InputDescription* inputDescriptions;
 
         /// <summary>
+        /// The pixel options for the shader.
+        /// </summary>
+        private static D2D1PixelOptions pixelOptions;
+
+        /// <summary>
         /// The shader bytecode.
         /// </summary>
         private static byte* bytecode;
@@ -119,6 +124,7 @@ internal unsafe partial struct PixelShaderEffect
                     byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
                     D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
                     D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
+                    D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
 
                     // Prepare the inputs info
                     int inputCount = D2D1PixelShader.GetInputCount<T>();
@@ -145,6 +151,7 @@ internal unsafe partial struct PixelShaderEffect
                     For<T>.inputTypes = inputTypes;
                     For<T>.inputDescriptionCount = inputDescriptionCount;
                     For<T>.inputDescriptions = inputDescriptions;
+                    For<T>.pixelOptions = pixelOptions;
                     For<T>.bytecode = bytecode;
                     For<T>.bytecodeSize = bytecodeSize;
                     For<T>.bufferPrecision = bufferPrecision;
@@ -228,6 +235,7 @@ internal unsafe partial struct PixelShaderEffect
                 inputTypes,
                 inputDescriptionCount,
                 inputDescriptions,
+                pixelOptions,
                 bytecode,
                 bytecodeSize,
                 bufferPrecision,
