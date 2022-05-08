@@ -331,13 +331,38 @@ partial struct PixelShaderEffect
                 return hresult;
             }
 
+            // If any input descriptions are present, set them
+            if (@this->inputDescriptionCount > 0)
+            {
+                for (int i = 0; i < @this->inputDescriptionCount; i++)
+                {
+                    ref D2D1InputDescription inputDescription = ref @this->inputDescriptions[i];
+
+                    D2D1_INPUT_DESCRIPTION d2D1InputDescription;
+                    d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
+                    d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetail;
+
+                    hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
+
+                    if (hresult != S.S_OK)
+                    {
+                        return hresult;
+                    }
+                }
+            }
+
             // If a custom buffer precision or channel depth is requested, set it
             if (@this->bufferPrecision != D2D1BufferPrecision.Unknown ||
                 @this->channelDepth != D2D1ChannelDepth.Default)
             {
-                return drawInfo->SetOutputBuffer(
+                hresult = drawInfo->SetOutputBuffer(
                     (D2D1_BUFFER_PRECISION)@this->bufferPrecision,
                     (D2D1_CHANNEL_DEPTH)@this->channelDepth);
+
+                if (hresult != S.S_OK)
+                {
+                    return hresult;
+                }
             }
 
             return S.S_OK;

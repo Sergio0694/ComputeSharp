@@ -55,6 +55,16 @@ internal unsafe partial struct PixelShaderEffect
         private static D2D1PixelShaderInputType* inputTypes;
 
         /// <summary>
+        /// The number of available input descriptions.
+        /// </summary>
+        private static int inputDescriptionCount;
+
+        /// <summary>
+        /// The buffer with the available input descriptions for the shader.
+        /// </summary>
+        private static D2D1InputDescription* inputDescriptions;
+
+        /// <summary>
         /// The shader bytecode.
         /// </summary>
         private static byte* bytecode;
@@ -104,8 +114,8 @@ internal unsafe partial struct PixelShaderEffect
                 {
                     // Load all shader properties
                     Guid shaderId = typeof(T).GUID;
-                    ReadOnlyMemory<byte> buffer = D2D1PixelShader.LoadBytecode<T>();
-                    int bytecodeSize = buffer.Length;
+                    ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
+                    int bytecodeSize = bytecodeInfo.Length;
                     byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
                     D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
                     D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
@@ -119,13 +129,22 @@ internal unsafe partial struct PixelShaderEffect
                         inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
                     }
 
+                    // Prepare the input descriptions
+                    ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
+                    int inputDescriptionCount = inputDescriptionsInfo.Length;
+                    D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), inputDescriptionCount);
+
+                    inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
+
                     // Copy the bytecode to the target buffer
-                    buffer.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
+                    bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
 
                     // Set the shared state and mark the type as initialized
                     For<T>.shaderId = shaderId;
                     For<T>.inputCount = inputCount;
                     For<T>.inputTypes = inputTypes;
+                    For<T>.inputDescriptionCount = inputDescriptionCount;
+                    For<T>.inputDescriptions = inputDescriptions;
                     For<T>.bytecode = bytecode;
                     For<T>.bytecodeSize = bytecodeSize;
                     For<T>.bufferPrecision = bufferPrecision;
@@ -207,6 +226,8 @@ internal unsafe partial struct PixelShaderEffect
                 shaderId,
                 inputCount,
                 inputTypes,
+                inputDescriptionCount,
+                inputDescriptions,
                 bytecode,
                 bytecodeSize,
                 bufferPrecision,

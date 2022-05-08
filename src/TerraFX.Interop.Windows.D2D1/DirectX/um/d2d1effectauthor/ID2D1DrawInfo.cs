@@ -21,6 +21,13 @@ namespace TerraFX.Interop.DirectX
         public void** lpVtbl;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [VtblIndex(3)]
+        public HRESULT SetInputDescription([NativeTypeName("UINT32")] uint inputIndex, D2D1_INPUT_DESCRIPTION inputDescription)
+        {
+            return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfo*, uint, D2D1_INPUT_DESCRIPTION, int>)(lpVtbl[3]))((ID2D1DrawInfo*)Unsafe.AsPointer(ref this), inputIndex, inputDescription);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT SetOutputBuffer(D2D1_BUFFER_PRECISION bufferPrecision, D2D1_CHANNEL_DEPTH channelDepth)
         {
