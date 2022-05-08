@@ -128,23 +128,23 @@ public partial class D2D1InteropServicesTests
 
         Assert.AreEqual(span[0].Index, 0);
         Assert.AreEqual(span[0].Filter, D2D1Filter.MinPointMagLinearMipPoint);
-        Assert.AreEqual(span[0].LevelOfDetail, 0);
+        Assert.AreEqual(span[0].LevelOfDetailCount, 0);
 
         Assert.AreEqual(span[1].Index, 1);
         Assert.AreEqual(span[1].Filter, D2D1Filter.Anisotropic);
-        Assert.AreEqual(span[1].LevelOfDetail, 0);
+        Assert.AreEqual(span[1].LevelOfDetailCount, 0);
 
         Assert.AreEqual(span[2].Index, 2);
         Assert.AreEqual(span[2].Filter, D2D1Filter.MinLinearMagPointMinLinear);
-        Assert.AreEqual(span[2].LevelOfDetail, 4);
+        Assert.AreEqual(span[2].LevelOfDetailCount, 4);
 
         Assert.AreEqual(span[3].Index, 5);
         Assert.AreEqual(span[3].Filter, D2D1Filter.MinMagPointMipLinear);
-        Assert.AreEqual(span[3].LevelOfDetail, 0);
+        Assert.AreEqual(span[3].LevelOfDetailCount, 0);
 
         Assert.AreEqual(span[4].Index, 6);
         Assert.AreEqual(span[4].Filter, D2D1Filter.MinPointMagMipLinear);
-        Assert.AreEqual(span[4].LevelOfDetail, 3);
+        Assert.AreEqual(span[4].LevelOfDetailCount, 3);
     }
 
     [D2DInputCount(7)]
@@ -156,9 +156,9 @@ public partial class D2D1InteropServicesTests
     [D2DInputSimple(6)]
     [D2DInputDescription(0, D2D1Filter.MinPointMagLinearMipPoint)]
     [D2DInputDescription(1, D2D1Filter.Anisotropic)]
-    [D2DInputDescription(2, D2D1Filter.MinLinearMagPointMinLinear, LevelOfDetail = 4)]
+    [D2DInputDescription(2, D2D1Filter.MinLinearMagPointMinLinear, LevelOfDetailCount = 4)]
     [D2DInputDescription(5, D2D1Filter.MinMagPointMipLinear)]
-    [D2DInputDescription(6, D2D1Filter.MinPointMagMipLinear, LevelOfDetail = 3)]
+    [D2DInputDescription(6, D2D1Filter.MinPointMagMipLinear, LevelOfDetailCount = 3)]
     partial struct ShaderWithInputDescriptions : ID2D1PixelShader
     {
         public Float4 Execute()

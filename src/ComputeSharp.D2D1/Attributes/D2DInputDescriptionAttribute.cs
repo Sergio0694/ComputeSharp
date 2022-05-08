@@ -37,5 +37,5 @@ public sealed class D2DInputDescriptionAttribute : Attribute
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.
     /// </summary>
-    public int LevelOfDetail { get; init; }
+    public int LevelOfDetailCount { get; init; }
 }

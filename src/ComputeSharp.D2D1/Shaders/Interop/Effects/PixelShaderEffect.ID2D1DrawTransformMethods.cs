@@ -340,7 +340,7 @@ partial struct PixelShaderEffect
 
                     D2D1_INPUT_DESCRIPTION d2D1InputDescription;
                     d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
-                    d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetail;
+                    d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
 
                     hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
 

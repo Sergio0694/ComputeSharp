@@ -16,12 +16,12 @@ public readonly struct D2D1InputDescription
     /// </summary>
     /// <param name="index">The index of the resource the description belongs to.</param>
     /// <param name="filter">The type of filter to apply to the input texture.</param>
-    /// <param name="levelOfDetail">The mip level to retrieve from the upstream transform, if specified.</param>
-    internal D2D1InputDescription(int index, D2D1Filter filter, int levelOfDetail)
+    /// <param name="levelOfDetailCount">The mip level to retrieve from the upstream transform, if specified.</param>
+    internal D2D1InputDescription(int index, D2D1Filter filter, int levelOfDetailCount)
     {
         Index = index;
         Filter = filter;
-        LevelOfDetail = levelOfDetail;
+        LevelOfDetailCount = levelOfDetailCount;
     }
 
     /// <summary>
@@ -37,5 +37,5 @@ public readonly struct D2D1InputDescription
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.
     /// </summary>
-    public int LevelOfDetail { get; }
+    public int LevelOfDetailCount { get; }
 }

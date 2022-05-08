@@ -45,9 +45,9 @@ partial class ID2D1ShaderGenerator
                             int index = (int)attributeData.ConstructorArguments[0].Value!;
                             D2D1Filter filter = (D2D1Filter)attributeData.ConstructorArguments[1].Value!;
 
-                            _ = attributeData.TryGetNamedArgument("LevelOfDetail", out int levelOfDetail);
+                            _ = attributeData.TryGetNamedArgument("LevelOfDetailCount", out int levelOfDetailCount);
 
-                            inputDescriptionsBuilder.Add(new InputDescription((uint)index, filter, levelOfDetail));
+                            inputDescriptionsBuilder.Add(new InputDescription((uint)index, filter, levelOfDetailCount));
                         }
                         break;
                     default:
