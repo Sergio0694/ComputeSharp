@@ -6,6 +6,14 @@ namespace ComputeSharp.D2D1;
 /// Represents the filtering mode that a transform may select to use on input textures.
 /// </summary>
 /// <remarks>
+/// <para>
+/// In most scenarios, or when unsure on what values to use, consider this reference:
+/// <list type="bullet">
+///     <item><description><see cref="MinMagMipPoint"/>: point sampling.</description></item>
+///     <item><description><see cref="MinMagMipLinear"/>: linear sampling.</description></item>
+/// </list>
+/// Other values can be used when explicit fine grained control is needed on how inputs are sampled.
+/// </para>
 /// <para>This type exposes the available values in <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/ne-d2d1effectauthor-d2d1_filter"/>.</para>
 /// </remarks>
 public enum D2D1Filter
