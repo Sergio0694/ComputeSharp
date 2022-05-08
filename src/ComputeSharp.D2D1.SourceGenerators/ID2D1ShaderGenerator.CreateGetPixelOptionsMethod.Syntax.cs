@@ -18,7 +18,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="pixelOptions">The pixel options for the shader.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>GetPixelOptions</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(D2D1PixelOption pixelOptions)
+        public static MethodDeclarationSyntax GetSyntax(D2D1PixelOptions pixelOptions)
         {
             // This code produces a method declaration as follows:
             //

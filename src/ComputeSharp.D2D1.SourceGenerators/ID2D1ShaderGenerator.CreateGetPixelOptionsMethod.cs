@@ -16,15 +16,15 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="pixelOptions">The pixel options for the shader.</param>
-        public static void GetInfo(INamedTypeSymbol structDeclarationSymbol, out D2D1PixelOption pixelOptions)
+        public static void GetInfo(INamedTypeSymbol structDeclarationSymbol, out D2D1PixelOptions pixelOptions)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DPixelOptionsAttribute", out AttributeData? attributeData))
             {
-                pixelOptions = (D2D1PixelOption)attributeData!.ConstructorArguments[0].Value!;
+                pixelOptions = (D2D1PixelOptions)attributeData!.ConstructorArguments[0].Value!;
             }
             else
             {
-                pixelOptions = D2D1PixelOption.None;
+                pixelOptions = D2D1PixelOptions.None;
             }
         }
     }

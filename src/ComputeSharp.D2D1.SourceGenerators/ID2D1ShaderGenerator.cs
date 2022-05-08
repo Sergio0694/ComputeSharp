@@ -308,18 +308,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
         // Get the pixel options, again independently from other generation steps.
         // This can also be immediately cached at a fine grained level.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOption Options)> pixelOptionsInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOptions Options)> pixelOptionsInfo =
             shaderDeclarations
             .Select(static (item, token) =>
             {
                 // GetPixelOptions() info
-                GetPixelOptions.GetInfo(item.Symbol, out D2D1PixelOption pixelOptions);
+                GetPixelOptions.GetInfo(item.Symbol, out D2D1PixelOptions pixelOptions);
 
                 token.ThrowIfCancellationRequested();
 
                 return (item.Hierarchy, pixelOptions);
             })
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<D2D1PixelOption>.Default);
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<D2D1PixelOptions>.Default);
 
         // Generate the GetPixelOptions() methods
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>

@@ -178,7 +178,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The pixel options for the shader.
     /// </summary>
-    private D2D1PixelOption pixelOptions;
+    private D2D1PixelOptions pixelOptions;
 
     /// <summary>
     /// The shader bytecode.
@@ -232,7 +232,7 @@ internal unsafe partial struct PixelShaderEffect
         D2D1PixelShaderInputType* inputTypes,
         int inputDescriptionCount,
         D2D1InputDescription* inputDescriptions,
-        D2D1PixelOption pixelOptions,
+        D2D1PixelOptions pixelOptions,
         byte* bytecode,
         int bytecodeSize,
         D2D1BufferPrecision bufferPrecision,

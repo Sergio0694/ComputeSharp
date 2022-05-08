@@ -16,7 +16,7 @@ public sealed class D2DPixelOptionsAttribute : Attribute
     /// Creates a new instance of the <see cref="D2DPixelOptionsAttribute"/> type with the specified arguments.
     /// </summary>
     /// <param name="options">The options to specify for the shader.</param>
-    public D2DPixelOptionsAttribute(D2D1PixelOption options)
+    public D2DPixelOptionsAttribute(D2D1PixelOptions options)
     {
         Options = options;
     }
@@ -24,5 +24,5 @@ public sealed class D2DPixelOptionsAttribute : Attribute
     /// <summary>
     /// Gets the options to specify for the shader.
     /// </summary>
-    public D2D1PixelOption Options { get; }
+    public D2D1PixelOptions Options { get; }
 }
