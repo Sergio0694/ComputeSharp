@@ -586,4 +586,36 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "D2D1 shaders can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range input description index (or more).
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using some out of range input description indices"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor OutOfRangeInputDescriptionIndex = new DiagnosticDescriptor(
+        id: "CMPSD2D0042",
+        title: "Our of range D2D1 shader input description indices",
+        messageFormat: "The D2D1 shader of type {0} is using some out of range input description indices",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must have all the indices of its input descriptions in the valid range (between 0 and the number of declared inputs).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for repeated indices for D2D input descriptions.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputDescription] attributes"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor RepeatedD2DInputDescriptionIndices = new DiagnosticDescriptor(
+        id: "CMPSD2D0043",
+        title: "Repeated D2D1 shader input description indices",
+        messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputDescription] attributes",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must only have unique indices for all of its [D2DInputDescription] attributes.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
