@@ -81,6 +81,19 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the pixel options from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the pixel options for.</typeparam>
+    /// <returns>The pixel options for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1PixelOption GetPixelOptions<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return (D2D1PixelOption)shader.GetPixelOptions();
+    }
+
+    /// <summary>
     /// Gets the number of inputs from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
