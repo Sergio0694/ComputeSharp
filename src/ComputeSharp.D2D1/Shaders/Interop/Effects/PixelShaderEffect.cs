@@ -162,6 +162,20 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1PixelShaderInputType* inputTypes;
 
     /// <summary>
+    /// The number of available input descriptions.
+    /// </summary>
+    private int inputDescriptionCount;
+
+    /// <summary>
+    /// The buffer with the available input descriptions for the shader.
+    /// </summary>
+    /// <remarks>
+    /// This buffer is also shared among effect instances, so it should not be released. It is
+    /// owned by <see cref="For{T}"/>, which will release it when the target type is unloaded.
+    /// </remarks>
+    private D2D1InputDescription* inputDescriptions;
+
+    /// <summary>
     /// The shader bytecode.
     /// </summary>
     private byte* bytecode;
@@ -197,6 +211,8 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
     /// <param name="inputCount">The number of inputs for the shader.</param>
     /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
+    /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
+    /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
     /// <param name="bytecode">The shader bytecode.</param>
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
     /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
@@ -208,6 +224,8 @@ internal unsafe partial struct PixelShaderEffect
         Guid shaderId,
         int inputCount,
         D2D1PixelShaderInputType* inputTypes,
+        int inputDescriptionCount,
+        D2D1InputDescription* inputDescriptions,
         byte* bytecode,
         int bytecodeSize,
         D2D1BufferPrecision bufferPrecision,
@@ -225,6 +243,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->shaderId = shaderId;
         @this->inputCount = inputCount;
         @this->inputTypes = inputTypes;
+        @this->inputDescriptionCount = inputDescriptionCount;
+        @this->inputDescriptions = inputDescriptions;
         @this->bytecode = bytecode;
         @this->bytecodeSize = bytecodeSize;
         @this->bufferPrecision = bufferPrecision;

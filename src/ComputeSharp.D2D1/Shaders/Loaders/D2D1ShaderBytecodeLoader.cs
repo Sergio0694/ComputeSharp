@@ -9,7 +9,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.D2D1.Shaders.Dispatching;
+namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
 /// A bytecode loader for D2D1 shaders.
@@ -46,7 +46,8 @@ internal unsafe struct D2D1ShaderBytecodeLoader : ID2D1BytecodeLoader
     }
 
     /// <inheritdoc/>
-    public unsafe void LoadDynamicBytecode(IntPtr handle)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    unsafe void ID2D1BytecodeLoader.LoadDynamicBytecode(IntPtr handle)
     {
         if (this.embeddedBytecodePtr is not null ||
             this.d3DBlob.Get() is not null)
@@ -64,7 +65,7 @@ internal unsafe struct D2D1ShaderBytecodeLoader : ID2D1BytecodeLoader
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void LoadEmbeddedBytecode(ReadOnlySpan<byte> bytecode)
+    void ID2D1BytecodeLoader.LoadEmbeddedBytecode(ReadOnlySpan<byte> bytecode)
     {
         if (this.embeddedBytecodePtr is not null ||
             this.d3DBlob.Get() is not null)

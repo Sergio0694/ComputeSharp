@@ -19,12 +19,12 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the input info for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="combinedInputTypes">The combined and serialized input types for each available input.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         public static void GetInfo(
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,

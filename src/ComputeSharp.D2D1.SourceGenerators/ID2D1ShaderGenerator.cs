@@ -269,5 +269,41 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetOutputBuffer)}", compilationUnit.ToFullString());
         });
+
+        // Get the input description data, which can also be computed separately from all other generation steps.
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<InputDescriptionsInfo> Info)> inputDescriptionsInfoWithErrors =
+            shaderDeclarations
+            .Select(static (item, token) =>
+            {
+                // LoadInputDescriptions() info
+                LoadInputDescriptions.GetInfo(
+                    item.Symbol,
+                    out ImmutableArray<InputDescription> inputDescriptions,
+                    out ImmutableArray<Diagnostic> diagnostics);
+
+                token.ThrowIfCancellationRequested();
+
+                InputDescriptionsInfo inputDescriptionsInfo = new(inputDescriptions);
+
+                return (item.Hierarchy, new Result<InputDescriptionsInfo>(inputDescriptionsInfo, diagnostics));
+            });
+
+        // Output the diagnostics
+        context.ReportDiagnostics(inputDescriptionsInfoWithErrors.Select(static (item, token) => item.Info.Errors));
+
+        // Get the filtered sequence to enable caching
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputDescriptionsInfo Info)> inputDescriptionsInfo =
+            inputDescriptionsInfoWithErrors
+            .Select(static (item, token) => (item.Hierarchy, item.Info.Value))
+            .WithComparers(HierarchyInfo.Comparer.Default, InputDescriptionsInfo.Comparer.Default);
+
+        // Generate the LoadInputDescriptions() methods
+        context.RegisterSourceOutput(inputDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        {
+            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Left.Info);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadInputDescriptionsMethod, item.Right);
+
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadInputDescriptions)}", compilationUnit.ToFullString());
+        });
     }
 }

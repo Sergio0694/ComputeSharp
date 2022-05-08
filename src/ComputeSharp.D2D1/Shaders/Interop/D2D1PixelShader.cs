@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Helpers;
-using ComputeSharp.D2D1.Shaders.Dispatching;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
+using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -111,6 +111,23 @@ public static class D2D1PixelShader
         }
 
         return (D2D1PixelShaderInputType)shader.GetInputType((uint)index);
+    }
+
+    /// <summary>
+    /// Gets the available input descriptions for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input descriptions for.</typeparam>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available input descriptions for the shader.</returns>
+    public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        D2D1ByteArrayInputDescriptionsLoader inputDescriptionsLoader = default;
+
+        Unsafe.SkipInit(out T shader);
+
+        shader.LoadInputDescriptions(ref inputDescriptionsLoader);
+
+        return inputDescriptionsLoader.GetResultingInputDescriptions();
     }
 
     /// <summary>

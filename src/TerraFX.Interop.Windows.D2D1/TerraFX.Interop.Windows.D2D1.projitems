@@ -11,8 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\DirectX\um\d3d11shader\D3D.cs" Link="DirectX\um\d3d11shader\D3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_CHANGE_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_FILTER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_PIXEL_OPTIONS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_PROPERTY_BINDING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_INPUT_DESCRIPTION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1DrawTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectImpl.cs" />

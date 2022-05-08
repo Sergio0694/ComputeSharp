@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Shaders.Dispatching;
+using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
