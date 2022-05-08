@@ -8,8 +8,8 @@ using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
-using ComputeSharp.D2D1.Shaders.Dispatching;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
+using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 

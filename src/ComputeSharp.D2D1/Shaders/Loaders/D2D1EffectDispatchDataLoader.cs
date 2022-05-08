@@ -7,7 +7,7 @@ using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.D2D1.Shaders.Dispatching;
+namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
 /// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1Effect"/>.
@@ -30,7 +30,7 @@ internal readonly unsafe struct D2D1EffectDispatchDataLoader : ID2D1DispatchData
     }
 
     /// <inheritdoc/>
-    public void LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
     {
         if (data.IsEmpty)
         {

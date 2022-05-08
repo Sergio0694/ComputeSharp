@@ -6,7 +6,7 @@ using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.D2D1.Shaders.Dispatching;
+namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
 /// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1DrawInfo"/>.
@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.Shaders.Dispatching;
 internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
 {
     /// <summary>
-    /// The <see cref="ID2D1DrawInfo"/> object in use.
+    /// The resulting array with the constant buffer to use.
     /// </summary>
     private byte[]? data;
 
@@ -29,7 +29,7 @@ internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
     }
 
     /// <inheritdoc/>
-    public void LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
     {
         this.data = MemoryMarshal.AsBytes(data).ToArray();
     }
