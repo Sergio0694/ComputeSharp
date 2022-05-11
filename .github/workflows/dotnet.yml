@@ -25,8 +25,14 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: msbuild -t:restore,build /p:Configuration=Debug /p:Platform=x64
+      run: msbuild -t:restore,build /p:Configuration=Debug /p:Platform=x64 /bl
       shell: cmd
+    - name: Upload MSBuild binary log
+      uses: actions/upload-artifact@v2
+      with:
+        name: msbuild_log
+        path: msbuild.binlog
+        if-no-files-found: error
 
   # Build the whole ComputeSharp solution, in Release
   build-solution-release:

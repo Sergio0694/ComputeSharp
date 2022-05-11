@@ -19,13 +19,36 @@
   -->
   <PropertyGroup>
     <ComputeSharpPackageVersion>2.0.0</ComputeSharpPackageVersion>
+    <IsCommitOnReleaseBranch>false</IsCommitOnReleaseBranch>
   </PropertyGroup>
 
+  <!--
+    Check if the current push is for a release build for NuGet, as that will create a package with a hardcoded version.
+    A release build is one that originates from a push to a branch with the format 'rel/<BUILD_VERSION>(.<SUFFIX>)?'.
+  -->
+  <PropertyGroup>
+    <ReleaseVersionParsingRegex>^rel/(\d{1,4}\.\d{1,4}\.\d{1,4})(?:-(\w+(?:\.\w+)?))?$</ReleaseVersionParsingRegex>
+    <IsBranchNameStartingWithRefPrefix>$([System.Text.RegularExpressions.Regex]::IsMatch($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)))</IsBranchNameStartingWithRefPrefix>
+  </PropertyGroup>
+
+  <!-- If the current branch and action match a release for NuGet, override the relative build properties -->
+  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">    
+    <IsCommitOnReleaseBranch>true</IsCommitOnReleaseBranch>
+    <ComputeSharpPackageVersionFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[1].Value)</ComputeSharpPackageVersionFromReleaseBranch>
+    <ComputeSharpPackageVersionSuffixFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[2].Value)</ComputeSharpPackageVersionSuffixFromReleaseBranch>
+    <ComputeSharpPackageVersion>$(ComputeSharpPackageVersionFromReleaseBranch)</ComputeSharpPackageVersion>
+    <VersionSuffix>$(ComputeSharpPackageVersionSuffixFromReleaseBranch)</VersionSuffix>
+  </PropertyGroup>
+
+  <!-- Configure the assembly version and suffix for both normal CI builds and release builds -->
   <PropertyGroup>
     <AssemblyVersion>$(ComputeSharpPackageVersion).0</AssemblyVersion>
     <VersionPrefix>$(ComputeSharpPackageVersion)</VersionPrefix>
-    <VersionSuffix Condition="'$(EXCLUDE_SUFFIX_FROM_VERSION)' != 'true'">alpha</VersionSuffix>
-    <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request'">pr</VersionSuffix>
+    <VersionSuffix Condition="'$(EXCLUDE_SUFFIX_FROM_VERSION)' != 'true' AND '$(IsCommitOnReleaseBranch)' != 'true'">alpha</VersionSuffix>
+    <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request' AND '$(IsCommitOnReleaseBranch)' != 'true'">pr</VersionSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
     <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
