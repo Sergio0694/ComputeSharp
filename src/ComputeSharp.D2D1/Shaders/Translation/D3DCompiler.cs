@@ -32,9 +32,9 @@ internal static unsafe partial class D3DCompiler
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
-    /// <param name="enableLinkingSupport">Whether to enable linking support for the shader.</param>
+    /// <param name="enableLinking">Whether to enable linking for the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, bool enableLinkingSupport)
+    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, bool enableLinking)
     {
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
@@ -51,7 +51,7 @@ internal static unsafe partial class D3DCompiler
                 target: ASCII.GetPixelShaderProfile(shaderProfile),
                 flags: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
 
-            if (!enableLinkingSupport)
+            if (!enableLinking)
             {
                 return d3DBlobFullShader.Move();
             }
@@ -158,7 +158,7 @@ internal static unsafe partial class D3DCompiler
     /// <param name="shaderBlob">The bytecode for the full shader.</param>
     /// <param name="exportBlob">The bytecode for the shader function to export.</param>
     /// <returns>An <see cref="ID3DBlob"/> instance with the combined data of <paramref name="shaderBlob"/> and <paramref name="exportBlob"/>.</returns>
-    private static ComPtr<ID3DBlob> SetD3DPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
+    public static ComPtr<ID3DBlob> SetD3DPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
     {
         void* shaderPtr = shaderBlob->GetBufferPointer();
         nuint shaderSize = shaderBlob->GetBufferSize();
@@ -209,7 +209,7 @@ internal static unsafe partial class D3DCompiler
     /// <summary>
     /// A container for ASCII encoded, null-terminated constant strings.
     /// </summary>
-    private static class ASCII
+    public static class ASCII
     {
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"D2D_FUNCTION"</c> ASCII text.
