@@ -20,7 +20,7 @@ namespace ComputeSharp.D2D1.Shaders.Translation;
 /// <summary>
 /// A <see langword="class"/> that uses the FXC APIs to compile D2D1 pixel shaders.
 /// </summary>
-internal static unsafe partial class D2D1ShaderCompiler
+internal static unsafe partial class D3DCompiler
 {
     /// <summary>
     /// The <see cref="ID3DInclude"/> instance to load <c>d2d1effecthelpers.hlsli</c>.
@@ -36,76 +36,105 @@ internal static unsafe partial class D2D1ShaderCompiler
     /// <returns>The bytecode for the compiled shader.</returns>
     public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, bool enableLinkingSupport)
     {
-        // Compile the standalone D2D1 full shader
-        using ComPtr<ID3DBlob> d3DBlobFullShader = CompileD2DFullShader(source, shaderProfile);
-
-        if (!enableLinkingSupport)
-        {
-            return d3DBlobFullShader.Move();
-        }
-
-        // Compile the export function and embed it as private data if requested
-        using ComPtr<ID3DBlob> d3DBlobFunction = CompileD2DFunction(source, shaderProfile);
-        using ComPtr<ID3DBlob> d3DBlobLinked = EmbedD2DFunctionPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
-
-        return d3DBlobLinked.Move();
-    }
-
-    /// <summary>
-    /// Compiles a D2D1 pixel shader with <c>D2D_FULL_SHADER</c>.
-    /// </summary>
-    /// <param name="source">The HLSL source code to compile.</param>
-    /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
-    /// <returns>The bytecode for the compiled shader.</returns>
-    private static ComPtr<ID3DBlob> CompileD2DFullShader(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile)
-    {
-        // Encode the HLSL source to ASCII
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
         int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
 
+        try
+        {
+            // Compile the standalone D2D1 full shader
+            using ComPtr<ID3DBlob> d3DBlobFullShader = CompileShader(
+                buffer.AsSpan(0, writtenBytes),
+                ASCII.D2D_FULL_SHADER,
+                ASCII.Execute,
+                ASCII.GetPixelShaderProfile(shaderProfile),
+                D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+
+            if (!enableLinkingSupport)
+            {
+                return d3DBlobFullShader.Move();
+            }
+
+            // Compile the export function
+            using ComPtr<ID3DBlob> d3DBlobFunction = CompileShader(
+                buffer.AsSpan(0, writtenBytes),
+                ASCII.D2D_FUNCTION,
+                ASCII.Execute,
+                ASCII.GetLibraryProfile(shaderProfile),
+                D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+
+            // Embed it as private data if requested
+            using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
+
+            return d3DBlobLinked.Move();
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
+
+    /// <summary>
+    /// Compiles a D2D1 pixel shader with the specified parameters.
+    /// </summary>
+    /// <param name="source">The HLSL source code to compile (in ASCII).</param>
+    /// <param name="macro">The target macro to define for the shader (either <c>D2D_FULL_SHADER</c> or <c>D2D_FUNCTION</c>).</param>
+    /// <param name="entryPoint">The entry point for the shader.</param>
+    /// <param name="target">The shader target to use to compile the input source.</param>
+    /// <param name="flags">The compilationm flag to use.</param>
+    /// <returns>The bytecode for the compiled shader.</returns>
+    /// <exception cref="FxcCompilationException">Thrown if the compilation fails.</exception>
+    public static ComPtr<ID3DBlob> CompileShader(
+        ReadOnlySpan<byte> source,
+        ReadOnlySpan<byte> macro,
+        ReadOnlySpan<byte> entryPoint,
+        ReadOnlySpan<byte> target,
+        uint flags)
+    {
         using ComPtr<ID3DBlob> d3DBlobBytecode = default;
         using ComPtr<ID3DBlob> d3DBlobErrors = default;
 
         int hResult;
 
-        fixed (byte* bufferPtr = buffer)
+        fixed (byte* sourcePtr = source)
+        fixed (byte* macroPtr = macro)
+        fixed (byte* entryPointPtr = entryPoint)
+        fixed (byte* targetPtr = target)
         {
             // Prepare the macros for full shader compilation:
             //
-            // -D D2D_FULL_SHADER
-            // -D D2D_ENTRY=Execute
+            // -D <MACRO>
+            // -D D2D_ENTRY=<ENTRY_POINT>
+            // <EMPTY_MARKER>
             D3D_SHADER_MACRO* macros = stackalloc D3D_SHADER_MACRO[]
             {
                 new()
                 {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_FULL_SHADER)),
+                    Name = (sbyte*)macroPtr,
                     Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.NullTerminator))
                 },
                 new()
                 {
                     Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_ENTRY)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute))
+                    Definition = (sbyte*)entryPointPtr
                 },
                 new()
             };
 
-            // Compile the shader with -ps_5_0 -O3 -We -Zpr
+            // Compile the shader
             hResult = DirectX.D3DCompile(
-                pSrcData: bufferPtr,
-                SrcDataSize: (nuint)writtenBytes,
+                pSrcData: sourcePtr,
+                SrcDataSize: (nuint)source.Length,
                 pSourceName: null,
                 pDefines: macros,
                 pInclude: D3DIncludeForD2D1EffectHelpers,
-                pEntrypoint: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute)),
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetPixelShaderProfile(shaderProfile))),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
+                pEntrypoint: (sbyte*)entryPointPtr,
+                pTarget: (sbyte*)targetPtr,
+                Flags1: flags,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),
                 ppErrorMsgs: d3DBlobErrors.GetAddressOf());
         }
-
-        ArrayPool<byte>.Shared.Return(buffer);
 
         // Throw if an error was retrieved, then also double check the HRESULT
         if (d3DBlobErrors.Get() is not null)
@@ -119,78 +148,12 @@ internal static unsafe partial class D2D1ShaderCompiler
     }
 
     /// <summary>
-    /// Compiles a D2D1 pixel shader with <c>D2D_FUNCTION</c>.
-    /// </summary>
-    /// <param name="source">The HLSL source code to compile.</param>
-    /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
-    /// <returns>The bytecode for the compiled shader.</returns>
-    private static ComPtr<ID3DBlob> CompileD2DFunction(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile)
-    {
-        int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
-        int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
-
-        using ComPtr<ID3DBlob> d3DBlobBytecode = default;
-        using ComPtr<ID3DBlob> d3DBlobErrors = default;
-
-        int hResult;
-
-        fixed (byte* bufferPtr = buffer)
-        {
-            // Prepare the macros for full shader compilation:
-            //
-            // -D D2D_FUNCTION
-            // -D D2D_ENTRY=Execute
-            D3D_SHADER_MACRO* macros = stackalloc D3D_SHADER_MACRO[]
-            {
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_FUNCTION)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.NullTerminator))
-                },
-                new()
-                {
-                    Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_ENTRY)),
-                    Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.Execute))
-                },
-                new()
-            };
-
-            // Compile the shader with -lib_5_0 -O3 -We -Zpr
-            hResult = DirectX.D3DCompile(
-                pSrcData: bufferPtr,
-                SrcDataSize: (nuint)writtenBytes,
-                pSourceName: null,
-                pDefines: macros,
-                pInclude: D3DIncludeForD2D1EffectHelpers,
-                pEntrypoint: null,
-                pTarget: (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.GetLibraryProfile(shaderProfile))),
-                Flags1: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
-                Flags2: 0,
-                ppCode: d3DBlobBytecode.GetAddressOf(),
-                ppErrorMsgs: d3DBlobErrors.GetAddressOf());
-        }
-
-        ArrayPool<byte>.Shared.Return(buffer);
-
-        // Check for errors and double check like above
-        if (d3DBlobErrors.Get() is not null)
-        {
-            ThrowHslsCompilationException(d3DBlobErrors.Get());
-        }
-
-        hResult.Assert();
-
-        return d3DBlobBytecode.Move();
-    }
-
-    /// <summary>
     /// Embeds the bytecode for an exported shader as private data into another shader bytecode.
     /// </summary>
-    /// <param name="shaderBlob">The bytecode produced by <see cref="CompileD2DFullShader(ReadOnlySpan{char}, D2D1ShaderProfile)"/>.</param>
-    /// <param name="exportBlob">The bytecode produced by <see cref="CompileD2DFunction(ReadOnlySpan{char}, D2D1ShaderProfile)"/>.</param>
+    /// <param name="shaderBlob">The bytecode for the full shader.</param>
+    /// <param name="exportBlob">The bytecode for the shader function to export.</param>
     /// <returns>An <see cref="ID3DBlob"/> instance with the combined data of <paramref name="shaderBlob"/> and <paramref name="exportBlob"/>.</returns>
-    private static ComPtr<ID3DBlob> EmbedD2DFunctionPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
+    private static ComPtr<ID3DBlob> SetD3DPrivateData(ID3DBlob* shaderBlob, ID3DBlob* exportBlob)
     {
         void* shaderPtr = shaderBlob->GetBufferPointer();
         nuint shaderSize = shaderBlob->GetBufferSize();

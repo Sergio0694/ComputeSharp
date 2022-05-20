@@ -28,7 +28,7 @@ public static class D2D1ShaderCompiler
     {
         Unsafe.AsRef(in shader).BuildHlslSource(out string hlslSource);
 
-        using ComPtr<ID3DBlob> d3DBlobBytecode = Shaders.Translation.D2D1ShaderCompiler.Compile(
+        using ComPtr<ID3DBlob> d3DBlobBytecode = Shaders.Translation.D3DCompiler.Compile(
             hlslSource.AsSpan(),
             shaderProfile ?? D2D1ShaderProfile.PixelShader50,
             enableLinkingSupport);
