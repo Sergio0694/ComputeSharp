@@ -44,11 +44,12 @@ internal static unsafe partial class D3DCompiler
         {
             // Compile the standalone D2D1 full shader
             using ComPtr<ID3DBlob> d3DBlobFullShader = CompileShader(
-                buffer.AsSpan(0, writtenBytes),
-                ASCII.D2D_FULL_SHADER,
-                ASCII.Execute,
-                ASCII.GetPixelShaderProfile(shaderProfile),
-                D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+                source: buffer.AsSpan(0, writtenBytes),
+                macro: ASCII.D2D_FULL_SHADER,
+                d2DEntry: ASCII.Execute,
+                entryPoint: ASCII.Execute,
+                target: ASCII.GetPixelShaderProfile(shaderProfile),
+                flags: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
 
             if (!enableLinkingSupport)
             {
@@ -57,11 +58,12 @@ internal static unsafe partial class D3DCompiler
 
             // Compile the export function
             using ComPtr<ID3DBlob> d3DBlobFunction = CompileShader(
-                buffer.AsSpan(0, writtenBytes),
-                ASCII.D2D_FUNCTION,
-                ASCII.Execute,
-                ASCII.GetLibraryProfile(shaderProfile),
-                D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+                source: buffer.AsSpan(0, writtenBytes),
+                macro: ASCII.D2D_FUNCTION,
+                d2DEntry: ASCII.Execute,
+                entryPoint: default,
+                target: ASCII.GetLibraryProfile(shaderProfile),
+                flags: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
 
             // Embed it as private data if requested
             using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
@@ -79,6 +81,7 @@ internal static unsafe partial class D3DCompiler
     /// </summary>
     /// <param name="source">The HLSL source code to compile (in ASCII).</param>
     /// <param name="macro">The target macro to define for the shader (either <c>D2D_FULL_SHADER</c> or <c>D2D_FUNCTION</c>).</param>
+    /// <param name="d2DEntry">The D2D entry to specify when compiling the shader.</param>
     /// <param name="entryPoint">The entry point for the shader.</param>
     /// <param name="target">The shader target to use to compile the input source.</param>
     /// <param name="flags">The compilationm flag to use.</param>
@@ -87,6 +90,7 @@ internal static unsafe partial class D3DCompiler
     public static ComPtr<ID3DBlob> CompileShader(
         ReadOnlySpan<byte> source,
         ReadOnlySpan<byte> macro,
+        ReadOnlySpan<byte> d2DEntry,
         ReadOnlySpan<byte> entryPoint,
         ReadOnlySpan<byte> target,
         uint flags)
@@ -98,13 +102,14 @@ internal static unsafe partial class D3DCompiler
 
         fixed (byte* sourcePtr = source)
         fixed (byte* macroPtr = macro)
+        fixed (byte* d2DEntryPtr = d2DEntry)
         fixed (byte* entryPointPtr = entryPoint)
         fixed (byte* targetPtr = target)
         {
             // Prepare the macros for full shader compilation:
             //
             // -D <MACRO>
-            // -D D2D_ENTRY=<ENTRY_POINT>
+            // -D D2D_ENTRY=<D2DENTRY>
             // <EMPTY_MARKER>
             D3D_SHADER_MACRO* macros = stackalloc D3D_SHADER_MACRO[]
             {
@@ -116,7 +121,7 @@ internal static unsafe partial class D3DCompiler
                 new()
                 {
                     Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_ENTRY)),
-                    Definition = (sbyte*)entryPointPtr
+                    Definition = (sbyte*)d2DEntryPtr
                 },
                 new()
             };
