@@ -14,7 +14,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Translation;
 
 /// <inheritdoc/>
-partial class D2D1ShaderCompiler
+partial class D3DCompiler
 {
     /// <summary>
     /// A custom <see cref="ID3DInclude"/> fallback implementation to use on systems with no support for it.
