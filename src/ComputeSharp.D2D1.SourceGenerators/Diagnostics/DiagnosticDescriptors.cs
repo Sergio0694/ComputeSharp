@@ -634,4 +634,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A D2D1 shader generated with ComputeSharp.D2D1 cannot use the PackMatrixColumnMajor option, as that is not compatible with the generated code used to load shader constant buffers.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for the EnableLinking option being used.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using the EnableLinking option in its [D2DCompileOptions] attribute for a non-linkable shader"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidEnableLinkingOption = new DiagnosticDescriptor(
+        id: "CMPSD2D0045",
+        title: "Invalid EnableLinking compile option",
+        messageFormat: "The D2D1 shader of type {0} is using the EnableLinking option in its [D2DCompileOptions] attribute for a non-linkable shader",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader generated with ComputeSharp.D2D1 cannot use the EnableLinking option if the shader is non-linkable (ie. if it has any complex inputs).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

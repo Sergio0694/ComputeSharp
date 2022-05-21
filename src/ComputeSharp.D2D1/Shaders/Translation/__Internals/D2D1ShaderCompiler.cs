@@ -31,7 +31,7 @@ public static class D2D1ShaderCompiler
         using ComPtr<ID3DBlob> d3DBlobBytecode = Shaders.Translation.D3DCompiler.Compile(
             hlslSource.AsSpan(),
             shaderProfile ?? D2D1ShaderProfile.PixelShader50,
-            enableLinkingSupport);
+            D2D1CompileOptions.Default | (enableLinkingSupport ? D2D1CompileOptions.EnableLinking : 0));
 
         loader.LoadDynamicBytecode((IntPtr)d3DBlobBytecode.Get());
     }

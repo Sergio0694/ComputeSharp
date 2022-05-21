@@ -46,8 +46,12 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="isLinkingSupported">Whether or not linking is supported for the current shader.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static D2D1CompileOptions? GetCompileOptions(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
+            INamedTypeSymbol structDeclarationSymbol,
+            bool isLinkingSupported)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -61,7 +65,16 @@ partial class ID2D1ShaderGenerator
                         structDeclarationSymbol);
                 }
 
-                return options;
+                if ((options & D2D1CompileOptions.EnableLinking) != 0 && !isLinkingSupported)
+                {
+                    diagnostics.Add(
+                        InvalidEnableLinkingOption,
+                        structDeclarationSymbol,
+                        structDeclarationSymbol);
+                }
+
+                // PackMatrixRowMajor is always automatically enabled
+                return options | D2D1CompileOptions.PackMatrixRowMajor;
             }
 
             return null;
@@ -105,8 +118,7 @@ partial class ID2D1ShaderGenerator
             // No embedded shader was requested, or there were some errors earlier in the pipeline.
             // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
             // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
-            if (sourceInfo.HasErrors ||
-                sourceInfo.ShaderProfile is null)
+            if (sourceInfo is { HasErrors: true } or { ShaderProfile: null })
             {
                 diagnostic = null;
 
@@ -121,7 +133,7 @@ partial class ID2D1ShaderGenerator
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                     sourceInfo.HlslSource.AsSpan(),
                     sourceInfo.ShaderProfile.Value,
-                    sourceInfo.IsLinkingSupported);
+                    sourceInfo.CompileOptions ?? D2D1CompileOptions.Default);
 
                 token.ThrowIfCancellationRequested();
 
