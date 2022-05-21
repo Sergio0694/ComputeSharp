@@ -23,14 +23,14 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
         /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
             ITypeSymbol structDeclarationSymbol,
-            out int root32BitConstantCount,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out int root32BitConstantCount)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -78,8 +78,6 @@ partial class ID2D1ShaderGenerator
                 }
             }
 
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
-
             // Setup the resource and byte offsets for tracking
             StrongBox<int> rawDataOffsetAsBox = new();
 
@@ -107,10 +105,8 @@ partial class ID2D1ShaderGenerator
 
             if (rootSignatureDwordSize > 64)
             {
-                builder.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
-
-            diagnostics = builder.ToImmutable();
 
             return fieldInfos;
         }

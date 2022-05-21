@@ -19,22 +19,20 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the input info for the current shader.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="combinedInputTypes">The combined and serialized input types for each available input.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         public static void GetInfo(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,
             out ImmutableArray<int> inputComplexIndices,
-            out ImmutableArray<uint> combinedInputTypes,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<uint> combinedInputTypes)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
-
             // We need a separate local here so we can keep the original value to apply
             // diagnostics to, but without returning invalid values to the caller which
             // might cause generator errors (eg. -1 would cause other code to just throw).
@@ -71,17 +69,17 @@ partial class ID2D1ShaderGenerator
             // Validate the input count
             if (rawInputCount is not (>= 0 and <= 8))
             {
-                builder.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(InvalidD2DInputCount, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             // All simple indices must be in range
             if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => (uint)i >= rawInputCount))
             {
-                builder.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
@@ -90,25 +88,25 @@ partial class ID2D1ShaderGenerator
             // All simple indices must be unique
             if (inputSimpleIndicesAsSet.Count != inputSimpleIndicesBuilder.Count)
             {
-                builder.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             // All complex indices must be unique
             if (inputComplexIndicesAsSet.Count != inputComplexIndicesBuilder.Count)
             {
-                builder.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             // Simple and complex indices can't have indices in common
             if (inputSimpleIndicesAsSet.Intersect(inputComplexIndicesAsSet).Any())
             {
-                builder.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             // Build the combined input types list now that inputs have been validated
@@ -125,9 +123,6 @@ partial class ID2D1ShaderGenerator
             }
 
             combinedInputTypes = combinedBuilder.MoveToImmutable();
-
-            End:
-            diagnostics = builder.ToImmutable();
         }
     }
 }
