@@ -42,6 +42,32 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
+        /// Extracts the compile options for the current shader.
+        /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <returns>The compile options to use to compile the shader, if present.</returns>
+        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        {
+            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
+            {
+                D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
+
+                if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
+                {
+                    diagnostics.Add(
+                        InvalidPackMatrixColumnMajorOption,
+                        structDeclarationSymbol,
+                        structDeclarationSymbol);
+                }
+
+                return options;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Extracts the metadata definition for the current shader.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>

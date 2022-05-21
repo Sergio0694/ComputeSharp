@@ -5,6 +5,12 @@
 /// </summary>
 /// <param name="HlslSource">The HLSL source.</param>
 /// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
+/// <param name="CompileOptions">The compile options to use to compile the shader.</param>
 /// <param name="IsLinkingSupported">Whether the shader supports linking.</param>
 /// <param name="HasErrors">Whether any errors have been detected, and therefore the shader compilation should be skipped.</param>
-internal sealed record HlslShaderSourceInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, bool IsLinkingSupported, bool HasErrors);
+internal sealed record HlslShaderSourceInfo(
+    string HlslSource,
+    D2D1ShaderProfile? ShaderProfile,
+    D2D1CompileOptions? CompileOptions,
+    bool IsLinkingSupported,
+    bool HasErrors);
