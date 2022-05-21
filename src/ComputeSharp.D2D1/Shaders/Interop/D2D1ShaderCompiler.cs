@@ -19,22 +19,22 @@ public static class D2D1ShaderCompiler
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
-    /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="hlslSource">The HLSL source code to compile.</param>
     /// <param name="entryPoint">The entry point of the shader being compiled.</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="options">The compiler options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
     /// <exception cref="FxcCompilationException">Thrown if the compilation fails.</exception>
     public static ReadOnlyMemory<byte> Compile(
-        ReadOnlySpan<char> source,
+        ReadOnlySpan<char> hlslSource,
         ReadOnlySpan<char> entryPoint,
         D2D1ShaderProfile shaderProfile,
         D2D1ShaderCompilerOptions options)
     {
         // Encode the HLSL source to ASCII
-        int maxSourceLength = Encoding.ASCII.GetMaxByteCount(source.Length);
+        int maxSourceLength = Encoding.ASCII.GetMaxByteCount(hlslSource.Length);
         byte[] sourceBuffer = ArrayPool<byte>.Shared.Rent(maxSourceLength);
-        int sourceWrittenBytes = Encoding.ASCII.GetBytes(source, sourceBuffer);
+        int sourceWrittenBytes = Encoding.ASCII.GetBytes(hlslSource, sourceBuffer);
 
         // Encode the entry point to ASCII
         int maxEntryPointLength = Encoding.ASCII.GetMaxByteCount(entryPoint.Length);
@@ -50,15 +50,15 @@ public static class D2D1ShaderCompiler
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
-    /// <param name="source">The HLSL source code to compile (in ASCII).</param>
-    /// <param name="entryPoint">The entry point of the shader being compiled (in ASCII).</param>
+    /// <param name="hlslSourceAscii">The HLSL source code to compile (in ASCII).</param>
+    /// <param name="entryPointAscii">The entry point of the shader being compiled (in ASCII).</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="options">The compiler options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
     /// <exception cref="FxcCompilationException">Thrown if the compilation fails.</exception>
     public static unsafe ReadOnlyMemory<byte> Compile(
-        ReadOnlySpan<byte> source,
-        ReadOnlySpan<byte> entryPoint,
+        ReadOnlySpan<byte> hlslSourceAscii,
+        ReadOnlySpan<byte> entryPointAscii,
         D2D1ShaderProfile shaderProfile,
         D2D1ShaderCompilerOptions options)
     {
@@ -70,10 +70,10 @@ public static class D2D1ShaderCompiler
 
         // Compile the standalone D2D1 full shader
         using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.CompileShader(
-            source: source,
+            source: hlslSourceAscii,
             macro: D3DCompiler.ASCII.D2D_FULL_SHADER,
-            d2DEntry: entryPoint,
-            entryPoint: entryPoint,
+            d2DEntry: entryPointAscii,
+            entryPoint: entryPointAscii,
             target: D3DCompiler.ASCII.GetPixelShaderProfile(shaderProfile),
             flags: (uint)options);
 
@@ -87,9 +87,9 @@ public static class D2D1ShaderCompiler
 
         // Compile the export function
         using ComPtr<ID3DBlob> d3DBlobFunction = D3DCompiler.CompileShader(
-            source: source,
+            source: hlslSourceAscii,
             macro: D3DCompiler.ASCII.D2D_FUNCTION,
-            d2DEntry: entryPoint,
+            d2DEntry: entryPointAscii,
             entryPoint: default,
             target: D3DCompiler.ASCII.GetLibraryProfile(shaderProfile),
             flags: (uint)options);
