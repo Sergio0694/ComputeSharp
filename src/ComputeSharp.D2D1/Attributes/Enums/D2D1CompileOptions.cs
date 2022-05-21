@@ -1,5 +1,7 @@
 ﻿using System;
+#if !SOURCE_GENERATOR
 using ComputeSharp.D2D1.Interop;
+#endif
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.D2D1;
