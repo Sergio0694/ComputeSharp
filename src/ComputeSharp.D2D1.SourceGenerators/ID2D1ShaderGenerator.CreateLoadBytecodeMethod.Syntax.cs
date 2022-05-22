@@ -95,13 +95,13 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile ?? <DEFAULT_PROFILE>, options ?? <REQUESTED_OPTIONS>);
+            // global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile ?? <DEFAULT_PROFILE>, options ?? <REQUESTED_OPTIONS>);
             ExpressionStatementSyntax dynamicLoadingStatement =
                 ExpressionStatement(
                     InvocationExpression(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
+                            IdentifierName("global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
                             IdentifierName("LoadDynamicBytecode")))
                     .AddArgumentListArguments(
                         Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
