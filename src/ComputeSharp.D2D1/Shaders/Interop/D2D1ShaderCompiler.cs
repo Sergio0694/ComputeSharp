@@ -29,7 +29,7 @@ public static class D2D1ShaderCompiler
         ReadOnlySpan<char> hlslSource,
         ReadOnlySpan<char> entryPoint,
         D2D1ShaderProfile shaderProfile,
-        D2D1ShaderCompilerOptions options)
+        D2D1CompileOptions options)
     {
         // Encode the HLSL source to ASCII
         int maxSourceLength = Encoding.ASCII.GetMaxByteCount(hlslSource.Length);
@@ -60,13 +60,13 @@ public static class D2D1ShaderCompiler
         ReadOnlySpan<byte> hlslSourceAscii,
         ReadOnlySpan<byte> entryPointAscii,
         D2D1ShaderProfile shaderProfile,
-        D2D1ShaderCompilerOptions options)
+        D2D1CompileOptions options)
     {
         // Check linking support
-        bool enableLinking = (options & D2D1ShaderCompilerOptions.EnableLinking) == D2D1ShaderCompilerOptions.EnableLinking;
+        bool enableLinking = (options & D2D1CompileOptions.EnableLinking) == D2D1CompileOptions.EnableLinking;
 
         // Remove the linking flag to make the options blittable to flags
-        options &= ~D2D1ShaderCompilerOptions.EnableLinking;
+        options &= ~D2D1CompileOptions.EnableLinking;
 
         // Compile the standalone D2D1 full shader
         using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.CompileShader(

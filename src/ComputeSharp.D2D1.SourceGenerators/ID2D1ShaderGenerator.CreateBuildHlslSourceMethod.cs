@@ -28,27 +28,25 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             int inputCount,
             ImmutableArray<int> inputSimpleIndices,
-            ImmutableArray<int> inputComplexIndices,
-            out ImmutableArray<Diagnostic> diagnostics)
+            ImmutableArray<int> inputComplexIndices)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
-
             // Properties are not supported
-            DetectAndReportInvalidPropertyDeclarations(builder, structDeclarationSymbol);
+            DetectAndReportInvalidPropertyDeclarations(diagnostics, structDeclarationSymbol);
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -57,18 +55,16 @@ partial class ID2D1ShaderGenerator
 
             // Explore the syntax tree and extract the processed info
             var semanticModelProvider = new SemanticModelProvider(compilation);
-            var valueFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes);
-            var (entryPoint, processedMethods) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions);
-            var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+            var valueFields = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes);
+            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions);
+            var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Process the discovered types and constants
-            var declaredTypes = GetDeclaredTypes(builder, structDeclarationSymbol, discoveredTypes);
+            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Check whether the scene position is required
             bool requiresScenePosition = GetRequiresScenePositionInfo(structDeclarationSymbol);
-
-            diagnostics = builder.ToImmutable();
 
             // Get the HLSL source
             return GetHlslSource(

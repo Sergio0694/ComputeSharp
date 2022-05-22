@@ -1,7 +1,10 @@
 ﻿using System;
+#if !SOURCE_GENERATOR
+using ComputeSharp.D2D1.Interop;
+#endif
 using TerraFX.Interop.DirectX;
 
-namespace ComputeSharp.D2D1.Interop;
+namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// Flags to control the options that can be used to compile a D2D1 shader.
@@ -10,7 +13,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// For more info, see For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/d3dcompile-constants"/>.
 /// </remarks>
 [Flags]
-public enum D2D1ShaderCompilerOptions
+public enum D2D1CompileOptions
 {
     /// <summary>
     /// Directs the compiler to insert debug file/line/type/symbol information into the output code.

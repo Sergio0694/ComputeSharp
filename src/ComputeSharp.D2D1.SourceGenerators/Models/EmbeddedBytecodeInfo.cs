@@ -11,9 +11,9 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// </summary>
 /// <param name="HlslSource">The HLSL source for the shader.</param>
 /// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
-/// <param name="IsLinkingSupported">Whether linking is supported for the current shader.</param>
+/// <param name="CompileOptions">The compile options to use to compile the shader.</param>
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
-internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, bool IsLinkingSupported, ImmutableArray<byte> Bytecode)
+internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, D2D1CompileOptions? CompileOptions, ImmutableArray<byte> Bytecode)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
@@ -25,7 +25,7 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile
         {
             hashCode.Add(obj.HlslSource);
             hashCode.Add(obj.ShaderProfile);
-            hashCode.Add(obj.IsLinkingSupported);
+            hashCode.Add(obj.CompileOptions);
             hashCode.AddBytes(obj.Bytecode.AsSpan());
         }
 
@@ -35,7 +35,7 @@ internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile
             return
                 x.HlslSource == y.HlslSource &&
                 x.ShaderProfile == y.ShaderProfile &&
-                x.IsLinkingSupported == y.IsLinkingSupported &&
+                x.CompileOptions == y.CompileOptions &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
         }
     }

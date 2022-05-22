@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using ComputeSharp.__Internals;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -39,7 +40,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, global::ComputeSharp.D2D1.D2D1ShaderProfile? shaderProfile)
+            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, global::ComputeSharp.D2D1.D2D1ShaderProfile? shaderProfile, global::ComputeSharp.D2D1.D2D1CompileOptions? options)
             // {
             //     <BODY>
             // }
@@ -50,7 +51,8 @@ partial class ID2D1ShaderGenerator
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")),
-                    Parameter(Identifier("shaderProfile")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))))
+                    Parameter(Identifier("shaderProfile")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))),
+                    Parameter(Identifier("options")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))))
                 .WithBody(block);
         }
 
@@ -62,21 +64,56 @@ partial class ID2D1ShaderGenerator
         /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
         private static unsafe BlockSyntax GetShaderBytecodeBody(EmbeddedBytecodeInfo bytecodeInfo, out string? bytecodeLiterals)
         {
+            // This method needs to handle several different scenarions, which are as follows:
+            //   1) If [EmbeddedBytecode] is used, then the shader is precompiled and stored as a ReadOnlySpan<byte>. In this case,
+            //      this bytecode would have been generated with some specific D2D1ShaderProfile and D2D1CompileOptions values. So,
+            //      a branch is generated to try to retrieve this precompiled bytecode, which can be returned if and only if the
+            //      requested shader profile and compile options are either null, or either matches the values that have been used
+            //      to generate that bytecode. If this is the case, then no further work is done and that binary data is returned.
+            //   2) If either the requested shader profile or options do not match the values used to create the shader bytecode,
+            //      then a call to the internal D2D1ShaderCompiler.LoadDynamicBytecode API is used, to create the shader on the fly.
+            //   3) If [EmbeddedBytecode] is not used, then regardless of the requested profile and options, a new shader is compiled.
+            //   4) If this is the case and either the shader profile or the options are null, then this method will manually set the
+            //      value being null to the default one to use. That is, D2D1ShaderProfile.PixelShader50 will be used as the target,
+            //      and the options will be set to D2D1CompileOptions.Default (and optionally, D2D1CompileOptions.EnableLinking too).
+
+            // Get a formatted representation of the compile options being used
+            ExpressionSyntax optionsExpression =
+                ParseExpression(
+                    bytecodeInfo.CompileOptions
+                    .GetValueOrDefault()
+                    .ToString(CultureInfo.InvariantCulture)
+                    .Split(',')
+                    .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
+                    .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right));
+
+            // Add parantheses if needed
+            if (optionsExpression is BinaryExpressionSyntax)
+            {
+                optionsExpression = ParenthesizedExpression(optionsExpression);
+            }
+
             // This code produces a method declaration as follows:
             //
-            // ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile, <ENABLE_LINKING_SUPPORT>);
+            // global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile ?? <DEFAULT_PROFILE>, options ?? <REQUESTED_OPTIONS>);
             ExpressionStatementSyntax dynamicLoadingStatement =
                 ExpressionStatement(
                     InvocationExpression(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
+                            IdentifierName("global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
                             IdentifierName("LoadDynamicBytecode")))
                     .AddArgumentListArguments(
                         Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
                         Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
-                        Argument(IdentifierName("shaderProfile")),
-                        Argument(LiteralExpression(bytecodeInfo.IsLinkingSupported ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression))));
+                        Argument(BinaryExpression(
+                            SyntaxKind.CoalesceExpression,
+                            IdentifierName("shaderProfile"),
+                            IdentifierName($"global::ComputeSharp.D2D1.D2D1ShaderProfile.{D2D1ShaderProfile.PixelShader50}"))),
+                        Argument(BinaryExpression(
+                            SyntaxKind.CoalesceExpression,
+                            IdentifierName("options"),
+                            optionsExpression))));
 
             // If there is no precompiled bytecode, just return the dynamic path
             if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)
@@ -90,7 +127,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a branch as follows:
             //
-            // if (shaderProfile is null or <SHADER_PROFILE>)
+            // if (shaderProfile is null or <SHADER_PROFILE> && options is null or <OPTIONS>)
             // {
             //     global::System.ReadOnlySpan<byte> bytecode = new byte[] { __EMBEDDED_SHADER_BYTECODE };
             //     loader.LoadEmbeddedBytecode(bytecode);
@@ -101,16 +138,24 @@ partial class ID2D1ShaderGenerator
             // having to create/parse tens of thousands of literal expression nodes for every shader.
             IfStatementSyntax embeddedBranch =
                 IfStatement(
-                    IsPatternExpression(
-                        IdentifierName("shaderProfile"),
-                        BinaryPattern(
-                            SyntaxKind.OrPattern,
-                            ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                            ConstantPattern(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                                    IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString(CultureInfo.InvariantCulture)))))),
+                    BinaryExpression(
+                        SyntaxKind.LogicalAndExpression,
+                        IsPatternExpression(
+                            IdentifierName("shaderProfile"),
+                            BinaryPattern(
+                                SyntaxKind.OrPattern,
+                                ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                                ConstantPattern(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
+                                        IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString(CultureInfo.InvariantCulture)))))),
+                        IsPatternExpression(
+                            IdentifierName("options"),
+                            BinaryPattern(
+                                SyntaxKind.OrPattern,
+                                ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                                ConstantPattern(optionsExpression)))),
                     Block(
                         LocalDeclarationStatement(
                             VariableDeclaration(

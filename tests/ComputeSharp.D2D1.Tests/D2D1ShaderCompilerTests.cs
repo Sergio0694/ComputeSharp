@@ -31,7 +31,7 @@ public partial class D2D1ShaderCompilerTests
             source,
             "PSMain",
             D2D1ShaderProfile.PixelShader40Level93,
-            D2D1ShaderCompilerOptions.Default);
+            D2D1CompileOptions.Default);
 
         Assert.IsTrue(bytecode.Length > 0);
     }
@@ -57,7 +57,7 @@ public partial class D2D1ShaderCompilerTests
             source,
             "PSMain",
             D2D1ShaderProfile.PixelShader40Level93,
-            D2D1ShaderCompilerOptions.Default | D2D1ShaderCompilerOptions.EnableLinking);
+            D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
 
         Assert.IsTrue(bytecode.Length > 0);
     }
@@ -84,7 +84,7 @@ public partial class D2D1ShaderCompilerTests
             source,
             "Execute",
             D2D1ShaderProfile.PixelShader40Level93,
-            D2D1ShaderCompilerOptions.Default);
+            D2D1CompileOptions.Default);
 
         Assert.IsTrue(bytecode.Length > 0);
     }
@@ -111,7 +111,7 @@ public partial class D2D1ShaderCompilerTests
             source,
             "PSMain",
             D2D1ShaderProfile.PixelShader40Level93,
-            D2D1ShaderCompilerOptions.Default);
+            D2D1CompileOptions.Default);
 
         Assert.IsTrue(bytecode.Length > 0);
     }
@@ -158,7 +158,7 @@ public partial class D2D1ShaderCompilerTests
             source,
             "PSMain",
             D2D1ShaderProfile.PixelShader40,
-            D2D1ShaderCompilerOptions.Default);
+            D2D1CompileOptions.Default);
 
         Assert.IsTrue(bytecode.Length > 0);
     }

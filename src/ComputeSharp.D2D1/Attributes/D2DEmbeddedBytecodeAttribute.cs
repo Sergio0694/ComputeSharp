@@ -8,7 +8,6 @@ namespace ComputeSharp.D2D1;
 /// <para>
 /// This attribute can be used to annotate shader types as follows:
 /// <code>
-/// // A compute shader that is dispatched on a target buffer
 /// [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
 /// struct MyShader : ID2D1PixelShader
 /// {

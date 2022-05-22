@@ -32,9 +32,9 @@ internal static unsafe partial class D3DCompiler
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
-    /// <param name="enableLinking">Whether to enable linking for the shader.</param>
+    /// <param name="options">The options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, bool enableLinking)
+    public static ComPtr<ID3DBlob> Compile(ReadOnlySpan<char> source, D2D1ShaderProfile shaderProfile, D2D1CompileOptions options)
     {
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
@@ -49,9 +49,9 @@ internal static unsafe partial class D3DCompiler
                 d2DEntry: ASCII.Execute,
                 entryPoint: ASCII.Execute,
                 target: ASCII.GetPixelShaderProfile(shaderProfile),
-                flags: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+                flags: (uint)(options & ~D2D1CompileOptions.EnableLinking));
 
-            if (!enableLinking)
+            if ((options & D2D1CompileOptions.EnableLinking) == 0)
             {
                 return d3DBlobFullShader.Move();
             }
@@ -63,7 +63,7 @@ internal static unsafe partial class D3DCompiler
                 d2DEntry: ASCII.Execute,
                 entryPoint: default,
                 target: ASCII.GetLibraryProfile(shaderProfile),
-                flags: D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS | D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR);
+                flags: (uint)(options & ~D2D1CompileOptions.EnableLinking));
 
             // Embed it as private data if requested
             using ComPtr<ID3DBlob> d3DBlobLinked = SetD3DPrivateData(d3DBlobFullShader.Get(), d3DBlobFunction.Get());
