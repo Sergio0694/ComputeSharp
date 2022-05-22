@@ -46,12 +46,8 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="isLinkingSupported">Whether or not linking is supported for the current shader.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
-            INamedTypeSymbol structDeclarationSymbol,
-            bool isLinkingSupported)
+        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -61,14 +57,6 @@ partial class ID2D1ShaderGenerator
                 {
                     diagnostics.Add(
                         InvalidPackMatrixColumnMajorOption,
-                        structDeclarationSymbol,
-                        structDeclarationSymbol);
-                }
-
-                if ((options & D2D1CompileOptions.EnableLinking) != 0 && !isLinkingSupported)
-                {
-                    diagnostics.Add(
-                        InvalidEnableLinkingOption,
                         structDeclarationSymbol,
                         structDeclarationSymbol);
                 }
@@ -109,9 +97,14 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="sourceInfo">The source info for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
+        /// <param name="options">The effective compile options used to create the shader bytecode.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderSourceInfo sourceInfo, CancellationToken token, out DiagnosticInfo? diagnostic)
+        public static unsafe ImmutableArray<byte> GetBytecode(
+            HlslShaderSourceInfo sourceInfo,
+            CancellationToken token,
+            out D2D1CompileOptions options,
+            out DiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
@@ -120,6 +113,7 @@ partial class ID2D1ShaderGenerator
             // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
             if (sourceInfo is { HasErrors: true } or { ShaderProfile: null })
             {
+                options = default;
                 diagnostic = null;
 
                 goto End;
@@ -129,11 +123,15 @@ partial class ID2D1ShaderGenerator
             {
                 token.ThrowIfCancellationRequested();
 
-                // Compile the shader bytecode
+                // If an explicit set of compile options is provided, use that directly. Otherwise, use the default
+                // options plus the option to enable linking only if the shader can potentially support it.
+                options = sourceInfo.CompileOptions ?? (D2D1CompileOptions.Default | (sourceInfo.IsLinkingSupported ? D2D1CompileOptions.EnableLinking : 0));
+
+                // Compile the shader bytecode using the requested parameters
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                     sourceInfo.HlslSource.AsSpan(),
                     sourceInfo.ShaderProfile.Value,
-                    sourceInfo.CompileOptions ?? D2D1CompileOptions.Default);
+                    options);
 
                 token.ThrowIfCancellationRequested();
 
@@ -147,10 +145,12 @@ partial class ID2D1ShaderGenerator
             }
             catch (Win32Exception e)
             {
+                options = default;
                 diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
+                options = default;
                 diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 

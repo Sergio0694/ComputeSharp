@@ -21,8 +21,8 @@ public static class D2D1ShaderCompiler
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the bytecode.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the D2D1 shader to run.</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
-    /// <param name="enableLinkingSupport">Whether to enable linking support for the shader.</param>
-    public static unsafe void LoadDynamicBytecode<TLoader, T>(ref TLoader loader, in T shader, D2D1ShaderProfile? shaderProfile, bool enableLinkingSupport)
+    /// <param name="options">The compiler options to use to compile the shader.</param>
+    public static unsafe void LoadDynamicBytecode<TLoader, T>(ref TLoader loader, in T shader, D2D1ShaderProfile shaderProfile, D2D1CompileOptions options)
         where TLoader : struct, ID2D1BytecodeLoader
         where T : struct, ID2D1Shader
     {
@@ -30,8 +30,8 @@ public static class D2D1ShaderCompiler
 
         using ComPtr<ID3DBlob> d3DBlobBytecode = Shaders.Translation.D3DCompiler.Compile(
             hlslSource.AsSpan(),
-            shaderProfile ?? D2D1ShaderProfile.PixelShader50,
-            D2D1CompileOptions.Default | (enableLinkingSupport ? D2D1CompileOptions.EnableLinking : 0));
+            shaderProfile,
+            options);
 
         loader.LoadDynamicBytecode((IntPtr)d3DBlobBytecode.Get());
     }

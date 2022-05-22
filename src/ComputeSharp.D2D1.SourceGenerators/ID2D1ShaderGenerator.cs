@@ -92,16 +92,16 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 token.ThrowIfCancellationRequested();
 
                 // Get the shader profile and linking info for LoadBytecode()
-                bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(item.Left.Symbol, inputCount);
                 D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(item.Left.Symbol);
-                D2D1CompileOptions? compileOptions = LoadBytecode.GetCompileOptions(diagnostics, item.Left.Symbol, isLinkingSupported);
+                D2D1CompileOptions? compileOptions = LoadBytecode.GetCompileOptions(diagnostics, item.Left.Symbol);
+                bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(item.Left.Symbol, inputCount);
 
                 HlslShaderSourceInfo sourceInfo = new(
                     hlslSource,
                     shaderProfile,
                     compileOptions,
                     isLinkingSupported,
-                    diagnostics.Count > 0);
+                    HasErrors: diagnostics.Count > 0);
 
                 token.ThrowIfCancellationRequested();
 
@@ -202,11 +202,19 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.Source, token, out DiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(
+                    item.Source,
+                    token,
+                    out D2D1CompileOptions options,
+                    out DiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
-                EmbeddedBytecodeInfo bytecodeInfo = new(item.Source.HlslSource, item.Source.ShaderProfile, item.Source.IsLinkingSupported, bytecode);
+                EmbeddedBytecodeInfo bytecodeInfo = new(
+                    item.Source.HlslSource,
+                    item.Source.ShaderProfile,
+                    options,
+                    bytecode);
 
                 return (item.Hierarchy, bytecodeInfo, diagnostic);
             });

@@ -29,7 +29,7 @@ public static class D2D1ReflectionServices
 
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        shader.LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50);
+        shader.LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50, D2D1CompileOptions.Default);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
