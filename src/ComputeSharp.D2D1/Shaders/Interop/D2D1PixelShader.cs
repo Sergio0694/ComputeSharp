@@ -63,6 +63,31 @@ public static class D2D1PixelShader
     /// Loads the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
+    /// <param name="options">The compile options to use to get the shader bytecode.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
+    /// <remarks>
+    /// <para>
+    /// If precompiled shader with the requested options does not exist, the shader will be compiled with the input options. If additional compile
+    /// options have been specified on the shader type <typeparamref name="T"/> (through <see cref="D2DCompileOptionsAttribute"/>), they will be ignored.
+    /// </para>
+    /// <para>
+    /// If the shader needs to be recompiled, the shader profile that will be used is <see cref="D2D1ShaderProfile.PixelShader50"/>.
+    /// </para>
+    /// <para>
+    /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
+    /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
+    /// </para>
+    /// </remarks>
+    public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions options)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        return LoadOrCompileBytecode<T>(null, options);
+    }
+
+    /// <summary>
+    /// Loads the bytecode from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
     /// <param name="options">The compile options to use to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
