@@ -10,6 +10,9 @@ namespace TerraFX.Interop.Windows
         [NativeTypeName("#define E_NOTIMPL _HRESULT_TYPEDEF_(0x80004001L)")]
         public const int E_NOTIMPL = unchecked((int)(0x80004001));
 
+        [NativeTypeName("#define E_OUTOFMEMORY _HRESULT_TYPEDEF_(0x8007000EL)")]
+        public const int E_OUTOFMEMORY = unchecked((int)(0x8007000E));
+
         [NativeTypeName("#define E_INVALIDARG _HRESULT_TYPEDEF_(0x80070057L)")]
         public const int E_INVALIDARG = unchecked((int)(0x80070057));
 

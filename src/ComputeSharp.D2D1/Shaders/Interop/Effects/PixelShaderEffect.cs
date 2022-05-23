@@ -240,7 +240,18 @@ internal unsafe partial struct PixelShaderEffect
         D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
-        PixelShaderEffect* @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
+        PixelShaderEffect* @this;
+
+        try
+        {
+            @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
+        }
+        catch (OutOfMemoryException)
+        {
+            *effectImpl = null;
+
+            return E.E_OUTOFMEMORY;
+        }
 
         *@this = default;
 
