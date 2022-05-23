@@ -20,6 +20,14 @@ public static class D2D1ReflectionServices
     /// </summary>
     /// <typeparam name="T">The type of D2D1 shader to retrieve info for.</typeparam>
     /// <returns>The resulting <see cref="D2D1ShaderInfo"/> instance.</returns>
+    /// <remarks>
+    /// If the target shader type <typeparamref name="T"/> is precompiled (ie. it's annotated with <see cref="D2DEmbeddedBytecodeAttribute"/>), that bytecode will
+    /// be reused to reflect on the shader, so the same shader profile and compile options will be reused, which can make the returned metadata more accurate.
+    /// <para>
+    /// If the shader is not precompiled, it will be compiled on the fly using the default settings for both the shader profile and the compile options. That is,
+    /// <see cref="D2D1ShaderProfile.PixelShader50"/> and <see cref="D2D1CompileOptions.Default"/> (with linking optionally enabled if supported by the shader type).
+    /// </para>
+    /// </remarks>
     public static unsafe D2D1ShaderInfo GetShaderInfo<T>()
         where T : struct, ID2D1PixelShader
     {
@@ -29,7 +37,7 @@ public static class D2D1ReflectionServices
 
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 
-        shader.LoadBytecode(ref bytecodeLoader, D2D1ShaderProfile.PixelShader50, D2D1CompileOptions.Default);
+        shader.LoadBytecode(ref bytecodeLoader, null, null);
 
         using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
 
