@@ -505,12 +505,14 @@ partial class ID2D1ShaderGenerator
             }
 
             // Captured variables
-            AppendLF();
-
-            // User-defined values
-            foreach (var (fieldName, fieldType) in valueFields)
+            if (valueFields.Any())
             {
-                AppendLineAndLF($"{fieldType} {fieldName};");
+                AppendLF();
+
+                foreach (var (fieldName, fieldType) in valueFields)
+                {
+                    AppendLineAndLF($"{fieldType} {fieldName};");
+                }
             }
 
             // Forward declarations
