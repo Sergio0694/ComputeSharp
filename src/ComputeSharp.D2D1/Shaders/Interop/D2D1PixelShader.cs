@@ -63,8 +63,12 @@ public static class D2D1PixelShader
     /// Loads the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
-    /// <param name="options">The compile options to use to get the shader bytecode.</param>
+    /// <param name="options">
+    /// <para>The compile options to use to get the shader bytecode.</para>
+    /// <para>For consistency with <see cref="D2DCompileOptionsAttribute"/>, <see cref="D2D1CompileOptions.PackMatrixRowMajor"/> will be automatically added.</para>
+    /// </param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
+    /// <exception cref="ArgumentException">Thrown if <see cref="D2D1CompileOptions.PackMatrixColumnMajor"/> is specified within <paramref name="options"/>.</exception>
     /// <remarks>
     /// <para>
     /// If precompiled shader with the requested options does not exist, the shader will be compiled with the input options. If additional compile
@@ -81,7 +85,12 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions options)
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileBytecode<T>(null, options);
+        if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
+        {
+            ThrowHelper.ThrowArgumentException(nameof(options), "The PackMatrixColumnMajor compile options is not compatible with ComputeSharp.D2D1 shaders.");
+        }
+
+        return LoadOrCompileBytecode<T>(null, options | D2D1CompileOptions.PackMatrixRowMajor);
     }
 
     /// <summary>
@@ -89,8 +98,12 @@ public static class D2D1PixelShader
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode.</param>
-    /// <param name="options">The compile options to use to get the shader bytecode.</param>
+    /// <param name="options">
+    /// <para>The compile options to use to get the shader bytecode.</para>
+    /// <para>For consistency with <see cref="D2DCompileOptionsAttribute"/>, <see cref="D2D1CompileOptions.PackMatrixRowMajor"/> will be automatically added.</para>
+    /// </param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
+    /// <exception cref="ArgumentException">Thrown if <see cref="D2D1CompileOptions.PackMatrixColumnMajor"/> is specified within <paramref name="options"/>.</exception>
     /// <remarks>
     /// If the input shader was precompiled, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a pinned memory buffer (from the PE section).
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
@@ -98,7 +111,12 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile, D2D1CompileOptions options)
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileBytecode<T>(shaderProfile, options);
+        if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
+        {
+            ThrowHelper.ThrowArgumentException(nameof(options), "The PackMatrixColumnMajor compile options is not compatible with ComputeSharp.D2D1 shaders.");
+        }
+
+        return LoadOrCompileBytecode<T>(shaderProfile, options | D2D1CompileOptions.PackMatrixRowMajor);
     }
 
     /// <summary>

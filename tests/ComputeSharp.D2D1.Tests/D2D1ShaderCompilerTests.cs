@@ -1,13 +1,12 @@
 ﻿using System;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.Tests.Effects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2D1ShaderCompilerTests")]
+[TestCategory("D2D1ShaderCompiler")]
 public partial class D2D1ShaderCompilerTests
 {
     [TestMethod]
