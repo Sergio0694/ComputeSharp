@@ -171,13 +171,18 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
             .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
 
-        // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
-        {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
+        // Check whether raw multiline string literals can be used (C# preview)
+        IncrementalValueProvider<bool> canUseRawMultiLineStringLiterals =
+            context.ParseOptionsProvider
+            .Select((item, _) => item is CSharpParseOptions options && options.LanguageVersion >= LanguageVersion.Preview);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.GetText(Encoding.UTF8));
+        // Generate the BuildHlslSource() methods
+        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit).Combine(canUseRawMultiLineStringLiterals), static (context, item) =>
+        {
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.Left.SourceInfo, item.Left.Left.SupportsDynamicShaders, item.Left.Left.Hierarchy.Hierarchy.Length, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Left.Hierarchy, buildHlslStringMethod, item.Right);
+
+            context.AddSource($"{item.Left.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the dispatch metadata info
