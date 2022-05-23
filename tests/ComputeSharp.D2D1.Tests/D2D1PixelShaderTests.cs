@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Buffers;
+using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -6,8 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("D2D1InteropServices")]
-public partial class D2D1InteropServicesTests
+[TestCategory("D2D1PixelShader")]
+public partial class D2D1PixelShaderTests
 {
     [TestMethod]
     public unsafe void GetInputCount()
@@ -164,6 +166,113 @@ public partial class D2D1InteropServicesTests
         public Float4 Execute()
         {
             return 0;
+        }
+    }
+
+    [TestMethod]
+    public unsafe void GetBytecode_FromEmbeddedBytecode()
+    {
+        // Bytecode with no parameters
+        ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>();
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching shader profile
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching compile options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching shader profile and compile options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public unsafe void GetBytecode_FromEmbeddedBytecode_WithPackMatrixColumnMajor()
+    {
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixColumnMajor);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public unsafe void GetBytecode_FromEmbeddedBytecode_WithTargetProfileAndPackMatrixColumnMajor()
+    {
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixColumnMajor);
+    }
+
+    [D2DInputCount(3)]
+    [D2DInputSimple(0)]
+    [D2DInputSimple(1)]
+    [D2DInputSimple(2)]
+    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader40Level91)]
+    private readonly partial struct ShaderWithEmbeddedBytecode : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            float4 dst = D2D.GetInput(0);
+            float4 src = D2D.GetInput(1);
+            float4 srcMask = D2D.GetInput(2);
+            float4 result = ((1 - srcMask) * dst) + (srcMask * src);
+
+            return result;
+        }
+    }
+
+    [TestMethod]
+    public unsafe void GetBytecode_FromEmbeddedBytecode_WithCompileOptions()
+    {
+        // Bytecode with no parameters
+        ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>();
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching shader profile
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(D2D1ShaderProfile.PixelShader40Level91);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching compile options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+
+        // Matching shader profile and compile options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2);
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+    }
+
+    [D2DInputCount(3)]
+    [D2DInputSimple(0)]
+    [D2DInputSimple(1)]
+    [D2DInputSimple(2)]
+    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader40Level91)]
+    [D2DCompileOptions(D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2)]
+    private readonly partial struct ShaderWithEmbeddedBytecodeAndCompileOptions : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            float4 dst = D2D.GetInput(0);
+            float4 src = D2D.GetInput(1);
+            float4 srcMask = D2D.GetInput(2);
+            float4 result = ((1 - srcMask) * dst) + (srcMask * src);
+
+            return result;
         }
     }
 }
