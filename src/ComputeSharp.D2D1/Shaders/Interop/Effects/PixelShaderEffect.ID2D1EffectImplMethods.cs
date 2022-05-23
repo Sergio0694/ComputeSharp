@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -91,6 +92,41 @@ internal unsafe partial struct PixelShaderEffect
                 shaderId: &@this->shaderId,
                 shaderBuffer: @this->bytecode,
                 shaderBufferCount: (uint)@this->bytecodeSize);
+
+            // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
+            // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
+            if (hresult == E.E_INVALIDARG)
+            {
+                D2D1_FEATURE_DATA_DOUBLES d2D1FeatureDataDoubles = default;
+
+                // If the call failed, just do nothing and return the previous result
+                if (!Windows.SUCCEEDED(effectContext->CheckFeatureSupport(D2D1_FEATURE.D2D1_FEATURE_DOUBLES, &d2D1FeatureDataDoubles, (uint)sizeof(D2D1_FEATURE_DATA_DOUBLES))))
+                {
+                    return E.E_INVALIDARG;
+                }
+
+                // If the context does not support double precision values, check whether the shader requested them
+                if (d2D1FeatureDataDoubles.doublePrecisionFloatShaderOps == 0)
+                {
+                    using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
+
+                    // Create the reflection instance, and in case of error just return the previous error like above
+                    if (!Windows.SUCCEEDED(DirectX.D3DReflect(
+                        pSrcData: @this->bytecode,
+                        SrcDataSize: (uint)@this->bytecodeSize,
+                        pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
+                        ppReflector: d3D11ShaderReflection.GetVoidAddressOf())))
+                    {
+                        return E.E_INVALIDARG;
+                    }
+
+                    // If the shader requires double precision support, return a more descriptive error
+                    if ((d3D11ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0)
+                    {
+                        return D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+                    }
+                }
+            }
 
             if (Windows.SUCCEEDED(hresult))
             {

@@ -39,5 +39,12 @@ namespace TerraFX.Interop.DirectX
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1EffectContext*, Guid*, int>)(lpVtbl[14]))((ID2D1EffectContext*)Unsafe.AsPointer(ref this), shaderId);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [VtblIndex(22)]
+        public HRESULT CheckFeatureSupport(D2D1_FEATURE feature, void* featureSupportData, [NativeTypeName("UINT32")] uint featureSupportDataSize)
+        {
+            return ((delegate* unmanaged[Stdcall]<ID2D1EffectContext*, D2D1_FEATURE, void*, uint, int>)(lpVtbl[22]))((ID2D1EffectContext*)Unsafe.AsPointer(ref this), feature, featureSupportData, featureSupportDataSize);
+        }
     }
 }
