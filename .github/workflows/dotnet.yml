@@ -157,6 +157,9 @@ jobs:
     - name: Run ComputeSharp.D2D1.Tests
       run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
       shell: cmd
+    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -v n -l "console;verbosity=detailed"
+      shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors
   run-dx12-samples:

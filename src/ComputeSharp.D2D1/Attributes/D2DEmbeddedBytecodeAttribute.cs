@@ -16,10 +16,15 @@ namespace ComputeSharp.D2D1;
 /// </para>
 /// <para>
 /// </para>
+/// <para>
 /// The runtime compilation will automatically be skipped if the shader bytecode is then retrieved using a matching profile,
 /// otherwise the usual runtime compilation will be used as fallback (or an exception will be thrown, depending on the API).
+/// </para>
+/// <para>
+/// This attribute can also be added to a whole assembly, and will be used by default if not overridden by a shader type.
+/// </para>
 /// </summary>
-[AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly, AllowMultiple = false)]
 public sealed class D2DEmbeddedBytecodeAttribute : Attribute
 {
     /// <summary>
