@@ -38,6 +38,11 @@ partial class ID2D1ShaderGenerator
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
+            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out attributeData))
+            {
+                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+            }
+
             return null;
         }
 
@@ -63,6 +68,12 @@ partial class ID2D1ShaderGenerator
 
                 // PackMatrixRowMajor is always automatically enabled
                 return options | D2D1CompileOptions.PackMatrixRowMajor;
+            }
+
+            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
+            {
+                // No need to validate against PackMatrixColumnMajor as that's checked separately
+                return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value! | D2D1CompileOptions.PackMatrixRowMajor;
             }
 
             return null;
