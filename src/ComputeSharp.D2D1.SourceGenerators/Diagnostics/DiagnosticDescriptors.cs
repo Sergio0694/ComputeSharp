@@ -622,16 +622,16 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for the PackMatrixColumnMajor option being used.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute"</c>.
+    /// Format: <c>"The D2D1 shader of type (or assembly) {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidPackMatrixColumnMajorOption = new DiagnosticDescriptor(
         id: "CMPSD2D0044",
         title: "Invalid PackMatrixColumnMajor compile option",
-        messageFormat: "The D2D1 shader of type {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute",
+        messageFormat: "The D2D1 shader of type (or assembly) {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A D2D1 shader generated with ComputeSharp.D2D1 cannot use the PackMatrixColumnMajor option, as that is not compatible with the generated code used to load shader constant buffers.",
+        description: "A D2D1 shader generated with ComputeSharp.D2D1 (or an assembly) cannot use the PackMatrixColumnMajor option, as that is not compatible with the generated code used to load shader constant buffers.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
