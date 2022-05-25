@@ -26,7 +26,16 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         mainWindow = new MainWindow();
-        mainWindow.Closed += (_, _) => Exit();
         mainWindow.Activate();
+
+        void OnClosed(object s, WindowEventArgs e)
+        {
+            mainWindow.Closed -= OnClosed;
+
+            Exit();
+        }
+
+        mainWindow.Closed += OnClosed;
+
     }
 }

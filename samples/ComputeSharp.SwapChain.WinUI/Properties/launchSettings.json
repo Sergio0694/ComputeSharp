@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ComputeSharp.SwapChain.WinUI": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": true
     }
   }
 }
