@@ -119,7 +119,7 @@
                                     <Grid>
 
                                         <!--  Shader preview  -->
-                                        <computesharp:AnimatedComputeShaderPanel ShaderRunner="{x:Bind ShaderRunner}" />
+                                        <computesharp:AnimatedComputeShaderPanel Loaded="AnimatedComputeShaderPanel_Loaded" ShaderRunner="{x:Bind ShaderRunner}" />
 
                                         <!--
                                             Note: here we have a selection property to work around {x:Bind} not working correctly outside of the

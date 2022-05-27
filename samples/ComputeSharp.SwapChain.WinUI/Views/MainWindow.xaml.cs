@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
+using ComputeSharp.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
@@ -11,6 +13,11 @@ namespace ComputeSharp.SwapChain.WinUI.Views;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
+    /// <summary>
+    /// The mapping of currently alive shader panels.
+    /// </summary>
+    private readonly ConditionalWeakTable<AnimatedComputeShaderPanel, object?> shaderPanels = new();
+
     public MainWindow()
     {
         this.InitializeComponent();
@@ -25,6 +32,19 @@ public sealed partial class MainWindow : Window
     /// Gets the <see cref="MainViewModel"/> instance for the current view.
     /// </summary>
     public MainViewModel ViewModel => (MainViewModel)Root.DataContext;
+
+    /// <summary>
+    /// Stops all rendering when the application is closing.
+    /// </summary>
+    public void OnShutdown()
+    {
+        ShaderPanel.ShaderRunner = null;
+
+        foreach (var (panel, _) in this.shaderPanels)
+        {
+            panel.ShaderRunner = null;
+        }
+    }
 
     // Opens the shader selection panel
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
@@ -43,5 +63,11 @@ public sealed partial class MainWindow : Window
     private void UserControl_SizeChanged(object sender, WindowSizeChangedEventArgs e)
     {
         ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
+    }
+
+    // Tracks the current panel
+    private void AnimatedComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
+    {
+        this.shaderPanels.AddOrUpdate((AnimatedComputeShaderPanel)sender, null);
     }
 }
