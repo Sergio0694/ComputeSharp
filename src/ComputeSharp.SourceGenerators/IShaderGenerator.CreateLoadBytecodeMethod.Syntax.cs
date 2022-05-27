@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618
@@ -23,17 +25,17 @@ partial class IShaderGenerator
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, bool supportsDynamicShaders, out Func<SyntaxNode, string> fixup)
+        public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, bool supportsDynamicShaders, out Func<SyntaxNode, SourceText> fixup)
         {
             BlockSyntax block = GetShaderBytecodeBody(bytecodeInfo, supportsDynamicShaders, out string? bytecodeLiterals);
 
             if (bytecodeLiterals is not null)
             {
-                fixup = tree => tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals);
+                fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals), Encoding.UTF8);
             }
             else
             {
-                fixup = static tree => tree.ToFullString();
+                fixup = static tree => tree.GetText(Encoding.UTF8);
             }
 
             // This code produces a method declaration as follows:

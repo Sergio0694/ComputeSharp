@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -9,6 +10,7 @@ using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -71,7 +73,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
@@ -159,7 +161,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 item.Left.Root32BitConstantCount);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the filtered sequence to enable caching
@@ -175,7 +177,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the dispatch metadata info
@@ -201,7 +203,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Left.MetadataInfo);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Transform the raw HLSL source to compile
@@ -256,9 +258,9 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, string> fixup);
+            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, SourceText> fixup);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, false);
-            string text = fixup(compilationUnit);
+            SourceText text = fixup(compilationUnit);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", text);
         });
