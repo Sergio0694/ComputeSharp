@@ -5,7 +5,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>ComputeSharp.SwapChain.WinUI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x64;ARM64</Platforms>
+    <Platforms>x64;arm64</Platforms>
     <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
@@ -13,11 +13,6 @@
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-  </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -38,6 +33,11 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
+    
+  <!-- Ensure the MSIX extension is activated even if the WinAppSDK package hasn't been restored yet -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix"/>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
@@ -46,6 +46,5 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
-
   <Import Project="..\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems" Label="Shared" />
 </Project>
