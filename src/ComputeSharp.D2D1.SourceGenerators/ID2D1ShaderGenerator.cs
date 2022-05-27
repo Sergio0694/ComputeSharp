@@ -117,7 +117,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Diagnostics));
 
         // Get all errors for invalid [D2D1CompileOptions] attributes added to the assembly level
-        IncrementalValuesProvider<Diagnostic> d2DCompileOptionsAtAssemblyLevelErrors = LoadBytecode.GetAssemblyLevelCompileOptionsDiagnostics(context.SyntaxProvider);
+        IncrementalValuesProvider<Diagnostic> d2DCompileOptionsAtAssemblyLevelErrors =
+            context.CompilationProvider
+            .SelectMany(static (compilation, token) => ImmutableArray.Create(LoadBytecode.GetAssemblyLevelCompileOptionsDiagnostics(compilation.Assembly, token)))
+            .Where(static item => item is not null)!;
 
         // Output the diagnostics
         context.ReportDiagnostics(d2DCompileOptionsAtAssemblyLevelErrors.Select(static (item, token) => item));

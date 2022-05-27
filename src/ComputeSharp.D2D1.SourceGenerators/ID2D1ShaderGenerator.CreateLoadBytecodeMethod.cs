@@ -81,72 +81,31 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Gets an <see cref="IncrementalValuesProvider{TValues}"/> instance producing <see cref="Diagnostic"/>-s for invalid assembly-level <c>[D2D1CompileOptions]</c> attributes.
+        /// Gets a <see cref="Diagnostic"/>-s for invalid assembly-level <c>[D2D1CompileOptions]</c> attribute, if one is present.
         /// </summary>
-        /// <param name="syntaxProvider">The input <see cref="SyntaxValueProvider"/> instance to use to produce the diagnostics.</param>
+        /// <param name="assemblySymbol">The input <see cref="IAssemblySymbol"/> instance to process.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> for the operation.</param>
         /// <returns>The diagnostic for the attribute, if invalid.</returns>
-        public static IncrementalValuesProvider<Diagnostic> GetAssemblyLevelCompileOptionsDiagnostics(SyntaxValueProvider syntaxProvider)
+        public static Diagnostic? GetAssemblyLevelCompileOptionsDiagnostics(IAssemblySymbol assemblySymbol, CancellationToken cancellationToken)
         {
             // In order to emit diagnostics for [D2D1CompileOptions] attributes at the assembly level, the following is needed:
-            //   - The type symbol for the attribute, to be able to check it's actually [D2D1CompileOptions].
-            //   - The syntax node representing the attribute targeting the assembly, to get a location.
-            //   - The input D2D1CompileOptions value, which can be retrieved as a constant argument to the attribute.
-            //
-            // The first step to do this is to find all AttributeListSyntax values and filter those targeting the assembly.
-            static bool IsAssemblyTargetingAttributeNode(SyntaxNode node, CancellationToken token)
+            //   - The type symbol for the assembly, to get the AttributeData object for the [D2D1CompileOptions] attribute, if used.
+            //   - The syntax node representing the attribute targeting the assembly, to get a location (this is retrieved from the AttributeData).
+            //   - The input D2D1CompileOptions value, which can be retrieved from the constructor arguments of the AttributeData object.
+            if (assemblySymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
-                return node is AttributeListSyntax attributeList && attributeList.Target?.Identifier.IsKind(SyntaxKind.AssemblyKeyword) == true;
-            }
+                D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
 
-            // Helper that detects invalid [D2D1CompileOptions] uses and produces a diagnostic
-            static Diagnostic? TryGetDiagnosticForAssemblyLevelCompileOptions(GeneratorSyntaxContext context, CancellationToken token)
-            {
-                Location? location = null;
-                D2D1CompileOptions? options = null;
-
-                // The input is an AttributeListSyntax object, so first traverse all its containing attributes
-                foreach (AttributeSyntax attributeSyntax in ((AttributeListSyntax)context.Node).Attributes)
+                if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
                 {
-                    // Match the symbol (retrieved from the constructor symbol) to check it's a [D2D1CompileOptions] attribute
-                    if (context.SemanticModel.GetSymbolInfo(attributeSyntax, token).Symbol is IMethodSymbol attributeConstructorSymbol &&
-                        attributeConstructorSymbol.ContainingType.HasFullyQualifiedName("ComputeSharp.D2D1.D2DCompileOptionsAttribute"))
-                    {
-                        // Get the value from the expression (get the argument expression and the constant value from there)
-                        if (attributeSyntax.ArgumentList?.Arguments.FirstOrDefault() is AttributeArgumentSyntax argumentSyntax &&
-                            context.SemanticModel.GetConstantValue(argumentSyntax.Expression, token) is { HasValue: true, Value: int rawOptions })
-                        {
-                            options = (D2D1CompileOptions)rawOptions;
-                        }
-
-                        // Also get the location from the attribute syntax node
-                        location = attributeSyntax.GetLocation();
-
-                        break;
-                    }
-                }
-
-                // Check that some options were actually found, and that they were incorrect.
-                // The attribute can't be repeated, so checking for multiple values isn't needed.
-                if (options is not null &&
-                    (options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-                {
-                    IAssemblySymbol assemblySymbol = context.SemanticModel.Compilation.Assembly;
-
-                    // Emit the diagnostic targeting the assembly (instead of a shader type)
                     return Diagnostic.Create(
                         InvalidPackMatrixColumnMajorOption,
-                        location,
+                        attributeData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation(),
                         assemblySymbol);
                 }
-
-                return null;
             }
 
-            // Create the incremental collection and only retrieve non null items
-            return
-                syntaxProvider
-                .CreateSyntaxProvider(IsAssemblyTargetingAttributeNode, TryGetDiagnosticForAssemblyLevelCompileOptions)
-                .Where(static diagnostic => diagnostic is not null)!;
+            return null;
         }
 
         /// <summary>
