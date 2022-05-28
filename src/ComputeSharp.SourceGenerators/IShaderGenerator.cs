@@ -174,7 +174,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Check whether raw multiline string literals can be used (C# preview)
         IncrementalValueProvider<bool> canUseRawMultiLineStringLiterals =
             context.ParseOptionsProvider
-            .Select((item, _) => item is CSharpParseOptions options && options.LanguageVersion >= LanguageVersion.Preview);
+            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.Preview });
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit).Combine(canUseRawMultiLineStringLiterals), static (context, item) =>

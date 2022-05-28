@@ -196,7 +196,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Check whether raw multiline string literals can be used (C# preview)
         IncrementalValueProvider<bool> canUseRawMultiLineStringLiterals =
             context.ParseOptionsProvider
-            .Select((item, _) => item is CSharpParseOptions options && options.LanguageVersion >= LanguageVersion.Preview);
+            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.Preview });
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseRawMultiLineStringLiterals), static (context, item) =>
