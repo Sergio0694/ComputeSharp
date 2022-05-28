@@ -321,6 +321,15 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
+            // Free the previous ID2D1DrawInfo object, if present
+            if (@this->d2D1DrawInfo is not null)
+            {
+                _ = @this->d2D1DrawInfo->Release();
+            }
+
+            // Store the new ID2D1DrawInfo object
+            _ = drawInfo->AddRef();
+
             @this->d2D1DrawInfo = drawInfo;
 
             // Set the pixel shader for the effect

@@ -374,6 +374,11 @@ internal unsafe partial struct PixelShaderEffect
 
             this.d2D1TransformMapperHandle.Free();
 
+            if (this.d2D1DrawInfo is not null)
+            {
+                _ = this.d2D1DrawInfo->Release();
+            }
+
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }
 
