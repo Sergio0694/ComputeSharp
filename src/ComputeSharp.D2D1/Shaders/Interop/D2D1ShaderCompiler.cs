@@ -44,7 +44,12 @@ public static class D2D1ShaderCompiler
         ReadOnlySpan<byte> sourceAscii = sourceBuffer.AsSpan(0, sourceWrittenBytes);
         ReadOnlySpan<byte> entryPointAscii = entryPointBuffer.AsSpan(0, entryPointWrittenBytes);
 
-        return Compile(sourceAscii, entryPointAscii, shaderProfile, options);
+        ReadOnlyMemory<byte> bytecode = Compile(sourceAscii, entryPointAscii, shaderProfile, options);
+
+        ArrayPool<byte>.Shared.Return(sourceBuffer);
+        ArrayPool<byte>.Shared.Return(entryPointBuffer);
+
+        return bytecode;
     }
 
     /// <summary>
