@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using ComputeSharp.Core.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Models;
@@ -41,7 +42,7 @@ public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
         {
             CompilationUnitSyntax compilationUnit = Ctor.GetSyntax(item.Left, item.Right);
 
-            context.AddSource($"{item.Left.FilenameHint}.Ctor", compilationUnit.ToFullString());
+            context.AddSource($"{item.Left.FilenameHint}.Ctor", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 

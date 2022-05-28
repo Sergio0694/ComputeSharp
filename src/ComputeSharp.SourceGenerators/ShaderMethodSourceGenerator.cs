@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -67,7 +68,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = Execute.GetSyntax(item);
             string filename = item.MetadataName.Replace('`', '-').Replace('+', '.');
 
-            context.AddSource(filename, compilationUnit.ToFullString());
+            context.AddSource(filename, compilationUnit.GetText(Encoding.UTF8));
         });
     }
 
