@@ -22,6 +22,11 @@ namespace ComputeSharp.D2D1.SourceGenerators.SyntaxRewriters;
 internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 {
     /// <summary>
+    /// An array with the <c>'.'</c> and <c>'E'</c> characters.
+    /// </summary>
+    private static readonly char[] FloatLiteralSpecialCharacters = { '.', 'E' };
+
+    /// <summary>
     /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
     /// </summary>
     protected readonly SemanticModelProvider SemanticModel;
@@ -195,7 +200,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                 string literal = updatedNode.Token.ValueText;
 
                 // If the numeric literal is neither a decimal nor an exponential, add the ".0" suffix
-                if (literal.IndexOfAny(new[] { '.', 'E' }) == -1)
+                if (literal.IndexOfAny(FloatLiteralSpecialCharacters) == -1)
                 {
                     literal += ".0";
                 }
@@ -208,7 +213,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
                 // If the numeric literal is neither a decimal nor an exponential, add the ".0L" suffix.
                 // This is necessary because otherwise integer literals would actually be of type long.
-                if (literal.IndexOfAny(new[] { '.', 'E' }) == -1)
+                if (literal.IndexOfAny(FloatLiteralSpecialCharacters) == -1)
                 {
                     literal += ".0L";
                 }
