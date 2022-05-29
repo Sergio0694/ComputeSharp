@@ -147,6 +147,10 @@ public partial class ShaderRewriterTests
         Assert.AreEqual(results[3], -(float)Math.Sin((float)(137.2 / 180.0 * Constants.PI2)), 0.0001f);
         Assert.AreEqual(results[4], (float)Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin)), 0.0001f);
         Assert.AreEqual(results[5], (float)(Math.Sin(ConstantsInShaderConstantFieldsShader.sin) + Math.Cos(Math.Sin(ConstantsInShaderConstantFieldsShader.sin))), 0.0001f);
+        Assert.AreEqual(results[6], ConstantsInShaderConstantFieldsShader.exponentLowercase, 0.0001f);
+        Assert.AreEqual(results[7], ConstantsInShaderConstantFieldsShader.exponentUppercase, 0.0001f);
+        Assert.AreEqual(results[8], ConstantsInShaderConstantFieldsShader.exponentLowercaseField, 0.0001f);
+        Assert.AreEqual(results[9], ConstantsInShaderConstantFieldsShader.exponentUppercaseField, 0.0001f);
     }
 
     private static class Constants
@@ -160,11 +164,15 @@ public partial class ShaderRewriterTests
         public const float rot_angle = (float)(137.2 / 180.0 * Math.PI);
         public const float rot_angle2 = rot_angle + (float)Math.E * 100;
         public const float sin = 42;
+        public const float exponentLowercase = 1234567e-4f;
+        public const float exponentUppercase = 1234567E-4f;
 
         private static readonly float rot_11 = Hlsl.Cos(rot_angle);
         private static readonly float rot_12 = -Hlsl.Sin((float)(137.2 / 180.0 * Constants.PI2));
         private static readonly float cos = Hlsl.Cos(Hlsl.Sin(sin));
         private static readonly float lerp = Hlsl.Sin(sin) + cos;
+        public static readonly float exponentLowercaseField = 1234567e-4f;
+        public static readonly float exponentUppercaseField = 1234567E-4f;
 
         public readonly ReadWriteBuffer<float> buffer;
 
@@ -176,6 +184,99 @@ public partial class ShaderRewriterTests
             buffer[3] = rot_12;
             buffer[4] = cos;
             buffer[5] = lerp;
+            buffer[6] = exponentLowercase;
+            buffer[7] = exponentUppercase;
+            buffer[8] = exponentLowercaseField;
+            buffer[9] = exponentUppercaseField;
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/278
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void DoubleConstantsInShaderConstantFields(Device device)
+    {
+        if (!device.Get().IsDoublePrecisionSupportAvailable())
+        {
+            Assert.Inconclusive();
+        }
+
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer<float>(8);
+        using ReadWriteBuffer<double> buffer2 = device.Get().AllocateReadWriteBuffer<double>(8);
+
+        device.Get().For(1, new DoubleConstantsInShaderConstantFieldsShader(buffer1, buffer2));
+
+        float[] results1 = buffer1.ToArray();
+
+        Assert.AreEqual(results1[0], DoubleConstantsInShaderConstantFieldsShader.DoubleToFloatConstant, 0.0001f);
+        Assert.AreEqual(results1[1], DoubleConstantsInShaderConstantFieldsShader.DoubleToFloatField, 0.0001f);
+        Assert.AreEqual(results1[2], DoubleConstants.PI, 0.0001f);
+        Assert.AreEqual(results1[3], (float)(1 / 255.0), 0.0001f);
+        Assert.AreEqual(results1[4], DoubleConstantsInShaderConstantFieldsShader.floatExponentLowercase, 0.0001f);
+        Assert.AreEqual(results1[5], DoubleConstantsInShaderConstantFieldsShader.floatExponentUppercase, 0.0001f);
+        Assert.AreEqual(results1[6], DoubleConstantsInShaderConstantFieldsShader.floatExponentLowercaseField, 0.0001f);
+        Assert.AreEqual(results1[7], DoubleConstantsInShaderConstantFieldsShader.floatExponentUppercaseField, 0.0001f);
+
+        double[] results2 = buffer2.ToArray();
+
+        Assert.AreEqual(results2[0], DoubleConstantsInShaderConstantFieldsShader.DoubleConstant, 0.0001f);
+        Assert.AreEqual(results2[1], DoubleConstantsInShaderConstantFieldsShader.DoubleField, 0.0001f);
+        Assert.AreEqual(results2[2], DoubleConstants.PI2, 0.0001f);
+        Assert.AreEqual(results2[3], 1 / 255.0, 0.0001f);
+        Assert.AreEqual(results2[4], DoubleConstantsInShaderConstantFieldsShader.exponentLowercase, 0.0001f);
+        Assert.AreEqual(results2[5], DoubleConstantsInShaderConstantFieldsShader.exponentUppercase, 0.0001f);
+        Assert.AreEqual(results2[6], DoubleConstantsInShaderConstantFieldsShader.exponentLowercaseField, 0.0001f);
+        Assert.AreEqual(results2[7], DoubleConstantsInShaderConstantFieldsShader.exponentUppercaseField, 0.0001f);
+    }
+
+    private static class DoubleConstants
+    {
+        public const float PI = (float)3.14;
+        public const double PI2 = 3.14 * 2;
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct DoubleConstantsInShaderConstantFieldsShader : IComputeShader
+    {
+        public const float DoubleToFloatConstant = (float)(1 / 255.0);
+        public const double DoubleConstant = 1.0 / 255;
+        public const float floatExponentLowercase = (float)1234567e-4;
+        public const float floatExponentUppercase = (float)1234567E-4;
+        public const double exponentLowercase = 1234567e-4;
+        public const double exponentUppercase = 1234567E-4;
+
+        public static readonly float DoubleToFloatField = (float)(1D / 255);
+        public static readonly double DoubleField = 1 / 255D;
+        public static readonly float floatExponentLowercaseField = (float)1234567e-4;
+        public static readonly float floatExponentUppercaseField = (float)1234567E-4;
+        public static readonly double exponentLowercaseField = 1234567e-4;
+        public static readonly double exponentUppercaseField = 1234567E-4;
+
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<double> buffer2;
+
+        public void Execute()
+        {
+            const float localFloat = (float)(1 / 255.0);
+            const double localDouble = 1.0 / 255;
+
+            buffer1[0] = DoubleToFloatConstant;
+            buffer1[1] = DoubleToFloatField;
+            buffer1[2] = DoubleConstants.PI;
+            buffer1[3] = localFloat;
+            buffer1[4] = floatExponentLowercase;
+            buffer1[5] = floatExponentUppercase;
+            buffer1[6] = floatExponentLowercaseField;
+            buffer1[7] = floatExponentUppercaseField;
+
+            buffer2[0] = DoubleConstant;
+            buffer2[1] = DoubleField;
+            buffer2[2] = DoubleConstants.PI2;
+            buffer2[3] = localDouble;
+            buffer2[4] = exponentLowercase;
+            buffer2[5] = exponentUppercase;
+            buffer2[6] = exponentLowercaseField;
+            buffer2[7] = exponentUppercaseField;
         }
     }
 }
