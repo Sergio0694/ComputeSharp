@@ -178,4 +178,69 @@ public partial class ShaderRewriterTests
             buffer[5] = lerp;
         }
     }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/278
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void DoubleConstantsInShaderConstantFields(Device device)
+    {
+        if (!device.Get().IsDoublePrecisionSupportAvailable())
+        {
+            Assert.Inconclusive();
+        }
+
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer<float>(4);
+        using ReadWriteBuffer<double> buffer2 = device.Get().AllocateReadWriteBuffer<double>(4);
+
+        device.Get().For(1, new DoubleConstantsInShaderConstantFieldsShader(buffer1, buffer2));
+
+        float[] results1 = buffer1.ToArray();
+
+        Assert.AreEqual(results1[0], DoubleConstantsInShaderConstantFieldsShader.DoubleToFloatConstant, 0.0001f);
+        Assert.AreEqual(results1[1], DoubleConstantsInShaderConstantFieldsShader.DoubleToFloatField, 0.0001f);
+        Assert.AreEqual(results1[2], DoubleConstants.PI, 0.0001f);
+        Assert.AreEqual(results1[3], (float)(1 / 255.0), 0.0001f);
+
+        double[] results2 = buffer2.ToArray();
+
+        Assert.AreEqual(results2[0], DoubleConstantsInShaderConstantFieldsShader.DoubleConstant, 0.0001f);
+        Assert.AreEqual(results2[1], DoubleConstantsInShaderConstantFieldsShader.DoubleField, 0.0001f);
+        Assert.AreEqual(results2[2], DoubleConstants.PI2, 0.0001f);
+        Assert.AreEqual(results2[3], 1 / 255.0, 0.0001f);
+    }
+
+    private static class DoubleConstants
+    {
+        public const float PI = (float)3.14;
+        public const double PI2 = 3.14 * 2;
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct DoubleConstantsInShaderConstantFieldsShader : IComputeShader
+    {
+        public const float DoubleToFloatConstant = (float)(1 / 255.0);
+        public const double DoubleConstant = 1.0 / 255;
+
+        public static readonly float DoubleToFloatField = (float)(1D / 255);
+        public static readonly double DoubleField = 1 / 255D;
+
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<double> buffer2;
+
+        public void Execute()
+        {
+            const float localFloat = (float)(1 / 255.0);
+            const double localDouble = 1.0 / 255;
+
+            buffer1[0] = DoubleToFloatConstant;
+            buffer1[1] = DoubleToFloatField;
+            buffer1[2] = DoubleConstants.PI;
+            buffer1[3] = localFloat;
+
+            buffer2[0] = DoubleConstant;
+            buffer2[1] = DoubleField;
+            buffer2[2] = DoubleConstants.PI2;
+            buffer2[3] = localDouble;
+        }
+    }
 }
