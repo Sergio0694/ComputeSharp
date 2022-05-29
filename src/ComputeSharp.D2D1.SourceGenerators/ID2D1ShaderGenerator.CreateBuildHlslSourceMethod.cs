@@ -469,9 +469,14 @@ partial class ID2D1ShaderGenerator
             AppendLineAndLF("#include \"d2d1effecthelpers.hlsli\"");
 
             // Define declarations
-            foreach (var (name, value) in definedConstants)
+            if (definedConstants.Any())
             {
-                AppendLineAndLF($"#define {name} {value}");
+                AppendLF();
+
+                foreach (var (name, value) in definedConstants)
+                {
+                    AppendLineAndLF($"#define {name} {value}");
+                }
             }
 
             // Static fields
@@ -500,12 +505,14 @@ partial class ID2D1ShaderGenerator
             }
 
             // Captured variables
-            AppendLF();
-
-            // User-defined values
-            foreach (var (fieldName, fieldType) in valueFields)
+            if (valueFields.Any())
             {
-                AppendLineAndLF($"{fieldType} {fieldName};");
+                AppendLF();
+
+                foreach (var (fieldName, fieldType) in valueFields)
+                {
+                    AppendLineAndLF($"{fieldType} {fieldName};");
+                }
             }
 
             // Forward declarations
