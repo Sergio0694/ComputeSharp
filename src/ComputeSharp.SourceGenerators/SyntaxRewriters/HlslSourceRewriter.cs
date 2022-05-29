@@ -195,7 +195,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // used in the HLSL representation. Floating point values accept either f or F, but they don't work
             // when the literal doesn't contain a decimal point. Since 32 bit floating point values are the default
             // in HLSL, we can remove the suffix entirely. As for 64 bit values, we simply use the 'L' suffix.
-            if (type.GetFullMetadataName().Equals(typeof(float).FullName))
+            if (type.SpecialType == SpecialType.System_Single)
             {
                 string literal = updatedNode.Token.ValueText;
 
@@ -207,9 +207,22 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
                 return updatedNode.WithToken(Literal(literal, 0f));
             }
-            else if (type.GetFullMetadataName().Equals(typeof(double).FullName))
+            else if (type.SpecialType == SpecialType.System_Double)
             {
-                return updatedNode.WithToken(Literal(updatedNode.Token.ValueText + "L", 0d));
+                string literal = updatedNode.Token.ValueText;
+
+                // If the numeric literal is neither a decimal nor an exponential, add the ".0L" suffix.
+                // This is necessary because otherwise integer literals would actually be of type long.
+                if (literal.IndexOfAny(new[] { '.', 'E' }) == -1)
+                {
+                    literal += ".0L";
+                }
+                else
+                {
+                    literal += "L";
+                }
+
+                return updatedNode.WithToken(Literal(literal, 0d));
             }
         }
         else if (updatedNode.IsKind(SyntaxKind.StringLiteralExpression))
