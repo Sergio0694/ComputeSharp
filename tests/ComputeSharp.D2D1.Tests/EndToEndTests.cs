@@ -6,6 +6,7 @@ using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SixLabors.ImageSharp;
 
 namespace ComputeSharp.D2D1.Tests;
 
@@ -13,6 +14,12 @@ namespace ComputeSharp.D2D1.Tests;
 [TestCategory("EndToEnd")]
 public class EndToEndTests
 {
+    [AssemblyInitialize]
+    public static void ConfigureImageSharp()
+    {
+        Configuration.Default.PreferContiguousImageBuffers = true;
+    }
+
     [TestMethod]
     public unsafe void Invert()
     {

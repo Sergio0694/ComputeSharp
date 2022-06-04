@@ -28,9 +28,9 @@ public static class ImagingExtensions
 
         Image<TTo> image = new(texture.Width, texture.Height);
 
-        Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<TTo> span));
+        Assert.IsTrue(image.DangerousTryGetSinglePixelMemory(out Memory<TTo> memory));
 
-        Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(span);
+        Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(memory.Span);
 
         texture.CopyTo(pixels);
 
@@ -53,9 +53,9 @@ public static class ImagingExtensions
 
         Image<TTo> image = new(texture.Width, texture.Height);
 
-        Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<TTo> span));
+        Assert.IsTrue(image.DangerousTryGetSinglePixelMemory(out Memory<TTo> memory));
 
-        Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(span);
+        Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(memory.Span);
 
         texture.CopyTo(pixels, 0, 0, depth, texture.Width, texture.Height, 1);
 

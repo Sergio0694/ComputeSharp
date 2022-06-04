@@ -186,9 +186,9 @@ public class ShadersTests
                 action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
             }
 
-            _ = image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span);
+            _ = image.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> memory);
 
-            texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span));
+            texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(memory.Span));
         }
 
         string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{shaderType.Name}.png");
@@ -246,9 +246,9 @@ public class ShadersTests
                 texture.GraphicsDevice.ForEach(texture, pixelFactory(texture));
             }
 
-            _ = image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span);
+            _ = image.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> memory);
 
-            texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span));
+            texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(memory.Span));
         }
 
         string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{shaderType.Name}.png");

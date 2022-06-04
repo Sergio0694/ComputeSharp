@@ -13,6 +13,8 @@ class Program
 {
     static void Main()
     {
+        Configuration.Default.PreferContiguousImageBuffers = true;
+
         Console.WriteLine(">> Loading image");
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "city.jpg");
         using Image<ImageSharpRgba32> image = Image.Load<ImageSharpRgba32>(path);

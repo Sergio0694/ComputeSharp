@@ -31,6 +31,8 @@ public class ImagingBenchmark : IDisposable
     [GlobalSetup]
     public void Setup()
     {
+        Configuration.Default.PreferContiguousImageBuffers = true;
+
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
         this.image = Image.Load<ImageSharpRgba32>(path);
