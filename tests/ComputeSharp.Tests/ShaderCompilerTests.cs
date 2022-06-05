@@ -33,6 +33,44 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        public void ReservedKeywordsInCustomTypes()
+        {
+            _ = ReflectionServices.GetShaderInfo<ReservedKeywordsInCustomTypesShader>();
+        }
+
+        public struct CellData
+        {
+            public float testX;
+            public float testY;
+            public uint seed;
+
+            public float distance;
+            public readonly float dword;
+            public readonly float float2;
+            public readonly int int2x2;
+        }
+
+        [AutoConstructor]
+        public readonly partial struct ReservedKeywordsInCustomTypesShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> row_major;
+            public readonly CellData cellData;
+            public readonly float dword;
+            public readonly float float2;
+            public readonly int int2x2;
+            public readonly CellData cbuffer;
+
+            public void Execute()
+            {
+                float exp = Hlsl.Exp(cellData.distance * row_major[ThreadIds.X]);
+                float log = Hlsl.Log(1 + exp);
+                float temp = log + cellData.dword + cellData.int2x2;
+
+                row_major[ThreadIds.X] = log / dword + float2 + int2x2 + cbuffer.float2;
+            }
+        }
+
+        [TestMethod]
         public void ReservedKeywordsPrecompiled()
         {
             _ = ReflectionServices.GetShaderInfo<ReservedKeywordsPrecompiledShader>();

@@ -337,15 +337,21 @@ partial class ID2D1ShaderGenerator
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     // Convert the name to the fully qualified HLSL version
-                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mapped))
+                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mappedType))
                     {
-                        mapped = fieldType.GetFullMetadataName().ToHlslIdentifierName();
+                        mappedType = fieldType.GetFullMetadataName().ToHlslIdentifierName();
+                    }
+
+                    // Get the field name as a valid HLSL identifier
+                    if (!HlslKnownKeywords.TryGetMappedName(field.Name, out string? mappedName))
+                    {
+                        mappedName = field.Name;
                     }
 
                     structDeclaration = structDeclaration.AddMembers(
                         FieldDeclaration(VariableDeclaration(
-                            IdentifierName(mapped!)).AddVariables(
-                            VariableDeclarator(Identifier(field.Name)))));
+                            IdentifierName(mappedType!)).AddVariables(
+                            VariableDeclarator(Identifier(mappedName!)))));
                 }
 
                 // Insert the trailing ; right after the closing bracket (after normalization)

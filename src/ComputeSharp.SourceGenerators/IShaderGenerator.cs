@@ -71,7 +71,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(supportsDynamicShaders), static (context, item) =>
         {
             MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -159,7 +159,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 item.Left.FieldInfos,
                 item.Left.ResourceCount,
                 item.Left.Root32BitConstantCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -180,7 +180,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit).Combine(canUseRawMultiLineStringLiterals), static (context, item) =>
         {
             MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.Left.SourceInfo, item.Left.Left.SupportsDynamicShaders, item.Left.Left.Hierarchy.Hierarchy.Length, item.Right);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Left.Hierarchy, buildHlslStringMethod, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: item.Left.Right);
 
             context.AddSource($"{item.Left.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -206,7 +206,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(dispatchMetadataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
             MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Left.MetadataInfo);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -264,7 +264,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
         {
             MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, canUseSkipLocalsInit: false);
             SourceText text = fixup(compilationUnit);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", text);
