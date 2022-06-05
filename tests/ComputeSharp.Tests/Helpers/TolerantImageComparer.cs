@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SixLabors.ImageSharp;
-using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Advanced;
-using System.Runtime.CompilerServices;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests.Helpers;
 
@@ -61,11 +61,11 @@ internal static class TolerantImageComparer
 
         for (int y = 0; y < actual.Height; y++)
         {
-            Span<TPixel> aSpan = expected.GetPixelRowSpan(y);
-            Span<TPixel> bSpan = actual.GetPixelRowSpan(y);
+            Memory<TPixel> aMemory = expected.DangerousGetPixelRowMemory(y);
+            Memory<TPixel> bMemory = actual.DangerousGetPixelRowMemory(y);
 
-            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), aSpan, aBuffer);
-            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), bSpan, bBuffer);
+            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), aMemory.Span, aBuffer);
+            PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), bMemory.Span, bBuffer);
 
             for (int x = 0; x < width; x++)
             {

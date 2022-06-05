@@ -93,12 +93,12 @@ public sealed partial class HlslGaussianBlurProcessor
         /// <inheritdoc/>
         protected override void OnFrameApply(ImageFrame<ImageSharpRgba32> source)
         {
-            if (!source.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> pixelSpan))
+            if (!source.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> pixelMemory))
             {
                 ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory.");
             }
 
-            Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
+            Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelMemory.Span);
 
             using ReadWriteTexture2D<Rgba32, float4> sourceTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
             using ReadWriteTexture2D<Rgba32, float4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(source.Width, source.Height);

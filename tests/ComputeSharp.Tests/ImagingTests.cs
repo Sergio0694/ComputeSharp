@@ -6,12 +6,12 @@ using CommunityToolkit.HighPerformance.Buffers;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
+using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
-using ComputeSharp.Tests.Helpers;
 
 namespace ComputeSharp.Tests;
 
@@ -19,6 +19,12 @@ namespace ComputeSharp.Tests;
 [TestCategory("Imaging")]
 public class ImagingTests
 {
+    [AssemblyInitialize]
+    public static void ConfigureImageSharp()
+    {
+        Configuration.Default.PreferContiguousImageBuffers = true;
+    }
+
     [CombinatorialTestMethod]
     [AllDevices]
     [Resource(typeof(ReadOnlyTexture2D<,>))]
