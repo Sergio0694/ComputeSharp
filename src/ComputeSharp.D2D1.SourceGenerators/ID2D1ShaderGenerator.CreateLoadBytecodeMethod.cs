@@ -116,6 +116,12 @@ partial class ID2D1ShaderGenerator
         /// <returns>Whether the shader only has simple inputs.</returns>
         public static bool IsSimpleInputShader(INamedTypeSymbol structDeclarationSymbol, int inputCount)
         {
+            // If there are no inputs, the shader is as if only had simple inputs
+            if (inputCount == 0)
+            {
+                return true;
+            }
+
             // Build a map of all simple inputs (unmarked inputs default to being complex)
             bool[] simpleInputsMap = new bool[inputCount];
 
@@ -123,8 +129,11 @@ partial class ID2D1ShaderGenerator
             {
                 switch (attributeData.AttributeClass?.GetFullMetadataName())
                 {
-                    case "ComputeSharp.D2D1.D2DInputSimpleAttribute":
-                        simpleInputsMap[(int)attributeData.ConstructorArguments[0].Value!] = true;
+                    // Only retrieve indices of simple inputs that are in range. If an input is out of
+                    // range, the diagnostic for it will already be emitted by a previous generator step.
+                    case "ComputeSharp.D2D1.D2DInputSimpleAttribute"
+                    when attributeData.ConstructorArguments[0].Value is int index && index < inputCount:
+                        simpleInputsMap[index] = true;
                         break;
                 }
             }
