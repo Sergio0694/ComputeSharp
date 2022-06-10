@@ -264,6 +264,46 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the constant buffer from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
+    /// <param name="shader">The input D2D1 pixel shader to retrieve info for.</param>
+    /// <param name="span">The target <see cref="Span{T}"/> to write the constant buffer to.</param>
+    /// <returns>The number of bytes written into <paramref name="span"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="span"/> is not large enough to contain the constant buffer.</exception>
+    public static int GetConstantBuffer<T>(in T shader, Span<byte> span)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        if (!TryGetConstantBuffer(in shader, span, out int writtenBytes))
+        {
+            ThrowHelper.ThrowArgumentException(nameof(span), "The destination span is too short.");
+        }
+
+        return writtenBytes;
+    }
+
+    /// <summary>
+    /// Tries to get the constant buffer from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
+    /// <param name="shader">The input D2D1 pixel shader to retrieve info for.</param>
+    /// <param name="span">The target <see cref="Span{T}"/> to write the constant buffer to.</param>
+    /// <param name="bytesWritten">The number of bytes written into <paramref name="span"/>.</param>
+    /// <returns>Whether or not the constant buffer was retrieved successfully.</returns>
+    public static unsafe bool TryGetConstantBuffer<T>(in T shader, Span<byte> span, out int bytesWritten)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        fixed (byte* buffer = span)
+        {
+            D2D1ByteBufferDispatchDataLoader dataLoader = new(buffer, span.Length);
+
+            Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+
+            return dataLoader.TryGetWrittenBytes(out bytesWritten);
+        }
+    }
+
+    /// <summary>
     /// Sets the constant buffer from an input D2D1 pixel shader, by calling <c>ID2D1DrawInfo::SetPixelShaderConstantBuffer</c>.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to set the constant buffer for.</typeparam>
