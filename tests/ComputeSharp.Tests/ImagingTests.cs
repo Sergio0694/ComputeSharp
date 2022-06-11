@@ -20,7 +20,7 @@ namespace ComputeSharp.Tests;
 public class ImagingTests
 {
     [AssemblyInitialize]
-    public static void ConfigureImageSharp()
+    public static void ConfigureImageSharp(TestContext _)
     {
         Configuration.Default.PreferContiguousImageBuffers = true;
     }
