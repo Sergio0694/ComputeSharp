@@ -277,6 +277,19 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
+    public unsafe void GetConstantBufferSize()
+    {
+        int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypes>();
+
+        Assert.AreEqual(size, 124);
+
+        // Repeated calls always return the same result
+        size = D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypes>();
+
+        Assert.AreEqual(size, 124);
+    }
+
+    [TestMethod]
     public unsafe void GetConstantBuffer_ReadOnlyMemory()
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
