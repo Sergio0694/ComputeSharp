@@ -205,7 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.0.0-preview1</Version>
+      <Version>8.0.0-preview4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>4.5.1</Version>

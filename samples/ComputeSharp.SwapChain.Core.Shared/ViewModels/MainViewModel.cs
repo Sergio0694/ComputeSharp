@@ -20,7 +20,7 @@ namespace ComputeSharp.SwapChain.Core.ViewModels;
 /// <summary>
 /// The viewmodel for for a view that allows users to select shaders and customize settings.
 /// </summary>
-public sealed class MainViewModel : ObservableObject
+public sealed partial class MainViewModel : ObservableObject
 {
     /// <summary>
     /// The <see cref="IAnalyticsService"/> instance currently in use.
@@ -40,9 +40,6 @@ public sealed class MainViewModel : ObservableObject
         this.selectedResolutionScale = 100;
         this.selectedComputeShader = ComputeShaderOptions[0];
         this.selectedComputeShader.IsSelected = true;
-
-        SetResolutionScaleCommand = new RelayCommand<int>(SetResolutionScale);
-        ToggleRenderingPausedCommand = new RelayCommand(ToggleRenderingPaused);
     }
 
     /// <summary>
@@ -102,19 +99,6 @@ public sealed class MainViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Gets the command that sets <see cref="SelectedResolutionScale"/>. 
-    /// </summary>
-    public IRelayCommand SetResolutionScaleCommand { get; }
-
-    /// <summary>
-    /// Sets <see cref="SelectedResolutionScale"/>.
-    /// </summary>
-    private void SetResolutionScale(int resolutionScale)
-    {
-        SelectedResolutionScale = resolutionScale;
-    }
-
-    /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
     public IReadOnlyList<ComputeShader> ComputeShaderOptions { get; } = new ComputeShader[]
@@ -171,13 +155,18 @@ public sealed class MainViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Gets the command that toggles <see cref="IsRenderingPaused"/>. 
+    /// Sets <see cref="SelectedResolutionScale"/>.
     /// </summary>
-    public IRelayCommand ToggleRenderingPausedCommand { get; }
+    [RelayCommand]
+    private void SetResolutionScale(int resolutionScale)
+    {
+        SelectedResolutionScale = resolutionScale;
+    }
 
     /// <summary>
     /// Toggles <see cref="IsRenderingPaused"/>.
     /// </summary>
+    [RelayCommand]
     private void ToggleRenderingPaused()
     {
         IsRenderingPaused = !IsRenderingPaused;
