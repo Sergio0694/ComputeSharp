@@ -98,6 +98,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE_FLAGS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DRED_ENABLEMENT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_FEATURE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_FEATURE_DATA_ARCHITECTURE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_FEATURE_DATA_ARCHITECTURE1.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12CommandQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12DescriptorHeap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12DeviceRemovedExtendedDataSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12Fence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12GraphicsCommandList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12Heap.cs" />

@@ -81,6 +81,8 @@ internal static partial class DeviceHelper
     /// <returns>Whether a default device was found with the requested feature level.</returns>
     private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
+        EnsureDeviceRemovedExtendedDataConfiguration();
+
         using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
 
         CreateDXGIFactory6(dxgiFactory6.GetAddressOf());
@@ -173,6 +175,8 @@ internal static partial class DeviceHelper
     /// <returns>Whether a warp device was created successfully.</returns>
     private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
+        EnsureDeviceRemovedExtendedDataConfiguration();
+
         using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
 
         CreateDXGIFactory6(dxgiFactory6.GetAddressOf());

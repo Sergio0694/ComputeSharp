@@ -105,6 +105,8 @@ internal static partial class DeviceHelper
                 {
                     this.isInitialized = true;
 
+                    EnsureDeviceRemovedExtendedDataConfiguration();
+
                     fixed (IDXGIFactory6** dxgiFactory6 = this.dxgiFactory6)
                     {
                         CreateDXGIFactory6(dxgiFactory6);

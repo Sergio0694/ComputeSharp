@@ -14,9 +14,19 @@ internal static class Configuration
     private const string EnableDebugOutput = "COMPUTESHARP_ENABLE_DEBUG_OUTPUT";
 
     /// <summary>
+    /// The configuration property name for <see cref="IsDeviceRemovedExtendedDataEnabled"/>.
+    /// </summary>
+    private const string EnableDeviceRemovedExtendedDataInfo = "COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA";
+
+    /// <summary>
     /// Indicates whether or not the debug output is enabled.
     /// </summary>
     public static readonly bool IsDebugOutputEnabled = GetConfigurationValue(EnableDebugOutput);
+
+    /// <summary>
+    /// Indicates whether or not the debug output is enabled.
+    /// </summary>
+    public static readonly bool IsDeviceRemovedExtendedDataEnabled = GetConfigurationValue(EnableDeviceRemovedExtendedDataInfo);
 
     /// <summary>
     /// Gets a configuration value for a specified property.
