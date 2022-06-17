@@ -17,6 +17,11 @@ namespace ComputeSharp.Graphics.Helpers;
 internal static partial class DeviceHelper
 {
     /// <summary>
+    /// A shared <see cref="StringBuilder"/> used from <see cref="FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings"/> to create messages.
+    /// </summary>
+    private static StringBuilder? infoQueueMessageBuilder;
+
+    /// <summary>
     /// Flushes all the pending debug messages for all existing <see cref="ID3D12Device"/> instances to the console/debugger.
     /// It also checks whether or not there are any error messages being logged that didn't result in an actual crash yet.
     /// </summary>
@@ -27,7 +32,7 @@ internal static partial class DeviceHelper
 
         lock (DevicesCache)
         {
-            StringBuilder builder = new(1024);
+            StringBuilder builder = infoQueueMessageBuilder ??= new(1024);
 
             foreach (var pair in D3D12InfoQueueMap)
             {
