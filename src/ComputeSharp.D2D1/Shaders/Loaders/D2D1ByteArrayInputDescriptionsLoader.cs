@@ -22,7 +22,7 @@ internal struct D2D1ByteArrayInputDescriptionsLoader : ID2D1InputDescriptionsLoa
     /// <summary>
     /// Gets the resulting input descriptions.
     /// </summary>
-    /// <remarks>A <see cref="D2D1InputDescription"/> array with the available input descriptions.</remarks>
+    /// <returns>A <see cref="D2D1InputDescription"/> array with the available input descriptions.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public D2D1InputDescription[] GetResultingInputDescriptions()
     {
