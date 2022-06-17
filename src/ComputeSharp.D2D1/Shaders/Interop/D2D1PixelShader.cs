@@ -264,6 +264,17 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the size of the constant buffer for a D2D1 pixel shader of a specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
+    /// <returns>The size of the constant buffer for a D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static int GetConstantBufferSize<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        return D2D1BufferSizeDispatchDataLoader.For<T>.ConstantBufferSize;
+    }
+
+    /// <summary>
     /// Gets the constant buffer from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
