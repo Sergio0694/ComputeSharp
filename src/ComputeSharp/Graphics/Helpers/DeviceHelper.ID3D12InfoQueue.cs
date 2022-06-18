@@ -15,7 +15,7 @@ using Enum = ComputeSharp.NetStandard.System.Enum;
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <inheritdoc/>
-internal static partial class DeviceHelper
+partial class DeviceHelper
 {
     /// <summary>
     /// A shared <see cref="StringBuilder"/> used from <see cref="FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings"/> to create messages.

@@ -7,7 +7,7 @@ using ComputeSharp.Resources;
 namespace ComputeSharp;
 
 /// <inheritdoc cref="GraphicsDeviceExtensions"/>
-public static partial class GraphicsDeviceExtensions
+partial class GraphicsDeviceExtensions
 {
     /// <summary>
     /// Allocates a new constant buffer with the specified parameters.

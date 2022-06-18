@@ -7,7 +7,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators.SyntaxRewriters;
 
 /// <inheritdoc cref="HlslSourceRewriter"/>
-internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
+partial class HlslSourceRewriter : CSharpSyntaxRewriter
 {
     /// <inheritdoc/>
     public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)

@@ -15,7 +15,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <inheritdoc cref="DeviceHelper"/>
-internal static partial class DeviceHelper
+partial class DeviceHelper
 {
     /// <summary>
     /// The creation flags for <see cref="IDXGIFactory"/> instances.

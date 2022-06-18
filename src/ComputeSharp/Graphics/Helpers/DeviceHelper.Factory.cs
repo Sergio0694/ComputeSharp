@@ -6,7 +6,7 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <inheritdoc/>
-internal static partial class DeviceHelper
+partial class DeviceHelper
 {
     /// <summary>
     /// The local cache of <see cref="GraphicsDevice"/> instances that are currently usable.
