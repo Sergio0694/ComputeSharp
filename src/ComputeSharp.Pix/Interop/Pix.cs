@@ -6,7 +6,7 @@ namespace ComputeSharp.Interop;
 /// <summary>
 /// A collection of native bindings for PIX APIs (see <see href="https://devblogs.microsoft.com/pix/winpixeventruntime/"/>).
 /// </summary>
-internal static unsafe class Pix
+internal static unsafe partial class Pix
 {
     /// <summary>
     /// Starts a PIX event on a target <see cref="ID3D12GraphicsCommandList"/> object.
