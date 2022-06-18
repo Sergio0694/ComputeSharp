@@ -14,6 +14,11 @@
     <Content Include="..\ComputeSharp.Core.Package\icon.png" PackFolder="\" />
   </ItemGroup>
 
+  <!-- Include the PIX license file -->
+  <ItemGroup>
+    <Content Include="..\ComputeSharp.Pix\LICENSE.txt" PackFolder="\" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Pix\ComputeSharp.Pix.csproj" />
     <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="net6.0">
