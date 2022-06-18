@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <OutputPath>bin\Release</OutputPath>
+    <DocumentationFile>ComputeSharp.Pix.xml</DocumentationFile>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <!-- Enable trimming support on .NET 6 -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
+
+  <!-- Reference to the main library-->
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+  </ItemGroup>
+
+  <Choose>
+
+    <!-- When building locally for x64/ARM64, only support the non-UAP libraries -->
+    <When Condition="'$(Platform)' == 'x64'">
+      <ItemGroup>
+        <None Include="Libraries\x64\WinPixEventRuntime.dll"
+              Link="WinPixEventRuntime.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Platform)' == 'ARM64'">
+      <ItemGroup>
+        <None Include="Libraries\arm64\WinPixEventRuntime.dll"
+              Link="WinPixEventRuntime.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest" />
+      </ItemGroup>
+    </When>
+
+    <!-- When no RID is specified, it means the NuGet package is being packed. In this case,
+         copy all libraries, and then rely on the custom .targets file to unpack them correctly. -->
+    <Otherwise>
+      <ItemGroup>
+        <None Include="Libraries\x64\WinPixEventRuntime.dll"
+              Link="runtimes\win-x64\native\WinPixEventRuntime.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest"
+              PackFolder="runtimes\win-x64\native" />
+        <None Include="Libraries\x64\WinPixEventRuntime_UAP.dll"
+              Link="runtimes\win-x64\native\WinPixEventRuntime_UAP.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest"
+              PackFolder="runtimes\win-x64\native" />
+        <None Include="Libraries\arm64\WinPixEventRuntime.dll"
+              Link="runtimes\win-arm64\native\WinPixEventRuntime.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest"
+              PackFolder="runtimes\win-arm64\native" />
+        <None Include="Libraries\arm64\WinPixEventRuntime_UAP.dll"
+              Link="runtimes\win-arm64\native\WinPixEventRuntime_UAP.dll"
+              Visible="False"
+              CopyToOutputDirectory="PreserveNewest"
+              PackFolder="runtimes\win-arm64\native" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+</Project>

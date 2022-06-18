@@ -100,6 +100,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests.AssemblyLevelAttributes", "tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj", "{94178D51-0097-4AD2-B3D0-827E40D62F2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -410,6 +412,18 @@ Global
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|ARM64.Build.0 = Release|Any CPU
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|x64.ActiveCfg = Release|Any CPU
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|x64.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|x64.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|ARM64.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
