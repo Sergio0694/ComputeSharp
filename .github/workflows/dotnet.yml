@@ -79,6 +79,9 @@ jobs:
     - name: Build ComputeSharp.D2D1 package
       run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release
       shell: cmd
+    - name: Build ComputeSharp.Pix package
+      run: dotnet build src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj -c Release
+      shell: cmd
     - name: Build ComputeSharp.Uwp package
       run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
       shell: cmd
