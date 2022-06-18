@@ -228,11 +228,4 @@
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
-
-  <ItemGroup Label="Package">
-
-    <!-- Include the custom .targets file to check the source generator (.NET 6 is not needed as it guarantees Roslyn 4.x) -->
-    <None Include="ComputeSharp.Core.targets" PackagePath="buildTransitive\netstandard2.0" Pack="true" />
-    <None Include="ComputeSharp.Core.targets" PackagePath="build\netstandard2.0" Pack="true" />
-  </ItemGroup>
 </Project>

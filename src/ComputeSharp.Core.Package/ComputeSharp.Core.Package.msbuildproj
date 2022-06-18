@@ -19,4 +19,11 @@
     <ProjectReference Include="..\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" PackFolder="analyzers\dotnet\cs" />
   </ItemGroup>
 
+  <ItemGroup Label="Package">
+
+    <!-- Include the custom .targets file to check the source generator (.NET 6 is not needed as it guarantees Roslyn 4.x) -->
+    <None Include="..\ComputeSharp.Core\ComputeSharp.Core.targets" PackagePath="buildTransitive\netstandard2.0" Pack="true" />
+    <None Include="..\ComputeSharp.Core\ComputeSharp.Core.targets" PackagePath="build\netstandard2.0" Pack="true" />
+  </ItemGroup>
+
 </Project>
