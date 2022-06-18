@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{FB17EF84
 		src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj = src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj
 		src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj = src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj
 		src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj = src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj
+		src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj = src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj
 		src\ComputeSharp.Core.Package\icon.png = src\ComputeSharp.Core.Package\icon.png
 		src\ComputeSharp.Core.Package\icon_highres.png = src\ComputeSharp.Core.Package\icon_highres.png
 	EndProjectSection
@@ -100,7 +101,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests.AssemblyLevelAttributes", "tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj", "{94178D51-0097-4AD2-B3D0-827E40D62F2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
