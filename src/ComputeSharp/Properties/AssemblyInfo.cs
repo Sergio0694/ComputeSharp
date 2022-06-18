@@ -3,6 +3,7 @@
 [module: SkipLocalsInit]
 
 [assembly: InternalsVisibleTo("ComputeSharp.Dynamic")]
+[assembly: InternalsVisibleTo("ComputeSharp.Pix")]
 [assembly: InternalsVisibleTo("ComputeSharp.Uwp")]
 [assembly: InternalsVisibleTo("ComputeSharp.WinUI")]
 

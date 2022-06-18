@@ -81,7 +81,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, null);
+        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->ClearUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, isNormalized);
     }
@@ -101,7 +101,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, null);
+        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->FillUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, value);
     }
@@ -275,7 +275,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, null);
+        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->TransitionBarrier(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
     }
@@ -345,7 +345,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="pipelineState">The input <see cref="ID3D12PipelineState"/> to load.</param>
     /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
+    internal static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
     {
         ref ComputeContext context = ref Unsafe.AsRef(in @this);
 
