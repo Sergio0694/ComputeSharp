@@ -1,17 +1,17 @@
 <Project>
 
   <!-- Get the analyzer from the ComputeSharp.D2D1 NuGet package -->
-  <Target Name="_ComputeSharpGatherAnalyzers">
+  <Target Name="_ComputeSharpD2D1GatherAnalyzers">
     <ItemGroup>
-      <_ComputeSharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'ComputeSharp.D2D1'" />
+      <_ComputeSharpD2D1Analyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'ComputeSharp.D2D1'" />
     </ItemGroup>
   </Target>
 
   <!-- Remove the analyzer if using Roslyn 3.x (incremental generators require Roslyn 4.x) -->
-  <Target Name="_ComputeSharpRemoveAnalyzersForRoslyn3"
+  <Target Name="_ComputeSharpD2D1RemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
-          DependsOnTargets="_ComputeSharpGatherAnalyzers">
+          DependsOnTargets="_ComputeSharpD2D1GatherAnalyzers">
 
     <!-- Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
          MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
@@ -32,7 +32,7 @@
 
     <!-- If the Roslyn version is < 4.0, disable the source generators -->
     <ItemGroup Condition ="'$(CurrentCompilerVersionIsNotNewEnough)' == 'true'">
-      <Analyzer Remove="@(_ComputeSharpAnalyzer)"/>
+      <Analyzer Remove="@(_ComputeSharpD2D1Analyzer)"/>
     </ItemGroup>
 
     <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
@@ -42,14 +42,14 @@
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->
-  <Target Name="_ComputeSharpRemoveAnalyzersForRosynNotFound"
+  <Target Name="_ComputeSharpD2D1RemoveAnalyzersForRosynNotFound"
           Condition="'$(CSharpCoreTargetsPath)' == ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
-          DependsOnTargets="_ComputeSharpGatherAnalyzers">
+          DependsOnTargets="_ComputeSharpD2D1GatherAnalyzers">
 
     <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
     <ItemGroup>
-      <Analyzer Remove="@(_ComputeSharpAnalyzer)"/>
+      <Analyzer Remove="@(_ComputeSharpD2D1Analyzer)"/>
     </ItemGroup>
   </Target>
 
