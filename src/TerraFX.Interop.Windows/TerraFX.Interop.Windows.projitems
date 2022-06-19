@@ -72,6 +72,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12shader\D3D12_SHADER_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12shader\ID3D12ShaderReflection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_AUTO_BREADCRUMB_NODE1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_AUTO_BREADCRUMB_OP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_BOX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_BUFFER_SRV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_BUFFER_SRV_FLAGS.cs" />
@@ -98,6 +100,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE_FLAGS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DESCRIPTOR_RANGE_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DRED_AUTO_BREADCRUMB_OUTPUT1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DRED_BREADCRUMB_CONTEXT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_DRED_ENABLEMENT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_FEATURE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\D3D12_FEATURE_DATA_ARCHITECTURE.cs" />
@@ -189,6 +193,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12CommandQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12DescriptorHeap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12DeviceRemovedExtendedData1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12DeviceRemovedExtendedDataSettings1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12Fence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12\ID3D12GraphicsCommandList.cs" />
