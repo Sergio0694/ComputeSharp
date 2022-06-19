@@ -40,27 +40,30 @@
     <!-- When no RID is specified, it means the NuGet package is being packed. In this case,
          copy all libraries, and then rely on the custom .targets file to unpack them correctly. -->
     <Otherwise>
+      <PropertyGroup>
+        <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220124001</WinPixEventRuntimeVersion>
+      </PropertyGroup>
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
-              Link="runtimes\win-x64\native\WinPixEventRuntime.dll"
+              Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
               Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-x64\native" />
+              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
         <None Include="Libraries\x64\WinPixEventRuntime_UAP.dll"
-              Link="runtimes\win-x64\native\WinPixEventRuntime_UAP.dll"
+              Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
               Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-x64\native" />
+              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
         <None Include="Libraries\arm64\WinPixEventRuntime.dll"
-              Link="runtimes\win-arm64\native\WinPixEventRuntime.dll"
+              Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
               Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-arm64\native" />
+              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
         <None Include="Libraries\arm64\WinPixEventRuntime_UAP.dll"
-              Link="runtimes\win-arm64\native\WinPixEventRuntime_UAP.dll"
+              Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
               Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-arm64\native" />
+              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
       </ItemGroup>
     </Otherwise>
   </Choose>

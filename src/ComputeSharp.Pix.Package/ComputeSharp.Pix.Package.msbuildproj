@@ -29,4 +29,11 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup Label="Package">
+
+    <!-- Include the custom .targets file extract the PIX native libraries -->
+    <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="buildTransitive\netstandard2.0" Pack="true" />
+    <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="build\netstandard2.0" Pack="true" />
+  </ItemGroup>
+
 </Project>
