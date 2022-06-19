@@ -18,6 +18,10 @@
   <ItemGroup>
     <Content Include="..\ComputeSharp.Pix\LICENSE.txt" PackFolder="\" />
   </ItemGroup>
+  <PropertyGroup>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Pix\ComputeSharp.Pix.csproj" />
