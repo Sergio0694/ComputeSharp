@@ -43,7 +43,7 @@
 
   <ItemGroup Label="Package">
 
-    <!-- Include the custom .targets file extract the PIX native libraries (applies to .NET 6 as well) -->
+    <!-- Include the custom .targets file extract the PIX native libraries -->
     <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="buildTransitive\ComputeSharp.Pix.targets" Pack="true" />
     <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="build\ComputeSharp.Pix.targets" Pack="true" />
   </ItemGroup>
