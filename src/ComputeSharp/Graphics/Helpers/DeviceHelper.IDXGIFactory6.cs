@@ -90,14 +90,15 @@ partial class DeviceHelper
     /// </summary>
     private static unsafe void EnableDeviceRemovedExtendedDataConfiguration()
     {
-        using ComPtr<ID3D12DeviceRemovedExtendedDataSettings> d3D12DeviceRemovedExtendedDataSettings = default;
+        using ComPtr<ID3D12DeviceRemovedExtendedDataSettings1> d3D12DeviceRemovedExtendedDataSettings = default;
 
         DirectX.D3D12GetDebugInterface(
-            riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedDataSettings>(),
+            riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedDataSettings1>(),
             ppvDebug: d3D12DeviceRemovedExtendedDataSettings.GetVoidAddressOf()).Assert();
 
         // Enable the auto-breadcrumbs and page faults reporting
         d3D12DeviceRemovedExtendedDataSettings.Get()->SetAutoBreadcrumbsEnablement(D3D12_DRED_ENABLEMENT.D3D12_DRED_ENABLEMENT_FORCED_ON);
+        d3D12DeviceRemovedExtendedDataSettings.Get()->SetBreadcrumbContextEnablement(D3D12_DRED_ENABLEMENT.D3D12_DRED_ENABLEMENT_FORCED_ON);
         d3D12DeviceRemovedExtendedDataSettings.Get()->SetPageFaultEnablement(D3D12_DRED_ENABLEMENT.D3D12_DRED_ENABLEMENT_FORCED_ON);
     }
 
