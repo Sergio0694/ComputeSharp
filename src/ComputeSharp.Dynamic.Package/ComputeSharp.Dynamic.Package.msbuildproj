@@ -22,6 +22,14 @@
     <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="netstandard2.0">
       <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
     </ProjectReference>
+
+    <!-- Also include the ComputeSharp.Core reference, so that it's packed as a package reference, and not as binaries -->
+    <ProjectReference Include="..\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj" TargetFramework="net6.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj" TargetFramework="netstandard2.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
