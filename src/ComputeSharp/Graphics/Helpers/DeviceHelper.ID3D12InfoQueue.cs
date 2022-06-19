@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using CommunityToolkit.Diagnostics;
+using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
@@ -60,8 +61,10 @@ partial class DeviceHelper
                         builder.AppendLine($"[Severity]: {Enum.GetName(message->Severity)}");
                         builder.AppendLine($"[ID]: {Enum.GetName(message->ID)}");
 
+                        bool isDeviceRemovedMessage = message->ID is D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_POSSIBLY_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_NOT_AT_FAULT;
+
                         // Special handling for device removal messages
-                        if (message->ID is D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_POSSIBLY_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_NOT_AT_FAULT)
+                        if (isDeviceRemovedMessage)
                         {
                             HRESULT result = device.D3D12Device->GetDeviceRemovedReason();
 
@@ -82,7 +85,81 @@ partial class DeviceHelper
                             }
                         }
 
-                        builder.Append($"[Description]: \"{new string(message->pDescription)}\"");
+                        // If DRED is enabled, also output the available auto breadcrumbs
+                        if (isDeviceRemovedMessage && Configuration.IsDeviceRemovedExtendedDataEnabled)
+                        {
+                            builder.AppendLine($"[Description]: \"{new string(message->pDescription)}\"");
+
+                            using ComPtr<ID3D12DeviceRemovedExtendedData1> d3D12DeviceRemovedExtendedData = default;
+
+                            // Get the DRED data
+                            int hresult = device.D3D12Device->QueryInterface(
+                                riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedData1>(),
+                                ppvObject: d3D12DeviceRemovedExtendedData.GetVoidAddressOf());
+
+                            if (hresult != S.S_OK)
+                            {
+                                ThrowHelper.ThrowWin32Exception(hresult);
+                            }
+
+                            D3D12_DRED_AUTO_BREADCRUMBS_OUTPUT1 d3D12DredAutoBreadcrumbsOutput;
+
+                            // Get the auto breadcrumbs for the current event
+                            hresult = d3D12DeviceRemovedExtendedData.Get()->GetAutoBreadcrumbsOutput1(&d3D12DredAutoBreadcrumbsOutput);
+
+                            if (hresult != S.S_OK)
+                            {
+                                ThrowHelper.ThrowWin32Exception(hresult);
+                            }
+
+                            builder.AppendLine("[DRED breadcrumbs START] ===============================");
+
+                            int breadcrumbNodeIndex = 0;
+
+                            // Traverse all the auto breadcrumb nodes and print their contents
+                            for (D3D12_AUTO_BREADCRUMB_NODE1* d3D12AutoBreadcrumbNode = d3D12DredAutoBreadcrumbsOutput.pHeadAutoBreadcrumbNode;
+                                 d3D12AutoBreadcrumbNode is not null;
+                                 d3D12AutoBreadcrumbNode = d3D12AutoBreadcrumbNode->pNext, breadcrumbNodeIndex++)
+                            {
+                                uint numberOfExecutedOps = *d3D12AutoBreadcrumbNode->pLastBreadcrumbValue;
+
+                                // For each auto breadcrumb node, not all recorded breadcrumb have actually been executed. To reduce the verbosity of the
+                                // output and only show the most relevant info, indicate how many breadcrumbs were recorded and how many were actually
+                                // executed, but then only display the executed ones in the code below. This makes it easier to debug hangs for users.
+                                builder.AppendLine($"[NODE #{breadcrumbNodeIndex}]: {d3D12AutoBreadcrumbNode->BreadcrumbCount} total breadcrumb(s), {numberOfExecutedOps} executed breadcrumb(s)");
+
+                                uint contextIndex = 0;
+
+                                for (uint commandIndex = 0; commandIndex < numberOfExecutedOps; commandIndex++)
+                                {
+                                    // An D3D12_AUTO_BREADCRUMB_NODE1 object has two pointers:
+                                    //   - pCommandHistory, pointing to the full list of available breadcrumbs.
+                                    //   - pBreadcrumbContexts, pointing to the list of available contexts.
+                                    // Each context also has a field to indicate the index of the breadcrumb it belongs to. Since these indices are
+                                    // sorted in ascending order, the following code loops through the executed breadcrumbs and then only checks if
+                                    // the current index for the context list is within bounds, and if so, if the current context has a matching index.
+                                    // If that is the case, the context message is extracted and the index is incremented, otherwise just the opcode
+                                    // is added to the debug output. Essentially, this is somewhat similar to a merge algorithm for two ordered lists.
+                                    if (contextIndex < d3D12AutoBreadcrumbNode->BreadcrumbContextsCount &&
+                                        d3D12AutoBreadcrumbNode->pBreadcrumbContexts[contextIndex].BreadcrumbIndex == commandIndex)
+                                    {
+                                        string context = new((char*)d3D12AutoBreadcrumbNode->pBreadcrumbContexts[contextIndex++].pContextString);
+
+                                        builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}, \"{context}\"");
+                                    }
+                                    else
+                                    {
+                                        builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}");
+                                    }
+                                }
+                            }
+
+                            builder.AppendLine("================================= [DRED breadcrumbs END]");
+                        }
+                        else
+                        {
+                            builder.Append($"[Description]: \"{new string(message->pDescription)}\"");
+                        }
                     }
                     finally
                     {
