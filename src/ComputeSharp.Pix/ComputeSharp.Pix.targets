@@ -1,7 +1,9 @@
 <Project>
 
   <!-- Get the analyzer from the ComputeSharp.Pix NuGet package -->
-  <Target Name="_ComputeSharpPixLinkNativeLibraries">
+  <Target Name="_ComputeSharpPixLinkNativeLibraries"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          BeforeTargets="CheckForDuplicateItems;PrepareForBuild">
     <PropertyGroup>
 
       <!-- PIX version (this needs to be kept in sync with the one in the .csproj) -->
@@ -9,7 +11,7 @@
 
       <!-- Detect whether the target project is UWP-->
       <ShouldUnpackUapPixNativeLibraries>false</ShouldUnpackUapPixNativeLibraries>
-      <ShouldUnpackUapPixNativeLibraries Condition="'$(TargetPlatformIdentifier)' == 'UAP'">true</ShouldUnpackUapPixNativeLibraries>
+      <ShouldUnpackUapPixNativeLibraries Condition="'$(TargetFrameworkIdentifier)' == 'UAP'">true</ShouldUnpackUapPixNativeLibraries>
 
       <!-- Detect the target project CPU architecture -->
       <ShouldUnpackArm64PixNativeLibraries>false</ShouldUnpackArm64PixNativeLibraries>
