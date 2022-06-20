@@ -70,6 +70,48 @@ namespace ComputeSharp.Tests
             }
         }
 
+        // See https://github.com/Sergio0694/ComputeSharp/issues/313
+        [TestMethod]
+        public void ReservedKeywordsFromHlslTypesAndBuiltInValues()
+        {
+            _ = ReflectionServices.GetShaderInfo<ReservedKeywordsFromHlslTypesAndBuiltInValuesShader>();
+        }
+
+        [AutoConstructor]
+        public readonly partial struct ReservedKeywordsFromHlslTypesAndBuiltInValuesShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> fragmentKeyword;
+            public readonly ReadWriteBuffer<float> compile_fragment;
+            public readonly ReadWriteBuffer<float> shaderProfile;
+            public readonly ReadWriteBuffer<float> maxvertexcount;
+            public readonly ReadWriteBuffer<float> TriangleStream;
+            public readonly ReadWriteBuffer<float> Buffer;
+            public readonly ReadWriteBuffer<float> ByteAddressBuffer;
+            public readonly int ConsumeStructuredBuffer;
+            public readonly int RWTexture2D;
+            public readonly int Texture2D;
+            public readonly int Texture2DArray;
+            public readonly int SV_DomainLocation;
+            public readonly int SV_GroupIndex;
+            public readonly int SV_OutputControlPointID;
+            public readonly int SV_StencilRef;
+
+            public void Execute()
+            {
+                float sum = ConsumeStructuredBuffer + RWTexture2D + Texture2D + Texture2DArray;
+
+                sum += SV_DomainLocation + SV_GroupIndex + SV_OutputControlPointID + SV_StencilRef;
+
+                fragmentKeyword[ThreadIds.X] = sum;
+                compile_fragment[ThreadIds.X] = sum;
+                shaderProfile[ThreadIds.X] = sum;
+                maxvertexcount[ThreadIds.X] = sum;
+                TriangleStream[ThreadIds.X] = sum;
+                Buffer[ThreadIds.X] = sum;
+                ByteAddressBuffer[ThreadIds.X] = sum;
+            }
+        }
+
         [TestMethod]
         public void ReservedKeywordsPrecompiled()
         {
