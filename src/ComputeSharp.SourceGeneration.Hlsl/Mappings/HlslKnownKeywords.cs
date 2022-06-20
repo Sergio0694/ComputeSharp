@@ -31,7 +31,16 @@ internal static partial class HlslKnownKeywords
             "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
             "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
             "unsigned", "vector", "vertexfragment", "zero", "float1", "double1",
-            "int1", "uint1", "bool1"
+            "int1", "uint1", "bool1", "fragmentKeyword", "compile_fragment", "shaderProfile",
+            "maxvertexcount", "TriangleStream", "Buffer", "ByteAddressBuffer", "ConsumeStructuredBuffer",
+            "InputPatch", "OutputPatch", "RWBuffer", "RWByteAddressBuffer", "RWStructuredBuffer",
+            "RWTexture1D", "RWTexture1DArray", "RWTexture2D", "RWTexture2DArray", "RWTexture3D",
+            "StructuredBuffer", "Texture1D", "Texture1DArray", "Texture2D", "Texture2DArray",
+            "Texture3D", "Texture2DMS", "Texture2DMSArray", "TextureCube", "TextureCubeArray",
+            "SV_DispatchThreadID", "SV_DomainLocation", "SV_GroupID", "SV_GroupIndex", "SV_GroupThreadID",
+            "SV_GSInstanceID", "SV_InsideTessFactor", "SV_OutputControlPointID", "SV_TessFactor",
+            "SV_InnerCoverage", "SV_StencilRef"
+
         });
 
         // HLSL primitive names
