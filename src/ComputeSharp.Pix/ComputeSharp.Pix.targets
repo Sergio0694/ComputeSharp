@@ -7,44 +7,44 @@
     <PropertyGroup>
 
       <!-- PIX version (this needs to be kept in sync with the one in the .csproj) -->
-      <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220124001</WinPixEventRuntimeVersion>
+      <ComputeSharpPixWinPixEventRuntimeVersion>winpixeventruntime.1.0.220124001</ComputeSharpPixWinPixEventRuntimeVersion>
 
       <!-- Detect whether the target project is UWP-->
-      <ShouldUnpackUapPixNativeLibraries>false</ShouldUnpackUapPixNativeLibraries>
-      <ShouldUnpackUapPixNativeLibraries Condition="'$(TargetFrameworkIdentifier)' == 'UAP'">true</ShouldUnpackUapPixNativeLibraries>
+      <ComputeSharpPixShouldUnpackUapPixNativeLibraries>false</ComputeSharpPixShouldUnpackUapPixNativeLibraries>
+      <ComputeSharpPixShouldUnpackUapPixNativeLibraries Condition="'$(TargetFrameworkIdentifier)' == 'UAP'">true</ComputeSharpPixShouldUnpackUapPixNativeLibraries>
 
       <!-- Detect the target project CPU architecture -->
-      <ShouldUnpackArm64PixNativeLibraries>false</ShouldUnpackArm64PixNativeLibraries>
-      <ShouldUnpackArm64PixNativeLibraries Condition="'$(Platform)' == 'arm64'">true</ShouldUnpackArm64PixNativeLibraries>
+      <ComputeSharpPixShouldUnpackArm64PixNativeLibraries>false</ComputeSharpPixShouldUnpackArm64PixNativeLibraries>
+      <ComputeSharpPixShouldUnpackArm64PixNativeLibraries Condition="'$(Platform)' == 'arm64'">true</ComputeSharpPixShouldUnpackArm64PixNativeLibraries>
     </PropertyGroup>
 
     <!-- Win32, x64 -->
-    <ItemGroup Condition="'$(ShouldUnpackUapPixNativeLibraries)' == 'False' AND '$(ShouldUnpackArm64PixNativeLibraries)' == 'False'">
-      <None Include="$(MSBuildThisFileDirectory)..\$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
+    <ItemGroup Condition="'$(ComputeSharpPixShouldUnpackUapPixNativeLibraries)' == 'False' AND '$(ComputeSharpPixShouldUnpackArm64PixNativeLibraries)' == 'False'">
+      <None Include="$(MSBuildThisFileDirectory)..\$(ComputeSharpPixWinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
             Link="WinPixEventRuntime.dll"
             Visible="False"
             CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <!-- Win32, arm64 -->
-    <ItemGroup Condition="'$(ShouldUnpackUapPixNativeLibraries)' == 'False' AND '$(ShouldUnpackArm64PixNativeLibraries)' == 'True'">
-      <None Include="$(MSBuildThisFileDirectory)..\$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
+    <ItemGroup Condition="'$(ComputeSharpPixShouldUnpackUapPixNativeLibraries)' == 'False' AND '$(ComputeSharpPixShouldUnpackArm64PixNativeLibraries)' == 'True'">
+      <None Include="$(MSBuildThisFileDirectory)..\$(ComputeSharpPixWinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
             Link="WinPixEventRuntime.dll"
             Visible="False"
             CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <!-- UWP, x64 -->
-    <ItemGroup Condition="'$(ShouldUnpackUapPixNativeLibraries)' == 'True' AND '$(ShouldUnpackArm64PixNativeLibraries)' == 'False'">
-      <None Include="$(MSBuildThisFileDirectory)..\$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
+    <ItemGroup Condition="'$(ComputeSharpPixShouldUnpackUapPixNativeLibraries)' == 'True' AND '$(ComputeSharpPixShouldUnpackArm64PixNativeLibraries)' == 'False'">
+      <None Include="$(MSBuildThisFileDirectory)..\$(ComputeSharpPixWinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
             Link="WinPixEventRuntime.dll"
             Visible="False"
             CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <!-- UWP, arm64 -->
-    <ItemGroup Condition="'$(ShouldUnpackUapPixNativeLibraries)' == 'True' AND '$(ShouldUnpackArm64PixNativeLibraries)' == 'True'">
-      <None Include="$(MSBuildThisFileDirectory)..\$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
+    <ItemGroup Condition="'$(ComputeSharpPixShouldUnpackUapPixNativeLibraries)' == 'True' AND '$(ComputeSharpPixShouldUnpackArm64PixNativeLibraries)' == 'True'">
+      <None Include="$(MSBuildThisFileDirectory)..\$(ComputeSharpPixWinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
             Link="WinPixEventRuntime.dll"
             Visible="False"
             CopyToOutputDirectory="PreserveNewest" />
