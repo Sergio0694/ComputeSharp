@@ -110,6 +110,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.NuGet", "Compu
 		tests\ComputeSharp.NuGet\Program.cs = tests\ComputeSharp.NuGet\Program.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Pix.NuGet", "ComputeSharp.Pix.NuGet", "{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A}"
+	ProjectSection(SolutionItems) = preProject
+		tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj = tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj
+		tests\ComputeSharp.Pix.NuGet\nuget.config = tests\ComputeSharp.Pix.NuGet\nuget.config
+		tests\ComputeSharp.Pix.NuGet\Program.cs = tests\ComputeSharp.Pix.NuGet\Program.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -462,6 +469,7 @@ Global
 		{209C95A3-FA53-431B-B688-3299CA6C29D2} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{CBA545B4-31EF-4E9F-A1A8-2A1290B54046} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
