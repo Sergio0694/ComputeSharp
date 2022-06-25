@@ -103,11 +103,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests.Ass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.NuGet", "ComputeSharp.NuGet", "{CBA545B4-31EF-4E9F-A1A8-2A1290B54046}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Dynamic.NuGet", "ComputeSharp.Dynamic.NuGet", "{CBA545B4-31EF-4E9F-A1A8-2A1290B54046}"
 	ProjectSection(SolutionItems) = preProject
-		tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj = tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj
-		tests\ComputeSharp.NuGet\nuget.config = tests\ComputeSharp.NuGet\nuget.config
-		tests\ComputeSharp.NuGet\Program.cs = tests\ComputeSharp.NuGet\Program.cs
+		tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj = tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj
+		tests\ComputeSharp.Dynamic.NuGet\nuget.config = tests\ComputeSharp.Dynamic.NuGet\nuget.config
+		tests\ComputeSharp.Dynamic.NuGet\Program.cs = tests\ComputeSharp.Dynamic.NuGet\Program.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Pix.NuGet", "ComputeSharp.Pix.NuGet", "{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A}"
