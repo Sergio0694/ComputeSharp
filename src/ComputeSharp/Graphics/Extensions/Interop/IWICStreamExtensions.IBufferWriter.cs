@@ -21,7 +21,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.Graphics.Extensions;
 
 /// <inheritdoc/>
-internal static unsafe partial class IWICStreamExtensions
+unsafe partial class IWICStreamExtensions
 {
     /// <summary>
     /// Initializes an input <see cref="IWICStream"/> wrapping a given <see cref="IBufferWriter{T}"/> instance.

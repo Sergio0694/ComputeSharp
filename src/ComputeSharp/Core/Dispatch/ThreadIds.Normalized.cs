@@ -3,7 +3,7 @@
 namespace ComputeSharp;
 
 /// <inheritdoc cref="ThreadIds"/>
-public static partial class ThreadIds
+partial class ThreadIds
 {
     /// <summary>
     /// A <see langword="class"/> that indicates the normalized ids of a given GPU thread running a compute shader.

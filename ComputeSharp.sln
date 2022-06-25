@@ -28,12 +28,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SourceGenerators", "src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj", "{EB52CB67-4162-4722-874B-44EA8DA5450E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{FB17EF84-9208-47AC-921F-680CB1DAD8BA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{FB17EF84-9208-47AC-921F-680CB1DAD8BA}"
 	ProjectSection(SolutionItems) = preProject
 		src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj = src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj
 		src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj = src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj
 		src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj = src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj
 		src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj = src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj
+		src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj = src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj
 		src\ComputeSharp.Core.Package\icon.png = src\ComputeSharp.Core.Package\icon.png
 		src\ComputeSharp.Core.Package\icon_highres.png = src\ComputeSharp.Core.Package\icon_highres.png
 	EndProjectSection
@@ -99,6 +100,29 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests", "tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj", "{209C95A3-FA53-431B-B688-3299CA6C29D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests.AssemblyLevelAttributes", "tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj", "{94178D51-0097-4AD2-B3D0-827E40D62F2E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Dynamic.NuGet", "ComputeSharp.Dynamic.NuGet", "{CBA545B4-31EF-4E9F-A1A8-2A1290B54046}"
+	ProjectSection(SolutionItems) = preProject
+		tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj = tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj
+		tests\ComputeSharp.Dynamic.NuGet\nuget.config = tests\ComputeSharp.Dynamic.NuGet\nuget.config
+		tests\ComputeSharp.Dynamic.NuGet\Program.cs = tests\ComputeSharp.Dynamic.NuGet\Program.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Pix.NuGet", "ComputeSharp.Pix.NuGet", "{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A}"
+	ProjectSection(SolutionItems) = preProject
+		tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj = tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj
+		tests\ComputeSharp.Pix.NuGet\nuget.config = tests\ComputeSharp.Pix.NuGet\nuget.config
+		tests\ComputeSharp.Pix.NuGet\Program.cs = tests\ComputeSharp.Pix.NuGet\Program.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.NuGet", "ComputeSharp.NuGet", "{E3403F19-A0D8-4317-8A54-322C7A13F2A2}"
+	ProjectSection(SolutionItems) = preProject
+		tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj = tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj
+		tests\ComputeSharp.NuGet\nuget.config = tests\ComputeSharp.NuGet\nuget.config
+		tests\ComputeSharp.NuGet\Program.cs = tests\ComputeSharp.NuGet\Program.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -410,6 +434,18 @@ Global
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|ARM64.Build.0 = Release|Any CPU
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|x64.ActiveCfg = Release|Any CPU
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E}.Release|x64.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Debug|x64.Build.0 = Debug|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|ARM64.Build.0 = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.ActiveCfg = Release|Any CPU
+		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -439,6 +475,9 @@ Global
 		{3ACACF03-6B20-40BA-B8EC-11AC1624D2C9} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{209C95A3-FA53-431B-B688-3299CA6C29D2} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{CBA545B4-31EF-4E9F-A1A8-2A1290B54046} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{E3403F19-A0D8-4317-8A54-322C7A13F2A2} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}

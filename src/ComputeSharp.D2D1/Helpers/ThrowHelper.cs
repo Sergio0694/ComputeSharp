@@ -6,7 +6,7 @@ namespace ComputeSharp.D2D1.Helpers;
 /// <summary>
 /// Helper methods to efficiently throw exceptions.
 /// </summary>
-internal static partial class ThrowHelper
+internal static class ThrowHelper
 {
     /// <summary>
     /// Throws a new <see cref="ArgumentException"/>.

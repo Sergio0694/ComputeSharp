@@ -15,7 +15,7 @@ using static TerraFX.Interop.DirectX.DXGI_GPU_PREFERENCE;
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <inheritdoc/>
-internal static partial class DeviceHelper
+partial class DeviceHelper
 {
     /// <summary>
     /// A custom query type that iterates through devices matching a given predicate.

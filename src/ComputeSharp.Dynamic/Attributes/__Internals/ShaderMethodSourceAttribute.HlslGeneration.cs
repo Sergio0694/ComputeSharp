@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ComputeSharp.__Internals;
 
 /// <inheritdoc/>
-public sealed partial class ShaderMethodSourceAttribute : Attribute
+partial class ShaderMethodSourceAttribute : Attribute
 {
     /// <summary>
     /// Appends the mapped source code for the current method.

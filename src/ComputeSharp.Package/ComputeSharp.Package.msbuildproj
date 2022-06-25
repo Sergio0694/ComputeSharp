@@ -27,9 +27,9 @@
 
   <ItemGroup Label="Package">
 
-    <!-- Include the custom .targets file to check the source generator (.NET 6 is not needed as it guarantees Roslyn 4.x) -->
-    <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="buildTransitive\netstandard2.0" Pack="true" />
-    <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="build\netstandard2.0" Pack="true" />
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="buildTransitive\ComputeSharp.targets" Pack="true" />
+    <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="build\ComputeSharp.targets" Pack="true" />
   </ItemGroup>
 
 </Project>

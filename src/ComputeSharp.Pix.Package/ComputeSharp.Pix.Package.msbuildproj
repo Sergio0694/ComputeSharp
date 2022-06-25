@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp.Pix</PackageId>
+    <Title>ComputeSharp.Pix</Title>
+    <Description>An extension library for ComputeSharp to enable PIX support to produce debugging information</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\ComputeSharp.Core.Package\icon.png" PackFolder="\" />
+  </ItemGroup>
+
+  <!-- Include the PIX license file -->
+  <ItemGroup>
+    <Content Include="..\ComputeSharp.Pix\LICENSE.txt" PackFolder="\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.Pix\ComputeSharp.Pix.csproj" />
+    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="net6.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="netstandard2.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+
+    <!-- Also include the ComputeSharp.Core reference, so that it's packed as a package reference, and not as binaries (same as in ComputeSharp.Dynamic) -->
+    <ProjectReference Include="..\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj" TargetFramework="net6.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj" TargetFramework="netstandard2.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Label="Package">
+
+    <!-- Include the custom .targets file extract the PIX native libraries -->
+    <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="buildTransitive\ComputeSharp.Pix.targets" Pack="true" />
+    <None Include="..\ComputeSharp.Pix\ComputeSharp.Pix.targets" PackagePath="build\ComputeSharp.Pix.targets" Pack="true" />
+  </ItemGroup>
+
+</Project>
