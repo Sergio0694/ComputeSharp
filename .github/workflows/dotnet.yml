@@ -232,6 +232,45 @@ jobs:
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
   # a test to ensure the NuGet packages work in a consuming project.
+  verify-packages:
+    if: success()
+    needs: [build-packages]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Create local NuGet feed
+      run: mkdir artifacts
+      shell: cmd
+    - name: Download package artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: nuget_preview
+        path: artifacts
+    - name: Build ComputeSharp.NuGet (.NET 6)
+      run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f net6.0
+      shell: cmd
+    - name: Run ComputeSharp.NuGet (.NET 6)
+      run: dotnet tests\ComputeSharp.NuGet\bin\Release\net6.0\ComputeSharp.NuGet.dll
+      shell: cmd
+    - name: Build ComputeSharp.NuGet (.NET Core 3.1)
+      run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f netcoreapp3.1 -r win-x64
+      shell: cmd
+    - name: Run ComputeSharp.NuGet (.NET Core 3.1)
+      run: tests\ComputeSharp.NuGet\bin\Release\netcoreapp3.1\win-x64\ComputeSharp.NuGet.exe
+      shell: cmd
+    - name: Build ComputeSharp.NuGet (.NET Framework 4.7.2)
+      run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.NuGet (.NET Framework 4.7.2)
+      run: tests\ComputeSharp.NuGet\bin\x64\Release\net472\ComputeSharp.NuGet.exe
+      shell: cmd
+
+  # Download the NuGet packages and test the ComputeSharp.Dynamic dependency
   verify-packages-dynamic:
     if: success()
     needs: [build-packages]
@@ -329,7 +368,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -345,7 +384,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:

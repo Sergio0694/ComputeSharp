@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ComputeSharp.Core" Version="$(PackageVersion)" />
+    <PackageReference Include="ComputeSharp" Version="$(PackageVersion)" />
+  </ItemGroup>
+
+</Project>
