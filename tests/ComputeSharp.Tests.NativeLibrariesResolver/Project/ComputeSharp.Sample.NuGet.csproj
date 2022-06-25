@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <RestoreSources>$(PackageOutputPath)</RestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,5 @@
     <PackageReference Include="ComputeSharp" Version="$(PackageVersion)" />
     <PackageReference Include="ComputeSharp.Dynamic" Version="$(PackageVersion)" />
   </ItemGroup>
-
-  <Import Project="..\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems" Label="Shared" />
 
 </Project>
