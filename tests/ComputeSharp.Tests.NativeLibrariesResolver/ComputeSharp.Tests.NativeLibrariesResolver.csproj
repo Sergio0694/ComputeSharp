@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Project\*"/>
-    <None Include="Project\*"/>
+    <Compile Remove="Project\*" />
+    <None Include="Project\*" />
   </ItemGroup>
 
 </Project>
