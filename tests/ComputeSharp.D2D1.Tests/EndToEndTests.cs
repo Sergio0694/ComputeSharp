@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.Tests;
 public class EndToEndTests
 {
     [AssemblyInitialize]
-    public static void ConfigureImageSharp()
+    public static void ConfigureImageSharp(TestContext _)
     {
         Configuration.Default.PreferContiguousImageBuffers = true;
     }

@@ -20,7 +20,7 @@ namespace ComputeSharp.Tests;
 public class ImagingTests
 {
     [AssemblyInitialize]
-    public static void ConfigureImageSharp()
+    public static void ConfigureImageSharp(TestContext _)
     {
         Configuration.Default.PreferContiguousImageBuffers = true;
     }
@@ -516,7 +516,7 @@ public class ImagingTests
 
         original.Save(expectedPath);
 
-        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004037f);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004038f);
     }
 
     [CombinatorialTestMethod]
