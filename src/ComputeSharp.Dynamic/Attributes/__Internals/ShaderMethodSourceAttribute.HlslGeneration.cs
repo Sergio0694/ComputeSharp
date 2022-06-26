@@ -17,6 +17,7 @@ partial class ShaderMethodSourceAttribute : Attribute
         {
             if (mapping.Add(constant.Key))
             {
+                builder.Append('\n');
                 builder.Append("#define ");
                 builder.Append(constant.Key);
                 builder.Append(' ');
