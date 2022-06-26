@@ -6,7 +6,6 @@
       "samples\\ComputeSharp.ImageProcessing\\ComputeSharp.ImageProcessing.csproj",
       "samples\\ComputeSharp.Sample.FSharp.Shaders\\ComputeSharp.Sample.FSharp.Shaders.csproj",
       "samples\\ComputeSharp.Sample.FSharp\\ComputeSharp.Sample.FSharp.fsproj",
-      "samples\\ComputeSharp.Sample.Shared\\ComputeSharp.Sample.Shared.shproj",
       "samples\\ComputeSharp.Sample\\ComputeSharp.Sample.csproj",
       "samples\\ComputeSharp.SwapChain.Shaders.Shared\\ComputeSharp.SwapChain.Shaders.Shared.shproj",
       "samples\\ComputeSharp.SwapChain\\ComputeSharp.SwapChain.csproj",
