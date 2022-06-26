@@ -516,7 +516,7 @@ public class ImagingTests
 
         original.Save(expectedPath);
 
-        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004037f);
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004038f);
     }
 
     [CombinatorialTestMethod]
