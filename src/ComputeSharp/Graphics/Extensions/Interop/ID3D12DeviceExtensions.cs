@@ -256,17 +256,23 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.QueryInterface(Windows.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
 
-        D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[2]
+        D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[3]
         {
             // The map/unmap warnings when using null ranges are being suppressed due to
-            // them only being generated due to a bug in the DirectX runtime. using null
+            // them only being generated due to a bug in the DirectX runtime. Using null
             // ranges when calling Map()/Unmap() is allowed and perfeclty well defined.
             D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
-            D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE
+            D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE,
+
+            // Some devices (like the Surface Go) can show this warning when creating a
+            // readback buffer, probably due to some driver-specific behavior. This is not
+            // an issue, as the initial state doesn't matter anyway and the readback buffer
+            // is still correctly transitioned when needed, so it can be safely ignored.
+            D3D12_MESSAGE_ID_CREATERESOURCE_STATE_IGNORED
         };
 
         D3D12_INFO_QUEUE_FILTER d3D12InfoQueueFilter = default;
-        d3D12InfoQueueFilter.DenyList.NumIDs = 2;
+        d3D12InfoQueueFilter.DenyList.NumIDs = 3;
         d3D12InfoQueueFilter.DenyList.pIDList = d3D12MessageIds;
 
         d3D12InfoQueue.Get()->PushRetrievalFilter(&d3D12InfoQueueFilter).Assert();
