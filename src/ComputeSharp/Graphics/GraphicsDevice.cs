@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands.Interop;
 #if NET6_0_OR_GREATER
@@ -14,6 +16,7 @@ using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
+
 namespace ComputeSharp;
 
 /// <summary>
@@ -83,6 +86,30 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// </summary>
     private ComPtr<D3D12MA_Pool> pool;
 #endif
+
+    /// <summary>
+    /// The reason the device was removed, if any.
+    /// </summary>
+    private HRESULT deviceRemovedReason;
+
+    /// <summary>
+    /// Raised whenever the device is lost.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// "Device lost" refers to a situation where the GPU graphics device becomes unusable for further operations. This can occur
+    /// due to GPU hardware malfunction, driver bugs, driver software updates, or switching the app from one GPU to another.
+    /// </para> 
+    /// <para>
+    /// A lost device can no longer be used, and any attempt to do so will throw an exception. To recover from
+    /// this situation, the app must create a new device and then recreate all its graphics resources.
+    /// </para>
+    /// <para>
+    /// This event will only be raised at most once for a given <see cref="GraphicsDevice"/> instance. Additionally,
+    /// the event is raised asynchronously with respect to the device being lost, and on a thread pool thread.
+    /// </para>
+    /// </remarks>
+    public event EventHandler<DeviceLostReason>? DeviceLost;
 
     /// <summary>
     /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -344,6 +371,56 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         ID3D12DescriptorHeap* d3D12DescriptorHeap = this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap;
 
         d3D12GraphicsCommandList->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DeviceLost"/> event if needed.
+    /// </summary>
+    internal void RaiseDeviceLostEventIfNeeded()
+    {
+        if (IsDisposed)
+        {
+            return;
+        }
+
+        // If the current device removed reason is not S_OK, it means the event
+        // has already been raised (but the device will keep reporting that reason).
+        // In that case, do nothing to avoid raising it again while the device is alive.
+        if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
+        {
+            return;
+        }
+
+        HRESULT result = this.d3D12Device.Get()->GetDeviceRemovedReason();
+
+        // Only raise the event once, and store the device removed reason to track it
+        if (Interlocked.CompareExchange(
+            ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason),
+            (int)result,
+            S.S_OK) == S.S_OK)
+        {
+            ThreadPool.QueueUserWorkItem(static state => ((GraphicsDevice)state!).RaiseDeviceLostEvent(), this);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DeviceLost"/> event.
+    /// </summary>
+    private void RaiseDeviceLostEvent()
+    {
+        HRESULT result = Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason));
+
+        DeviceLostReason reason = (int)result switch
+        {
+            DXGI.DXGI_ERROR_DEVICE_HUNG => DeviceLostReason.DeviceHung,
+            DXGI.DXGI_ERROR_DEVICE_REMOVED => DeviceLostReason.DeviceRemoved,
+            DXGI.DXGI_ERROR_DEVICE_RESET => DeviceLostReason.DeviceReset,
+            DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR => DeviceLostReason.DriverInternalError,
+            DXGI.DXGI_ERROR_INVALID_CALL => DeviceLostReason.InvalidCall,
+            _ => DeviceLostReason.UnspecifiedError
+        };
+
+        DeviceLost?.Invoke(this, reason);
     }
 
     /// <inheritdoc/>
