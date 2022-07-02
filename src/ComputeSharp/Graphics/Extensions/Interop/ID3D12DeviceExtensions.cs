@@ -268,7 +268,12 @@ internal static unsafe class ID3D12DeviceExtensions
             // readback buffer, probably due to some driver-specific behavior. This is not
             // an issue, as the initial state doesn't matter anyway and the readback buffer
             // is still correctly transitioned when needed, so it can be safely ignored.
+#if NET6_0_OR_GREATER
+            // Temporary constant due to the value not being available in the D3D12MA TerraFX version
+            (D3D12_MESSAGE_ID)1328
+#else
             D3D12_MESSAGE_ID_CREATERESOURCE_STATE_IGNORED
+#endif
         };
 
         D3D12_INFO_QUEUE_FILTER d3D12InfoQueueFilter = default;
