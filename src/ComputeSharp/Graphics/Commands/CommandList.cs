@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -134,7 +135,7 @@ internal unsafe struct CommandList : IDisposable
     /// </summary>
     public void ExecuteAndWaitForCompletion()
     {
-        this.d3D12GraphicsCommandList.Get()->Close();
+        this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
         this.device.ExecuteCommandList(ref this);
     }
@@ -145,7 +146,7 @@ internal unsafe struct CommandList : IDisposable
     /// <returns>The <see cref="ValueTask"/> to await for the operations to complete.</returns>
     public ValueTask ExecuteAndWaitForCompletionAsync()
     {
-        this.d3D12GraphicsCommandList.Get()->Close();
+        this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
         return this.device.ExecuteCommandListAsync(ref this);
     }
