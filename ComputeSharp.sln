@@ -122,6 +122,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.NuGet", "Compu
 		tests\ComputeSharp.NuGet\Program.cs = tests\ComputeSharp.NuGet\Program.cs
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Tests.DeviceLost", "tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj", "{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -444,6 +446,18 @@ Global
 		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|ARM64.Build.0 = Release|Any CPU
 		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.ActiveCfg = Release|Any CPU
 		{14EF12A3-90E6-4683-BD71-9896AF87026B}.Release|x64.Build.0 = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|ARM64.Build.0 = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -475,6 +489,7 @@ Global
 		{CBA545B4-31EF-4E9F-A1A8-2A1290B54046} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{E3403F19-A0D8-4317-8A54-322C7A13F2A2} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
