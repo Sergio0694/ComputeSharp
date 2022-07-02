@@ -71,11 +71,15 @@ internal static class HResultExtensions
 
                 if (result < 0)
                 {
+                    DeviceHelper.RaiseAllDeviceLostEventsIfNeeded();
+
                     ThrowHelper.ThrowWin32Exception(result);
                 }
 
                 if (hasErrorsOrWarnings)
                 {
+                    DeviceHelper.RaiseAllDeviceLostEventsIfNeeded();
+
                     ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
                 }
             }
