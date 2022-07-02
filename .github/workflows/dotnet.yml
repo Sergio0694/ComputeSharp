@@ -145,6 +145,32 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
+  # Run all the DX12 device lost unit tests (run the separately to minimize issues)
+  run-dx12-device-list-tests:
+    if: success()
+    needs: [build-solution-debug, build-solution-release]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Run ComputeSharp.Tests.DeviceLost (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+
   # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
   run-d2d1-tests:
     if: success()
@@ -368,7 +394,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-list-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -384,7 +410,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-list-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
