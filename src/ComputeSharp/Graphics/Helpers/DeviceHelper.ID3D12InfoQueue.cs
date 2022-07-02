@@ -160,15 +160,15 @@ partial class DeviceHelper
                         {
                             builder.Append($"[Description]: \"{new string(message->pDescription)}\"");
                         }
+
+                        if (message->Severity is D3D12_MESSAGE_SEVERITY_ERROR or D3D12_MESSAGE_SEVERITY_CORRUPTION or D3D12_MESSAGE_SEVERITY_WARNING)
+                        {
+                            hasErrorsOrWarnings = true;
+                        }
                     }
                     finally
                     {
                         NativeMemory.Free(message);
-                    }
-
-                    if (message->Severity is D3D12_MESSAGE_SEVERITY_ERROR or D3D12_MESSAGE_SEVERITY_CORRUPTION or D3D12_MESSAGE_SEVERITY_WARNING)
-                    {
-                        hasErrorsOrWarnings = true;
                     }
 
                     Trace.WriteLine(builder);
