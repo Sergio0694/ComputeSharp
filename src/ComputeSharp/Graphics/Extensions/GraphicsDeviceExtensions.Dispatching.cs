@@ -151,6 +151,7 @@ public static partial class GraphicsDeviceExtensions
         Guard.IsNotNull(device);
 
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         return new(device);
     }

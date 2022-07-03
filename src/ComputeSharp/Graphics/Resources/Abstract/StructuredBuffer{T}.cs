@@ -33,6 +33,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -104,6 +105,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -148,6 +150,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -191,6 +194,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -266,6 +270,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 

@@ -51,6 +51,7 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
     private protected TransferTexture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);

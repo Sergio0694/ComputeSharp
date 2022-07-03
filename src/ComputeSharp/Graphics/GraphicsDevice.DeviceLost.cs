@@ -22,6 +22,28 @@ unsafe partial class GraphicsDevice
 #endif
 
     /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if the current device has been lost.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if the current device has been lost.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void ThrowIfDeviceLost()
+    {
+        // This method is called as a check before performing any operations. In order to minimize overhead,
+        // the GetDeviceRemovedReason() method is not called here, and the local field is just used instead.
+        // That field is set by the device lost callback anyway, and the extra precision of calling the API
+        // explicitly is not needed since there are no thread safety guarantees in this scenario anyway.
+        // That is, the check isn't meant to cover 100% of cases, as a device might be lost right after this
+        // check is performed anyway. This check is only meant to catch the common scenarios to help users.
+        // For the same reason, this method doesn't have to worry about raising the event either.
+        if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
+        {
+            static void Throw(object self) => throw new InvalidOperationException($"The device \"{self}\" has been lost and can no longer be used.");
+
+            Throw(this);
+        }
+    }
+
+    /// <summary>
     /// Raises the <see cref="DeviceLost"/> event if needed.
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
