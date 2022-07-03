@@ -72,6 +72,7 @@ public abstract class NativeObject : IDisposable
     /// <summary>
     /// Throws an <see cref="ObjectDisposedException"/> if the current instance has been disposed.
     /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown if the current instance is disposed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void ThrowIfDisposed()
     {
@@ -80,9 +81,9 @@ public abstract class NativeObject : IDisposable
             // We can't use ThrowHelper here as we only want to invoke ToString if we
             // are about to throw an exception. The JIT will recognize this pattern
             // as this method has a single basic block that always throws an exception.
-            void Throw() => throw new ObjectDisposedException(ToString());
+            static void Throw(object self) => throw new ObjectDisposedException(self.ToString());
 
-            Throw();
+            Throw(this);
         }
     }
 }

@@ -180,25 +180,4 @@ partial class DeviceHelper
 
         return hasErrorsOrWarnings;
     }
-
-    /// <summary>
-    /// Raises the <see cref="GraphicsDevice.DeviceLost"/> event if needed, on all existing devices.
-    /// </summary>
-    public static void RaiseAllDeviceLostEventsIfNeeded()
-    {
-        lock (DevicesCache)
-        {
-            foreach (GraphicsDevice device in DevicesCache.Values)
-            {
-                // Check whether the device was lost, and raise the event once. This method will
-                // queue the event being raised on a thread pool thread, which is crucial to avoid
-                // invoking the handlers while taking a lock on the devices cache. Doing so would
-                // lead to issues if a handler tried to synchronously create a new device, which would
-                // take the same lock (it's reentrant) and then add the new device to the cache. Then
-                // once this method resumed, the collection would be invalid, and the foreach loop
-                // would throw an exception on the next iteration. This will prevent that from happening.
-                device.RaiseDeviceLostEventIfNeeded();
-            }
-        }
-    }
 }
