@@ -31,9 +31,9 @@ unsafe partial class GraphicsDevice
     private delegate void WaitForSingleObjectCallbackDelegate(void* pContext, byte timedOut);
 
     /// <summary>
-    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallback(void*, byte)"/>.
+    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallbackForWaitForFenceAsync(void*, byte)"/>.
     /// </summary>
-    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackWrapper = WaitForSingleObjectCallback;
+    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper = WaitForSingleObjectCallbackForWaitForFenceAsync;
 #endif
 
     /// <summary>
@@ -131,7 +131,7 @@ unsafe partial class GraphicsDevice
     }
 
     /// <summary>
-    /// A context to support <see cref="WaitForSingleObjectCallback"/>.
+    /// A context to support <see cref="WaitForSingleObjectCallbackForWaitForFenceAsync"/>.
     /// </summary>
     private struct CallbackContext
     {
@@ -195,9 +195,9 @@ unsafe partial class GraphicsDevice
             phNewWaitObject: &waitHandle,
             hObject: eventHandle,
 #if NET6_0_OR_GREATER
-            Callback: &WaitForSingleObjectCallback,
+            Callback: &WaitForSingleObjectCallbackForWaitForFenceAsync,
 #else
-            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackWrapper),
+            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper),
 #endif
             Context: callbackContext,
             dwMilliseconds: Windows.INFINITE,
@@ -212,7 +212,7 @@ unsafe partial class GraphicsDevice
     /// <param name="pContext">The input context.</param>
     /// <param name="timedOut">Whether the wait has timed out.</param>
     [UnmanagedCallersOnly]
-    private static void WaitForSingleObjectCallback(void* pContext, byte timedOut)
+    private static void WaitForSingleObjectCallbackForWaitForFenceAsync(void* pContext, byte timedOut)
     {
         CallbackContext* callbackContext = (CallbackContext*)pContext;
 

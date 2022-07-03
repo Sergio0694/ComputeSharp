@@ -39,26 +39,7 @@ internal static class HResultExtensions
         {
             if (result < 0)
             {
-                // This method just throws the exception from the helper below, which includes the
-                // additional logic for the device lost events. This structure ensures this method
-                // only has a single basic block, so it can be identified as a throw helper and
-                // imported properly, which results in better codegen.
-                static void RaiseDeviceLostEventsAndThrowWin32Exception(int result)
-                {
-                    throw RaiseDeviceLostEventsAndGetWin32Exception(result);
-                }
-
-                // Raises all device lost events, if needed, and then creates the Win32Exception to throw.
-                // This method is never inlined, which is needed to make handling the throw helper easier.
-                [MethodImpl(MethodImplOptions.NoInlining)]
-                static Win32Exception RaiseDeviceLostEventsAndGetWin32Exception(int result)
-                {
-                    DeviceHelper.RaiseAllDeviceLostEventsIfNeeded();
-
-                    return new Win32Exception(result);
-                }
-
-                RaiseDeviceLostEventsAndThrowWin32Exception(result);
+                ThrowHelper.ThrowWin32Exception(result);
             }
         }
         else
@@ -71,15 +52,11 @@ internal static class HResultExtensions
 
                 if (result < 0)
                 {
-                    DeviceHelper.RaiseAllDeviceLostEventsIfNeeded();
-
                     ThrowHelper.ThrowWin32Exception(result);
                 }
 
                 if (hasErrorsOrWarnings)
                 {
-                    DeviceHelper.RaiseAllDeviceLostEventsIfNeeded();
-
                     ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
                 }
             }

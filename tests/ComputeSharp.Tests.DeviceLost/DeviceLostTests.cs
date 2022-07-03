@@ -16,7 +16,7 @@ public partial class DeviceLostTests
     {
         GraphicsDevice graphicsDevice = device.Get();
 
-        bool win32ExceptionThrown = false;
+        //bool win32ExceptionThrown = false;
         TaskCompletionSource<(object? Sender, DeviceLostReason Reason)> tcs = new();
 
         // Register the device lost callback
@@ -28,19 +28,11 @@ public partial class DeviceLostTests
             using ReadWriteBuffer<float> bufferB = graphicsDevice.AllocateReadWriteBuffer<float>(128);
 
             graphicsDevice.For(128, new ComputeShaderGettingStuck(bufferA, bufferB, 12345678, 87654321, 42));
-
-            // The shader above will always hang, but it's not guaranteed that the DirectX runtime will detect
-            // the error right when executing that command. As such, we can force it to be detected by running
-            // any other command after that. At this point the device is lost, so any operation will fail.
-            graphicsDevice.For(128, new ComputeShaderGettingStuck(bufferA, bufferB, 2, 2, 42));
         }
         catch (Win32Exception)
         {
-            win32ExceptionThrown = true;
+            // This is not guaranteed to be thrown, but handle it just in case
         }
-
-        // The previous shader must hang and cause an exception
-        Assert.IsTrue(win32ExceptionThrown);
 
         // Wait up to a second for the event to be raised (it's raised asynchronously on a thread pool thread)
         await Task.WhenAny(tcs.Task, Task.Delay(1000));

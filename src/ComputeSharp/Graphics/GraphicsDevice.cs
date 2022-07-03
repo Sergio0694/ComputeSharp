@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands.Interop;
 #if NET6_0_OR_GREATER
@@ -88,6 +88,16 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 #endif
 
     /// <summary>
+    /// A weak <see cref="GCHandle"/> to the current instance (used to support the device lost callback).
+    /// </summary>
+    private GCHandle deviceHandle;
+
+    /// <summary>
+    /// The wait event for the device removed.
+    /// </summary>
+    private HANDLE deviceRemovedEvent;
+
+    /// <summary>
     /// The reason the device was removed, if any.
     /// </summary>
     private HRESULT deviceRemovedReason;
@@ -153,6 +163,10 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
             this.pool = this.allocator.Get()->CreatePoolForCacheCoherentUMA();
         }
 #endif
+
+        this.deviceRemovedReason = S.S_OK;
+
+        RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent);
     }
 
     /// <summary>
@@ -373,56 +387,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         d3D12GraphicsCommandList->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
     }
 
-    /// <summary>
-    /// Raises the <see cref="DeviceLost"/> event if needed.
-    /// </summary>
-    internal void RaiseDeviceLostEventIfNeeded()
-    {
-        if (IsDisposed)
-        {
-            return;
-        }
-
-        // If the current device removed reason is not S_OK, it means the event
-        // has already been raised (but the device will keep reporting that reason).
-        // In that case, do nothing to avoid raising it again while the device is alive.
-        if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
-        {
-            return;
-        }
-
-        HRESULT result = this.d3D12Device.Get()->GetDeviceRemovedReason();
-
-        // Only raise the event once, and store the device removed reason to track it
-        if (Interlocked.CompareExchange(
-            ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason),
-            (int)result,
-            S.S_OK) == S.S_OK)
-        {
-            ThreadPool.QueueUserWorkItem(static state => ((GraphicsDevice)state!).RaiseDeviceLostEvent(), this);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="DeviceLost"/> event.
-    /// </summary>
-    private void RaiseDeviceLostEvent()
-    {
-        HRESULT result = Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason));
-
-        DeviceLostReason reason = (int)result switch
-        {
-            DXGI.DXGI_ERROR_DEVICE_HUNG => DeviceLostReason.DeviceHung,
-            DXGI.DXGI_ERROR_DEVICE_REMOVED => DeviceLostReason.DeviceRemoved,
-            DXGI.DXGI_ERROR_DEVICE_RESET => DeviceLostReason.DeviceReset,
-            DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR => DeviceLostReason.DriverInternalError,
-            DXGI.DXGI_ERROR_INVALID_CALL => DeviceLostReason.InvalidCall,
-            _ => DeviceLostReason.UnspecifiedError
-        };
-
-        DeviceLost?.Invoke(this, reason);
-    }
-
     /// <inheritdoc/>
     protected override void OnDispose()
     {
@@ -440,6 +404,8 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         this.pool.Dispose();
         this.allocator.Dispose();
 #endif
+
+        UnregisterDeviceLostCallback(this);
     }
 
     /// <inheritdoc/>
