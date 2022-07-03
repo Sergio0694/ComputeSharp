@@ -25,6 +25,7 @@ partial class ReadWriteTexture2D<T>
     public IReadOnlyTexture2D<T> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
         ThrowIfIsNotInReadOnlyState();

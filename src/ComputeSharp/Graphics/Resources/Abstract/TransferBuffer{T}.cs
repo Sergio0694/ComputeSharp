@@ -45,6 +45,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);

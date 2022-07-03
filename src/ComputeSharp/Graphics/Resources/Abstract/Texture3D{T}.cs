@@ -74,6 +74,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
@@ -181,6 +182,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -279,6 +281,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -356,6 +359,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -427,6 +431,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -523,6 +528,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyFrom(UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 

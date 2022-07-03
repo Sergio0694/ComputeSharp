@@ -65,6 +65,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         if (resourceType == ResourceType.Constant)
         {

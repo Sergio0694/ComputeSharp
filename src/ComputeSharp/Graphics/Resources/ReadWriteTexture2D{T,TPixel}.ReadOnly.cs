@@ -25,6 +25,7 @@ partial class ReadWriteTexture2D<T, TPixel>
     internal IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
         ThrowIfIsNotInReadOnlyState();

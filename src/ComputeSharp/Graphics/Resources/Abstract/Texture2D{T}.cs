@@ -73,6 +73,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     private protected Texture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
@@ -169,6 +170,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int width, int height)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -258,6 +260,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -326,6 +329,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyTo(ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -389,6 +393,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -476,6 +481,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal void CopyFrom(UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 

@@ -58,6 +58,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(ref T destination, int offset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -84,6 +85,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 
@@ -118,6 +120,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
 
         ThrowIfDisposed();
 

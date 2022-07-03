@@ -234,6 +234,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsDoublePrecisionSupportAvailable()
     {
         ThrowIfDisposed();
+        ThrowIfDeviceLost();
 
         var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
 
@@ -250,6 +251,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         where T : unmanaged
     {
         ThrowIfDisposed();
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
     }
@@ -264,6 +266,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         where T : unmanaged
     {
         ThrowIfDisposed();
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(
             DXGIFormatHelper.GetForType<T>(),
@@ -280,6 +283,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         where T : unmanaged
     {
         ThrowIfDisposed();
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
     }
@@ -294,6 +298,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         where T : unmanaged
     {
         ThrowIfDisposed();
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(
             DXGIFormatHelper.GetForType<T>(),

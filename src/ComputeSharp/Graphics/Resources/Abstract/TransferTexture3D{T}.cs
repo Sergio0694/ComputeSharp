@@ -52,6 +52,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
     private protected TransferTexture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode)
     {
         device.ThrowIfDisposed();
+        device.ThrowIfDeviceLost();
 
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
