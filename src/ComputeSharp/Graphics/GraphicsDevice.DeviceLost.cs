@@ -18,7 +18,7 @@ unsafe partial class GraphicsDevice
     /// <summary>
     /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallbackForRegisterDeviceLostCallback(void*, byte)"/>.
     /// </summary>
-    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForRegisterDeviceLostCallbackWrapper = WaitForSingleObjectCallbackForWaitForFenceAsync;
+    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForRegisterDeviceLostCallbackWrapper = WaitForSingleObjectCallbackForRegisterDeviceLostCallback;
 #endif
 
     /// <summary>
