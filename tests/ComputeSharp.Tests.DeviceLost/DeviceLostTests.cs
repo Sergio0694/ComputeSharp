@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
 using System.Threading.Tasks;
+using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TerraFX.Interop.DirectX;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.Tests.DeviceLost;
 
@@ -16,26 +20,15 @@ public partial class DeviceLostTests
     {
         GraphicsDevice graphicsDevice = device.Get();
 
-        //bool win32ExceptionThrown = false;
         TaskCompletionSource<(object? Sender, DeviceLostReason Reason)> tcs = new();
 
         // Register the device lost callback
         graphicsDevice.DeviceLost += (s, e) => tcs.SetResult((s, e));
 
-        try
-        {
-            using ReadOnlyBuffer<float> bufferA = graphicsDevice.AllocateReadOnlyBuffer<float>(128);
-            using ReadWriteBuffer<float> bufferB = graphicsDevice.AllocateReadWriteBuffer<float>(128);
-
-            graphicsDevice.For(128, new ComputeShaderGettingStuck(bufferA, bufferB, 12345678, 87654321, 42));
-        }
-        catch (Win32Exception)
-        {
-            // This is not guaranteed to be thrown, but handle it just in case
-        }
+        RemoveDevice(graphicsDevice);
 
         // Wait up to a second for the event to be raised (it's raised asynchronously on a thread pool thread)
-        await Task.WhenAny(tcs.Task, Task.Delay(1000));
+        await Task.WhenAny(tcs.Task, Task.Delay(100));
 
         // Ensure the event has been raised, and get the results
         Assert.IsTrue(tcs.Task.IsCompleted);
@@ -45,36 +38,33 @@ public partial class DeviceLostTests
 
         Assert.IsNotNull(sender);
         Assert.AreSame(sender, graphicsDevice);
-        Assert.IsTrue(reason is DeviceLostReason.DeviceHung or DeviceLostReason.DeviceReset);
+        Assert.AreEqual(reason, DeviceLostReason.DeviceRemoved);
     }
 
-    [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
-    internal readonly partial struct ComputeShaderGettingStuck : IComputeShader
+    /// <summary>
+    /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance.
+    /// </summary>
+    /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
+    private static unsafe void RemoveDevice(GraphicsDevice graphicsDevice)
     {
-        private readonly ReadOnlyBuffer<float> bufferA;
-        private readonly ReadWriteBuffer<float> bufferB;
-        private readonly float a;
-        private readonly float b;
-        private readonly int target;
+        ID3D12Device5* d3D12Device = default;
+        Guid d3D12Device5Guid = typeof(ID3D12Device5).GUID;
 
-        /// <inheritdoc/>
-        public void Execute()
+        if (InteropServices.TryGetID3D12Device(graphicsDevice, &d3D12Device5Guid, (void**)&d3D12Device) != 0)
         {
-            if (ThreadIds.X == target)
+            Assert.Inconclusive();
+        }
+
+        try
+        {
+            d3D12Device->RemoveDevice();
+        }
+        finally
+        {
+            if (d3D12Device is not null)
             {
-                for (float x = 0; x < a; x += 0.1f)
-                {
-                    for (float y = 0; y < b; y += 0.1f)
-                    {
-                        bufferB[ThreadIds.X] += bufferA[ThreadIds.X] * x * y;
-                    }
-                }
+                d3D12Device->Release();
             }
-            else
-            {
-                bufferB[ThreadIds.X] = bufferA[ThreadIds.X];
-            }            
         }
     }
 }
