@@ -143,10 +143,23 @@ unsafe partial class GraphicsDevice
     /// <param name="device">The current <see cref="GraphicsDevice"/> instance.</param>
     private static void UnregisterDeviceLostCallback(GraphicsDevice device)
     {
-        _ = Windows.UnregisterWait(device.deviceRemovedWaitHandle);
-        _ = Windows.CloseHandle(device.deviceRemovedEvent);
+        // As per the UnregisterWait docs:
+        // "If any callback functions associated with the timer have not completed when UnregisterWait is called,
+        // UnregisterWait unregisters the wait on the callback functions and fails with the ERROR_IO_PENDING error code."
+        // To ensure the handle is always correctly disposed, there are three scenarios to take into account:
+        //   1) If the callback is executed first and has completed, this call will return S_OK. No additional cleanup
+        //      is needed, as the wait callback will have already freed the handle. In that case, do nothing.
+        //   2) If the callback is pending, this call will return ERROR_IO_PENDING. If that happens, no additional work
+        //      is needed in this case either, as the callback will take care of freeing the handle during execution.
+        //   3) If the callback has never been invoked, the handle can safely be freed.
+        // In all cases, the OS will take care of checking against race conditions, so no interlocked APIs are needed.
+        if (Windows.UnregisterWait(device.deviceRemovedWaitHandle) == S.S_OK &&
+            device.deviceHandle.IsAllocated)
+        {
+            device.deviceHandle.Free();
+        }
 
-        device.deviceHandle.Free();
+        _ = Windows.CloseHandle(device.deviceRemovedEvent);
     }
 
     /// <summary>
@@ -158,6 +171,11 @@ unsafe partial class GraphicsDevice
     private static void WaitForSingleObjectCallbackForRegisterDeviceLostCallback(void* pContext, byte timedOut)
     {
         GraphicsDevice device = Unsafe.As<GraphicsDevice>(GCHandle.FromIntPtr((IntPtr)pContext).Target!);
+
+        // The handle is guaranteed to be allocated when the callback is executed. Freeing it from here
+        // is needed so that the cleanup upon disposal might skip it if there's a pending execution. That
+        // ensures the handle is always disposed, without the disposal path having to lock and wait for it.
+        device.deviceHandle.Free();
 
         device.QueueRaiseDeviceLostEventIfNeeded();
     }
