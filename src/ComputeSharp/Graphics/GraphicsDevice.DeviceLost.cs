@@ -105,7 +105,12 @@ unsafe partial class GraphicsDevice
     /// <param name="device">The current <see cref="GraphicsDevice"/> instance.</param>
     /// <param name="deviceHandle">The resulting <see cref="GCHandle"/> used as callback state.</param>
     /// <param name="deviceRemovedEvent">The resulting device lost event for the callback.</param>
-    private static void RegisterDeviceLostCallback(GraphicsDevice device, out GCHandle deviceHandle, out HANDLE deviceRemovedEvent)
+    /// <param name="deviceRemovedWaitHandle">The resulting device lost wait handle for the callback.</param>
+    private static void RegisterDeviceLostCallback(
+        GraphicsDevice device,
+        out GCHandle deviceHandle,
+        out HANDLE deviceRemovedEvent,
+        out HANDLE deviceRemovedWaitHandle)
     {
         HANDLE eventHandle = Windows.CreateEventW(null, Windows.FALSE, Windows.FALSE, null);
 
@@ -128,7 +133,8 @@ unsafe partial class GraphicsDevice
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);
 
-        deviceRemovedEvent = waitHandle;
+        deviceRemovedEvent = eventHandle;
+        deviceRemovedWaitHandle = waitHandle;
     }
 
     /// <summary>
@@ -137,7 +143,7 @@ unsafe partial class GraphicsDevice
     /// <param name="device">The current <see cref="GraphicsDevice"/> instance.</param>
     private static void UnregisterDeviceLostCallback(GraphicsDevice device)
     {
-        _ = Windows.UnregisterWait(device.deviceRemovedEvent);
+        _ = Windows.UnregisterWait(device.deviceRemovedWaitHandle);
         _ = Windows.CloseHandle(device.deviceRemovedEvent);
 
         device.deviceHandle.Free();
