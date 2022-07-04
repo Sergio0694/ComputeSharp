@@ -20,13 +20,20 @@ public static class DeviceExtensions
         GraphicsDevice? device = type switch
         {
             Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).FirstOrDefault(),
             _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device.")
         };
 
         if (device is null)
         {
-            Assert.Inconclusive();
+            // If the device is null, fail only if the device was WARP (as it should always be available).
+            // If a dedicated device was requested instead, just report the test as inconclusive (no GPU).
+            switch (type)
+            {
+                case Device.Discrete: Assert.Inconclusive(); break;
+                case Device.Warp: Assert.Fail(); break;
+            }
+            
         }
 
         return device!;
