@@ -93,9 +93,14 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     private GCHandle deviceHandle;
 
     /// <summary>
-    /// The wait event for the device removed.
+    /// The event for the device removed callback.
     /// </summary>
     private HANDLE deviceRemovedEvent;
+
+    /// <summary>
+    /// The wait handle for the device removed callback.
+    /// </summary>
+    private HANDLE deviceRemovedWaitHandle;
 
     /// <summary>
     /// The reason the device was removed, if any.
@@ -166,7 +171,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 
         this.deviceRemovedReason = S.S_OK;
 
-        RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent);
+        RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
     }
 
     /// <summary>
