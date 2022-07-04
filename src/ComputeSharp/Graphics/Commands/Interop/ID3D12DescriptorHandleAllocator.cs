@@ -138,5 +138,6 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     public void Dispose()
     {
         this.d3D12DescriptorHeap.Dispose();
+        this.d3D12DescriptorHeapNonShaderVisible.Dispose();
     }
 }
