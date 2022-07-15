@@ -12,8 +12,7 @@ namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
 [TestCategory("DeviceLost")]
-[DoNotParallelize]
-public partial class DeviceLostTests
+public class DeviceLostTests
 {
     [CombinatorialTestMethod]
     [AllDevices]
