@@ -90,6 +90,7 @@ unsafe partial class GraphicsDevice
                 DXGI.DXGI_ERROR_DEVICE_RESET => DeviceLostReason.DeviceReset,
                 DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR => DeviceLostReason.DriverInternalError,
                 DXGI.DXGI_ERROR_INVALID_CALL => DeviceLostReason.InvalidCall,
+                DXGI.DXGI_ERROR_ACCESS_DENIED => DeviceLostReason.AccessDenied,
                 _ => DeviceLostReason.UnspecifiedError
             };
 
