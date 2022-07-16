@@ -119,7 +119,7 @@ unsafe partial class GraphicsDevice
         // As such, a fence event with a value of ulong.MaxValue can act as a device lost callback.
         device.d3D12ComputeFence.Get()->SetEventOnCompletion(ulong.MaxValue, eventHandle).Assert();
 
-        GCHandle handle = deviceHandle = GCHandle.Alloc(device, GCHandleType.Weak);
+        GCHandle handle = GCHandle.Alloc(device, GCHandleType.Weak);
         HANDLE waitHandle;
 
         _ = Windows.RegisterWaitForSingleObject(
@@ -130,10 +130,11 @@ unsafe partial class GraphicsDevice
 #else
             Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackForRegisterDeviceLostCallbackWrapper),
 #endif
-            Context: (void*)(IntPtr)handle,
+            Context: (void*)GCHandle.ToIntPtr(handle),
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);
 
+        deviceHandle = handle;
         deviceRemovedEvent = eventHandle;
         deviceRemovedWaitHandle = waitHandle;
     }
@@ -171,13 +172,23 @@ unsafe partial class GraphicsDevice
     [UnmanagedCallersOnly]
     private static void WaitForSingleObjectCallbackForRegisterDeviceLostCallback(void* pContext, byte timedOut)
     {
-        GraphicsDevice device = Unsafe.As<GraphicsDevice>(GCHandle.FromIntPtr((IntPtr)pContext).Target!);
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)pContext);
+        GraphicsDevice? device = Unsafe.As<GraphicsDevice>(handle.Target);
 
-        // The handle is guaranteed to be allocated when the callback is executed. Freeing it from here
-        // is needed so that the cleanup upon disposal might skip it if there's a pending execution. That
-        // ensures the handle is always disposed, without the disposal path having to lock and wait for it.
-        device.deviceHandle.Free();
+        // Since the GCHandle is weak, it's possible that if the callback races against the finalizer thread,
+        // the call to UnregisterDeviceLostCallback might not be able to unregister the wait before the object
+        // is collected, which causes the GCHandle to return null. To guard against this, it is crucial to
+        // free the handle from the input context, and not by trying to get the one stored in the field on
+        // the target object, as that might just be null. The handle is guaranteed to be allocated when the
+        // callback is executed. Freeing it from here is needed so that the cleanup upon disposal might skip
+        // it if there's a pending execution. That ensures the handle is always disposed, without the disposal
+        // path having to lock and wait for it.
+        handle.Free();
 
-        device.QueueRaiseDeviceLostEventIfNeeded();
+        // If the device is available, then also queue the device lost event to be raised on the thread pool
+        if (device is not null)
+        {
+            device.QueueRaiseDeviceLostEventIfNeeded();
+        }
     }
 }
