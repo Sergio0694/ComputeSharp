@@ -53,7 +53,7 @@ partial class GraphicsDevice
     /// <exception cref="NotSupportedException">Thrown if no adapter could be created (this should never be the case).</exception>
     public static GraphicsDevice GetDefault()
     {
-        throw new NotImplementedException();
+        return DeviceHelper.GetDefaultDeviceFromCacheOrCreateInstance();
     }
 
     /// <summary>
