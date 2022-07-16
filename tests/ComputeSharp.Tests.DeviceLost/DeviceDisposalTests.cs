@@ -13,7 +13,7 @@ namespace ComputeSharp.Tests.DeviceLost;
 [TestCategory("DeviceDisposal")]
 public class DeviceDisposalTests
 {
-    [CombinatorialTestMethod]
+    [TestMethod]
     public unsafe void DeviceDisposal_GetDefault_ReferenceCounting()
     {
         using ComPtr<ID3D12Device> d3D12Device = default;

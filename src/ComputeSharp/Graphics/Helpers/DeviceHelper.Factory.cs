@@ -94,6 +94,12 @@ partial class DeviceHelper
     {
         lock (DevicesCache)
         {
+            // Remove the default device from the cache, if it has been disposed
+            if (device == defaultDevice)
+            {
+                defaultDevice = null;
+            }
+
             DevicesCache.Remove(device.Luid);
 
             if (Configuration.IsDebugOutputEnabled)
