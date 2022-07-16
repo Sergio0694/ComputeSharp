@@ -5,10 +5,10 @@ using ComputeSharp;
 float[] array = Enumerable.Range(1, 100).Select(static i => (float)i).ToArray();
 
 // Create the graphics buffer
-using ReadWriteBuffer<float> gpuBuffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array);
+using ReadWriteBuffer<float> gpuBuffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer(array);
 
 // Run the shader
-using (var context = GraphicsDevice.Default.CreateComputeContext())
+using (var context = GraphicsDevice.GetDefault().CreateComputeContext())
 {
     context.Log("Dispatching shader");
     context.BeginEvent("Dispatching event");

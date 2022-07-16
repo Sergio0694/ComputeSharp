@@ -23,7 +23,7 @@ public partial class DispatchingBenchmark : IDisposable
     [GlobalSetup]
     public void Setup()
     {
-        Buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(128);
+        Buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(128);
     }
 
     /// <inheritdoc/>
@@ -40,7 +40,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public void Compute_Single()
     {
-        GraphicsDevice.Default.For(64, new TestShader(Buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public void Compute_Single_WithContext()
     {
-        using var context = GraphicsDevice.Default.CreateComputeContext();
+        using var context = GraphicsDevice.GetDefault().CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
     }
@@ -62,7 +62,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public async Task Compute_Single_WithContext_Async()
     {
-        await using var context = GraphicsDevice.Default.CreateComputeContext();
+        await using var context = GraphicsDevice.GetDefault().CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
     }
@@ -74,8 +74,8 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public void Compute_Multiple()
     {
-        GraphicsDevice.Default.For(64, new TestShader(Buffer!));
-        GraphicsDevice.Default.For(64, new TestShader(Buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public void Compute_Multiple_WithContext()
     {
-        using var context = GraphicsDevice.Default.CreateComputeContext();
+        using var context = GraphicsDevice.GetDefault().CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
         context.Barrier(Buffer!);
@@ -99,7 +99,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public async Task Compute_Multiple_WithContext_Async()
     {
-        await using var context = GraphicsDevice.Default.CreateComputeContext();
+        await using var context = GraphicsDevice.GetDefault().CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
         context.Barrier(Buffer!);

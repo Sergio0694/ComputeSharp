@@ -18,7 +18,7 @@ public class DeviceDisposalTests
     {
         using ComPtr<ID3D12Device> d3D12Device = default;
 
-        using (GraphicsDevice graphicsDevice = GraphicsDevice.Default)
+        using (GraphicsDevice graphicsDevice = GraphicsDevice.GetDefault())
         {
             InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
         }

@@ -239,7 +239,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            GraphicsDevice.Default.D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            GraphicsDevice.GetDefault().D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -394,7 +394,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             // Dispose the previous texture, if present, and create the new 2D texture to use to generate frames to display
             this.texture?.Dispose();
 
-            this.texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Rgba32, Float4>((int)resizedWidth, (int)resizeHeight);
+            this.texture = GraphicsDevice.GetDefault().AllocateReadWriteTexture2D<Rgba32, Float4>((int)resizedWidth, (int)resizeHeight);
         }
     }
 

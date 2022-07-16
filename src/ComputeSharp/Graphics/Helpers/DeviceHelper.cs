@@ -28,30 +28,6 @@ internal static partial class DeviceHelper
     private const uint WarpDeviceId = 0x8C;
 
     /// <summary>
-    /// The <see cref="Lazy{T}"/> instance used to produce the default <see cref="GraphicsDevice"/> instance.
-    /// </summary>
-    public static readonly Lazy<GraphicsDevice> DefaultFactory = new(GetOrCreateDefaultDevice);
-
-    /// <summary>
-    /// Gets the <see cref="Luid"/> of the default device.
-    /// </summary>
-    /// <returns>The <see cref="Luid"/> of the default device supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
-    /// <remarks>This methods assumes that a default device is available.</remarks>
-    public static unsafe Luid GetDefaultDeviceLuid()
-    {
-        if (DefaultFactory.IsValueCreated)
-        {
-            return DefaultFactory.Value.Luid;
-        }
-
-        DXGI_ADAPTER_DESC1 dxgiDescription1;
-
-        _ = TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
-
-        return Luid.FromLUID(dxgiDescription1.AdapterLuid);
-    }
-
-    /// <summary>
     /// Gets the default <see cref="GraphicsDevice"/> instance.
     /// </summary>
     /// <returns>The default <see cref="GraphicsDevice"/> instance supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
