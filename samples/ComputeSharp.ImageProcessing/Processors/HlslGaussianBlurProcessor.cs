@@ -21,7 +21,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
     /// </summary>
     public HlslGaussianBlurProcessor()
-        : this(GraphicsDevice.Default, DefaultSigma, 9)
+        : this(GraphicsDevice.GetDefault(), DefaultSigma, 9)
     {
     }
 
@@ -30,7 +30,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     /// </summary>
     /// <param name="radius">The radius value representing the size of the area to sample.</param>
     public HlslGaussianBlurProcessor(int radius)
-        : this(GraphicsDevice.Default, radius / 3F, radius)
+        : this(GraphicsDevice.GetDefault(), radius / 3F, radius)
     {
     }
 

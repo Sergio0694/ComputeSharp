@@ -23,11 +23,11 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void CapturedResource()
     {
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-        ((IShader)new CapturedResourceShader(buffer)).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)new CapturedResourceShader(buffer)).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(3, dataLoader.Values.Length);
         Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -55,12 +55,12 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void LoadMultipleResourcesAndPrimitives()
     {
-        using ReadWriteBuffer<float> buffer0 = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> buffer1 = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer0 = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer1 = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-        ((IShader)new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77)).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77)).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(6, dataLoader.Values.Length);
         Assert.AreEqual(2, dataLoader.Resources.Length);
@@ -94,12 +94,12 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void LoadScalarAndVectorTypes()
     {
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
         ScalarAndVectorTypesShader shader = new(buffer, new(55, 44, 888), 22, 77, new(3.14, 6.28), 42, 9999);
 
-        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(18, dataLoader.Values.Length);
         Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -147,7 +147,7 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void LoadScalarVectorAndMatrixTypes()
     {
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
         ScalarVectorAndMatrixTypesShader shader = new(
@@ -161,7 +161,7 @@ public partial class ShaderDataLoaderTests
             i2x2: new(11, 22, 33, 44),
             d: 9999);
 
-        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(31, dataLoader.Values.Length);
         Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -226,7 +226,7 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void LoadFlatCustomTypeShader()
     {
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
         FlatCustomTypeShader shader = new(
@@ -241,7 +241,7 @@ public partial class ShaderDataLoaderTests
                 i2x2: new(11, 22, 33, 44),
                 d: 9999));
 
-        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(31, dataLoader.Values.Length);
         Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -318,7 +318,7 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void LoadNestedCustomTypes()
     {
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
         NestedCustomTypesShader shader = new(
@@ -345,7 +345,7 @@ public partial class ShaderDataLoaderTests
                     a: 888888,
                     b: new(333.3f, 444.4f))));
 
-        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)shader).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(47, dataLoader.Values.Length);
         Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -417,16 +417,16 @@ public partial class ShaderDataLoaderTests
     [TestMethod]
     public unsafe void AmbiguousNames()
     {
-        using ReadWriteBuffer<float> a = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> b = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> c = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> x = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> y = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
-        using ReadWriteBuffer<float> z = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> a = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> b = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> c = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> x = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> y = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
+        using ReadWriteBuffer<float> z = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(16);
 
         DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-        ((IShader)new AmbiguousNamesShader(a, b, c, x, y, z, 7777, 8888, 9999)).LoadDispatchData(ref dataLoader, GraphicsDevice.Default, 111, 222, 333);
+        ((IShader)new AmbiguousNamesShader(a, b, c, x, y, z, 7777, 8888, 9999)).LoadDispatchData(ref dataLoader, GraphicsDevice.GetDefault(), 111, 222, 333);
 
         Assert.AreEqual(6, dataLoader.Values.Length);
         Assert.AreEqual(6, dataLoader.Resources.Length);

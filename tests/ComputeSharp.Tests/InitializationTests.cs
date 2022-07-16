@@ -13,7 +13,7 @@ public partial class InitializationTests
     [TestMethod]
     public void IsSupported()
     {
-        Assert.IsTrue(GraphicsDevice.Default is not null);
+        Assert.IsTrue(GraphicsDevice.GetDefault() is not null);
     }
 
     [CombinatorialTestMethod]
@@ -31,11 +31,11 @@ public partial class InitializationTests
     [TestMethod]
     public void DisposeDefault()
     {
-        using var before = GraphicsDevice.Default.AllocateReadOnlyBuffer<float>(128);
+        using var before = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer<float>(128);
 
-        GraphicsDevice.Default.Dispose();
+        GraphicsDevice.GetDefault().Dispose();
 
-        using var after = GraphicsDevice.Default.AllocateReadOnlyBuffer<float>(128);
+        using var after = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer<float>(128);
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.EnumerateDevices())
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.Default, device);
+            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
@@ -64,7 +64,7 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.QueryDevices(info => info.DedicatedMemorySize >= 1024))
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.Default, device);
+            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 

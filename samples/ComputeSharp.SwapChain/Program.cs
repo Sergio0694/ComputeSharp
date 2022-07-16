@@ -77,6 +77,6 @@ class Program
     {
         string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Textures", $"{name}.png");
 
-        return GraphicsDevice.Default.LoadReadOnlyTexture2D<Rgba32, float4>(filename);
+        return GraphicsDevice.GetDefault().LoadReadOnlyTexture2D<Rgba32, float4>(filename);
     }
 }

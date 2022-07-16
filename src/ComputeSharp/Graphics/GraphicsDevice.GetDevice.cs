@@ -9,18 +9,6 @@ namespace ComputeSharp;
 partial class GraphicsDevice
 {
     /// <summary>
-    /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine.
-    /// This instance cannot be manually disposed - attempting to do so is safe and it will
-    /// not cause an exception, but it will simply do nothing and not dispose the device.
-    /// </summary>
-    /// <remarks>
-    /// This device will always be available, even when there isn't a compatible physical GPU
-    /// or integrated GPU in the system in use. In that case, the WARP device will be used.
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3darticles/directx-warp"/>.
-    /// </remarks>
-    public static GraphicsDevice Default => DeviceHelper.DefaultFactory.Value;
-
-    /// <summary>
     /// Gets or creates the default <see cref="GraphicsDevice"/> instance for the current machine.
     /// <para>
     /// The default define is the first device supporting the required feature level that could
