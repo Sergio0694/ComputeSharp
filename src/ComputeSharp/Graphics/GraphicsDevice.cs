@@ -108,6 +108,13 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     private HRESULT deviceRemovedReason;
 
     /// <summary>
+    /// A lcok object used to synchronize accesses to <see cref="d3D12Device"/> between <see cref="OnDispose"/> and <see cref="QueueRaiseDeviceLostEventIfNeeded"/>.
+    /// This is needed because the device lost callback might race with a dispose call and end up trying to invoke a method on an invalid object.
+    /// We can't just check whether it's <see langword="null"/>, as a null condition might still cause a racing thread to access a freed up object.
+    /// </summary>
+    private readonly object d3D12DeviceLock = new();
+
+    /// <summary>
     /// Raised whenever the device is lost.
     /// </summary>
     /// <remarks>
@@ -402,7 +409,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     {
         DeviceHelper.NotifyDisposedDevice(this);
 
-        this.d3D12Device.Dispose();
+        // Guard the dispose call around the native device to avoid device lost races
+        lock (this.d3D12DeviceLock)
+        {
+            this.d3D12Device.Dispose();
+        }
+
         this.d3D12ComputeCommandQueue.Dispose();
         this.d3D12CopyCommandQueue.Dispose();
         this.d3D12ComputeFence.Dispose();
