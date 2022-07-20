@@ -61,7 +61,20 @@ unsafe partial class GraphicsDevice
             return;
         }
 
-        HRESULT result = this.d3D12Device.Get()->GetDeviceRemovedReason();
+        HRESULT result;
+        
+        // Make sure to guard against concurrent accesses from the dispose logic
+        lock (this.d3D12DeviceLock)
+        {
+            ID3D12Device* d3D12Device = this.d3D12Device.Get();
+
+            if (d3D12Device is null)
+            {
+                return;
+            }
+
+            result = d3D12Device->GetDeviceRemovedReason();
+        }
 
         // Only raise the event once, and store the device removed reason to track it
         if (result != S.S_OK &&
