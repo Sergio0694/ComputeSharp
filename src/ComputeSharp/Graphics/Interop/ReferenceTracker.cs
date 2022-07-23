@@ -154,7 +154,7 @@ internal struct ReferenceTracker : IDisposable
     /// <summary>
     /// A reference tracking lease to extend the lifetime of a given tracked object while in a given scope.
     /// </summary>
-    public struct Lease
+    public struct Lease : IDisposable
     {
         /// <summary>
         /// The tracked object being wrapped, if any.

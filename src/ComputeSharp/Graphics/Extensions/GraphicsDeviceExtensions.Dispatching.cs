@@ -150,9 +150,11 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device);
 
-        device.ThrowIfDisposed();
-        device.ThrowIfDeviceLost();
+        using (device.GetReferenceTracker().GetLease())
+        {
+            device.ThrowIfDeviceLost();
 
-        return new(device);
+            return new(device);
+        }
     }
 }

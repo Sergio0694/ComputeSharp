@@ -24,32 +24,34 @@ partial class ReadWriteTexture3D<T>
     /// <inheritdoc cref="ReadWriteTexture3DExtensions.AsReadOnly(ReadWriteTexture3D{float})"/>
     public IReadOnlyTexture3D<T> AsReadOnly()
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-        ThrowIfIsNotInReadOnlyState();
-
-        ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
-
-        if (readOnlyWrapper is not null)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
         {
-            return readOnlyWrapper;
-        }
+            GraphicsDevice.ThrowIfDeviceLost();
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T> texture)
-        {
-            return texture.readOnlyWrapper = new(texture);
-        }
+            ThrowIfIsNotInReadOnlyState();
 
-        return InitializeWrapper(this);
+            ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
+
+            if (readOnlyWrapper is not null)
+            {
+                return readOnlyWrapper;
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static ReadOnly InitializeWrapper(ReadWriteTexture3D<T> texture)
+            {
+                return texture.readOnlyWrapper = new(texture);
+            }
+
+            return InitializeWrapper(this);
+        }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public override void Dispose()
     {
-        base.OnDispose();
+        base.Dispose();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -57,8 +59,13 @@ partial class ReadWriteTexture3D<T>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture3D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture3D<T>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : ReferenceTracker.ITrackedObject, IDisposable, IReadOnlyTexture3D<T>, GraphicsResourceHelper.IGraphicsResource
     {
+        /// <summary>
+        /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+        /// </summary>
+        private ReferenceTracker referenceTracker;
+
         /// <summary>
         /// The owning <see cref="ReadWriteTexture3D{T}"/> instance being wrapped.
         /// </summary>
@@ -75,6 +82,7 @@ partial class ReadWriteTexture3D<T>
         /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture3D<T> owner)
         {
+            this.referenceTracker = new ReferenceTracker(this);
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -109,12 +117,13 @@ partial class ReadWriteTexture3D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using (this.referenceTracker.GetLease())
+            using (this.owner.GetReferenceTracker().GetLease())
+            {
+                this.owner.ThrowIfDeviceMismatch(device);
 
-            this.owner.ThrowIfDisposed();
-            this.owner.ThrowIfDeviceMismatch(device);
-
-            return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
+                return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
+            }
         }
 
         /// <inheritdoc/>
@@ -126,12 +135,13 @@ partial class ReadWriteTexture3D<T>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using (this.referenceTracker.GetLease())
+            using (this.owner.GetReferenceTracker().GetLease())
+            {
+                this.owner.ThrowIfDeviceMismatch(device);
 
-            this.owner.ThrowIfDisposed();
-            this.owner.ThrowIfDeviceMismatch(device);
-
-            return this.owner.D3D12Resource;
+                return this.owner.D3D12Resource;
+            }
         }
 
         /// <inheritdoc/>
@@ -141,7 +151,21 @@ partial class ReadWriteTexture3D<T>
         }
 
         /// <inheritdoc/>
-        protected override void OnDispose()
+        public void Dispose()
+        {
+            this.referenceTracker.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc/>
+        ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+        {
+            return ref this.referenceTracker;
+        }
+
+        /// <inheritdoc/>
+        void ReferenceTracker.ITrackedObject.DangerousRelease()
         {
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {
