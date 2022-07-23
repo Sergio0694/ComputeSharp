@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
@@ -24,9 +25,14 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
+public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDisposable, IGraphicsResource
     where T : unmanaged
 {
+    /// <summary>
+    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -64,63 +70,75 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-        device.ThrowIfDeviceLost();
+        this.referenceTracker = new ReferenceTracker(this);
 
-        if (resourceType == ResourceType.Constant)
+        using (device.GetReferenceTracker().GetLease())
         {
-            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
-        }
-        else
-        {
-            // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
-        }
+            device.ThrowIfDeviceLost();
 
-        if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
-            device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
-        {
-            UnsupportedDoubleOperationException.Throw<T>();
-        }
+            if (resourceType == ResourceType.Constant)
+            {
+                Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
+            }
+            else
+            {
+                // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
+                Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
+            }
 
-        nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
-        nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, D3D12.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
+            if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
+                device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
+            {
+                UnsupportedDoubleOperationException.Throw<T>();
+            }
 
-        SizeInBytes = usableSizeInBytes;
-        GraphicsDevice = device;
-        Length = length;
+            nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
+            nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, D3D12.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
+
+            SizeInBytes = usableSizeInBytes;
+            GraphicsDevice = device;
+            Length = length;
 
 #if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)effectiveSizeInBytes);
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)effectiveSizeInBytes);
+            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)effectiveSizeInBytes, device.IsCacheCoherentUMA);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)effectiveSizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
-        device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
-        device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
+            device.RegisterAllocatedResource();
+            device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
+            device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
 
-        switch (resourceType)
-        {
-            case ResourceType.Constant:
-                device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), effectiveSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
-                break;
-            case ResourceType.ReadOnly:
-                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
-                break;
-            case ResourceType.ReadWrite:
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
-                device.D3D12Device->CreateUnorderedAccessViewForClear(
-                    this.d3D12Resource.Get(),
-                    DXGI_FORMAT_R32_UINT,
-                    (uint)(usableSizeInBytes / sizeof(uint)),
-                    this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandle,
-                    this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
-                break;
+            switch (resourceType)
+            {
+                case ResourceType.Constant:
+                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), effectiveSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                    break;
+                case ResourceType.ReadOnly:
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                    break;
+                case ResourceType.ReadWrite:
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessViewForClear(
+                        this.d3D12Resource.Get(),
+                        DXGI_FORMAT_R32_UINT,
+                        (uint)(usableSizeInBytes / sizeof(uint)),
+                        this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandle,
+                        this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
+                    break;
+            }
+
+            this.d3D12Resource.Get()->SetName(this);
         }
+    }
 
-        this.d3D12Resource.Get()->SetName(this);
+    /// <summary>
+    /// Releases unmanaged resources for the current <see cref="Buffer{T}"/> instance.
+    /// </summary>
+    ~Buffer()
+    {
+        this.referenceTracker.Dispose();
     }
 
     /// <inheritdoc/>
@@ -201,7 +219,28 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     internal abstract void CopyFrom(ref T source, int destinationOffset, int count);
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public void Dispose()
+    {
+        this.referenceTracker.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ref ReferenceTracker GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    void ReferenceTracker.ITrackedObject.DangerousRelease()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -231,20 +270,24 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceMismatch(device);
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceMismatch(device);
 
-        return (
-            this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12GpuDescriptorHandle,
-            this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
+            return (
+                this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12GpuDescriptorHandle,
+                this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
+        }
     }
 
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceMismatch(device);
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceMismatch(device);
 
-        return D3D12Resource;
+            return D3D12Resource;
+        }
     }
 }

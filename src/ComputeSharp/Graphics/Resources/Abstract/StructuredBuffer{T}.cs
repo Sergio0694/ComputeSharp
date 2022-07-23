@@ -32,71 +32,72 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
-        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-
-        if (GraphicsDevice.IsCacheCoherentUMA)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
         {
-            using ID3D12ResourceMap resource = D3D12Resource->Map();
+            GraphicsDevice.ThrowIfDeviceLost();
 
-            fixed (void* destinationPointer = &destination)
+            Guard.IsBetweenOrEqualTo(count, 0, Length);
+            Guard.IsInRange(sourceOffset, 0, Length);
+            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+
+            if (GraphicsDevice.IsCacheCoherentUMA)
             {
-                MemoryHelper.Copy<T>(
-                    source: resource.Pointer,
-                    destination: destinationPointer,
-                    sourceElementOffset: (uint)sourceOffset,
-                    destinationElementOffset: 0,
-                    sourceElementPitchInBytes: (uint)sizeof(T),
-                    destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)count);
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
+
+                fixed (void* destinationPointer = &destination)
+                {
+                    MemoryHelper.Copy<T>(
+                        source: resource.Pointer,
+                        destination: destinationPointer,
+                        sourceElementOffset: (uint)sourceOffset,
+                        destinationElementOffset: 0,
+                        sourceElementPitchInBytes: (uint)sizeof(T),
+                        destinationElementPitchInBytes: (uint)sizeof(T),
+                        count: (uint)count);
+                }
             }
-        }
-        else
-        {
-            nint byteOffset = (nint)sourceOffset * sizeof(T);
-            nint byteLength = count * sizeof(T);
-
-#if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
-#else
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
-                ResourceType.ReadBack,
-                (ulong)byteLength,
-                GraphicsDevice.IsCacheCoherentUMA);
-#endif
-
-            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
+            else
             {
-#if NET6_0_OR_GREATER
-                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(allocation.Get()->GetResource(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
-#else
-                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
-#endif
-                copyCommandList.ExecuteAndWaitForCompletion();
-            }
+                nint byteOffset = (nint)sourceOffset * sizeof(T);
+                nint byteLength = count * sizeof(T);
 
 #if NET6_0_OR_GREATER
-            using ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map();
+                using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 #else
-            using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+                    ResourceType.ReadBack,
+                    (ulong)byteLength,
+                    GraphicsDevice.IsCacheCoherentUMA);
 #endif
 
-            fixed (void* destinationPointer = &destination)
-            {
-                MemoryHelper.Copy<T>(
-                    source: resource.Pointer,
-                    destination: destinationPointer,
-                    sourceElementOffset: 0,
-                    destinationElementOffset: 0,
-                    sourceElementPitchInBytes: (uint)sizeof(T),
-                    destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)count);
+                using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
+                {
+#if NET6_0_OR_GREATER
+                    copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(allocation.Get()->GetResource(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
+#else
+                    copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
+#endif
+                    copyCommandList.ExecuteAndWaitForCompletion();
+                }
+
+#if NET6_0_OR_GREATER
+                using ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map();
+#else
+                using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
+#endif
+
+                fixed (void* destinationPointer = &destination)
+                {
+                    MemoryHelper.Copy<T>(
+                        source: resource.Pointer,
+                        destination: destinationPointer,
+                        sourceElementOffset: 0,
+                        destinationElementOffset: 0,
+                        sourceElementPitchInBytes: (uint)sizeof(T),
+                        destinationElementPitchInBytes: (uint)sizeof(T),
+                        count: (uint)count);
+                }
             }
         }
     }
@@ -104,40 +105,41 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
-        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length);
-        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
-
-        if (!destination.IsPaddingPresent)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
+        using (destination.GetReferenceTracker().GetLease())
         {
-            nint sourceByteOffset = (nint)sourceOffset * sizeof(T);
-            nint destinationByteOffset = (nint)destinationOffset * sizeof(T);
-            nint byteLength = count * sizeof(T);
+            GraphicsDevice.ThrowIfDeviceLost();
 
-            // Directly copy the input buffer
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(
-                destination.D3D12Resource,
-                (ulong)destinationByteOffset,
-                D3D12Resource,
-                (ulong)sourceByteOffset,
-                (ulong)byteLength);
+            Guard.IsBetweenOrEqualTo(count, 0, Length);
+            Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+            Guard.IsInRange(sourceOffset, 0, Length);
+            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+            Guard.IsInRange(destinationOffset, 0, destination.Length);
+            Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-            copyCommandList.ExecuteAndWaitForCompletion();
+            if (!destination.IsPaddingPresent)
+            {
+                nint sourceByteOffset = (nint)sourceOffset * sizeof(T);
+                nint destinationByteOffset = (nint)destinationOffset * sizeof(T);
+                nint byteLength = count * sizeof(T);
+
+                // Directly copy the input buffer
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(
+                    destination.D3D12Resource,
+                    (ulong)destinationByteOffset,
+                    D3D12Resource,
+                    (ulong)sourceByteOffset,
+                    (ulong)byteLength);
+
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
+            else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, count);
         }
-        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, count);
     }
 
     /// <summary>
@@ -149,114 +151,116 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
-        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length);
-        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
-
-        if (GraphicsDevice.IsCacheCoherentUMA)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
+        using (destination.GetReferenceTracker().GetLease())
         {
-            using ID3D12ResourceMap resource = D3D12Resource->Map();
+            GraphicsDevice.ThrowIfDeviceLost();
 
-            MemoryHelper.Copy<T>(
-                source: resource.Pointer,
-                destination: destination.MappedData,
-                sourceElementOffset: (uint)sourceOffset,
-                destinationElementOffset: (uint)destinationOffset,
-                sourceElementPitchInBytes: (uint)sizeof(T),
-                destinationElementPitchInBytes: (uint)sizeof(T),
-                count: (uint)count);
-        }
-        else
-        {
-            ulong byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T);
-            ulong byteOffset = (uint)sourceOffset * (uint)sizeof(T);
-            ulong byteLength = (uint)count * (uint)sizeof(T);
+            destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            Guard.IsBetweenOrEqualTo(count, 0, Length);
+            Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+            Guard.IsInRange(sourceOffset, 0, Length);
+            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+            Guard.IsInRange(destinationOffset, 0, destination.Length);
+            Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(destination.D3D12Resource, byteDestinationOffset, D3D12Resource, byteOffset, byteLength);
-            copyCommandList.ExecuteAndWaitForCompletion();
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
+
+                MemoryHelper.Copy<T>(
+                    source: resource.Pointer,
+                    destination: destination.MappedData,
+                    sourceElementOffset: (uint)sourceOffset,
+                    destinationElementOffset: (uint)destinationOffset,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)count);
+            }
+            else
+            {
+                ulong byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T);
+                ulong byteOffset = (uint)sourceOffset * (uint)sizeof(T);
+                ulong byteLength = (uint)count * (uint)sizeof(T);
+
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(destination.D3D12Resource, byteDestinationOffset, D3D12Resource, byteOffset, byteLength);
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
         }
     }
 
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-
-        Guard.IsBetweenOrEqualTo(length, 0, Length);
-        Guard.IsInRange(offset, 0, Length);
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
-
-        if (GraphicsDevice.IsCacheCoherentUMA)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
         {
-            using ID3D12ResourceMap resource = D3D12Resource->Map();
+            GraphicsDevice.ThrowIfDeviceLost();
 
-            fixed (void* sourcePointer = &source)
+            Guard.IsBetweenOrEqualTo(length, 0, Length);
+            Guard.IsInRange(offset, 0, Length);
+            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+
+            if (GraphicsDevice.IsCacheCoherentUMA)
             {
-                MemoryHelper.Copy<T>(
-                    source: sourcePointer,
-                    destination: resource.Pointer,
-                    sourceElementOffset: 0,
-                    destinationElementOffset: (uint)offset,
-                    sourceElementPitchInBytes: (uint)sizeof(T),
-                    destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)length);
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
+
+                fixed (void* sourcePointer = &source)
+                {
+                    MemoryHelper.Copy<T>(
+                        source: sourcePointer,
+                        destination: resource.Pointer,
+                        sourceElementOffset: 0,
+                        destinationElementOffset: (uint)offset,
+                        sourceElementPitchInBytes: (uint)sizeof(T),
+                        destinationElementPitchInBytes: (uint)sizeof(T),
+                        count: (uint)length);
+                }
             }
-        }
-        else
-        {
-            nint byteOffset = (nint)offset * sizeof(T);
-            nint byteLength = length * sizeof(T);
-
-#if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
-#else
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
-                ResourceType.Upload,
-                (ulong)byteLength,
-                GraphicsDevice.IsCacheCoherentUMA);
-#endif
-
-#if NET6_0_OR_GREATER
-            using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
-#else
-            using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-#endif
-            fixed (void* sourcePointer = &source)
+            else
             {
-                MemoryHelper.Copy<T>(
-                    source: sourcePointer,
-                    destination: resource.Pointer,
-                    sourceElementOffset: 0,
-                    destinationElementOffset: 0,
-                    sourceElementPitchInBytes: (uint)sizeof(T),
-                    destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)length);
-            }
-
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+                nint byteOffset = (nint)offset * sizeof(T);
+                nint byteLength = length * sizeof(T);
 
 #if NET6_0_OR_GREATER
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, allocation.Get()->GetResource(), 0, (ulong)byteLength);
+                using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
 #else
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteLength);
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+                    ResourceType.Upload,
+                    (ulong)byteLength,
+                    GraphicsDevice.IsCacheCoherentUMA);
 #endif
-            copyCommandList.ExecuteAndWaitForCompletion();
+
+#if NET6_0_OR_GREATER
+                using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
+#else
+                using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+#endif
+                    fixed (void* sourcePointer = &source)
+                    {
+                        MemoryHelper.Copy<T>(
+                            source: sourcePointer,
+                            destination: resource.Pointer,
+                            sourceElementOffset: 0,
+                            destinationElementOffset: 0,
+                            sourceElementPitchInBytes: (uint)sizeof(T),
+                            destinationElementPitchInBytes: (uint)sizeof(T),
+                            count: (uint)length);
+                    }
+
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+#if NET6_0_OR_GREATER
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, allocation.Get()->GetResource(), 0, (ulong)byteLength);
+#else
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteLength);
+#endif
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
         }
     }
 
@@ -269,44 +273,45 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-
-        source.ThrowIfDeviceMismatch(GraphicsDevice);
-        source.ThrowIfDisposed();
-
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, source.Length);
-        Guard.IsInRange(sourceOffset, 0, source.Length);
-        Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, Length);
-        Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
-
-        if (GraphicsDevice.IsCacheCoherentUMA)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
+        using (source.GetReferenceTracker().GetLease())
         {
-            using ID3D12ResourceMap resource = D3D12Resource->Map();
+            GraphicsDevice.ThrowIfDeviceLost();
 
-            MemoryHelper.Copy<T>(
-                source: source.MappedData,
-                destination: resource.Pointer,
-                sourceElementOffset: (uint)sourceOffset,
-                destinationElementOffset: (uint)destinationOffset,
-                sourceElementPitchInBytes: (uint)sizeof(T),
-                destinationElementPitchInBytes: (uint)sizeof(T),
-                count: (uint)count);
-        }
-        else
-        {
-            ulong byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T);
-            ulong byteOffset = (uint)destinationOffset * (uint)sizeof(T);
-            ulong byteLength = (uint)count * (uint)sizeof(T);
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            Guard.IsBetweenOrEqualTo(count, 0, Length);
+            Guard.IsBetweenOrEqualTo(count, 0, source.Length);
+            Guard.IsInRange(sourceOffset, 0, source.Length);
+            Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
+            Guard.IsInRange(destinationOffset, 0, Length);
+            Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
-            copyCommandList.ExecuteAndWaitForCompletion();
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
+
+                MemoryHelper.Copy<T>(
+                    source: source.MappedData,
+                    destination: resource.Pointer,
+                    sourceElementOffset: (uint)sourceOffset,
+                    destinationElementOffset: (uint)destinationOffset,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)count);
+            }
+            else
+            {
+                ulong byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T);
+                ulong byteOffset = (uint)destinationOffset * (uint)sizeof(T);
+                ulong byteLength = (uint)count * (uint)sizeof(T);
+
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
         }
     }
 }

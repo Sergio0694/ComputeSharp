@@ -7,7 +7,7 @@ namespace ComputeSharp.Interop;
 /// <summary>
 /// Base class for a <see cref="IDisposable"/> class.
 /// </summary>
-public abstract class NativeObject : IDisposable
+internal abstract class NativeObject : IDisposable
 {
     /// <summary>
     /// Indicates whether or not the current instance has been disposed.

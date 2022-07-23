@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -15,9 +16,14 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResource
+public unsafe abstract class TransferTexture3D<T> : ReferenceTracker.ITrackedObject, IDisposable, IGraphicsResource
     where T : unmanaged
 {
+    /// <summary>
+    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -51,41 +57,53 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-        device.ThrowIfDeviceLost();
+        this.referenceTracker = new ReferenceTracker(this);
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
-        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
-
-        if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D))
+        using (device.GetReferenceTracker().GetLease())
         {
-            UnsupportedTextureTypeException.ThrowForTexture3D<T>();
-        }
+            device.ThrowIfDeviceLost();
 
-        GraphicsDevice = device;
+            Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+            Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+            Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
-        device.D3D12Device->GetCopyableFootprint(
-            DXGIFormatHelper.GetForType<T>(),
-            (uint)width,
-            (uint)height,
-            (ushort)depth,
-            out this.d3D12PlacedSubresourceFootprint,
-            out _,
-            out ulong totalSizeInBytes);
+            if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D))
+            {
+                UnsupportedTextureTypeException.ThrowForTexture3D<T>();
+            }
+
+            GraphicsDevice = device;
+
+            device.D3D12Device->GetCopyableFootprint(
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                (ushort)depth,
+                out this.d3D12PlacedSubresourceFootprint,
+                out _,
+                out ulong totalSizeInBytes);
 
 #if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
+            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
-        device.RegisterAllocatedResource();
+            device.RegisterAllocatedResource();
 
-        this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
+            this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
-        this.d3D12Resource.Get()->SetName(this);
+            this.d3D12Resource.Get()->SetName(this);
+        }
+    }
+
+    /// <summary>
+    /// Releases unmanaged resources for the current <see cref="TransferTexture3D{T}"/> instance.
+    /// </summary>
+    ~TransferTexture3D()
+    {
+        this.referenceTracker.Dispose();
     }
 
     /// <inheritdoc/>
@@ -122,14 +140,36 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
-
-            return new(this.mappedData, Width, Height, Depth, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+            using (this.referenceTracker.GetLease())
+            {
+                return new(this.mappedData, Width, Height, Depth, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+            }
         }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public void Dispose()
+    {
+        this.referenceTracker.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ref ReferenceTracker GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    void ReferenceTracker.ITrackedObject.DangerousRelease()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

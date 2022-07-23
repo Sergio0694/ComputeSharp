@@ -15,9 +15,14 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
+public abstract unsafe class TransferBuffer<T> : ReferenceTracker.ITrackedObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
+    /// <summary>
+    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -44,29 +49,41 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-        device.ThrowIfDeviceLost();
+        this.referenceTracker = new ReferenceTracker(this);
 
-        // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-        Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
+        using (device.GetReferenceTracker().GetLease())
+        {
+            device.ThrowIfDeviceLost();
 
-        GraphicsDevice = device;
-        Length = length;
+            // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
+            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
-        ulong sizeInBytes = (uint)length * (uint)sizeof(T);
+            GraphicsDevice = device;
+            Length = length;
+
+            ulong sizeInBytes = (uint)length * (uint)sizeof(T);
 
 #if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, sizeInBytes);
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, sizeInBytes);
+            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, sizeInBytes, device.IsCacheCoherentUMA);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, sizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
-        device.RegisterAllocatedResource();
+            device.RegisterAllocatedResource();
 
-        this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
+            this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
-        this.d3D12Resource.Get()->SetName(this);
+            this.d3D12Resource.Get()->SetName(this);
+        }
+    }
+
+    /// <summary>
+    /// Releases unmanaged resources for the current <see cref="TransferBuffer{T}"/> instance.
+    /// </summary>
+    ~TransferBuffer()
+    {
+        this.referenceTracker.Dispose();
     }
 
     /// <inheritdoc/>
@@ -93,9 +110,10 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
-
-            return new MemoryManager(this).Memory;
+            using (this.referenceTracker.GetLease())
+            {
+                return new MemoryManager(this).Memory;
+            }
         }
     }
 
@@ -105,14 +123,36 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
-
-            return new(this.mappedData, Length);
+            using (this.referenceTracker.GetLease())
+            {
+                return new(this.mappedData, Length);
+            }
         }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public void Dispose()
+    {
+        this.referenceTracker.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ref ReferenceTracker GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    void ReferenceTracker.ITrackedObject.DangerousRelease()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -171,11 +211,12 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         /// <inheritdoc/>
         public override MemoryHandle Pin(int elementIndex = 0)
         {
-            Guard.IsEqualTo(elementIndex, 0);
+            using (this.buffer.referenceTracker.GetLease())
+            {
+                Guard.IsEqualTo(elementIndex, 0);
 
-            this.buffer.ThrowIfDisposed();
-
-            return new(this.buffer.mappedData);
+                return new(this.buffer.mappedData);
+            }
         }
 
         /// <inheritdoc/>

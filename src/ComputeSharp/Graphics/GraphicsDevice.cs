@@ -23,8 +23,13 @@ namespace ComputeSharp;
 /// A <see langword="class"/> that represents an <see cref="ID3D12Device"/> instance that can be used to run compute shaders.
 /// </summary>
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed unsafe partial class GraphicsDevice : NativeObject
+public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObject, IDisposable
 {
+    /// <summary>
+    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
     /// <summary>
     /// The underlying <see cref="ID3D12Device"/> wrapped by the current instance.
     /// </summary>
@@ -108,13 +113,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     private HRESULT deviceRemovedReason;
 
     /// <summary>
-    /// A lcok object used to synchronize accesses to <see cref="d3D12Device"/> between <see cref="OnDispose"/> and <see cref="QueueRaiseDeviceLostEventIfNeeded"/>.
-    /// This is needed because the device lost callback might race with a dispose call and end up trying to invoke a method on an invalid object.
-    /// We can't just check whether it's <see langword="null"/>, as a null condition might still cause a racing thread to access a freed up object.
-    /// </summary>
-    private readonly object d3D12DeviceLock = new();
-
-    /// <summary>
     /// Raised whenever the device is lost.
     /// </summary>
     /// <remarks>
@@ -141,6 +139,8 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
     internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
 
         this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -179,6 +179,14 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         this.deviceRemovedReason = S.S_OK;
 
         RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
+    }
+
+    /// <summary>
+    /// Releases unmanaged resources for the current <see cref="GraphicsDevice"/> instance.
+    /// </summary>
+    ~GraphicsDevice()
+    {
+        this.referenceTracker.Dispose();
     }
 
     /// <summary>
@@ -245,12 +253,14 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceLost();
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceLost();
 
-        var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
+            var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
 
-        return d3D12OptionsData.DoublePrecisionFloatShaderOps;
+            return d3D12OptionsData.DoublePrecisionFloatShaderOps;
+        }
     }
 
     /// <summary>
@@ -262,10 +272,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceLost();
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceLost();
 
-        return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
+        }
     }
 
     /// <summary>
@@ -277,12 +289,14 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceLost();
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceLost();
 
-        return this.d3D12Device.Get()->IsDxgiFormatSupported(
-            DXGIFormatHelper.GetForType<T>(),
-            D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(
+                DXGIFormatHelper.GetForType<T>(),
+                D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+        }
     }
 
     /// <summary>
@@ -294,10 +308,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceLost();
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceLost();
 
-        return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
+        }
     }
 
     /// <summary>
@@ -309,12 +325,14 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
-        ThrowIfDeviceLost();
+        using (this.referenceTracker.GetLease())
+        {
+            ThrowIfDeviceLost();
 
-        return this.d3D12Device.Get()->IsDxgiFormatSupported(
-            DXGIFormatHelper.GetForType<T>(),
-            D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(
+                DXGIFormatHelper.GetForType<T>(),
+                D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+        }
     }
 
     /// <summary>
@@ -405,16 +423,32 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public void Dispose()
+    {
+        this.referenceTracker.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal ref ReferenceTracker GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+    {
+        return ref this.referenceTracker;
+    }
+
+    /// <inheritdoc/>
+    void ReferenceTracker.ITrackedObject.DangerousRelease()
     {
         DeviceHelper.NotifyDisposedDevice(this);
 
-        // Guard the dispose call around the native device to avoid device lost races
-        lock (this.d3D12DeviceLock)
-        {
-            this.d3D12Device.Dispose();
-        }
-
+        this.d3D12Device.Dispose();
         this.d3D12ComputeCommandQueue.Dispose();
         this.d3D12CopyCommandQueue.Dispose();
         this.d3D12ComputeFence.Dispose();

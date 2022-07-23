@@ -24,35 +24,37 @@ partial class ReadWriteTexture2D<T>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly(ReadWriteTexture2D{float})"/>
     public IReadOnlyTexture2D<T> AsReadOnly()
     {
-        GraphicsDevice.ThrowIfDisposed();
-        GraphicsDevice.ThrowIfDeviceLost();
-
-        ThrowIfDisposed();
-        ThrowIfIsNotInReadOnlyState();
-
-        ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
-
-        if (readOnlyWrapper is not null)
+        using (GraphicsDevice.GetReferenceTracker().GetLease())
+        using (GetReferenceTracker().GetLease())
         {
-            return readOnlyWrapper;
-        }
+            GraphicsDevice.ThrowIfDeviceLost();
 
-        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
-        // as compact as possible. If the current wrapper is not initialized, control goes directly to the
-        // helper that will initialize and return it, which translates to a single jump.
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        static ReadOnly InitializeWrapper(ReadWriteTexture2D<T> texture)
-        {
-            return texture.readOnlyWrapper = new(texture);
-        }
+            ThrowIfIsNotInReadOnlyState();
 
-        return InitializeWrapper(this);
+            ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
+
+            if (readOnlyWrapper is not null)
+            {
+                return readOnlyWrapper;
+            }
+
+            // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
+            // as compact as possible. If the current wrapper is not initialized, control goes directly to the
+            // helper that will initialize and return it, which translates to a single jump.
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static ReadOnly InitializeWrapper(ReadWriteTexture2D<T> texture)
+            {
+                return texture.readOnlyWrapper = new(texture);
+            }
+
+            return InitializeWrapper(this);
+        }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    public override void Dispose()
     {
-        base.OnDispose();
+        base.Dispose();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -60,8 +62,13 @@ partial class ReadWriteTexture2D<T>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture2D<T>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : ReferenceTracker.ITrackedObject, IDisposable, IReadOnlyTexture2D<T>, GraphicsResourceHelper.IGraphicsResource
     {
+        /// <summary>
+        /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+        /// </summary>
+        private ReferenceTracker referenceTracker;
+
         /// <summary>
         /// The owning <see cref="ReadWriteTexture2D{T}"/> instance being wrapped.
         /// </summary>
@@ -78,6 +85,7 @@ partial class ReadWriteTexture2D<T>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T> owner)
         {
+            this.referenceTracker = new ReferenceTracker(this);
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -109,12 +117,13 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using (this.referenceTracker.GetLease())
+            using (this.owner.GetReferenceTracker().GetLease())
+            {
+                this.owner.ThrowIfDeviceMismatch(device);
 
-            this.owner.ThrowIfDisposed();
-            this.owner.ThrowIfDeviceMismatch(device);
-
-            return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
+                return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
+            }
         }
 
         /// <inheritdoc/>
@@ -126,12 +135,13 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using (this.referenceTracker.GetLease())
+            using (this.owner.GetReferenceTracker().GetLease())
+            {
+                this.owner.ThrowIfDeviceMismatch(device);
 
-            this.owner.ThrowIfDisposed();
-            this.owner.ThrowIfDeviceMismatch(device);
-
-            return this.owner.D3D12Resource;
+                return this.owner.D3D12Resource;
+            }
         }
 
         /// <inheritdoc/>
@@ -141,7 +151,21 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        protected override void OnDispose()
+        public void Dispose()
+        {
+            this.referenceTracker.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc/>
+        ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
+        {
+            return ref this.referenceTracker;
+        }
+
+        /// <inheritdoc/>
+        void ReferenceTracker.ITrackedObject.DangerousRelease()
         {
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {
