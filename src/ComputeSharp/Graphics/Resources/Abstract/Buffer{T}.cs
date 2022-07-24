@@ -25,14 +25,9 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDisposable, IGraphicsResource
+public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
-    /// <summary>
-    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
-    /// </summary>
-    private ReferenceTracker referenceTracker;
-
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -70,8 +65,6 @@ public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDispo
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
-
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
@@ -131,14 +124,6 @@ public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDispo
 
             this.d3D12Resource.Get()->SetName(this);
         }
-    }
-
-    /// <summary>
-    /// Releases unmanaged resources for the current <see cref="Buffer{T}"/> instance.
-    /// </summary>
-    ~Buffer()
-    {
-        this.referenceTracker.Dispose();
     }
 
     /// <inheritdoc/>
@@ -219,28 +204,7 @@ public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDispo
     internal abstract void CopyFrom(ref T source, int destinationOffset, int count);
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        this.referenceTracker.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal ref ReferenceTracker GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    void ReferenceTracker.ITrackedObject.DangerousRelease()
+    private protected sealed override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -270,7 +234,7 @@ public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDispo
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 
@@ -283,7 +247,7 @@ public unsafe abstract class Buffer<T> : ReferenceTracker.ITrackedObject, IDispo
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 

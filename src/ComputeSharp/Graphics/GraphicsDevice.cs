@@ -23,13 +23,8 @@ namespace ComputeSharp;
 /// A <see langword="class"/> that represents an <see cref="ID3D12Device"/> instance that can be used to run compute shaders.
 /// </summary>
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObject, IDisposable
+public sealed unsafe partial class GraphicsDevice : NativeObject
 {
-    /// <summary>
-    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
-    /// </summary>
-    private ReferenceTracker referenceTracker;
-
     /// <summary>
     /// The underlying <see cref="ID3D12Device"/> wrapped by the current instance.
     /// </summary>
@@ -139,8 +134,6 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
     internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
-        this.referenceTracker = new ReferenceTracker(this);
-
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
 
         this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -179,14 +172,6 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
         this.deviceRemovedReason = S.S_OK;
 
         RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
-    }
-
-    /// <summary>
-    /// Releases unmanaged resources for the current <see cref="GraphicsDevice"/> instance.
-    /// </summary>
-    ~GraphicsDevice()
-    {
-        this.referenceTracker.Dispose();
     }
 
     /// <summary>
@@ -253,7 +238,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceLost();
 
@@ -272,7 +257,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceLost();
 
@@ -289,7 +274,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceLost();
 
@@ -308,7 +293,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceLost();
 
@@ -325,7 +310,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceLost();
 
@@ -423,28 +408,7 @@ public sealed unsafe partial class GraphicsDevice : ReferenceTracker.ITrackedObj
     }
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        this.referenceTracker.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal ref ReferenceTracker GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    void ReferenceTracker.ITrackedObject.DangerousRelease()
+    private protected override void OnDispose()
     {
         DeviceHelper.NotifyDisposedDevice(this);
 

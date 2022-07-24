@@ -26,14 +26,9 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDisposable, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
-    /// <summary>
-    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
-    /// </summary>
-    private ReferenceTracker referenceTracker;
-
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -78,8 +73,6 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
-        this.referenceTracker = new ReferenceTracker(this);
-
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
@@ -149,14 +142,6 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
         }
     }
 
-    /// <summary>
-    /// Releases unmanaged resources for the current <see cref="Texture3D{T}"/> instance.
-    /// </summary>
-    ~Texture3D()
-    {
-        this.referenceTracker.Dispose();
-    }
-
     /// <inheritdoc/>
     public GraphicsDevice GraphicsDevice { get; }
 
@@ -199,7 +184,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
     {
         using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
 
@@ -299,8 +284,8 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (this.referenceTracker.GetLease())
-        using (destination.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
+        using (destination.GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
 
@@ -378,7 +363,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     internal void CopyTo(ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
@@ -451,7 +436,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
 
@@ -549,7 +534,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     internal void CopyFrom(UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
         using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         using (source.GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
@@ -609,28 +594,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     }
 
     /// <inheritdoc/>
-    public virtual void Dispose()
-    {
-        this.referenceTracker.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal ref ReferenceTracker GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    void ReferenceTracker.ITrackedObject.DangerousRelease()
+    private protected override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -678,7 +642,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 
@@ -691,7 +655,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 
@@ -702,7 +666,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*)"/>
     internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 
@@ -720,7 +684,7 @@ public unsafe abstract class Texture3D<T> : ReferenceTracker.ITrackedObject, IDi
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
-        using (this.referenceTracker.GetLease())
+        using (GetReferenceTracker().GetLease())
         {
             ThrowIfDeviceMismatch(device);
 

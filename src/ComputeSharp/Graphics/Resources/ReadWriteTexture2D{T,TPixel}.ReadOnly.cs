@@ -49,9 +49,9 @@ partial class ReadWriteTexture2D<T, TPixel>
     }
 
     /// <inheritdoc/>
-    public override void Dispose()
+    private protected override void OnDispose()
     {
-        base.Dispose();
+        base.OnDispose();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -59,13 +59,8 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : ReferenceTracker.ITrackedObject, IDisposable, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
     {
-        /// <summary>
-        /// The owning <see cref="ReferenceTracker"/> object for the current instance.
-        /// </summary>
-        private ReferenceTracker referenceTracker;
-
         /// <summary>
         /// The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance being wrapped.
         /// </summary>
@@ -82,7 +77,6 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T, TPixel> owner)
         {
-            this.referenceTracker = new ReferenceTracker(this);
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -114,7 +108,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using (this.referenceTracker.GetLease())
+            using (GetReferenceTracker().GetLease())
             using (this.owner.GetReferenceTracker().GetLease())
             {
                 this.owner.ThrowIfDeviceMismatch(device);
@@ -132,7 +126,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            using (this.referenceTracker.GetLease())
+            using (GetReferenceTracker().GetLease())
             using (this.owner.GetReferenceTracker().GetLease())
             {
                 this.owner.ThrowIfDeviceMismatch(device);
@@ -148,21 +142,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            this.referenceTracker.Dispose();
-
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc/>
-        ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-        {
-            return ref this.referenceTracker;
-        }
-
-        /// <inheritdoc/>
-        void ReferenceTracker.ITrackedObject.DangerousRelease()
+        private protected override void OnDispose()
         {
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -16,14 +15,9 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 2D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture2D<T> : ReferenceTracker.ITrackedObject, IDisposable, IGraphicsResource
+public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
-    /// <summary>
-    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
-    /// </summary>
-    private ReferenceTracker referenceTracker;
-
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -56,8 +50,6 @@ public unsafe abstract class TransferTexture2D<T> : ReferenceTracker.ITrackedObj
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
-
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
@@ -95,14 +87,6 @@ public unsafe abstract class TransferTexture2D<T> : ReferenceTracker.ITrackedObj
         }
     }
 
-    /// <summary>
-    /// Releases unmanaged resources for the current <see cref="TransferTexture2D{T}"/> instance.
-    /// </summary>
-    ~TransferTexture2D()
-    {
-        this.referenceTracker.Dispose();
-    }
-
     /// <inheritdoc/>
     public GraphicsDevice GraphicsDevice { get; }
 
@@ -132,7 +116,7 @@ public unsafe abstract class TransferTexture2D<T> : ReferenceTracker.ITrackedObj
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using (this.referenceTracker.GetLease())
+            using (this.GetReferenceTracker().GetLease())
             {
                 return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
             }
@@ -140,28 +124,7 @@ public unsafe abstract class TransferTexture2D<T> : ReferenceTracker.ITrackedObj
     }
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        this.referenceTracker.Dispose();
-
-        GC.SuppressFinalize(this);
-    }
-
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal ref ReferenceTracker GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    void ReferenceTracker.ITrackedObject.DangerousRelease()
+    private protected sealed override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
