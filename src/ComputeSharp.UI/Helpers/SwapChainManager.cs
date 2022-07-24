@@ -50,6 +50,11 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     private readonly TOwner owner;
 
     /// <summary>
+    /// The <see cref="GraphicsDevice"/> instance in use.
+    /// </summary>
+    private readonly GraphicsDevice device;
+
+    /// <summary>
     /// The captured <see cref="SynchronizationContext"/> for the current instance.
     /// </summary>
     private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -216,6 +221,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     public SwapChainManager(TOwner owner)
     {
         this.owner = owner;
+        this.device = GraphicsDevice.GetDefault();
 
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
@@ -239,7 +245,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            GraphicsDevice.GetDefault().D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            this.device.D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -394,7 +400,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             // Dispose the previous texture, if present, and create the new 2D texture to use to generate frames to display
             this.texture?.Dispose();
 
-            this.texture = GraphicsDevice.GetDefault().AllocateReadWriteTexture2D<Rgba32, Float4>((int)resizedWidth, (int)resizeHeight);
+            this.texture = this.device.AllocateReadWriteTexture2D<Rgba32, Float4>((int)resizedWidth, (int)resizeHeight);
         }
     }
 
