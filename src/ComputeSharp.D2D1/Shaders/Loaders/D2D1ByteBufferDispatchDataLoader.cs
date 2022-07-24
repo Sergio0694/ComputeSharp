@@ -38,7 +38,7 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     {
         this.buffer = buffer;
         this.length = length;
-        this.writtenBytes = 0;
+        this.writtenBytes = -1;
     }
 
     /// <summary>
@@ -49,7 +49,20 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetWrittenBytes(out int writtenBytes)
     {
-        return (writtenBytes = this.writtenBytes) != 0;
+        // If the -1 marker is present, it means copying to the target span failed.
+        // In this case, the returned number of written bytes is still reported as 0.
+        // But, the actual load operation is marked as failed. This allows the data loader
+        // to both handle calls with a destination too short and with an empty source buffer.
+        if (this.writtenBytes == -1)
+        {
+            writtenBytes = 0;
+
+            return false;
+        }
+
+        writtenBytes = this.writtenBytes;
+
+        return true;
     }
 
     /// <inheritdoc/>
