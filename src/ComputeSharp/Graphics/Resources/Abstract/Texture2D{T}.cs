@@ -72,12 +72,12 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
-
-            Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-            Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
             if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
             {
@@ -171,26 +171,26 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int width, int height)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
 
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-            DXGIFormatHelper.GetForType<T>(),
-            (uint)width,
-            (uint)height,
-            out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintDestination,
-            out ulong rowSizeInBytes,
-            out ulong totalSizeInBytes);
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintDestination,
+                out ulong rowSizeInBytes,
+                out ulong totalSizeInBytes);
 
 #if NET6_0_OR_GREATER
             using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
@@ -262,6 +262,19 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -269,19 +282,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-            Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-            Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-            Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
             D3D12_COMMAND_LIST_TYPE d3D12CommandListType =
                 this.d3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE ||
@@ -332,6 +332,19 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -339,19 +352,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-            Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-            Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-            Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -397,18 +397,18 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
-
-            Guard.IsInRange(destinationOffsetX, 0, Width);
-            Guard.IsInRange(destinationOffsetY, 0, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-            Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
 
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 DXGIFormatHelper.GetForType<T>(),
@@ -486,6 +486,19 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
+        Guard.IsInRange(sourceOffsetX, 0, source.Width);
+        Guard.IsInRange(sourceOffsetY, 0, source.Height);
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (source.GetReferenceTracker().GetLease())
@@ -493,19 +506,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             source.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, source.Width);
-            Guard.IsInRange(sourceOffsetY, 0, source.Height);
-            Guard.IsInRange(destinationOffsetX, 0, Width);
-            Guard.IsInRange(destinationOffsetY, 0, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(width, 1, source.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, source.Height);
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
-            Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-            Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 

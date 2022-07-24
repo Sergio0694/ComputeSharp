@@ -65,19 +65,19 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
+        if (resourceType == ResourceType.Constant)
+        {
+            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
+        }
+        else
+        {
+            // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
+            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
+        }
+
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
-
-            if (resourceType == ResourceType.Constant)
-            {
-                Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
-            }
-            else
-            {
-                // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-                Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
-            }
 
             if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
                 device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
