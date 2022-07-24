@@ -277,13 +277,63 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
+    public unsafe void GetConstantBufferSize_Empty()
+    {
+        int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithNoCapturedValues>();
+
+        Assert.AreEqual(size, 0);
+
+        // Repeated calls always return the same result
+        size = D2D1PixelShader.GetConstantBufferSize<ShaderWithNoCapturedValues>();
+
+        Assert.AreEqual(size, 0);
+    }
+
+    [TestMethod]
+    public unsafe void GetConstantBuffer_Empty_ReadOnlyMemory()
+    {
+        ShaderWithNoCapturedValues shader = default;
+
+        ReadOnlyMemory<byte> constantBuffer = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        Assert.AreEqual(constantBuffer.Length, 0);
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/323
+    [TestMethod]
+    public unsafe void GetConstantBuffer_Empty_Span()
+    {
+        ShaderWithNoCapturedValues shader = default;
+
+        byte[] buffer = Array.Empty<byte>();
+
+        int bytesWritten = D2D1PixelShader.GetConstantBuffer(in shader, buffer);
+
+        Assert.AreEqual(bytesWritten, 0);
+    }
+
+    [D2DInputCount(1)]
+    [D2DInputSimple(0)]
+    [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+    [D2DPixelOptions(D2D1PixelOptions.TrivialSampling)]
+    private readonly partial struct ShaderWithNoCapturedValues : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            float4 color = D2D.GetInput(0);
+
+            return color * color;
+        }
+    }
+
+    [TestMethod]
     public unsafe void GetConstantBufferSize()
     {
         int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypes>();
 
         Assert.AreEqual(size, 124);
 
-        // Repeated calls always return the same result
+        // Same as above: repeated calls always return the same result
         size = D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypes>();
 
         Assert.AreEqual(size, 124);
