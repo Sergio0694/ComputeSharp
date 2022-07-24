@@ -16,7 +16,7 @@ public abstract class NativeObject : IDisposable, ReferenceTracker.ITrackedObjec
     /// <summary>
     /// Creates a new <see cref="NativeObject"/> instance.
     /// </summary>
-    internal NativeObject()
+    private protected NativeObject()
     {
         this.referenceTracker = new ReferenceTracker(this);
     }
