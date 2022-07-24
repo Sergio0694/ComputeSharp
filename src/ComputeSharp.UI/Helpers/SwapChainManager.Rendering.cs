@@ -27,27 +27,25 @@ partial class SwapChainManager<TOwner>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
     public async void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
+        Guard.IsNotNull(shaderRunner);
+
         using (GetReferenceTracker().GetLease())
+        using (await this.setupSemaphore.LockAsync())
         {
-            Guard.IsNotNull(shaderRunner);
+            this.renderCancellationTokenSource?.Cancel();
 
-            using (await this.setupSemaphore.LockAsync())
-            {
-                this.renderCancellationTokenSource?.Cancel();
+            await this.renderSemaphore.WaitAsync();
 
-                await this.renderSemaphore.WaitAsync();
+            Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
 
-                Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
+            this.frameRequestQueue = frameRequestQueue;
+            this.shaderRunner = shaderRunner;
+            this.renderCancellationTokenSource = new CancellationTokenSource();
+            this.renderThread = newRenderThread;
+            this.renderSemaphore = new SemaphoreSlim(0, 1);
+            this.isResizePending = true;
 
-                this.frameRequestQueue = frameRequestQueue;
-                this.shaderRunner = shaderRunner;
-                this.renderCancellationTokenSource = new CancellationTokenSource();
-                this.renderThread = newRenderThread;
-                this.renderSemaphore = new SemaphoreSlim(0, 1);
-                this.isResizePending = true;
-
-                newRenderThread.Start(this);
-            }
+            newRenderThread.Start(this);
         }
     }
 

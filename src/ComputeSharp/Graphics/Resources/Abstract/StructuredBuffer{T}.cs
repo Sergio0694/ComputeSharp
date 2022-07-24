@@ -32,14 +32,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
+        Guard.IsBetweenOrEqualTo(count, 0, Length);
+        Guard.IsInRange(sourceOffset, 0, Length);
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
-
-            Guard.IsBetweenOrEqualTo(count, 0, Length);
-            Guard.IsInRange(sourceOffset, 0, Length);
-            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {
@@ -105,6 +105,13 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
+        Guard.IsBetweenOrEqualTo(count, 0, Length);
+        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+        Guard.IsInRange(sourceOffset, 0, Length);
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, destination.Length);
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -112,13 +119,6 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsBetweenOrEqualTo(count, 0, Length);
-            Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-            Guard.IsInRange(sourceOffset, 0, Length);
-            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-            Guard.IsInRange(destinationOffset, 0, destination.Length);
-            Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
             if (!destination.IsPaddingPresent)
             {
@@ -151,6 +151,13 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
+        Guard.IsBetweenOrEqualTo(count, 0, Length);
+        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+        Guard.IsInRange(sourceOffset, 0, Length);
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, destination.Length);
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -158,13 +165,6 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsBetweenOrEqualTo(count, 0, Length);
-            Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-            Guard.IsInRange(sourceOffset, 0, Length);
-            Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-            Guard.IsInRange(destinationOffset, 0, destination.Length);
-            Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {
@@ -196,14 +196,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
+        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        Guard.IsInRange(offset, 0, Length);
+        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
-
-            Guard.IsBetweenOrEqualTo(length, 0, Length);
-            Guard.IsInRange(offset, 0, Length);
-            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {
@@ -273,6 +273,13 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
+        Guard.IsBetweenOrEqualTo(count, 0, Length);
+        Guard.IsBetweenOrEqualTo(count, 0, source.Length);
+        Guard.IsInRange(sourceOffset, 0, source.Length);
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, Length);
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (source.GetReferenceTracker().GetLease())
@@ -280,13 +287,6 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             GraphicsDevice.ThrowIfDeviceLost();
 
             source.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsBetweenOrEqualTo(count, 0, Length);
-            Guard.IsBetweenOrEqualTo(count, 0, source.Length);
-            Guard.IsInRange(sourceOffset, 0, source.Length);
-            Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
-            Guard.IsInRange(destinationOffset, 0, Length);
-            Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {

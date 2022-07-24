@@ -73,13 +73,13 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+
         using (device.GetReferenceTracker().GetLease())
         {
             device.ThrowIfDeviceLost();
-
-            Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
-            Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
-            Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
             if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
             {
@@ -183,21 +183,21 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
-
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsInRange(sourceOffsetZ, 0, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, Depth);
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 DXGIFormatHelper.GetForType<T>(),
@@ -283,6 +283,25 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
+        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -290,25 +309,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsInRange(sourceOffsetZ, 0, Depth);
-            Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-            Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-            Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
-            Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-            Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-            Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
             D3D12_COMMAND_LIST_TYPE d3D12CommandListType =
                 this.d3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE ||
@@ -362,6 +362,25 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
+        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (destination.GetReferenceTracker().GetLease())
@@ -369,25 +388,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, Width);
-            Guard.IsInRange(sourceOffsetY, 0, Height);
-            Guard.IsInRange(sourceOffsetZ, 0, Depth);
-            Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-            Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-            Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
-            Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-            Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-            Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -435,21 +435,21 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         {
             GraphicsDevice.ThrowIfDeviceLost();
-
-            Guard.IsInRange(destinationOffsetX, 0, Width);
-            Guard.IsInRange(destinationOffsetY, 0, Height);
-            Guard.IsInRange(destinationOffsetZ, 0, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, Depth);
-            Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-            Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-            Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 DXGIFormatHelper.GetForType<T>(),
@@ -533,6 +533,25 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
+        Guard.IsInRange(sourceOffsetX, 0, source.Width);
+        Guard.IsInRange(sourceOffsetY, 0, source.Height);
+        Guard.IsInRange(sourceOffsetZ, 0, source.Depth);
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, source.Depth);
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, source.Depth, nameof(sourceOffsetZ));
+        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
+
         using (GraphicsDevice.GetReferenceTracker().GetLease())
         using (GetReferenceTracker().GetLease())
         using (source.GetReferenceTracker().GetLease())
@@ -540,25 +559,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
             GraphicsDevice.ThrowIfDeviceLost();
 
             source.ThrowIfDeviceMismatch(GraphicsDevice);
-
-            Guard.IsInRange(sourceOffsetX, 0, source.Width);
-            Guard.IsInRange(sourceOffsetY, 0, source.Height);
-            Guard.IsInRange(sourceOffsetZ, 0, source.Depth);
-            Guard.IsInRange(destinationOffsetX, 0, Width);
-            Guard.IsInRange(destinationOffsetY, 0, Height);
-            Guard.IsInRange(destinationOffsetZ, 0, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, Width);
-            Guard.IsBetweenOrEqualTo(height, 1, Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, Depth);
-            Guard.IsBetweenOrEqualTo(width, 1, source.Width);
-            Guard.IsBetweenOrEqualTo(height, 1, source.Height);
-            Guard.IsBetweenOrEqualTo(depth, 1, source.Depth);
-            Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
-            Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
-            Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, source.Depth, nameof(sourceOffsetZ));
-            Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-            Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-            Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
