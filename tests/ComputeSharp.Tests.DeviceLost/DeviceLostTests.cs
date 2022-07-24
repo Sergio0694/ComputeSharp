@@ -186,7 +186,7 @@ public class DeviceLostTests
     /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance and waits for it to be reported.
     /// </summary>
     /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
-    private static async Task RemoveDeviceAsync(GraphicsDevice graphicsDevice)
+    internal static async Task RemoveDeviceAsync(GraphicsDevice graphicsDevice)
     {
         TaskCompletionSource<object?> tcs = new();
 
