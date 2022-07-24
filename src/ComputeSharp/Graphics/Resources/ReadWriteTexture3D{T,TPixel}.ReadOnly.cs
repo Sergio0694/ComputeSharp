@@ -24,28 +24,27 @@ partial class ReadWriteTexture3D<T, TPixel>
     /// <inheritdoc cref="ReadWriteTexture3DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture3D{T, TPixel})"/>
     public IReadOnlyNormalizedTexture3D<TPixel> AsReadOnly()
     {
-        using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using var _1 = GetReferenceTracker().GetLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        ThrowIfIsNotInReadOnlyState();
+
+        ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
+
+        if (readOnlyWrapper is not null)
         {
-            GraphicsDevice.ThrowIfDeviceLost();
-
-            ThrowIfIsNotInReadOnlyState();
-
-            ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
-
-            if (readOnlyWrapper is not null)
-            {
-                return readOnlyWrapper;
-            }
-
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static ReadOnly InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
-            {
-                return texture.readOnlyWrapper = new(texture);
-            }
-
-            return InitializeWrapper(this);
+            return readOnlyWrapper;
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
+        {
+            return texture.readOnlyWrapper = new(texture);
+        }
+
+        return InitializeWrapper(this);
     }
 
     /// <inheritdoc/>
@@ -111,13 +110,12 @@ partial class ReadWriteTexture3D<T, TPixel>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using (GetReferenceTracker().GetLease())
-            using (this.owner.GetReferenceTracker().GetLease())
-            {
-                this.owner.ThrowIfDeviceMismatch(device);
+            using var _0 = GetReferenceTracker().GetLease();
+            using var _1 = this.owner.GetReferenceTracker().GetLease();
 
-                return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
-            }
+            this.owner.ThrowIfDeviceMismatch(device);
+
+            return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
         }
 
         /// <inheritdoc/>
@@ -129,13 +127,12 @@ partial class ReadWriteTexture3D<T, TPixel>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            using (GetReferenceTracker().GetLease())
-            using (this.owner.GetReferenceTracker().GetLease())
-            {
-                this.owner.ThrowIfDeviceMismatch(device);
+            using var _0 = GetReferenceTracker().GetLease();
+            using var _1 = this.owner.GetReferenceTracker().GetLease();
 
-                return this.owner.D3D12Resource;
-            }
+            this.owner.ThrowIfDeviceMismatch(device);
+
+            return this.owner.D3D12Resource;
         }
 
         /// <inheritdoc/>

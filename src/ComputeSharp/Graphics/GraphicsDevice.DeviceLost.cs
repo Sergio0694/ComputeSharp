@@ -48,32 +48,31 @@ unsafe partial class GraphicsDevice
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
     {
-        using (GetReferenceTracker().TryGetLease(out bool leaseTaken))
+        using var _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
+
+        if (!leaseTaken)
         {
-            if (!leaseTaken)
-            {
-                return;
-            }
+            return;
+        }
 
-            // If the current device removed reason is not S_OK, it means the event
-            // has already been raised (but the device will keep reporting that reason).
-            // In that case, do nothing to avoid raising it again while the device is alive.
-            if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
-            {
-                return;
-            }
+        // If the current device removed reason is not S_OK, it means the event
+        // has already been raised (but the device will keep reporting that reason).
+        // In that case, do nothing to avoid raising it again while the device is alive.
+        if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
+        {
+            return;
+        }
 
-            HRESULT result = this.d3D12Device.Get()->GetDeviceRemovedReason();
+        HRESULT result = this.d3D12Device.Get()->GetDeviceRemovedReason();
 
-            // Only raise the event once, and store the device removed reason to track it
-            if (result != S.S_OK &&
-                Interlocked.CompareExchange(
-                ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason),
-                (int)result,
-                S.S_OK) == S.S_OK)
-            {
-                QueueRaiseDeviceLostEvent();
-            }
+        // Only raise the event once, and store the device removed reason to track it
+        if (result != S.S_OK &&
+            Interlocked.CompareExchange(
+            ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason),
+            (int)result,
+            S.S_OK) == S.S_OK)
+        {
+            QueueRaiseDeviceLostEvent();
         }
     }
 

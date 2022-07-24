@@ -24,31 +24,30 @@ partial class ReadWriteTexture2D<T>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly(ReadWriteTexture2D{float})"/>
     public IReadOnlyTexture2D<T> AsReadOnly()
     {
-        using (GraphicsDevice.GetReferenceTracker().GetLease())
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using var _1 = GetReferenceTracker().GetLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        ThrowIfIsNotInReadOnlyState();
+
+        ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
+
+        if (readOnlyWrapper is not null)
         {
-            GraphicsDevice.ThrowIfDeviceLost();
-
-            ThrowIfIsNotInReadOnlyState();
-
-            ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
-
-            if (readOnlyWrapper is not null)
-            {
-                return readOnlyWrapper;
-            }
-
-            // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
-            // as compact as possible. If the current wrapper is not initialized, control goes directly to the
-            // helper that will initialize and return it, which translates to a single jump.
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static ReadOnly InitializeWrapper(ReadWriteTexture2D<T> texture)
-            {
-                return texture.readOnlyWrapper = new(texture);
-            }
-
-            return InitializeWrapper(this);
+            return readOnlyWrapper;
         }
+
+        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
+        // as compact as possible. If the current wrapper is not initialized, control goes directly to the
+        // helper that will initialize and return it, which translates to a single jump.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static ReadOnly InitializeWrapper(ReadWriteTexture2D<T> texture)
+        {
+            return texture.readOnlyWrapper = new(texture);
+        }
+
+        return InitializeWrapper(this);
     }
 
     /// <inheritdoc/>
@@ -111,13 +110,12 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using (GetReferenceTracker().GetLease())
-            using (this.owner.GetReferenceTracker().GetLease())
-            {
-                this.owner.ThrowIfDeviceMismatch(device);
+            using var _0 = GetReferenceTracker().GetLease();
+            using var _1 = this.owner.GetReferenceTracker().GetLease();
 
-                return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
-            }
+            this.owner.ThrowIfDeviceMismatch(device);
+
+            return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
         }
 
         /// <inheritdoc/>
@@ -129,13 +127,12 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            using (GetReferenceTracker().GetLease())
-            using (this.owner.GetReferenceTracker().GetLease())
-            {
-                this.owner.ThrowIfDeviceMismatch(device);
+            using var _0 = GetReferenceTracker().GetLease();
+            using var _1 = this.owner.GetReferenceTracker().GetLease();
 
-                return this.owner.D3D12Resource;
-            }
+            this.owner.ThrowIfDeviceMismatch(device);
+
+            return this.owner.D3D12Resource;
         }
 
         /// <inheritdoc/>

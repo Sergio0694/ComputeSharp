@@ -29,7 +29,8 @@ partial class SwapChainManager<TOwner>
     {
         Guard.IsNotNull(shaderRunner);
 
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GetReferenceTracker().GetLease();
+
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
@@ -54,7 +55,8 @@ partial class SwapChainManager<TOwner>
     /// </summary>
     public async void StopRenderLoop()
     {
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GetReferenceTracker().GetLease();
+
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
@@ -67,7 +69,8 @@ partial class SwapChainManager<TOwner>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
     public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GetReferenceTracker().GetLease();
+
         using (await this.setupSemaphore.LockAsync())
         {
             // If there is a render thread currently running, stop it and restart it
@@ -100,7 +103,8 @@ partial class SwapChainManager<TOwner>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
     public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
-        using (GetReferenceTracker().GetLease())
+        using var _0 = GetReferenceTracker().GetLease();
+
         using (await this.setupSemaphore.LockAsync())
         {
             // The v-sync option can be toggled on the fly when not using dynamic resolution
@@ -134,13 +138,12 @@ partial class SwapChainManager<TOwner>
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            this.width = (float)width;
-            this.height = (float)height;
+        using var _0 = GetReferenceTracker().GetLease();
 
-            this.isResizePending = true;
-        }
+        this.width = (float)width;
+        this.height = (float)height;
+
+        this.isResizePending = true;
     }
 
     /// <summary>
@@ -150,13 +153,12 @@ partial class SwapChainManager<TOwner>
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            this.compositionScaleX = (float)compositionScaleX;
-            this.compositionScaleY = (float)compositionScaleY;
+        using var _0 = GetReferenceTracker().GetLease();
 
-            this.isResizePending = true;
-        }
+        this.compositionScaleX = (float)compositionScaleX;
+        this.compositionScaleY = (float)compositionScaleY;
+
+        this.isResizePending = true;
     }
 
     /// <summary>
@@ -165,12 +167,11 @@ partial class SwapChainManager<TOwner>
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            this.resolutionScale = (float)resolutionScale;
+        using var _0 = GetReferenceTracker().GetLease();
 
-            this.isResizePending = true;
-        }
+        this.resolutionScale = (float)resolutionScale;
+
+        this.isResizePending = true;
     }
 
     /// <summary>
@@ -187,17 +188,15 @@ partial class SwapChainManager<TOwner>
                 this.dynamicResolutionScale = this.resolutionScale;
 
                 // These two leases are needed to ensure the manager isn't disposed while rendering is running
-                using (GetReferenceTracker().GetLease())
-                {
-                    RenderLoopWithDynamicResolution();
-                }
+                using var _0 = GetReferenceTracker().GetLease();
+
+                RenderLoopWithDynamicResolution();
             }
             else
             {
-                using (GetReferenceTracker().GetLease())
-                {
-                    RenderLoop();
-                }
+                using var _0 = GetReferenceTracker().GetLease();
+
+                RenderLoop();
             }
 
             this.renderStopwatch?.Stop();

@@ -53,38 +53,37 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-        using (device.GetReferenceTracker().GetLease())
+        using var _0 = device.GetReferenceTracker().GetLease();
+
+        device.ThrowIfDeviceLost();
+
+        if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
         {
-            device.ThrowIfDeviceLost();
+            UnsupportedTextureTypeException.ThrowForTexture2D<T>();
+        }
 
-            if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
-            {
-                UnsupportedTextureTypeException.ThrowForTexture2D<T>();
-            }
+        GraphicsDevice = device;
 
-            GraphicsDevice = device;
-
-            device.D3D12Device->GetCopyableFootprint(
-                DXGIFormatHelper.GetForType<T>(),
-                (uint)width,
-                (uint)height,
-                out this.d3D12PlacedSubresourceFootprint,
-                out _,
-                out ulong totalSizeInBytes);
+        device.D3D12Device->GetCopyableFootprint(
+            DXGIFormatHelper.GetForType<T>(),
+            (uint)width,
+            (uint)height,
+            out this.d3D12PlacedSubresourceFootprint,
+            out _,
+            out ulong totalSizeInBytes);
 
 #if NET6_0_OR_GREATER
-            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
-            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
+        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
-            device.RegisterAllocatedResource();
+        device.RegisterAllocatedResource();
 
-            this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
+        this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
-            this.d3D12Resource.Get()->SetName(this);
-        }
+        this.d3D12Resource.Get()->SetName(this);
     }
 
     /// <inheritdoc/>
@@ -116,10 +115,9 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using (this.GetReferenceTracker().GetLease())
-            {
-                return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
-            }
+            using var _0 = this.GetReferenceTracker().GetLease();
+
+            return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }
     }
 
