@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Interop;
+﻿using System;
+using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,6 +57,20 @@ public class DeviceDisposalTests
         uint refCount = d3D12Device.Get()->Release();
 
         Assert.AreEqual(refCount, 1u);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(ObjectDisposedException))]
+    public unsafe void DeviceDisposal_InteropServicesThrowsObjectDisposedException(Device device)
+    {
+        using ComPtr<ID3D12Device> d3D12Device = default;
+
+        GraphicsDevice graphicsDevice = device.Get();
+
+        graphicsDevice.Dispose();
+
+        InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
     }
 
     [CombinatorialTestMethod]
