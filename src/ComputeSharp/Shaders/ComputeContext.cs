@@ -6,7 +6,6 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.Interop;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
 using ComputeSharp.Shaders.Models;
@@ -41,11 +40,6 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     private CommandList commandList;
 
     /// <summary>
-    /// The lease to ensure <see cref="device"/> is not disposed until the context is no longer in use.
-    /// </summary>
-    private ReferenceTracker.Lease lease;
-
-    /// <summary>
     /// Creates a new <see cref="ComputeContext"/> instance with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> instance owning the current context.</param>
@@ -53,7 +47,10 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         this.device = device;
         this.commandList = default;
-        this.lease = device.GetReferenceTracker().GetLease();
+
+        // Increment the reference count for the device. This has to be released when disposing the context.
+        // Not disposing the context is undefined behavior, so we can rely on that to release the reference.
+        device.GetReferenceTracker().DangerousAddRef();
     }
 
     /// <summary>
@@ -302,11 +299,13 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        GraphicsDevice device = this.device;
+
         this.device = null;
 
         if (!this.commandList.IsAllocated)
         {
-            this.lease.Dispose();
+            device.GetReferenceTracker().DangerousRelease();
 
             return;
         }
@@ -317,7 +316,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
         finally
         {
-            this.lease.Dispose();
+            device.GetReferenceTracker().DangerousRelease();
         }
     }
 
@@ -327,11 +326,13 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        GraphicsDevice device = this.device;
+
         this.device = null;
 
         if (!this.commandList.IsAllocated)
         {
-            this.lease.Dispose();
+            device.GetReferenceTracker().DangerousRelease();
 
 #if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
@@ -346,7 +347,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
         finally
         {
-            this.lease.Dispose();
+            device.GetReferenceTracker().DangerousRelease();
         }
     }
 
