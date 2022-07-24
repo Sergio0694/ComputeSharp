@@ -9,6 +9,7 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
+using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -191,7 +192,9 @@ unsafe partial class GraphicsDevice
 
         HANDLE waitHandle;
 
-        _ = Windows.RegisterWaitForSingleObject(
+        device.GetReferenceTracker().DangerousAddRef();
+
+        int result = Windows.RegisterWaitForSingleObject(
             phNewWaitObject: &waitHandle,
             hObject: eventHandle,
 #if NET6_0_OR_GREATER
@@ -202,6 +205,16 @@ unsafe partial class GraphicsDevice
             Context: callbackContext,
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);
+
+        // The register is successful if the return value is nonzero
+        if (result == 0)
+        {
+            device.GetReferenceTracker().DangerousRelease();
+
+            NativeMemory.Free(callbackContext);
+
+            ThrowHelper.ThrowWin32Exception("Failed to register the compute context completion callback.");
+        }
 
         return waitForFenceValueTaskSource;
     }
@@ -226,6 +239,9 @@ unsafe partial class GraphicsDevice
         callbackContext->GraphicsDeviceHandle.Free();
 
         device.computeCommandListPool.Return(d3D12GraphicsCommandList, d3D12CommandAllocator);
+
+        // Decrement the reference count that was incremented when scheduling the completion callback
+        device.GetReferenceTracker().DangerousRelease();
 
         _ = Windows.CloseHandle(eventHandle);
 

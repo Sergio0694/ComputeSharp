@@ -6,6 +6,7 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Interop;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
 using ComputeSharp.Shaders.Models;
@@ -18,6 +19,15 @@ namespace ComputeSharp;
 /// <summary>
 /// A context to batch compute operations in a single invocation, minimizing GPU overhead.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This type must always be used in a <see langword="using"/> statement and disposed properly.
+/// Not doing so is undefined behavior and may result in the target device not being disposed correctly.
+/// </para>
+/// <para>
+/// For more documentation on this, see the remarks in <see cref="GraphicsDeviceExtensions.CreateComputeContext(ComputeSharp.GraphicsDevice)"/>.
+/// </para>
+/// </remarks>
 public struct ComputeContext : IDisposable, IAsyncDisposable
 {
     /// <summary>
@@ -31,6 +41,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     private CommandList commandList;
 
     /// <summary>
+    /// The lease to ensure <see cref="device"/> is not disposed until the context is no longer in use.
+    /// </summary>
+    private ReferenceTracker.Lease lease;
+
+    /// <summary>
     /// Creates a new <see cref="ComputeContext"/> instance with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> instance owning the current context.</param>
@@ -38,6 +53,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         this.device = device;
         this.commandList = default;
+        this.lease = device.GetReferenceTracker().GetLease();
     }
 
     /// <summary>
@@ -290,10 +306,19 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         if (!this.commandList.IsAllocated)
         {
+            this.lease.Dispose();
+
             return;
         }
 
-        this.commandList.ExecuteAndWaitForCompletion();
+        try
+        {
+            this.commandList.ExecuteAndWaitForCompletion();
+        }
+        finally
+        {
+            this.lease.Dispose();
+        }
     }
 
     /// <inheritdoc/>
@@ -306,6 +331,8 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         if (!this.commandList.IsAllocated)
         {
+            this.lease.Dispose();
+
 #if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
 #else
@@ -313,7 +340,14 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 #endif
         }
 
-        return this.commandList.ExecuteAndWaitForCompletionAsync();
+        try
+        {
+            return this.commandList.ExecuteAndWaitForCompletionAsync();
+        }
+        finally
+        {
+            this.lease.Dispose();
+        }
     }
 
     /// <summary>
