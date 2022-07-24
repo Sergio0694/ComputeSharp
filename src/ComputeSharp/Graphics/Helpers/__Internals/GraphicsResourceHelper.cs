@@ -64,14 +64,13 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(buffer);
 
-        using (buffer.GetReferenceTracker().GetLease())
-        {
-            buffer.ThrowIfDeviceMismatch(device);
+        using var _0 = buffer.GetReferenceTracker().GetLease();
 
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = buffer.D3D12GpuDescriptorHandle;
+        buffer.ThrowIfDeviceMismatch(device);
 
-            return *(ulong*)&d3D12GpuDescriptorHandle;
-        }
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = buffer.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -87,14 +86,13 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using (texture.GetReferenceTracker().GetLease())
-        {
-            texture.ThrowIfDeviceMismatch(device);
+        using var _0 = texture.GetReferenceTracker().GetLease();
 
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+        texture.ThrowIfDeviceMismatch(device);
 
-            return *(ulong*)&d3D12GpuDescriptorHandle;
-        }
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -110,14 +108,13 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using (texture.GetReferenceTracker().GetLease())
-        {
-            texture.ThrowIfDeviceMismatch(device);
+        using var _0 = texture.GetReferenceTracker().GetLease();
 
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+        texture.ThrowIfDeviceMismatch(device);
 
-            return *(ulong*)&d3D12GpuDescriptorHandle;
-        }
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -202,14 +199,13 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using (texture.GetReferenceTracker().GetLease())
-        {
-            texture.ThrowIfDeviceMismatch(device);
+        using var _0 = texture.GetReferenceTracker().GetLease();
 
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+        texture.ThrowIfDeviceMismatch(device);
 
-            return *(ulong*)&d3D12GpuDescriptorHandle;
-        }
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -225,14 +221,13 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using (texture.GetReferenceTracker().GetLease())
-        {
-            texture.ThrowIfDeviceMismatch(device);
+        using var _0 = texture.GetReferenceTracker().GetLease();
 
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+        texture.ThrowIfDeviceMismatch(device);
 
-            return *(ulong*)&d3D12GpuDescriptorHandle;
-        }
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>

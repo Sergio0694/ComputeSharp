@@ -238,14 +238,13 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            ThrowIfDeviceLost();
+        using var _0 = GetReferenceTracker().GetLease();
 
-            var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
+        ThrowIfDeviceLost();
 
-            return d3D12OptionsData.DoublePrecisionFloatShaderOps;
-        }
+        var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
+
+        return d3D12OptionsData.DoublePrecisionFloatShaderOps;
     }
 
     /// <summary>
@@ -257,12 +256,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            ThrowIfDeviceLost();
+        using var _0 = GetReferenceTracker().GetLease();
 
-            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
-        }
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
     }
 
     /// <summary>
@@ -274,14 +272,13 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            ThrowIfDeviceLost();
+        using var _0 = GetReferenceTracker().GetLease();
 
-            return this.d3D12Device.Get()->IsDxgiFormatSupported(
-                DXGIFormatHelper.GetForType<T>(),
-                D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
-        }
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(
+            DXGIFormatHelper.GetForType<T>(),
+            D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
     }
 
     /// <summary>
@@ -293,12 +290,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            ThrowIfDeviceLost();
+        using var _0 = GetReferenceTracker().GetLease();
 
-            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
-        }
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
     }
 
     /// <summary>
@@ -310,14 +306,13 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using (GetReferenceTracker().GetLease())
-        {
-            ThrowIfDeviceLost();
+        using var _0 = GetReferenceTracker().GetLease();
 
-            return this.d3D12Device.Get()->IsDxgiFormatSupported(
-                DXGIFormatHelper.GetForType<T>(),
-                D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
-        }
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(
+            DXGIFormatHelper.GetForType<T>(),
+            D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
     }
 
     /// <summary>
