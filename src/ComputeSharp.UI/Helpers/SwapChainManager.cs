@@ -497,7 +497,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected override void OnDispose()
     {
         ThreadPool.UnsafeQueueUserWorkItem(static state =>
         {

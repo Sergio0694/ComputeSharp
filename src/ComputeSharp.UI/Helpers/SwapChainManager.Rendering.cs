@@ -9,13 +9,13 @@ using ComputeSharp.Uwp.Extensions;
 using ComputeSharp.WinUI.Extensions;
 #endif
 
-#pragma warning disable CS0420
-
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp.Helpers;
 #else
 namespace ComputeSharp.WinUI.Helpers;
 #endif
+
+#pragma warning disable CS0420
 
 /// <inheritdoc/>
 partial class SwapChainManager<TOwner>
@@ -27,26 +27,27 @@ partial class SwapChainManager<TOwner>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
     public async void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
-        ThrowIfDisposed();
-
-        Guard.IsNotNull(shaderRunner);
-
-        using (await this.setupSemaphore.LockAsync())
+        using (GetReferenceTracker().GetLease())
         {
-            this.renderCancellationTokenSource?.Cancel();
-            
-            await this.renderSemaphore.WaitAsync();
+            Guard.IsNotNull(shaderRunner);
 
-            Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
+            using (await this.setupSemaphore.LockAsync())
+            {
+                this.renderCancellationTokenSource?.Cancel();
 
-            this.frameRequestQueue = frameRequestQueue;
-            this.shaderRunner = shaderRunner;
-            this.renderCancellationTokenSource = new CancellationTokenSource();
-            this.renderThread = newRenderThread;
-            this.renderSemaphore = new SemaphoreSlim(0, 1);
-            this.isResizePending = true;
+                await this.renderSemaphore.WaitAsync();
 
-            newRenderThread.Start(this);
+                Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
+
+                this.frameRequestQueue = frameRequestQueue;
+                this.shaderRunner = shaderRunner;
+                this.renderCancellationTokenSource = new CancellationTokenSource();
+                this.renderThread = newRenderThread;
+                this.renderSemaphore = new SemaphoreSlim(0, 1);
+                this.isResizePending = true;
+
+                newRenderThread.Start(this);
+            }
         }
     }
 
@@ -55,8 +56,7 @@ partial class SwapChainManager<TOwner>
     /// </summary>
     public async void StopRenderLoop()
     {
-        ThrowIfDisposed();
-
+        using (GetReferenceTracker().GetLease())
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
@@ -69,8 +69,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
     public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
-        ThrowIfDisposed();
-
+        using (GetReferenceTracker().GetLease())
         using (await this.setupSemaphore.LockAsync())
         {
             // If there is a render thread currently running, stop it and restart it
@@ -103,8 +102,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
     public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
-        ThrowIfDisposed();
-
+        using (GetReferenceTracker().GetLease())
         using (await this.setupSemaphore.LockAsync())
         {
             // The v-sync option can be toggled on the fly when not using dynamic resolution
@@ -138,12 +136,13 @@ partial class SwapChainManager<TOwner>
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
-        ThrowIfDisposed();
+        using (GetReferenceTracker().GetLease())
+        {
+            this.width = (float)width;
+            this.height = (float)height;
 
-        this.width = (float)width;
-        this.height = (float)height;
-
-        this.isResizePending = true;
+            this.isResizePending = true;
+        }
     }
 
     /// <summary>
@@ -153,12 +152,13 @@ partial class SwapChainManager<TOwner>
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
-        ThrowIfDisposed();
+        using (GetReferenceTracker().GetLease())
+        {
+            this.compositionScaleX = (float)compositionScaleX;
+            this.compositionScaleY = (float)compositionScaleY;
 
-        this.compositionScaleX = (float)compositionScaleX;
-        this.compositionScaleY = (float)compositionScaleY;
-
-        this.isResizePending = true;
+            this.isResizePending = true;
+        }
     }
 
     /// <summary>
@@ -167,11 +167,12 @@ partial class SwapChainManager<TOwner>
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
-        ThrowIfDisposed();
+        using (GetReferenceTracker().GetLease())
+        {
+            this.resolutionScale = (float)resolutionScale;
 
-        this.resolutionScale = (float)resolutionScale;
-
-        this.isResizePending = true;
+            this.isResizePending = true;
+        }
     }
 
     /// <summary>
@@ -187,11 +188,18 @@ partial class SwapChainManager<TOwner>
             {
                 this.dynamicResolutionScale = this.resolutionScale;
 
-                RenderLoopWithDynamicResolution();
+                // These two leases are needed to ensure the manager isn't disposed while rendering is running
+                using (GetReferenceTracker().GetLease())
+                {
+                    RenderLoopWithDynamicResolution();
+                }
             }
             else
             {
-                RenderLoop();
+                using (GetReferenceTracker().GetLease())
+                {
+                    RenderLoop();
+                }
             }
 
             this.renderStopwatch?.Stop();
