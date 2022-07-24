@@ -41,6 +41,23 @@ internal struct ReferenceTracker : IDisposable
     }
 
     /// <summary>
+    /// Adds an untracked reference to the underlying object. This needs to be released with <see cref="DangerousRelease"/>.
+    /// </summary>
+    /// <exception cref="ObjectDisposedException">Thrown if the tracked object has been disposed.</exception>
+    public void DangerousAddRef()
+    {
+        _ = GetLease();
+    }
+
+    /// <summary>
+    /// Decrements the reference count for the underlying object. A call to this API has to match a previous <see cref="DangerousAddRef"/> call.
+    /// </summary>
+    public void DangerousRelease()
+    {
+        ReturnLease();
+    }
+
+    /// <summary>
     /// Gets a <see cref="Lease"/> value to extend the lifetime of the tracked object.
     /// </summary>
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
