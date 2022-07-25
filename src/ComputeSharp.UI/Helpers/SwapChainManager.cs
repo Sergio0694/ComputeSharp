@@ -530,6 +530,14 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
             @this.UnsafeStopRenderLoopAndWait();
 
+            ulong updatedFenceValue = @this.nextD3D12FenceValue + 1;
+
+            @this.d3D12CommandQueue.Get()->Signal(@this.d3D12Fence.Get(), updatedFenceValue).Assert();
+
+            // Just like in the resize logic, signal and wait to make sure no operations are pending. This
+            // is needed to avoid a crash when disposing resources when disposing after stopping rendering.
+            @this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
+
             _ = Win32.CloseHandle(@this.frameLatencyWaitableObject);
 
             @this.d3D12Device.Dispose();
