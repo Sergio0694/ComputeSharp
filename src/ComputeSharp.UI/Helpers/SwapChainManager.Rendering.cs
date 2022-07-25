@@ -55,8 +55,10 @@ partial class SwapChainManager<TOwner>
     /// </summary>
     public async void StopRenderLoop()
     {
-        using var _0 = GetReferenceTracker().GetLease();
-
+        // Stopping the render loop doesn't use a reference tracking lease on purpose.
+        // This is to allow callers to stop the render loop even after disposing without
+        // the method throwing an exception. Stopping a loop doesn't actually access any
+        // native objects anyway, as it's just cancelling the cancellation token source.
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();

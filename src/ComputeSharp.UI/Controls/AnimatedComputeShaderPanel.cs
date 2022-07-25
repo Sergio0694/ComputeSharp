@@ -1,4 +1,5 @@
-﻿#if WINDOWS_UWP
+﻿using System;
+#if WINDOWS_UWP
 using ComputeSharp.Uwp.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,7 +24,7 @@ namespace ComputeSharp.WinUI;
 /// This panel will always render new frames at the current display refresh rate, automatically.
 /// </para>
 /// </summary>
-public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel
+public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel, IDisposable
 {
     /// <summary>
     /// The <see cref="SwapChainManager{TOwner}"/> instance handling rendering.
@@ -75,5 +76,11 @@ public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel
     private void AnimatedComputeShaderPanel_CompositionScaleChanged(SwapChainPanel sender, object args)
     {
         this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.swapChainManager.Dispose();
     }
 }
