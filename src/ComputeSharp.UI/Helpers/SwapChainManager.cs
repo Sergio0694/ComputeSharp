@@ -511,6 +511,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
             @this.UnsafeStopRenderLoopAndWait();
 
+            _ = Win32.CloseHandle(@this.frameLatencyWaitableObject);
+
             @this.d3D12Device.Dispose();
             @this.d3D12CommandQueue.Dispose();
             @this.d3D12Fence.Dispose();
