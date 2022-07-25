@@ -95,6 +95,15 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
 
     /// <summary>
+    /// The <see cref="ISwapChainPanelNative"/> instance for the underlying object wrapped by the target control.
+    /// </summary>
+    /// <remarks>
+    /// This is needed to call <see cref="ISwapChainPanelNative.SetSwapChain(IDXGISwapChain*)"/> with <see langword="null"/>
+    /// when the panel is destroyed, so the additional implicit references to the swap chain an native device can be released.
+    /// </remarks>
+    private ComPtr<ISwapChainPanelNative> swapChainPanelNative;
+
+    /// <summary>
     /// The <see cref="IDXGISwapChain3"/> instance used to display content onto the target window.
     /// </summary>
     private ComPtr<IDXGISwapChain3> dxgiSwapChain3;
@@ -225,20 +234,19 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
-        using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
-
+        fixed (ISwapChainPanelNative** swapChainPanelNative = this.swapChainPanelNative)
         using (ComPtr<IUnknown> swapChainPanel = default)
         {
 #if WINDOWS_UWP
             swapChainPanel.Attach((IUnknown*)Marshal.GetIUnknownForObject(owner));
 
-            swapChainPanel.CopyTo(swapChainPanelNative.GetAddressOf()).Assert();
+            swapChainPanel.CopyTo(swapChainPanelNative).Assert();
 #else
             swapChainPanel.Attach((IUnknown*)((IWinRTObject)owner).NativeObject.GetRef());
 
             swapChainPanel.CopyTo(
                 (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(new Guid(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25))),
-                (void**)swapChainPanelNative.GetAddressOf()).Assert();
+                (void**)swapChainPanelNative).Assert();
 #endif
         }
 
@@ -336,7 +344,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         {
             this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
 
-            swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+            this.swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
         }
 
         GC.KeepAlive(this);
@@ -505,6 +513,17 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <inheritdoc/>
     private protected override void OnDispose()
     {
+        // Even while rendering is still running, we need to properly release all implicit references
+        // that have been added when connecting the swap chain panel that was used. To do that, the
+        // same ISwapChainPanelNative::SetSwapChain API has to be called, but passing null as the
+        // target swap chain. This is handled correctly in the implementation, and all the additional
+        // references to the swap chain we passed during initialization will be dropped. Once that
+        // is done, we can then dispose our reference to the underlying swap chain panel for the control.
+        // This API has to be called on the UI thread, and it can be called just fine even if rendering
+        // is still running, so we can just call it immediately before moving to a thread to stop rendering.
+        this.swapChainPanelNative.Get()->SetSwapChain(null).Assert();
+        this.swapChainPanelNative.Dispose();
+
         ThreadPool.UnsafeQueueUserWorkItem(static state =>
         {
             SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
