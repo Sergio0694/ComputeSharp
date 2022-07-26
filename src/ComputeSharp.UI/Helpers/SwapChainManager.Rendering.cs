@@ -426,6 +426,14 @@ partial class SwapChainManager<TOwner>
     }
 
     /// <summary>
+    /// Raises <see cref="Disposed"/>.
+    /// </summary>
+    private void OnDisposed()
+    {
+        _ = this.dispatcherQueue.TryEnqueue(() => Disposed?.Invoke(this.owner, EventArgs.Empty));
+    }
+
+    /// <summary>
     /// Stops the current render loop, if one is running, and waits for it.
     /// </summary>
     /// <remarks>This method doesn't check for disposal.</remarks>

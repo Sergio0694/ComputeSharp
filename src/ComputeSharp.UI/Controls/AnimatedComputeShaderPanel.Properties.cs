@@ -43,6 +43,15 @@ partial class AnimatedComputeShaderPanel
     }
 
     /// <summary>
+    /// Raised whenever the <see cref="AnimatedComputeShaderPanel"/> control is disposed and all underlying resources are released.
+    /// </summary>
+    public event TypedEventHandler<AnimatedComputeShaderPanel, EventArgs>? Disposed
+    {
+        add => this.swapChainManager.Disposed += value;
+        remove => this.swapChainManager.Disposed -= value;
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.
     /// </summary>
     public IShaderRunner? ShaderRunner

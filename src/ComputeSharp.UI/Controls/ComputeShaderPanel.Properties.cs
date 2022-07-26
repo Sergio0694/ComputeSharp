@@ -43,6 +43,15 @@ partial class ComputeShaderPanel
     }
 
     /// <summary>
+    /// Raised whenever the <see cref="ComputeShaderPanel"/> control is disposed and all underlying resources are released.
+    /// </summary>
+    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? Disposed
+    {
+        add => this.swapChainManager.Disposed += value;
+        remove => this.swapChainManager.Disposed -= value;
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="IFrameRequestQueue"/> instance to use to request new frames.
     /// </summary>
     public IFrameRequestQueue? FrameRequestQueue

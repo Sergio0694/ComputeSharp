@@ -224,6 +224,11 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     public event TypedEventHandler<TOwner, Exception>? RenderingFailed;
 
     /// <summary>
+    /// Raised whenever the parent control is disposed and all underlying resources are released.
+    /// </summary>
+    public event TypedEventHandler<TOwner, EventArgs>? Disposed;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SwapChainManager{TOwner}"/> type.
     /// </summary>
     /// <param name="owner">The input swap chain instance being used.</param>
@@ -549,6 +554,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             @this.d3D12Resource0.Dispose();
             @this.d3D12Resource1.Dispose();
             @this.texture?.Dispose();
+
+            @this.OnDisposed();
         }, this);
     }
 }
