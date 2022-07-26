@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
+using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Core.Extensions;
@@ -63,5 +64,32 @@ internal static class HResultExtensions
 
             AssertWithDebugInfo(result);
         }
+    }
+
+    /// <summary>
+    /// Checks whether or not a given <see cref="HRESULT"/> represents a device lost reason.
+    /// </summary>
+    /// <param name="result">The input <see cref="HRESULT"/> to check.</param>
+    /// <returns>Whether or not a given <see cref="HRESULT"/> represents a device lost reason.</returns>
+    /// <remarks>
+    /// An <see cref="HRESULT"/> is a device lost reason when it has one of the following values:
+    /// <list type="bullet">
+    ///     <item><see cref="DXGI.DXGI_ERROR_DEVICE_HUNG"/></item>
+    ///     <item><see cref="DXGI.DXGI_ERROR_DEVICE_REMOVED"/></item>
+    ///     <item><see cref="DXGI.DXGI_ERROR_DEVICE_RESET"/></item>
+    ///     <item><see cref="DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR"/></item>
+    ///     <item><see cref="DXGI.DXGI_ERROR_INVALID_CALL"/></item>
+    ///     <item><see cref="DXGI.DXGI_ERROR_ACCESS_DENIED"/></item>
+    /// </list>
+    /// </remarks>
+    public static bool IsDeviceLostReason(this HRESULT result)
+    {
+        return (int)result is
+            DXGI.DXGI_ERROR_DEVICE_HUNG or
+            DXGI.DXGI_ERROR_DEVICE_REMOVED or
+            DXGI.DXGI_ERROR_DEVICE_RESET or
+            DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR or
+            DXGI.DXGI_ERROR_INVALID_CALL or
+            DXGI.DXGI_ERROR_ACCESS_DENIED;
     }
 }

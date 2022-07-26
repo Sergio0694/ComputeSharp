@@ -105,13 +105,7 @@ internal static partial class DeviceHelper
                 d3D12DeviceCandidate.GetVoidAddressOf());
 
             // Check and throw if the device is a device lost state and not disposed properly
-            if ((int)createDeviceResult is
-                DXGI.DXGI_ERROR_DEVICE_HUNG or
-                DXGI.DXGI_ERROR_DEVICE_REMOVED or
-                DXGI.DXGI_ERROR_DEVICE_RESET or
-                DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR or
-                DXGI.DXGI_ERROR_INVALID_CALL or
-                DXGI.DXGI_ERROR_ACCESS_DENIED)
+            if (createDeviceResult.IsDeviceLostReason())
             {
                 ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
             }
@@ -157,13 +151,7 @@ internal static partial class DeviceHelper
             Windows.__uuidof<ID3D12Device>(),
             d3D12DeviceCandidate.GetVoidAddressOf());
 
-        if ((int)createDeviceResult is
-            DXGI.DXGI_ERROR_DEVICE_HUNG or
-            DXGI.DXGI_ERROR_DEVICE_REMOVED or
-            DXGI.DXGI_ERROR_DEVICE_RESET or
-            DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR or
-            DXGI.DXGI_ERROR_INVALID_CALL or
-            DXGI.DXGI_ERROR_ACCESS_DENIED)
+        if (createDeviceResult.IsDeviceLostReason())
         {
             ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
         }
