@@ -12,7 +12,7 @@ namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
 [TestCategory("DeviceDisposal")]
-public class DeviceDisposalTests
+public partial class DeviceDisposalTests
 {
     [TestMethod]
     public unsafe void DeviceDisposal_GetDefault_ReferenceCounting()
@@ -136,5 +136,79 @@ public class DeviceDisposalTests
         uint refCount = d3D12Device.Get()->Release();
 
         Assert.AreEqual(refCount, 1u);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void DeviceDisposal_WithComputeShader_ReferenceCounting(Device device)
+    {
+        using ComPtr<ID3D12Device> d3D12Device = default;
+
+        using (GraphicsDevice graphicsDevice = device.Get())
+        {
+            using var buffer = graphicsDevice.AllocateReadWriteBuffer<float>(128);
+
+            using (ComputeContext context = graphicsDevice.CreateComputeContext())
+            {
+                context.For(buffer.Length, new InitializeShader(buffer));
+            }
+
+            InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        }
+
+        _ = d3D12Device.Get()->AddRef();
+
+        uint refCount = d3D12Device.Get()->Release();
+
+        Assert.AreEqual(refCount, 1u);
+    }
+
+    [EmbeddedBytecode(DispatchAxis.X)]
+    [AutoConstructor]
+    private partial struct InitializeShader : IComputeShader
+    {
+        private readonly ReadWriteBuffer<float> buffer;
+
+        public void Execute()
+        {
+            buffer[ThreadIds.X] = ThreadIds.X;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void DeviceDisposal_WithPixelShader_ReferenceCounting(Device device)
+    {
+        using ComPtr<ID3D12Device> d3D12Device = default;
+
+        using (GraphicsDevice graphicsDevice = device.Get())
+        {
+            using var texture = graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
+
+            using (ComputeContext context = graphicsDevice.CreateComputeContext())
+            {
+                context.ForEach(texture, default(HelloWorldShader));
+            }
+
+            InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        }
+
+        _ = d3D12Device.Get()->AddRef();
+
+        uint refCount = d3D12Device.Get()->Release();
+
+        Assert.AreEqual(refCount, 1u);
+    }
+
+    [EmbeddedBytecode(DispatchAxis.XY)]
+    private partial struct HelloWorldShader : IPixelShader<float4>
+    {
+        public float4 Execute()
+        {
+            float2 uv = ThreadIds.Normalized.XY;
+            float3 col = 0.5f + 0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4));
+
+            return new(col, 1f);
+        }
     }
 }

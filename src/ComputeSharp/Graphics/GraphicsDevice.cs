@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -10,6 +11,7 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Shaders.Models;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -108,6 +110,17 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     private HRESULT deviceRemovedReason;
 
     /// <summary>
+    /// The list of cached <see cref="PipelineData"/> objects for the current device.
+    /// </summary>
+    /// <remarks>
+    /// A new entry is added to this list every time a shader is dispatched using this device. These cached items
+    /// are stored via a <see cref="ConditionalWeakTable{TKey, TValue}"/>, meaning they will be collected automatically
+    /// when the device is collected. But, due to the fact that could happen at any time, a list is required to guarantee
+    /// the additional references added by the native objects in the pipeline model can be released immediately.
+    /// </remarks>
+    private List<PipelineData> cachedPipelineData;
+
+    /// <summary>
     /// Raised whenever the device is lost.
     /// </summary>
     /// <remarks>
@@ -170,6 +183,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 #endif
 
         this.deviceRemovedReason = S.S_OK;
+        this.cachedPipelineData = new List<PipelineData>();
 
         RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
     }
@@ -337,6 +351,21 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 #endif
     }
 
+    /// <summary>
+    /// Registers a <see cref="PipelineData"/> object for the current device to enable early disposal.
+    /// </summary>
+    /// <param name="pipelineData">The <see cref="PipelineData"/> instance just loaded to run a shader.</param>
+    internal void RegisterPipelineData(PipelineData pipelineData)
+    {
+        // This is only used when first initializing a pipeline data for a given shader.
+        // Adding an item is very quick, so we can just use a lock and not a concurrent
+        // list. That would've added more overhead given the low contention in this case.
+        lock (this.cachedPipelineData)
+        {
+            this.cachedPipelineData.Add(pipelineData);
+        }
+    }
+
     /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void RentShaderResourceViewDescriptorHandles(out ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles)
@@ -421,6 +450,16 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 #endif
 
         UnregisterDeviceLostCallback(this);
+
+        // Explicitly release the cached pipeline objects as well.
+        // Locking is not needed here, as this method is only invoked
+        // when the device has been disposed and no other usage is active
+        // for the device (ie. no lease exists), meaning that no other
+        // thread could potentially add a new pipeline data concurrently.
+        foreach (PipelineData pipelineData in this.cachedPipelineData)
+        {
+            pipelineData.Dispose();
+        }
     }
 
     /// <inheritdoc/>

@@ -98,5 +98,8 @@ internal static class PipelineDataLoader<T>
         pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
 
         shaderData.CachedPipelines.Add(device, pipelineData);
+
+        // Register the newly created pipeline data to enable early disposal
+        device.RegisterPipelineData(pipelineData);
     }
 }
