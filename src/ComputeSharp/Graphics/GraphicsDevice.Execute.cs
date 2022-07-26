@@ -192,7 +192,7 @@ unsafe partial class GraphicsDevice
 
         HANDLE waitHandle;
 
-        device.GetReferenceTracker().DangerousAddRef();
+        device.DangerousAddRef();
 
         int result = Windows.RegisterWaitForSingleObject(
             phNewWaitObject: &waitHandle,
@@ -209,7 +209,7 @@ unsafe partial class GraphicsDevice
         // The register is successful if the return value is nonzero
         if (result == 0)
         {
-            device.GetReferenceTracker().DangerousRelease();
+            device.DangerousRelease();
 
             NativeMemory.Free(callbackContext);
 
@@ -241,7 +241,7 @@ unsafe partial class GraphicsDevice
         device.computeCommandListPool.Return(d3D12GraphicsCommandList, d3D12CommandAllocator);
 
         // Decrement the reference count that was incremented when scheduling the completion callback
-        device.GetReferenceTracker().DangerousRelease();
+        device.DangerousRelease();
 
         _ = Windows.CloseHandle(eventHandle);
 

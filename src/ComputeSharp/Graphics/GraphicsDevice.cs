@@ -252,7 +252,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -270,7 +270,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -286,7 +286,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -304,7 +304,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -320,7 +320,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 

@@ -47,7 +47,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
-        using var _0 = device.GetReferenceTracker().GetLease();
+        using var _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -94,7 +94,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTracker().GetLease();
+            using var _0 = GetReferenceTrackingLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -106,7 +106,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTracker().GetLease();
+            using var _0 = GetReferenceTrackingLease();
 
             return new(this.mappedData, Length);
         }
@@ -174,7 +174,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using var _0 = this.buffer.GetReferenceTracker().GetLease();
+            using var _0 = this.buffer.GetReferenceTrackingLease();
 
             return new(this.buffer.mappedData);
         }

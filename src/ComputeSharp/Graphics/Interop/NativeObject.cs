@@ -1,24 +1,35 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Interop;
 
 /// <summary>
 /// Base class for a <see cref="IDisposable"/> class.
 /// </summary>
-public abstract class NativeObject : IDisposable, ReferenceTracker.ITrackedObject
+public abstract partial class NativeObject : IDisposable
 {
     /// <summary>
-    /// The owning <see cref="ReferenceTracker"/> object for the current instance.
+    /// An object to use to synchronize the reference tracking operations.
     /// </summary>
-    private ReferenceTracker referenceTracker;
+    private readonly object lockObject;
+
+    /// <summary>
+    /// The number of existing reference tracking leases for the current instance.
+    /// </summary>
+    private int leasesCount;
+
+    /// <summary>
+    /// Whether or not <see cref="Dispose"/> has been called on the current instance.
+    /// </summary>
+    private bool isDisposeRequested;
 
     /// <summary>
     /// Creates a new <see cref="NativeObject"/> instance.
     /// </summary>
     private protected NativeObject()
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        this.lockObject = new object();
+        this.leasesCount = 0;
+        this.isDisposeRequested = false;
     }
 
     /// <summary>
@@ -26,36 +37,20 @@ public abstract class NativeObject : IDisposable, ReferenceTracker.ITrackedObjec
     /// </summary>
     ~NativeObject()
     {
-        this.referenceTracker.Dispose();
+        RequestDispose();
     }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        this.referenceTracker.Dispose();
+        RequestDispose();
 
         GC.SuppressFinalize(this);
     }
 
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.GetReferenceTracker"/>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal ref ReferenceTracker GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    ref ReferenceTracker ReferenceTracker.ITrackedObject.GetReferenceTracker()
-    {
-        return ref this.referenceTracker;
-    }
-
-    /// <inheritdoc/>
-    void ReferenceTracker.ITrackedObject.DangerousRelease()
-    {
-        OnDispose();
-    }
-
-    /// <inheritdoc cref="ReferenceTracker.ITrackedObject.DangerousRelease"/>
+    /// <summary>
+    /// Releases all resources (including unmanaged ones) for the tracked object.
+    /// </summary>
+    /// <remarks>This method is guaranteed to only ever be called once for a given tracked object.</remarks>
     private protected abstract void OnDispose();
 }

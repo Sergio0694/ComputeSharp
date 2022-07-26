@@ -22,15 +22,15 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     /// <summary>
     /// Creates a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
     /// </summary>
-    /// <param name="resource">The input <see cref="ReferenceTracker.ITrackedObject"/> that was used.</param>
+    /// <param name="resource">The input <see cref="NativeObject"/> that was used.</param>
     /// <param name="sourceDevice">The source <see cref="GraphicsDevice"/> instance tied to <paramref name="resource"/>.</param>
     /// <param name="destinationDevice">The target <see cref="GraphicsDevice"/> instance that was used.</param>
     /// <returns>A new <see cref="GraphicsDeviceMismatchException"/> instance with a formatted error message.</returns>
     /// <remarks>
-    /// This method only takes a <see cref="ReferenceTracker.ITrackedObject"/> instance and the associated <see cref="GraphicsDevice"/> instance as
+    /// This method only takes a <see cref="NativeObject"/> instance and the associated <see cref="GraphicsDevice"/> instance as
     /// <see cref="object.GetType"/> will still be available, but without the unnecessary generic type specializations for the method.
     /// </remarks>
-    private static GraphicsDeviceMismatchException Create(ReferenceTracker.ITrackedObject resource, GraphicsDevice sourceDevice, GraphicsDevice destinationDevice)
+    private static GraphicsDeviceMismatchException Create(NativeObject resource, GraphicsDevice sourceDevice, GraphicsDevice destinationDevice)
     {
         StringBuilder builder = new(512);
 

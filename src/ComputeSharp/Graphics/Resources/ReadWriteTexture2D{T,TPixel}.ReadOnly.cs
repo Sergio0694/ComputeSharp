@@ -24,8 +24,8 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture2D{T, TPixel})"/>
     internal IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
     {
-        using var _0 = GraphicsDevice.GetReferenceTracker().GetLease();
-        using var _1 = GetReferenceTracker().GetLease();
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -107,8 +107,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using var _0 = GetReferenceTracker().GetLease();
-            using var _1 = this.owner.GetReferenceTracker().GetLease();
+            using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -124,8 +124,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            using var _0 = GetReferenceTracker().GetLease();
-            using var _1 = this.owner.GetReferenceTracker().GetLease();
+            using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 

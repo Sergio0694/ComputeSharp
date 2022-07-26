@@ -29,7 +29,7 @@ partial class SwapChainManager<TOwner>
     {
         Guard.IsNotNull(shaderRunner);
 
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
@@ -71,7 +71,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
     public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
@@ -105,7 +105,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
     public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
@@ -140,7 +140,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         this.width = (float)width;
         this.height = (float)height;
@@ -155,7 +155,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         this.compositionScaleX = (float)compositionScaleX;
         this.compositionScaleY = (float)compositionScaleY;
@@ -169,7 +169,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
-        using var _0 = GetReferenceTracker().GetLease();
+        using var _0 = GetReferenceTrackingLease();
 
         this.resolutionScale = (float)resolutionScale;
 
@@ -190,13 +190,13 @@ partial class SwapChainManager<TOwner>
                 this.dynamicResolutionScale = this.resolutionScale;
 
                 // These two leases are needed to ensure the manager isn't disposed while rendering is running
-                using var _0 = GetReferenceTracker().GetLease();
+                using var _0 = GetReferenceTrackingLease();
 
                 RenderLoopWithDynamicResolution();
             }
             else
             {
-                using var _0 = GetReferenceTracker().GetLease();
+                using var _0 = GetReferenceTrackingLease();
 
                 RenderLoop();
             }

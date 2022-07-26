@@ -55,7 +55,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
-        using var _0 = device.GetReferenceTracker().GetLease();
+        using var _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -123,7 +123,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = this.GetReferenceTracker().GetLease();
+            using var _0 = this.GetReferenceTrackingLease();
 
             return new(this.mappedData, Width, Height, Depth, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }

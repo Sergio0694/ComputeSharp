@@ -50,7 +50,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         // Increment the reference count for the device. This has to be released when disposing the context.
         // Not disposing the context is undefined behavior, so we can rely on that to release the reference.
-        device.GetReferenceTracker().DangerousAddRef();
+        device.DangerousAddRef();
     }
 
     /// <summary>
@@ -305,7 +305,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         if (!this.commandList.IsAllocated)
         {
-            device.GetReferenceTracker().DangerousRelease();
+            device.DangerousRelease();
 
             return;
         }
@@ -316,7 +316,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
         finally
         {
-            device.GetReferenceTracker().DangerousRelease();
+            device.DangerousRelease();
         }
     }
 
@@ -332,7 +332,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         if (!this.commandList.IsAllocated)
         {
-            device.GetReferenceTracker().DangerousRelease();
+            device.DangerousRelease();
 
 #if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
@@ -347,7 +347,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
         finally
         {
-            device.GetReferenceTracker().DangerousRelease();
+            device.DangerousRelease();
         }
     }
 
