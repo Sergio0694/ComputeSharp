@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #if WINDOWS_UWP
 using System.Runtime.InteropServices;
-#else
-using System.Runtime.CompilerServices;
 #endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
@@ -518,44 +517,66 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <inheritdoc/>
     private protected override void OnDispose()
     {
-        // Even while rendering is still running, we need to properly release all implicit references
-        // that have been added when connecting the swap chain panel that was used. To do that, the
-        // same ISwapChainPanelNative::SetSwapChain API has to be called, but passing null as the
-        // target swap chain. This is handled correctly in the implementation, and all the additional
-        // references to the swap chain we passed during initialization will be dropped. Once that
-        // is done, we can then dispose our reference to the underlying swap chain panel for the control.
-        // This API has to be called on the UI thread, and it can be called just fine even if rendering
-        // is still running, so we can just call it immediately before moving to a thread to stop rendering.
-        this.swapChainPanelNative.Get()->SetSwapChain(null).Assert();
-        this.swapChainPanelNative.Dispose();
-
-        ThreadPool.UnsafeQueueUserWorkItem(static state =>
+        static void OnDisposeOnDispatcherQueueThread(SwapChainManager<TOwner> @this)
         {
-            SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
+            // Even while rendering is still running, we need to properly release all implicit references
+            // that have been added when connecting the swap chain panel that was used. To do that, the
+            // same ISwapChainPanelNative::SetSwapChain API has to be called, but passing null as the
+            // target swap chain. This is handled correctly in the implementation, and all the additional
+            // references to the swap chain we passed during initialization will be dropped. Once that
+            // is done, we can then dispose our reference to the underlying swap chain panel for the control.
+            // This API has to be called on the UI thread, and it can be called just fine even if rendering
+            // is still running, so we can just call it immediately before moving to a thread to stop rendering.
+            @this.swapChainPanelNative.Get()->SetSwapChain(null).Assert();
+            @this.swapChainPanelNative.Dispose();
 
-            @this.UnsafeStopRenderLoopAndWait();
+            ThreadPool.UnsafeQueueUserWorkItem(static state =>
+            {
+                SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
 
-            ulong updatedFenceValue = @this.nextD3D12FenceValue + 1;
+                @this.UnsafeStopRenderLoopAndWait();
 
-            @this.d3D12CommandQueue.Get()->Signal(@this.d3D12Fence.Get(), updatedFenceValue).Assert();
+                ulong updatedFenceValue = @this.nextD3D12FenceValue + 1;
 
-            // Just like in the resize logic, signal and wait to make sure no operations are pending. This
-            // is needed to avoid a crash when disposing resources when disposing after stopping rendering.
-            @this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
+                @this.d3D12CommandQueue.Get()->Signal(@this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
-            _ = Win32.CloseHandle(@this.frameLatencyWaitableObject);
+                // Just like in the resize logic, signal and wait to make sure no operations are pending. This
+                // is needed to avoid a crash when disposing resources when disposing after stopping rendering.
+                @this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
 
-            @this.d3D12Device.Dispose();
-            @this.d3D12CommandQueue.Dispose();
-            @this.d3D12Fence.Dispose();
-            @this.d3D12CommandAllocator.Dispose();
-            @this.d3D12GraphicsCommandList.Dispose();
-            @this.dxgiSwapChain3.Dispose();
-            @this.d3D12Resource0.Dispose();
-            @this.d3D12Resource1.Dispose();
-            @this.texture?.Dispose();
+                _ = Win32.CloseHandle(@this.frameLatencyWaitableObject);
 
-            @this.OnDisposed();
-        }, this);
+                @this.d3D12Device.Dispose();
+                @this.d3D12CommandQueue.Dispose();
+                @this.d3D12Fence.Dispose();
+                @this.d3D12CommandAllocator.Dispose();
+                @this.d3D12GraphicsCommandList.Dispose();
+                @this.dxgiSwapChain3.Dispose();
+                @this.d3D12Resource0.Dispose();
+                @this.d3D12Resource1.Dispose();
+                @this.texture?.Dispose();
+
+                @this.OnDisposed();
+            }, @this);
+        }
+
+        // Check whether the current thread is the one associated with the dispatcher queue. If so, the dispose
+        // logic can be called directly, otherwise an extra dispatch is needed. This is because the start of
+        // the dispose logic requires UI thread access to interact with the swap chain panel.
+        if (this.dispatcherQueue.HasThreadAccess)
+        {
+            OnDisposeOnDispatcherQueueThread(this);
+        }
+        else
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void OnDisposeOnThreadPoolThread(SwapChainManager<TOwner> @this)
+            {
+                _ = @this.dispatcherQueue.TryEnqueue(() => OnDisposeOnDispatcherQueueThread(@this));
+            }
+
+            // Move to a separate queue to skip the closure when lowering this method, if not needed
+            OnDisposeOnThreadPoolThread(this);
+        }
     }
 }
