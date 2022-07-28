@@ -10,25 +10,6 @@ namespace ComputeSharp.Tests.Extensions;
 public static class DeviceExtensions
 {
     /// <summary>
-    /// The <see cref="GraphicsDevice"/> instance for the discrete device.
-    /// </summary>
-    private static readonly GraphicsDevice? DiscreteDevice;
-
-    /// <summary>
-    /// The <see cref="GraphicsDevice"/> instance for the WARP device.
-    /// </summary>
-    private static readonly GraphicsDevice? WarpDevice;
-
-    /// <summary>
-    /// Initializes <see cref="DiscreteDevice"/> and <see cref="WarpDevice"/>.
-    /// </summary>
-    static DeviceExtensions()
-    {
-        DiscreteDevice = GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault();
-        WarpDevice = GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).FirstOrDefault();
-    }
-
-    /// <summary>
     /// Gets a <see cref="GraphicsDevice"/> instance matching a specified type.
     /// </summary>
     /// <param name="type">The device to retrieve.</param>
@@ -38,8 +19,8 @@ public static class DeviceExtensions
     {
         GraphicsDevice? device = type switch
         {
-            Device.Discrete => DiscreteDevice,
-            Device.Warp => WarpDevice,
+            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).FirstOrDefault(),
             _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device.")
         };
 

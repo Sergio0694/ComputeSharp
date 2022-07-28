@@ -37,7 +37,6 @@
     <Compile Include="..\ComputeSharp.Tests\Attributes\DataAttribute.cs" Link="Attributes\DataAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\DeviceAttribute.cs" Link="Attributes\DeviceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\ResourceAttribute.cs" Link="Attributes\ResourceAttribute.cs" />
-    <Compile Include="..\ComputeSharp.Tests\Extensions\DeviceExtensions.cs" Link="Extensions\DeviceExtensions.cs" />
     <Compile Include="..\ComputeSharp.Tests\Extensions\GraphicsDeviceExtensions.cs" Link="Extensions\GraphicsDeviceExtensions.cs" />
   </ItemGroup>	
 
