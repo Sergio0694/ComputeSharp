@@ -73,4 +73,47 @@ public class GetDefaultDeviceTests
 
         GetDefault_VerifyContract_Part2();
     }
+
+    [TestMethod]
+    public unsafe void GetDefault_DisposeAndUseNewInstance()
+    {
+        using (ComPtr<ID3D12Device> d3D12Device = default)
+        {
+            GraphicsDevice device = GraphicsDevice.GetDefault();
+
+            using (device.AllocateReadOnlyBuffer<float>(128))
+            {
+            }
+
+            InteropServices.GetID3D12Device(device, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+
+            device.Dispose();
+
+            _ = d3D12Device.Get()->AddRef();
+
+            uint refCount = d3D12Device.Get()->Release();
+
+            Assert.AreEqual(refCount, 1u);
+        }
+
+        // Just same test but twice, just for good measure
+        using (ComPtr<ID3D12Device> d3D12Device = default)
+        {
+            GraphicsDevice device = GraphicsDevice.GetDefault();
+
+            using (device.AllocateReadOnlyBuffer<float>(128))
+            {
+            }
+
+            InteropServices.GetID3D12Device(device, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+
+            device.Dispose();
+
+            _ = d3D12Device.Get()->AddRef();
+
+            uint refCount = d3D12Device.Get()->Release();
+
+            Assert.AreEqual(refCount, 1u);
+        }
+    }
 }

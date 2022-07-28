@@ -29,16 +29,6 @@ public partial class InitializationTests
     }
 
     [TestMethod]
-    public void DisposeDefault()
-    {
-        using var before = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer<float>(128);
-
-        GraphicsDevice.GetDefault().Dispose();
-
-        using var after = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer<float>(128);
-    }
-
-    [TestMethod]
     public void EnumerateDevices()
     {
         int i = 0;

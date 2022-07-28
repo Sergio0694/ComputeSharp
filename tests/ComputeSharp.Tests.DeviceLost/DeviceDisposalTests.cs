@@ -86,6 +86,10 @@ public partial class DeviceDisposalTests
             using var r3 = graphicsDevice.AllocateReadWriteBuffer<float>(128);
             using var r4 = graphicsDevice.AllocateReadOnlyTexture2D<float>(128, 128);
             using var r5 = graphicsDevice.AllocateReadWriteTexture2D<float>(128, 128);
+            using var r6 = graphicsDevice.AllocateUploadBuffer<float>(128);
+            using var r7 = graphicsDevice.AllocateReadBackBuffer<float>(128);
+            using var r8 = graphicsDevice.AllocateUploadTexture2D<float>(128, 128);
+            using var r9 = graphicsDevice.AllocateReadBackTexture2D<float>(128, 128);
 
             InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
         }
