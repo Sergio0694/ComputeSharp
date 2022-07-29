@@ -394,7 +394,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -410,7 +410,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
