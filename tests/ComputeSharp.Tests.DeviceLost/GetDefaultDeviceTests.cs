@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,20 +20,46 @@ public class GetDefaultDeviceTests
         // The default device is never null (or the previous call would've thrown an exception)
         Assert.IsNotNull(device1);
 
-        GraphicsDevice device2 = GraphicsDevice.GetDefault();
+        using (ComPtr<ID3D12Device> d3D12Device = default)
+        {
+            unsafe void GetNativeDevice(in ComPtr<ID3D12Device> d3D12Device)
+            {
+                InteropServices.GetID3D12Device(device1, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+            }
 
-        // Assuming the device hasn't been disposed (tests don't run concurrently), calling
-        // GraphicsDevice.GetDefault() again will always return the same cached instance.
-        Assert.AreSame(device1, device2);
+            GetNativeDevice(in d3D12Device);
 
-        await DeviceLostTests.RemoveDeviceAsync(device1);
+            GraphicsDevice device2 = GraphicsDevice.GetDefault();
 
-        // The device is lost but not disposed, so the same instance should be returned yet again
-        GraphicsDevice device3 = GraphicsDevice.GetDefault();
+            // Assuming the device hasn't been disposed (tests don't run concurrently), calling
+            // GraphicsDevice.GetDefault() again will always return the same cached instance.
+            Assert.AreSame(device1, device2);
 
-        Assert.AreSame(device1, device3);
+            await DeviceLostTests.RemoveDeviceAsync(device1);
 
-        device1.Dispose();
+            // The device is lost but not disposed, so the same instance should be returned yet again
+            GraphicsDevice device3 = GraphicsDevice.GetDefault();
+
+            Assert.AreSame(device1, device3);
+
+            // Dispose the device, which should make its actual release logic execute
+            device1.Dispose();
+
+            // The device is correctly marked as disposed
+            Assert.ThrowsException<ObjectDisposedException>(() => device1.IsDoublePrecisionSupportAvailable());
+
+            unsafe void VerifyDisposeForDevice1(ComPtr<ID3D12Device> d3D12Device)
+            {
+                _ = d3D12Device.Get()->AddRef();
+
+                uint refCount = d3D12Device.Get()->Release();
+
+                // Now there should just be this one last reference left to the native device
+                Assert.AreEqual(refCount, 1u);
+            }
+
+            VerifyDisposeForDevice1(d3D12Device);
+        }
 
         // Calling GraphicsDevice.GetDefault() after disposing it should always succeed...
         GraphicsDevice device4 = GraphicsDevice.GetDefault();
