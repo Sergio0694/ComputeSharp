@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using ComputeSharp.Interop;
+using ComputeSharp.Tests.DeviceLost.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -13,7 +11,7 @@ namespace ComputeSharp.Tests.DeviceLost;
 public class GetDefaultDeviceTests
 {
     [TestMethod]
-    public async Task GetDefault_VerifyContract()
+    public unsafe void GetDefault_VerifyContract()
     {
         GraphicsDevice device1 = GraphicsDevice.GetDefault();
 
@@ -22,12 +20,7 @@ public class GetDefaultDeviceTests
 
         using (ComPtr<ID3D12Device> d3D12Device = default)
         {
-            unsafe void GetNativeDevice(in ComPtr<ID3D12Device> d3D12Device)
-            {
-                InteropServices.GetID3D12Device(device1, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
-            }
-
-            GetNativeDevice(in d3D12Device);
+            GraphicsDeviceHelper.GetD3D12Device(device1, in d3D12Device);
 
             GraphicsDevice device2 = GraphicsDevice.GetDefault();
 
@@ -35,7 +28,7 @@ public class GetDefaultDeviceTests
             // GraphicsDevice.GetDefault() again will always return the same cached instance.
             Assert.AreSame(device1, device2);
 
-            await DeviceLostTests.RemoveDeviceAsync(device1);
+            GraphicsDeviceHelper.RemoveDevice(device1);
 
             // The device is lost but not disposed, so the same instance should be returned yet again
             GraphicsDevice device3 = GraphicsDevice.GetDefault();
@@ -48,17 +41,8 @@ public class GetDefaultDeviceTests
             // The device is correctly marked as disposed
             Assert.ThrowsException<ObjectDisposedException>(() => device1.IsDoublePrecisionSupportAvailable());
 
-            unsafe void VerifyDisposeForDevice1(ComPtr<ID3D12Device> d3D12Device)
-            {
-                _ = d3D12Device.Get()->AddRef();
-
-                uint refCount = d3D12Device.Get()->Release();
-
-                // Now there should just be this one last reference left to the native device
-                Assert.AreEqual(refCount, 1u);
-            }
-
-            VerifyDisposeForDevice1(d3D12Device);
+            // Now there should just be this one last reference left to the native device
+            Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
         }
 
         // Calling GraphicsDevice.GetDefault() after disposing it should always succeed...
@@ -71,76 +55,64 @@ public class GetDefaultDeviceTests
         // The LUID should match though, as the same adapter should be returned
         Assert.AreEqual(device1.Luid, device4.Luid);
 
-        unsafe void GetDefault_VerifyContract_Part2()
-        {
-            using ComPtr<ID3D12Device> d3D12Device = default;
+        GraphicsDeviceHelper.RemoveDevice(device4);
 
-            // Increment the reference count on the internal device, causing it to remain alive
-            InteropServices.GetID3D12Device(device4, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        using (ComPtr<ID3D12Device> d3D12Device = default)
+        {
+            GraphicsDeviceHelper.GetD3D12Device(device4, in d3D12Device);
 
             device4.Dispose();
 
-            _ = d3D12Device.Get()->AddRef();
-
-            uint refCount = d3D12Device.Get()->Release();
+            // The device is correctly marked as disposed
+            Assert.ThrowsException<ObjectDisposedException>(() => device4.IsDoublePrecisionSupportAvailable());
 
             // Sanity check that this is in fact the only reference keeping the device alive
-            Assert.AreEqual(refCount, 1u);
+            Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
 
             HRESULT removalReason = d3D12Device.Get()->GetDeviceRemovedReason();
 
             // Sanity check that the device is in fact removed
-            Assert.AreEqual((int)removalReason, DXGI.DXGI_ERROR_DEVICE_REMOVED);
+            Assert.AreEqual(DXGI.DXGI_ERROR_DEVICE_REMOVED, (int)removalReason);
 
             // Calling GraphicsDevice.GetDefault() will now throw, because the native device has not been disposed properly
             Assert.ThrowsException<InvalidOperationException>(() => GraphicsDevice.GetDefault());
         }
-
-        await DeviceLostTests.RemoveDeviceAsync(device4);
-
-        GetDefault_VerifyContract_Part2();
     }
 
     [TestMethod]
-    public unsafe void GetDefault_DisposeAndUseNewInstance()
+    public void GetDefault_DisposeAndUseNewInstance()
     {
+        GraphicsDevice device1 = GraphicsDevice.GetDefault();
+
         using (ComPtr<ID3D12Device> d3D12Device = default)
         {
-            GraphicsDevice device = GraphicsDevice.GetDefault();
-
-            using (device.AllocateReadOnlyBuffer<float>(128))
+            using (device1.AllocateReadOnlyBuffer<float>(128))
             {
             }
 
-            InteropServices.GetID3D12Device(device, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+            GraphicsDeviceHelper.GetD3D12Device(device1, in d3D12Device);
 
-            device.Dispose();
+            device1.Dispose();
 
-            _ = d3D12Device.Get()->AddRef();
-
-            uint refCount = d3D12Device.Get()->Release();
-
-            Assert.AreEqual(refCount, 1u);
+            Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
         }
 
         // Just same test but twice, just for good measure
         using (ComPtr<ID3D12Device> d3D12Device = default)
         {
-            GraphicsDevice device = GraphicsDevice.GetDefault();
+            GraphicsDevice device2 = GraphicsDevice.GetDefault();
 
-            using (device.AllocateReadOnlyBuffer<float>(128))
+            Assert.AreNotSame(device1, device2);
+
+            using (device2.AllocateReadOnlyBuffer<float>(128))
             {
             }
 
-            InteropServices.GetID3D12Device(device, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+            GraphicsDeviceHelper.GetD3D12Device(device2, in d3D12Device);
 
-            device.Dispose();
+            device2.Dispose();
 
-            _ = d3D12Device.Get()->AddRef();
-
-            uint refCount = d3D12Device.Get()->Release();
-
-            Assert.AreEqual(refCount, 1u);
+            Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
         }
     }
 }

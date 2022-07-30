@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.DeviceLost.Helpers;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop.DirectX;
-
-#pragma warning disable CA1416
 
 namespace ComputeSharp.Tests.DeviceLost;
 
@@ -25,7 +22,7 @@ public class DeviceLostTests
         // Register the device lost callback
         graphicsDevice.DeviceLost += (s, e) => tcs.SetResult((s, e));
 
-        RemoveDevice(graphicsDevice);
+        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
 
         // Wait up to a second for the event to be raised (it's raised asynchronously on a thread pool thread)
         await Task.WhenAny(tcs.Task, Task.Delay(1000));
@@ -50,7 +47,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         using var _ = graphicsDevice.AllocateBuffer<float>(bufferType, 128);
     }
@@ -64,7 +61,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         using var _ = graphicsDevice.AllocateTexture2D<float>(textureType, 128, 128);
     }
@@ -78,7 +75,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         using var _ = graphicsDevice.AllocateTexture3D<float>(textureType, 128, 128, 3);
     }
@@ -90,7 +87,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         _ = graphicsDevice.IsDoublePrecisionSupportAvailable();
     }
@@ -102,7 +99,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         _ = graphicsDevice.IsReadOnlyTexture2DSupportedForType<float>();
     }
@@ -114,7 +111,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         _ = graphicsDevice.IsReadWriteTexture2DSupportedForType<float>();
     }
@@ -126,7 +123,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         _ = graphicsDevice.IsReadOnlyTexture3DSupportedForType<float>();
     }
@@ -138,7 +135,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         _ = graphicsDevice.IsReadWriteTexture3DSupportedForType<float>();
     }
@@ -150,55 +147,8 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        await RemoveDeviceAsync(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
         using var _ = graphicsDevice.CreateComputeContext();
-    }
-
-    /// <summary>
-    /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance.
-    /// </summary>
-    /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
-    private static unsafe void RemoveDevice(GraphicsDevice graphicsDevice)
-    {
-        ID3D12Device5* d3D12Device = default;
-        Guid d3D12Device5Guid = typeof(ID3D12Device5).GUID;
-
-        if (InteropServices.TryGetID3D12Device(graphicsDevice, &d3D12Device5Guid, (void**)&d3D12Device) != 0)
-        {
-            Assert.Inconclusive();
-        }
-
-        try
-        {
-            d3D12Device->RemoveDevice();
-        }
-        finally
-        {
-            if (d3D12Device is not null)
-            {
-                d3D12Device->Release();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance and waits for it to be reported.
-    /// </summary>
-    /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
-    internal static async Task RemoveDeviceAsync(GraphicsDevice graphicsDevice)
-    {
-        TaskCompletionSource<object?> tcs = new();
-
-        graphicsDevice.DeviceLost += (s, e) => tcs.SetResult(null);
-
-        RemoveDevice(graphicsDevice);
-
-        await Task.WhenAny(tcs.Task, Task.Delay(1000));
-
-        if (!tcs.Task.IsCompleted)
-        {
-            Assert.Fail();
-        }
     }
 }
