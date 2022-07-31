@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
@@ -17,24 +18,18 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        TaskCompletionSource<(object? Sender, DeviceLostReason Reason)> tcs = new();
+        List<(object? Sender, DeviceLostReason Reason)> args = new();
 
         // Register the device lost callback
-        graphicsDevice.DeviceLost += (s, e) => tcs.SetResult((s, e));
+        graphicsDevice.DeviceLost += (s, e) => args.Add((s, e));
 
-        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        // Wait up to a second for the event to be raised (it's raised asynchronously on a thread pool thread)
-        await Task.WhenAny(tcs.Task, Task.Delay(1000));
-
-        // Ensure the event has been raised, and get the results
-        Assert.IsTrue(tcs.Task.IsCompleted);
-
-        (object? sender, DeviceLostReason reason) = await tcs.Task;
-
-        Assert.IsNotNull(sender);
-        Assert.AreSame(sender, graphicsDevice);
-        Assert.AreEqual(reason, DeviceLostReason.DeviceRemoved);
+        Assert.AreEqual(1, args.Count);
+        Assert.IsNotNull(args[0].Sender);
+        Assert.IsNotNull(args[0].Reason);
+        Assert.AreSame(args[0].Sender, graphicsDevice);
+        Assert.AreEqual(args[0].Reason, DeviceLostReason.DeviceRemoved);
     }
 
     [CombinatorialTestMethod]

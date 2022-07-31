@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
@@ -11,7 +12,7 @@ namespace ComputeSharp.Tests.DeviceLost;
 public class GetDefaultDeviceTests
 {
     [TestMethod]
-    public unsafe void GetDefault_VerifyContract()
+    public async Task GetDefault_VerifyContract()
     {
         GraphicsDevice device1 = GraphicsDevice.GetDefault();
 
@@ -28,7 +29,7 @@ public class GetDefaultDeviceTests
             // GraphicsDevice.GetDefault() again will always return the same cached instance.
             Assert.AreSame(device1, device2);
 
-            GraphicsDeviceHelper.RemoveDevice(device1);
+            await GraphicsDeviceHelper.RemoveDeviceAsync(device1);
 
             // The device is lost but not disposed, so the same instance should be returned yet again
             GraphicsDevice device3 = GraphicsDevice.GetDefault();
@@ -55,7 +56,7 @@ public class GetDefaultDeviceTests
         // The LUID should match though, as the same adapter should be returned
         Assert.AreEqual(device1.Luid, device4.Luid);
 
-        GraphicsDeviceHelper.RemoveDevice(device4);
+        await GraphicsDeviceHelper.RemoveDeviceAsync(device4);
 
         using (ComPtr<ID3D12Device> d3D12Device = default)
         {
@@ -69,10 +70,13 @@ public class GetDefaultDeviceTests
             // Sanity check that this is in fact the only reference keeping the device alive
             Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
 
-            HRESULT removalReason = d3D12Device.Get()->GetDeviceRemovedReason();
+            unsafe
+            {
+                HRESULT removalReason = d3D12Device.Get()->GetDeviceRemovedReason();
 
-            // Sanity check that the device is in fact removed
-            Assert.AreEqual(DXGI.DXGI_ERROR_DEVICE_REMOVED, (int)removalReason);
+                // Sanity check that the device is in fact removed
+                Assert.AreEqual(DXGI.DXGI_ERROR_DEVICE_REMOVED, (int)removalReason);
+            }
 
             // Calling GraphicsDevice.GetDefault() will now throw, because the native device has not been disposed properly
             Assert.ThrowsException<InvalidOperationException>(() => GraphicsDevice.GetDefault());
