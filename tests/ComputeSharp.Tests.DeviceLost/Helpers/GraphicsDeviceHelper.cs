@@ -21,7 +21,10 @@ internal static class GraphicsDeviceHelper
     /// <param name="d3D12Device">The underlying <see cref="ID3D12Device"/> object for <paramref name="graphicsDevice"/>.</param>
     public static unsafe void GetD3D12Device(GraphicsDevice graphicsDevice, in ComPtr<ID3D12Device> d3D12Device)
     {
-        InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        fixed (ID3D12Device** ppvObject = d3D12Device)
+        {
+            InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)ppvObject);
+        }
     }
 
     /// <summary>
