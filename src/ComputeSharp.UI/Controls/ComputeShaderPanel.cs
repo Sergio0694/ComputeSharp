@@ -34,9 +34,18 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel, IDisposable
     /// <summary>
     /// Creates a new <see cref="ComputeShaderPanel"/> instance.
     /// </summary>
-    public unsafe ComputeShaderPanel()
+    public ComputeShaderPanel()
+        : this(GraphicsDevice.GetDefault())
     {
-        this.swapChainManager = new SwapChainManager<ComputeShaderPanel>(this);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ComputeShaderPanel"/> instance.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to render frames.</param>
+    public ComputeShaderPanel(GraphicsDevice device)
+    {
+        this.swapChainManager = new SwapChainManager<ComputeShaderPanel>(this, device);
 
         this.Loaded += ComputeShaderPanel_Loaded;
         this.Unloaded += ComputeShaderPanel_Unloaded;

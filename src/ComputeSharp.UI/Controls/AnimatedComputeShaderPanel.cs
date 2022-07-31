@@ -34,9 +34,18 @@ public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel, IDispos
     /// <summary>
     /// Creates a new <see cref="AnimatedComputeShaderPanel"/> instance.
     /// </summary>
-    public unsafe AnimatedComputeShaderPanel()
+    public AnimatedComputeShaderPanel()
+        : this(GraphicsDevice.GetDefault())
     {
-        this.swapChainManager = new SwapChainManager<AnimatedComputeShaderPanel>(this);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="AnimatedComputeShaderPanel"/> instance.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to render frames.</param>
+    public AnimatedComputeShaderPanel(GraphicsDevice device)
+    {
+        this.swapChainManager = new SwapChainManager<AnimatedComputeShaderPanel>(this, device);
 
         this.Loaded += AnimatedComputeShaderPanel_Loaded;
         this.Unloaded += AnimatedComputeShaderPanel_Unloaded;

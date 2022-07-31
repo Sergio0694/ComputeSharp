@@ -231,10 +231,11 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// Initializes a new instance of the <see cref="SwapChainManager{TOwner}"/> type.
     /// </summary>
     /// <param name="owner">The input swap chain instance being used.</param>
-    public SwapChainManager(TOwner owner)
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to render frames.</param>
+    public SwapChainManager(TOwner owner, GraphicsDevice device)
     {
         this.owner = owner;
-        this.device = GraphicsDevice.GetDefault();
+        this.device = device;
 
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
