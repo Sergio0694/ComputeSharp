@@ -444,9 +444,16 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         this.computeCommandListPool.Dispose();
         this.copyCommandListPool.Dispose();
         this.shaderResourceViewDescriptorAllocator.Dispose();
+
+        // On .NET 6, D3D12MA is used. In this case, the pool and allocator must be kept alive
+        // until all associated resources are returned and destroyed. Because of this, when the
+        // device is disposed (since there might be outstanding resources that are still alive),
+        // the pool and allocator are only released, but not disposed. This allows reosurces to
+        // also release them when disposed (since each resource keeps a reference back to the
+        // parent device). When the last one is disposed, the pool and allocator will be deleted.
 #if NET6_0_OR_GREATER
-        this.pool.Dispose();
-        this.allocator.Dispose();
+        this.pool.Release();
+        this.allocator.Release();
 #endif
 
         UnregisterDeviceLostCallback(this);
