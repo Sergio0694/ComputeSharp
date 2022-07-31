@@ -16,11 +16,5 @@
 -->
 
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
-  <Application>
-      
-    <!-- Shader types need their info preserved for logging -->
-    <Type Name="ComputeSharp.Uwp.ShaderRunner`1" Activate="Required Public" />
-    <Namespace Name="ComputeSharp.SwapChain.Core.Shaders.Runners" Activate="Required Public" />
-    <Namespace Name="ComputeSharp.SwapChain.Shaders" Activate="Required Public" />
-  </Application>
+  <Application/>
 </Directives>

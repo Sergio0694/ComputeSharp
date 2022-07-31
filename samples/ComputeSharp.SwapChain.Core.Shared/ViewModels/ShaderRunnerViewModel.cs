@@ -1,35 +1,33 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp;
 #else
 using ComputeSharp.WinUI;
 #endif
 
-#nullable enable
-
-namespace ComputeSharp.SwapChain.Core.Models;
+namespace ComputeSharp.SwapChain.Core.ViewModels;
 
 /// <summary>
-/// A model for a compute shader.
+/// A viewmodel for a compute shader.
 /// </summary>
-/// <remarks>This can be converted to a record when bindings are fixed, see notes in the XAML code.</remarks>
-public sealed class ComputeShader : ObservableObject
+public sealed class ShaderRunnerViewModel : ObservableObject
 {
     /// <summary>
-    /// Creates a new <see cref="ComputeShader"/> instance.
+    /// Creates a new <see cref="ShaderRunnerViewModel"/> instance.
     /// </summary>
-    /// <param name="name">The name of the shader.</param>
+    /// <param name="shaderType">The <see cref="Type"/> instance for the actual shader to execute.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to execute.</param>
-    public ComputeShader(string name, IShaderRunner shaderRunner)
+    public ShaderRunnerViewModel(Type shaderType, IShaderRunner shaderRunner)
     {
-        Name = name;
+        ShaderType = shaderType;
         ShaderRunner = shaderRunner;
     }
 
     /// <summary>
-    /// Gets the name of the shader.
+    /// Gets the <see cref="Type"/> instance for the actual shader to execute.
     /// </summary>
-    public string Name { get; }
+    public Type ShaderType { get; }
 
     /// <summary>
     /// Gets the <see cref="IShaderRunner"/> instance to execute.
