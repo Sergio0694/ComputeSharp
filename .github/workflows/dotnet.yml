@@ -165,7 +165,9 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the DX12 device lost unit tests (run the separately to minimize issues)
+  # Run all the DX12 device lost unit tests (run the separately to minimize issues).
+  # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
+  # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
   run-dx12-device-lost-tests:
     if: success()
     needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
@@ -181,14 +183,32 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Run ComputeSharp.Tests.DeviceLost (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net472 -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
