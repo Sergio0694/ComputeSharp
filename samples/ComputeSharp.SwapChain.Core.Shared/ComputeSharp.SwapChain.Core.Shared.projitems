@@ -13,10 +13,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Event.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\RenderingPauseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ResolutionScaleConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\ComputeShader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DebugAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shaders\Runners\ContouredLayersRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShaderRunnerViewModel.cs" />
   </ItemGroup>
 </Project>

@@ -9,8 +9,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
-    xmlns:models="using:ComputeSharp.SwapChain.Core.Models"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
+    xmlns:viewmodels="using:ComputeSharp.SwapChain.Core.ViewModels"
     SizeChanged="UserControl_SizeChanged"
     mc:Ignorable="d">
 
@@ -110,7 +110,7 @@
                         <ListView.ItemTemplate>
 
                             <!--  Shader template  -->
-                            <DataTemplate x:DataType="models:ComputeShader">
+                            <DataTemplate x:DataType="viewmodels:ShaderRunnerViewModel">
                                 <controls:ConstrainedBox
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"

@@ -3,7 +3,6 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Constants;
-using ComputeSharp.SwapChain.Core.Models;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
@@ -101,26 +100,26 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
-    public IReadOnlyList<ComputeShader> ComputeShaderOptions { get; } = new ComputeShader[]
+    public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
     {
-        new("Colorful infinity", new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
-        new("Extruded truchet", new ShaderRunner<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
-        new("Fractal tiling", new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds))),
-        new("Menger Journey", new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds))),
-        new("Octagrams", new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds))),
-        new("Protean clouds", new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
-        new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
-        new("Pyramid pattern", new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-        new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
-        new("Contoured layers", new ContouredLayersRunner())
+        new(typeof(ColorfulInfinity), new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
+        new(typeof(ExtrudedTruchetPattern),new ShaderRunner<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
+        new(typeof(FractalTiling),new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds))),
+        new(typeof(MengerJourney),new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds))),
+        new(typeof(Octagrams),new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds))),
+        new(typeof(ProteanClouds),new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
+        new(typeof(TwoTiledTruchet),new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
+        new(typeof(PyramidPattern),new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
+        new(typeof(TriangleGridContouring),new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
+        new(typeof(ContouredLayers),new ContouredLayersRunner())
     };
 
-    private ComputeShader selectedComputeShader;
+    private ShaderRunnerViewModel selectedComputeShader;
 
     /// <summary>
     /// Gets or sets the currently selected compute shader.
     /// </summary>
-    public ComputeShader SelectedComputeShader
+    public ShaderRunnerViewModel SelectedComputeShader
     {
         get => this.selectedComputeShader;
         set
@@ -130,7 +129,7 @@ public sealed partial class MainViewModel : ObservableObject
             if (SetProperty(ref this.selectedComputeShader, value) &&
                 value is not null)
             {
-                this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderRunner), value.ShaderRunner));
+                this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
 
                 value.IsSelected = true;
             }
