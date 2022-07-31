@@ -9,7 +9,7 @@ env:
 jobs:
 
   # Build the whole ComputeSharp solution, in Debug
-  build-solution-debug:
+  build-solution-debug-x64:
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -35,7 +35,7 @@ jobs:
         if-no-files-found: error
 
   # Build the whole ComputeSharp solution, in Release
-  build-solution-release:
+  build-solution-release-x64:
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -52,6 +52,26 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=x64
+      shell: cmd
+
+  # Build the solution in Release Arm64 too to double-check that target
+  build-solution-release-arm64:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=arm64
       shell: cmd
 
   # Build the .msbuildproj projects and the UWP/WinUI projects to generate all the NuGet packages.
@@ -101,7 +121,7 @@ jobs:
   # Run all the DX12 unit tests referencing the ComputeSharp project directly
   run-dx12-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -148,7 +168,7 @@ jobs:
   # Run all the DX12 device lost unit tests (run the separately to minimize issues)
   run-dx12-device-lost-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -174,7 +194,7 @@ jobs:
   # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
   run-d2d1-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -193,7 +213,7 @@ jobs:
   # Run all the local samples to ensure they build and run with no errors
   run-dx12-samples:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
