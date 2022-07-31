@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace ComputeSharp.Interop;
 
@@ -55,24 +56,52 @@ partial class NativeObject
     /// </summary>
     /// <param name="leaseTaken">Whether or not the returned <see cref="Lease"/> value is enabled.</param>
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Lease TryGetReferenceTrackingLease(out bool leaseTaken)
     {
         bool success = true;
 
-        lock (this.lockObject)
+        int currentValue;
+        int originalValue;
+
+        // To get a reference tracking lease, the procedure is as follows:
+        //   - If the object has been disposed (ie. if Disposed() has been called),
+        //     even if the object hasn't actually released the unmanaged resources
+        //     yet, then getting a tracking lease will fail and have no effect.
+        //   - If the object hasn't been disposed, the reference count is incremented.
+        // This can be done without taking a look, as follows:
+        //   - Do an interlocked read to get the current reference tracking mask.
+        //   - If the object has been disposed, the 32nd bit will be set. Due to the
+        //     mask being a signed integer in two-complement, we can just compare and
+        //     check whether the mask is lower than 0. If that is the case, just bail.
+        //   - Do an interlocked compare exchange incrementing the reference count by 1.
+        //     If the original value is the same as the current one, it means no other
+        //     thread performed a concurrent update between our read and write, so we can
+        //     stop. Otherwise, just loop until a compare exchange completes successfully.
+        // The assumption is contention will be extremely rare, given that taking and
+        // returning a lease is incredibly fast compared to the time other operations need.
+        do
         {
-            if (this.isDisposeRequested)
+            currentValue = this.referenceTrackingMask;
+
+            if (currentValue < 0)
             {
                 success = false;
+
+                break;
             }
-            else
-            {
-                this.leasesCount++;
-            }
+
+            originalValue = Interlocked.CompareExchange(
+                location1: ref this.referenceTrackingMask,
+                value: currentValue + 1,
+                comparand: currentValue);
         }
+        while (currentValue != originalValue);
 
         NativeObject? nativeObject;
 
+        // If the reference count was incremented, return a valid lease. Otherwise,
+        // return one just wrapping a null instance, which will no-op when disposed.
         if (success)
         {
             leaseTaken = true;
@@ -90,25 +119,47 @@ partial class NativeObject
     /// <inheritdoc/>
     private void RequestDispose()
     {
-        bool shouldRelease = false;
+        bool isDisposed = false;
 
-        lock (this.lockObject)
+        int currentValue;
+        int originalValue;
+
+        // To request a dispose operation, the procedure is as follows:
+        //   - If the dispose bit has already been set, just do nothing. This means
+        //     that another thread was the first to call Dispose(). In that case, the
+        //     actual releasing of unmanaged resources will be performed either by that
+        //     thread if there are no active leases, or by the last returned lease.
+        //   - Do an interlocked compare exchange setting the dispose bit (32nd bit).
+        //     Like above, if the original value doesn't match the current one, it means
+        //     that another thread raced against this one, so the value is invalid, and
+        //     another loop is executed. If the value matches, the loop just ends.
+        // After this atomic update, we can then check whether (1) this was the first
+        // thread to call Dispose() (ie. the dispose flag wasn't previously set and it
+        // was set successfully by this call), and (2) there are no other active leases.
+        // If both checks are true, the object is effectively dead and we can safely release
+        // unmanaged resources. All other leases will just fail to be taken after this anyway.
+        do
         {
-            if (!this.isDisposeRequested)
+            currentValue = this.referenceTrackingMask;
+
+            if (currentValue < 0)
             {
-                this.isDisposeRequested = true;
+                isDisposed = true;
 
-                // Only release resources if this is the first time Dipose() has been called, and
-                // there are no outstanding leases. If there is one, don't do anything now. The
-                // tracked object will just be released once the last active lease is returned.
-                if (this.leasesCount == 0)
-                {
-                    shouldRelease = true;
-                }
+                break;
             }
-        }
 
-        if (shouldRelease)
+            originalValue = Interlocked.CompareExchange(
+                location1: ref this.referenceTrackingMask,
+                value: currentValue | (1 << 31),
+                comparand: currentValue);
+        }
+        while (currentValue != originalValue);
+
+        // Only release resources if this is the first time Dipose() has been called, and
+        // there are no outstanding leases. If there is one, don't do anything now. The
+        // tracked object will just be released once the last active lease is returned.
+        if (!isDisposed && currentValue == 0)
         {
             OnDispose();
         }
@@ -119,20 +170,17 @@ partial class NativeObject
     /// </summary>
     private void ReturnReferenceTrackingLease()
     {
-        bool shouldRelease = false;
+        // To return a lease, we can simply do an interlocked decrement on the reference tracking
+        // mask. Each lease is guaranteed to only be disposed once (the contract states to only
+        // ever use it in a using statement), and a valid lease existing implies that the reference
+        // counting mask had previously been incremented by 1. There is also no need to check for
+        // disposal, becausse returning a lease on a disposed object is perfectly valid (given that
+        // the actual disposal is deferred until all active leases are returned).
+        int currentValue = Interlocked.Decrement(ref this.referenceTrackingMask);
 
-        lock (this.lockObject)
-        {
-            this.leasesCount--;
-
-            // If Dipose() has been called and this was the last lease, release the tracked object
-            if (this.isDisposeRequested && this.leasesCount == 0)
-            {
-                shouldRelease = true;
-            }
-        }
-
-        if (shouldRelease)
+        // If Dipose() has been called and this was the last lease, release the tracked object.
+        // This is the case if the dispose bit is set (the 32nd one), and no other bit is set.
+        if (currentValue == 1 << 31)
         {
             OnDispose();
         }
@@ -141,6 +189,10 @@ partial class NativeObject
     /// <summary>
     /// A reference tracking lease to extend the lifetime of a given <see cref="NativeObject"/> instance while in a given scope.
     /// </summary>
+    /// <remarks>
+    /// This type must always be used in a <see langword="using"/> statement and disposed properly. Not doing
+    /// so is undefined behavior and may result in memory leaks and inability to correctly restore lost devices.
+    /// </remarks>
     internal struct Lease : IDisposable
     {
         /// <summary>

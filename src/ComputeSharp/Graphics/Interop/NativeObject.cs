@@ -8,28 +8,21 @@ namespace ComputeSharp.Interop;
 public abstract partial class NativeObject : IDisposable
 {
     /// <summary>
-    /// An object to use to synchronize the reference tracking operations.
+    /// A mask that indicates the state of the current object.
+    /// The mask uses the following schema:
+    /// <list type="bullet">
+    ///     <item>[0, 30]: the number of existing reference tracking leases.</item>
+    ///     <item>[31]: whether or not <see cref="Dispose"/> has been called.</item>
+    /// </list>
     /// </summary>
-    private readonly object lockObject;
-
-    /// <summary>
-    /// The number of existing reference tracking leases for the current instance.
-    /// </summary>
-    private int leasesCount;
-
-    /// <summary>
-    /// Whether or not <see cref="Dispose"/> has been called on the current instance.
-    /// </summary>
-    private bool isDisposeRequested;
+    private volatile int referenceTrackingMask;
 
     /// <summary>
     /// Creates a new <see cref="NativeObject"/> instance.
     /// </summary>
     private protected NativeObject()
     {
-        this.lockObject = new object();
-        this.leasesCount = 0;
-        this.isDisposeRequested = false;
+        this.referenceTrackingMask = 0;
     }
 
     /// <summary>
