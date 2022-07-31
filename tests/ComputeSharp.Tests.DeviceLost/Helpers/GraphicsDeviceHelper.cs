@@ -46,6 +46,33 @@ internal static class GraphicsDeviceHelper
     }
 
     /// <summary>
+    /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance.
+    /// </summary>
+    /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
+    public static unsafe void RemoveDevice(GraphicsDevice graphicsDevice)
+    {
+        ID3D12Device5* d3D12Device = default;
+        Guid d3D12Device5Guid = typeof(ID3D12Device5).GUID;
+
+        if (InteropServices.TryGetID3D12Device(graphicsDevice, &d3D12Device5Guid, (void**)&d3D12Device) != 0)
+        {
+            Assert.Inconclusive();
+        }
+
+        try
+        {
+            d3D12Device->RemoveDevice();
+        }
+        finally
+        {
+            if (d3D12Device is not null)
+            {
+                d3D12Device->Release();
+            }
+        }
+    }
+
+    /// <summary>
     /// Removes the underlying device for a given <see cref="GraphicsDevice"/> instance and waits for it to be reported.
     /// </summary>
     /// <param name="graphicsDevice">The target <see cref="GraphicsDevice"/> instance.</param>
@@ -61,29 +88,6 @@ internal static class GraphicsDeviceHelper
         TaskCompletionSource<object?> tcs = new();
 
         graphicsDevice.DeviceLost += (s, e) => tcs.SetResult(null);
-
-        static unsafe void RemoveDevice(GraphicsDevice graphicsDevice)
-        {
-            ID3D12Device5* d3D12Device = default;
-            Guid d3D12Device5Guid = typeof(ID3D12Device5).GUID;
-
-            if (InteropServices.TryGetID3D12Device(graphicsDevice, &d3D12Device5Guid, (void**)&d3D12Device) != 0)
-            {
-                Assert.Inconclusive();
-            }
-
-            try
-            {
-                d3D12Device->RemoveDevice();
-            }
-            finally
-            {
-                if (d3D12Device is not null)
-                {
-                    d3D12Device->Release();
-                }
-            }
-        }
 
         RemoveDevice(graphicsDevice);
 

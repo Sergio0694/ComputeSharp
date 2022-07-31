@@ -30,6 +30,15 @@ public class DeviceLostTests
         Assert.IsNotNull(args[0].Reason);
         Assert.AreSame(args[0].Sender, graphicsDevice);
         Assert.AreEqual(args[0].Reason, DeviceLostReason.DeviceRemoved);
+
+        // Trying to remove the device again does nothing
+        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+
+        // The event can only be raised once
+        Assert.AreEqual(1, args.Count);
     }
 
     [CombinatorialTestMethod]
