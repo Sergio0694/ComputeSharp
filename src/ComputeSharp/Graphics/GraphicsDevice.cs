@@ -137,7 +137,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// the event is raised asynchronously with respect to the device being lost, and on a thread pool thread.
     /// </para>
     /// </remarks>
-    public event EventHandler<DeviceLostReason>? DeviceLost;
+    public event EventHandler<DeviceLostEventArgs>? DeviceLost;
 
     /// <summary>
     /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.

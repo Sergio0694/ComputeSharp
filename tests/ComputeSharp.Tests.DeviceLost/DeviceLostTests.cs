@@ -18,7 +18,7 @@ public class DeviceLostTests
     {
         using GraphicsDevice graphicsDevice = device.Get();
 
-        List<(object? Sender, DeviceLostReason Reason)> args = new();
+        List<(object? Sender, DeviceLostEventArgs Args)> args = new();
 
         // Register the device lost callback
         graphicsDevice.DeviceLost += (s, e) => args.Add((s, e));
@@ -27,9 +27,9 @@ public class DeviceLostTests
 
         Assert.AreEqual(1, args.Count);
         Assert.IsNotNull(args[0].Sender);
-        Assert.IsNotNull(args[0].Reason);
+        Assert.IsNotNull(args[0].Args);
         Assert.AreSame(args[0].Sender, graphicsDevice);
-        Assert.AreEqual(args[0].Reason, DeviceLostReason.DeviceRemoved);
+        Assert.AreEqual(args[0].Args.Reason, DeviceLostReason.DeviceRemoved);
 
         // Trying to remove the device again does nothing
         GraphicsDeviceHelper.RemoveDevice(graphicsDevice);

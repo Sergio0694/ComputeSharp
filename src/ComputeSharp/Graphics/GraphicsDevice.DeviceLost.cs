@@ -96,7 +96,7 @@ unsafe partial class GraphicsDevice
                 _ => DeviceLostReason.UnspecifiedError
             };
 
-            device.DeviceLost?.Invoke(device, reason);
+            device.DeviceLost?.Invoke(device, new DeviceLostEventArgs(reason));
         }
 
         ThreadPool.QueueUserWorkItem(static state => RaiseDeviceLostEvent((GraphicsDevice)state!), this);
