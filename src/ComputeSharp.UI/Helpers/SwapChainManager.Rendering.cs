@@ -422,7 +422,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="e">The <see cref="Exception"/> being thrown that caused rendering to stop.</param>
     private void OnRenderingFailed(Exception e)
     {
-        _ = this.dispatcherQueue.TryEnqueue(() => RenderingFailed?.Invoke(this.owner, e));
+        _ = this.dispatcherQueue.TryEnqueue(() => RenderingFailed?.Invoke(this.owner, new RenderingFailedEventArgs(e)));
     }
 
     /// <summary>

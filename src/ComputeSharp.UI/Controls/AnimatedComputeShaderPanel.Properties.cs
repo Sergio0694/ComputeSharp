@@ -36,7 +36,7 @@ partial class AnimatedComputeShaderPanel
     /// <summary>
     /// Raised whenever rendering fails.
     /// </summary>
-    public event TypedEventHandler<AnimatedComputeShaderPanel, Exception>? RenderingFailed
+    public event TypedEventHandler<AnimatedComputeShaderPanel, RenderingFailedEventArgs>? RenderingFailed
     {
         add => this.swapChainManager.RenderingFailed += value;
         remove => this.swapChainManager.RenderingFailed -= value;

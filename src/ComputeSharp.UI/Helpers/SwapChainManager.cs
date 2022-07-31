@@ -220,7 +220,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <summary>
     /// Raised whenever rendering fails.
     /// </summary>
-    public event TypedEventHandler<TOwner, Exception>? RenderingFailed;
+    public event TypedEventHandler<TOwner, RenderingFailedEventArgs>? RenderingFailed;
 
     /// <summary>
     /// Raised whenever the parent control is disposed and all underlying resources are released.
