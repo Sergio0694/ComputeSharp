@@ -9,7 +9,7 @@ env:
 jobs:
 
   # Build the whole ComputeSharp solution, in Debug
-  build-solution-debug:
+  build-solution-debug-x64:
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -35,7 +35,7 @@ jobs:
         if-no-files-found: error
 
   # Build the whole ComputeSharp solution, in Release
-  build-solution-release:
+  build-solution-release-x64:
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -52,6 +52,26 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build
       run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=x64
+      shell: cmd
+
+  # Build the solution in Release Arm64 too to double-check that target
+  build-solution-release-arm64:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=arm64
       shell: cmd
 
   # Build the .msbuildproj projects and the UWP/WinUI projects to generate all the NuGet packages.
@@ -101,7 +121,7 @@ jobs:
   # Run all the DX12 unit tests referencing the ComputeSharp project directly
   run-dx12-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -145,10 +165,56 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
+  # Run all the DX12 device lost unit tests (run the separately to minimize issues).
+  # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
+  # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
+  run-dx12-device-lost-tests:
+    if: success()
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+
   # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
   run-d2d1-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -167,7 +233,7 @@ jobs:
   # Run all the local samples to ensure they build and run with no errors
   run-dx12-samples:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -368,7 +434,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -384,7 +450,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-dx12-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:

@@ -64,7 +64,8 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(buffer);
 
-        buffer.ThrowIfDisposed();
+        using var _0 = buffer.GetReferenceTrackingLease();
+
         buffer.ThrowIfDeviceMismatch(device);
 
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = buffer.D3D12GpuDescriptorHandle;
@@ -85,7 +86,8 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        texture.ThrowIfDisposed();
+        using var _0 = texture.GetReferenceTrackingLease();
+
         texture.ThrowIfDeviceMismatch(device);
 
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
@@ -106,7 +108,8 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        texture.ThrowIfDisposed();
+        using var _0 = texture.GetReferenceTrackingLease();
+
         texture.ThrowIfDeviceMismatch(device);
 
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
@@ -196,7 +199,8 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        texture.ThrowIfDisposed();
+        using var _0 = texture.GetReferenceTrackingLease();
+
         texture.ThrowIfDeviceMismatch(device);
 
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
@@ -217,7 +221,8 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        texture.ThrowIfDisposed();
+        using var _0 = texture.GetReferenceTrackingLease();
+
         texture.ThrowIfDeviceMismatch(device);
 
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;

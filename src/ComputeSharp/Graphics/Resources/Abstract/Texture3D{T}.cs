@@ -73,11 +73,13 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
-        device.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+
+        using var _0 = device.GetReferenceTrackingLease();
+
+        device.ThrowIfDeviceLost();
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {
@@ -180,10 +182,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsInRange(sourceOffsetX, 0, Width);
         Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsInRange(sourceOffsetZ, 0, Depth);
@@ -194,6 +192,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -278,13 +281,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
         Guard.IsInRange(sourceOffsetX, 0, Width);
         Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsInRange(sourceOffsetZ, 0, Depth);
@@ -303,6 +299,14 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = destination.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
         D3D12_COMMAND_LIST_TYPE d3D12CommandListType =
             this.d3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE ||
@@ -355,13 +359,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
         Guard.IsInRange(sourceOffsetX, 0, Width);
         Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsInRange(sourceOffsetZ, 0, Depth);
@@ -380,6 +377,14 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = destination.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -426,10 +431,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsInRange(destinationOffsetX, 0, Width);
         Guard.IsInRange(destinationOffsetY, 0, Height);
         Guard.IsInRange(destinationOffsetZ, 0, Depth);
@@ -440,6 +441,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -522,13 +528,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        source.ThrowIfDeviceMismatch(GraphicsDevice);
-        source.ThrowIfDisposed();
-
         Guard.IsInRange(sourceOffsetX, 0, source.Width);
         Guard.IsInRange(sourceOffsetY, 0, source.Height);
         Guard.IsInRange(sourceOffsetZ, 0, source.Depth);
@@ -547,6 +546,14 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = source.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        source.ThrowIfDeviceMismatch(GraphicsDevice);
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -581,7 +588,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -629,7 +636,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         isNormalized = DXGIFormatHelper.IsNormalizedType<T>();
@@ -640,7 +648,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         return D3D12Resource;
@@ -649,7 +658,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*)"/>
     internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         D3D12_RESOURCE_STATES d3D12ResourceStatesBefore = this.d3D12ResourceState;
@@ -665,7 +675,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         return D3D12GpuDescriptorHandle;

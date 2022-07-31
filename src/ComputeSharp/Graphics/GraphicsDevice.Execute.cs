@@ -9,6 +9,7 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
+using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -31,9 +32,9 @@ unsafe partial class GraphicsDevice
     private delegate void WaitForSingleObjectCallbackDelegate(void* pContext, byte timedOut);
 
     /// <summary>
-    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallback(void*, byte)"/>.
+    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallbackForWaitForFenceAsync(void*, byte)"/>.
     /// </summary>
-    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackWrapper = WaitForSingleObjectCallback;
+    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper = WaitForSingleObjectCallbackForWaitForFenceAsync;
 #endif
 
     /// <summary>
@@ -131,7 +132,7 @@ unsafe partial class GraphicsDevice
     }
 
     /// <summary>
-    /// A context to support <see cref="WaitForSingleObjectCallback"/>.
+    /// A context to support <see cref="WaitForSingleObjectCallbackForWaitForFenceAsync"/>.
     /// </summary>
     private struct CallbackContext
     {
@@ -191,17 +192,29 @@ unsafe partial class GraphicsDevice
 
         HANDLE waitHandle;
 
-        _ = Windows.RegisterWaitForSingleObject(
+        device.DangerousAddRef();
+
+        int result = Windows.RegisterWaitForSingleObject(
             phNewWaitObject: &waitHandle,
             hObject: eventHandle,
 #if NET6_0_OR_GREATER
-            Callback: &WaitForSingleObjectCallback,
+            Callback: &WaitForSingleObjectCallbackForWaitForFenceAsync,
 #else
-            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackWrapper),
+            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper),
 #endif
             Context: callbackContext,
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);
+
+        // The register is successful if the return value is nonzero
+        if (result == 0)
+        {
+            device.DangerousRelease();
+
+            NativeMemory.Free(callbackContext);
+
+            ThrowHelper.ThrowWin32Exception("Failed to register the compute context completion callback.");
+        }
 
         return waitForFenceValueTaskSource;
     }
@@ -212,7 +225,7 @@ unsafe partial class GraphicsDevice
     /// <param name="pContext">The input context.</param>
     /// <param name="timedOut">Whether the wait has timed out.</param>
     [UnmanagedCallersOnly]
-    private static void WaitForSingleObjectCallback(void* pContext, byte timedOut)
+    private static void WaitForSingleObjectCallbackForWaitForFenceAsync(void* pContext, byte timedOut)
     {
         CallbackContext* callbackContext = (CallbackContext*)pContext;
 
@@ -226,6 +239,9 @@ unsafe partial class GraphicsDevice
         callbackContext->GraphicsDeviceHandle.Free();
 
         device.computeCommandListPool.Return(d3D12GraphicsCommandList, d3D12CommandAllocator);
+
+        // Decrement the reference count that was incremented when scheduling the completion callback
+        device.DangerousRelease();
 
         _ = Windows.CloseHandle(eventHandle);
 

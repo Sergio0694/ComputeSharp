@@ -129,33 +129,6 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    public void DisposeAfterDevice(Device device, Type bufferType)
-    {
-        GraphicsDevice? gpu = device switch
-        {
-            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
-            _ => throw new ArgumentException(nameof(device))
-        };
-
-        if (gpu is null)
-        {
-            Assert.Inconclusive();
-
-            return;
-        }
-
-        Buffer<float> buffer = gpu.AllocateBuffer<float>(bufferType, 128);
-
-        gpu.Dispose();
-        buffer.Dispose();
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
-    [Resource(typeof(ConstantBuffer<>))]
-    [Resource(typeof(ReadOnlyBuffer<>))]
-    [Resource(typeof(ReadWriteBuffer<>))]
     [Data(0, 4096)]
     [Data(128, 512)]
     [Data(2048, 2048)]

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -17,6 +18,44 @@ partial class DeviceHelper
     /// The local map of <see cref="ID3D12InfoQueue"/> instances for the existing devices.
     /// </summary>
     private static readonly Dictionary<Luid, ComPtr<ID3D12InfoQueue>> D3D12InfoQueueMap = new();
+
+    /// <summary>
+    /// The cached default <see cref="GraphicsDevice"/> instance, if any.
+    /// </summary>
+    internal static GraphicsDevice? defaultDevice;
+
+    /// <summary>
+    /// Gets the cached <see cref="GraphicsDevice"/> instance or creates and caches a new one.
+    /// </summary>
+    /// <returns>The default <see cref="GraphicsDevice"/> instance.</returns>
+    public static unsafe GraphicsDevice GetDefaultDeviceFromCacheOrCreateInstance()
+    {
+        lock (DevicesCache)
+        {
+            do
+            {
+                GraphicsDevice? defaultDevice = DeviceHelper.defaultDevice;
+
+                // Fast path retrieving the cached instance and returning it
+                if (defaultDevice is not null)
+                {
+                    return defaultDevice;
+                }
+
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                static void InitializeAndAssignDefaultDevice()
+                {
+                    DeviceHelper.defaultDevice = GetOrCreateDefaultDevice();
+                }
+
+                // Non inlined method to load the default device and assign it to the
+                // cached field. If this method returns, then the default device has
+                // correctly been initialized. Otherwise, the method will just throw.
+                InitializeAndAssignDefaultDevice();
+            }
+            while (true);
+        }
+    }
 
     /// <summary>
     /// Retrieves a <see cref="GraphicsDevice"/> instance for an <see cref="ID3D12Device"/> object.
@@ -55,6 +94,12 @@ partial class DeviceHelper
     {
         lock (DevicesCache)
         {
+            // Remove the default device from the cache, if it has been disposed
+            if (device == defaultDevice)
+            {
+                defaultDevice = null;
+            }
+
             DevicesCache.Remove(device.Luid);
 
             if (Configuration.IsDebugOutputEnabled)

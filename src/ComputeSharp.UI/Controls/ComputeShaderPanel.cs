@@ -1,4 +1,5 @@
-﻿#if WINDOWS_UWP
+﻿using System;
+#if WINDOWS_UWP
 using ComputeSharp.Uwp.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,7 +24,7 @@ namespace ComputeSharp.WinUI;
 /// This panel accepts a custom <see cref="IFrameRequestQueue"/> instance to customize frame requests.
 /// </para>
 /// </summary>
-public sealed partial class ComputeShaderPanel : SwapChainPanel
+public sealed partial class ComputeShaderPanel : SwapChainPanel, IDisposable
 {
     /// <summary>
     /// The <see cref="SwapChainManager{TOwner}"/> instance handling rendering.
@@ -33,9 +34,18 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel
     /// <summary>
     /// Creates a new <see cref="ComputeShaderPanel"/> instance.
     /// </summary>
-    public unsafe ComputeShaderPanel()
+    public ComputeShaderPanel()
+        : this(GraphicsDevice.GetDefault())
     {
-        this.swapChainManager = new SwapChainManager<ComputeShaderPanel>(this);
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ComputeShaderPanel"/> instance.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to render frames.</param>
+    public ComputeShaderPanel(GraphicsDevice device)
+    {
+        this.swapChainManager = new SwapChainManager<ComputeShaderPanel>(this, device);
 
         this.Loaded += ComputeShaderPanel_Loaded;
         this.Unloaded += ComputeShaderPanel_Unloaded;
@@ -75,5 +85,11 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel
     private void ComputeShaderPanel_CompositionScaleChanged(SwapChainPanel sender, object args)
     {
         this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.swapChainManager.Dispose();
     }
 }

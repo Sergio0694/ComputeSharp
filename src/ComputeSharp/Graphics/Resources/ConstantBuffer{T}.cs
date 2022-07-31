@@ -57,13 +57,14 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int offset, int length)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(length, 0, Length);
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();
 
@@ -83,19 +84,20 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(length, 0, Length);
         Guard.IsBetweenOrEqualTo(length, 0, destination.Length);
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = destination.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
         if (destination is ConstantBuffer<T> buffer)
         {
@@ -117,13 +119,14 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(length, 0, Length);
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();
 

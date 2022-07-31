@@ -18,6 +18,15 @@ namespace ComputeSharp;
 /// <summary>
 /// A context to batch compute operations in a single invocation, minimizing GPU overhead.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This type must always be used in a <see langword="using"/> statement and disposed properly.
+/// Not doing so is undefined behavior and may result in the target device not being disposed correctly.
+/// </para>
+/// <para>
+/// For more documentation on this, see the remarks in <see cref="GraphicsDeviceExtensions.CreateComputeContext(ComputeSharp.GraphicsDevice)"/>.
+/// </para>
+/// </remarks>
 public struct ComputeContext : IDisposable, IAsyncDisposable
 {
     /// <summary>
@@ -38,6 +47,10 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         this.device = device;
         this.commandList = default;
+
+        // Increment the reference count for the device. This has to be released when disposing the context.
+        // Not disposing the context is undefined behavior, so we can rely on that to release the reference.
+        device.DangerousAddRef();
     }
 
     /// <summary>
@@ -286,14 +299,25 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        GraphicsDevice device = this.device;
+
         this.device = null;
 
         if (!this.commandList.IsAllocated)
         {
+            device.DangerousRelease();
+
             return;
         }
 
-        this.commandList.ExecuteAndWaitForCompletion();
+        try
+        {
+            this.commandList.ExecuteAndWaitForCompletion();
+        }
+        finally
+        {
+            device.DangerousRelease();
+        }
     }
 
     /// <inheritdoc/>
@@ -302,10 +326,14 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        GraphicsDevice device = this.device;
+
         this.device = null;
 
         if (!this.commandList.IsAllocated)
         {
+            device.DangerousRelease();
+
 #if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
 #else
@@ -313,7 +341,14 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 #endif
         }
 
-        return this.commandList.ExecuteAndWaitForCompletionAsync();
+        try
+        {
+            return this.commandList.ExecuteAndWaitForCompletionAsync();
+        }
+        finally
+        {
+            device.DangerousRelease();
+        }
     }
 
     /// <summary>

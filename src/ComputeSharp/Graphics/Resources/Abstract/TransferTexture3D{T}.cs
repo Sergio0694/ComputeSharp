@@ -51,11 +51,13 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+
+        using var _0 = device.GetReferenceTrackingLease();
+
+        device.ThrowIfDeviceLost();
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D))
         {
@@ -121,14 +123,14 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
+            using var _0 = this.GetReferenceTrackingLease();
 
             return new(this.mappedData, Width, Height, Depth, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected sealed override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

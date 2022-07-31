@@ -24,9 +24,11 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture2D{T, TPixel})"/>
     internal IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
     {
-        GraphicsDevice.ThrowIfDisposed();
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
 
-        ThrowIfDisposed();
+        GraphicsDevice.ThrowIfDeviceLost();
+
         ThrowIfIsNotInReadOnlyState();
 
         ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
@@ -46,7 +48,7 @@ partial class ReadWriteTexture2D<T, TPixel>
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected override void OnDispose()
     {
         base.OnDispose();
 
@@ -105,9 +107,9 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
-            this.owner.ThrowIfDisposed();
             this.owner.ThrowIfDeviceMismatch(device);
 
             return this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
@@ -122,9 +124,9 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
         {
-            ThrowIfDisposed();
+            using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
-            this.owner.ThrowIfDisposed();
             this.owner.ThrowIfDeviceMismatch(device);
 
             return this.owner.D3D12Resource;
@@ -137,7 +139,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        protected override void OnDispose()
+        private protected override void OnDispose()
         {
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {

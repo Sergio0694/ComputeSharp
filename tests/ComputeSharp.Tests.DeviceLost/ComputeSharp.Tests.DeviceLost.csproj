@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+    
+  <!-- When the .NET Standard 2.0 version of ComputeSharp is resolved, the TerraFX APIs are internal, as they
+       are referenced from the shared project. The same reference is needed here to make all tests build fine. -->
+  <Import Condition="'$(TargetFramework)' != 'net6.0'" Project="..\..\src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" />
+  <Import Condition="'$(TargetFramework)' != 'net6.0'" Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
+
+  <!-- Only when the local TerraFX is referenced, ignore warnings from there -->
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0'">
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalDataAttribute.cs" Link="Attributes\AdditionalDataAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalResourceAttribute.cs" Link="Attributes\AdditionalResourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AllDevicesAttribute.cs" Link="Attributes\AllDevicesAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\CombinatorialTestMethodAttribute.cs" Link="Attributes\CombinatorialTestMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\DataAttribute.cs" Link="Attributes\DataAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\DeviceAttribute.cs" Link="Attributes\DeviceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\ResourceAttribute.cs" Link="Attributes\ResourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Extensions\GraphicsDeviceExtensions.cs" Link="Extensions\GraphicsDeviceExtensions.cs" />
+  </ItemGroup>	
+
+</Project>

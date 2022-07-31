@@ -90,32 +90,6 @@ public partial class Texture2DTests
     [AllDevices]
     [Resource(typeof(ReadOnlyTexture2D<>))]
     [Resource(typeof(ReadWriteTexture2D<>))]
-    public void DisposeAfterDevice(Device device, Type textureType)
-    {
-        GraphicsDevice? gpu = device switch
-        {
-            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
-            _ => throw new ArgumentException(nameof(device))
-        };
-
-        if (gpu is null)
-        {
-            Assert.Inconclusive();
-
-            return;
-        }
-
-        Texture2D<float> texture = gpu.AllocateTexture2D<float>(textureType, 10, 10);
-
-        gpu.Dispose();
-        texture.Dispose();
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
-    [Resource(typeof(ReadOnlyTexture2D<>))]
-    [Resource(typeof(ReadWriteTexture2D<>))]
     [Data(0, 0, 64, 64)]
     [Data(0, 14, 64, 50)]
     [Data(14, 0, 50, 64)]

@@ -32,13 +32,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -103,19 +104,20 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = destination.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
         if (!destination.IsPaddingPresent)
         {
@@ -147,19 +149,20 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        destination.ThrowIfDeviceMismatch(GraphicsDevice);
-        destination.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = destination.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -190,13 +193,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(length, 0, Length);
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -265,19 +269,20 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        source.ThrowIfDeviceMismatch(GraphicsDevice);
-        source.ThrowIfDisposed();
-
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, source.Length);
         Guard.IsInRange(sourceOffset, 0, source.Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
+
+        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using var _1 = GetReferenceTrackingLease();
+        using var _2 = source.GetReferenceTrackingLease();
+
+        GraphicsDevice.ThrowIfDeviceLost();
+
+        source.ThrowIfDeviceMismatch(GraphicsDevice);
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {

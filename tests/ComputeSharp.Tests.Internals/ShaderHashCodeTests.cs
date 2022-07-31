@@ -25,7 +25,7 @@ public partial class ShaderHashCodeTests
     public void ShaderWithNoCapturedDelegates()
     {
         float value = 10;
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(1);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(1);
 
         Shader1 shader1 = new() { A = value, B = buffer };
 
@@ -58,7 +58,7 @@ public partial class ShaderHashCodeTests
     {
         Func<float, float> f = static x => x * x;
 
-        using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(1);
+        using ReadWriteBuffer<float> buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(1);
 
         Shader2 shader1 = new() { A = 1, B = buffer, F = f };
 

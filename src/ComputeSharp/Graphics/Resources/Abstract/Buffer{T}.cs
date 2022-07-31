@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
@@ -64,8 +65,6 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-
         if (resourceType == ResourceType.Constant)
         {
             Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
@@ -75,6 +74,10 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
             // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
             Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
+
+        using var _0 = device.GetReferenceTrackingLease();
+
+        device.ThrowIfDeviceLost();
 
         if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
             device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
@@ -200,7 +203,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     internal abstract void CopyFrom(ref T source, int destinationOffset, int count);
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected sealed override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -230,7 +233,8 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         return (
@@ -241,7 +245,8 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
         ThrowIfDeviceMismatch(device);
 
         return D3D12Resource;

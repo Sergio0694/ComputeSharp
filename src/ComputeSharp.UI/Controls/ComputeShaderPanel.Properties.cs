@@ -36,10 +36,19 @@ partial class ComputeShaderPanel
     /// <summary>
     /// Raised whenever rendering fails.
     /// </summary>
-    public event TypedEventHandler<ComputeShaderPanel, Exception>? RenderingFailed
+    public event TypedEventHandler<ComputeShaderPanel, RenderingFailedEventArgs>? RenderingFailed
     {
         add => this.swapChainManager.RenderingFailed += value;
         remove => this.swapChainManager.RenderingFailed -= value;
+    }
+
+    /// <summary>
+    /// Raised whenever the <see cref="ComputeShaderPanel"/> control is disposed and all underlying resources are released.
+    /// </summary>
+    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? Disposed
+    {
+        add => this.swapChainManager.Disposed += value;
+        remove => this.swapChainManager.Disposed -= value;
     }
 
     /// <summary>

@@ -28,35 +28,11 @@ internal static partial class DeviceHelper
     private const uint WarpDeviceId = 0x8C;
 
     /// <summary>
-    /// The <see cref="Lazy{T}"/> instance used to produce the default <see cref="GraphicsDevice"/> instance.
-    /// </summary>
-    public static readonly Lazy<GraphicsDevice> DefaultFactory = new(GetDefaultDevice);
-
-    /// <summary>
-    /// Gets the <see cref="Luid"/> of the default device.
-    /// </summary>
-    /// <returns>The <see cref="Luid"/> of the default device supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
-    /// <remarks>This methods assumes that a default device is available.</remarks>
-    public static unsafe Luid GetDefaultDeviceLuid()
-    {
-        if (DefaultFactory.IsValueCreated)
-        {
-            return DefaultFactory.Value.Luid;
-        }
-
-        DXGI_ADAPTER_DESC1 dxgiDescription1;
-
-        _ = TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
-
-        return Luid.FromLUID(dxgiDescription1.AdapterLuid);
-    }
-
-    /// <summary>
     /// Gets the default <see cref="GraphicsDevice"/> instance.
     /// </summary>
     /// <returns>The default <see cref="GraphicsDevice"/> instance supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
     /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
-    private static unsafe GraphicsDevice GetDefaultDevice()
+    private static unsafe GraphicsDevice GetOrCreateDefaultDevice()
     {
         using ComPtr<ID3D12Device> d3D12Device = default;
         using ComPtr<IDXGIAdapter> dxgiAdapter = default;
@@ -79,6 +55,7 @@ internal static partial class DeviceHelper
     /// <param name="dxgiAdapter">A pointer to the <see cref="IDXGIAdapter"/> object used to create <paramref name="d3D12Device"/>, or <see langword="null"/>.</param>
     /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
     /// <returns>Whether a default device was found with the requested feature level.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the target device was lost and incorrectly disposed (see remarks).</exception>
     private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
         using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
@@ -106,60 +83,42 @@ internal static partial class DeviceHelper
 
             dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
+            // Skip the WARP adapter
             if (dxgiDescription1->VendorId == MicrosoftVendorId &&
                 dxgiDescription1->DeviceId == WarpDeviceId)
             {
                 continue;
             }
 
-            // Explicit paths for when a device is being retrieved or not, with special handling
-            // for the additional check that is required for the SM6 level. This can't be checked
-            // without creating a device first, so the path for when the target device pointer is
-            // null is useful to do an initial filtering using D3D12CreateDevice to avoid creating
-            // a device for adapters that would've failed at the FL11 check already.
-            if (d3D12Device == null)
+            using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
+
+            // Try to create a device for the current adapter. There are 3 possible results here:
+            //   1) The call succeeds. In this case the first device retrieved is the default one.
+            //   2) The call fails for a device lost reason. This indicates a default device was
+            //      previously retrieved but not disposed correctly. In this case, the code throws.
+            //   3) The call fails for other reasons. In this case the adapter is simply skipped.
+            //      This might be the case if an adapter doesn't support the requested feature level.
+            HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
+                dxgiAdapter1.AsIUnknown().Get(),
+                D3D_FEATURE_LEVEL_11_0,
+                Windows.__uuidof<ID3D12Device>(),
+                d3D12DeviceCandidate.GetVoidAddressOf());
+
+            // Check and throw if the device is a device lost state and not disposed properly
+            if (createDeviceResult.IsDeviceLostReason())
             {
-                HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-                    dxgiAdapter1.AsIUnknown().Get(),
-                    D3D_FEATURE_LEVEL_11_0,
-                    Windows.__uuidof<ID3D12Device>(),
-                    null);
-
-                if (Windows.SUCCEEDED(createDeviceResult))
-                {
-                    using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
-
-                    createDeviceResult = DirectX.D3D12CreateDevice(
-                        dxgiAdapter1.AsIUnknown().Get(),
-                        D3D_FEATURE_LEVEL_11_0,
-                        Windows.__uuidof<ID3D12Device>(),
-                        d3D12DeviceCandidate.GetVoidAddressOf());
-
-                    if (Windows.SUCCEEDED(createDeviceResult) &&
-                        d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
-                    {
-                        return true;
-                    }
-                }
+                ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
             }
-            else
+
+            // Check for success, and then also filter out devices that support SM6.0. This can
+            // only be checked on a concrete ID3D12Device instance, so it can't be done earlier.
+            if (Windows.SUCCEEDED(createDeviceResult) &&
+                d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
             {
-                using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
+                d3D12DeviceCandidate.CopyTo(d3D12Device);
+                dxgiAdapter1.CopyTo(dxgiAdapter);
 
-                HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-                    dxgiAdapter1.AsIUnknown().Get(),
-                    D3D_FEATURE_LEVEL_11_0,
-                    Windows.__uuidof<ID3D12Device>(),
-                    d3D12DeviceCandidate.GetVoidAddressOf());
-
-                if (Windows.SUCCEEDED(createDeviceResult) &&
-                    d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
-                {
-                    d3D12DeviceCandidate.CopyTo(d3D12Device);
-                    dxgiAdapter1.CopyTo(dxgiAdapter);
-
-                    return true;
-                }
+                return true;
             }
         }
     }
@@ -171,6 +130,7 @@ internal static partial class DeviceHelper
     /// <param name="dxgiAdapter">A pointer to the <see cref="IDXGIAdapter"/> object used to create <paramref name="d3D12Device"/>, or <see langword="null"/>.</param>
     /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
     /// <returns>Whether a warp device was created successfully.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the target device was lost and incorrectly disposed (see remarks).</exception>
     private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
         using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
@@ -183,14 +143,28 @@ internal static partial class DeviceHelper
         
         dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
+        using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
+
         HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
             dxgiAdapter1.AsIUnknown().Get(),
             D3D_FEATURE_LEVEL_11_0,
             Windows.__uuidof<ID3D12Device>(),
-            (void**)d3D12Device);
+            d3D12DeviceCandidate.GetVoidAddressOf());
 
-        dxgiAdapter1.CopyTo(dxgiAdapter);
+        if (createDeviceResult.IsDeviceLostReason())
+        {
+            ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
+        }
 
-        return Windows.SUCCEEDED(createDeviceResult);
+        // There is no need to check for SM6.0, as it's guaranteed to be supported by Windows
+        if (Windows.SUCCEEDED(createDeviceResult))
+        {
+            d3D12DeviceCandidate.CopyTo(d3D12Device);
+            dxgiAdapter1.CopyTo(dxgiAdapter);
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -12,6 +12,9 @@ namespace TerraFX.Interop.Windows
         [DllImport("kernel32", ExactSpelling = true)]
         public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] void* Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
 
+        [DllImport("kernel32", ExactSpelling = true)]
+        public static extern BOOL UnregisterWait(HANDLE WaitHandle);
+
         [NativeTypeName("#define INFINITE 0xFFFFFFFF")]
         public const uint INFINITE = 0xFFFFFFFF;
     }

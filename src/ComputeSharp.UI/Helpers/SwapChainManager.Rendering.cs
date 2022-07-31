@@ -9,13 +9,13 @@ using ComputeSharp.Uwp.Extensions;
 using ComputeSharp.WinUI.Extensions;
 #endif
 
-#pragma warning disable CS0420
-
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp.Helpers;
 #else
 namespace ComputeSharp.WinUI.Helpers;
 #endif
+
+#pragma warning disable CS0420
 
 /// <inheritdoc/>
 partial class SwapChainManager<TOwner>
@@ -27,14 +27,14 @@ partial class SwapChainManager<TOwner>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
     public async void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
-        ThrowIfDisposed();
-
         Guard.IsNotNull(shaderRunner);
+
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
-            
+
             await this.renderSemaphore.WaitAsync();
 
             Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
@@ -55,8 +55,10 @@ partial class SwapChainManager<TOwner>
     /// </summary>
     public async void StopRenderLoop()
     {
-        ThrowIfDisposed();
-
+        // Stopping the render loop doesn't use a reference tracking lease on purpose.
+        // This is to allow callers to stop the render loop even after disposing without
+        // the method throwing an exception. Stopping a loop doesn't actually access any
+        // native objects anyway, as it's just cancelling the cancellation token source.
         using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
@@ -69,7 +71,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
     public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
@@ -103,7 +105,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
     public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
 
         using (await this.setupSemaphore.LockAsync())
         {
@@ -138,7 +140,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
 
         this.width = (float)width;
         this.height = (float)height;
@@ -153,7 +155,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
 
         this.compositionScaleX = (float)compositionScaleX;
         this.compositionScaleY = (float)compositionScaleY;
@@ -167,7 +169,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
 
         this.resolutionScale = (float)resolutionScale;
 
@@ -187,10 +189,15 @@ partial class SwapChainManager<TOwner>
             {
                 this.dynamicResolutionScale = this.resolutionScale;
 
+                // These two leases are needed to ensure the manager isn't disposed while rendering is running
+                using var _0 = GetReferenceTrackingLease();
+
                 RenderLoopWithDynamicResolution();
             }
             else
             {
+                using var _0 = GetReferenceTrackingLease();
+
                 RenderLoop();
             }
 
@@ -415,7 +422,15 @@ partial class SwapChainManager<TOwner>
     /// <param name="e">The <see cref="Exception"/> being thrown that caused rendering to stop.</param>
     private void OnRenderingFailed(Exception e)
     {
-        _ = this.dispatcherQueue.TryEnqueue(() => RenderingFailed?.Invoke(this.owner, e));
+        _ = this.dispatcherQueue.TryEnqueue(() => RenderingFailed?.Invoke(this.owner, new RenderingFailedEventArgs(e)));
+    }
+
+    /// <summary>
+    /// Raises <see cref="Disposed"/>.
+    /// </summary>
+    private void OnDisposed()
+    {
+        _ = this.dispatcherQueue.TryEnqueue(() => Disposed?.Invoke(this.owner, EventArgs.Empty));
     }
 
     /// <summary>

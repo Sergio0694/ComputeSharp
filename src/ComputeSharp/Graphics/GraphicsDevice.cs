@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands.Interop;
 #if NET6_0_OR_GREATER
@@ -8,12 +11,14 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Shaders.Models;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
+
 namespace ComputeSharp;
 
 /// <summary>
@@ -85,6 +90,56 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 #endif
 
     /// <summary>
+    /// A weak <see cref="GCHandle"/> to the current instance (used to support the device lost callback).
+    /// </summary>
+    private GCHandle deviceHandle;
+
+    /// <summary>
+    /// The event for the device removed callback.
+    /// </summary>
+    private HANDLE deviceRemovedEvent;
+
+    /// <summary>
+    /// The wait handle for the device removed callback.
+    /// </summary>
+    private HANDLE deviceRemovedWaitHandle;
+
+    /// <summary>
+    /// The reason the device was removed, if any.
+    /// </summary>
+    private HRESULT deviceRemovedReason;
+
+    /// <summary>
+    /// The list of cached <see cref="PipelineData"/> objects for the current device.
+    /// </summary>
+    /// <remarks>
+    /// A new entry is added to this list every time a shader is dispatched using this device. These cached items
+    /// are stored via a <see cref="ConditionalWeakTable{TKey, TValue}"/>, meaning they will be collected automatically
+    /// when the device is collected. But, due to the fact that could happen at any time, a list is required to guarantee
+    /// the additional references added by the native objects in the pipeline model can be released immediately.
+    /// </remarks>
+    private List<PipelineData> cachedPipelineData;
+
+    /// <summary>
+    /// Raised whenever the device is lost.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// "Device lost" refers to a situation where the GPU graphics device becomes unusable for further operations. This can occur
+    /// due to GPU hardware malfunction, driver bugs, driver software updates, or switching the app from one GPU to another.
+    /// </para> 
+    /// <para>
+    /// A lost device can no longer be used, and any attempt to do so will throw an exception. To recover from
+    /// this situation, the app must create a new device and then recreate all its graphics resources.
+    /// </para>
+    /// <para>
+    /// This event will only be raised at most once for a given <see cref="GraphicsDevice"/> instance. Additionally,
+    /// the event is raised asynchronously with respect to the device being lost, and on a thread pool thread.
+    /// </para>
+    /// </remarks>
+    public event EventHandler<DeviceLostEventArgs>? DeviceLost;
+
+    /// <summary>
     /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
     /// </summary>
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
@@ -126,6 +181,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
             this.pool = this.allocator.Get()->CreatePoolForCacheCoherentUMA();
         }
 #endif
+
+        this.deviceRemovedReason = S.S_OK;
+        this.cachedPipelineData = new List<PipelineData>();
+
+        RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
     }
 
     /// <summary>
@@ -192,7 +252,9 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
 
         var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
 
@@ -208,7 +270,9 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
     }
@@ -222,7 +286,9 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(
             DXGIFormatHelper.GetForType<T>(),
@@ -238,7 +304,9 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
     }
@@ -252,7 +320,9 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        ThrowIfDisposed();
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
 
         return this.d3D12Device.Get()->IsDxgiFormatSupported(
             DXGIFormatHelper.GetForType<T>(),
@@ -279,6 +349,21 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         this.pool.Release();
         this.allocator.Release();
 #endif
+    }
+
+    /// <summary>
+    /// Registers a <see cref="PipelineData"/> object for the current device to enable early disposal.
+    /// </summary>
+    /// <param name="pipelineData">The <see cref="PipelineData"/> instance just loaded to run a shader.</param>
+    internal void RegisterPipelineData(PipelineData pipelineData)
+    {
+        // This is only used when first initializing a pipeline data for a given shader.
+        // Adding an item is very quick, so we can just use a lock and not a concurrent
+        // list. That would've added more overhead given the low contention in this case.
+        lock (this.cachedPipelineData)
+        {
+            this.cachedPipelineData.Add(pipelineData);
+        }
     }
 
     /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
@@ -347,7 +432,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected override void OnDispose()
     {
         DeviceHelper.NotifyDisposedDevice(this);
 
@@ -359,10 +444,29 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         this.computeCommandListPool.Dispose();
         this.copyCommandListPool.Dispose();
         this.shaderResourceViewDescriptorAllocator.Dispose();
+
+        // On .NET 6, D3D12MA is used. In this case, the pool and allocator must be kept alive
+        // until all associated resources are returned and destroyed. Because of this, when the
+        // device is disposed (since there might be outstanding resources that are still alive),
+        // the pool and allocator are only released, but not disposed. This allows reosurces to
+        // also release them when disposed (since each resource keeps a reference back to the
+        // parent device). When the last one is disposed, the pool and allocator will be deleted.
 #if NET6_0_OR_GREATER
-        this.pool.Dispose();
-        this.allocator.Dispose();
+        this.pool.Release();
+        this.allocator.Release();
 #endif
+
+        UnregisterDeviceLostCallback(this);
+
+        // Explicitly release the cached pipeline objects as well.
+        // Locking is not needed here, as this method is only invoked
+        // when the device has been disposed and no other usage is active
+        // for the device (ie. no lease exists), meaning that no other
+        // thread could potentially add a new pipeline data concurrently.
+        foreach (PipelineData pipelineData in this.cachedPipelineData)
+        {
+            pipelineData.Dispose();
+        }
     }
 
     /// <inheritdoc/>

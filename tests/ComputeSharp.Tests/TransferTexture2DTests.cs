@@ -72,32 +72,6 @@ public partial class TransferTexture2DTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    [Resource(typeof(UploadTexture2D<>))]
-    [Resource(typeof(ReadBackTexture2D<>))]
-    public void DisposeAfterDevice(Device device, Type textureType)
-    {
-        GraphicsDevice? gpu = device switch
-        {
-            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
-            _ => throw new ArgumentException(nameof(device))
-        };
-
-        if (gpu is null)
-        {
-            Assert.Inconclusive();
-
-            return;
-        }
-
-        TransferTexture2D<float> texture = gpu.AllocateTransferTexture2D<float>(textureType, 32, 32);
-
-        gpu.Dispose();
-        texture.Dispose();
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
     public unsafe void Allocate_UploadTexture2D_Copy_Full(Device device)
     {
         using UploadTexture2D<int> uploadTexture2D = device.Get().AllocateUploadTexture2D<int>(256, 256);

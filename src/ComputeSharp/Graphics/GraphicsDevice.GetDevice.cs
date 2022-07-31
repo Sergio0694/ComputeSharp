@@ -9,16 +9,40 @@ namespace ComputeSharp;
 partial class GraphicsDevice
 {
     /// <summary>
-    /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine.
-    /// This instance cannot be manually disposed - attempting to do so is safe and it will
-    /// not cause an exception, but it will simply do nothing and not dispose the device.
+    /// Gets or creates the default <see cref="GraphicsDevice"/> instance for the current machine.
+    /// <para>
+    /// The default define is the first device supporting the required feature level that could
+    /// be created when enumerating the available adapters in performance order. That is, it is
+    /// conceptually equivalent to the first successfully created device from <see cref="EnumerateDevices"/>.
+    /// </para>
     /// </summary>
+    /// <returns>The default <see cref="GraphicsDevice"/> instance for the current machine.</returns>
     /// <remarks>
-    /// This device will always be available, even when there isn't a compatible physical GPU
-    /// or integrated GPU in the system in use. In that case, the WARP device will be used.
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3darticles/directx-warp"/>.
+    /// The returned <see cref="GraphicsDevice"/> is cached across multiple invocations. In order to
+    /// support device lost scenarios (see <see cref="DeviceLost"/>) and due to how the DirectX 12
+    /// runtime handles caching of device instances, this method has the following behavior:
+    /// <list type="bullet">
+    ///     <item>If no device has been created, create the default one, cache it, and return it.</item>
+    ///     <item>If a cached device is available, return that.</item>
+    ///     <item>If the returned device is disposed, the cache is reset.</item>
+    ///     <item>
+    ///         If <see cref="GetDefault"/> is called again after that, the returned device might map to a different adapter.
+    ///         This would be the case if the first device was lost due to the adapter being removed from the system.
+    ///     </item>
+    /// </list>
+    /// There is one additional caveat to the list above: if <see cref="GetDefault"/> is called, then that device is lost, then
+    /// the returned <see cref="GraphicsDevice"/> instance is disposed incorrectly (eg. with some existing resources not being
+    /// disposed, which would keep the underlying device object alive), calling <see cref="GetDefault"/> again will result in
+    /// an exception instead of a different device being returned. That is, if enumerating adapters and trying to create a device
+    /// fails due to device lost (as opposed to other valid failures when trying to normally create a device), an exception will be
+    /// thrown instead of just skipping that adapter, because that would mean a device had been created but incorrectly disposed.
     /// </remarks>
-    public static GraphicsDevice Default => DeviceHelper.DefaultFactory.Value;
+    /// <exception cref="InvalidOperationException">Thrown if the target device was lost and incorrectly disposed (see remarks).</exception>
+    /// <exception cref="NotSupportedException">Thrown if no adapter could be created (this should never be the case).</exception>
+    public static GraphicsDevice GetDefault()
+    {
+        return DeviceHelper.GetDefaultDeviceFromCacheOrCreateInstance();
+    }
 
     /// <summary>
     /// Enumerates all the currently available devices supporting the minimum necessary feature level.

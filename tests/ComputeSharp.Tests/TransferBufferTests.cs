@@ -68,32 +68,6 @@ public partial class TransferBufferTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    [Resource(typeof(UploadBuffer<>))]
-    [Resource(typeof(ReadBackBuffer<>))]
-    public void DisposeAfterDevice(Device device, Type bufferType)
-    {
-        GraphicsDevice? gpu = device switch
-        {
-            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
-            _ => throw new ArgumentException(nameof(device))
-        };
-
-        if (gpu is null)
-        {
-            Assert.Inconclusive();
-
-            return;
-        }
-
-        TransferBuffer<float> buffer = gpu.AllocateTransferBuffer<float>(bufferType, 128);
-
-        gpu.Dispose();
-        buffer.Dispose();
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
     public void Allocate_UploadBuffer_CopyTo_Full(Device device)
     {
         using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);

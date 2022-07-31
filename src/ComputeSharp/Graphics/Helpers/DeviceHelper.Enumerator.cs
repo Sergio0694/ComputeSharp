@@ -207,7 +207,7 @@ partial class DeviceHelper
             }
 
             /// <inheritdoc/>
-            protected override void OnDispose()
+            private protected override void OnDispose()
             {
                 this.dxgiFactory6.Dispose();
             }

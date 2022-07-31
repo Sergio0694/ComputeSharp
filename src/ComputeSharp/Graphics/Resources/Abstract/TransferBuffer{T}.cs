@@ -44,10 +44,12 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
-        device.ThrowIfDisposed();
-
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
+
+        using var _0 = device.GetReferenceTrackingLease();
+
+        device.ThrowIfDeviceLost();
 
         GraphicsDevice = device;
         Length = length;
@@ -92,7 +94,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
+            using var _0 = GetReferenceTrackingLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -104,14 +106,14 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ThrowIfDisposed();
+            using var _0 = GetReferenceTrackingLease();
 
             return new(this.mappedData, Length);
         }
     }
 
     /// <inheritdoc/>
-    protected override void OnDispose()
+    private protected sealed override void OnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -172,7 +174,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            this.buffer.ThrowIfDisposed();
+            using var _0 = this.buffer.GetReferenceTrackingLease();
 
             return new(this.buffer.mappedData);
         }
