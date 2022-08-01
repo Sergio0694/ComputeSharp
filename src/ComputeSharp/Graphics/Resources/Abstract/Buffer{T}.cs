@@ -242,10 +242,10 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
             this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
-    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
-    internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
+    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out Lease)"/>
+    internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
     {
-        using var _0 = GetReferenceTrackingLease();
+        lease = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
+using ComputeSharp.Interop;
 using ComputeSharp.Resources;
 using TerraFX.Interop.DirectX;
 
@@ -38,8 +39,9 @@ public static class GraphicsResourceHelper
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="lease">The <see cref="NativeObject.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
         /// <returns>The the underlying <see cref="ID3D12Resource"/> object.</returns> 
-        ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device);
+        ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out NativeObject.Lease lease);
 
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object, along with the transition states.
@@ -47,8 +49,9 @@ public static class GraphicsResourceHelper
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <param name="resourceState">The target state to transition the resource to.</param>
         /// <param name="d3D12Resource">The the underlying <see cref="ID3D12Resource"/> object.</param>
+        /// <param name="lease">The <see cref="NativeObject.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
         /// <returns>The resource states for <paramref name="d3D12Resource"/>, before and after the transition.</returns>
-        (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource);
+        (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out NativeObject.Lease lease);
     }
 
     /// <summary>

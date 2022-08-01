@@ -645,20 +645,20 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         return (this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
-    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out Lease)"/>
+    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
     {
-        using var _0 = GetReferenceTrackingLease();
+        lease = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
         return D3D12Resource;
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*)"/>
-    internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*, out Lease)"/>
+    internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
     {
-        using var _0 = GetReferenceTrackingLease();
+        lease = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -689,14 +689,14 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <inheritdoc/>
-    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
+    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
     {
-        return ValidateAndGetID3D12Resource(device);
+        return ValidateAndGetID3D12Resource(device, out lease);
     }
 
     /// <inheritdoc/>
-    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
     {
-        return ValidateAndGetID3D12ResourceAndTransitionStates(device, resourceState, out d3D12Resource);
+        return ValidateAndGetID3D12ResourceAndTransitionStates(device, resourceState, out d3D12Resource, out lease);
     }
 }

@@ -2,6 +2,7 @@
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
+using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
@@ -24,7 +25,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(buffer);
 
-        context.Barrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -38,7 +41,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -52,7 +57,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -68,7 +75,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -84,7 +93,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -98,7 +109,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -112,7 +125,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -212,7 +227,9 @@ public static class ComputeContextExtensions
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, true);
+        using NativeObject.Lease lease = default;
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -228,7 +245,9 @@ public static class ComputeContextExtensions
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, true);
+        using NativeObject.Lease lease = default;
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -283,8 +302,10 @@ public static class ComputeContextExtensions
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
+        using NativeObject.Lease lease = default;
+
         context.Fill(
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
+            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
             handles.Gpu,
             handles.Cpu,
             DXGIFormatHelper.ExtendToNormalizedValue(value));
@@ -304,8 +325,10 @@ public static class ComputeContextExtensions
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
+        using NativeObject.Lease lease = default;
+
         context.Fill(
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
+            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
             handles.Gpu,
             handles.Cpu,
             DXGIFormatHelper.ExtendToNormalizedValue(value));
@@ -414,7 +437,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -429,7 +454,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -444,7 +471,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -459,7 +488,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -478,7 +509,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -493,7 +526,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -508,7 +543,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -523,7 +560,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -538,7 +577,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }
@@ -557,7 +598,9 @@ public static class ComputeContextExtensions
     {
         Guard.IsNotNull(texture);
 
-        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
 
         context.Transition(d3D12Resource, states.Before, states.After);
     }

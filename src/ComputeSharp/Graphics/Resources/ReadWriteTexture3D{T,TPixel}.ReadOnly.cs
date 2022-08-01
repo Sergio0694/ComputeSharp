@@ -76,6 +76,8 @@ partial class ReadWriteTexture3D<T, TPixel>
         /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture3D<T, TPixel> owner)
         {
+            owner.DangerousAddRef();
+
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -111,7 +113,6 @@ partial class ReadWriteTexture3D<T, TPixel>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
             using var _0 = GetReferenceTrackingLease();
-            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -125,10 +126,9 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
+        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
         {
-            using var _0 = GetReferenceTrackingLease();
-            using var _1 = this.owner.GetReferenceTrackingLease();
+            lease = GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -136,7 +136,7 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
@@ -144,6 +144,8 @@ partial class ReadWriteTexture3D<T, TPixel>
         /// <inheritdoc/>
         private protected override void OnDispose()
         {
+            this.owner.DangerousRelease();
+
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {
                 device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
