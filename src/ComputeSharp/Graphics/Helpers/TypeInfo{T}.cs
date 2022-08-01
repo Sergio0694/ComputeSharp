@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ComputeSharp.Graphics.Helpers;
@@ -7,7 +8,7 @@ namespace ComputeSharp.Graphics.Helpers;
 /// A class providing info on specific types.
 /// </summary>
 /// <typeparam name="T">The input type to extract info for.</typeparam>
-internal static class TypeInfo<T>
+internal static class TypeInfo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>
     where T : unmanaged
 {
     /// <summary>
@@ -20,7 +21,7 @@ internal static class TypeInfo<T>
     /// </summary>
     /// <param name="type">The current type to check.</param>
     /// <returns>Whether or not <paramref name="type"/> is <see cref="double"/> or contains a <see cref="double"/> field.</returns>
-    private static bool ChecksIsDoubleOrContainsDoubles(Type type)
+    private static bool ChecksIsDoubleOrContainsDoubles([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] Type type)
     {
         if (type == typeof(double)) return true;
 
