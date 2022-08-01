@@ -16,19 +16,19 @@ class Program
     /// <summary>
     /// The mapping of available samples to choose from.
     /// </summary>
-    private static readonly (Type ShaderType, Win32Application Application)[] Samples = new (Type, Win32Application)[]
+    private static readonly (string ShaderName, Win32Application Application)[] Samples = new (string, Win32Application)[]
     {
-        (typeof(HelloWorld), new SwapChainApplication<HelloWorld>(static time => new((float)time.TotalSeconds))),
-        (typeof(FourColorGradient), new SwapChainApplication<FourColorGradient>(static time => new((float)time.TotalSeconds))),
-        (typeof(ColorfulInfinity), new SwapChainApplication<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
-        (typeof(FractalTiling), new SwapChainApplication<FractalTiling>(static time => new((float)time.TotalSeconds))),
-        (typeof(TwoTiledTruchet), new SwapChainApplication<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
-        (typeof(MengerJourney), new SwapChainApplication<MengerJourney>(static time => new((float)time.TotalSeconds))),
-        (typeof(Octagrams), new SwapChainApplication<Octagrams>(static time => new((float)time.TotalSeconds))),
-        (typeof(ProteanClouds), new SwapChainApplication<ProteanClouds>(static time => new((float)time.TotalSeconds))),
-        (typeof(ExtrudedTruchetPattern), new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
-        (typeof(PyramidPattern), new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-        (typeof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds)))
+        (nameof(HelloWorld), new SwapChainApplication<HelloWorld>(static time => new((float)time.TotalSeconds))),
+        (nameof(FourColorGradient), new SwapChainApplication<FourColorGradient>(static time => new((float)time.TotalSeconds))),
+        (nameof(ColorfulInfinity), new SwapChainApplication<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
+        (nameof(FractalTiling), new SwapChainApplication<FractalTiling>(static time => new((float)time.TotalSeconds))),
+        (nameof(TwoTiledTruchet), new SwapChainApplication<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
+        (nameof(MengerJourney), new SwapChainApplication<MengerJourney>(static time => new((float)time.TotalSeconds))),
+        (nameof(Octagrams), new SwapChainApplication<Octagrams>(static time => new((float)time.TotalSeconds))),
+        (nameof(ProteanClouds), new SwapChainApplication<ProteanClouds>(static time => new((float)time.TotalSeconds))),
+        (nameof(ExtrudedTruchetPattern), new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
+        (nameof(PyramidPattern), new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds))),
+        (nameof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds)))
     };
 
     static void Main()
@@ -43,7 +43,7 @@ class Program
 
             for (int i = 0; i < Samples.Length; i++)
             {
-                Console.WriteLine($"{i}: {Samples[i].ShaderType.Name}");
+                Console.WriteLine($"{i}: {Samples[i].ShaderName}");
             }
 
             Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt + F4 to exit a sample once chosen)");
@@ -58,7 +58,7 @@ class Program
             if (index >= 0 && index < Samples.Length)
             {
                 Console.WriteLine();
-                Console.WriteLine($"Starting {Samples[index].ShaderType.Name}...");
+                Console.WriteLine($"Starting {Samples[index].ShaderName}...");
 
                 Win32ApplicationRunner.Run(Samples[index].Application);
             }
