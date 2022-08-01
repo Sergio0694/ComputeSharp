@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
@@ -12,7 +13,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
 [DebuggerTypeProxy(typeof(BufferDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadWriteBuffer<T> : StructuredBuffer<T>
+public sealed class ReadWriteBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T> : StructuredBuffer<T>
     where T : unmanaged
 {
     /// <summary>

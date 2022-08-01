@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
@@ -20,7 +21,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+    public static unsafe void Barrier<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
         Guard.IsNotNull(buffer);
@@ -136,7 +137,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to clear.</param>
-    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+    public static unsafe void Clear<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
         Guard.IsNotNull(buffer);

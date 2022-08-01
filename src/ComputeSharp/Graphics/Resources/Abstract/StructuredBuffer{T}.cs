@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using System.Diagnostics.CodeAnalysis;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -14,7 +15,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public abstract class StructuredBuffer<T> : Buffer<T>
+public abstract class StructuredBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T> : Buffer<T>
     where T : unmanaged
 {
     /// <summary>

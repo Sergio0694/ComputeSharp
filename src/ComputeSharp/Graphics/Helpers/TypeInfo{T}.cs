@@ -29,7 +29,9 @@ internal static class TypeInfo<[DynamicallyAccessedMembers(DynamicallyAccessedMe
 
         foreach (FieldInfo fieldInfo in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
+#pragma warning disable IL2072 // 'type' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields'
             if (ChecksIsDoubleOrContainsDoubles(fieldInfo.FieldType))
+#pragma warning restore IL2072
             {
                 return true;
             }

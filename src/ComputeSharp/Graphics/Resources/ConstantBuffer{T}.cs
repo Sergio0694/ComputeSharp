@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
@@ -19,7 +20,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
 [DebuggerTypeProxy(typeof(BufferDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ConstantBuffer<T> : Buffer<T>
+public sealed class ConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T> : Buffer<T>
     where T : unmanaged
 {
     /// <summary>
