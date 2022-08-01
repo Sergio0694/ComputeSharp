@@ -11,7 +11,7 @@ class Program
     /// <summary>
     /// A texture for <c>\Textures\RustyMetal.png</c>.
     /// </summary>
-    private static readonly IReadOnlyNormalizedTexture2D<float4> RustyMetal = LoadTexture();
+    private static readonly Lazy<IReadOnlyNormalizedTexture2D<float4>> RustyMetal = new(static () => LoadTexture());
 
     /// <summary>
     /// The mapping of available samples to choose from.
@@ -28,7 +28,8 @@ class Program
         (nameof(ProteanClouds), new SwapChainApplication<ProteanClouds>(static time => new((float)time.TotalSeconds))),
         (nameof(ExtrudedTruchetPattern), new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
         (nameof(PyramidPattern), new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-        (nameof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds)))
+        (nameof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
+        (nameof(ContouredLayers), new SwapChainApplication<ContouredLayers>(static time => new((float)time.TotalSeconds, RustyMetal.Value)))
     };
 
     static void Main()
