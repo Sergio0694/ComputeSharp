@@ -21,6 +21,10 @@ internal static class TypeInfo<[DynamicallyAccessedMembers(DynamicallyAccessedMe
     /// </summary>
     /// <param name="type">The current type to check.</param>
     /// <returns>Whether or not <paramref name="type"/> is <see cref="double"/> or contains a <see cref="double"/> field.</returns>
+    [UnconditionalSuppressMessage(
+        "ReflectionAnalysis",
+        "IL2026:RequiresUnreferencedCode",
+        Justification = "The types of all fields (recursively) are already guaranteed to be preserved given it's all value types (plus T is already annotated).")]
     private static bool ChecksIsDoubleOrContainsDoubles([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] Type type)
     {
         if (type == typeof(double)) return true;
@@ -29,9 +33,7 @@ internal static class TypeInfo<[DynamicallyAccessedMembers(DynamicallyAccessedMe
 
         foreach (FieldInfo fieldInfo in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
-#pragma warning disable IL2072 // 'type' argument does not satisfy 'DynamicallyAccessedMemberTypes.PublicFields', 'DynamicallyAccessedMemberTypes.NonPublicFields'
             if (ChecksIsDoubleOrContainsDoubles(fieldInfo.FieldType))
-#pragma warning restore IL2072
             {
                 return true;
             }
