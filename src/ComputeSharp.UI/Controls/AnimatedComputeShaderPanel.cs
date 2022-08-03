@@ -90,6 +90,12 @@ public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel, IDispos
     /// <inheritdoc/>
     public void Dispose()
     {
+        // Also request the render loop to stop before disposing. This ensures that in case there's
+        // a render thread already ongoing that is using a custom frame request queue, it might have
+        // the ability to stop rendering immediately and safely, instead of causing the panel to remain
+        // alive and then just throwing an exception the next time a frame is requested in case the
+        // device ot other resources have also been disposed.
+        this.swapChainManager.StopRenderLoop();
         this.swapChainManager.Dispose();
     }
 }
