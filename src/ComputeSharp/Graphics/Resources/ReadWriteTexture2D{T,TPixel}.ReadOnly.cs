@@ -76,6 +76,11 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T, TPixel> owner)
         {
+            // This call is required to ensure the underlying resource is kept alive as long as this resource
+            // is not disposed, given that the underlying native resource is the same. Additional checks are
+            // still performed below so that exceptions are thrown early, but this is needed to ensure safety.
+            owner.DangerousAddRef();
+
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -122,9 +127,10 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
+        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
         {
-            using var _0 = GetReferenceTrackingLease();
+            lease = GetReferenceTrackingLease();
+
             using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
@@ -133,7 +139,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
@@ -141,6 +147,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         private protected override void OnDispose()
         {
+            this.owner.DangerousRelease();
+
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {
                 device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);

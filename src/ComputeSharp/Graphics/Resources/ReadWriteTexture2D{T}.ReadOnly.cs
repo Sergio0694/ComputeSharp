@@ -79,6 +79,8 @@ partial class ReadWriteTexture2D<T>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T> owner)
         {
+            owner.DangerousAddRef();
+
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
@@ -125,9 +127,10 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
+        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
         {
-            using var _0 = GetReferenceTrackingLease();
+            lease = GetReferenceTrackingLease();
+
             using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
@@ -136,7 +139,7 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
@@ -144,6 +147,8 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         private protected override void OnDispose()
         {
+            this.owner.DangerousRelease();
+
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {
                 device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
