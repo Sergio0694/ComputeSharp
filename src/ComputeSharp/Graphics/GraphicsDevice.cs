@@ -118,7 +118,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// when the device is collected. But, due to the fact that could happen at any time, a list is required to guarantee
     /// the additional references added by the native objects in the pipeline model can be released immediately.
     /// </remarks>
-    private List<PipelineData> cachedPipelineData;
+    private readonly List<PipelineData> cachedPipelineData;
 
     /// <summary>
     /// Raised whenever the device is lost.
