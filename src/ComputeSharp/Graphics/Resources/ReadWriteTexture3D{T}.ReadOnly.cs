@@ -113,6 +113,7 @@ partial class ReadWriteTexture3D<T>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
             using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -129,6 +130,8 @@ partial class ReadWriteTexture3D<T>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
         {
             lease = GetReferenceTrackingLease();
+
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 

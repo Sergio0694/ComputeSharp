@@ -76,6 +76,9 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T, TPixel> owner)
         {
+            // This call is required to ensure the underlying resource is kept alive as long as this resource
+            // is not disposed, given that the underlying native resource is the same. Additional checks are
+            // still performed below so that exceptions are thrown early, but this is needed to ensure safety.
             owner.DangerousAddRef();
 
             this.owner = owner;
@@ -110,6 +113,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
             using var _0 = GetReferenceTrackingLease();
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -126,6 +130,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
         {
             lease = GetReferenceTrackingLease();
+
+            using var _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
