@@ -29,10 +29,13 @@ partial class SwapChainManager<TOwner>
     {
         Guard.IsNotNull(shaderRunner);
 
-        using var _0 = GetReferenceTrackingLease();
-
         using (await this.setupSemaphore.LockAsync())
         {
+            // Here and in the calls below, only get a reference tracking lease when starting a render thread.
+            // This avoids crashes when the panel has been disposed but some code (eg. event handlers) still
+            // ends up calling into any of the APIs in this file, which is not intended but should not crash.
+            using var _0 = GetReferenceTrackingLease();
+
             this.renderCancellationTokenSource?.Cancel();
 
             await this.renderSemaphore.WaitAsync();
@@ -71,13 +74,13 @@ partial class SwapChainManager<TOwner>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
     public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
-        using var _0 = GetReferenceTrackingLease();
-
         using (await this.setupSemaphore.LockAsync())
         {
             // If there is a render thread currently running, stop it and restart it
             if (this.renderCancellationTokenSource?.IsCancellationRequested == false)
             {
+                using var _0 = GetReferenceTrackingLease();
+
                 this.renderCancellationTokenSource?.Cancel();
 
                 await this.renderSemaphore.WaitAsync();
@@ -105,14 +108,14 @@ partial class SwapChainManager<TOwner>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
     public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
-        using var _0 = GetReferenceTrackingLease();
-
         using (await this.setupSemaphore.LockAsync())
         {
             // The v-sync option can be toggled on the fly when not using dynamic resolution
             if (this.renderCancellationTokenSource?.IsCancellationRequested == false &&
                 this.isDynamicResolutionEnabled)
             {
+                using var _0 = GetReferenceTrackingLease();
+
                 this.renderCancellationTokenSource?.Cancel();
 
                 await this.renderSemaphore.WaitAsync();
@@ -140,8 +143,6 @@ partial class SwapChainManager<TOwner>
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
-        using var _0 = GetReferenceTrackingLease();
-
         this.width = (float)width;
         this.height = (float)height;
 
@@ -155,8 +156,6 @@ partial class SwapChainManager<TOwner>
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
-        using var _0 = GetReferenceTrackingLease();
-
         this.compositionScaleX = (float)compositionScaleX;
         this.compositionScaleY = (float)compositionScaleY;
 
@@ -169,8 +168,6 @@ partial class SwapChainManager<TOwner>
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
-        using var _0 = GetReferenceTrackingLease();
-
         this.resolutionScale = (float)resolutionScale;
 
         this.isResizePending = true;
