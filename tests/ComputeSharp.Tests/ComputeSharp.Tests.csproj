@@ -52,6 +52,9 @@
     <None Update="Assets\CityAfter1024x1024SamplingAndDashing.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\CityAfter1024x1024SamplingFrom1920x1080.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\CityAfter1024x1024SamplingFrom1920x1080AndDashing.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

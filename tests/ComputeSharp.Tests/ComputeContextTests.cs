@@ -995,7 +995,7 @@ public partial class ComputeContextTests
 
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
-        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
         var imageInfo = Image.Identify(originalPath);
 
@@ -1047,7 +1047,7 @@ public partial class ComputeContextTests
 
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
-        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
         var imageInfo = Image.Identify(originalPath);
 
