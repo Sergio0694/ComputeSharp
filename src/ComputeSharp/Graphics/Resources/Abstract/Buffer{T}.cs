@@ -1,5 +1,5 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
@@ -63,6 +63,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
     /// <param name="resourceType">The resource type for the current buffer.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
         if (resourceType == ResourceType.Constant)

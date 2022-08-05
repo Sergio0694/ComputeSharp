@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
@@ -33,6 +34,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
     /// <param name="length">The number of items to store in the current buffer.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     internal ConstantBuffer(GraphicsDevice device, int length, AllocationMode allocationMode)
         : base(device, length, (uint)GetPaddedSize(), ResourceType.Constant, allocationMode)
     {
