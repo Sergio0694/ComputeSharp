@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 #if NET6_0_OR_GREATER
 using GC = System.GC;
 #else
@@ -12,7 +11,7 @@ namespace ComputeSharp.Resources.Debug;
 /// A debug proxy used to display items in a <see cref="Buffer{T}"/> instance.
 /// </summary>
 /// <typeparam name="T">The type of items to display.</typeparam>
-internal sealed class BufferDebugView<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>
+internal sealed class BufferDebugView<T>
     where T : unmanaged
 {
     /// <summary>

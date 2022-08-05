@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
@@ -50,7 +49,7 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     /// <typeparam name="T">The type of values in the input buffer.</typeparam>
     /// <param name="buffer">The input <see cref="Buffer{T}"/> that was used.</param>
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
-    internal static void Throw<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(Buffer<T> buffer, GraphicsDevice device)
+    internal static void Throw<T>(Buffer<T> buffer, GraphicsDevice device)
         where T : unmanaged
     {
         throw Create(buffer, buffer.GraphicsDevice, device);

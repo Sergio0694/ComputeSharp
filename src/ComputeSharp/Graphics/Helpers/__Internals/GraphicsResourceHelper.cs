@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Interop;
@@ -63,7 +62,7 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the buffer.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(Buffer<T> buffer, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
         where T : unmanaged
     {
         Guard.IsNotNull(buffer);

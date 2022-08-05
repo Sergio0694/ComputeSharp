@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -15,7 +14,7 @@ public static class UploadBufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The target <see cref="StructuredBuffer{T}"/> instance to write data to.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this UploadBuffer<T> source, StructuredBuffer<T> destination)
+    public static void CopyTo<T>(this UploadBuffer<T> source, StructuredBuffer<T> destination)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -33,7 +32,7 @@ public static class UploadBufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this UploadBuffer<T> source, StructuredBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
+    public static void CopyTo<T>(this UploadBuffer<T> source, StructuredBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(source);

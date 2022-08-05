@@ -20,7 +20,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
 [DebuggerTypeProxy(typeof(BufferDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T> : Buffer<T>
+public sealed class ConstantBuffer<T> : Buffer<T>
     where T : unmanaged
 {
     /// <summary>
@@ -34,6 +34,7 @@ public sealed class ConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccess
     /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
     /// <param name="length">The number of items to store in the current buffer.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     internal ConstantBuffer(GraphicsDevice device, int length, AllocationMode allocationMode)
         : base(device, length, (uint)GetPaddedSize(), ResourceType.Constant, allocationMode)
     {

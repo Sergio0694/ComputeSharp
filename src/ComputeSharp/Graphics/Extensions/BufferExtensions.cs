@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
@@ -20,7 +19,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the input buffer.</returns>
-    public static T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source)
+    public static T[] ToArray<T>(this Buffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -36,7 +35,7 @@ public static class BufferExtensions
     /// <param name="offset">The offset to start reading data from.</param>
     /// <param name="count">The number of items to read.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer.</returns>
-    public static T[] ToArray<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, int offset, int count)
+    public static T[] ToArray<T>(this Buffer<T> source, int offset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -55,7 +54,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The input array to write data to.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, T[] destination)
+    public static void CopyTo<T>(this Buffer<T> source, T[] destination)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -73,7 +72,7 @@ public static class BufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, T[] destination, int sourceOffset, int destinationOffset, int count)
+    public static void CopyTo<T>(this Buffer<T> source, T[] destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -90,7 +89,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, Span<T> destination)
+    public static void CopyTo<T>(this Buffer<T> source, Span<T> destination)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -105,7 +104,7 @@ public static class BufferExtensions
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
     /// <param name="sourceOffset">The offset to start reading data from.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, Span<T> destination, int sourceOffset)
+    public static void CopyTo<T>(this Buffer<T> source, Span<T> destination, int sourceOffset)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -119,7 +118,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, Buffer<T> destination)
+    public static void CopyTo<T>(this Buffer<T> source, Buffer<T> destination)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -137,7 +136,7 @@ public static class BufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> source, Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
+    public static void CopyTo<T>(this Buffer<T> source, Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -152,7 +151,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
     /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, T[] source)
+    public static void CopyFrom<T>(this Buffer<T> destination, T[] source)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -170,7 +169,7 @@ public static class BufferExtensions
     /// <param name="sourceOffset">The starting offset within <paramref name="source"/> to read data from.</param>
     /// <param name="destinationOffset">The offset to start writing data to.</param>
     /// <param name="count">The number of items to write.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, T[] source, int sourceOffset, int destinationOffset, int count)
+    public static void CopyFrom<T>(this Buffer<T> destination, T[] source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -187,7 +186,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, ReadOnlySpan<T> source)
+    public static void CopyFrom<T>(this Buffer<T> destination, ReadOnlySpan<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -202,7 +201,7 @@ public static class BufferExtensions
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
     /// <param name="destinationOffset">The offset to start writing data to.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, ReadOnlySpan<T> source, int destinationOffset)
+    public static void CopyFrom<T>(this Buffer<T> destination, ReadOnlySpan<T> source, int destinationOffset)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -216,7 +215,7 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
     /// <param name="destination">The input <see cref="Buffer{T}"/> instance to write data data to.</param>
     /// <param name="source">The source <see cref="Buffer{T}"/> instance to read data from.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, Buffer<T> source)
+    public static void CopyFrom<T>(this Buffer<T> destination, Buffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -234,7 +233,7 @@ public static class BufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this Buffer<T> destination, Buffer<T> source, int sourceOffset, int destinationOffset, int count)
+    public static void CopyFrom<T>(this Buffer<T> destination, Buffer<T> source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);

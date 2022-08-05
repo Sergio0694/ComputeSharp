@@ -18,7 +18,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ConstantBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    public static ConstantBuffer<T> AllocateConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -33,7 +34,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input array.</returns>
-    public static ConstantBuffer<T> AllocateConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, T[] source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -49,7 +51,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    public static ConstantBuffer<T> AllocateConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, ReadOnlySpan<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -68,7 +71,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    public static ConstantBuffer<T> AllocateConstantBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, Buffer<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -89,7 +93,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -104,7 +109,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
-    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, T[] source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -120,7 +126,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, ReadOnlySpan<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -139,7 +146,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, Buffer<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -576,7 +584,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadWriteBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -591,7 +600,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input array.</returns>
-    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, T[] source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -607,7 +617,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, ReadOnlySpan<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);
@@ -626,7 +637,8 @@ partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this GraphicsDevice device, Buffer<T> source)
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
+    public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(device);

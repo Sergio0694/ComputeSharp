@@ -25,7 +25,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public unsafe abstract class Buffer<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T> : NativeObject, IGraphicsResource
+public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -63,6 +63,7 @@ public unsafe abstract class Buffer<[DynamicallyAccessedMembers(DynamicallyAcces
     /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
     /// <param name="resourceType">The resource type for the current buffer.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
         if (resourceType == ResourceType.Constant)

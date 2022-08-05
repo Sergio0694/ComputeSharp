@@ -11,9 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\QueueExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DynamicallyAccessedMembersAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DynamicallyAccessedMemberTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\MemberNotNullAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\RequiresUnreferencedCodeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\UnconditionalSuppressMessageAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Enum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\GC.cs" />

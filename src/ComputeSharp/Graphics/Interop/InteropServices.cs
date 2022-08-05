@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Resources;
 
@@ -50,7 +49,7 @@ public static unsafe class InteropServices
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
     /// <exception cref="ObjectDisposedException">The <paramref name="buffer"/> instance has been disposed.</exception>
     /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
-    public static void GetID3D12Resource<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
+    public static void GetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
         using var _0 = buffer.GetReferenceTrackingLease();
@@ -180,7 +179,7 @@ public static unsafe class InteropServices
     /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
     /// </returns>
     /// <exception cref="ObjectDisposedException">The <paramref name="buffer"/> instance has been disposed.</exception>
-    public static int TryGetID3D12Resource<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
+    public static int TryGetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
         using var _0 = buffer.GetReferenceTrackingLease();

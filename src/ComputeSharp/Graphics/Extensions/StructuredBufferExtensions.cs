@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -15,7 +14,7 @@ public static class StructuredBufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination)
+    public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -33,7 +32,7 @@ public static class StructuredBufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
+    public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(source);
@@ -48,7 +47,7 @@ public static class StructuredBufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="destination">The target <see cref="StructuredBuffer{T}"/> instance to write data to.</param>
     /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this StructuredBuffer<T> destination, UploadBuffer<T> source)
+    public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
@@ -66,7 +65,7 @@ public static class StructuredBufferExtensions
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyFrom<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] T>(this StructuredBuffer<T> destination, UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
+    public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Guard.IsNotNull(destination);
