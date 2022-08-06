@@ -5,7 +5,7 @@ namespace ComputeSharp;
 /// <summary>
 /// An attribute that indicates that a target shader type should get an automatic constructor for all fields.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
 internal sealed class AutoConstructorBehaviorAttribute : Attribute
 {
     /// <summary>

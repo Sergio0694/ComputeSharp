@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using ComputeSharp.Core.SourceGenerators.Models;
@@ -31,11 +30,11 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
                                     symbol.GetAttributes().Any(static a => a.AttributeClass?.ToDisplayString() == typeof(AutoConstructorAttribute).FullName))!;
 
         // Get the type hierarchy and fields info
-        IncrementalValuesProvider<(HierarchyInfo Left, ImmutableArray<ParameterInfo> Right)> constructorInfo =
+        IncrementalValuesProvider<(HierarchyInfo Left, ConstructorInfo Right)> constructorInfo =
             structDeclarations
-            .Select(static (item, token) => (Hierarchy: HierarchyInfo.From(item), Parameters: Ctor.GetData(item)))
-            .Where(static item => !item.Parameters.IsEmpty)
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<ParameterInfo>.Default.ForImmutableArray());
+            .Select(static (item, token) => (Hierarchy: HierarchyInfo.From(item), Info: Ctor.GetData(item)))
+            .Where(static item => !item.Info.Parameters.IsEmpty)
+            .WithComparers(HierarchyInfo.Comparer.Default, ConstructorInfo.Comparer.Default);
 
         // Generate the constructors
         context.RegisterSourceOutput(constructorInfo, static (context, item) =>
@@ -55,23 +54,46 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         /// Gets the sequence of <see cref="ParameterInfo"/> items for all fields in the input type.
         /// </summary>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> being inspected.</param>
-        /// <returns>The sequence of <see cref="ParameterInfo"/> items for all fields in <paramref name="structDeclarationSymbol"/>.</returns>
-        public static ImmutableArray<ParameterInfo> GetData(INamedTypeSymbol structDeclarationSymbol)
+        /// <returns>The <see cref="ConstructorInfo"/> instance for <paramref name="structDeclarationSymbol"/>.</returns>
+        public static ConstructorInfo GetData(INamedTypeSymbol structDeclarationSymbol)
         {
-            return (
-                from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
-                where fieldSymbol is { IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
-                let typeName = fieldSymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                select new ParameterInfo(typeName, fieldSymbol.Name)).ToImmutableArray();
+            ImmutableArray<ParameterInfo>.Builder parameters = ImmutableArray.CreateBuilder<ParameterInfo>();
+            ImmutableArray<string>.Builder defaulted = ImmutableArray.CreateBuilder<string>();
+
+            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                // Skip fields that are not instance ones (and also ignore generated fields and fixed size buffers)
+                if (fieldSymbol is not { IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false })
+                {
+                    continue;
+                }
+
+                // Check whether the field is annotated to have a special behavior
+                if (fieldSymbol.Type.TryGetAttributeWithFullMetadataName("ComputeSharp.AutoConstructorBehaviorAttribute", out AttributeData? usageData) &&
+                    usageData!.ConstructorArguments is { Length: 1 } arguments &&
+                    arguments[0].Value is (int)AutoConstructorBehavior.IgnoreAndSetToDefault)
+                {
+                    defaulted.Add(fieldSymbol.Name);
+                }
+                else
+                {
+                    // Track the field normally
+                    string typeName = fieldSymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                    parameters.Add(new ParameterInfo(typeName, fieldSymbol.Name));
+                }
+            }
+
+            return new(parameters.ToImmutableArray(), defaulted.ToImmutableArray());
         }
 
         /// <summary>
         /// Gets the <see cref="CompilationUnitSyntax"/> instance for a given type and sequence of parameters.
         /// </summary>
         /// <param name="hierarchyInfo">The type hierarchy info.</param>
-        /// <param name="parameters">The sequence of parameters to initialize.</param>
+        /// <param name="constructorInfo">The <see cref="ConstructorInfo"/> instance with the info for the constructor to generate.</param>
         /// <returns>A <see cref="CompilationUnitSyntax"/> instance for a specified type.</returns>
-        public static CompilationUnitSyntax GetSyntax(HierarchyInfo hierarchyInfo, ImmutableArray<ParameterInfo> parameters)
+        public static CompilationUnitSyntax GetSyntax(HierarchyInfo hierarchyInfo, ConstructorInfo constructorInfo)
         {
             // Create the constructor declaration for the type. This will
             // produce a constructor with simple initialization of all variables:
@@ -82,15 +104,20 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
             //     this.b = b;
             //     this.c = c;
             //     ...
+            //     this.ignored1 = default;
+            //     this.ignored2 = default;
+            //     this.ignored3 = default;
+            //     ...
             // }
             ConstructorDeclarationSyntax constructorDeclaration =
                 ConstructorDeclaration(hierarchyInfo.Hierarchy[0].QualifiedName)
                 .AddModifiers(Token(SyntaxKind.PublicKeyword))
-                .AddParameterListParameters(parameters.Select(field => Parameter(Identifier(field.Name)).WithType(IdentifierName(field.Type))).ToArray())
-                .AddBodyStatements(parameters.Select(field => ParseStatement($"this.{field.Name} = {field.Name};")).ToArray());
+                .AddParameterListParameters(constructorInfo.Parameters.Select(field => Parameter(Identifier(field.Name)).WithType(IdentifierName(field.Type))).ToArray())
+                .AddBodyStatements(constructorInfo.Parameters.Select(field => ParseStatement($"this.{field.Name} = {field.Name};")).ToArray())
+                .AddBodyStatements(constructorInfo.DefaultedFields.Select(field => ParseStatement($"this.{field} = default;")).ToArray());
 
             // Add the unsafe modifier, if needed
-            if (parameters.Any(static param => param.Type.Contains("*")))
+            if (constructorInfo.Parameters.Any(static param => param.Type.Contains("*")))
             {
                 constructorDeclaration = constructorDeclaration.AddModifiers(Token(SyntaxKind.UnsafeKeyword));
             }
