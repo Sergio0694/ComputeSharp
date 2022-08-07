@@ -634,4 +634,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A D2D1 shader generated with ComputeSharp.D2D1 (or an assembly) cannot use the PackMatrixColumnMajor option, as that is not compatible with the generated code used to load shader constant buffers.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DRequiresPosition]</c> attribute is missing.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is calling a D2D1 API or another method that require the [D2DRequiresPosition] attribute to be used, but the shader type is not annotated accordingly"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingD2DRequiresPositionAttribute = new DiagnosticDescriptor(
+        id: "CMPSD2D0045",
+        title: "Missing [D2DRequiresPosition] attribute",
+        messageFormat: "The D2D1 shader of type {0} is calling a D2D1 API or another method that require the [D2DRequiresPosition] attribute to be used, but the shader type is not annotated accordingly",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader using functionality that needs position info (ie. when [D2DRequiresPosition] is used) needs to be annotated accordingly.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
