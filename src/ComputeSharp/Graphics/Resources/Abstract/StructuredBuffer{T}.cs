@@ -65,7 +65,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             nint byteLength = count * sizeof(T);
 
 #if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
+            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(GraphicsDevice.Pool, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 #else
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
                 ResourceType.ReadBack,
@@ -226,7 +226,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             nint byteLength = length * sizeof(T);
 
 #if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
+            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(GraphicsDevice.Pool, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
 #else
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
                 ResourceType.Upload,
