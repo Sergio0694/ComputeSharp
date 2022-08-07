@@ -41,7 +41,7 @@ partial class HlslKnownTypes
             "ComputeSharp.ConstantBuffer`1" or 
             "ComputeSharp.ReadOnlyBuffer`1" or 
             "ComputeSharp.ReadWriteBuffer`1" => true,
-            _ => false,
+            _ => false
         };
     }
 
@@ -63,7 +63,7 @@ partial class HlslKnownTypes
             "ComputeSharp.IReadOnlyTexture3D`1" => true,
             "ComputeSharp.IReadOnlyNormalizedTexture2D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture3D`1" => true,
-            _ => false,
+            _ => false
         };
     }
 
@@ -83,7 +83,7 @@ partial class HlslKnownTypes
             "ComputeSharp.ReadWriteTexture3D`2" or
             "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
             "ComputeSharp.IReadWriteNormalizedTexture3D`1" => true,
-            _ => false,
+            _ => false
         };
     }
 
@@ -113,7 +113,7 @@ partial class HlslKnownTypes
             "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture3D`1" or
             "ComputeSharp.IReadWriteNormalizedTexture3D`1" => true,
-            _ => false,
+            _ => false
         };
     }
 
