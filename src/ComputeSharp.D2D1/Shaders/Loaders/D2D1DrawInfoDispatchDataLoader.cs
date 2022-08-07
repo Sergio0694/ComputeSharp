@@ -29,10 +29,10 @@ internal readonly unsafe struct D2D1DrawInfoDispatchDataLoader : ID2D1DispatchDa
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
         this.d2D1DrawInfo->SetPixelShaderConstantBuffer(
             buffer: (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data)),
-            bufferCount: (uint)data.Length * sizeof(uint));
+            bufferCount: (uint)data.Length);
     }
 }

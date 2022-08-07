@@ -34,16 +34,16 @@ partial class ID2D1ShaderGenerator
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")))
-                .WithBody(Block(GetDispatchDataLoadingStatements(dispatchInfo.FieldInfos, dispatchInfo.Root32BitConstantCount)));
+                .WithBody(Block(GetDispatchDataLoadingStatements(dispatchInfo.FieldInfos, dispatchInfo.ConstantBufferSizeInBytes)));
         }
 
         /// <summary>
         /// Gets a sequence of statements to load the dispatch data for a given shader.
         /// </summary>
         /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
-        /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
+        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
-        private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(ImmutableArray<FieldInfo> fieldInfos, int root32BitConstantsCount)
+        private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(ImmutableArray<FieldInfo> fieldInfos, int constantBufferSizeInBytes)
         {
             // If there are no fields, just load an empty buffer
             if (fieldInfos.IsEmpty)
@@ -74,12 +74,12 @@ partial class ID2D1ShaderGenerator
 
                         // Read a primitive value and serialize it into the target buffer. This will generate:
                         //
-                        // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::<TYPE_NAME>>(
+                        // global::System.Runtime.CompilerServices.Unsafe.As<byte, global::<TYPE_NAME>>(
                         //     ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET>)) = <FIELD_PATH>
                         statements.Add(ExpressionStatement(
                             AssignmentExpression(
                                 SyntaxKind.SimpleAssignmentExpression,
-                                ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<uint, global::{primitive.TypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset}))"),
+                                ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::{primitive.TypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset}))"),
                                 ParseExpression($"{string.Join(".", primitive.FieldPath)}"))));
                         break;
 
@@ -97,39 +97,39 @@ partial class ID2D1ShaderGenerator
                         // This will result in the following (assuming Float2x3 m):
                         //
                         // ref global::ComputeSharp.Float3 __m__row0 = ref global::System.Runtime.CompilerServices.Unsafe.As<global::ComputeSharp.Float2x3, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in m));
-                        // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0);
-                        // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 1);
+                        // global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0);
+                        // global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 1);
                         for (int j = 0; j < matrix.Rows; j++)
                         {
                             statements.Add(ExpressionStatement(
                                 AssignmentExpression(
                                     SyntaxKind.SimpleAssignmentExpression,
-                                    ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<uint, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){matrix.Offsets[j]}))"),
+                                    ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){matrix.Offsets[j]}))"),
                                     ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.Add(ref {rowLocalName}, {j})"))));
                         }
                         break;
                 }
             }
 
-            // global::System.Span<uint> data = stackalloc uint[<VARIABLES>];
+            // global::System.Span<byte> data = stackalloc byte[<CONSTANT_BUFFER_SIZE>];
             statements.Insert(0,
                 LocalDeclarationStatement(
                     VariableDeclaration(
                         GenericName(Identifier("global::System.Span"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
                     .AddVariables(
                         VariableDeclarator(Identifier("data"))
                         .WithInitializer(EqualsValueClause(
                             StackAllocArrayCreationExpression(
-                                ArrayType(PredefinedType(Token(SyntaxKind.UIntKeyword)))
+                                ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
                                 .AddRankSpecifiers(
                                     ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(root32BitConstantsCount)))))))))));
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(constantBufferSizeInBytes)))))))))));
 
-            // ref uint r0 = ref data[0];
+            // ref byte r0 = ref data[0];
             statements.Insert(1,
                 LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
                     .AddVariables(
                         VariableDeclarator(Identifier("r0"))
                         .WithInitializer(EqualsValueClause(

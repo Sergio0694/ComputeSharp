@@ -28,9 +28,9 @@ internal unsafe struct D2D1BufferSizeDispatchDataLoader : ID2D1DispatchDataLoade
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
-        this.size = data.Length * sizeof(uint);
+        this.size = data.Length;
     }
 
     /// <summary>

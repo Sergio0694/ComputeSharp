@@ -25,12 +25,12 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
-        /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
+        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
             ImmutableArray<Diagnostic>.Builder diagnostics,
             ITypeSymbol structDeclarationSymbol,
-            out int root32BitConstantCount)
+            out int constantBufferSizeInBytes)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -87,23 +87,14 @@ partial class ID2D1ShaderGenerator
                 ImmutableArray<string>.Empty,
                 rawDataOffsetAsBox).ToImmutableArray();
 
-            // After all the captured fields have been processed, ansure the reported byte size for
-            // the local variables is padded to a multiple of a 32 bit value. This is necessary to
-            // enable loading all the dispatch data after reinterpreting it to a sequence of values
-            // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-            root32BitConstantCount = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
+            constantBufferSizeInBytes = rawDataOffsetAsBox.Value;
 
-            // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
-            // Loaded values in the root signature have the following costs:
-            //  - Root constants cost 1 DWORD each, since they are 32-bit values.
-            //  - Descriptor tables cost 1 DWORD each.
-            //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
-            // So here we check whether the current signature respects that constraint,
-            // and emit a build error otherwise. For more info on this, see the docs here:
-            // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-            int rootSignatureDwordSize = root32BitConstantCount;
+            // The maximum size for a constant buffer is 64KB
+            const int D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT = 4096;
+            const int MaximumConstantBufferSize = D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * 4 * sizeof(float);
 
-            if (rootSignatureDwordSize > 64)
+            // Emit a diagnostic if the shader constant buffer is too large
+            if (constantBufferSizeInBytes > MaximumConstantBufferSize)
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
