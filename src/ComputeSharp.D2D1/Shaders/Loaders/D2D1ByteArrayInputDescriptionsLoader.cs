@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.Interop;
-using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
@@ -15,7 +14,7 @@ namespace ComputeSharp.D2D1.Shaders.Loaders;
 internal struct D2D1ByteArrayInputDescriptionsLoader : ID2D1InputDescriptionsLoader
 {
     /// <summary>
-    /// The <see cref="ID2D1DrawInfo"/> object in use.
+    /// The resulting <see cref="D2D1InputDescription"/> array.
     /// </summary>
     private D2D1InputDescription[]? inputDescriptions;
 

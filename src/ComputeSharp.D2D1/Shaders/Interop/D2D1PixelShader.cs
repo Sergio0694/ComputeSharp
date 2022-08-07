@@ -215,6 +215,23 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the available resource texture descriptions for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture descriptions for.</typeparam>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available resource texture descriptions for the shader.</returns>
+    public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        D2D1ByteArrayResourceTextureDescriptionsLoader resourceTextureDescriptionsLoader = default;
+
+        Unsafe.SkipInit(out T shader);
+
+        shader.LoadResourceTextureDescriptions(ref resourceTextureDescriptionsLoader);
+
+        return resourceTextureDescriptionsLoader.GetResultingResourceTextureDescriptions();
+    }
+
+    /// <summary>
     /// Gets the buffer precision for the output buffer of a D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer precision for.</typeparam>
