@@ -18,7 +18,7 @@ partial class HlslKnownMethods
     /// <returns>Whether the method needs the <c>[D2DRequiresPosition]</c> annotation.</returns>
     public static bool NeedsD2DRequiresPositionAttribute(string name)
     {
-        return name == "ComputeSharp.D2D1.D2D.GetScenePosition";
+        return name is "ComputeSharp.D2D1.D2D.GetScenePosition" or "ComputeSharp.D2D1.D2D.SampleInputAtPosition";
     }
 
     /// <inheritdoc/>
