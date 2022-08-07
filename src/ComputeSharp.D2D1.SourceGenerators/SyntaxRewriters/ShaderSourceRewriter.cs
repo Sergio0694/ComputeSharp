@@ -77,7 +77,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
-    public ShaderSourceRewriter(
+    private ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
@@ -278,11 +278,19 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
             operation.TargetMethod is IMethodSymbol method &&
             method.IsStatic)
         {
+            string metadataName = method.GetFullMetadataName();
+
             // If the invocation consists of invoking a static method that has a direct
             // mapping to HLSL, rewrite the expression in the current invocation node.
             // For instance: Math.Abs(expr) => abs(expr).
-            if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+            if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
             {
+                // Track whether the method needs [D2DRequiresPosition]
+                if (HlslKnownMethods.NeedsD2DRequiresPositionAttribute(metadataName))
+                {
+                    NeedsD2DRequiresPositionAttribute = true;
+                }
+
                 return updatedNode.WithExpression(ParseExpression(mapping!));
             }
 

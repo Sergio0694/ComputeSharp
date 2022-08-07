@@ -94,9 +94,16 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
             operation.TargetMethod is IMethodSymbol method &&
             method.IsStatic)
         {
+            string metadataName = method.GetFullMetadataName();
+
             // Rewrite HLSL intrinsic methods
-            if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+            if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
             {
+                if (HlslKnownMethods.NeedsD2DRequiresPositionAttribute(metadataName))
+                {
+                    NeedsD2DRequiresPositionAttribute = true;
+                }
+
                 return updatedNode.WithExpression(ParseExpression(mapping!));
             }
         }

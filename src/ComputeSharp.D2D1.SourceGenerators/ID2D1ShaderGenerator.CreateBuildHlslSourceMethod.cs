@@ -56,15 +56,18 @@ partial class ID2D1ShaderGenerator
             // Explore the syntax tree and extract the processed info
             var semanticModelProvider = new SemanticModelProvider(compilation);
             var valueFields = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes);
-            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions);
-            var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, out bool methodsNeedD2D1RequiresPosition);
+            var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresPosition);
 
             // Process the discovered types and constants
             var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes);
             var definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Check whether the scene position is required
-            bool requiresScenePosition = GetRequiresScenePositionInfo(structDeclarationSymbol);
+            bool requiresScenePosition = GetD2DRequiresScenePositionInfo(structDeclarationSymbol);
+
+            // Emit diagnostics for incorrect scene position uses
+            ReportInvalidD2DRequiresPositionUse(diagnostics, structDeclarationSymbol, requiresScenePosition, methodsNeedD2D1RequiresPosition || fieldsNeedD2D1RequiresPosition);
 
             // Get the HLSL source
             return GetHlslSource(
@@ -143,6 +146,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="needsD2D1RequiresPosition">Whether or not the shader needs the <c>[D2DRequiresPosition]</c> annotation.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
             ImmutableArray<Diagnostic>.Builder diagnostics,
@@ -150,9 +154,12 @@ partial class ID2D1ShaderGenerator
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            out bool needsD2D1RequiresPosition)
         {
             ImmutableArray<(string, string, string?)>.Builder builder = ImmutableArray.CreateBuilder<(string, string, string?)>();
+
+            needsD2D1RequiresPosition = false;
 
             foreach (var fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
             {
@@ -190,6 +197,8 @@ partial class ID2D1ShaderGenerator
 
                     string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
 
+                    needsD2D1RequiresPosition |= staticFieldRewriter.NeedsD2DRequiresPositionAttribute;
+
                     builder.Add((mapping ?? fieldSymbol.Name, typeDeclaration, assignment));
                 }
             }
@@ -207,6 +216,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="needsD2D1RequiresPosition">Whether or not the shader needs the <c>[D2DRequiresPosition]</c> annotation.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods) GetProcessedMethods(
             ImmutableArray<Diagnostic>.Builder diagnostics,
@@ -215,7 +225,8 @@ partial class ID2D1ShaderGenerator
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            out bool needsD2D1RequiresPosition)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -225,6 +236,8 @@ partial class ID2D1ShaderGenerator
 
             string? entryPoint = null;
             ImmutableArray<(string, string)>.Builder methods = ImmutableArray.CreateBuilder<(string, string)>();
+
+            needsD2D1RequiresPosition = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
@@ -252,6 +265,9 @@ partial class ID2D1ShaderGenerator
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+
+                // Update the position requirement
+                needsD2D1RequiresPosition |= shaderSourceRewriter.NeedsD2DRequiresPositionAttribute;
 
                 // Emit the extracted local functions first
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
@@ -396,11 +412,30 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
+        /// Reports diagnostics for invalid uses of <c>[D2DRequiresPosition]</c> in a shader.
+        /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="requiresScenePosition">Whether the shader type is declaring the need for scene position.</param>
+        /// <param name="usesPositionDependentMethods">Whether the shader is using APIs that rely on scene position.</param>
+        private static void ReportInvalidD2DRequiresPositionUse(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
+            INamedTypeSymbol structDeclarationSymbol,
+            bool requiresScenePosition,
+            bool usesPositionDependentMethods)
+        {
+            if (!requiresScenePosition && usesPositionDependentMethods)
+            {
+                diagnostics.Add(MissingD2DRequiresPositionAttribute, structDeclarationSymbol, structDeclarationSymbol);
+            }
+        }
+
+        /// <summary>
         /// Gets whether or not a given shader requires the scene position.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <remarks>Whether <paramref name="structDeclarationSymbol"/> requires the scene position.</remarks>
-        private static bool GetRequiresScenePositionInfo(INamedTypeSymbol structDeclarationSymbol)
+        private static bool GetD2DRequiresScenePositionInfo(INamedTypeSymbol structDeclarationSymbol)
         {
             return structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DRequiresScenePositionAttribute", out _);
         }
