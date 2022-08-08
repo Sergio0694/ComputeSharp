@@ -105,7 +105,7 @@ partial class IShaderGenerator
 
             resourceCount = resourceOffsetAsBox.Value;
 
-            // After all the captured fields have been processed, ansure the reported byte size for
+            // After all the captured fields have been processed, ensure the reported byte size for
             // the local variables is padded to a multiple of a 32 bit value. This is necessary to
             // enable loading all the dispatch data after reinterpreting it to a sequence of values
             // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.

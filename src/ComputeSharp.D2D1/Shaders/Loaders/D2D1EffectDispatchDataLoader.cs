@@ -30,7 +30,7 @@ internal readonly unsafe struct D2D1EffectDispatchDataLoader : ID2D1DispatchData
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
         if (data.IsEmpty)
         {
@@ -41,6 +41,6 @@ internal readonly unsafe struct D2D1EffectDispatchDataLoader : ID2D1DispatchData
             index: 0,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
             data: (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data)),
-            dataSize: (uint)data.Length * sizeof(uint)).Assert();
+            dataSize: (uint)data.Length).Assert();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.__Internals;
 using TerraFX.Interop.DirectX;
 
@@ -66,13 +65,11 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
-        ReadOnlySpan<byte> constantBuffer = MemoryMarshal.Cast<uint, byte>(data);
-
-        if (constantBuffer.TryCopyTo(new Span<byte>(this.buffer, this.length)))
+        if (data.TryCopyTo(new Span<byte>(this.buffer, this.length)))
         {
-            this.writtenBytes = constantBuffer.Length;
+            this.writtenBytes = data.Length;
         }
     }
 }

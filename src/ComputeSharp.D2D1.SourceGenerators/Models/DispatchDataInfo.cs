@@ -10,8 +10,8 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// A model representing gathered info on a shader dispatch data.
 /// </summary>
 /// <param name="FieldInfos">The description on shader instance fields.</param>
-/// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
-internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, int Root32BitConstantCount)
+/// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
+internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, int ConstantBufferSizeInBytes)
 {
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
@@ -22,7 +22,7 @@ internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, in
         protected override void AddToHashCode(ref HashCode hashCode, DispatchDataInfo obj)
         {
             hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
-            hashCode.Add(obj.Root32BitConstantCount);
+            hashCode.Add(obj.ConstantBufferSizeInBytes);
         }
 
         /// <inheritdoc/>
@@ -30,7 +30,7 @@ internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, in
         {
             return
                 x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
-                x.Root32BitConstantCount == y.Root32BitConstantCount;
+                x.ConstantBufferSizeInBytes == y.ConstantBufferSizeInBytes;
         }
     }
 }

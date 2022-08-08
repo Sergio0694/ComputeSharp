@@ -29,8 +29,8 @@ internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<uint> data)
+    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
-        this.data = MemoryMarshal.AsBytes(data).ToArray();
+        this.data = data.ToArray();
     }
 }

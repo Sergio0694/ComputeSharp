@@ -64,11 +64,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
                     diagnostics,
                     item.Left.Symbol,
-                    out int root32BitConstantCount);
+                    out int constantBufferSizeInBytes);
 
                 token.ThrowIfCancellationRequested();
 
-                DispatchDataInfo dispatchDataInfo = new(fieldInfos, root32BitConstantCount);
+                DispatchDataInfo dispatchDataInfo = new(fieldInfos, constantBufferSizeInBytes);
 
                 // Get the input info for GetInputInfo()
                 GetInputType.GetInfo(
