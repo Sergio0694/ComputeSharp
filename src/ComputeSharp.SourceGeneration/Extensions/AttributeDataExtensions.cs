@@ -9,6 +9,29 @@ namespace ComputeSharp.SourceGeneration.Extensions;
 internal static class AttributeDataExtensions
 {
     /// <summary>
+    /// Tries to get a constructor argument at a given index from the input <see cref="AttributeData"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of constructor argument to retrieve.</typeparam>
+    /// <param name="attributeData">The target <see cref="AttributeData"/> instance to get the argument from.</param>
+    /// <param name="index">The index of the argument to try to retrieve.</param>
+    /// <param name="result">The resulting argument, if it was found.</param>
+    /// <returns>Whether or not an argument of type <typeparamref name="T"/> at position <paramref name="index"/> was found.</returns>
+    public static bool TryGetConstructorArgument<T>(this AttributeData attributeData, int index, out T? result)
+    {
+        if (attributeData.ConstructorArguments.Length >= index + 1 &&
+            attributeData.ConstructorArguments[index].Value is T argument)
+        {
+            result = argument;
+
+            return true;
+        }
+
+        result = default;
+
+        return false;
+    }
+
+    /// <summary>
     /// Tries to get a given named argument value from an <see cref="AttributeData"/> instance, if present.
     /// </summary>
     /// <typeparam name="T">The type of argument to check.</typeparam>

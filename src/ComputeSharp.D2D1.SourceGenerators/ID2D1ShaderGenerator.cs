@@ -51,9 +51,9 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Where(static item => IsD2D1PixelShaderType(item.Left.Symbol, item.Right))
             .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol)));
 
-        // Get the dispatch data, input types, HLSL source and embedded bytecode info. This info is computed
-        // on the same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, HlslShaderSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
+        // Get the dispatch data, input types, resource texture descriptions, HLSL source and embedded bytecode info. This info
+        // is computed on the same step as parts are shared in following sub-branches in the incremental generator pipeline.
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, ResourceTextureDescriptionsInfo ResourceTextureDescriptions, HlslShaderSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -80,6 +80,15 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     out ImmutableArray<uint> inputTypes);
 
                 InputTypesInfo inputTypesInfo = new(inputTypes);
+
+                // Get the resource texture info for LoadResourceTextureDescriptions()
+                LoadResourceTextureDescriptions.GetInfo(
+                    diagnostics,
+                    item.Left.Symbol,
+                    inputCount,
+                    out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
+
+                ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo = new(resourceTextureDescriptions);
 
                 // Get HLSL source for BuildHlslSource()
                 string hlslSource = BuildHlslSource.GetHlslSource(
@@ -111,6 +120,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     item.Left.Hierarchy,
                     dispatchDataInfo,
                     inputTypesInfo,
+                    resourceTextureDescriptionsInfo,
                     sourceInfo,
                     diagnostics.ToImmutableArray());
             });
@@ -128,10 +138,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.ReportDiagnostics(d2DCompileOptionsAtAssemblyLevelErrors.Select(static (item, token) => item));
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, HlslShaderSourceInfo Source)> shaderInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, ResourceTextureDescriptionsInfo ResourceTextureDescriptions, HlslShaderSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch, item.InputTypes, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, InputTypesInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch, item.InputTypes, item.ResourceTextureDescriptions, item.Source))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, InputTypesInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
 
         // Filter items to enable caching for the input count methods
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
@@ -161,6 +171,21 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetInputType)}", compilationUnit.GetText(Encoding.UTF8));
+        });
+
+        // Get a filtered sequence to enable caching
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, ResourceTextureDescriptionsInfo ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
+            shaderInfo
+            .Select(static (item, token) => (item.Hierarchy, item.ResourceTextureDescriptions))
+            .WithComparers(HierarchyInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default);
+
+        // Generate the LoadResourceTextureDescriptions() methods
+        context.RegisterSourceOutput(resourceTextureDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        {
+            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.Left.ResourceTextureDescriptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadResourceTextureDescriptions)}", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get a filtered sequence to enable caching

@@ -42,7 +42,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
-        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
+        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load the shader dispatch data.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(ImmutableArray<FieldInfo> fieldInfos, int constantBufferSizeInBytes)
         {
             // If there are no fields, just load an empty buffer
