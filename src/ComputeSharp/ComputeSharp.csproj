@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0-preview4" />
+    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
   </ItemGroup>
 
   <!-- .NET 6 uses the NuGet packages for TerraFX -->
