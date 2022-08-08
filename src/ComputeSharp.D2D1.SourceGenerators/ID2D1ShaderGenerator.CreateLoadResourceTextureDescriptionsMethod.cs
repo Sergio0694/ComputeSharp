@@ -30,7 +30,7 @@ partial class ID2D1ShaderGenerator
             int inputCount,
             out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
-            ImmutableArray<(string Name, int? Index, int Rank)>.Builder resourceTextureInfos = ImmutableArray.CreateBuilder<(string, int?, int)>();
+            ImmutableArray<(int? Index, int Rank)>.Builder resourceTextureInfos = ImmutableArray.CreateBuilder<(int?, int)>();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -66,9 +66,7 @@ partial class ID2D1ShaderGenerator
                         diagnostics.Add(MissingD2DResourceTextureIndexAttribute, fieldSymbol, fieldSymbol.Name, structDeclarationSymbol);
                     }
 
-                    _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                    resourceTextureInfos.Add((mapping ?? fieldSymbol.Name, index, rank));
+                    resourceTextureInfos.Add((index, rank));
                 }
             }
 
