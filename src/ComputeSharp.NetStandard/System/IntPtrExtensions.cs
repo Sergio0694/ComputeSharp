@@ -9,15 +9,25 @@ internal static class IntPtrExtensions
 {
     /// <inheritdoc cref="IComparable{T}.CompareTo(T)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CompareTo(this nint left, nint right)
+    public static unsafe int CompareTo(this nint left, nint right)
     {
-        return left.CompareTo(right);
+        if (sizeof(nint) == sizeof(int))
+        {
+            return ((int)left).CompareTo((int)right);
+        }
+
+        return ((long)left).CompareTo(right);
     }
 
     /// <inheritdoc cref="IComparable{T}.CompareTo(T)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CompareTo(this nuint left, nuint right)
+    public static unsafe int CompareTo(this nuint left, nuint right)
     {
-        return left.CompareTo(right);
+        if (sizeof(nuint) == sizeof(uint))
+        {
+            return ((uint)left).CompareTo((uint)right);
+        }
+
+        return ((ulong)left).CompareTo(right);
     }
 }
