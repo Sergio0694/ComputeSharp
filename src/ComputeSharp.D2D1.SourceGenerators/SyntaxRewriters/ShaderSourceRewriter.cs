@@ -285,10 +285,10 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
             // For instance: Math.Abs(expr) => abs(expr).
             if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
             {
-                // Track whether the method needs [D2DRequiresPosition]
-                if (HlslKnownMethods.NeedsD2DRequiresPositionAttribute(metadataName))
+                // Track whether the method needs [D2DRequiresScenePosition]
+                if (HlslKnownMethods.NeedsD2DRequiresScenePositionAttribute(metadataName))
                 {
-                    NeedsD2DRequiresPositionAttribute = true;
+                    NeedsD2DRequiresScenePositionAttribute = true;
                 }
 
                 return updatedNode.WithExpression(ParseExpression(mapping!));

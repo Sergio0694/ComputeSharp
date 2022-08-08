@@ -66,9 +66,9 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <summary>
-    /// Gets whether or not the shader needs the <c>[D2DRequiresPosition]</c> attribute.
+    /// Gets whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> attribute.
     /// </summary>
-    public bool NeedsD2DRequiresPositionAttribute { get; protected set; }
+    public bool NeedsD2DRequiresScenePositionAttribute { get; protected set; }
 
     /// <inheritdoc/>
     public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)

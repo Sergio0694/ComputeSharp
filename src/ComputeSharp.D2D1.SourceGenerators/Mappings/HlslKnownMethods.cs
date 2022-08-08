@@ -12,11 +12,11 @@ partial class HlslKnownMethods
 {
     /// <summary>
     /// Checks whether or not a method name (previous matched with <see cref="TryGetMappedName(string, out string?)"/>
-    /// needs the <c>[D2DRequiresPosition]</c> annotation on its containing shader in order to be used.
+    /// needs the <c>[D2DRequiresScenePosition]</c> annotation on its containing shader in order to be used.
     /// </summary>
     /// <param name="name">The fully qualified metadata name.</param>
-    /// <returns>Whether the method needs the <c>[D2DRequiresPosition]</c> annotation.</returns>
-    public static bool NeedsD2DRequiresPositionAttribute(string name)
+    /// <returns>Whether the method needs the <c>[D2DRequiresScenePosition]</c> annotation.</returns>
+    public static bool NeedsD2DRequiresScenePositionAttribute(string name)
     {
         return name is "ComputeSharp.D2D1.D2D.GetScenePosition" or "ComputeSharp.D2D1.D2D.SampleInputAtPosition";
     }
