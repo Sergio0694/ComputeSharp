@@ -61,7 +61,7 @@ partial class ID2D1ShaderGenerator
                     else
                     {
                         // If the attribute is missing, emit a diagnostic
-                        // TODO
+                        diagnostics.Add(MissingD2DResourceTextureIndexAttribute, fieldSymbol, fieldSymbol.Name, structDeclarationSymbol);
                     }
 
                     _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);

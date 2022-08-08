@@ -714,4 +714,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A field is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a missing <c>[D2DResourceTextureIndex]</c>.
+    /// <para>
+    /// Format: <c>"The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingD2DResourceTextureIndexAttribute = new DiagnosticDescriptor(
+        id: "CMPSD2D0050",
+        title: "Missing [D2DResourceTextureIndex] attribute",
+        messageFormat: "The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "All fields of a D2D1 resource texture type must be annotated using the [D2DResourceTextureIndex] attribute.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
