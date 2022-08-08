@@ -380,5 +380,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetPixelOptions)}", compilationUnit.GetText(Encoding.UTF8));
         });
+
+        // Get all diagnostics for invalid [D2DResourceTextureIndex] uses
+        IncrementalValuesProvider<Diagnostic> invalidD2DResourceTextureIndexUseErrors =
+            context.SyntaxProvider
+            .CreateSyntaxProvider(
+                static (node, _) => node is FieldDeclarationSyntax { AttributeLists.Count: > 0 },
+                static (context, _) => ((FieldDeclarationSyntax)context.Node).Declaration.Variables.Select(v => (IFieldSymbol)context.SemanticModel.GetDeclaredSymbol(v)!))
+            .SelectMany(static (item, _) => item)
+            .Select(static (item, token) => LoadResourceTextureDescriptions.GetDiagnosticForFieldWithInvalidD2DResourceTextureIndexAttribute(item))
+            .Where(static diagnostic => diagnostic is not null)!;
+
+        // Output the diagnostics
+        context.ReportDiagnostics(invalidD2DResourceTextureIndexUseErrors);
     }
 }

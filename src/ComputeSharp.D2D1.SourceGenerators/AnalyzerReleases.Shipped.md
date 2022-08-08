@@ -55,3 +55,4 @@ CMPSD2D0045 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github
 CMPSD2D0046 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2D0047 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPSD2D0048 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPSD2D0049 | ComputeSharp.D2D1.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
