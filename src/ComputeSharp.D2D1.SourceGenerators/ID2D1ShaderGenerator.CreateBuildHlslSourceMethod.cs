@@ -53,9 +53,16 @@ partial class ID2D1ShaderGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
+            // Extract information on all captured fields
+            GetInstanceFields(
+                diagnostics,
+                structDeclarationSymbol,
+                discoveredTypes,
+                out ImmutableArray<(string Name, string HlslType)> valueFields,
+                out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields);
+
             // Explore the syntax tree and extract the processed info
             var semanticModelProvider = new SemanticModelProvider(compilation);
-            var valueFields = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes);
             var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, out bool methodsNeedD2D1RequiresPosition);
             var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresPosition);
 
@@ -74,6 +81,7 @@ partial class ID2D1ShaderGenerator
                 definedConstants,
                 declaredTypes,
                 valueFields,
+                resourceTextureFields,
                 staticFields,
                 processedMethods,
                 entryPoint,
@@ -89,13 +97,17 @@ partial class ID2D1ShaderGenerator
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
-        /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
-        private static ImmutableArray<(string Name, string HlslType)> GetInstanceFields(
+        /// <param name="valueFields">The sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</param>
+        /// <param name="resourceTextureFields">The sequence of captured resource textures in <paramref name="structDeclarationSymbol"/>.</param>
+        private static void GetInstanceFields(
             ImmutableArray<Diagnostic>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
-            ICollection<INamedTypeSymbol> types)
+            ICollection<INamedTypeSymbol> types,
+            out ImmutableArray<(string Name, string HlslType)> valueFields,
+            out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields)
         {
             ImmutableArray<(string, string)>.Builder values = ImmutableArray.CreateBuilder<(string, string)>();
+            ImmutableArray<(string, string, int)>.Builder resourceTextures = ImmutableArray.CreateBuilder<(string, string, int)>();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -117,10 +129,25 @@ partial class ID2D1ShaderGenerator
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
-                // Allowed fields must be unmanaged values
-                if (typeSymbol.IsUnmanagedType)
+                // Handle resource textures as a special case
+                if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
-                    // Track the type if it's a custom struct
+                    int index = 0;
+
+                    // If [D2DResourceTextureIndex] is present, get the resource texture index.
+                    // This generator doesn't need to emit diagnostics, as that's handled separately
+                    // by the logic handling the info gathering for LoadResourceTextureDescriptions.
+                    if (fieldSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
+                    {
+                        _ = attributeData!.TryGetConstructorArgument(0, out index);
+                    }
+
+                    resourceTextures.Add((mapping ?? fieldSymbol.Name, typeName, index));
+                }
+                else if (typeSymbol.IsUnmanagedType)
+                {
+                    // Allowed fields must be unmanaged values.
+                    // Also, track the type if it's a custom struct.
                     if (!HlslKnownTypes.IsKnownHlslType(metadataName))
                     {
                         types.Add(typeSymbol);
@@ -134,7 +161,8 @@ partial class ID2D1ShaderGenerator
                 }
             }
 
-            return values.ToImmutable();
+            valueFields = values.ToImmutable();
+            resourceTextureFields = resourceTextures.ToImmutable();
         }
 
         /// <summary>
@@ -446,6 +474,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
         /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
         /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
+        /// <param name="resourceTextureFields">The sequence of captured resource textures for the current shader.</param>
         /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
@@ -458,6 +487,7 @@ partial class ID2D1ShaderGenerator
             ImmutableArray<(string Name, string Value)> definedConstants,
             ImmutableArray<(string Name, string Definition)> declaredTypes,
             ImmutableArray<(string Name, string HlslType)> valueFields,
+            ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields,
             ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
             ImmutableArray<(string Signature, string Definition)> processedMethods,
             string executeMethod,
@@ -554,6 +584,15 @@ partial class ID2D1ShaderGenerator
                 {
                     AppendLineAndLF($"{fieldType} {fieldName};");
                 }
+            }
+
+            // Resource textures
+            foreach (var (fieldName, fieldType, index) in resourceTextureFields)
+            {
+                AppendLF();
+
+                AppendLineAndLF($"{fieldType} {fieldName} : register(t{index});");
+                AppendLineAndLF($"SamplerState __sampler__{fieldName} : register(s{index});");
             }
 
             // Forward declarations
