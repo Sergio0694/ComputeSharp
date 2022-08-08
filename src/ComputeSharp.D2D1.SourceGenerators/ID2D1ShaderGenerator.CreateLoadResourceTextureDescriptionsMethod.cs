@@ -30,7 +30,7 @@ partial class ID2D1ShaderGenerator
             int inputCount,
             out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
-            ImmutableArray<(string Name, uint Index, uint Rank)>.Builder resourceTextureInfos = ImmutableArray.CreateBuilder<(string, uint, uint)>();
+            ImmutableArray<(string Name, int? Index, int Rank)>.Builder resourceTextureInfos = ImmutableArray.CreateBuilder<(string, int?, int)>();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -46,17 +46,19 @@ partial class ID2D1ShaderGenerator
                 // Check that the field is a resource texture type (if not, it will be processed by the HLSL rewriter too)
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
-                    // The type name will be either Texture1D, Texture2D or Texture3D
-                    string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
-                    uint rank = uint.Parse(typeName.Substring(typeName.Length - 2, 1));
-                    uint index = uint.MaxValue;
+                    // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D or the 2D/3D versions
+                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 2, 1));
+                    int? index = null;
 
                     // Get the index from the [D2DResourceTextureIndex] attribute over the field
                     if (fieldSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
                     {
                         // If the constructor argument isn't available, it means the code is invalid. Just do nothing then, as the
                         // user will have to fix that to get the code to compile anyway. This way the generator won't crash too.
-                        _ = attributeData!.TryGetConstructorArgument(0, out index);
+                        if (attributeData!.TryGetConstructorArgument(0, out int resourceIndex))
+                        {
+                            index = resourceIndex;
+                        }
                     }
                     else
                     {
@@ -71,7 +73,7 @@ partial class ID2D1ShaderGenerator
             }
 
             // Extract the resource texture descriptions for the rest of the pipeline
-            resourceTextureDescriptions = resourceTextureInfos.Select(static info => new ResourceTextureDescription(info.Index, info.Rank)).ToImmutableArray();
+            resourceTextureDescriptions = resourceTextureInfos.Select(static info => new ResourceTextureDescription((uint)(info.Index ?? 0), (uint)info.Rank)).ToImmutableArray();
 
             // If the input count is invalid, do nothing and avoid emitting potentially incorrect
             // diagnostics based on the resource texture indices with respect to the input count.
@@ -98,7 +100,7 @@ partial class ID2D1ShaderGenerator
                 return;
             }
 
-            HashSet<uint> resourceTextureIndices = new(resourceTextureInfos.Select(info => info.Index));
+            HashSet<int> resourceTextureIndices = new(resourceTextureInfos.Where(info => info.Index.HasValue).Select(info => info.Index!.Value));
 
             // All input description indices must be unique
             if (resourceTextureIndices.Count != resourceTextureInfos.Count)
