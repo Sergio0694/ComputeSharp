@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
 using Microsoft.CodeAnalysis;
+using static ComputeSharp.D2D1.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -72,10 +73,19 @@ partial class ID2D1ShaderGenerator
             // Extract the resource texture descriptions for the rest of the pipeline
             resourceTextureDescriptions = resourceTextureInfos.Select(static info => new ResourceTextureDescription(info.Index, info.Rank)).ToImmutableArray();
 
+            // If the input count is invalid, do nothing and avoid emitting potentially incorrect
+            // diagnostics based on the resource texture indices with respect to the input count.
+            // The GetInputType() generator has already emitted diagnostic for this error, so this
+            // generator can just wait for users to go back and fix that issue before proceeding.
+            if (inputCount is not (>= 0 and <= 8))
+            {
+                return;
+            }
+
             // Validate that the resource texture indices don't overlap with the shader inputs
             if (resourceTextureInfos.Any(info => info.Index < inputCount))
             {
-                // TODO: overlap with textures
+                diagnostics.Add(ResourceTextureIndexOverlappingWithInputIndex, structDeclarationSymbol, structDeclarationSymbol);
 
                 return;
             }
@@ -83,7 +93,7 @@ partial class ID2D1ShaderGenerator
             // Validate that no resource texture has an index greater than or equal to 16
             if (resourceTextureInfos.Any(info => info.Index >= 16))
             {
-                // TODO: diagnostic
+                diagnostics.Add(OutOfRangeResourceTextureIndex, structDeclarationSymbol, structDeclarationSymbol);
 
                 return;
             }
@@ -93,7 +103,7 @@ partial class ID2D1ShaderGenerator
             // All input description indices must be unique
             if (resourceTextureIndices.Count != resourceTextureInfos.Count)
             {
-                // TODO: diagnostic
+                diagnostics.Add(RepeatedD2DResourceTextureIndices, structDeclarationSymbol, structDeclarationSymbol);
             }
         }
     }

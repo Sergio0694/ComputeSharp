@@ -57,7 +57,7 @@ partial class ID2D1ShaderGenerator
 
             inputDescriptions = ImmutableArray<InputDescription>.Empty;
 
-            // Validate the input count (ignore if invalid, this will be validated by the HLSL source generator)
+            // Validate the input count (ignore if invalid, this will be validated by GetInputType() generator)
             if (inputCount is not (>= 0 and <= 8))
             {
                 goto End;
