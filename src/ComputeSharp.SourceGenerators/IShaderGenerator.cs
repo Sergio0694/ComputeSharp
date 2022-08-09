@@ -28,7 +28,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.CompilationProvider
             .Select(static (compilation, token) =>
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
-                compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute") is not null);
+                compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
 
         // Check whether or not dynamic shaders are supported
         IncrementalValueProvider<bool> supportsDynamicShaders =
