@@ -398,8 +398,15 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
             }
             else if (HlslKnownMethods.TryGetMappedResourceSamplerAccessType(metadataName, out string? mapping))
             {
+                // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
+                ArgumentSyntax coordinateSyntax = mapping switch
+                {
+                    not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
+                    null => updatedNode.ArgumentList.Arguments[0]
+                };
+
                 // Rewrite texture resource sampled accesses, if needed
-                return RewriteSampledTextureAccess(operation, updatedNode, mapping);
+                return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
             }
         }
 
@@ -435,10 +442,10 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// Rewrites a sampled texture access.
     /// </summary>
     /// <param name="operation">The <see cref="IInvocationOperation"/> instance for the sampled texture access.</param>
-    /// <param name="node">The input <see cref="InvocationExpressionSyntax"/> instance for the node to rewrite.</param>
-    /// <param name="mappedType">The mapped type name to use for the sampled access, if any.</param>
+    /// <param name="expression">The input <see cref="ExpressionSyntax"/> instance for the node to rewrite.</param>
+    /// <param name="arguments">The input <see cref="ArgumentSyntax"/> with the updated arguments for the expression to rewrite.</param>
     /// <returns>A <see cref="SyntaxNode"/> representing the rewritten sampled texture access.</returns>
-    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, InvocationExpressionSyntax node, string? mappedType);
+    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, ExpressionSyntax expression, ArgumentSyntax arguments);
 
     /// <summary>
     /// Tracks a property access to a known HLSL property.

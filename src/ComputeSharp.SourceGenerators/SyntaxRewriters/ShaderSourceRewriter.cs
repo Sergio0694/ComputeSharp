@@ -33,24 +33,17 @@ partial class ShaderSourceRewriter
     public bool IsSamplerUsed { get; private set; }
 
     /// <inheritdoc/>
-    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, InvocationExpressionSyntax node, string? mappedType)
+    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, ExpressionSyntax expression, ArgumentSyntax arguments)
     {
         IsSamplerUsed = true;
-
-        // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
-        ArgumentSyntax coordinateSyntax = mappedType switch
-        {
-            not null => Argument(InvocationExpression(IdentifierName(mappedType!), ArgumentList(node.ArgumentList.Arguments))),
-            null => node.ArgumentList.Arguments[0]
-        };
 
         // Transform a method invocation syntax into a sampling call with the implicit static linear sampler.
         // For instance: texture.Sample(uv) will be rewritten as texture.SampleLevel(__sampler, uv, 0).
         return
-            InvocationExpression(((MemberAccessExpressionSyntax)node.Expression).WithName(IdentifierName("SampleLevel")))
+            InvocationExpression(((MemberAccessExpressionSyntax)expression).WithName(IdentifierName("SampleLevel")))
             .AddArgumentListArguments(
                 Argument(IdentifierName("__sampler")),
-                coordinateSyntax,
+                arguments,
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))));
     }
 
