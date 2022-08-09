@@ -1,6 +1,8 @@
 ﻿using ComputeSharp.SourceGeneration.Mappings;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
@@ -11,6 +13,27 @@ partial class ShaderSourceRewriter
     /// Gets whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> attribute.
     /// </summary>
     public bool NeedsD2DRequiresScenePositionAttribute { get; private set; }
+
+    /// <inheritdoc/>
+    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, InvocationExpressionSyntax node, string? mappedType)
+    {
+        // Get the syntax for the argument syntax transformation (to pack arguments if needed, just like in the DX12 rewriter)
+        ArgumentSyntax coordinateSyntax = mappedType switch
+        {
+            not null => Argument(InvocationExpression(IdentifierName(mappedType!), ArgumentList(node.ArgumentList.Arguments))),
+            null => node.ArgumentList.Arguments[0]
+        };
+
+        string fieldName = (operation.Instance as IFieldReferenceOperation)?.Member.Name ?? "";
+
+        _ = HlslKnownKeywords.TryGetMappedName(fieldName, out string? mapped);
+
+        // Transform an indexer syntax into a sampling call with the implicit static linear sampler.
+        // For instance: texture.Sample(uv) will be rewritten as texture.Sample(__sampler__texture, uv).
+        return
+            InvocationExpression(node.Expression)
+            .AddArgumentListArguments(Argument(IdentifierName($"__sampler__{mapped ?? fieldName}")), coordinateSyntax);
+    }
 
     /// <inheritdoc/>
     private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName)

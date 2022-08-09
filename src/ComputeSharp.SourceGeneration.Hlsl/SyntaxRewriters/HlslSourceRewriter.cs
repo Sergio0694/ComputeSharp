@@ -251,12 +251,6 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                 return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
             }
 
-            // Rewrite texture resource sampled accesses, if needed
-            if (HlslKnownProperties.TryGetMappedResourceSamplerAccessType(propertyName, out mapping))
-            {
-                return RewriteSampledTextureAccess(operation, updatedNode, mapping);
-            }
-
             // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite
             // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
             if (HlslKnownProperties.IsKnownMatrixIndexer(propertyName))
@@ -331,13 +325,4 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         return updatedToken.WithoutTrivia();
     }
-
-    /// <summary>
-    /// Rewrites a sampled texture access.
-    /// </summary>
-    /// <param name="operation">The <see cref="IPropertyReferenceOperation"/> instance for the sampled texture access.</param>
-    /// <param name="node">The input <see cref="ElementAccessExpressionSyntax"/> instance for the node to rewrite.</param>
-    /// <param name="mappedType">The mapped type name to use for the sampled access, if any.</param>
-    /// <returns>A <see cref="SyntaxNode"/> representing the rewritten sampled texture access.</returns>
-    private partial SyntaxNode RewriteSampledTextureAccess(IPropertyReferenceOperation operation, ElementAccessExpressionSyntax node, string? mappedType);
 }

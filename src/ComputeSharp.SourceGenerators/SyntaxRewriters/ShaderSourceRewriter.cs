@@ -1,9 +1,11 @@
 ﻿using System;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
@@ -24,6 +26,33 @@ partial class ShaderSourceRewriter
     /// Gets whether or not the shader uses <see cref="GridIds"/> at least once.
     /// </summary>
     public bool IsGridIdsUsed { get; set; }
+
+    /// <summary>
+    /// Gets whether or not the shader uses a texture sampler at least once.
+    /// </summary>
+    public bool IsSamplerUsed { get; private set; }
+
+    /// <inheritdoc/>
+    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, InvocationExpressionSyntax node, string? mappedType)
+    {
+        IsSamplerUsed = true;
+
+        // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
+        ArgumentSyntax coordinateSyntax = mappedType switch
+        {
+            not null => Argument(InvocationExpression(IdentifierName(mappedType!), ArgumentList(node.ArgumentList.Arguments))),
+            null => node.ArgumentList.Arguments[0]
+        };
+
+        // Transform a method invocation syntax into a sampling call with the implicit static linear sampler.
+        // For instance: texture.Sample(uv) will be rewritten as texture.SampleLevel(__sampler, uv, 0).
+        return
+            InvocationExpression(((MemberAccessExpressionSyntax)node.Expression).WithName(IdentifierName("SampleLevel")))
+            .AddArgumentListArguments(
+                Argument(IdentifierName("__sampler")),
+                coordinateSyntax,
+                Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))));
+    }
 
     /// <inheritdoc/>
     private partial void TrackKnownPropertyAccess(IMemberReferenceOperation operation, MemberAccessExpressionSyntax node, string mappedName)
