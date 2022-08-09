@@ -2,9 +2,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static ComputeSharp.D2D1.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
-namespace ComputeSharp.D2D1.SourceGenerators.SyntaxRewriters;
+namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
 /// <inheritdoc cref="HlslSourceRewriter"/>
 partial class HlslSourceRewriter : CSharpSyntaxRewriter

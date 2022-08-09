@@ -9,6 +9,7 @@
     <Import_RootNamespace>ComputeSharp.SourceGeneration.Hlsl</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticDescriptors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SyntaxNodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownFields.cs" />
@@ -17,5 +18,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.Diagnostics.cs" />
   </ItemGroup>
 </Project>
