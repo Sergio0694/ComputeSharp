@@ -35,6 +35,9 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
     {
     }
 
+    /// <inheritdoc cref="ShaderSourceRewriter.NeedsD2DRequiresScenePositionAttribute"/>
+    public bool NeedsD2DRequiresScenePositionAttribute { get; private set; }
+
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public ExpressionSyntax? Visit(VariableDeclaratorSyntax? node)
     {

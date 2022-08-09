@@ -96,6 +96,11 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
     /// </summary>
     public IReadOnlyDictionary<string, LocalFunctionStatementSyntax> LocalFunctions => this.localFunctions;
 
+    /// <summary>
+    /// Gets whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> attribute.
+    /// </summary>
+    public bool NeedsD2DRequiresScenePositionAttribute { get; private set; }
+
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
     {
