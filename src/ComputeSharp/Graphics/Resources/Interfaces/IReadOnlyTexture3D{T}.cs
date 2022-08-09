@@ -40,18 +40,18 @@ public interface IReadOnlyTexture3D<T> : IGraphicsResource
     ref readonly T this[Int3 xyz] { get; }
 
     /// <summary>
-    /// Gets a single <typeparamref name="T"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <typeparamref name="T"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="u">The horizontal normalized offset of the value to get.</param>
     /// <param name="v">The vertical normalized offset of the value to get.</param>
     /// <param name="w">The depthwise normalized offset of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    ref readonly T this[float u, float v, float w] { get; }
+    ref readonly T Sample(float u, float v, float w);
 
     /// <summary>
-    /// Gets a single <typeparamref name="T"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <typeparamref name="T"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="uvw">The normalized coordinates of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    ref readonly T this[Float3 uvw] { get; }
+    ref readonly T Sample(Float3 uvw);
 }

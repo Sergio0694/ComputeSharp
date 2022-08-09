@@ -34,17 +34,17 @@ public interface IReadOnlyNormalizedTexture2D<TPixel> : IGraphicsResource
     ref readonly TPixel this[Int2 xy] { get; }
 
     /// <summary>
-    /// Gets a single <typeparamref name="TPixel"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <typeparamref name="TPixel"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="u">The horizontal normalized offset of the value to get.</param>
     /// <param name="v">The vertical normalized offset of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    ref readonly TPixel this[float u, float v] { get; }
+    ref readonly TPixel Sample(float u, float v);
 
     /// <summary>
-    /// Gets a single <typeparamref name="TPixel"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <typeparamref name="TPixel"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="uv">The normalized coordinates of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    ref readonly TPixel this[Float2 uv] { get; }
+    ref readonly TPixel Sample(Float2 uv);
 }

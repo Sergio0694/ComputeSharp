@@ -38,10 +38,10 @@ public sealed class ReadOnlyTexture3D<T, TPixel> : Texture3D<T>, IReadOnlyNormal
     public ref readonly TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Int3)}]");
 
     /// <inheritdoc/>
-    public ref readonly TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
+    public ref readonly TPixel Sample(float u, float v, float w) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}.{nameof(Sample)}({typeof(float)}, {typeof(float)}, {typeof(float)})");
 
     /// <inheritdoc/>
-    public ref readonly TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Float3)}]");
+    public ref readonly TPixel Sample(Float3 uvw) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}.{nameof(Sample)}({typeof(Float3)})");
 
     /// <inheritdoc/>
     public override string ToString()
