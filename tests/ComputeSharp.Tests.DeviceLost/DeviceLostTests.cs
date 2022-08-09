@@ -5,6 +5,8 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests.DeviceLost;
 
@@ -16,29 +18,37 @@ public class DeviceLostTests
     [AllDevices]
     public async Task DeviceLost_RaiseEvent(Device device)
     {
-        using GraphicsDevice graphicsDevice = device.Get();
+        using ComPtr<ID3D12Device> d3D12Device = default;
 
-        List<(object? Sender, DeviceLostEventArgs Args)> args = new();
+        using (GraphicsDevice graphicsDevice = device.Get())
+        {
+            GraphicsDeviceHelper.GetD3D12Device(graphicsDevice, in d3D12Device);
 
-        // Register the device lost callback
-        graphicsDevice.DeviceLost += (s, e) => args.Add((s, e));
+            List<(object? Sender, DeviceLostEventArgs Args)> args = new();
 
-        await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
+            // Register the device lost callback
+            graphicsDevice.DeviceLost += (s, e) => args.Add((s, e));
 
-        Assert.AreEqual(1, args.Count);
-        Assert.IsNotNull(args[0].Sender);
-        Assert.IsNotNull(args[0].Args);
-        Assert.AreSame(args[0].Sender, graphicsDevice);
-        Assert.AreEqual(args[0].Args.Reason, DeviceLostReason.DeviceRemoved);
+            await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        // Trying to remove the device again does nothing
-        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
-        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
-        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
-        GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+            Assert.AreEqual(1, args.Count);
+            Assert.IsNotNull(args[0].Sender);
+            Assert.IsNotNull(args[0].Args);
+            Assert.AreSame(args[0].Sender, graphicsDevice);
+            Assert.AreEqual(args[0].Args.Reason, DeviceLostReason.DeviceRemoved);
 
-        // The event can only be raised once
-        Assert.AreEqual(1, args.Count);
+            // Trying to remove the device again does nothing
+            GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+            GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+            GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+            GraphicsDeviceHelper.RemoveDevice(graphicsDevice);
+
+            // The event can only be raised once
+            Assert.AreEqual(1, args.Count);
+        }
+
+        // Ensure the device has been disposed correctly
+        Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
     }
 
     [CombinatorialTestMethod]
