@@ -99,9 +99,9 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
             // Rewrite HLSL intrinsic methods
             if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
             {
-                if (HlslKnownMethods.NeedsD2DRequiresPositionAttribute(metadataName))
+                if (HlslKnownMethods.NeedsD2DRequiresScenePositionAttribute(metadataName))
                 {
-                    NeedsD2DRequiresPositionAttribute = true;
+                    NeedsD2DRequiresScenePositionAttribute = true;
                 }
 
                 return updatedNode.WithExpression(ParseExpression(mapping!));

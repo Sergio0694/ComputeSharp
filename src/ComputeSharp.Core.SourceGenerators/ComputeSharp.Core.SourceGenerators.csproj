@@ -16,6 +16,8 @@
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
+	<Compile Include="..\ComputeSharp.Core\Attributes\Internals\AutoConstructorBehaviorAttribute.cs" Link="ComputeSharp.Core\Attributes\Internals\AutoConstructorBehaviorAttribute.cs" />
+	<Compile Include="..\ComputeSharp.Core\Attributes\Internals\AutoConstructorBehavior.cs" Link="ComputeSharp.Core\Attributes\Internals\AutoConstructorBehavior.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.cs" />

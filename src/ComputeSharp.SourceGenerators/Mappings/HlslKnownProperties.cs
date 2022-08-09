@@ -8,75 +8,78 @@ namespace ComputeSharp.SourceGeneration.Mappings;
 /// <inheritdoc/>
 partial class HlslKnownProperties
 {
-    /// <summary>
-    /// The mapping of supported known indexers to HLSL resource type names.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, string> KnownResourceIndexers = new Dictionary<string, string>
+    /// <inheritdoc/>
+    private static partial IReadOnlyDictionary<string, string> BuildKnownResourceIndexers()
     {
-        [$"ComputeSharp.ReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.ReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.ReadWriteTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.IReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.IReadWriteNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
-        [$"ComputeSharp.ReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.ReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.ReadWriteTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.IReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-        [$"ComputeSharp.IReadWriteNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
-    };
+        return new Dictionary<string, string>
+        {
+            [$"ComputeSharp.ReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadWriteTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadWriteNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.ReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.ReadWriteTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadWriteNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
+        };
+    }
 
-    /// <summary>
-    /// The mapping of supported known samplers to HLSL resource type names.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, string?> KnownResourceSamplers = new Dictionary<string, string?>
+    /// <inheritdoc/>
+    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers()
     {
-        [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
-        [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(Float2).FullName}]"] = null,
-        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
-        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
-        [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
-        [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
-        [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
-        [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(Float3).FullName}]"] = null,
-        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
-        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(Float3).FullName}]"] = null,
-        [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
-        [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(Float3).FullName}]"] = null
-    };
+        return new Dictionary<string, string?>
+        {
+            [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+            [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+            [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(Float3).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(Float3).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(Float3).FullName}]"] = null
+        };
+    }
 
-    /// <summary>
-    /// The mapping of supported known size accessors for HLSL resource types.
-    /// </summary>
-    private static readonly IReadOnlyDictionary<string, (int Rank, int Axis)> KnownSizeAccessors = new Dictionary<string, (int, int)>
+    /// <inheritdoc/>
+    private static partial IReadOnlyDictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors()
     {
-        ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
-        ["ComputeSharp.Resources.Texture2D`1.Width"] = (2, 0),
-        ["ComputeSharp.Resources.Texture2D`1.Height"] = (2, 1),
-        ["ComputeSharp.Resources.Texture3D`1.Width"] = (3, 0),
-        ["ComputeSharp.Resources.Texture3D`1.Height"] = (3, 1),
-        ["ComputeSharp.Resources.Texture3D`1.Depth"] = (3, 2),
-        ["ComputeSharp.IReadOnlyTexture2D`1.Width"] = (2, 0),
-        ["ComputeSharp.IReadOnlyTexture2D`1.Height"] = (2, 1),
-        ["ComputeSharp.IReadOnlyTexture3D`1.Width"] = (3, 0),
-        ["ComputeSharp.IReadOnlyTexture3D`1.Height"] = (3, 1),
-        ["ComputeSharp.IReadOnlyTexture3D`1.Depth"] = (3, 2),
-        ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Width"] = (2, 0),
-        ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Height"] = (2, 1),
-        ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Width"] = (3, 0),
-        ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Height"] = (3, 1),
-        ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Depth"] = (3, 2),
-        ["ComputeSharp.IReadWriteNormalizedTexture2D`1.Width"] = (2, 0),
-        ["ComputeSharp.IReadWriteNormalizedTexture2D`1.Height"] = (2, 1),
-        ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Width"] = (3, 0),
-        ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Height"] = (3, 1),
-        ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Depth"] = (3, 2)
-    };
+        return new Dictionary<string, (int, int)>
+        {
+            ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.Resources.Texture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadWriteNormalizedTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadWriteNormalizedTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadWriteNormalizedTexture3D`1.Depth"] = (3, 2)
+        };
+    }
 
     /// <inheritdoc/>
     static partial void AddKnownProperties(IDictionary<string, string> knownProperties)
@@ -174,48 +177,5 @@ partial class HlslKnownProperties
                     break;
             }
         }
-    }
-
-    /// <summary>
-    /// Tries to get the mapped HLSL-compatible indexer resource type name for the input indexer name.
-    /// </summary>
-    /// <param name="name">The input fully qualified indexer name.</param>
-    /// <param name="mapped">The mapped type name, if one is found.</param>
-    /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
-    public static bool TryGetMappedResourceIndexerTypeName(string name, out string? mapped)
-    {
-        return KnownResourceIndexers.TryGetValue(name, out mapped);
-    }
-
-    /// <summary>
-    /// Tries to get the mapped HLSL-compatible sampler resource type name for the input indexer name.
-    /// </summary>
-    /// <param name="name">The input fully qualified indexer name.</param>
-    /// <param name="mapped">The mapped type name, if one is found.</param>
-    /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given sampler.</returns>
-    public static bool TryGetMappedResourceSamplerAccessType(string name, out string? mapped)
-    {
-        return KnownResourceSamplers.TryGetValue(name, out mapped);
-    }
-
-    /// <summary>
-    /// Tries to get the mapped rank and axis for a given indexer name.
-    /// </summary>
-    /// <param name="name">The input fully qualified indexer name.</param>
-    /// <param name="rank">The resulting indexer rank, if found.</param>
-    /// <param name="axis">The resulting indexer axis, if found.</param>
-    /// <returns>Whether or not a rank and axis could be resolved by the input indexer name.</returns>
-    public static bool TryGetAccessorRankAndAxis(string name, out int rank, out int axis)
-    {
-        if (KnownSizeAccessors.TryGetValue(name, out var info))
-        {
-            (rank, axis) = info;
-
-            return true;
-        }
-
-        (rank, axis) = default((int, int));
-
-        return false;
     }
 }

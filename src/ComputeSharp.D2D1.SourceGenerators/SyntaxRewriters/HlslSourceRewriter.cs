@@ -66,9 +66,9 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <summary>
-    /// Gets whether or not the shader needs the <c>[D2DRequiresPosition]</c> attribute.
+    /// Gets whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> attribute.
     /// </summary>
-    public bool NeedsD2DRequiresPositionAttribute { get; protected set; }
+    public bool NeedsD2DRequiresScenePositionAttribute { get; protected set; }
 
     /// <inheritdoc/>
     public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
@@ -246,6 +246,40 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
         {
             string propertyName = operation.Property.GetFullMetadataName();
+
+            // Rewrite texture resource indices taking individual indices a vector argument, as per HLSL spec.
+            // For instance: texture[ThreadIds.X, ThreadIds.Y] will be rewritten as texture[int2(ThreadIds.X, ThreadIds.Y)].
+            if (HlslKnownProperties.TryGetMappedResourceIndexerTypeName(propertyName, out string? mapping))
+            {
+                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+
+                return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+            }
+
+            // Rewrite texture resource sampled accesses, if needed
+            if (HlslKnownProperties.TryGetMappedResourceSamplerAccessType(propertyName, out mapping))
+            {
+                // Get the syntax for the argument syntax transformation as described above
+                ArgumentSyntax coordinateSyntax = mapping switch
+                {
+                    not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
+                    null => updatedNode.ArgumentList.Arguments[0]
+                };
+
+                string fieldName = (operation.Instance as IFieldReferenceOperation)?.Member.Name ?? "";
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldName, out string? mapped);
+
+                // Transform an indexer syntax into a sampling call with the implicit static linear sampler.
+                // For instance: texture[uv] will be rewritten as texture.Sample(__sampler__texture, uv).
+                return
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            updatedNode.Expression,
+                            IdentifierName("Sample")))
+                    .AddArgumentListArguments(Argument(IdentifierName($"__sampler__{mapped ?? fieldName}")), coordinateSyntax);
+            }
 
             // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite
             // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.

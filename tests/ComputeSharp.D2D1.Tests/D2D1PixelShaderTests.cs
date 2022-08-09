@@ -170,6 +170,73 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
+    public unsafe void GetResourceTextureDescriptions_Empty()
+    {
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<CheckerboardClipEffect>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<InvertEffect>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<InvertWithThresholdEffect>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<PixelateEffect.Shader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<ZonePlateEffect>().Length, 0);
+
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<ShaderWithMultipleInputs>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<EmptyShader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<OnlyBufferPrecisionShader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<OnlyChannelDepthShader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<CustomBufferOutputShader>().Length, 0);
+    }
+
+    [TestMethod]
+    public unsafe void GetResourceTextureDescriptions_Custom()
+    {
+        ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptions = D2D1PixelShader.GetResourceTextureDescriptions<ShaderWithResourceTextures>();
+
+        Assert.AreEqual(resourceTextureDescriptions.Length, 3);
+
+        ReadOnlySpan<D2D1ResourceTextureDescription> span = resourceTextureDescriptions.Span;
+
+        Assert.AreEqual(span[0].Index, 5);
+        Assert.AreEqual(span[0].Rank, 1);
+
+        Assert.AreEqual(span[1].Index, 6);
+        Assert.AreEqual(span[1].Rank, 2);
+
+        Assert.AreEqual(span[2].Index, 7);
+        Assert.AreEqual(span[2].Rank, 3);
+    }
+
+    [D2DInputCount(4)]
+    [D2DInputSimple(0)]
+    [D2DInputSimple(2)]
+    [D2DInputComplex(1)]
+    [D2DInputComplex(3)]
+    [AutoConstructor]
+    partial struct ShaderWithResourceTextures : ID2D1PixelShader
+    {
+        float number;
+
+        [D2DResourceTextureIndex(5)]
+        D2D1ResourceTexture1D myTexture1;
+
+        [D2DResourceTextureIndex(6)]
+        D2D1ResourceTexture2D myTexture2;
+
+        [D2DResourceTextureIndex(7)]
+        D2D1ResourceTexture3D myTexture3;
+
+        public Float4 Execute()
+        {
+            float4 pixel1 = myTexture1[0];
+            float4 pixel2 = myTexture1[0.4f];
+            float4 pixel3 = myTexture2[0, 1];
+            float4 pixel4 = myTexture2[0.4f, 0.3f];
+            float4 pixel5 = myTexture3[0, 1, 2];
+            float4 pixel6 = myTexture3[0.4f, 0.5f, 0.6f];
+
+            return 0;
+        }
+    }
+
+    [TestMethod]
     public unsafe void GetBytecode_FromEmbeddedBytecode()
     {
         // Bytecode with no parameters

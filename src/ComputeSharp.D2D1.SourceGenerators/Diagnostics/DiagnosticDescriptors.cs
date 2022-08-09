@@ -547,7 +547,7 @@ internal static class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor OutOfRangeInputIndex = new DiagnosticDescriptor(
         id: "CMPSD2D0039",
-        title: "Our of range D2D1 shader input indices",
+        title: "Out of range D2D1 shader input indices",
         messageFormat: "The D2D1 shader of type {0} is using some out of range input indices",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -595,7 +595,7 @@ internal static class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor OutOfRangeInputDescriptionIndex = new DiagnosticDescriptor(
         id: "CMPSD2D0042",
-        title: "Our of range D2D1 shader input description indices",
+        title: "Out of range D2D1 shader input description indices",
         messageFormat: "The D2D1 shader of type {0} is using some out of range input description indices",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -636,18 +636,98 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DRequiresPosition]</c> attribute is missing.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DRequiresScenePosition]</c> attribute is missing.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresPosition] attribute to be used (that is, D2D1.GetScenePosition() and D2D1.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresScenePosition] attribute to be used (that is, D2D1.GetScenePosition() and D2D1.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingD2DRequiresPositionAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingD2DRequiresScenePositionAttribute = new DiagnosticDescriptor(
         id: "CMPSD2D0045",
-        title: "Missing [D2DRequiresPosition] attribute",
-        messageFormat: "The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresPosition] attribute to be used (that is, D2D.GetScenePosition() and D2D.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly",
+        title: "Missing [D2DRequiresScenePosition] attribute",
+        messageFormat: "The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresScenePosition] attribute to be used (that is, D2D.GetScenePosition() and D2D.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "A D2D1 shader using functionality that needs position info (ie. when [D2DRequiresPosition] is used, which is mandatory when calling either D2D.GetScenePosition() or D2D.SampleInputAtPosition(int, float2)) needs to be annotated accordingly.",
+        description: "A D2D1 shader using functionality that needs position info (ie. when [D2DRequiresScenePosition] is used, which is mandatory when calling either D2D.GetScenePosition() or D2D.SampleInputAtPosition(int, float2)) needs to be annotated accordingly.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range resource texture index (or more).
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor ResourceTextureIndexOverlappingWithInputIndex = new DiagnosticDescriptor(
+        id: "CMPSD2D0046",
+        title: "D2D1 shader resource texture indices overlapping input indices",
+        messageFormat: "The D2D1 shader of type {0} is using some resource texture indices that overlap with the shader input indices",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must have all the indices of its resource textures in the valid range (between the input count and 16, exclusive).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with an out of range resource texture index (or more).
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor OutOfRangeResourceTextureIndex = new DiagnosticDescriptor(
+        id: "CMPSD2D0047",
+        title: "Out of range D2D1 shader resource texture indices",
+        messageFormat: "The D2D1 shader of type {0} is using some out of range resource texture indices",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must have all the indices of its resource textures in the valid range (between the input count and 16, exclusive).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for repeated indices for D2D resource texture indices.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DResourceTextureIndex] attributes"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor RepeatedD2DResourceTextureIndices = new DiagnosticDescriptor(
+        id: "CMPSD2D0048",
+        title: "Repeated D2D1 shader resource texture indices",
+        messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DResourceTextureIndex] attributes",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must only have unique indices for all of its [D2DResourceTextureIndex] attributes.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DResourceTextureIndex]</c>.
+    /// <para>
+    /// Format: <c>"The field \"{0}\" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeUse = new DiagnosticDescriptor(
+        id: "CMPSD2D0049",
+        title: "Invalid [D2DResourceTextureIndex] use",
+        messageFormat: "The field \"{0}\" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A field is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a missing <c>[D2DResourceTextureIndex]</c>.
+    /// <para>
+    /// Format: <c>"The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingD2DResourceTextureIndexAttribute = new DiagnosticDescriptor(
+        id: "CMPSD2D0050",
+        title: "Missing [D2DResourceTextureIndex] attribute",
+        messageFormat: "The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "All fields of a D2D1 resource texture type must be annotated using the [D2DResourceTextureIndex] attribute.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
