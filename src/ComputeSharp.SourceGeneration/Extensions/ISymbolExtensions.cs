@@ -76,7 +76,7 @@ internal static class ISymbolExtensions
     {
         if (includeParameters)
         {
-            var parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
+            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
 
             return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}({parameters})";
         }
@@ -95,7 +95,7 @@ internal static class ISymbolExtensions
 
         if (symbol.IsIndexer)
         {
-            var parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
+            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
 
             return $"{declaringTypeName}.this[{parameters}]";
         }
