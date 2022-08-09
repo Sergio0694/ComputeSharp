@@ -346,10 +346,10 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
         {
-            string metadataName = method.GetFullMetadataName();
-
             if (method.IsStatic)
             {
+                string metadataName = method.GetFullMetadataName();
+
                 // If the invocation consists of invoking a static method that has a direct
                 // mapping to HLSL, rewrite the expression in the current invocation node.
                 // For instance: Math.Abs(expr) => abs(expr).
@@ -396,17 +396,22 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     return updatedNode.WithExpression(ParseExpression(methodIdentifier));
                 }
             }
-            else if (HlslKnownMethods.TryGetMappedResourceSamplerAccessType(metadataName, out string? mapping))
+            else
             {
-                // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
-                ArgumentSyntax coordinateSyntax = mapping switch
-                {
-                    not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
-                    null => updatedNode.ArgumentList.Arguments[0]
-                };
+                string metadataName = method.GetFullMetadataName(includeParameters: true);
 
-                // Rewrite texture resource sampled accesses, if needed
-                return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
+                if (HlslKnownMethods.TryGetMappedResourceSamplerAccessType(metadataName, out string? mapping))
+                {
+                    // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
+                    ArgumentSyntax coordinateSyntax = mapping switch
+                    {
+                        not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
+                        null => updatedNode.ArgumentList.Arguments[0]
+                    };
+
+                    // Rewrite texture resource sampled accesses, if needed
+                    return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
+                }
             }
         }
 

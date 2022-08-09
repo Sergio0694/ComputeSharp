@@ -20,17 +20,6 @@ internal static class ISymbolExtensions
         miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
 
     /// <summary>
-    /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
-    /// </summary>
-    private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat = new(
-        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers,
-        memberOptions: SymbolDisplayMemberOptions.IncludeContainingType,
-        parameterOptions: SymbolDisplayParameterOptions.None);
-
-    /// <summary>
     /// Gets the fully qualified name for a given symbol.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
@@ -89,10 +78,10 @@ internal static class ISymbolExtensions
         {
             var parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
 
-            return $"{symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat)}({parameters})";
+            return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}({parameters})";
         }
 
-        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
+        return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}";
     }
 
     /// <summary>
