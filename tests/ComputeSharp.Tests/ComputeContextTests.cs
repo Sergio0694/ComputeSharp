@@ -1288,7 +1288,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source[ThreadIds.Normalized.XY];
+            return source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1301,7 +1301,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source[ThreadIds.Normalized.XYZ];
+            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
         }
     }
 
@@ -1313,7 +1313,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source[ThreadIds.Normalized.XY];
+            return source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1326,7 +1326,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source[ThreadIds.Normalized.XYZ];
+            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
         }
     }
 
