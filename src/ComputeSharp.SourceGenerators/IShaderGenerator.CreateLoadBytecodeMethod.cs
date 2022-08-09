@@ -18,7 +18,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
 

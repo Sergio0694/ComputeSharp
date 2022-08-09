@@ -8,7 +8,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
 

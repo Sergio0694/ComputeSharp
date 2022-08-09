@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
-using static ComputeSharp.D2D1.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 

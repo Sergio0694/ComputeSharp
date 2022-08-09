@@ -1,13 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace ComputeSharp.D2D1.SourceGenerators.Diagnostics;
+namespace ComputeSharp.SourceGeneration.Diagnostics;
 
 #pragma warning disable IDE0090 // Use 'new(...)'
 
-/// <summary>
-/// A container for all <see cref="DiagnosticDescriptor"/> instances for errors reported by analyzers in this project.
-/// </summary>
-internal static class DiagnosticDescriptors
+/// <inheritdoc/>
+partial class DiagnosticDescriptors
 {
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader field.

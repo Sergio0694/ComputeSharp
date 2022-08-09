@@ -15,7 +15,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-using static ComputeSharp.D2D1.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ComputeSharp.D2D1.SourceGenerators.SyntaxRewriters;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static ComputeSharp.D2D1.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618, RS1024
@@ -289,7 +289,8 @@ partial class ID2D1ShaderGenerator
                     discoveredTypes,
                     staticMethods,
                     constantDefinitions,
-                    diagnostics);
+                    diagnostics,
+                    isShaderEntryPoint);
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
