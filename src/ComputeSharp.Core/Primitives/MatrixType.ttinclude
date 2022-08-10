@@ -9,6 +9,7 @@
 void GenerateAllMatrixProperties(string typeName, int elementSize)
 {
 #>
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 <#
@@ -19,7 +20,6 @@ using System.Runtime.InteropServices;
 #>
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #pragma warning disable CS0660, CS0661
@@ -151,6 +151,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
 
     /// <summary>
@@ -159,6 +160,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
         
     /// <summary>
@@ -168,6 +170,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
         
     /// <summary>
@@ -178,6 +181,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
 <#
     for (int i = 1; i <= rows; i++)
@@ -192,13 +196,15 @@ public unsafe partial struct <#=fullTypeName#>
     if (isBoolType)
     {
 #>
-    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m<#=i#><#=j#>)), 1));
+    [UnscopedRef]
+    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref Unsafe.As<int, bool>(ref this.m<#=i#><#=j#>);
 <#
     }
     else
     {
 #>
-    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m<#=i#><#=j#>), 1));
+    [UnscopedRef]
+    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref this.m<#=i#><#=j#>;
 <#
     }
 #>

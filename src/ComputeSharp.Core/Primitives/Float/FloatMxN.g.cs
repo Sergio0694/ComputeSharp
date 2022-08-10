@@ -1,9 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Intrinsics.Attributes;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #pragma warning disable CS0660, CS0661
@@ -36,6 +36,7 @@ public unsafe partial struct Float1x1
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
@@ -44,6 +45,7 @@ public unsafe partial struct Float1x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -53,6 +55,7 @@ public unsafe partial struct Float1x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -63,12 +66,14 @@ public unsafe partial struct Float1x1
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Creates a new <see cref="Float1x1"/> value with the same value for all its components.
@@ -239,6 +244,7 @@ public unsafe partial struct Float1x2
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
@@ -247,6 +253,7 @@ public unsafe partial struct Float1x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -256,6 +263,7 @@ public unsafe partial struct Float1x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -266,17 +274,20 @@ public unsafe partial struct Float1x2
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Creates a new <see cref="Float1x2"/> value with the same value for all its components.
@@ -543,6 +554,7 @@ public unsafe partial struct Float1x3
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
@@ -551,6 +563,7 @@ public unsafe partial struct Float1x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -560,6 +573,7 @@ public unsafe partial struct Float1x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -570,22 +584,26 @@ public unsafe partial struct Float1x3
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Creates a new <see cref="Float1x3"/> value with the same value for all its components.
@@ -858,6 +876,7 @@ public unsafe partial struct Float1x4
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
@@ -866,6 +885,7 @@ public unsafe partial struct Float1x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -875,6 +895,7 @@ public unsafe partial struct Float1x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -885,27 +906,32 @@ public unsafe partial struct Float1x4
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref float M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public readonly ref float M14 => ref this.m14;
 
     /// <summary>
     /// Creates a new <see cref="Float1x4"/> value with the same value for all its components.
@@ -1169,6 +1195,7 @@ public unsafe partial struct Float2x1
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
@@ -1177,6 +1204,7 @@ public unsafe partial struct Float2x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -1186,6 +1214,7 @@ public unsafe partial struct Float2x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -1196,17 +1225,20 @@ public unsafe partial struct Float2x1
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Creates a new <see cref="Float2x1"/> value with the same value for all its components.
@@ -1477,6 +1509,7 @@ public unsafe partial struct Float2x2
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
@@ -1485,6 +1518,7 @@ public unsafe partial struct Float2x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -1494,6 +1528,7 @@ public unsafe partial struct Float2x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -1504,27 +1539,32 @@ public unsafe partial struct Float2x2
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Creates a new <see cref="Float2x2"/> value with the same value for all its components.
@@ -1733,6 +1773,7 @@ public unsafe partial struct Float2x3
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
@@ -1741,6 +1782,7 @@ public unsafe partial struct Float2x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -1750,6 +1792,7 @@ public unsafe partial struct Float2x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -1760,37 +1803,44 @@ public unsafe partial struct Float2x3
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Creates a new <see cref="Float2x3"/> value with the same value for all its components.
@@ -2097,6 +2147,7 @@ public unsafe partial struct Float2x4
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
@@ -2105,6 +2156,7 @@ public unsafe partial struct Float2x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -2114,6 +2166,7 @@ public unsafe partial struct Float2x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -2124,47 +2177,56 @@ public unsafe partial struct Float2x4
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref float M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public readonly ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref float M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public readonly ref float M24 => ref this.m24;
 
     /// <summary>
     /// Creates a new <see cref="Float2x4"/> value with the same value for all its components.
@@ -2431,6 +2493,7 @@ public unsafe partial struct Float3x1
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
@@ -2439,6 +2502,7 @@ public unsafe partial struct Float3x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -2448,6 +2512,7 @@ public unsafe partial struct Float3x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -2458,22 +2523,26 @@ public unsafe partial struct Float3x1
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Creates a new <see cref="Float3x1"/> value with the same value for all its components.
@@ -2758,6 +2827,7 @@ public unsafe partial struct Float3x2
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
@@ -2766,6 +2836,7 @@ public unsafe partial struct Float3x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -2775,6 +2846,7 @@ public unsafe partial struct Float3x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -2785,37 +2857,44 @@ public unsafe partial struct Float3x2
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Creates a new <see cref="Float3x2"/> value with the same value for all its components.
@@ -3129,6 +3208,7 @@ public unsafe partial struct Float3x3
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
@@ -3137,6 +3217,7 @@ public unsafe partial struct Float3x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -3146,6 +3227,7 @@ public unsafe partial struct Float3x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -3156,52 +3238,62 @@ public unsafe partial struct Float3x3
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref float M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public readonly ref float M33 => ref this.m33;
 
     /// <summary>
     /// Creates a new <see cref="Float3x3"/> value with the same value for all its components.
@@ -3452,6 +3544,7 @@ public unsafe partial struct Float3x4
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
@@ -3460,6 +3553,7 @@ public unsafe partial struct Float3x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -3469,6 +3563,7 @@ public unsafe partial struct Float3x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -3479,67 +3574,80 @@ public unsafe partial struct Float3x4
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref float M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public readonly ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref float M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public readonly ref float M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref float M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public readonly ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref float M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
+    [UnscopedRef]
+    public readonly ref float M34 => ref this.m34;
 
     /// <summary>
     /// Creates a new <see cref="Float3x4"/> value with the same value for all its components.
@@ -3815,6 +3923,7 @@ public unsafe partial struct Float4x1
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
@@ -3823,6 +3932,7 @@ public unsafe partial struct Float4x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -3832,6 +3942,7 @@ public unsafe partial struct Float4x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -3842,27 +3953,32 @@ public unsafe partial struct Float4x1
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref float M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public readonly ref float M41 => ref this.m41;
 
     /// <summary>
     /// Creates a new <see cref="Float4x1"/> value with the same value for all its components.
@@ -4161,6 +4277,7 @@ public unsafe partial struct Float4x2
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
@@ -4169,6 +4286,7 @@ public unsafe partial struct Float4x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -4178,6 +4296,7 @@ public unsafe partial struct Float4x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -4188,47 +4307,56 @@ public unsafe partial struct Float4x2
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref float M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public readonly ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref float M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public readonly ref float M42 => ref this.m42;
 
     /// <summary>
     /// Creates a new <see cref="Float4x2"/> value with the same value for all its components.
@@ -4563,6 +4691,7 @@ public unsafe partial struct Float4x3
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
@@ -4571,6 +4700,7 @@ public unsafe partial struct Float4x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -4580,6 +4710,7 @@ public unsafe partial struct Float4x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -4590,67 +4721,80 @@ public unsafe partial struct Float4x3
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref float M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public readonly ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref float M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public readonly ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref float M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public readonly ref float M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref float M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
+    [UnscopedRef]
+    public readonly ref float M43 => ref this.m43;
 
     /// <summary>
     /// Creates a new <see cref="Float4x3"/> value with the same value for all its components.
@@ -5013,6 +5157,7 @@ public unsafe partial struct Float4x4
     /// </summary>
     /// <param name="row">The row to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
@@ -5021,6 +5166,7 @@ public unsafe partial struct Float4x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
@@ -5030,6 +5176,7 @@ public unsafe partial struct Float4x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
@@ -5040,87 +5187,104 @@ public unsafe partial struct Float4x4
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [UnscopedRef]
     public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref float M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public readonly ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref float M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public readonly ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref float M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public readonly ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref float M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public readonly ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref float M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public readonly ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref float M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public readonly ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref float M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public readonly ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref float M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public readonly ref float M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref float M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public readonly ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref float M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public readonly ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref float M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public readonly ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref float M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
+    [UnscopedRef]
+    public readonly ref float M34 => ref this.m34;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref float M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public readonly ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref float M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public readonly ref float M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref float M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
+    [UnscopedRef]
+    public readonly ref float M43 => ref this.m43;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 4].
     /// </summary>
-    public readonly ref float M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m44), 1));
+    [UnscopedRef]
+    public readonly ref float M44 => ref this.m44;
 
     /// <summary>
     /// Creates a new <see cref="Float4x4"/> value with the same value for all its components.
