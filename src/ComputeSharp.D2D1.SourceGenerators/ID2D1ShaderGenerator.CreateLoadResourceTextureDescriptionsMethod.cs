@@ -46,8 +46,8 @@ partial class ID2D1ShaderGenerator
                 // Check that the field is a resource texture type (if not, it will be processed by the HLSL rewriter too)
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
-                    // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D or the 2D/3D versions
-                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 2, 1));
+                    // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D`1 or the 2D/3D versions
+                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 4, 1));
                     int? index = null;
 
                     // Get the index from the [D2DResourceTextureIndex] attribute over the field
