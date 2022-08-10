@@ -215,13 +215,13 @@ public partial class D2D1PixelShaderTests
         float number;
 
         [D2DResourceTextureIndex(5)]
-        D2D1ResourceTexture1D myTexture1;
+        D2D1ResourceTexture1D<float4> myTexture1;
 
         [D2DResourceTextureIndex(6)]
-        D2D1ResourceTexture2D myTexture2;
+        D2D1ResourceTexture2D<float4> myTexture2;
 
         [D2DResourceTextureIndex(7)]
-        D2D1ResourceTexture3D myTexture3;
+        D2D1ResourceTexture3D<float4> myTexture3;
 
         public Float4 Execute()
         {
