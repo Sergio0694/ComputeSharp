@@ -344,56 +344,74 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     {
         var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-        if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation operation &&
-            operation.TargetMethod is IMethodSymbol method &&
-            method.IsStatic)
+        if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
         {
-            string metadataName = method.GetFullMetadataName();
-
-            // If the invocation consists of invoking a static method that has a direct
-            // mapping to HLSL, rewrite the expression in the current invocation node.
-            // For instance: Math.Abs(expr) => abs(expr).
-            if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
+            if (method.IsStatic)
             {
-                // Allow specialized types to track the method invocation, if needed
-                TrackKnownMethodInvocation(metadataName);
+                string metadataName = method.GetFullMetadataName();
 
-                return updatedNode.WithExpression(ParseExpression(mapping!));
-            }
-
-            // Update the name if the target is a local function. The exact schema for the
-            // updated name is detailed in the override handling the local function statement.
-            if (method.MethodKind == MethodKind.LocalFunction)
-            {
-                var functionIdentifier = $"__{this.currentMethod!.Identifier.Text}__{method.Name}";
-
-                return updatedNode.WithExpression(ParseExpression(functionIdentifier));
-            }
-
-            // If the method is an external static method, import and rewrite it as well.
-            // This assumes that the target method is actually part of the same compilation.
-            // We need to check the declaring type to avoid rewriting static methods in the shader
-            // type as well, as they will be processed by the generator in a different path.
-            if (!SymbolEqualityComparer.Default.Equals(this.shaderType, method.ContainingType))
-            {
-                var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
-
-                if (!this.staticMethods.ContainsKey(method))
+                // If the invocation consists of invoking a static method that has a direct
+                // mapping to HLSL, rewrite the expression in the current invocation node.
+                // For instance: Math.Abs(expr) => abs(expr).
+                if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
                 {
-                    if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
-                    {
-                        Diagnostics.Add(InvalidMethodCall, node, method);
+                    // Allow specialized types to track the method invocation, if needed
+                    TrackKnownMethodInvocation(metadataName);
 
-                        return updatedNode;
-                    }
-
-                    ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Diagnostics);
-                    MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
-
-                    this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                    return updatedNode.WithExpression(ParseExpression(mapping!));
                 }
 
-                return updatedNode.WithExpression(ParseExpression(methodIdentifier));
+                // Update the name if the target is a local function. The exact schema for the
+                // updated name is detailed in the override handling the local function statement.
+                if (method.MethodKind == MethodKind.LocalFunction)
+                {
+                    var functionIdentifier = $"__{this.currentMethod!.Identifier.Text}__{method.Name}";
+
+                    return updatedNode.WithExpression(ParseExpression(functionIdentifier));
+                }
+
+                // If the method is an external static method, import and rewrite it as well.
+                // This assumes that the target method is actually part of the same compilation.
+                // We need to check the declaring type to avoid rewriting static methods in the shader
+                // type as well, as they will be processed by the generator in a different path.
+                if (!SymbolEqualityComparer.Default.Equals(this.shaderType, method.ContainingType))
+                {
+                    var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
+
+                    if (!this.staticMethods.ContainsKey(method))
+                    {
+                        if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
+                        {
+                            Diagnostics.Add(InvalidMethodCall, node, method);
+
+                            return updatedNode;
+                        }
+
+                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Diagnostics);
+                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
+
+                        this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                    }
+
+                    return updatedNode.WithExpression(ParseExpression(methodIdentifier));
+                }
+            }
+            else
+            {
+                string metadataName = method.GetFullMetadataName(includeParameters: true);
+
+                if (HlslKnownMethods.TryGetMappedResourceSamplerAccessType(metadataName, out string? mapping))
+                {
+                    // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
+                    ArgumentSyntax coordinateSyntax = mapping switch
+                    {
+                        not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
+                        null => updatedNode.ArgumentList.Arguments[0]
+                    };
+
+                    // Rewrite texture resource sampled accesses, if needed
+                    return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
+                }
             }
         }
 
@@ -422,6 +440,17 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         return updatedNode;
     }
+
+
+
+    /// <summary>
+    /// Rewrites a sampled texture access.
+    /// </summary>
+    /// <param name="operation">The <see cref="IInvocationOperation"/> instance for the sampled texture access.</param>
+    /// <param name="expression">The input <see cref="ExpressionSyntax"/> instance for the node to rewrite.</param>
+    /// <param name="arguments">The input <see cref="ArgumentSyntax"/> with the updated arguments for the expression to rewrite.</param>
+    /// <returns>A <see cref="SyntaxNode"/> representing the rewritten sampled texture access.</returns>
+    private partial SyntaxNode RewriteSampledTextureAccess(IInvocationOperation operation, ExpressionSyntax expression, ArgumentSyntax arguments);
 
     /// <summary>
     /// Tracks a property access to a known HLSL property.

@@ -78,7 +78,7 @@ public sealed partial class ShaderMethodSourceAttribute : Attribute
         }
 
         var attributes = function.Method.DeclaringType!.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
-        string methodName = function.Method.GetFullName();
+        string methodName = function.Method.GetFullyQualifiedName();
 
         foreach (var attribute in attributes)
         {

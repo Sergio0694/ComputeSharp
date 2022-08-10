@@ -37,17 +37,17 @@ public readonly struct D2D1ResourceTexture2D
     public ref readonly Float4 this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(D2D1ResourceTexture2D)}[{typeof(Int2)}]");
 
     /// <summary>
-    /// Gets a single <see cref="Float4"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <see cref="Float4"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="u">The horizontal normalized offset of the value to get.</param>
     /// <param name="v">The vertical normalized offset of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    public ref readonly Float4 this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(D2D1ResourceTexture2D)}[{typeof(float)}, {typeof(float)}]");
+    public ref readonly Float4 Sample(float u, float v) => throw new InvalidExecutionContextException($"{typeof(D2D1ResourceTexture2D)}.{nameof(Sample)}({typeof(float)}, {typeof(float)})");
 
     /// <summary>
-    /// Gets a single <see cref="Float4"/> value from the current readonly texture with linear sampling.
+    /// Retrieves a single <see cref="Float4"/> value from the current readonly texture with linear sampling.
     /// </summary>
     /// <param name="uv">The normalized coordinates of the value to get.</param>
     /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-    public ref readonly Float4 this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(D2D1ResourceTexture2D)}[{typeof(Float2)}]");
+    public ref readonly Float4 Sample(Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D1ResourceTexture2D)}.{nameof(Sample)}({typeof(Float2)})");
 }

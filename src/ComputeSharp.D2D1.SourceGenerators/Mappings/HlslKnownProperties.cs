@@ -16,19 +16,6 @@ partial class HlslKnownProperties
     }
 
     /// <inheritdoc/>
-    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers()
-    {
-        return new Dictionary<string, string?>
-        {
-            [$"ComputeSharp.D2D1.D2D1ResourceTexture1D.this[{typeof(float).FullName}]"] = null,
-            [$"ComputeSharp.D2D1.D2D1ResourceTexture2D.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
-            [$"ComputeSharp.D2D1.D2D1ResourceTexture2D.this[{typeof(Float2).FullName}]"] = null,
-            [$"ComputeSharp.D2D1.D2D1ResourceTexture3D.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
-            [$"ComputeSharp.D2D1.D2D1ResourceTexture3D.this[{typeof(Float3).FullName}]"] = null
-        };
-    }
-
-    /// <inheritdoc/>
     private static partial IReadOnlyDictionary<string, (int Rank, int Axis)> BuildKnownSizeAccessors()
     {
         return new Dictionary<string, (int, int)>

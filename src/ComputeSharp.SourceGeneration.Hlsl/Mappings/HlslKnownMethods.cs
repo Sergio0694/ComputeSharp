@@ -150,6 +150,28 @@ internal static partial class HlslKnownMethods
     static partial void AddKnownMethods(IDictionary<string, string> knownMethods);
 
     /// <summary>
+    /// The mapping of supported known samplers to HLSL resource type names.
+    /// </summary>
+    private static readonly IReadOnlyDictionary<string, string?> KnownResourceSamplers = BuildKnownResourceSamplers();
+
+    /// <summary>
+    /// Builds the mapping of supported known samplers to HLSL resource type names.
+    /// </summary>
+    /// <returns>The mapping of supported known samplers to HLSL resource type names.</returns>
+    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers();
+
+    /// <summary>
+    /// Tries to get the mapped HLSL-compatible sampler resource type name for the input indexer name.
+    /// </summary>
+    /// <param name="name">The input fully qualified indexer name.</param>
+    /// <param name="mapped">The mapped type name, if one is found.</param>
+    /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given sampler.</returns>
+    public static bool TryGetMappedResourceSamplerAccessType(string name, out string? mapped)
+    {
+        return KnownResourceSamplers.TryGetValue(name, out mapped);
+    }
+
+    /// <summary>
     /// Tries to get the mapped HLSL-compatible method name for the input method name.
     /// </summary>
     /// <param name="name">The input fully qualified method name.</param>

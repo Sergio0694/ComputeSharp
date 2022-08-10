@@ -37,4 +37,17 @@ partial class HlslKnownMethods
             knownMethods.Add($"{typeof(D2D).FullName}{Type.Delimiter}{method.Name}", hlslName);
         }
     }
+
+    /// <inheritdoc/>
+    private static partial IReadOnlyDictionary<string, string?> BuildKnownResourceSamplers()
+    {
+        return new Dictionary<string, string?>
+        {
+            [$"ComputeSharp.D2D1.D2D1ResourceTexture1D.Sample({typeof(float).FullName})"] = null,
+            [$"ComputeSharp.D2D1.D2D1ResourceTexture2D.Sample({typeof(float).FullName}, {typeof(float).FullName})"] = "float2",
+            [$"ComputeSharp.D2D1.D2D1ResourceTexture2D.Sample({typeof(Float2).FullName})"] = null,
+            [$"ComputeSharp.D2D1.D2D1ResourceTexture3D.Sample({typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName})"] = "float3",
+            [$"ComputeSharp.D2D1.D2D1ResourceTexture3D.Sample({typeof(Float3).FullName})"] = null
+        };
+    }
 }

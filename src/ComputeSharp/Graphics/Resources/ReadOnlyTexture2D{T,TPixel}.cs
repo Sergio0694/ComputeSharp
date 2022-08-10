@@ -37,10 +37,10 @@ public sealed class ReadOnlyTexture2D<T, TPixel> : Texture2D<T>, IReadOnlyNormal
     public ref readonly TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T,TPixel>)}[{typeof(Int2)}]");
 
     /// <inheritdoc/>
-    public ref readonly TPixel this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}[{typeof(float)}, {typeof(float)}]");
+    public ref readonly TPixel Sample(float u, float v) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}.{nameof(Sample)}({typeof(float)}, {typeof(float)})");
 
     /// <inheritdoc/>
-    public ref readonly TPixel this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}[{typeof(Float2)}]");
+    public ref readonly TPixel Sample(Float2 uv) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}.{nameof(Sample)}({typeof(Float2)})");
 
     /// <inheritdoc/>
     public override string ToString()

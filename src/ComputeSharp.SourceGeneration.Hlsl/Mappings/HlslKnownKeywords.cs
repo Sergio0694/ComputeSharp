@@ -23,10 +23,10 @@ internal static partial class HlslKnownKeywords
         // HLSL keywords
         HashSet<string> knownKeywords = new(new[]
         {
-            "asm", "asm_fragment", "cbuffer", "centroid", "column_major",
-            "compile", "discard", "dword", "export", "fxgroup", "groupshared",
-            "half", "inline", "inout", "line", "lineadj", "linear", "matrix",
-            "nointerpolation", "noperspective", "NULL", "packoffset", "pass",
+            "asm", "asm_fragment", "cbuffer", "buffer", "texture", "centroid",
+            "column_major", "compile", "discard", "dword", "export", "fxgroup",
+            "groupshared", "half", "inline", "inout", "line", "lineadj", "linear",
+            "matrix", "nointerpolation", "noperspective", "NULL", "packoffset", "pass",
             "pixelfragment", "point", "precise", "register", "row_major", "sample",
             "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
             "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
