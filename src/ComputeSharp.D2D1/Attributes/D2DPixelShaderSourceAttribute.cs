@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ComputeSharp.D2D1;
 
@@ -38,7 +39,7 @@ public sealed class D2DPixelShaderSourceAttribute : Attribute
     /// Creates a new instance of the <see cref="D2DPixelShaderSourceAttribute"/> type with the specified arguments.
     /// </summary>
     /// <param name="hlslSource">The number of texture inputs for the shader.</param>
-    public D2DPixelShaderSourceAttribute(string hlslSource)
+    public D2DPixelShaderSourceAttribute([StringSyntax("Hlsl")] string hlslSource)
     {
         HlslSource = hlslSource;
     }
