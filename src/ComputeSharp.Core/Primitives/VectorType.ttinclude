@@ -64,11 +64,11 @@ void GenerateVectorProperties(string typeName, int elementSize)
         WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
     }
 #>
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #nullable enable
@@ -206,16 +206,16 @@ public unsafe partial struct <#=typeName#>
             char fieldName = "xyzw"["xyzwrgba".IndexOf(propertyName.ToLower()) % 4];
 
             // Property
-            Write($"public readonly {refType} {propertyType} {propertyName} ");
+            WriteLine("[UnscopedRef]");
 
             if (isBoolType)
             {
                 // For bool types, also reinterpret cast from int to bool (the backing field is int to ensure all 4 bytes are initialized)
-                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.{fieldName})), 1));");
+                WriteLine($"public readonly {refType} {propertyType} {propertyName} => ref Unsafe.As<int, bool>(ref this.{fieldName});");
             }
             else
             {
-                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.{fieldName}), 1));");
+                WriteLine($"public readonly {refType} {propertyType} {propertyName} => ref this.{fieldName};");
             }
         }
         else
@@ -229,6 +229,7 @@ public unsafe partial struct <#=typeName#>
             WriteLine("/// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>");
 
             // Property
+            WriteLine("[UnscopedRef]");
             Write($"public readonly {refType} {propertyType} {propertyName} ");
             WriteLine($"=> ref *({propertyType}*)UndefinedData;");
         }
