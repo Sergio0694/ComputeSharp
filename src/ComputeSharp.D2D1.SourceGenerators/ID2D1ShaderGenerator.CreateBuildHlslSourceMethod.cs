@@ -132,6 +132,20 @@ partial class ID2D1ShaderGenerator
                 // Handle resource textures as a special case
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
+                    ITypeSymbol resourceTextureTypeArgumentSymbol = typeSymbol.TypeArguments[0];
+
+                    // Validate that the type argument is only either float or float4
+                    if (!resourceTextureTypeArgumentSymbol.HasFullyQualifiedName("System.Single") &&
+                        !resourceTextureTypeArgumentSymbol.HasFullyQualifiedName("ComputeSharp.Float4"))
+                    {
+                        diagnostics.Add(
+                            InvalidResourceTextureElementType,
+                            fieldSymbol,
+                            fieldSymbol.Name,
+                            structDeclarationSymbol,
+                            fieldSymbol.Type);
+                    }
+
                     int index = 0;
 
                     // If [D2DResourceTextureIndex] is present, get the resource texture index.
