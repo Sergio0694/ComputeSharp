@@ -99,7 +99,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderSourceInfo sourceInfo, CancellationToken token, out DiagnosticInfo? diagnostic)
+        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderMethodSourceInfo sourceInfo, CancellationToken token, out DiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 

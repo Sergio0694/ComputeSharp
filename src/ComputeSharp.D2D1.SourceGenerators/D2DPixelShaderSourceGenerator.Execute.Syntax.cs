@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -21,7 +22,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="bytecodeInfo">The input bytecode info.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the target method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, out Func<SyntaxNode, SourceText> fixup)
+        public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeMethodInfo bytecodeInfo, out Func<SyntaxNode, SourceText> fixup)
         {
             // If there is no precompiled bytecode, just emit a span with a 0 value
             string bytecodeLiterals = bytecodeInfo.Bytecode.IsDefaultOrEmpty
@@ -47,7 +48,8 @@ partial class D2DPixelShaderSourceGenerator
                 MethodDeclaration(
                     GenericName(Identifier("global::System.ReadOnlySpan"))
                     .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
-                    Identifier("TheMethodName")).AddModifiers(Token(SyntaxKind.PartialKeyword))
+                    Identifier(bytecodeInfo.MethodName))
+                .AddModifiers(bytecodeInfo.Modifiers.Select(Token).ToArray())
                 .AddAttributeLists(
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode"))
