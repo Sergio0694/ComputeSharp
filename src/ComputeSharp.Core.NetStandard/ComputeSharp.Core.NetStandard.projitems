@@ -15,6 +15,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\RuntimeHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime.CompilerServices\SkipLocalsInitAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\System.Diagnostics.CodeAnalysis\UnscopedRefAttribute.cs" />
   </ItemGroup>
 </Project>
