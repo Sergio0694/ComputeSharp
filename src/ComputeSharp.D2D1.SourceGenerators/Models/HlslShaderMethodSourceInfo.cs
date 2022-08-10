@@ -13,15 +13,15 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="Modifiers">The modifiers for the annotated method.</param>
 /// <param name="MethodName">The name of the annotated method.</param>
 /// <param name="HlslSource">The HLSL source.</param>
-/// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>
+/// <param name="ShaderProfile">The shader profile to use to compile the shader.</param>
 /// <param name="CompileOptions">The compile options to use to compile the shader.</param>
 /// <param name="HasErrors">Whether any errors have been detected, and therefore the shader compilation should be skipped.</param>
 internal sealed record HlslShaderMethodSourceInfo(
     ImmutableArray<SyntaxKind> Modifiers,
     string MethodName,
     string HlslSource,
-    D2D1ShaderProfile? ShaderProfile,
-    D2D1CompileOptions? CompileOptions,
+    D2D1ShaderProfile ShaderProfile,
+    D2D1CompileOptions CompileOptions,
     bool HasErrors)
 {
     /// <summary>

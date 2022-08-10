@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
@@ -12,11 +9,9 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -34,16 +29,20 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string? GetHlslSource(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static string GetHlslSource(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             _ = methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
 
             if (!attributeData!.TryGetConstructorArgument(0, out string? hlslSource))
             {
-                // TODO: no string diagnostic
+                diagnostics.Add(
+                    InvalidD2DPixelShaderSource,
+                    methodSymbol,
+                    methodSymbol.Name,
+                    methodSymbol.ContainingType);
             }
 
-            return hlslSource;
+            return hlslSource ?? "";
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
-        public static D2D1ShaderProfile? GetShaderProfile(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1ShaderProfile GetShaderProfile(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
             {
@@ -64,9 +63,13 @@ partial class D2DPixelShaderSourceGenerator
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            // TODO: diagnostics
+            diagnostics.Add(
+                MissingShaderProfileForD2DPixelShaderSource,
+                methodSymbol,
+                methodSymbol.Name,
+                methodSymbol.ContainingType);
 
-            return null;
+            return D2D1ShaderProfile.PixelShader50;
         }
 
         /// <summary>
@@ -75,7 +78,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1CompileOptions GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -87,9 +90,13 @@ partial class D2DPixelShaderSourceGenerator
                 return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            // TODO: diagnostics
+            diagnostics.Add(
+                MissingCompileOptionsForD2DPixelShaderSource,
+                methodSymbol,
+                methodSymbol.Name,
+                methodSymbol.ContainingType);
 
-            return null;
+            return D2D1CompileOptions.Default;
         }
 
         /// <summary>
@@ -118,8 +125,8 @@ partial class D2DPixelShaderSourceGenerator
                 // Compile the shader bytecode using the requested parameters
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                     sourceInfo.HlslSource.AsSpan(),
-                    sourceInfo.ShaderProfile!.Value,
-                    sourceInfo.CompileOptions!.Value);
+                    sourceInfo.ShaderProfile,
+                    sourceInfo.CompileOptions);
 
                 token.ThrowIfCancellationRequested();
 
@@ -134,14 +141,16 @@ partial class D2DPixelShaderSourceGenerator
             catch (Win32Exception e)
             {
                 diagnostic = new DiagnosticInfo(
-                    null!, // TODO
+                    D2DPixelShaderSourceCompilationFailedWithWin32Exception,
+                    sourceInfo.MethodName,
                     e.HResult,
                     ID2D1ShaderGenerator.LoadBytecode.FixupExceptionMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
                 diagnostic = new DiagnosticInfo(
-                    null!, // TODO
+                    D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
+                    sourceInfo.MethodName,
                     ID2D1ShaderGenerator.LoadBytecode.FixupExceptionMessage(e.Message));
             }
 

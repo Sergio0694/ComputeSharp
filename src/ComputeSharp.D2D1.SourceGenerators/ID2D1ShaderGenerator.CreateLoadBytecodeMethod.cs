@@ -198,7 +198,7 @@ partial class ID2D1ShaderGenerator
             catch (FxcCompilationException e)
             {
                 options = default;
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:
