@@ -272,7 +272,7 @@ partial class ID2D1ShaderGenerator
                 IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
                 bool isShaderEntryPoint =
                     methodDeclarationSymbol.Name == nameof(ID2D1PixelShader.Execute) &&
-                    methodDeclarationSymbol.ReturnType is not null && // TODO: match for pixel type
+                    methodDeclarationSymbol.ReturnType.HasFullyQualifiedName("ComputeSharp.Float4") &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
                     methodDeclarationSymbol.Parameters.Length == 0;
 
