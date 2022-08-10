@@ -195,16 +195,16 @@ public partial class D2D1PixelShaderTests
         ReadOnlySpan<D2D1ResourceTextureDescription> span = resourceTextureDescriptions.Span;
 
         Assert.AreEqual(span[0].Index, 5);
-        Assert.AreEqual(span[0].Rank, 1);
+        Assert.AreEqual(span[0].Dimensions, 1);
 
         Assert.AreEqual(span[1].Index, 6);
-        Assert.AreEqual(span[1].Rank, 2);
+        Assert.AreEqual(span[1].Dimensions, 2);
 
         Assert.AreEqual(span[2].Index, 7);
-        Assert.AreEqual(span[2].Rank, 3);
+        Assert.AreEqual(span[2].Dimensions, 3);
 
         Assert.AreEqual(span[3].Index, 8);
-        Assert.AreEqual(span[3].Rank, 2);
+        Assert.AreEqual(span[3].Dimensions, 2);
     }
 
     [D2DInputCount(4)]
