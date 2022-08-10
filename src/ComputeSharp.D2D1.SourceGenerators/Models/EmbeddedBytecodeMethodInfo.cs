@@ -11,13 +11,15 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <summary>
 /// A model representing info on a shader method that has requested to be precompiled at build time.
 /// </summary>
-///<param name="Modifiers">The modifiers for the annotated method.</param>
+/// <param name="Modifiers">The modifiers for the annotated method.</param>
 /// <param name="MethodName">The name of the annotated method.</param>
+/// <param name="InvalidReturnType">The fully qualified name of the return type, if invalid.</param>
 /// <param name="HlslSource">The HLSL source.</param>
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
 internal sealed record EmbeddedBytecodeMethodInfo(
     ImmutableArray<SyntaxKind> Modifiers,
     string MethodName,
+    string? InvalidReturnType,
     string HlslSource,
     ImmutableArray<byte> Bytecode)
 {
@@ -31,6 +33,7 @@ internal sealed record EmbeddedBytecodeMethodInfo(
         {
             hashCode.AddRange(obj.Modifiers);
             hashCode.Add(obj.MethodName);
+            hashCode.Add(obj.InvalidReturnType);
             hashCode.Add(obj.HlslSource);
             hashCode.AddBytes(obj.Bytecode.AsSpan());
         }
@@ -41,6 +44,7 @@ internal sealed record EmbeddedBytecodeMethodInfo(
             return
                 MemoryMarshal.Cast<SyntaxKind, ushort>(x.Modifiers.AsSpan()).SequenceEqual(MemoryMarshal.Cast<SyntaxKind, ushort>(y.Modifiers.AsSpan())) &&
                 x.MethodName == y.MethodName &&
+                x.InvalidReturnType == y.InvalidReturnType &&
                 x.HlslSource == y.HlslSource &&
                 x.Bytecode.SequenceEqual(y.Bytecode);
         }

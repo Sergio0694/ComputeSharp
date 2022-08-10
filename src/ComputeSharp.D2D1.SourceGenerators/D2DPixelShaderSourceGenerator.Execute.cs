@@ -24,6 +24,35 @@ partial class D2DPixelShaderSourceGenerator
     private static partial class Execute
     {
         /// <summary>
+        /// Validates that the return type of the annotated method is valid and returns the type name.
+        /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
+        /// <returns>The HLSL source to compile, if present.</returns>
+        public static string? GetInvalidReturnType(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        {
+            if (!(methodSymbol.ReturnType is INamedTypeSymbol
+                {
+                    Name: "ReadOnlySpan",
+                    ContainingNamespace.Name: "System",
+                    IsGenericType: true,
+                    TypeParameters.Length: 1
+                } returnType && returnType.TypeArguments[0].SpecialType == SpecialType.System_Byte))
+            {
+                diagnostics.Add(
+                    InvalidD2DPixelShaderSourceMethodReturnType,
+                    methodSymbol,
+                    methodSymbol.Name,
+                    methodSymbol.ContainingType,
+                    methodSymbol.ReturnType);
+
+                return methodSymbol.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Extracts the HLSL source from a method with the <see cref="D2DPixelShaderSourceAttribute"/> annotation.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>

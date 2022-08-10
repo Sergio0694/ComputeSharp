@@ -12,6 +12,7 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// </summary>
 /// <param name="Modifiers">The modifiers for the annotated method.</param>
 /// <param name="MethodName">The name of the annotated method.</param>
+/// <param name="InvalidReturnType">The fully qualified name of the return type, if invalid.</param>
 /// <param name="HlslSource">The HLSL source.</param>
 /// <param name="ShaderProfile">The shader profile to use to compile the shader.</param>
 /// <param name="CompileOptions">The compile options to use to compile the shader.</param>
@@ -19,6 +20,7 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 internal sealed record HlslShaderMethodSourceInfo(
     ImmutableArray<SyntaxKind> Modifiers,
     string MethodName,
+    string? InvalidReturnType,
     string HlslSource,
     D2D1ShaderProfile ShaderProfile,
     D2D1CompileOptions CompileOptions,
@@ -34,6 +36,7 @@ internal sealed record HlslShaderMethodSourceInfo(
         {
             hashCode.AddRange(obj.Modifiers);
             hashCode.Add(obj.MethodName);
+            hashCode.Add(obj.InvalidReturnType);
             hashCode.Add(obj.HlslSource);
             hashCode.Add(obj.ShaderProfile);
             hashCode.Add(obj.CompileOptions);
@@ -46,6 +49,7 @@ internal sealed record HlslShaderMethodSourceInfo(
             return
                 MemoryMarshal.Cast<SyntaxKind, ushort>(x.Modifiers.AsSpan()).SequenceEqual(MemoryMarshal.Cast<SyntaxKind, ushort>(y.Modifiers.AsSpan())) &&
                 x.MethodName == y.MethodName &&
+                x.InvalidReturnType == y.InvalidReturnType &&
                 x.HlslSource == y.HlslSource &&
                 x.ShaderProfile == y.ShaderProfile &&
                 x.CompileOptions == y.CompileOptions &&

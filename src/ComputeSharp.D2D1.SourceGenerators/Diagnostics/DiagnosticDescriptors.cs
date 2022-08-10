@@ -824,4 +824,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Precompiled shaders using [D2DPixelShaderSource] must explicitly indicate the compile options.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a method with [D2DPixelShaderSource] has an invalid return type.
+    /// <para>
+    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan&lt;byte&gt;)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSourceMethodReturnType = new DiagnosticDescriptor(
+        id: "CMPSD2D0057",
+        title: "Missing compile options for D2D pixel shader source",
+        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan<byte>)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Methods using using [D2DPixelShaderSource] must use ReadOnlySpan<byte> as the return type.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
