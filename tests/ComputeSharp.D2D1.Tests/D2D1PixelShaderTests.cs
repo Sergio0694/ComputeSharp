@@ -190,18 +190,21 @@ public partial class D2D1PixelShaderTests
     {
         ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptions = D2D1PixelShader.GetResourceTextureDescriptions<ShaderWithResourceTextures>();
 
-        Assert.AreEqual(resourceTextureDescriptions.Length, 3);
+        Assert.AreEqual(resourceTextureDescriptions.Length, 4);
 
         ReadOnlySpan<D2D1ResourceTextureDescription> span = resourceTextureDescriptions.Span;
 
         Assert.AreEqual(span[0].Index, 5);
-        Assert.AreEqual(span[0].Rank, 1);
+        Assert.AreEqual(span[0].Dimensions, 1);
 
         Assert.AreEqual(span[1].Index, 6);
-        Assert.AreEqual(span[1].Rank, 2);
+        Assert.AreEqual(span[1].Dimensions, 2);
 
         Assert.AreEqual(span[2].Index, 7);
-        Assert.AreEqual(span[2].Rank, 3);
+        Assert.AreEqual(span[2].Dimensions, 3);
+
+        Assert.AreEqual(span[3].Index, 8);
+        Assert.AreEqual(span[3].Dimensions, 2);
     }
 
     [D2DInputCount(4)]
@@ -209,19 +212,23 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(2)]
     [D2DInputComplex(1)]
     [D2DInputComplex(3)]
+    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     partial struct ShaderWithResourceTextures : ID2D1PixelShader
     {
         float number;
 
         [D2DResourceTextureIndex(5)]
-        D2D1ResourceTexture1D myTexture1;
+        D2D1ResourceTexture1D<float4> myTexture1;
 
         [D2DResourceTextureIndex(6)]
-        D2D1ResourceTexture2D myTexture2;
+        D2D1ResourceTexture2D<float4> myTexture2;
 
         [D2DResourceTextureIndex(7)]
-        D2D1ResourceTexture3D myTexture3;
+        D2D1ResourceTexture3D<float4> myTexture3;
+
+        [D2DResourceTextureIndex(8)]
+        D2D1ResourceTexture2D<float> myTexture4;
 
         public Float4 Execute()
         {
@@ -231,6 +238,8 @@ public partial class D2D1PixelShaderTests
             float4 pixel4 = myTexture2.Sample(0.4f, 0.3f);
             float4 pixel5 = myTexture3[0, 1, 2];
             float4 pixel6 = myTexture3.Sample(0.4f, 0.5f, 0.6f);
+            float number1 = myTexture4[0, 2];
+            float number2 = myTexture4.Sample(0.4f, 0.6f);
 
             return 0;
         }

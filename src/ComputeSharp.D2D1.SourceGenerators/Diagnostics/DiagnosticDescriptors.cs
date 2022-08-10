@@ -728,4 +728,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "All fields of a D2D1 resource texture type must be annotated using the [D2DResourceTextureIndex] attribute.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a resource texture using an invalid element type.
+    /// <para>
+    /// Format: <c>"The field \"{0}\" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidResourceTextureElementType = new DiagnosticDescriptor(
+        id: "CMPSD2D0051",
+        title: "Missing [D2DResourceTextureIndex] attribute",
+        messageFormat: "The field \"{0}\" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The element type of D2D1 resource texture fields in a D2D1 shader must be either float or float4.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

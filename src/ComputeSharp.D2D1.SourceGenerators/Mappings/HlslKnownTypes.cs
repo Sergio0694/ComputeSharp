@@ -16,9 +16,9 @@ partial class HlslKnownTypes
     {
         return typeName switch
         {
-            "ComputeSharp.D2D1.D2D1ResourceTexture1D" or
-            "ComputeSharp.D2D1.D2D1ResourceTexture2D" or
-            "ComputeSharp.D2D1.D2D1ResourceTexture3D" => true,
+            "ComputeSharp.D2D1.D2D1ResourceTexture1D`1" or
+            "ComputeSharp.D2D1.D2D1ResourceTexture2D`1" or
+            "ComputeSharp.D2D1.D2D1ResourceTexture3D`1" => true,
             _ => false
         };
     }
@@ -31,11 +31,16 @@ partial class HlslKnownTypes
         // Special case for resource texture types
         if (IsResourceTextureType(typeName))
         {
+            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullMetadataName();
+
+            // Get the HLSL name for the type argument (it can only be either float or float4)
+            _ = KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType);
+
             return typeName switch
             {
-                "ComputeSharp.D2D1.D2D1ResourceTexture1D" => "Texture1D",
-                "ComputeSharp.D2D1.D2D1ResourceTexture2D" => "Texture2D",
-                "ComputeSharp.D2D1.D2D1ResourceTexture3D" => "Texture3D",
+                "ComputeSharp.D2D1.D2D1ResourceTexture1D`1" => $"Texture1D<{mappedElementType}>",
+                "ComputeSharp.D2D1.D2D1ResourceTexture2D`1" => $"Texture2D<{mappedElementType}>",
+                "ComputeSharp.D2D1.D2D1ResourceTexture3D`1" => $"Texture3D<{mappedElementType}>",
                 _ => throw new ArgumentException()
             };
         }
