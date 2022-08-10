@@ -18,7 +18,6 @@ public partial class D2D1ShaderCompilerTests
 
             #include ""d2d1effecthelpers.hlsli""
 
-
             D2D_PS_ENTRY(PSMain)
             {
                 float4 color = D2DGetInput(0);
@@ -43,7 +42,6 @@ public partial class D2D1ShaderCompilerTests
             #define D2D_INPUT0_SIMPLE
 
             #include ""d2d1effecthelpers.hlsli""
-
 
             D2D_PS_ENTRY(PSMain)
             {
@@ -71,7 +69,6 @@ public partial class D2D1ShaderCompilerTests
 
             #include ""d2d1effecthelpers.hlsli""
 
-
             D2D_PS_ENTRY(PSMain)
             {
                 float4 color = D2DGetInput(0);
@@ -97,7 +94,6 @@ public partial class D2D1ShaderCompilerTests
             #define D2D_INPUT0_SIMPLE
 
             #include ""d2d1effecthelpers.hlsli""
-
 
             D2D_PS_ENTRY(PSMain)
             {
