@@ -192,6 +192,11 @@ internal unsafe partial struct PixelShaderEffect
     private ID2D1DrawInfo* d2D1DrawInfo;
 
     /// <summary>
+    /// The <see cref="ID2D1EffectContext"/> instance currently in use.
+    /// </summary>
+    private ID2D1EffectContext* d2D1EffectContext;
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
@@ -250,8 +255,10 @@ internal unsafe partial struct PixelShaderEffect
         @this->bufferPrecision = bufferPrecision;
         @this->channelDepth = channelDepth;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
+        @this->d2D1DrawInfo = null;
+        @this->d2D1EffectContext = null;
 
-        *effectImpl = (IUnknown*)@this;
+        * effectImpl = (IUnknown*)@this;
 
         return S.S_OK;
     }
@@ -315,6 +322,11 @@ internal unsafe partial struct PixelShaderEffect
             if (this.d2D1DrawInfo is not null)
             {
                 _ = this.d2D1DrawInfo->Release();
+            }
+
+            if (this.d2D1EffectContext is not null)
+            {
+                _ = this.d2D1EffectContext->Release();
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));

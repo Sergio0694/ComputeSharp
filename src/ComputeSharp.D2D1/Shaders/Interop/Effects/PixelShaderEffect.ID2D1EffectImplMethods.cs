@@ -128,9 +128,25 @@ internal unsafe partial struct PixelShaderEffect
                 }
             }
 
+            // If loading the bytecode succeeded, set the transform node
             if (Windows.SUCCEEDED(hresult))
             {
                 hresult = transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1DrawTransform);
+            }
+
+            // If the transform node was set, also store the effect context
+            if (Windows.SUCCEEDED(hresult))
+            {
+                // Free the previous ID2D1EffectContext object, if present
+                if (@this->d2D1EffectContext is not null)
+                {
+                    _ = @this->d2D1EffectContext->Release();
+                }
+
+                // Store the new ID2D1EffectContext object
+                _ = effectContext->AddRef();
+
+                @this->d2D1EffectContext = effectContext;
             }
 
             return hresult;
