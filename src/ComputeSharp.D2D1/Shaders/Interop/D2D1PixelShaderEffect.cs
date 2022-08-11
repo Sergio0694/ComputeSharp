@@ -514,4 +514,22 @@ public static unsafe class D2D1PixelShaderEffect
 
         Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
     }
+
+    /// <summary>
+    /// Sets the resource texture manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="resourceTextureManager">The input <c>ID2D1ResourceTextureManager</c> object (see <see cref="D2D1ResourceTextureManager"/>).</param>
+    /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int index)
+    {
+        // TODO: validate args
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)&resourceTextureManager,
+            dataSize: (uint)sizeof(void*));
+    }
 }
