@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 
@@ -66,7 +65,6 @@ namespace ComputeSharp.D2D1.Interop;
 /// </code>
 /// </para>
 /// </remarks>
-[Guid("3C4FC7E4-A419-46CA-B5F6-66EB4FF18D64")]
 public static unsafe class D2D1ResourceTextureManager
 {
     /// <summary>
