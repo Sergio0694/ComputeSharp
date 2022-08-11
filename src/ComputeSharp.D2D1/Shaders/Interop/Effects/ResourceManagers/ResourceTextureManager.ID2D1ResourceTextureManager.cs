@@ -107,6 +107,73 @@ partial struct ResourceTextureManager
         {
             @this = (ResourceTextureManager*)&((void**)@this)[-1];
 
+            // Return E_POINTER if any input pointer is null
+            if (resourceTextureProperties is null ||
+                data is null ||
+                strides is null ||
+                resourceTextureProperties->extents is null ||
+                resourceTextureProperties->extendModes is null)
+            {
+                return E.E_POINTER;
+            }
+
+            // If the method has already been called, fail
+            if (@this->d2D1ResourceTexture is not null ||
+                @this->data is not null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            // If Initialize has already been called, just forward the call
+            if (@this->d2D1EffectContext is not null)
+            {
+                return @this->d2D1EffectContext->CreateResourceTexture(
+                    resourceId: resourceId,
+                    resourceTextureProperties: resourceTextureProperties,
+                    data: data,
+                    strides: strides,
+                    dataSize: dataSize,
+                    resourceTexture: &@this->d2D1ResourceTexture);
+            }
+
+            @this->resourceId = (Guid*)NativeMemory.Alloc((nuint)sizeof(Guid));
+
+            *@this->resourceId = *resourceId;
+
+            uint* extents = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
+            D2D1_EXTEND_MODE* extendModes = (D2D1_EXTEND_MODE*)NativeMemory.Alloc(sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
+
+            Buffer.MemoryCopy(
+                source: resourceTextureProperties->extents,
+                destination: extents,
+                destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
+                sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+
+            Buffer.MemoryCopy(
+                source: resourceTextureProperties->extendModes,
+                destination: extendModes,
+                destinationSizeInBytes: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions,
+                sourceBytesToCopy: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
+
+            @this->resourceTextureProperties.extents = extents;
+            @this->resourceTextureProperties.dimensions = resourceTextureProperties->dimensions;
+            @this->resourceTextureProperties.bufferPrecision = resourceTextureProperties->bufferPrecision;
+            @this->resourceTextureProperties.channelDepth = resourceTextureProperties->channelDepth;
+            @this->resourceTextureProperties.filter = resourceTextureProperties->filter;
+            @this->resourceTextureProperties.extendModes = extendModes;
+
+            @this->data = (byte*)NativeMemory.Alloc(dataSize);
+
+            Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
+
+            @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
+
+            Buffer.MemoryCopy(
+                source: strides,
+                destination: @this->strides,
+                destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
+                sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+
             return 0;
         }
 
@@ -132,6 +199,20 @@ partial struct ResourceTextureManager
             uint dataCount)
         {
             @this = (ResourceTextureManager*)&((void**)@this)[-1];
+
+            // If a resource texture already exists, just forward the call
+            if (@this->d2D1ResourceTexture is not null)
+            {
+                return @this->d2D1ResourceTexture->Update(
+                    minimumExtents: minimumExtents,
+                    maximimumExtents: maximumExtents,
+                    strides: strides,
+                    dimensions: dimensions,
+                    data: data,
+                    dataCount: dataCount);
+            }
+
+            // TODO: implement Update over buffered data
 
             return 0;
         }
