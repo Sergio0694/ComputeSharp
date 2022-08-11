@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -76,6 +77,7 @@ unsafe partial struct PixelShaderEffect
         }
         else
         {
+            // TODO: handle case with buffer not large enough
             int bytesToCopy = Math.Min((int)dataSize, @this->constantBufferSize);
 
             Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, bytesToCopy);
@@ -117,7 +119,35 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
-        // TODO: implement GetResourceTextureIndex
+        if (!IsResourceTextureManagerIndexValid(index))
+        {
+            return E.E_INVALIDARG;
+        }
+
+        if (data is null || actualSize is null)
+        {
+            return E.E_POINTER;
+        }
+
+        if (dataSize < sizeof(void*))
+        {
+            return E.E_INVALIDARG;
+        }
+
+        ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[index];
+
+        if (resourceTextureManager is not null)
+        {
+            _ = ((IUnknown*)resourceTextureManager)->AddRef();
+
+            *(void**)data = resourceTextureManager;
+        }
+        else
+        {
+            *(void**)data = null;
+        }
+
+        *actualSize = (uint)sizeof(void*);
 
         return S.S_OK;
     }
@@ -131,8 +161,72 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int SetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize)
     {
-        // TODO: implement SetResourceTextureIndex
+        if (!IsResourceTextureManagerIndexValid(index))
+        {
+            return E.E_INVALIDARG;
+        }
+
+        if (data is null)
+        {
+            return E.E_POINTER;
+        }
+
+        if (dataSize != (uint)sizeof(void*))
+        {
+            return E.E_INVALIDARG;
+        }
+
+        ID2D1ResourceTextureManager* resourceTextureManager = null;
+
+        // Check that the input object implements ID2D1ResourceTextureManager
+        int result = ((IUnknown*)*(void**)data)->QueryInterface(
+            riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManager.Guid)),
+            ppvObject: (void**)&resourceTextureManager);
+
+        if (result != S.S_OK)
+        {
+            return result;
+        }
+
+        ID2D1ResourceTextureManagerInternal* resourceTextureManagerInternal = null;
+
+        // Then, also check that it implements ID2D1ResourceTextureManagerInternal
+        result = ((IUnknown*)*(void**)data)->QueryInterface(
+            riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManagerInternal.Guid)),
+            ppvObject: (void**)&resourceTextureManagerInternal);
+
+        if (result != S.S_OK)
+        {
+            // If the internal interface is not present, fail (but first release the public interface)
+            _ = ((IUnknown*)resourceTextureManager)->Release();
+
+            return result;
+        }
+
+        // If the object is valid, release the internal interface (it was retrieved just to check it was present)
+        _ = ((IUnknown*)resourceTextureManagerInternal)->Release();
+
+        // Store the resource texture manager into the buffer
+        this.resourceTextureManagerBuffer[index] = resourceTextureManager;
 
         return S.S_OK;
+    }
+
+    /// <summary>
+    /// Checks whether a given index for a resource texture manager is valid for the current effect.
+    /// </summary>
+    /// <param name="index">The resource texture manager index to validate.</param>
+    /// <returns>Whether or not <paramref name="index"/> is valid for the current effect.</returns>
+    private bool IsResourceTextureManagerIndexValid(int index)
+    {
+        foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
+        {
+            if (resourceTextureDescription.Index == index)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

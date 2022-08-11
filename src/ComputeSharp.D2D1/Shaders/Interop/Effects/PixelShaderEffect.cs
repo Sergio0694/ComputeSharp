@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
@@ -210,6 +211,11 @@ internal unsafe partial struct PixelShaderEffect
     private ID2D1EffectContext* d2D1EffectContext;
 
     /// <summary>
+    /// The resource texture managers for the current instance.
+    /// </summary>
+    private ResourceTextureManagerBuffer resourceTextureManagerBuffer;
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
@@ -277,7 +283,9 @@ internal unsafe partial struct PixelShaderEffect
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
 
-        * effectImpl = (IUnknown*)@this;
+        @this->resourceTextureManagerBuffer.AsSpan().Clear();
+
+        *effectImpl = (IUnknown*)@this;
 
         return S.S_OK;
     }
@@ -346,6 +354,18 @@ internal unsafe partial struct PixelShaderEffect
             if (this.d2D1EffectContext is not null)
             {
                 _ = this.d2D1EffectContext->Release();
+            }
+
+            // Use the list of resource texture descriptions to see the indices that might have accepted a resource texture manager.
+            // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
+            foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
+            {
+                ID2D1ResourceTextureManager* resourceTextureManager = resourceTextureManagerBuffer[resourceTextureDescription.Index];
+
+                if (resourceTextureManager is not null)
+                {
+                    _ = ((IUnknown*)resourceTextureManager)->Release();
+                }
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
