@@ -87,7 +87,25 @@ partial struct ResourceTextureManager
         [UnmanagedCallersOnly]
         public static int Initialize(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
         {
-            return 0;
+            if (effectContext is null)
+            {
+                return E.E_POINTER;
+            }
+
+            effectContext->AddRef();
+
+            // If this is the first time the method is called, just store the context
+            if (@this->d2D1EffectContext is null)
+            {
+                @this->d2D1EffectContext = effectContext;
+
+                return S.S_OK;
+            }
+
+            // Otherwise, just do nothing and return S_FALSE. This allows an existing resource texture
+            // manager to be shared across effects. If the resource cannot be shared, it will just
+            // return an error when effect is actually set, with ID2D1DrawInfo::SetResourceTexture.
+            return S.S_FALSE;
         }
 
         /// <summary>
@@ -99,7 +117,50 @@ partial struct ResourceTextureManager
         [UnmanagedCallersOnly]
         public static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
         {
-            return 0;
+            if (*resourceTexture is not null)
+            {
+                return E.E_POINTER;
+            }
+
+            // If the effect context is null, it means Initialize has not been called yet
+            if (@this->d2D1EffectContext is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            // If the texture has already been created, just return it
+            if (@this->d2D1ResourceTexture is not null)
+            {
+                @this->d2D1ResourceTexture->AddRef();
+
+                *resourceTexture = @this->d2D1ResourceTexture;
+            }
+
+            // If the data is null at this point, it means CreateResourceTexture has not been called yet
+            if (@this->data is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            // Create the resource now, as it hasn't been created yet
+            int result = @this->d2D1EffectContext->CreateResourceTexture(
+                resourceId: @this->resourceId,
+                resourceTextureProperties: &@this->resourceTextureProperties,
+                data: @this->data,
+                strides: @this->strides,
+                dataSize: @this->dataSize,
+                resourceTexture: resourceTexture);
+
+            // If creation was successful, release the buffered data
+            if (result == S.S_OK)
+            {
+                NativeMemory.Free(@this->resourceTextureProperties.extents);
+                NativeMemory.Free(@this->resourceTextureProperties.extendModes);
+                NativeMemory.Free(@this->data);
+                NativeMemory.Free(@this->strides);
+            }
+
+            return S.S_OK;
         }
     }
 }
