@@ -115,19 +115,19 @@ internal unsafe partial struct PixelShaderEffect
     private volatile int referenceCount;
 
     /// <summary>
+    /// The <see cref="Guid"/> for the shader.
+    /// </summary>
+    private Guid shaderId;
+
+    /// <summary>
     /// The constant buffer data, if set.
     /// </summary>
     private byte* constantBuffer;
 
     /// <summary>
-    /// The size of <see cref="constantBuffer"/>, if set.
+    /// The size of <see cref="constantBuffer"/>.
     /// </summary>
     private int constantBufferSize;
-
-    /// <summary>
-    /// The <see cref="Guid"/> for the shader.
-    /// </summary>
-    private Guid shaderId;
 
     /// <summary>
     /// The number of inputs for the shader.
@@ -219,6 +219,7 @@ internal unsafe partial struct PixelShaderEffect
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+    /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
     /// <param name="inputCount">The number of inputs for the shader.</param>
     /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
     /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
@@ -235,6 +236,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
         Guid shaderId,
+        int constantBufferSize,
         int inputCount,
         D2D1PixelShaderInputType* inputTypes,
         int inputDescriptionCount,
@@ -268,6 +270,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
         @this->referenceCount = 1;
         @this->shaderId = shaderId;
+        @this->constantBuffer = null;
+        @this->constantBufferSize = constantBufferSize;
         @this->inputCount = inputCount;
         @this->inputTypes = inputTypes;
         @this->inputDescriptionCount = inputDescriptionCount;

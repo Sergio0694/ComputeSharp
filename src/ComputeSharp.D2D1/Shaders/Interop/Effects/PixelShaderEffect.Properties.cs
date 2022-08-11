@@ -69,7 +69,22 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
+        if (data is null || actualSize is null)
+        {
+            return E.E_POINTER;
+        }
+
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        if (dataSize < @this->constantBufferSize)
+        {
+            return E.E_NOT_SUFFICIENT_BUFFER;
+        }
+
+        if (@this->constantBuffer is null)
+        {
+            return E.E_NOT_VALID_STATE;
+        }
 
         if (@this->constantBufferSize == 0)
         {
@@ -77,12 +92,9 @@ unsafe partial struct PixelShaderEffect
         }
         else
         {
-            // TODO: handle case with buffer not large enough
-            int bytesToCopy = Math.Min((int)dataSize, @this->constantBufferSize);
+            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->constantBufferSize);
 
-            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, bytesToCopy);
-
-            *actualSize = (uint)bytesToCopy;
+            *actualSize = (uint)@this->constantBufferSize;
         }
 
         return S.S_OK;
@@ -92,7 +104,17 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize)
     {
+        if (data is null)
+        {
+            return E.E_POINTER;
+        }
+
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        if (dataSize != (uint)@this->constantBufferSize)
+        {
+            return E.E_INVALIDARG;
+        }
 
         if (@this->constantBuffer is not null)
         {
@@ -104,7 +126,6 @@ unsafe partial struct PixelShaderEffect
         Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
 
         @this->constantBuffer = (byte*)buffer;
-        @this->constantBufferSize = (int)dataSize;
 
         return S.S_OK;
     }

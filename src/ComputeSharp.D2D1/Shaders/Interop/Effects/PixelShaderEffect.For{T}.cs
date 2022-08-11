@@ -45,6 +45,11 @@ internal unsafe partial struct PixelShaderEffect
         private static Guid shaderId;
 
         /// <summary>
+        /// The size of the constant buffer for the shader.
+        /// </summary>
+        private static int constantBufferSize;
+
+        /// <summary>
         /// The number of inputs for the shader.
         /// </summary>
         private static int inputCount;
@@ -129,6 +134,7 @@ internal unsafe partial struct PixelShaderEffect
                 {
                     // Load all shader properties
                     Guid shaderId = typeof(T).GUID;
+                    int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
                     D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
                     D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
                     D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
@@ -165,6 +171,7 @@ internal unsafe partial struct PixelShaderEffect
 
                     // Set the shared state and mark the type as initialized
                     For<T>.shaderId = shaderId;
+                    For<T>.constantBufferSize = constantBufferSize;
                     For<T>.inputCount = inputCount;
                     For<T>.inputTypes = inputTypes;
                     For<T>.inputDescriptionCount = inputDescriptionCount;
@@ -251,6 +258,7 @@ internal unsafe partial struct PixelShaderEffect
 
             return PixelShaderEffect.Factory(
                 shaderId,
+                constantBufferSize,
                 inputCount,
                 inputTypes,
                 inputDescriptionCount,

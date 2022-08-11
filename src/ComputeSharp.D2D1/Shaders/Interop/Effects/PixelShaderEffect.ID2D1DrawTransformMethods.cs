@@ -200,6 +200,7 @@ partial struct PixelShaderEffect
                     opaqueInputs[i] = inputOpaqueSubRects[i].ToRectangle();
                 }
 
+                // TODO: shouldn't there be a check for the buffer being null?
                 ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
 
                 Rectangle output;
