@@ -1,0 +1,56 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ output extension=".g.cs"#>
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
+#endif
+
+namespace ComputeSharp.D2D1.Interop.Effects;
+
+/// <inheritdoc/>
+unsafe partial struct PixelShaderEffect
+{
+#if !NET6_0_OR_GREATER
+<#
+for (int i = 0; i < 16; i++)
+{
+#>
+    /// <summary>
+    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager<#=i#>"/>.
+    /// </summary>
+    private static readonly PropertyGetFunctionDelegate GetResourceTextureManager<#=i#>Wrapper = GetResourceTextureManager<#=i#>;
+
+    /// <summary>
+    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager<#=i#>"/>.
+    /// </summary>
+    private static readonly PropertySetBindingDelegate SetResourceTextureManager<#=i#>Wrapper = SetResourceTextureManager<#=i#>;
+<#
+    if (i < 15) WriteLine("");
+}
+#>
+#endif
+
+<#
+for (int i = 0; i < 16; i++)
+{
+#>
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly]
+    private static int GetResourceTextureManager<#=i#>(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    {
+        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(<#=i#>, data, dataSize, actualSize);
+    }
+
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly]
+    private static int SetResourceTextureManager<#=i#>(IUnknown* effect, byte* data, uint dataSize)
+    {
+        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(<#=i#>, data, dataSize);
+    }
+<#
+    if (i < 15) WriteLine("");
+}
+#>
+}
