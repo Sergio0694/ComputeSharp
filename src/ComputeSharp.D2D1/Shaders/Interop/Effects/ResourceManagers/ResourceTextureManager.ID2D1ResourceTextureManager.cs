@@ -105,8 +105,6 @@ partial struct ResourceTextureManager
             uint* strides,
             uint dataSize)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
-
             // Return E_POINTER if any input pointer is null
             if (resourceTextureProperties is null ||
                 data is null ||
@@ -198,8 +196,6 @@ partial struct ResourceTextureManager
             byte* data,
             uint dataCount)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
-
             // If a resource texture already exists, just forward the call
             if (@this->d2D1ResourceTexture is not null)
             {

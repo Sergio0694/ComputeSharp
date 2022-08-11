@@ -87,6 +87,8 @@ partial struct ResourceTextureManager
         [UnmanagedCallersOnly]
         public static int Initialize(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
         {
+            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+
             if (effectContext is null)
             {
                 return E.E_POINTER;
@@ -117,6 +119,8 @@ partial struct ResourceTextureManager
         [UnmanagedCallersOnly]
         public static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
         {
+            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+
             if (*resourceTexture is not null)
             {
                 return E.E_POINTER;
