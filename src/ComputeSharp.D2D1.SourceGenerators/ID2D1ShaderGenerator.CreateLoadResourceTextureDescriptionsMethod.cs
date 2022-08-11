@@ -101,7 +101,7 @@ partial class ID2D1ShaderGenerator
             HashSet<int> resourceTextureIndices = new(resourceTextureInfos.Where(info => info.Index.HasValue).Select(info => info.Index!.Value));
 
             // All input description indices must be unique
-            if (resourceTextureIndices.Count != resourceTextureInfos.Count)
+            if (resourceTextureIndices.Count != resourceTextureInfos.Count(info => info.Index.HasValue))
             {
                 diagnostics.Add(RepeatedD2DResourceTextureIndices, structDeclarationSymbol, structDeclarationSymbol);
             }
