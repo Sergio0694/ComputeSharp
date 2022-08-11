@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-#if !NET6_0_OR_GREATER
-using System.Runtime.InteropServices;
-#endif
 using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
@@ -11,7 +8,6 @@ using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
@@ -30,7 +26,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
+    public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         RegisterForD2D1Factory1<T>(d2D1Factory1, null, out effectId);
@@ -45,7 +41,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
+    public static void RegisterForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
@@ -61,7 +57,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static unsafe void RegisterForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;
@@ -243,7 +239,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
-    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
+    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         return GetRegistrationBlob<T>(null, out effectId);
@@ -258,7 +254,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
-    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T, TMapper>(out Guid effectId)
+    public static ReadOnlyMemory<byte> GetRegistrationBlob<T, TMapper>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
@@ -305,7 +301,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
     /// </para>
     /// </remarks>
-    public static unsafe ReadOnlyMemory<byte> GetRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;
@@ -491,7 +487,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// to use <see cref="GetRegistrationBlob{T}(out Guid)"/> (or an overload), and use that blob to register an effect.
     /// </exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1devicecontext-createeffect"/>.</remarks>
-    public static unsafe void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
+    public static void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
         if (!PixelShaderEffect.For<T>.TryGetId(out Guid id))
@@ -511,7 +507,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static unsafe void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
+    public static void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
         D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
