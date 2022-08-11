@@ -2,9 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-#if NET6_0_OR_GREATER
 using TerraFX.Interop.DirectX;
-#endif
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
@@ -140,6 +138,52 @@ internal unsafe partial struct ResourceTextureManager
     private void** lpVtblForID2D1ResourceTextureManagerInternal;
 
     /// <summary>
+    /// The current reference count for the object (from <c>IUnknown</c>).
+    /// </summary>
+    private volatile int referenceCount;
+
+    /// <summary>
+    /// The <see cref="ID2D1EffectContext"/> object currently wrapped by the current instance.
+    /// </summary>
+    private ID2D1EffectContext* d2D1EffectContext;
+
+    /// <summary>
+    /// The <see cref="ID2D1ResourceTexture"/> object, if one was created already.
+    /// </summary>
+    private ID2D1ResourceTexture* d2D1ResourceTexture;
+
+    /// <summary>
+    /// The <see cref="Guid"/> to identify the resource, if available.
+    /// </summary>
+    private Guid* resourceId;
+
+    /// <summary>
+    /// The <see cref="D2D1_RESOURCE_TEXTURE_PROPERTIES"/> for the resource texture.
+    /// </summary>
+    /// <remarks>
+    /// If <see cref="D2D1_RESOURCE_TEXTURE_PROPERTIES.extents"/> is <see langword="null"/>, it has not been set.
+    /// </remarks>
+    private D2D1_RESOURCE_TEXTURE_PROPERTIES resourceTextureProperties;
+
+    /// <summary>
+    /// The texture data, if available.
+    /// </summary>
+    /// <remarks>
+    /// Once the texture has been created, this will no longer be necessary.
+    /// </remarks>
+    private byte* data;
+
+    /// <summary>
+    /// An optional pointer to the stride to advance through the resource texture, according to dimension.
+    /// </summary>
+    private uint* strides;
+
+    /// <summary>
+    /// The size, in bytes, of the data.
+    /// </summary>
+    private uint dataSize;
+
+    /// <summary>
     /// The factory method for <see cref="ResourceTextureManager"/> instances.
     /// </summary>
     /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
@@ -163,16 +207,19 @@ internal unsafe partial struct ResourceTextureManager
 
         @this->lpVtblForID2D1ResourceTextureManager = VtblForID2D1ResourceTextureManager;
         @this->lpVtblForID2D1ResourceTextureManagerInternal = VtblForID2D1ResourceTextureManagerInternal;
+        @this->referenceCount = 1;
+        @this->d2D1EffectContext = null;
+        @this->d2D1ResourceTexture = null;
+        @this->resourceId = null;
+        @this->resourceTextureProperties = default;
+        @this->data = null;
+        @this->strides = null;
+        @this->dataSize = 0;
 
         *resourceTextureManager = @this;
 
         return S.S_OK;
     }
-
-    /// <summary>
-    /// The current reference count for the object (from <c>IUnknown</c>).
-    /// </summary>
-    private volatile int referenceCount;
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
     private int QueryInterface(Guid* riid, void** ppvObject)
@@ -221,7 +268,40 @@ internal unsafe partial struct ResourceTextureManager
 
         if (referenceCount == 0)
         {
-            // TODO: release resources
+            if (this.d2D1EffectContext is not null)
+            {
+                this.d2D1EffectContext->Release();
+            }
+
+            if (this.d2D1ResourceTexture is not null)
+            {
+                this.d2D1ResourceTexture->Release();
+            }
+
+            if (this.resourceId is not null)
+            {
+                NativeMemory.Free(this.resourceId);
+            }
+
+            if (this.resourceTextureProperties.extents is not null)
+            {
+                NativeMemory.Free(this.resourceTextureProperties.extents);
+            }
+
+            if (this.resourceTextureProperties.extendModes is not null)
+            {
+                NativeMemory.Free(this.resourceTextureProperties.extendModes);
+            }
+
+            if (this.data is not null)
+            {
+                NativeMemory.Free(this.data);
+            }
+
+            if (this.strides is not null)
+            {
+                NativeMemory.Free(this.strides);
+            }
         }
 
         return referenceCount;
