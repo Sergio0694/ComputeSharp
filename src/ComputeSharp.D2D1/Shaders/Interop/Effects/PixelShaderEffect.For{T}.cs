@@ -90,6 +90,16 @@ internal unsafe partial struct PixelShaderEffect
         private static D2D1ChannelDepth channelDepth;
 
         /// <summary>
+        /// The number of available resource texture descriptions.
+        /// </summary>
+        private static int resourceTextureDescriptionCount;
+
+        /// <summary>
+        /// The buffer with the available resource texture descriptions for the shader.
+        /// </summary>
+        private static D2D1ResourceTextureDescription* resourceTextureDescriptions;
+
+        /// <summary>
         /// The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.
         /// </summary>
         private static Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory;
@@ -119,9 +129,6 @@ internal unsafe partial struct PixelShaderEffect
                 {
                     // Load all shader properties
                     Guid shaderId = typeof(T).GUID;
-                    ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
-                    int bytecodeSize = bytecodeInfo.Length;
-                    byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
                     D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
                     D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
                     D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
@@ -142,7 +149,18 @@ internal unsafe partial struct PixelShaderEffect
 
                     inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
 
+                    // Prepare the resource texture descriptions
+                    ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1PixelShader.GetResourceTextureDescriptions<T>();
+                    int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
+                    D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
+
+                    resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
+
                     // Copy the bytecode to the target buffer
+                    ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
+                    int bytecodeSize = bytecodeInfo.Length;
+                    byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
+
                     bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
 
                     // Set the shared state and mark the type as initialized
@@ -156,6 +174,8 @@ internal unsafe partial struct PixelShaderEffect
                     For<T>.bytecodeSize = bytecodeSize;
                     For<T>.bufferPrecision = bufferPrecision;
                     For<T>.channelDepth = channelDepth;
+                    For<T>.resourceTextureDescriptionCount = resourceTextureDescriptionCount;
+                    For<T>.resourceTextureDescriptions = resourceTextureDescriptions;
                     For<T>.d2D1DrawTransformMapperFactory = d2D1DrawTransformMapperFactory;
 
                     isInitialized = true;
@@ -240,6 +260,8 @@ internal unsafe partial struct PixelShaderEffect
                 bytecodeSize,
                 bufferPrecision,
                 channelDepth,
+                resourceTextureDescriptionCount,
+                resourceTextureDescriptions,
                 d2D1TransformMapper,
                 effectImpl);
         }

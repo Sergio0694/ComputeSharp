@@ -182,6 +182,19 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1ChannelDepth channelDepth;
 
     /// <summary>
+    /// The number of available resource texture descriptions.
+    /// </summary>
+    private int resourceTextureDescriptionCount;
+
+    /// <summary>
+    /// The buffer with the available resource texture descriptions for the shader.
+    /// </summary>
+    /// <remarks>
+    /// This buffer is also shared among effect instances, like <see cref="inputDescriptions"/>.
+    /// </remarks>
+    private D2D1ResourceTextureDescription* resourceTextureDescriptions;
+
+    /// <summary>
     /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
     /// </summary>
     private GCHandle d2D1TransformMapperHandle;
@@ -209,6 +222,8 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
     /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
     /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
+    /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
+    /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
     /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
@@ -223,6 +238,8 @@ internal unsafe partial struct PixelShaderEffect
         int bytecodeSize,
         D2D1BufferPrecision bufferPrecision,
         D2D1ChannelDepth channelDepth,
+        int resourceTextureDescriptionCount,
+        D2D1ResourceTextureDescription* resourceTextureDescriptions,
         D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
@@ -254,6 +271,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->bytecodeSize = bytecodeSize;
         @this->bufferPrecision = bufferPrecision;
         @this->channelDepth = channelDepth;
+        @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
+        @this->resourceTextureDescriptions = resourceTextureDescriptions;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
