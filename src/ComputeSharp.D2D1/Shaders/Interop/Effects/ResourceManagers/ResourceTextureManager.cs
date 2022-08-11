@@ -2,7 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+#if NET6_0_OR_GREATER
 using TerraFX.Interop.DirectX;
+#endif
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
@@ -79,12 +81,12 @@ internal unsafe partial struct ResourceTextureManager
     /// <summary>
     /// The shared vtable pointer for <see cref="ResourceTextureManager"/> instance, for <c>ID2D1ResourceTextureManager</c>.
     /// </summary>
-    private static readonly void** VtblForID2D1EffectImpl;
+    private static readonly void** VtblForID2D1ResourceTextureManager;
 
     /// <summary>
     /// The shared vtable pointer for <see cref="ResourceTextureManager"/> instance, for <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
-    private static readonly void** VtblForID2D1DrawTransform;
+    private static readonly void** VtblForID2D1ResourceTextureManagerInternal;
 
     /// <summary>
     /// Initializes the shared state for <see cref="ResourceTextureManager"/>.
@@ -123,8 +125,8 @@ internal unsafe partial struct ResourceTextureManager
         lpVtbl[5 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.GetResourceTextureWrapper);
 #endif
 
-        VtblForID2D1EffectImpl = lpVtbl;
-        VtblForID2D1DrawTransform = &lpVtbl[6];
+        VtblForID2D1ResourceTextureManager = lpVtbl;
+        VtblForID2D1ResourceTextureManagerInternal = &lpVtbl[6];
     }
 
     /// <summary>
@@ -136,6 +138,36 @@ internal unsafe partial struct ResourceTextureManager
     /// The vtable pointer for the current instance, for <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
     private void** lpVtblForID2D1ResourceTextureManagerInternal;
+
+    /// <summary>
+    /// The factory method for <see cref="ResourceTextureManager"/> instances.
+    /// </summary>
+    /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
+    /// <returns>This always returns <c>0</c>.</returns>
+    public static int Factory(ResourceTextureManager** resourceTextureManager)
+    {
+        ResourceTextureManager* @this;
+
+        try
+        {
+            @this = (ResourceTextureManager*)NativeMemory.Alloc((nuint)sizeof(ResourceTextureManager));
+        }
+        catch (OutOfMemoryException)
+        {
+            *resourceTextureManager = null;
+
+            return E.E_OUTOFMEMORY;
+        }
+
+        *@this = default;
+
+        @this->lpVtblForID2D1ResourceTextureManager = VtblForID2D1ResourceTextureManager;
+        @this->lpVtblForID2D1ResourceTextureManagerInternal = VtblForID2D1ResourceTextureManagerInternal;
+
+        *resourceTextureManager = @this;
+
+        return S.S_OK;
+    }
 
     /// <summary>
     /// The current reference count for the object (from <c>IUnknown</c>).
