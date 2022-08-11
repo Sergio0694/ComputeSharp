@@ -22,10 +22,11 @@ internal unsafe struct ID2D1ResourceTextureManager
         get
         {
             ReadOnlySpan<byte> data = new byte[] {
-                0x3C, 0x4F, 0xC7, 0xE4, 0xA4,
-                0x19, 0x46,
-                0xCA, 0xB5,
-                0xF6, 0x66,
+                0xE4, 0xC7, 0x4F, 0x3C,
+                0x19, 0xA4,
+                0xCA, 0x46,
+                0xB5, 0xF6,
+                0x66,
                 0xEB,
                 0x4F,
                 0xF1,
