@@ -26,11 +26,11 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Interop\Effects\PixelShaderEffect.Properties.g.cs">
+    <Compile Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>PixelShaderEffect.Properties.tt</DependentUpon>
-    </None>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.tt">

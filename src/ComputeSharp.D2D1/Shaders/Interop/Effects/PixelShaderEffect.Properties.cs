@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -21,19 +22,51 @@ unsafe partial struct PixelShaderEffect
     private delegate int PropertySetBindingDelegate(IUnknown* effect, byte* data, uint dataSize);
 
     /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBuffer"/>.
+    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBufferImpl"/>.
     /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBuffer;
+    private static readonly PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBufferImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetConstantBuffer"/>.
+    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetConstantBufferWrapper = SetConstantBuffer;
+    private static readonly PropertySetBindingDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
 #endif
 
+    /// <summary>
+    /// Gets the get accessor for the constant buffer.
+    /// </summary>
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetConstantBuffer
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+#if NET6_0_OR_GREATER
+            return &GetConstantBufferImpl;
+#else
+            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Gets the set accessor for the constant buffer.
+    /// </summary>
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetConstantBuffer
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+#if NET6_0_OR_GREATER
+            return &SetConstantBufferImpl;
+#else
+            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
+#endif
+        }
+    }
+
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    private static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -54,8 +87,8 @@ unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    private static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    private static int SetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
