@@ -155,18 +155,9 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[index];
+        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
 
-        if (resourceTextureManager is not null)
-        {
-            _ = ((IUnknown*)resourceTextureManager)->AddRef();
-
-            *(void**)data = resourceTextureManager;
-        }
-        else
-        {
-            *(void**)data = null;
-        }
+        resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
 
         *actualSize = (uint)sizeof(void*);
 
@@ -197,38 +188,29 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        ID2D1ResourceTextureManager* resourceTextureManager = null;
+        using ComPtr<IUnknown> unknown = (IUnknown*)data;
+        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
         // Check that the input object implements ID2D1ResourceTextureManager
-        int result = ((IUnknown*)*(void**)data)->QueryInterface(
-            riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManager.Guid)),
-            ppvObject: (void**)&resourceTextureManager);
+        int result = unknown.CopyTo(resourceTextureManager.GetAddressOf());
 
         if (result != S.S_OK)
         {
             return result;
         }
 
-        ID2D1ResourceTextureManagerInternal* resourceTextureManagerInternal = null;
+        using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
 
         // Then, also check that it implements ID2D1ResourceTextureManagerInternal
-        result = ((IUnknown*)*(void**)data)->QueryInterface(
-            riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManagerInternal.Guid)),
-            ppvObject: (void**)&resourceTextureManagerInternal);
+        result = unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf());
 
         if (result != S.S_OK)
         {
-            // If the internal interface is not present, fail (but first release the public interface)
-            _ = ((IUnknown*)resourceTextureManager)->Release();
-
             return result;
         }
 
-        // If the object is valid, release the internal interface (it was retrieved just to check it was present)
-        _ = ((IUnknown*)resourceTextureManagerInternal)->Release();
-
         // Store the resource texture manager into the buffer
-        this.resourceTextureManagerBuffer[index] = resourceTextureManager;
+        this.resourceTextureManagerBuffer[index] = resourceTextureManager.Detach();
 
         return S.S_OK;
     }

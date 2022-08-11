@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -153,19 +152,14 @@ internal unsafe partial struct PixelShaderEffect
                 // Then also initialize all available resource texture managers
                 foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(@this->resourceTextureDescriptions, @this->resourceTextureDescriptionCount))
                 {
-                    ID2D1ResourceTextureManager* resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
-
-                    ID2D1ResourceTextureManagerInternal* resourceTextureManagerInternal = null;
+                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                    using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
 
                     // Get the ID2D1ResourceTextureManagerInternal object (this is guaranteed to succeed here)
-                    _ = ((IUnknown*)resourceTextureManager)->QueryInterface(
-                        riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManagerInternal.Guid)),
-                        ppvObject: (void**)&resourceTextureManagerInternal);
+                    _ = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
 
                     // Initialize the resource texture manager with the effect context
-                    hresult = resourceTextureManagerInternal->SetEffectContext(effectContext);
-
-                    _ = ((IUnknown*)resourceTextureManagerInternal)->Release();
+                    hresult = resourceTextureManagerInternal.Get()->SetEffectContext(effectContext);
 
                     if (!Windows.SUCCEEDED(hresult))
                     {
@@ -195,19 +189,16 @@ internal unsafe partial struct PixelShaderEffect
             {
                 foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(@this->resourceTextureDescriptions, @this->resourceTextureDescriptionCount))
                 {
-                    ID2D1ResourceTextureManager* resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
-
-                    ID2D1ResourceTextureManagerInternal* resourceTextureManagerInternal = null;
+                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                    using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
 
                     // Get the ID2D1ResourceTextureManagerInternal object (as above, this is guaranteed to succeed here)
-                    _ = ((IUnknown*)resourceTextureManager)->QueryInterface(
-                        riid: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in ID2D1ResourceTextureManagerInternal.Guid)),
-                        ppvObject: (void**)&resourceTextureManagerInternal);
+                    _ = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
 
                     using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
 
                     // Try to get the ID2D1ResourceTexture from the manager
-                    hresult = resourceTextureManagerInternal->GetResourceTexture(d2D1ResourceTexture.GetAddressOf());
+                    hresult = resourceTextureManagerInternal.Get()->GetResourceTexture(d2D1ResourceTexture.GetAddressOf());
 
                     if (!Windows.SUCCEEDED(hresult))
                     {
