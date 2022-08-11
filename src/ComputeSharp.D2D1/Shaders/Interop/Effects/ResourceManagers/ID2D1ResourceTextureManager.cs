@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
+#pragma warning disable CS0649
+
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <summary>

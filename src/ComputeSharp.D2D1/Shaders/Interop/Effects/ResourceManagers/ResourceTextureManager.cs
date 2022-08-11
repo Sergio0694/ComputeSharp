@@ -17,53 +17,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 /// </summary>
 internal unsafe partial struct ResourceTextureManager
 {
-    /// <summary>
-    /// Gets the <see cref="Guid"/> for <c>ID2D1ResourceTextureManager</c> (<c>3C4FC7E4-A419-46CA-B5F6-66EB4FF18D64</c>).
-    /// </summary>
-    private static ref readonly Guid IID_ID2D1ResourceTextureManager
-    {
-        get
-        {
-            ReadOnlySpan<byte> data = new byte[] {
-                0x3C, 0x4F, 0xC7, 0xE4, 0xA4,
-                0x19, 0x46,
-                0xCA, 0xB5,
-                0xF6, 0x66,
-                0xEB,
-                0x4F,
-                0xF1,
-                0x8D,
-                0x64
-            };
-
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
-        }
-    }
-
-    /// <summary>
-    /// Gets the <see cref="Guid"/> for <c>ID2D1ResourceTextureManagerInternal</c> (<c>5CBB1024-8EA1-4689-81BF-8AD190B5EF5D</c>).
-    /// </summary>
-    private static ref readonly Guid IID_ID2D1ResourceTextureManagerInternal
-    {
-        get
-        {
-            ReadOnlySpan<byte> data = new byte[] {
-                0x5C, 0xBB, 0x10, 0x24,
-                0x8E, 0xA1,
-                0x46, 0x89,
-                0x81, 0xBF,
-                0x8A,
-                0xD1,
-                0x90,
-                0xB5,
-                0xEF,
-                0x5D
-            };
-
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
-        }
-    }
-
     /// <inheritdoc cref="QueryInterface"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int QueryInterfaceDelegate(ResourceTextureManager* @this, Guid* riid, void** ppvObject);
@@ -231,7 +184,7 @@ internal unsafe partial struct ResourceTextureManager
 
         // ID2D1ResourceTextureManager
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(IID_ID2D1ResourceTextureManager))
+            riid->Equals(ID2D1ResourceTextureManager.Guid))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 
@@ -241,7 +194,7 @@ internal unsafe partial struct ResourceTextureManager
         }
 
         // ID2D1ResourceTextureManagerInternal
-        if (riid->Equals(IID_ID2D1ResourceTextureManagerInternal))
+        if (riid->Equals(ID2D1ResourceTextureManagerInternal.Guid))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 

@@ -81,17 +81,21 @@ public static unsafe class D2D1ResourceTextureManager
     }
 
     /// <summary>
-    /// 
+    /// Initializes a given <c>ID2D1ResourceTextureManager</c> instance.
     /// </summary>
-    /// <param name="resourceTextureManager"></param>
-    /// <param name="resourceId"></param>
-    /// <param name="extents"></param>
-    /// <param name="bufferPrecision"></param>
-    /// <param name="channelDepth"></param>
-    /// <param name="filter"></param>
-    /// <param name="extendModes"></param>
-    /// <param name="data"></param>
-    /// <param name="strides"></param>
+    /// <param name="resourceTextureManager">A pointer to the <c>ID2D1ResourceTextureManager</c> instance to use.</param>
+    /// <param name="resourceId">The resource id for the resource to create.</param>
+    /// <param name="extents">The extents of the resource to create.</param>
+    /// <param name="bufferPrecision">The buffer precision for the resource to create.</param>
+    /// <param name="channelDepth">The channel depth for the resource to create.</param>
+    /// <param name="filter">The filter for the resource to create.</param>
+    /// <param name="extendModes">The extend modes for the resource to create.</param>
+    /// <param name="data">The data to load in the resource to create.</param>
+    /// <param name="strides">The strides for the data supplied for the resource to create.</param>
+    /// <remarks>
+    /// Depending on internal state, <paramref name="resourceTextureManager"/> might immediately create the resource
+    /// texture, or it might buffer the data internally and then create the resource texture at a later time.
+    /// </remarks>
     public static void Initialize(
         void* resourceTextureManager,
         Guid resourceId,
@@ -118,25 +122,25 @@ public static unsafe class D2D1ResourceTextureManager
             d2D1ResourceTextureProperties.filter = (D2D1_FILTER)filter;
             d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
 
-            _ = ((delegate* unmanaged[Stdcall]<void*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)(*(void***)resourceTextureManager)[3])(
-                resourceTextureManager,
-                &resourceId,
-                &d2D1ResourceTextureProperties,
-                pData,
-                pStrides,
-                (uint)data.Length);
+            // TODO: validate
+            _ = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Initialize(
+                resourceId: &resourceId,
+                resourceTextureProperties: &d2D1ResourceTextureProperties,
+                data: pData,
+                strides: pStrides,
+                dataSize: (uint)data.Length);
         }
     }
 
     /// <summary>
-    /// 
+    /// Updates the data in a given <c>ID2D1ResourceTextureManager</c> instance.
     /// </summary>
-    /// <param name="resourceTextureManager"></param>
-    /// <param name="minimumExtents"></param>
-    /// <param name="maximumExtents"></param>
-    /// <param name="strides"></param>
-    /// <param name="dimensions"></param>
-    /// <param name="data"></param>
+    /// <param name="resourceTextureManager">A pointer to the <c>ID2D1ResourceTextureManager</c> instance to use.</param>
+    /// <param name="minimumExtents">The "left" extent of the updates if specified (if empty, the entire texture is updated).</param>
+    /// <param name="maximumExtents">The "right" extent of the updates if specified (if empty, the entire texture is updated).</param>
+    /// <param name="strides">The stride to advance through the input data, according to dimension.</param>
+    /// <param name="dimensions">The number of dimensions in the resource texture. This must match the number used to load the texture.</param>
+    /// <param name="data">The data to be placed into the resource texture.</param>
     public static void Update(
         void* resourceTextureManager,
         ReadOnlySpan<uint> minimumExtents,
@@ -152,14 +156,14 @@ public static unsafe class D2D1ResourceTextureManager
         fixed (uint* pStrides = strides)
         fixed (byte* pData = data)
         {
-            _ = ((delegate* unmanaged[Stdcall]<void*, uint*, uint*, uint*, uint, byte*, uint, int>)(*(void***)resourceTextureManager)[4])(
-                resourceTextureManager,
-                pMinimumExtents,
-                pMaximumExtents,
-                pStrides,
-                dimensions,
-                pData,
-                (uint)data.Length);
+            // TODO: validate
+            _ = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Update(
+                minimumExtents: pMinimumExtents,
+                maximumExtents: pMaximumExtents,
+                strides: pStrides,
+                dimensions: dimensions,
+                data: pData,
+                dataCount: (uint)data.Length);
         }
     }
 }

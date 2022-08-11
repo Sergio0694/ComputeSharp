@@ -78,12 +78,7 @@ partial struct ResourceTextureManager
             return @this->Release();
         }
 
-        /// <summary>
-        /// Sets the <see cref="ID2D1EffectContext"/> for the current <c>ID2D1ResourceTextureManagerInternal</c> instance.
-        /// </summary>
-        /// <param name="this">The current <c>ID2D1ResourceTextureManagerInternal</c> instance.</param>
-        /// <param name="effectContext">The input <see cref="ID2D1EffectContext"/> for the manager.</param>
-        /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
+        /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.SetEffectContext"/>
         [UnmanagedCallersOnly]
         public static int SetEffectContext(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
         {
@@ -110,12 +105,7 @@ partial struct ResourceTextureManager
             return S.S_FALSE;
         }
 
-        /// <summary>
-        /// Gets the <see cref="ID2D1ResourceTexture"/> instance held by the manager.
-        /// </summary>
-        /// <param name="this">The current <c>ID2D1ResourceTextureManagerInternal</c> instance.</param>
-        /// <param name="resourceTexture">The resulting <see cref="ID2D1ResourceTexture"/> instance.</param>
-        /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
+        /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.GetResourceTexture"/>
         [UnmanagedCallersOnly]
         public static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
         {

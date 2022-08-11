@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
+#pragma warning disable CS0649
+
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <summary>
@@ -14,7 +16,7 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <c>ID2D1ResourceTextureManagerInternal</c> (<c>5CBB1024-8EA1-4689-81BF-8AD190B5EF5D</c>).
     /// </summary>
-    private static ref readonly Guid Guid
+    public static ref readonly Guid Guid
     {
         get
         {
