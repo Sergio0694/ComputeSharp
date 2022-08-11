@@ -100,17 +100,13 @@ public static unsafe class D2D1PixelShaderEffect
             D2D1_PROPERTY_BINDING d2D1PropertyBinding;
             d2D1PropertyBinding.propertyName = (ushort*)pPropertyName;
             d2D1PropertyBinding.getFunction =
-                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, HRESULT>)
 #if NET6_0_OR_GREATER
-                (delegate* unmanaged<IUnknown*, byte*, uint, uint*, int>)
                 &PixelShaderEffect.GetConstantBuffer;
 #else
                 (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.GetConstantBufferWrapper);
 #endif
             d2D1PropertyBinding.setFunction =
-                (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, HRESULT>)
 #if NET6_0_OR_GREATER
-                (delegate* unmanaged<IUnknown*, byte*, uint, int>)
                 &PixelShaderEffect.SetConstantBuffer;
 #else
                 (void*)Marshal.GetFunctionPointerForDelegate(PixelShaderEffect.SetConstantBufferWrapper);
