@@ -8,7 +8,6 @@ using TerraFX.Interop.Windows;
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
 namespace ComputeSharp.D2D1.Interop.Effects;
@@ -38,24 +37,6 @@ internal unsafe partial struct PixelShaderEffect
     /// <inheritdoc cref="Release"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate uint ReleaseDelegate(PixelShaderEffect* @this);
-
-    /// <inheritdoc cref="GetConstantBuffer"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int GetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize, uint* actualSize);
-
-    /// <inheritdoc cref="SetConstantBuffer"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int SetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize);
-
-    /// <summary>
-    /// A cached <see cref="GetConstantBufferDelegate"/> instance wrapping <see cref="GetConstantBuffer"/>.
-    /// </summary>
-    public static readonly GetConstantBufferDelegate GetConstantBufferWrapper = GetConstantBuffer;
-
-    /// <summary>
-    /// A cached <see cref="SetConstantBufferDelegate"/> instance wrapping <see cref="SetConstantBuffer"/>.
-    /// </summary>
-    public static readonly SetConstantBufferDelegate SetConstantBufferWrapper = SetConstantBuffer;
 #endif
 
     /// <summary>
@@ -271,49 +252,6 @@ internal unsafe partial struct PixelShaderEffect
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
 
         *effectImpl = (IUnknown*)@this;
-
-        return S.S_OK;
-    }
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    public static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
-    {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
-
-        if (@this->constantBufferSize == 0)
-        {
-            *actualSize = 0;
-        }
-        else
-        {
-            int bytesToCopy = Math.Min((int)dataSize, @this->constantBufferSize);
-
-            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, bytesToCopy);
-
-            *actualSize = (uint)bytesToCopy;
-        }
-
-        return S.S_OK;
-    }
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    public static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
-    {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
-
-        if (@this->constantBuffer is not null)
-        {
-            NativeMemory.Free(@this->constantBuffer);
-        }
-
-        void* buffer = NativeMemory.Alloc(dataSize);
-
-        Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
-
-        @this->constantBuffer = (byte*)buffer;
-        @this->constantBufferSize = (int)dataSize;
 
         return S.S_OK;
     }
