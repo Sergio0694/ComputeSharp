@@ -96,7 +96,8 @@ partial struct ResourceTextureManager
         /// <param name="strides">An optional pointer to the stride to advance through the resource texture, according to dimension.</param>
         /// <param name="dataSize">The size, in bytes, of the data.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
-        private static int CreateResourceTexture(
+        [UnmanagedCallersOnly]
+        public static int CreateResourceTexture(
             ResourceTextureManager* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
@@ -121,7 +122,7 @@ partial struct ResourceTextureManager
         /// <param name="dataCount">The size of the data buffer to be used to update the resource texture.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
         [UnmanagedCallersOnly]
-        private static int Update(
+        public static int Update(
             ResourceTextureManager* @this,
             uint* minimumExtents,
             uint* maximumExtents,

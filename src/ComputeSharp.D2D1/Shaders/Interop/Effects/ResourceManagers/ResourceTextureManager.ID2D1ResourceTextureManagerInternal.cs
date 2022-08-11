@@ -85,7 +85,7 @@ partial struct ResourceTextureManager
         /// <param name="effectContext">The input <see cref="ID2D1EffectContext"/> for the manager.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
         [UnmanagedCallersOnly]
-        private static int Initialize(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
+        public static int Initialize(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
         {
             return 0;
         }
@@ -97,7 +97,7 @@ partial struct ResourceTextureManager
         /// <param name="resourceTexture">The resulting <see cref="ID2D1ResourceTexture"/> instance.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
         [UnmanagedCallersOnly]
-        private static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
+        public static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
         {
             return 0;
         }
