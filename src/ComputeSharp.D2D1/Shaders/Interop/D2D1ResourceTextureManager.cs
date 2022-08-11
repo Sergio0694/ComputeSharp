@@ -20,7 +20,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// [uuid(3C4FC7E4-A419-46CA-B5F6-66EB4FF18D64)]
 /// interface ID2D1ResourceTextureManager : IUnknown
 /// {
-///     HRESULT CreateResourceTexture(
+///     HRESULT Initialize(
 ///         [in, optional] const GUID                             *resourceId,
 ///         [in]           const D2D1_RESOURCE_TEXTURE_PROPERTIES *resourceTextureProperties,
 ///         [in, optional] const BYTE                             *data,
@@ -42,10 +42,10 @@ namespace ComputeSharp.D2D1.Interop;
 /// </para>
 /// <para>
 /// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1ResourceTextureManager"/>.
-/// That is, <see cref="CreateResourceTextureManager"/> is first use to create an <c>ID2D1ResourceTextureManager</c> instance. Then,
-/// <see cref="CreateResourceTexture"/> can be used to initialize the resource texture held by the manager. The manager can also be
-/// assigned to an effect at any time, using the available property indices from <see cref="D2D1PixelShaderEffectProperty"/>. The
-/// <see cref="UpdateResourceTexture"/> API can also be used to update texture data after the initial creation.
+/// That is, <see cref="Create"/> is first use to create an <c>ID2D1ResourceTextureManager</c> instance. Then,
+/// <see cref="Initialize"/> can be used to initialize the resource texture held by the manager. The manager can also be
+/// assigned to an effect at any time, using the available property indices from <see cref="D2D1PixelShaderEffectProperty"/>.
+/// The <see cref="Update"/> API can also be used to update texture data after the initial creation.
 /// </para>
 /// <para>
 /// The <c>ID2D1ResourceTextureManager</c> contract allows callers to create a resource texture at any time even before the effect
@@ -59,7 +59,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// [uuid(5CBB1024-8EA1-4689-81BF-8AD190B5EF5D)]
 /// interface ID2D1ResourceTextureManager : IUnknown
 /// {
-///     HRESULT Initialize([in] ID2D1EffectContext *effectContext);
+///     HRESULT SetEffectContext([in] ID2D1EffectContext *effectContext);
 /// 
 ///     HRESULT GetResourceTexture([out] ID2D1ResourceTexture **resourceTexture);
 /// };
@@ -73,7 +73,7 @@ public static unsafe class D2D1ResourceTextureManager
     /// Creates a new <c>ID2D1ResourceTextureManager</c> instance.
     /// </summary>
     /// <param name="resourceTextureManager">A pointer to the resulting <c>ID2D1ResourceTextureManager</c> instance.</param>
-    public static void CreateResourceTextureManager(void** resourceTextureManager)
+    public static void Create(void** resourceTextureManager)
     {
         // TODO: validate argument and return
 
@@ -92,7 +92,7 @@ public static unsafe class D2D1ResourceTextureManager
     /// <param name="extendModes"></param>
     /// <param name="data"></param>
     /// <param name="strides"></param>
-    public static void CreateResourceTexture(
+    public static void Initialize(
         void* resourceTextureManager,
         Guid resourceId,
         ReadOnlySpan<uint> extents,
@@ -137,7 +137,7 @@ public static unsafe class D2D1ResourceTextureManager
     /// <param name="strides"></param>
     /// <param name="dimensions"></param>
     /// <param name="data"></param>
-    public static void UpdateResourceTexture(
+    public static void Update(
         void* resourceTextureManager,
         ReadOnlySpan<uint> minimumExtents,
         ReadOnlySpan<uint> maximumExtents,

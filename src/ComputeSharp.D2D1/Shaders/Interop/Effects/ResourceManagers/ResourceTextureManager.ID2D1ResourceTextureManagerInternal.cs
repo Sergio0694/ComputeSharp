@@ -17,9 +17,9 @@ partial struct ResourceTextureManager
     private unsafe static class ID2D1ResourceTextureManagerInternalMethods
     {
 #if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Initialize"/>
+        /// <inheritdoc cref="SetEffectContext"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int InitializeDelegate(ResourceTextureManager* @this, ID2D1EffectContext* effectContext);
+        public delegate int SetEffectContextDelegate(ResourceTextureManager* @this, ID2D1EffectContext* effectContext);
 
         /// <inheritdoc cref="GetResourceTexture"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -41,9 +41,9 @@ partial struct ResourceTextureManager
         public static readonly ReleaseDelegate ReleaseWrapper = Release;
 
         /// <summary>
-        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
+        /// A cached <see cref="SetEffectContextDelegate"/> instance wrapping <see cref="SetEffectContext"/>.
         /// </summary>
-        public static readonly InitializeDelegate InitializeWrapper = Initialize;
+        public static readonly SetEffectContextDelegate SetEffectContextWrapper = SetEffectContext;
 
         /// <summary>
         /// A cached <see cref="GetResourceTextureDelegate"/> instance wrapping <see cref="GetResourceTexture"/>.
@@ -79,13 +79,13 @@ partial struct ResourceTextureManager
         }
 
         /// <summary>
-        /// Initializes the current <c>ID2D1ResourceTextureManagerInternal</c> instance.
+        /// Sets the <see cref="ID2D1EffectContext"/> for the current <c>ID2D1ResourceTextureManagerInternal</c> instance.
         /// </summary>
         /// <param name="this">The current <c>ID2D1ResourceTextureManagerInternal</c> instance.</param>
         /// <param name="effectContext">The input <see cref="ID2D1EffectContext"/> for the manager.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
         [UnmanagedCallersOnly]
-        public static int Initialize(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
+        public static int SetEffectContext(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
         {
             @this = (ResourceTextureManager*)&((void**)@this)[-1];
 

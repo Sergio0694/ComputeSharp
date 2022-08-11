@@ -98,13 +98,13 @@ internal unsafe partial struct ResourceTextureManager
         lpVtbl[0] = (delegate* unmanaged<ResourceTextureManager*, Guid*, void**, int>)&ID2D1ResourceTextureManagerMethods.QueryInterface;
         lpVtbl[1] = (delegate* unmanaged<ResourceTextureManager*, uint>)&ID2D1ResourceTextureManagerMethods.AddRef;
         lpVtbl[2] = (delegate* unmanaged<ResourceTextureManager*, uint>)&ID2D1ResourceTextureManagerMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged<ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)&ID2D1ResourceTextureManagerMethods.CreateResourceTexture;
+        lpVtbl[3] = (delegate* unmanaged<ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)&ID2D1ResourceTextureManagerMethods.Initialize;
         lpVtbl[4] = (delegate* unmanaged<ResourceTextureManager*, uint*, uint*, uint*, uint, byte*, uint, int>)&ID2D1ResourceTextureManagerMethods.Update;
 #else
         lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.QueryInterfaceWrapper);
         lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.AddRefWrapper);
         lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.ReleaseWrapper);
-        lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.CreateResourceTextureWrapper);
+        lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.InitializeWrapper);
         lpVtbl[4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.UpdateWrapper);
 #endif
 
@@ -113,13 +113,13 @@ internal unsafe partial struct ResourceTextureManager
         lpVtbl[5 + 0] = (delegate* unmanaged<ResourceTextureManager*, Guid*, void**, int>)&ID2D1ResourceTextureManagerInternalMethods.QueryInterface;
         lpVtbl[5 + 1] = (delegate* unmanaged<ResourceTextureManager*, uint>)&ID2D1ResourceTextureManagerInternalMethods.AddRef;
         lpVtbl[5 + 2] = (delegate* unmanaged<ResourceTextureManager*, uint>)&ID2D1ResourceTextureManagerInternalMethods.Release;
-        lpVtbl[5 + 3] = (delegate* unmanaged<ResourceTextureManager*, ID2D1EffectContext*, int>)&ID2D1ResourceTextureManagerInternalMethods.Initialize;
+        lpVtbl[5 + 3] = (delegate* unmanaged<ResourceTextureManager*, ID2D1EffectContext*, int>)&ID2D1ResourceTextureManagerInternalMethods.SetEffectContext;
         lpVtbl[5 + 4] = (delegate* unmanaged<ResourceTextureManager*, ID2D1ResourceTexture**, int>)&ID2D1ResourceTextureManagerInternalMethods.GetResourceTexture;
 #else
         lpVtbl[5 + 0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.QueryInterfaceWrapper);
         lpVtbl[5 + 1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.AddRefWrapper);
         lpVtbl[5 + 2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.ReleaseWrapper);
-        lpVtbl[5 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.InitializeWrapper);
+        lpVtbl[5 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.SetEffectContextWrapper);
         lpVtbl[5 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.GetResourceTextureWrapper);
 #endif
 

@@ -17,9 +17,9 @@ partial struct ResourceTextureManager
     private static unsafe class ID2D1ResourceTextureManagerMethods
     {
 #if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="CreateResourceTexture"/>
+        /// <inheritdoc cref="Initialize"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int CreateResourceTextureDelegate(
+        public delegate int InitializeDelegate(
             ResourceTextureManager* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
@@ -54,9 +54,9 @@ partial struct ResourceTextureManager
         public static readonly ReleaseDelegate ReleaseWrapper = Release;
 
         /// <summary>
-        /// A cached <see cref="CreateResourceTextureDelegate"/> instance wrapping <see cref="CreateResourceTexture"/>.
+        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
         /// </summary>
-        public static readonly CreateResourceTextureDelegate CreateResourceTextureWrapper = CreateResourceTexture;
+        public static readonly InitializeDelegate InitializeWrapper = Initialize;
 
         /// <summary>
         /// A cached <see cref="UpdateDelegate"/> instance wrapping <see cref="Update"/>.
@@ -97,7 +97,7 @@ partial struct ResourceTextureManager
         /// <param name="dataSize">The size, in bytes, of the data.</param>
         /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
         [UnmanagedCallersOnly]
-        public static int CreateResourceTexture(
+        public static int Initialize(
             ResourceTextureManager* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
