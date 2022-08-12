@@ -37,9 +37,12 @@ public static class D2D1ShaderCompiler
         int sourceWrittenBytes = Encoding.ASCII.GetBytes(hlslSource, sourceBuffer);
 
         // Encode the entry point to ASCII
-        int maxEntryPointLength = Encoding.ASCII.GetMaxByteCount(entryPoint.Length);
+        int maxEntryPointLength = Encoding.ASCII.GetMaxByteCount(entryPoint.Length) + 1;
         byte[] entryPointBuffer = ArrayPool<byte>.Shared.Rent(maxEntryPointLength);
         int entryPointWrittenBytes = Encoding.ASCII.GetBytes(entryPoint, entryPointBuffer);
+
+        // The entry point has to be null-terminated
+        entryPointBuffer[entryPointWrittenBytes] = (byte)'\0';
 
         ReadOnlySpan<byte> sourceAscii = sourceBuffer.AsSpan(0, sourceWrittenBytes);
         ReadOnlySpan<byte> entryPointAscii = entryPointBuffer.AsSpan(0, entryPointWrittenBytes);
@@ -56,7 +59,7 @@ public static class D2D1ShaderCompiler
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
     /// <param name="hlslSourceAscii">The HLSL source code to compile (in ASCII).</param>
-    /// <param name="entryPointAscii">The entry point of the shader being compiled (in ASCII).</param>
+    /// <param name="entryPointAscii">The entry point of the shader being compiled (in ASCII, null-terminated).</param>
     /// <param name="shaderProfile">The shader profile to use to compile the shader.</param>
     /// <param name="options">The compiler options to use to compile the shader.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
