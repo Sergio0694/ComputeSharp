@@ -89,11 +89,11 @@ partial struct ResourceTextureManager
                 return E.E_POINTER;
             }
 
-            effectContext->AddRef();
-
             // If this is the first time the method is called, just store the context
             if (@this->d2D1EffectContext is null)
             {
+                effectContext->AddRef();
+
                 @this->d2D1EffectContext = effectContext;
 
                 return S.S_OK;
