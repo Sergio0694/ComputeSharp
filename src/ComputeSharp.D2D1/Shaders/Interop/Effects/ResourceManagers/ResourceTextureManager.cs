@@ -137,6 +137,11 @@ internal unsafe partial struct ResourceTextureManager
     private uint dataSize;
 
     /// <summary>
+    /// A <see cref="GCHandle"/> to a dummy <see langword="object"/> to use for locking.
+    /// </summary>
+    private GCHandle lockHandle;
+
+    /// <summary>
     /// The factory method for <see cref="ResourceTextureManager"/> instances.
     /// </summary>
     /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
@@ -156,6 +161,7 @@ internal unsafe partial struct ResourceTextureManager
         @this->data = null;
         @this->strides = null;
         @this->dataSize = 0;
+        @this->lockHandle = GCHandle.Alloc(new object());
 
         *resourceTextureManager = @this;
     }
@@ -207,40 +213,45 @@ internal unsafe partial struct ResourceTextureManager
 
         if (referenceCount == 0)
         {
-            if (this.d2D1EffectContext is not null)
+            lock (this.lockHandle.Target!)
             {
-                this.d2D1EffectContext->Release();
+                if (this.d2D1EffectContext is not null)
+                {
+                    this.d2D1EffectContext->Release();
+                }
+
+                if (this.d2D1ResourceTexture is not null)
+                {
+                    this.d2D1ResourceTexture->Release();
+                }
+
+                if (this.resourceId is not null)
+                {
+                    NativeMemory.Free(this.resourceId);
+                }
+
+                if (this.resourceTextureProperties.extents is not null)
+                {
+                    NativeMemory.Free(this.resourceTextureProperties.extents);
+                }
+
+                if (this.resourceTextureProperties.extendModes is not null)
+                {
+                    NativeMemory.Free(this.resourceTextureProperties.extendModes);
+                }
+
+                if (this.data is not null)
+                {
+                    NativeMemory.Free(this.data);
+                }
+
+                if (this.strides is not null)
+                {
+                    NativeMemory.Free(this.strides);
+                }
             }
 
-            if (this.d2D1ResourceTexture is not null)
-            {
-                this.d2D1ResourceTexture->Release();
-            }
-
-            if (this.resourceId is not null)
-            {
-                NativeMemory.Free(this.resourceId);
-            }
-
-            if (this.resourceTextureProperties.extents is not null)
-            {
-                NativeMemory.Free(this.resourceTextureProperties.extents);
-            }
-
-            if (this.resourceTextureProperties.extendModes is not null)
-            {
-                NativeMemory.Free(this.resourceTextureProperties.extendModes);
-            }
-
-            if (this.data is not null)
-            {
-                NativeMemory.Free(this.data);
-            }
-
-            if (this.strides is not null)
-            {
-                NativeMemory.Free(this.strides);
-            }
+            this.lockHandle.Free();
         }
 
         return referenceCount;

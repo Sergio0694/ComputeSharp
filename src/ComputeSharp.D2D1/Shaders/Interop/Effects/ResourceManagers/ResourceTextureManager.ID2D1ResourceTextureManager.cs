@@ -104,73 +104,36 @@ partial struct ResourceTextureManager
                 return E.E_POINTER;
             }
 
-            // If the method has already been called, fail
-            if (@this->d2D1ResourceTexture is not null ||
-                @this->data is not null)
+            lock (@this->lockHandle.Target!)
             {
-                return E.E_NOT_VALID_STATE;
-            }
+                // If the method has already been called, fail
+                if (@this->d2D1ResourceTexture is not null ||
+                    @this->data is not null)
+                {
+                    return E.E_NOT_VALID_STATE;
+                }
 
-            // If Initialize has already been called, just forward the call
-            if (@this->d2D1EffectContext is not null)
-            {
-                return @this->d2D1EffectContext->CreateResourceTexture(
+                // If the method has already been called, just forward the call
+                if (@this->d2D1EffectContext is not null)
+                {
+                    return @this->d2D1EffectContext->CreateResourceTexture(
+                        resourceId: resourceId,
+                        resourceTextureProperties: resourceTextureProperties,
+                        data: data,
+                        strides: strides,
+                        dataSize: dataSize,
+                        resourceTexture: &@this->d2D1ResourceTexture);
+                }
+
+                // Initialize into a staging buffer
+                return InitializeWithStagingBuffer(
+                    @this: @this,
                     resourceId: resourceId,
                     resourceTextureProperties: resourceTextureProperties,
                     data: data,
                     strides: strides,
-                    dataSize: dataSize,
-                    resourceTexture: &@this->d2D1ResourceTexture);
+                    dataSize: dataSize);
             }
-
-            @this->resourceId = (Guid*)NativeMemory.Alloc((nuint)sizeof(Guid));
-
-            *@this->resourceId = *resourceId;
-
-            uint* extents = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
-            D2D1_EXTEND_MODE* extendModes = (D2D1_EXTEND_MODE*)NativeMemory.Alloc(sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
-
-            Buffer.MemoryCopy(
-                source: resourceTextureProperties->extents,
-                destination: extents,
-                destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
-                sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
-
-            Buffer.MemoryCopy(
-                source: resourceTextureProperties->extendModes,
-                destination: extendModes,
-                destinationSizeInBytes: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions,
-                sourceBytesToCopy: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
-
-            @this->resourceTextureProperties.extents = extents;
-            @this->resourceTextureProperties.dimensions = resourceTextureProperties->dimensions;
-            @this->resourceTextureProperties.bufferPrecision = resourceTextureProperties->bufferPrecision;
-            @this->resourceTextureProperties.channelDepth = resourceTextureProperties->channelDepth;
-            @this->resourceTextureProperties.filter = resourceTextureProperties->filter;
-            @this->resourceTextureProperties.extendModes = extendModes;
-
-            @this->data = (byte*)NativeMemory.Alloc(dataSize);
-
-            Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
-
-            @this->dataSize = dataSize;
-
-            if (strides is not null)
-            {
-                @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * (resourceTextureProperties->dimensions - 1));
-
-                Buffer.MemoryCopy(
-                    source: strides,
-                    destination: @this->strides,
-                    destinationSizeInBytes: sizeof(uint) * (resourceTextureProperties->dimensions - 1),
-                    sourceBytesToCopy: sizeof(uint) * (resourceTextureProperties->dimensions - 1));
-            }
-            else
-            {
-                @this->strides = null;
-            }
-
-            return 0;
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
@@ -191,27 +154,137 @@ partial struct ResourceTextureManager
                 return E.E_POINTER;
             }
 
-            if (@this->d2D1ResourceTexture is null &&
-                @this->data is null)
+            lock (@this->lockHandle.Target!)
             {
-                return E.E_NOT_VALID_STATE;
+                if (@this->d2D1ResourceTexture is null &&
+                    @this->data is null)
+                {
+                    return E.E_NOT_VALID_STATE;
+                }
+
+                // If a resource texture already exists, just forward the call
+                if (@this->d2D1ResourceTexture is not null)
+                {
+                    return @this->d2D1ResourceTexture->Update(
+                        minimumExtents: minimumExtents,
+                        maximimumExtents: maximumExtents,
+                        strides: strides,
+                        dimensions: dimensions,
+                        data: data,
+                        dataCount: dataCount);
+                }
+
+                // TODO: implement Update over buffered data
+
+                return 0;
+            }
+        }
+
+        /// <inheritdoc cref="Initialize"/>
+        private static int InitializeWithStagingBuffer(
+            ResourceTextureManager* @this,
+            Guid* resourceId,
+            D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
+            byte* data,
+            uint* strides,
+            uint dataSize)
+        {
+            // Allocate a buffer for the resource id, if there is one
+            if (resourceId is not null)
+            {
+                try
+                {
+                    @this->resourceId = (Guid*)NativeMemory.Alloc((nuint)sizeof(Guid));
+                }
+                catch (OutOfMemoryException)
+                {
+                    return E.E_OUTOFMEMORY;
+                }
+
+                *@this->resourceId = *resourceId;
             }
 
-            // If a resource texture already exists, just forward the call
-            if (@this->d2D1ResourceTexture is not null)
+            uint* extents;
+
+            // Allocate a buffer for the extents (one per dimension)
+            try
             {
-                return @this->d2D1ResourceTexture->Update(
-                    minimumExtents: minimumExtents,
-                    maximimumExtents: maximumExtents,
-                    strides: strides,
-                    dimensions: dimensions,
-                    data: data,
-                    dataCount: dataCount);
+                extents = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
+            }
+            catch (OutOfMemoryException)
+            {
+                return E.E_OUTOFMEMORY;
             }
 
-            // TODO: implement Update over buffered data
+            D2D1_EXTEND_MODE* extendModes;
 
-            return 0;
+            // Allocate a buffer for the extend modes (one per dimension)
+            try
+            {
+                extendModes = (D2D1_EXTEND_MODE*)NativeMemory.Alloc(sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
+            }
+            catch (OutOfMemoryException)
+            {
+                return E.E_OUTOFMEMORY;
+            }
+
+            // Copy the extents into the buffer
+            Buffer.MemoryCopy(
+                source: resourceTextureProperties->extents,
+                destination: extents,
+                destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
+                sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+
+            // Copy the extend modes into the buffer
+            Buffer.MemoryCopy(
+                source: resourceTextureProperties->extendModes,
+                destination: extendModes,
+                destinationSizeInBytes: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions,
+                sourceBytesToCopy: sizeof(D2D1_EXTEND_MODE) * resourceTextureProperties->dimensions);
+
+            // Initialize the other resource texture properties
+            @this->resourceTextureProperties.extents = extents;
+            @this->resourceTextureProperties.dimensions = resourceTextureProperties->dimensions;
+            @this->resourceTextureProperties.bufferPrecision = resourceTextureProperties->bufferPrecision;
+            @this->resourceTextureProperties.channelDepth = resourceTextureProperties->channelDepth;
+            @this->resourceTextureProperties.filter = resourceTextureProperties->filter;
+            @this->resourceTextureProperties.extendModes = extendModes;
+
+            // Allocate the data buffer (this is the one most likely to potentially throw)
+            try
+            {
+                @this->data = (byte*)NativeMemory.Alloc(dataSize);
+            }
+            catch (OutOfMemoryException)
+            {
+                return E.E_OUTOFMEMORY;
+            }
+
+            // Copy the data buffer
+            Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
+
+            @this->dataSize = dataSize;
+
+            // If there are strides (ie. the texture has dimension greater than 1), initialize them as well
+            if (strides is not null)
+            {
+                try
+                {
+                    @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * (resourceTextureProperties->dimensions - 1));
+                }
+                catch (OutOfMemoryException)
+                {
+                    return E.E_OUTOFMEMORY;
+                }
+
+                Buffer.MemoryCopy(
+                    source: strides,
+                    destination: @this->strides,
+                    destinationSizeInBytes: sizeof(uint) * (resourceTextureProperties->dimensions - 1),
+                    sourceBytesToCopy: sizeof(uint) * (resourceTextureProperties->dimensions - 1));
+            }
+
+            return S.S_OK;
         }
     }
 }
