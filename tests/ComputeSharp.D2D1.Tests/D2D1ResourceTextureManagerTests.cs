@@ -60,7 +60,7 @@ public partial class D2D1ResourceTextureManagerTests
     }
 
     [TestMethod]
-    public unsafe void LoadPixelsFromResourceTexture2D()
+    public unsafe void LoadPixelsFromResourceTexture2D_CreateAfterGettingEffectContext()
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
@@ -82,7 +82,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string expectedPath = Path.Combine(assemblyPath, "Assets", "Landscape.png");
-        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D.png");
+        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_After.png");
 
         using Image<Rgba32> expected = Image.Load<Rgba32>(expectedPath);
 
@@ -101,6 +101,60 @@ public partial class D2D1ResourceTextureManagerTests
             extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
             data: MemoryMarshal.AsBytes(pixels.Span),
             strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
+
+        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
+
+        D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+
+        using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+        WICHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+    }
+
+    [TestMethod]
+    public unsafe void LoadPixelsFromResourceTexture2D_CreateBeforeGettingEffectContext()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<IndexFrom2DResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(IndexFrom2DResourceTextureShader), d2D1Effect.Get());
+
+        using ComPtr<IUnknown> resourceTextureManager = default;
+
+        D2D1ResourceTextureManager.Create((void**)resourceTextureManager.GetAddressOf());
+
+        string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+        string expectedPath = Path.Combine(assemblyPath, "Assets", "Landscape.png");
+        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_Before.png");
+
+        using Image<Rgba32> expected = Image.Load<Rgba32>(expectedPath);
+
+        if (!expected.DangerousTryGetSinglePixelMemory(out Memory<Rgba32> pixels))
+        {
+            Assert.Inconclusive();
+        }
+
+        D2D1ResourceTextureManager.Initialize(
+            resourceTextureManager: resourceTextureManager.Get(),
+            resourceId: Guid.NewGuid(),
+            extents: stackalloc[] { (uint)expected.Width, (uint)expected.Height },
+            bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
+            channelDepth: D2D1ChannelDepth.Four,
+            filter: D2D1Filter.MinMagMipPoint,
+            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            data: MemoryMarshal.AsBytes(pixels.Span),
+            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
+
+        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager.Get(), 0);
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
 
