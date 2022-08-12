@@ -98,7 +98,6 @@ partial struct ResourceTextureManager
             // Return E_POINTER if any input pointer is null
             if (resourceTextureProperties is null ||
                 data is null ||
-                strides is null ||
                 resourceTextureProperties->extents is null ||
                 resourceTextureProperties->extendModes is null)
             {
@@ -154,13 +153,20 @@ partial struct ResourceTextureManager
 
             Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
 
-            @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
+            if (strides is not null)
+            {
+                @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
 
-            Buffer.MemoryCopy(
-                source: strides,
-                destination: @this->strides,
-                destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
-                sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+                Buffer.MemoryCopy(
+                    source: strides,
+                    destination: @this->strides,
+                    destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
+                    sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+            }
+            else
+            {
+                @this->strides = null;
+            }
 
             return 0;
         }

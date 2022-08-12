@@ -128,6 +128,8 @@ partial struct ResourceTextureManager
                 @this->d2D1ResourceTexture->AddRef();
 
                 *resourceTexture = @this->d2D1ResourceTexture;
+
+                return S.S_OK;
             }
 
             // If the data is null at this point, it means CreateResourceTexture has not been called yet

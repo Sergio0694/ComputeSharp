@@ -77,7 +77,7 @@ internal unsafe partial struct ResourceTextureManager
 #endif
 
         VtblForID2D1ResourceTextureManager = lpVtbl;
-        VtblForID2D1ResourceTextureManagerInternal = &lpVtbl[6];
+        VtblForID2D1ResourceTextureManagerInternal = &lpVtbl[5];
     }
 
     /// <summary>

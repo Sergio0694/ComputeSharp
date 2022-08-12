@@ -188,7 +188,7 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        using ComPtr<IUnknown> unknown = (IUnknown*)data;
+        using ComPtr<IUnknown> unknown = *(IUnknown**)data;
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
         // Check that the input object implements ID2D1ResourceTextureManager
@@ -207,6 +207,12 @@ unsafe partial struct PixelShaderEffect
         if (result != S.S_OK)
         {
             return result;
+        }
+
+        // Initialize the resource texture manager, if an effect context is available
+        if (this.d2D1EffectContext is not null)
+        {
+            resourceTextureManagerInternal.Get()->SetEffectContext(this.d2D1EffectContext);
         }
 
         // Store the resource texture manager into the buffer

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 
@@ -73,9 +74,9 @@ public static unsafe class D2D1ResourceTextureManager
     /// <param name="resourceTextureManager">A pointer to the resulting <c>ID2D1ResourceTextureManager</c> instance.</param>
     public static void Create(void** resourceTextureManager)
     {
-        // TODO: validate argument and return
+        int hresult = ResourceTextureManager.Factory((ResourceTextureManager**)resourceTextureManager);
 
-        _ = ResourceTextureManager.Factory((ResourceTextureManager**)resourceTextureManager);
+        Marshal.ThrowExceptionForHR(hresult);
     }
 
     /// <summary>
@@ -120,13 +121,14 @@ public static unsafe class D2D1ResourceTextureManager
             d2D1ResourceTextureProperties.filter = (D2D1_FILTER)filter;
             d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
 
-            // TODO: validate
-            _ = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Initialize(
+            int hresult = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Initialize(
                 resourceId: &resourceId,
                 resourceTextureProperties: &d2D1ResourceTextureProperties,
                 data: pData,
                 strides: pStrides,
                 dataSize: (uint)data.Length);
+
+            Marshal.ThrowExceptionForHR(hresult);
         }
     }
 
@@ -154,14 +156,15 @@ public static unsafe class D2D1ResourceTextureManager
         fixed (uint* pStrides = strides)
         fixed (byte* pData = data)
         {
-            // TODO: validate
-            _ = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Update(
+            int hresult = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Update(
                 minimumExtents: pMinimumExtents,
                 maximumExtents: pMaximumExtents,
                 strides: pStrides,
                 dimensions: dimensions,
                 data: pData,
                 dataCount: (uint)data.Length);
+
+            Marshal.ThrowExceptionForHR(hresult);
         }
     }
 }
