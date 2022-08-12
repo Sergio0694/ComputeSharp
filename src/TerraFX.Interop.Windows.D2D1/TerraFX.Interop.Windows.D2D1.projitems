@@ -25,13 +25,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformGraph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effects\CLSID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\D2D1_EXTEND_MODE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\ID2D1Factory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\ID2D1Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\D2D1_CHANNEL_DEPTH.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\D2D1_BUFFER_PRECISION.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\D2D1_PROPERTY_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1DeviceContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1Effect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1Factory1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1_1\ID2D1Multithread.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_INCLUDE_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_SHADER_MACRO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11shader\D3D11_SHADER_DESC.cs" />
