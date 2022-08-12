@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -91,14 +93,25 @@ partial struct ResourceTextureManager
 
             lock (@this->lockHandle.Target!)
             {
-                // If this is the first time the method is called, just store the context
+                // If this is the first time the method is called, just store the context.
+                // Before doing so, get an ID2D1Multithread instance, to ensure thread safety.
+                // For additional info, see docs on ID2D1EffectFactoryExtensions.GetD2D1Multithread.
                 if (@this->d2D1EffectContext is null)
                 {
-                    effectContext->AddRef();
+                    using ComPtr<ID2D1Multithread> d2D1Multithread = default;
 
-                    @this->d2D1EffectContext = effectContext;
+                    int hresult = effectContext->GetD2D1Multithread(d2D1Multithread.GetAddressOf());
 
-                    return S.S_OK;
+                    // If an ID2D1Multithread object is available, we can safely store the context
+                    if (Windows.SUCCEEDED(hresult))
+                    {
+                        _ = effectContext->AddRef();
+
+                        @this->d2D1EffectContext = effectContext;
+                        @this->d2D1Multithread = d2D1Multithread.Detach();
+                    }
+
+                    return hresult;
                 }
 
                 // Otherwise, just do nothing and return S_FALSE. This allows an existing resource texture

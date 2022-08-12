@@ -101,6 +101,11 @@ internal unsafe partial struct ResourceTextureManager
     private ID2D1EffectContext* d2D1EffectContext;
 
     /// <summary>
+    /// The <see cref="ID2D1Multithread"/> instance used to lock accesses to <see cref="d2D1EffectContext"/> and <see cref="d2D1ResourceTexture"/>.
+    /// </summary>
+    private ID2D1Multithread* d2D1Multithread;
+
+    /// <summary>
     /// The <see cref="ID2D1ResourceTexture"/> object, if one was created already.
     /// </summary>
     private ID2D1ResourceTexture* d2D1ResourceTexture;
@@ -155,6 +160,7 @@ internal unsafe partial struct ResourceTextureManager
         @this->lpVtblForID2D1ResourceTextureManagerInternal = VtblForID2D1ResourceTextureManagerInternal;
         @this->referenceCount = 1;
         @this->d2D1EffectContext = null;
+        @this->d2D1Multithread = null;
         @this->d2D1ResourceTexture = null;
         @this->resourceId = null;
         @this->resourceTextureProperties = default;
@@ -215,14 +221,21 @@ internal unsafe partial struct ResourceTextureManager
         {
             lock (this.lockHandle.Target!)
             {
-                if (this.d2D1EffectContext is not null)
+                // Also synchronize on the ID2D1Multithread instance before touching D2D objects
+                if (this.d2D1Multithread is not null)
                 {
+                    // Enter the lock, and then free the effect context. That is guaranteed to
+                    // not be null here, as it is only ever set if ID2D1Multithread is retrieved.
+                    this.d2D1Multithread->Enter();
                     this.d2D1EffectContext->Release();
-                }
 
-                if (this.d2D1ResourceTexture is not null)
-                {
-                    this.d2D1ResourceTexture->Release();
+                    // Release the resource too if it has been created
+                    if (this.d2D1ResourceTexture is not null)
+                    {
+                        this.d2D1ResourceTexture->Release();
+                    }
+
+                    this.d2D1Multithread->Leave();
                 }
 
                 if (this.resourceId is not null)

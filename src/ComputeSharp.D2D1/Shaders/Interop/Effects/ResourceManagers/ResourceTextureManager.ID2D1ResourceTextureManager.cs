@@ -116,13 +116,20 @@ partial struct ResourceTextureManager
                 // If the method has already been called, just forward the call
                 if (@this->d2D1EffectContext is not null)
                 {
-                    return @this->d2D1EffectContext->CreateResourceTexture(
+                    @this->d2D1Multithread->Enter();
+
+                    // Create the resource after taking a D2D lock
+                    int hresult = @this->d2D1EffectContext->CreateResourceTexture(
                         resourceId: resourceId,
                         resourceTextureProperties: resourceTextureProperties,
                         data: data,
                         strides: strides,
                         dataSize: dataSize,
                         resourceTexture: &@this->d2D1ResourceTexture);
+
+                    @this->d2D1Multithread->Leave();
+
+                    return hresult;
                 }
 
                 // Initialize into a staging buffer
@@ -165,13 +172,20 @@ partial struct ResourceTextureManager
                 // If a resource texture already exists, just forward the call
                 if (@this->d2D1ResourceTexture is not null)
                 {
-                    return @this->d2D1ResourceTexture->Update(
+                    @this->d2D1Multithread->Enter();
+
+                    // Take a D2D lock here too to ensure thread safety
+                    int hresult = @this->d2D1ResourceTexture->Update(
                         minimumExtents: minimumExtents,
                         maximimumExtents: maximimumExtents,
                         strides: strides,
                         dimensions: dimensions,
                         data: data,
                         dataCount: dataCount);
+
+                    @this->d2D1Multithread->Leave();
+
+                    return hresult;
                 }
 
                 // Otherwise update the staging buffer
