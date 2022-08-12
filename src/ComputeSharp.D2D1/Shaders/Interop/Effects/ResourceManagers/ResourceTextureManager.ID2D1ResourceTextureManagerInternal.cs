@@ -147,16 +147,23 @@ partial struct ResourceTextureManager
                 dataSize: @this->dataSize,
                 resourceTexture: resourceTexture);
 
-            // If creation was successful, release the buffered data
+            // If creation was successful, release the buffered data. Going forwards,
+            // the resource texture will be used directly for all updates requested.
             if (result == S.S_OK)
             {
                 NativeMemory.Free(@this->resourceTextureProperties.extents);
                 NativeMemory.Free(@this->resourceTextureProperties.extendModes);
                 NativeMemory.Free(@this->data);
                 NativeMemory.Free(@this->strides);
+
+                // Reset the stored pointers to avoid double frees from Release()
+                @this->resourceTextureProperties.extents = null;
+                @this->resourceTextureProperties.extendModes = null;
+                @this->data = null;
+                @this->strides = null;
             }
 
-            return S.S_OK;
+            return result;
         }
     }
 }

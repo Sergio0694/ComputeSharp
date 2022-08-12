@@ -153,15 +153,17 @@ partial struct ResourceTextureManager
 
             Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
 
+            @this->dataSize = dataSize;
+
             if (strides is not null)
             {
-                @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * resourceTextureProperties->dimensions);
+                @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * (resourceTextureProperties->dimensions - 1));
 
                 Buffer.MemoryCopy(
                     source: strides,
                     destination: @this->strides,
-                    destinationSizeInBytes: sizeof(uint) * resourceTextureProperties->dimensions,
-                    sourceBytesToCopy: sizeof(uint) * resourceTextureProperties->dimensions);
+                    destinationSizeInBytes: sizeof(uint) * (resourceTextureProperties->dimensions - 1),
+                    sourceBytesToCopy: sizeof(uint) * (resourceTextureProperties->dimensions - 1));
             }
             else
             {
@@ -182,6 +184,19 @@ partial struct ResourceTextureManager
             byte* data,
             uint dataCount)
         {
+            if (minimumExtents is null ||
+                maximumExtents is null ||
+                data is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (@this->d2D1ResourceTexture is null &&
+                @this->data is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
             // If a resource texture already exists, just forward the call
             if (@this->d2D1ResourceTexture is not null)
             {
