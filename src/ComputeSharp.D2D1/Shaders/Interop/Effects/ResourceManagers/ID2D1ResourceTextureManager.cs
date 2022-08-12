@@ -61,21 +61,20 @@ internal unsafe struct ID2D1ResourceTextureManager
         uint* strides,
         uint dataSize)
     {
-        return
-            ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)this.lpVtbl[3])(
-                (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
-                resourceId,
-                resourceTextureProperties,
-                data,
-                strides,
-                dataSize);
+        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)this.lpVtbl[3])(
+            (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
+            resourceId,
+            resourceTextureProperties,
+            data,
+            strides,
+            dataSize);
     }
 
     /// <summary>
     /// Updates the specific resource texture inside the specific range or box using the supplied data.
     /// </summary>
     /// <param name="minimumExtents">The "left" extent of the updates if specified. If <see langword="null"/>, the entire texture is updated.</param>
-    /// <param name="maximumExtents">The "right" extent of the updates if specified. If <see langword="null"/>, the entire texture is updated.</param>
+    /// <param name="maximimumExtents">The "right" extent of the updates if specified. If <see langword="null"/>, the entire texture is updated.</param>
     /// <param name="strides">The stride to advance through the input data, according to dimension.</param>
     /// <param name="dimensions">The number of dimensions in the resource texture. This must match the number used to load the texture.</param>
     /// <param name="data">The data to be placed into the resource texture.</param>
@@ -84,20 +83,19 @@ internal unsafe struct ID2D1ResourceTextureManager
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int Update(
         uint* minimumExtents,
-        uint* maximumExtents,
+        uint* maximimumExtents,
         uint* strides,
         uint dimensions,
         byte* data,
         uint dataCount)
     {
-        return
-            ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, uint*, uint*, uint*, uint, byte*, uint, int>)this.lpVtbl[4])(
-                (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
-                minimumExtents,
-                maximumExtents,
-                strides,
-                dimensions,
-                data,
-                dataCount);
+        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, uint*, uint*, uint*, uint, byte*, uint, int>)this.lpVtbl[4])(
+            (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
+            minimumExtents,
+            maximimumExtents,
+            strides,
+            dimensions,
+            data,
+            dataCount);
     }
 }

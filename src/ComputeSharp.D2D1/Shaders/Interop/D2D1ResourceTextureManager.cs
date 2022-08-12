@@ -135,14 +135,14 @@ public static unsafe class D2D1ResourceTextureManager
     /// </summary>
     /// <param name="resourceTextureManager">A pointer to the <c>ID2D1ResourceTextureManager</c> instance to use.</param>
     /// <param name="minimumExtents">The "left" extent of the updates if specified (if empty, the entire texture is updated).</param>
-    /// <param name="maximumExtents">The "right" extent of the updates if specified (if empty, the entire texture is updated).</param>
+    /// <param name="maximimumExtents">The "right" extent of the updates if specified (if empty, the entire texture is updated).</param>
     /// <param name="strides">The stride to advance through the input data, according to dimension.</param>
     /// <param name="dimensions">The number of dimensions in the resource texture. This must match the number used to load the texture.</param>
     /// <param name="data">The data to be placed into the resource texture.</param>
     public static void Update(
         void* resourceTextureManager,
         ReadOnlySpan<uint> minimumExtents,
-        ReadOnlySpan<uint> maximumExtents,
+        ReadOnlySpan<uint> maximimumExtents,
         ReadOnlySpan<uint> strides,
         uint dimensions,
         ReadOnlySpan<byte> data)
@@ -150,13 +150,13 @@ public static unsafe class D2D1ResourceTextureManager
         // TODO: validate argument and return
 
         fixed (uint* pMinimumExtents = minimumExtents)
-        fixed (uint* pMaximumExtents = maximumExtents)
+        fixed (uint* pMaximumExtents = maximimumExtents)
         fixed (uint* pStrides = strides)
         fixed (byte* pData = data)
         {
             int hresult = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Update(
                 minimumExtents: pMinimumExtents,
-                maximumExtents: pMaximumExtents,
+                maximimumExtents: pMaximumExtents,
                 strides: pStrides,
                 dimensions: dimensions,
                 data: pData,

@@ -32,7 +32,7 @@ partial struct ResourceTextureManager
         public delegate int UpdateDelegate(
             ResourceTextureManager* @this,
             uint* minimumExtents,
-            uint* maximumExtents,
+            uint* maximimumExtents,
             uint* strides,
             uint dimensions,
             byte* data,
@@ -141,14 +141,14 @@ partial struct ResourceTextureManager
         public static int Update(
             ResourceTextureManager* @this,
             uint* minimumExtents,
-            uint* maximumExtents,
+            uint* maximimumExtents,
             uint* strides,
             uint dimensions,
             byte* data,
             uint dataCount)
         {
             if (minimumExtents is null ||
-                maximumExtents is null ||
+                maximimumExtents is null ||
                 data is null)
             {
                 return E.E_POINTER;
@@ -167,16 +167,22 @@ partial struct ResourceTextureManager
                 {
                     return @this->d2D1ResourceTexture->Update(
                         minimumExtents: minimumExtents,
-                        maximimumExtents: maximumExtents,
+                        maximimumExtents: maximimumExtents,
                         strides: strides,
                         dimensions: dimensions,
                         data: data,
                         dataCount: dataCount);
                 }
 
-                // TODO: implement Update over buffered data
-
-                return 0;
+                // Otherwise update the staging buffer
+                return UpdateWithStagingBuffer(
+                    @this: @this,
+                    minimumExtents: minimumExtents,
+                    maximimumExtents: maximimumExtents,
+                    strides: strides,
+                    dimensions: dimensions,
+                    data: data,
+                    dataCount: dataCount);
             }
         }
 
@@ -285,6 +291,19 @@ partial struct ResourceTextureManager
             }
 
             return S.S_OK;
+        }
+
+        /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
+        private static int UpdateWithStagingBuffer(
+            ResourceTextureManager* @this,
+            uint* minimumExtents,
+            uint* maximimumExtents,
+            uint* strides,
+            uint dimensions,
+            byte* data,
+            uint dataCount)
+        {
+            return E.E_NOTIMPL;
         }
     }
 }
