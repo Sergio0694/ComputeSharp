@@ -140,21 +140,9 @@ internal unsafe partial struct ResourceTextureManager
     /// The factory method for <see cref="ResourceTextureManager"/> instances.
     /// </summary>
     /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
-    /// <returns>This always returns <c>0</c>.</returns>
-    public static int Factory(ResourceTextureManager** resourceTextureManager)
+    public static void Factory(ResourceTextureManager** resourceTextureManager)
     {
-        ResourceTextureManager* @this;
-
-        try
-        {
-            @this = (ResourceTextureManager*)NativeMemory.Alloc((nuint)sizeof(ResourceTextureManager));
-        }
-        catch (OutOfMemoryException)
-        {
-            *resourceTextureManager = null;
-
-            return E.E_OUTOFMEMORY;
-        }
+        ResourceTextureManager* @this = (ResourceTextureManager*)NativeMemory.Alloc((nuint)sizeof(ResourceTextureManager));
 
         *@this = default;
 
@@ -170,8 +158,6 @@ internal unsafe partial struct ResourceTextureManager
         @this->dataSize = 0;
 
         *resourceTextureManager = @this;
-
-        return S.S_OK;
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>

@@ -74,9 +74,7 @@ public static unsafe class D2D1ResourceTextureManager
     /// <param name="resourceTextureManager">A pointer to the resulting <c>ID2D1ResourceTextureManager</c> instance.</param>
     public static void Create(void** resourceTextureManager)
     {
-        int hresult = ResourceTextureManager.Factory((ResourceTextureManager**)resourceTextureManager);
-
-        Marshal.ThrowExceptionForHR(hresult);
+        ResourceTextureManager.Factory((ResourceTextureManager**)resourceTextureManager);
     }
 
     /// <summary>
