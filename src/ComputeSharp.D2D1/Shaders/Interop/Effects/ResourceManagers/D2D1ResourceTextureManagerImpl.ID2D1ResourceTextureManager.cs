@@ -9,12 +9,125 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <inheritdoc/>
-partial struct D2D1ResourceTextureManagerImpl
+unsafe partial struct D2D1ResourceTextureManagerImpl
 {
+    /// <inheritdoc cref="ID2D1ResourceTextureManager.Initialize"/>
+    public static int Initialize(
+        D2D1ResourceTextureManagerImpl* @this,
+        Guid* resourceId,
+        D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
+        byte* data,
+        uint* strides,
+        uint dataSize)
+    {
+        // Return E_POINTER if any input pointer is null
+        if (resourceTextureProperties is null ||
+            data is null ||
+            resourceTextureProperties->extents is null ||
+            resourceTextureProperties->extendModes is null)
+        {
+            return E.E_POINTER;
+        }
+
+        lock (@this->lockHandle.Target!)
+        {
+            // If the method has already been called, fail
+            if (@this->d2D1ResourceTexture is not null ||
+                @this->data is not null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            // If the method has already been called, just forward the call
+            if (@this->d2D1EffectContext is not null)
+            {
+                @this->d2D1Multithread->Enter();
+
+                // Create the resource after taking a D2D lock
+                int hresult = @this->d2D1EffectContext->CreateResourceTexture(
+                    resourceId: resourceId,
+                    resourceTextureProperties: resourceTextureProperties,
+                    data: data,
+                    strides: strides,
+                    dataSize: dataSize,
+                    resourceTexture: &@this->d2D1ResourceTexture);
+
+                @this->d2D1Multithread->Leave();
+
+                return hresult;
+            }
+
+            // Initialize into a staging buffer
+            return ID2D1ResourceTextureManagerMethods.InitializeWithStagingBuffer(
+                @this: @this,
+                resourceId: resourceId,
+                resourceTextureProperties: resourceTextureProperties,
+                data: data,
+                strides: strides,
+                dataSize: dataSize);
+        }
+    }
+
+    /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
+    public static int Update(
+        D2D1ResourceTextureManagerImpl* @this,
+        uint* minimumExtents,
+        uint* maximimumExtents,
+        uint* strides,
+        uint dimensions,
+        byte* data,
+        uint dataCount)
+    {
+        if (minimumExtents is null ||
+            maximimumExtents is null ||
+            data is null)
+        {
+            return E.E_POINTER;
+        }
+
+        lock (@this->lockHandle.Target!)
+        {
+            if (@this->d2D1ResourceTexture is null &&
+                @this->data is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            // If a resource texture already exists, just forward the call
+            if (@this->d2D1ResourceTexture is not null)
+            {
+                @this->d2D1Multithread->Enter();
+
+                // Take a D2D lock here too to ensure thread safety
+                int hresult = @this->d2D1ResourceTexture->Update(
+                    minimumExtents: minimumExtents,
+                    maximimumExtents: maximimumExtents,
+                    strides: strides,
+                    dimensions: dimensions,
+                    data: data,
+                    dataCount: dataCount);
+
+                @this->d2D1Multithread->Leave();
+
+                return hresult;
+            }
+
+            // Otherwise update the staging buffer
+            return ID2D1ResourceTextureManagerMethods.UpdateWithStagingBuffer(
+                @this: @this,
+                minimumExtents: minimumExtents,
+                maximimumExtents: maximimumExtents,
+                strides: strides,
+                dimensions: dimensions,
+                data: data,
+                dataCount: dataCount);
+        }
+    }
+
     /// <summary>
     /// The implementation for <c>ID2D1ResourceTextureManager</c>.
     /// </summary>
-    private static unsafe class ID2D1ResourceTextureManagerMethods
+    private static class ID2D1ResourceTextureManagerMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Initialize"/>
@@ -95,52 +208,13 @@ partial struct D2D1ResourceTextureManagerImpl
             uint* strides,
             uint dataSize)
         {
-            // Return E_POINTER if any input pointer is null
-            if (resourceTextureProperties is null ||
-                data is null ||
-                resourceTextureProperties->extents is null ||
-                resourceTextureProperties->extendModes is null)
-            {
-                return E.E_POINTER;
-            }
-
-            lock (@this->lockHandle.Target!)
-            {
-                // If the method has already been called, fail
-                if (@this->d2D1ResourceTexture is not null ||
-                    @this->data is not null)
-                {
-                    return E.E_NOT_VALID_STATE;
-                }
-
-                // If the method has already been called, just forward the call
-                if (@this->d2D1EffectContext is not null)
-                {
-                    @this->d2D1Multithread->Enter();
-
-                    // Create the resource after taking a D2D lock
-                    int hresult = @this->d2D1EffectContext->CreateResourceTexture(
-                        resourceId: resourceId,
-                        resourceTextureProperties: resourceTextureProperties,
-                        data: data,
-                        strides: strides,
-                        dataSize: dataSize,
-                        resourceTexture: &@this->d2D1ResourceTexture);
-
-                    @this->d2D1Multithread->Leave();
-
-                    return hresult;
-                }
-
-                // Initialize into a staging buffer
-                return InitializeWithStagingBuffer(
-                    @this: @this,
-                    resourceId: resourceId,
-                    resourceTextureProperties: resourceTextureProperties,
-                    data: data,
-                    strides: strides,
-                    dataSize: dataSize);
-            }
+            return D2D1ResourceTextureManagerImpl.Initialize(
+                @this,
+                resourceId,
+                resourceTextureProperties,
+                data,
+                strides,
+                dataSize);
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
@@ -154,54 +228,18 @@ partial struct D2D1ResourceTextureManagerImpl
             byte* data,
             uint dataCount)
         {
-            if (minimumExtents is null ||
-                maximimumExtents is null ||
-                data is null)
-            {
-                return E.E_POINTER;
-            }
-
-            lock (@this->lockHandle.Target!)
-            {
-                if (@this->d2D1ResourceTexture is null &&
-                    @this->data is null)
-                {
-                    return E.E_NOT_VALID_STATE;
-                }
-
-                // If a resource texture already exists, just forward the call
-                if (@this->d2D1ResourceTexture is not null)
-                {
-                    @this->d2D1Multithread->Enter();
-
-                    // Take a D2D lock here too to ensure thread safety
-                    int hresult = @this->d2D1ResourceTexture->Update(
-                        minimumExtents: minimumExtents,
-                        maximimumExtents: maximimumExtents,
-                        strides: strides,
-                        dimensions: dimensions,
-                        data: data,
-                        dataCount: dataCount);
-
-                    @this->d2D1Multithread->Leave();
-
-                    return hresult;
-                }
-
-                // Otherwise update the staging buffer
-                return UpdateWithStagingBuffer(
-                    @this: @this,
-                    minimumExtents: minimumExtents,
-                    maximimumExtents: maximimumExtents,
-                    strides: strides,
-                    dimensions: dimensions,
-                    data: data,
-                    dataCount: dataCount);
-            }
+            return D2D1ResourceTextureManagerImpl.Update(
+                @this,
+                minimumExtents,
+                maximimumExtents,
+                strides,
+                dimensions,
+                data,
+                dataCount);
         }
 
         /// <inheritdoc cref="Initialize"/>
-        private static int InitializeWithStagingBuffer(
+        public static int InitializeWithStagingBuffer(
             D2D1ResourceTextureManagerImpl* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
@@ -308,7 +346,7 @@ partial struct D2D1ResourceTextureManagerImpl
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
-        private static int UpdateWithStagingBuffer(
+        public static int UpdateWithStagingBuffer(
             D2D1ResourceTextureManagerImpl* @this,
             uint* minimumExtents,
             uint* maximimumExtents,

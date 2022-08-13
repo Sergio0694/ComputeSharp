@@ -173,7 +173,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    private int QueryInterface(Guid* riid, void** ppvObject)
+    public int QueryInterface(Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
         {
@@ -213,7 +213,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
-    private uint Release()
+    public uint Release()
     {
         uint referenceCount = (uint)Interlocked.Decrement(ref this.referenceCount);
 
