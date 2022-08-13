@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -47,16 +45,6 @@ partial class D3DCompiler
         private static readonly void** Vtbl = InitVtbl();
 
         /// <summary>
-        /// A pointer to a buffer with the contents of <c>d2d1effecthelpers.hlsli</c>.
-        /// </summary>
-        private static void* d2D1EffectHelpersData;
-
-        /// <summary>
-        /// The size of the buffer in <see cref="d2D1EffectHelpersData"/>.
-        /// </summary>
-        private static int d2D1EffectHelpersSize;
-
-        /// <summary>
         /// Builds the custom method table pointer for <see cref="ID3DIncludeForD2DHelpers"/>.
         /// </summary>
         /// <returns>The method table pointer for <see cref="ID3DIncludeForD2DHelpers"/>.</returns>
@@ -99,14 +87,8 @@ partial class D3DCompiler
         {
             if (new string(pFileName) == "d2d1effecthelpers.hlsli")
             {
-                // Load the header if needed
-                if (d2D1EffectHelpersData is null)
-                {
-                    d2D1EffectHelpersData = LoadD2D1EffectHelpersHeader(out d2D1EffectHelpersSize);
-                }
-
-                *ppData = d2D1EffectHelpersData;
-                *pBytes = (uint)d2D1EffectHelpersSize;
+                *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1EffectHelpers.TextUtf8));
+                *pBytes = (uint)D2D1EffectHelpers.TextUtf8.Length;
 
                 return S.S_OK;
             }
@@ -119,35 +101,6 @@ partial class D3DCompiler
         public static int Close(ID3DIncludeForD2DHelpers* @this, void* pData)
         {
             return S.S_OK;
-        }
-
-        /// <summary>
-        /// Loads the <c>d2d1effecthelpers.hlsli</c> header into a persistent buffer.
-        /// </summary>
-        /// <param name="size">The size of the header.</param>
-        /// <returns>A pointer to a buffer with the contents of <c>d2d1effecthelpers.hlsli</c>.</returns>
-        private static void* LoadD2D1EffectHelpersHeader(out int size)
-        {
-#if SOURCE_GENERATOR
-            const string headerFilename = "ComputeSharp.D2D1.SourceGenerators.ComputeSharp.D2D1.Shaders.Translation.Headers.d2d1effecthelpers.hlsli";
-#else
-            const string headerFilename = "ComputeSharp.D2D1.Shaders.Translation.Headers.d2d1effecthelpers.hlsli";
-#endif
-
-            using Stream source = Assembly.GetExecutingAssembly().GetManifestResourceStream(headerFilename)!;
-            using MemoryStream destination = new();
-
-            source.CopyTo(destination);
-
-            byte[] buffer = destination.GetBuffer();
-
-            size = (int)destination.Position;
-
-            void* pointer = NativeMemory.Alloc((nuint)size);
-
-            buffer.AsSpan(0, size).CopyTo(new Span<byte>(pointer, size));
-
-            return pointer;
         }
     }
 }
