@@ -265,6 +265,8 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
             }
 
             this.lockHandle.Free();
+
+            NativeMemory.Free(Unsafe.AsPointer(ref this));
         }
 
         return referenceCount;
