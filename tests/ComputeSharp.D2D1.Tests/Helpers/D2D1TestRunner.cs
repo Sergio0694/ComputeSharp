@@ -117,8 +117,9 @@ internal static class D2D1TestRunner
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
 
-        using ComPtr<IWICBitmap> wicBitmap = WICHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
-        using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), wicBitmap.Get(), d2D1Effect.Get());
+        ReadOnlyMemory<byte> pixels = ImageHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
+
+        using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), pixels, width, height, d2D1Effect.Get());
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), width, height);
 
         D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
@@ -126,7 +127,7 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
         // Save the image
-        WICHelper.SaveBitmapToFile(destinationPath, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        ImageHelper.SaveBitmapToFile(destinationPath, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
     }
 
     /// <summary>
@@ -165,6 +166,6 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
         // Save the image
-        WICHelper.SaveBitmapToFile(destinationPath, (uint)width, (uint)height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        ImageHelper.SaveBitmapToFile(destinationPath, (uint)width, (uint)height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
     }
 }

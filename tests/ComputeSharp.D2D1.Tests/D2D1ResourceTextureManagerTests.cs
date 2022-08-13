@@ -108,7 +108,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
-        WICHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
         TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
     }
@@ -162,7 +162,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
-        WICHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
         TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
     }
@@ -233,7 +233,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
-        WICHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
         TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
     }

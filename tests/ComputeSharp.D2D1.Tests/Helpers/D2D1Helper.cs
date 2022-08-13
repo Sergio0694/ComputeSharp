@@ -1,4 +1,5 @@
-﻿using ComputeSharp.D2D1.Tests.Extensions;
+﻿using System;
+using ComputeSharp.D2D1.Tests.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -100,17 +101,40 @@ internal static class D2D1Helper
     /// Creates an <see cref="ID2D1Bitmap"/> instance.
     /// </summary>
     /// <param name="d2D1DeviceContext">The input <see cref="ID2D1DeviceContext"/> instance to use to create the bitmap source.</param>
-    /// <param name="wicBitmap">The input <see cref="IWICBitmap"/> to use to create the bitmap source.</param>
+    /// <param name="pixels">The loaded pixel data.</param>
+    /// <param name="width">The width of the bitmap.</param>
+    /// <param name="height">The height of the bitmap.</param>
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> to set the source for.</param>
     /// <returns>A new <see cref="ID2D1Bitmap"/> instance.</returns>
-    public static unsafe ComPtr<ID2D1Bitmap> CreateD2D1BitmapAndSetAsSource(ID2D1DeviceContext* d2D1DeviceContext, IWICBitmap* wicBitmap, ID2D1Effect* d2D1Effect)
+    public static unsafe ComPtr<ID2D1Bitmap> CreateD2D1BitmapAndSetAsSource(
+        ID2D1DeviceContext* d2D1DeviceContext,
+        ReadOnlyMemory<byte> pixels,
+        uint width,
+        uint height,
+        ID2D1Effect* d2D1Effect)
     {
         using ComPtr<ID2D1Bitmap> d2D1BitmapSource = default;
 
-        // Create a source D2D1 bitmap from the WIC bitmap
-        d2D1DeviceContext->CreateBitmapFromWicBitmap(
-            wicBitmapSource: (IWICBitmapSource*)wicBitmap,
-            bitmap: d2D1BitmapSource.GetAddressOf()).Assert();
+        D2D_SIZE_U d2DSize = default;
+        d2DSize.width = width;
+        d2DSize.height = height;
+
+        D2D1_BITMAP_PROPERTIES d2DBitmapProperties = default;
+        d2DBitmapProperties.pixelFormat.format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+        d2DBitmapProperties.pixelFormat.alphaMode = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_PREMULTIPLIED;
+        d2DBitmapProperties.dpiX = 96;
+        d2DBitmapProperties.dpiY = 96;
+
+        fixed (byte* p = pixels.Span)
+        {
+            // Create a source D2D1 bitmap from the image data
+            d2D1DeviceContext->CreateBitmap(
+                size: d2DSize,
+                srcData: p,
+                pitch: width * 4,
+                bitmapProperties: &d2DBitmapProperties,
+                bitmap: d2D1BitmapSource.GetAddressOf()).Assert();
+        }
 
         d2D1Effect->SetInput(0, (ID2D1Image*)d2D1BitmapSource.Get());
 
