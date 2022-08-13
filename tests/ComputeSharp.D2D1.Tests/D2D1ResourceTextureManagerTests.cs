@@ -82,7 +82,6 @@ public partial class D2D1ResourceTextureManagerTests
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string expectedPath = Path.Combine(assemblyPath, "Assets", "Landscape.png");
-        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_After.png");
 
         using Image<Rgba32> expected = Image.Load<Rgba32>(expectedPath);
 
@@ -107,6 +106,10 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_After.png");
+
+        _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
 
         ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
@@ -134,7 +137,6 @@ public partial class D2D1ResourceTextureManagerTests
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string expectedPath = Path.Combine(assemblyPath, "Assets", "Landscape.png");
-        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_Before.png");
 
         using Image<Rgba32> expected = Image.Load<Rgba32>(expectedPath);
 
@@ -161,6 +163,10 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_Before.png");
+
+        _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
 
         ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
@@ -197,7 +203,6 @@ public partial class D2D1ResourceTextureManagerTests
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string expectedPath = Path.Combine(assemblyPath, "Assets", "WallpapersStack.png");
-        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture3D.png");
 
         using Image<Rgba32> expected = Image.Load<Rgba32>(expectedPath);
 
@@ -232,6 +237,10 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture3D.png");
+
+        _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
 
         ImageHelper.SaveBitmapToFile(destinationPath, (uint)expected.Width, (uint)expected.Height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
 
