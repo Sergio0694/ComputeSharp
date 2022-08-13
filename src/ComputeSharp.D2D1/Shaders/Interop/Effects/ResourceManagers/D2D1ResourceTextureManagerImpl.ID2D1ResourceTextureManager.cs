@@ -403,8 +403,8 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             if (minimumExtents is not null)
             {
                 updateExtents[0] = maximimumExtents[0] - minimumExtents[0];
-                updateExtents[1] = dimensions > 1 ? (maximimumExtents[1] - minimumExtents[1]) : 0;
-                updateExtents[2] = dimensions > 2 ? (maximimumExtents[2] - minimumExtents[2]) : 0;
+                updateExtents[1] = dimensions > 1 ? (maximimumExtents[1] - minimumExtents[1]) : 1;
+                updateExtents[2] = dimensions > 2 ? (maximimumExtents[2] - minimumExtents[2]) : 1;
 
                 // Validate that the requested extent is not greater than the corresponding dimension
                 for (int i = 0; i < (int)dimensions; i++)
@@ -462,7 +462,40 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
                     dataSize: dataCount);
             }
 
-            // TODO: implement partial update
+            // Precalculate the byte size of each row update
+            uint rowUpdateSizeInBytes = updateExtents[0] * elementSizeInBytes;
+
+            for (int z = 0; z < updateExtents[2]; z++)
+            {
+                // Calculate the starting position in the source and destination buffers.
+                //   - The source advances by the 2D slice stride for each iteration.
+                //   - The destination does the same, but it also starts at the given initial offset.
+                //     This pointer is aligned to the start of a row in the offset 2D plane after this.
+                byte* sourceDataPlane =
+                    data +
+                    (dimensions > 2 ? z * strides[1] : 0);
+                byte* destinationDataPlane =
+                    @this->data +
+                    (dimensions > 2 ? minimumExtents[2] * @this->strides[1] + z * @this->strides[1] : 0) +
+                    (dimensions > 1 ? minimumExtents[1] * @this->strides[0] : 0);
+
+                for (int y = 0; y < updateExtents[1]; y++)
+                {
+                    // Shift the source ahead to get to the start of the current row. The destination
+                    // is also shifted ahead by the current row, plus the target initial element offset.
+                    byte* sourceDataRow = sourceDataPlane + (dimensions > 1 ? y * strides[0] : 0);
+                    byte* destinationDataRow =
+                        destinationDataPlane +
+                        (dimensions > 1 ? y * @this->strides[0] : 0) +
+                        (minimumExtents[0] * elementSizeInBytes);
+
+                    Buffer.MemoryCopy(
+                        source: sourceDataRow,
+                        destination: destinationDataRow,
+                        destinationSizeInBytes: rowUpdateSizeInBytes,
+                        sourceBytesToCopy: rowUpdateSizeInBytes);
+                }
+            }
 
             return E.E_NOTIMPL;
         }
