@@ -46,6 +46,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// <summary>
     /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
     /// </summary>
+    [UnscopedRef]
     public ReadOnlySpan<byte> WrittenSpan
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -67,7 +68,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// </summary>
     /// <typeparam name="T">The type of value to write.</typeparam>
     /// <param name="value">The value to write.</param>
-    public unsafe void Write<T>(in T value)
+    public unsafe void Write<T>(scoped in T value)
         where T : unmanaged
     {
         Span<byte> span = GetSpan(sizeof(T));
