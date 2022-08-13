@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
@@ -530,6 +533,30 @@ public static unsafe class D2D1PixelShaderEffect
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)&resourceTextureManager,
+            dataSize: (uint)sizeof(void*));
+    }
+
+    /// <summary>
+    /// Sets the resource texture manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance..</param>
+    /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int index)
+    {
+        // TODO: validate args
+
+        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
+
+        Guid uuidOfResourceTextureManager = ID2D1ResourceTextureManager.Guid;
+
+        _ = ((ICustomQueryInterface)resourceTextureManager).GetInterface(ref uuidOfResourceTextureManager, out *(IntPtr*)resourceTextureManager2.GetAddressOf());
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)resourceTextureManager2.GetAddressOf(),
             dataSize: (uint)sizeof(void*));
     }
 }
