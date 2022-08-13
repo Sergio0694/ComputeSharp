@@ -11,7 +11,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <inheritdoc/>
-partial struct ResourceTextureManager
+partial struct D2D1ResourceTextureManagerImpl
 {
     /// <summary>
     /// The implementation for <c>ID2D1ResourceTextureManagerInternal</c>.
@@ -21,11 +21,11 @@ partial struct ResourceTextureManager
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="SetEffectContext"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int SetEffectContextDelegate(ResourceTextureManager* @this, ID2D1EffectContext* effectContext);
+        public delegate int SetEffectContextDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext);
 
         /// <inheritdoc cref="GetResourceTexture"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetResourceTextureDelegate(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture);
+        public delegate int GetResourceTextureDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1ResourceTexture** resourceTexture);
 
         /// <summary>
         /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
@@ -53,38 +53,38 @@ partial struct ResourceTextureManager
         public static readonly GetResourceTextureDelegate GetResourceTextureWrapper = GetResourceTexture;
 #endif
 
-        /// <inheritdoc cref="ResourceTextureManager.QueryInterface"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
-        public static int QueryInterface(ResourceTextureManager* @this, Guid* riid, void** ppvObject)
+        public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+            @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
             return @this->QueryInterface(riid, ppvObject);
         }
 
-        /// <inheritdoc cref="ResourceTextureManager.AddRef"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.AddRef"/>
         [UnmanagedCallersOnly]
-        public static uint AddRef(ResourceTextureManager* @this)
+        public static uint AddRef(D2D1ResourceTextureManagerImpl* @this)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+            @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
             return @this->AddRef();
         }
 
-        /// <inheritdoc cref="ResourceTextureManager.Release"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.Release"/>
         [UnmanagedCallersOnly]
-        public static uint Release(ResourceTextureManager* @this)
+        public static uint Release(D2D1ResourceTextureManagerImpl* @this)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+            @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
             return @this->Release();
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.SetEffectContext"/>
         [UnmanagedCallersOnly]
-        public static int SetEffectContext(ResourceTextureManager* @this, ID2D1EffectContext* effectContext)
+        public static int SetEffectContext(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+            @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
             if (effectContext is null)
             {
@@ -123,9 +123,9 @@ partial struct ResourceTextureManager
 
         /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.GetResourceTexture"/>
         [UnmanagedCallersOnly]
-        public static int GetResourceTexture(ResourceTextureManager* @this, ID2D1ResourceTexture** resourceTexture)
+        public static int GetResourceTexture(D2D1ResourceTextureManagerImpl* @this, ID2D1ResourceTexture** resourceTexture)
         {
-            @this = (ResourceTextureManager*)&((void**)@this)[-1];
+            @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
             if (*resourceTexture is not null)
             {

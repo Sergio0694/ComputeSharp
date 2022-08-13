@@ -9,7 +9,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <inheritdoc/>
-partial struct ResourceTextureManager
+partial struct D2D1ResourceTextureManagerImpl
 {
     /// <summary>
     /// The implementation for <c>ID2D1ResourceTextureManager</c>.
@@ -20,7 +20,7 @@ partial struct ResourceTextureManager
         /// <inheritdoc cref="Initialize"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate int InitializeDelegate(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
             byte* data,
@@ -30,7 +30,7 @@ partial struct ResourceTextureManager
         /// <inheritdoc cref="Update"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate int UpdateDelegate(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             uint* minimumExtents,
             uint* maximimumExtents,
             uint* strides,
@@ -64,23 +64,23 @@ partial struct ResourceTextureManager
         public static readonly UpdateDelegate UpdateWrapper = Update;
 #endif
 
-        /// <inheritdoc cref="ResourceTextureManager.QueryInterface"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
-        public static int QueryInterface(ResourceTextureManager* @this, Guid* riid, void** ppvObject)
+        public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
-        /// <inheritdoc cref="ResourceTextureManager.AddRef"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.AddRef"/>
         [UnmanagedCallersOnly]
-        public static uint AddRef(ResourceTextureManager* @this)
+        public static uint AddRef(D2D1ResourceTextureManagerImpl* @this)
         {
             return @this->AddRef();
         }
 
-        /// <inheritdoc cref="ResourceTextureManager.Release"/>
+        /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.Release"/>
         [UnmanagedCallersOnly]
-        public static uint Release(ResourceTextureManager* @this)
+        public static uint Release(D2D1ResourceTextureManagerImpl* @this)
         {
             return @this->Release();
         }
@@ -88,7 +88,7 @@ partial struct ResourceTextureManager
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Initialize"/>
         [UnmanagedCallersOnly]
         public static int Initialize(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
             byte* data,
@@ -146,7 +146,7 @@ partial struct ResourceTextureManager
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
         [UnmanagedCallersOnly]
         public static int Update(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             uint* minimumExtents,
             uint* maximimumExtents,
             uint* strides,
@@ -202,7 +202,7 @@ partial struct ResourceTextureManager
 
         /// <inheritdoc cref="Initialize"/>
         private static int InitializeWithStagingBuffer(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             Guid* resourceId,
             D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
             byte* data,
@@ -309,7 +309,7 @@ partial struct ResourceTextureManager
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
         private static int UpdateWithStagingBuffer(
-            ResourceTextureManager* @this,
+            D2D1ResourceTextureManagerImpl* @this,
             uint* minimumExtents,
             uint* maximimumExtents,
             uint* strides,
