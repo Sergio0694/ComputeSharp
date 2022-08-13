@@ -7712,7 +7712,7 @@ partial class Hlsl
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("f32tof16")]
-    public static float Float32ToFloat16(uint x) => default;
+    public static uint Float32ToFloat16(float x) => default;
 
     /// <summary>
     /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
@@ -7724,7 +7724,7 @@ partial class Hlsl
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("f32tof16")]
-    public static Float2 Float32ToFloat16(UInt2 x) => default;
+    public static UInt2 Float32ToFloat16(Float2 x) => default;
 
     /// <summary>
     /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
@@ -7736,7 +7736,7 @@ partial class Hlsl
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("f32tof16")]
-    public static Float3 Float32ToFloat16(UInt3 x) => default;
+    public static UInt3 Float32ToFloat16(Float3 x) => default;
 
     /// <summary>
     /// Converts the input float value into a 16-bit floating point value stored in the lower half of the returned <see langword="uint"/> value.
@@ -7748,7 +7748,7 @@ partial class Hlsl
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [HlslIntrinsicName("f32tof16")]
-    public static Float4 Float32ToFloat16(UInt4 x) => default;
+    public static UInt4 Float32ToFloat16(Float4 x) => default;
 
     /// <summary>
     /// Converts the 16-bit floating point value stored in the lower half of the input <see langword="uint"/> value to a <see langword="float"/>.
