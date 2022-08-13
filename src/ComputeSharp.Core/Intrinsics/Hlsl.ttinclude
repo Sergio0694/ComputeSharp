@@ -1125,10 +1125,10 @@ var Intrinsics = new[]
         Returns = "The converted value, stored in the low-half of the uint.",
         Overloads = new[]
         {
-            new { Return = "float", Params = new[] { "uint" } },
-            new { Return = "Float2", Params = new[] { "UInt2" } },
-            new { Return = "Float3", Params = new[] { "UInt3" } },
-            new { Return = "Float4", Params = new[] { "UInt4" } }
+            new { Return = "uint", Params = new[] { "float" } },
+            new { Return = "UInt2", Params = new[] { "Float2" } },
+            new { Return = "UInt3", Params = new[] { "Float3" } },
+            new { Return = "UInt4", Params = new[] { "Float4" } }
         }
     },
     new
