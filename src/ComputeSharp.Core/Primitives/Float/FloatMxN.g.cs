@@ -35,18 +35,24 @@ public unsafe partial struct Float1x1
     /// Gets a reference to a specific row in the current <see cref="Float1x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref float this[int row] => ref *(float*)UndefinedData;
+    public ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
@@ -54,9 +60,12 @@ public unsafe partial struct Float1x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
@@ -65,15 +74,18 @@ public unsafe partial struct Float1x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Creates a new <see cref="Float1x1"/> value with the same value for all its components.
@@ -243,18 +255,24 @@ public unsafe partial struct Float1x2
     /// Gets a reference to a specific row in the current <see cref="Float1x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
@@ -262,9 +280,12 @@ public unsafe partial struct Float1x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
@@ -273,21 +294,24 @@ public unsafe partial struct Float1x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Creates a new <see cref="Float1x2"/> value with the same value for all its components.
@@ -553,18 +577,24 @@ public unsafe partial struct Float1x3
     /// Gets a reference to a specific row in the current <see cref="Float1x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
@@ -572,9 +602,12 @@ public unsafe partial struct Float1x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
@@ -583,27 +616,30 @@ public unsafe partial struct Float1x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Creates a new <see cref="Float1x3"/> value with the same value for all its components.
@@ -875,18 +911,24 @@ public unsafe partial struct Float1x4
     /// Gets a reference to a specific row in the current <see cref="Float1x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
@@ -894,9 +936,12 @@ public unsafe partial struct Float1x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
@@ -905,33 +950,36 @@ public unsafe partial struct Float1x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M14 => ref this.m14;
+    public ref float M14 => ref this.m14;
 
     /// <summary>
     /// Creates a new <see cref="Float1x4"/> value with the same value for all its components.
@@ -1194,18 +1242,24 @@ public unsafe partial struct Float2x1
     /// Gets a reference to a specific row in the current <see cref="Float2x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref float this[int row] => ref *(float*)UndefinedData;
+    public ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
@@ -1213,9 +1267,12 @@ public unsafe partial struct Float2x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
@@ -1224,21 +1281,24 @@ public unsafe partial struct Float2x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Creates a new <see cref="Float2x1"/> value with the same value for all its components.
@@ -1508,18 +1568,24 @@ public unsafe partial struct Float2x2
     /// Gets a reference to a specific row in the current <see cref="Float2x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
@@ -1527,9 +1593,12 @@ public unsafe partial struct Float2x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
@@ -1538,33 +1607,36 @@ public unsafe partial struct Float2x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Creates a new <see cref="Float2x2"/> value with the same value for all its components.
@@ -1772,18 +1844,24 @@ public unsafe partial struct Float2x3
     /// Gets a reference to a specific row in the current <see cref="Float2x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
@@ -1791,9 +1869,12 @@ public unsafe partial struct Float2x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
@@ -1802,45 +1883,48 @@ public unsafe partial struct Float2x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Creates a new <see cref="Float2x3"/> value with the same value for all its components.
@@ -2146,18 +2230,24 @@ public unsafe partial struct Float2x4
     /// Gets a reference to a specific row in the current <see cref="Float2x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
@@ -2165,9 +2255,12 @@ public unsafe partial struct Float2x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
@@ -2176,57 +2269,60 @@ public unsafe partial struct Float2x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M14 => ref this.m14;
+    public ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M24 => ref this.m24;
+    public ref float M24 => ref this.m24;
 
     /// <summary>
     /// Creates a new <see cref="Float2x4"/> value with the same value for all its components.
@@ -2492,18 +2588,24 @@ public unsafe partial struct Float3x1
     /// Gets a reference to a specific row in the current <see cref="Float3x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref float this[int row] => ref *(float*)UndefinedData;
+    public ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
@@ -2511,9 +2613,12 @@ public unsafe partial struct Float3x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
@@ -2522,27 +2627,30 @@ public unsafe partial struct Float3x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Creates a new <see cref="Float3x1"/> value with the same value for all its components.
@@ -2826,18 +2934,24 @@ public unsafe partial struct Float3x2
     /// Gets a reference to a specific row in the current <see cref="Float3x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
@@ -2845,9 +2959,12 @@ public unsafe partial struct Float3x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
@@ -2856,45 +2973,48 @@ public unsafe partial struct Float3x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Creates a new <see cref="Float3x2"/> value with the same value for all its components.
@@ -3207,18 +3327,24 @@ public unsafe partial struct Float3x3
     /// Gets a reference to a specific row in the current <see cref="Float3x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
@@ -3226,9 +3352,12 @@ public unsafe partial struct Float3x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
@@ -3237,63 +3366,66 @@ public unsafe partial struct Float3x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M33 => ref this.m33;
+    public ref float M33 => ref this.m33;
 
     /// <summary>
     /// Creates a new <see cref="Float3x3"/> value with the same value for all its components.
@@ -3543,18 +3675,24 @@ public unsafe partial struct Float3x4
     /// Gets a reference to a specific row in the current <see cref="Float3x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
@@ -3562,9 +3700,12 @@ public unsafe partial struct Float3x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
@@ -3573,81 +3714,84 @@ public unsafe partial struct Float3x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M14 => ref this.m14;
+    public ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M24 => ref this.m24;
+    public ref float M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M33 => ref this.m33;
+    public ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M34 => ref this.m34;
+    public ref float M34 => ref this.m34;
 
     /// <summary>
     /// Creates a new <see cref="Float3x4"/> value with the same value for all its components.
@@ -3922,18 +4066,24 @@ public unsafe partial struct Float4x1
     /// Gets a reference to a specific row in the current <see cref="Float4x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref float this[int row] => ref *(float*)UndefinedData;
+    public ref float this[int row] => ref *(float*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
@@ -3941,9 +4091,12 @@ public unsafe partial struct Float4x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
@@ -3952,33 +4105,36 @@ public unsafe partial struct Float4x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M41 => ref this.m41;
+    public ref float M41 => ref this.m41;
 
     /// <summary>
     /// Creates a new <see cref="Float4x1"/> value with the same value for all its components.
@@ -4276,18 +4432,24 @@ public unsafe partial struct Float4x2
     /// Gets a reference to a specific row in the current <see cref="Float4x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[int row] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[int row] => ref *(Float2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
@@ -4295,9 +4457,12 @@ public unsafe partial struct Float4x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
@@ -4306,57 +4471,60 @@ public unsafe partial struct Float4x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M41 => ref this.m41;
+    public ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M42 => ref this.m42;
+    public ref float M42 => ref this.m42;
 
     /// <summary>
     /// Creates a new <see cref="Float4x2"/> value with the same value for all its components.
@@ -4690,18 +4858,24 @@ public unsafe partial struct Float4x3
     /// Gets a reference to a specific row in the current <see cref="Float4x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[int row] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[int row] => ref *(Float3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
@@ -4709,9 +4883,12 @@ public unsafe partial struct Float4x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
@@ -4720,81 +4897,84 @@ public unsafe partial struct Float4x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M33 => ref this.m33;
+    public ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M41 => ref this.m41;
+    public ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M42 => ref this.m42;
+    public ref float M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M43 => ref this.m43;
+    public ref float M43 => ref this.m43;
 
     /// <summary>
     /// Creates a new <see cref="Float4x3"/> value with the same value for all its components.
@@ -5156,18 +5336,24 @@ public unsafe partial struct Float4x4
     /// Gets a reference to a specific row in the current <see cref="Float4x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float4 this[int row] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[int row] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
+    public ref Float2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Float2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
@@ -5175,9 +5361,12 @@ public unsafe partial struct Float4x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
+    public ref Float3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Float3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
@@ -5186,105 +5375,108 @@ public unsafe partial struct Float4x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
+    public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Float4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M11 => ref this.m11;
+    public ref float M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M12 => ref this.m12;
+    public ref float M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M13 => ref this.m13;
+    public ref float M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [1, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M14 => ref this.m14;
+    public ref float M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M21 => ref this.m21;
+    public ref float M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M22 => ref this.m22;
+    public ref float M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M23 => ref this.m23;
+    public ref float M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [2, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M24 => ref this.m24;
+    public ref float M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M31 => ref this.m31;
+    public ref float M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M32 => ref this.m32;
+    public ref float M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M33 => ref this.m33;
+    public ref float M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [3, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M34 => ref this.m34;
+    public ref float M34 => ref this.m34;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 1].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M41 => ref this.m41;
+    public ref float M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 2].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M42 => ref this.m42;
+    public ref float M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 3].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M43 => ref this.m43;
+    public ref float M43 => ref this.m43;
 
     /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the component at position [4, 4].
     /// </summary>
     [UnscopedRef]
-    public readonly ref float M44 => ref this.m44;
+    public ref float M44 => ref this.m44;
 
     /// <summary>
     /// Creates a new <see cref="Float4x4"/> value with the same value for all its components.

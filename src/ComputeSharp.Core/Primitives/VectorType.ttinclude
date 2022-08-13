@@ -113,7 +113,8 @@ public unsafe partial struct <#=typeName#>
     /// </summary>
     /// <param name="i">The index of the component to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
+    [UnscopedRef]
+    public ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
 
 <#
     // Generate the true/false and zero/one properties
@@ -194,7 +195,7 @@ public unsafe partial struct <#=typeName#>
 
         string propertyType = propertyName.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{propertyName.Length}";
         bool isReadonly = propertyName.Distinct().Count() < propertyName.Length;
-        string refType = isReadonly ? "ref readonly" : "ref";
+        string refType = isReadonly ? "readonly ref readonly" : "ref";
 
         // XML docs
         WriteLine("/// <summary>");
@@ -211,11 +212,11 @@ public unsafe partial struct <#=typeName#>
             if (isBoolType)
             {
                 // For bool types, also reinterpret cast from int to bool (the backing field is int to ensure all 4 bytes are initialized)
-                WriteLine($"public readonly {refType} {propertyType} {propertyName} => ref Unsafe.As<int, bool>(ref this.{fieldName});");
+                WriteLine($"public {refType} {propertyType} {propertyName} => ref Unsafe.As<int, bool>(ref this.{fieldName});");
             }
             else
             {
-                WriteLine($"public readonly {refType} {propertyType} {propertyName} => ref this.{fieldName};");
+                WriteLine($"public {refType} {propertyType} {propertyName} => ref this.{fieldName};");
             }
         }
         else
@@ -230,7 +231,7 @@ public unsafe partial struct <#=typeName#>
 
             // Property
             WriteLine("[UnscopedRef]");
-            Write($"public readonly {refType} {propertyType} {propertyName} ");
+            Write($"public {refType} {propertyType} {propertyName} ");
             WriteLine($"=> ref *({propertyType}*)UndefinedData;");
         }
     }

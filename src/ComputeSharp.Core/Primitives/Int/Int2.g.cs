@@ -36,7 +36,8 @@ public unsafe partial struct Int2
     /// </summary>
     /// <param name="i">The index of the component to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref int this[int i] => ref *(int*)UndefinedData;
+    [UnscopedRef]
+    public ref int this[int i] => ref *(int*)UndefinedData;
 
     /// <summary>
     /// Gets a <see cref="Int2"/> value with all components set to 0.
@@ -62,13 +63,13 @@ public unsafe partial struct Int2
     /// Gets a reference to the <see cref="int"/> value representing the <c>X</c> component.
     /// </summary>
     [UnscopedRef]
-    public readonly ref int X => ref this.x;
+    public ref int X => ref this.x;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the <c>Y</c> component.
     /// </summary>
     [UnscopedRef]
-    public readonly ref int Y => ref this.y;
+    public ref int Y => ref this.y;
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="X"/>.
@@ -82,14 +83,14 @@ public unsafe partial struct Int2
     /// </summary>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [UnscopedRef]
-    public readonly ref Int2 XY => ref *(Int2*)UndefinedData;
+    public ref Int2 XY => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
     /// </summary>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [UnscopedRef]
-    public readonly ref Int2 YX => ref *(Int2*)UndefinedData;
+    public ref Int2 YX => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
@@ -270,13 +271,13 @@ public unsafe partial struct Int2
     /// Gets a reference to the <see cref="int"/> value representing the <c>R</c> component.
     /// </summary>
     [UnscopedRef]
-    public readonly ref int R => ref this.x;
+    public ref int R => ref this.x;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the <c>G</c> component.
     /// </summary>
     [UnscopedRef]
-    public readonly ref int G => ref this.y;
+    public ref int G => ref this.y;
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="R"/>, <see cref="R"/>.
@@ -290,14 +291,14 @@ public unsafe partial struct Int2
     /// </summary>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [UnscopedRef]
-    public readonly ref Int2 RG => ref *(Int2*)UndefinedData;
+    public ref Int2 RG => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="G"/>, <see cref="R"/>.
     /// </summary>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [UnscopedRef]
-    public readonly ref Int2 GR => ref *(Int2*)UndefinedData;
+    public ref Int2 GR => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="G"/>, <see cref="G"/>.

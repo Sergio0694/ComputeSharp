@@ -150,18 +150,24 @@ public unsafe partial struct <#=fullTypeName#>
     /// Gets a reference to a specific row in the current <see cref="<#=fullTypeName#>"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
+    public ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
+    public ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -169,9 +175,12 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
     [UnscopedRef]
-    public readonly ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
+    public ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -180,9 +189,12 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
     [UnscopedRef]
-    public readonly ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
+    public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
 <#
     for (int i = 1; i <= rows; i++)
     for (int j = 1; j <= columns; j++)
@@ -197,14 +209,14 @@ public unsafe partial struct <#=fullTypeName#>
     {
 #>
     [UnscopedRef]
-    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref Unsafe.As<int, bool>(ref this.m<#=i#><#=j#>);
+    public ref <#=elementTypeName#> M<#=i#><#=j#> => ref Unsafe.As<int, bool>(ref this.m<#=i#><#=j#>);
 <#
     }
     else
     {
 #>
     [UnscopedRef]
-    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref this.m<#=i#><#=j#>;
+    public ref <#=elementTypeName#> M<#=i#><#=j#> => ref this.m<#=i#><#=j#>;
 <#
     }
 #>
