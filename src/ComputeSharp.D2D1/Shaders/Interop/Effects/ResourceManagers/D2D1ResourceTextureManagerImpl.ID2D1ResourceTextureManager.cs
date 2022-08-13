@@ -268,109 +268,20 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             // Validate the data size
             if (dataSize > 0)
             {
-                uint channelSizeInBytes = resourceTextureProperties->bufferPrecision switch
+                uint elementSizeInBytes = GetElementSizeInBytes(
+                    resourceTextureProperties->bufferPrecision,
+                    resourceTextureProperties->channelDepth);
+
+                int hresult = ValidateDataAndStrides(
+                    elementSizeInBytes,
+                    resourceTextureProperties->extents,
+                    resourceTextureProperties->dimensions,
+                    strides,
+                    dataSize);
+
+                if (hresult != S.S_OK)
                 {
-                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM => 1,
-                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM_SRGB => 1,
-                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_UNORM => 2,
-                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_FLOAT => 2,
-                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT => 4,
-                    _ => 0
-                };
-
-                uint elementSizeInBytes = resourceTextureProperties->channelDepth switch
-                {
-                    D2D1_CHANNEL_DEPTH.D2D1_CHANNEL_DEPTH_1 => channelSizeInBytes,
-                    D2D1_CHANNEL_DEPTH.D2D1_CHANNEL_DEPTH_4 => channelSizeInBytes * 4,
-                    _ => 0
-                };
-
-                if (elementSizeInBytes == 0)
-                {
-                    return E.E_INVALIDARG;
-                }
-
-                uint extent0SizeInBytes;
-
-                try
-                {
-                    extent0SizeInBytes = checked(resourceTextureProperties->extents[0] * elementSizeInBytes);
-                }
-                catch (OverflowException)
-                {
-                    return E.E_INVALIDARG;
-                }
-
-                // For 1D textures, the row byte size must match the data size (no strides to consider)
-                if (resourceTextureProperties->dimensions == 1)
-                {
-                    if (extent0SizeInBytes != dataSize)
-                    {
-                        return E.E_NOT_SUFFICIENT_BUFFER;
-                    }                    
-                }
-                else
-                {
-                    // Validate the 0th stride is not smaller than the byte size of each row
-                    if (extent0SizeInBytes > strides[0])
-                    {
-                        return E.E_INVALIDARG;
-                    }
-
-                    uint extent01SizeInBytes;
-
-                    try
-                    {
-                        extent01SizeInBytes = checked((resourceTextureProperties->extents[1] - 1) * strides[0] + extent0SizeInBytes);
-                    }
-                    catch (OverflowException)
-                    {
-                        return E.E_INVALIDARG;
-                    }
-
-                    // For 2D textures, the size must match the rows * stride, plus the byte size of the last row (no trailing padding)
-                    if (resourceTextureProperties->dimensions == 2)
-                    {
-                        if (extent01SizeInBytes != dataSize)
-                        {
-                            return E.E_NOT_SUFFICIENT_BUFFER;
-                        }
-                    }
-                    else
-                    {
-                        uint stridedExtent01SizeInBytes;
-
-                        try
-                        {
-                            stridedExtent01SizeInBytes = checked(resourceTextureProperties->extents[1] * strides[1]);
-                        }
-                        catch (OverflowException)
-                        {
-                            return E.E_INVALIDARG;
-                        }
-
-                        // Validate the 1th stride is not smaller than the byte size of a 2D slice, with padding
-                        if (stridedExtent01SizeInBytes > strides[2])
-                        {
-                            return E.E_INVALIDARG;
-                        }
-
-                        uint extent012SizeInBytes;
-
-                        try
-                        {
-                            extent012SizeInBytes = (resourceTextureProperties->extents[2] - 1) * strides[1] + extent01SizeInBytes;
-                        }
-                        catch (OverflowException)
-                        {
-                            return E.E_INVALIDARG;
-                        }
-
-                        if (extent012SizeInBytes != dataSize)
-                        {
-                            return E.E_NOT_SUFFICIENT_BUFFER;
-                        }
-                    }
+                    return hresult;
                 }
             }
 
@@ -435,41 +346,13 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             @this->resourceTextureProperties.filter = resourceTextureProperties->filter;
             @this->resourceTextureProperties.extendModes = extendModes;
 
-            // Allocate the data buffer (this is the one most likely to potentially throw)
-            try
-            {
-                @this->data = (byte*)NativeMemory.Alloc(dataSize);
-            }
-            catch (OutOfMemoryException)
-            {
-                return E.E_OUTOFMEMORY;
-            }
-
-            // Copy the data buffer
-            Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
-
-            @this->dataSize = dataSize;
-
-            // If there are strides (ie. the texture has dimension greater than 1), initialize them as well
-            if (strides is not null)
-            {
-                try
-                {
-                    @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * (resourceTextureProperties->dimensions - 1));
-                }
-                catch (OutOfMemoryException)
-                {
-                    return E.E_OUTOFMEMORY;
-                }
-
-                Buffer.MemoryCopy(
-                    source: strides,
-                    destination: @this->strides,
-                    destinationSizeInBytes: sizeof(uint) * (resourceTextureProperties->dimensions - 1),
-                    sourceBytesToCopy: sizeof(uint) * (resourceTextureProperties->dimensions - 1));
-            }
-
-            return S.S_OK;
+            // Initialize the staging buffer and optional strides
+            return InitializeStagingBufferAndStrides(
+                @this: @this,
+                dimensions: resourceTextureProperties->dimensions,
+                data: data,
+                strides: strides,
+                dataSize: dataSize);
         }
 
         /// <inheritdoc cref="ID2D1ResourceTextureManager.Update"/>
@@ -482,7 +365,293 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             byte* data,
             uint dataCount)
         {
+            // Either both extents are available, or none is, and the other values must not be null
+            if (minimumExtents is null && maximimumExtents is not null ||
+                minimumExtents is not null && maximimumExtents is null ||
+                strides is null ||
+                data is null)
+            {
+                return E.E_POINTER;
+            }
+
+            // The dimensions must match the currently stored texture data
+            if (dimensions != @this->resourceTextureProperties.dimensions)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            // If the update extents are specified, check that the targets are all greater than the starting extents.
+            if (minimumExtents is not null)
+            {
+                for (int i = 0; i < (int)dimensions; i++)
+                {
+                    if (maximimumExtents[i] <= minimumExtents[i])
+                    {
+                        return E.E_INVALIDARG;
+                    }
+                }
+            }
+
+            uint elementSizeInBytes = GetElementSizeInBytes(
+                @this->resourceTextureProperties.bufferPrecision,
+                @this->resourceTextureProperties.channelDepth);
+
+            // Calculate the extents of the buffer, based on the delta between the input extents.
+            // If no extents range is provided, it means that the entire resource texture is updated.
+            uint* updateExtents = stackalloc uint[3];
+
+            if (minimumExtents is not null)
+            {
+                updateExtents[0] = maximimumExtents[0] - minimumExtents[0];
+                updateExtents[1] = dimensions > 1 ? (maximimumExtents[1] - minimumExtents[1]) : 0;
+                updateExtents[2] = dimensions > 2 ? (maximimumExtents[2] - minimumExtents[2]) : 0;
+
+                // Validate that the requested extent is not greater than the corresponding dimension
+                for (int i = 0; i < (int)dimensions; i++)
+                {
+                    if (updateExtents[i] > @this->resourceTextureProperties.extents[i])
+                    {
+                        return E.E_INVALIDARG;
+                    }
+                }
+            }
+            else
+            {
+                Buffer.MemoryCopy(
+                    source: @this->resourceTextureProperties.extents,
+                    destination: updateExtents,
+                    destinationSizeInBytes: dimensions * sizeof(uint),
+                    sourceBytesToCopy: dimensions * sizeof(uint));
+            }
+
+            // Validate that the provided buffer is valid for the update range
+            int hresult = ValidateDataAndStrides(
+                elementSizeInBytes,
+                updateExtents,
+                dimensions,
+                strides,
+                dataCount);
+
+            if (hresult != S.S_OK)
+            {
+                return hresult;
+            }
+
+            // If the texture hasn't been allocated yet, do that now. This is only
+            // valid if the whole texture is being updated (as it's being initialized).
+            if (@this->data is null)
+            {
+                if (minimumExtents is not null)
+                {
+                    // If explicit extents are passed, they must match the resource texture size
+                    for (int i = 0; i < (int)dimensions; i++)
+                    {
+                        if (updateExtents[i] != @this->resourceTextureProperties.extents[i])
+                        {
+                            return E.E_INVALIDARG;
+                        }
+                    }
+                }
+
+                // This is a full update with no existing resource, so just initialize the buffer from scratch
+                return InitializeStagingBufferAndStrides(
+                    @this: @this,
+                    dimensions: dimensions,
+                    data: data,
+                    strides: strides,
+                    dataSize: dataCount);
+            }
+
+            // TODO: implement partial update
+
             return E.E_NOTIMPL;
+        }
+
+        /// <summary>
+        /// Gets the element size of each item in the resource texture, in bytes.
+        /// </summary>
+        /// <param name="bufferPrecision">The precision of the resource texture.</param>
+        /// <param name="channelDepth">The number of channels in the resource texture.</param>
+        /// <returns>Tthe element size of each item in the resource texture, in bytes.</returns>
+        private static uint GetElementSizeInBytes(D2D1_BUFFER_PRECISION bufferPrecision, D2D1_CHANNEL_DEPTH channelDepth)
+        {
+            uint channelSizeInBytes = bufferPrecision switch
+            {
+                D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM => 1,
+                D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM_SRGB => 1,
+                D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_UNORM => 2,
+                D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_FLOAT => 2,
+                D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT => 4,
+                _ => 0
+            };
+
+            return channelDepth switch
+            {
+                D2D1_CHANNEL_DEPTH.D2D1_CHANNEL_DEPTH_1 => channelSizeInBytes,
+                D2D1_CHANNEL_DEPTH.D2D1_CHANNEL_DEPTH_4 => channelSizeInBytes * 4,
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// Validates the data and strides for a call to <see cref="Initialize"/> or <see cref="Update"/>.
+        /// </summary>
+        /// <param name="elementSizeInBytes">The element size in bytes.</param>
+        /// <param name="extents">The extents of the resource table in each dimension.</param>
+        /// <param name="dimensions">The number of dimensions in the resource texture.</param>
+        /// <param name="strides">The stride to advance through the input data, according to dimension.</param>
+        /// <param name="dataSize">The size of the data buffer to be used to update the resource texture.</param>
+        /// <returns>The <see cref="HRESULT"/> for the validation.</returns>
+        private static int ValidateDataAndStrides(
+            uint elementSizeInBytes,
+            uint* extents,
+            uint dimensions,
+            uint* strides,
+            uint dataSize)
+        {
+            uint extent0SizeInBytes;
+
+            try
+            {
+                extent0SizeInBytes = checked(extents[0] * elementSizeInBytes);
+            }
+            catch (OverflowException)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            // For 1D textures, the row byte size must match the data size (no strides to consider)
+            if (dimensions == 1)
+            {
+                if (extent0SizeInBytes != dataSize)
+                {
+                    return E.E_NOT_SUFFICIENT_BUFFER;
+                }
+            }
+            else
+            {
+                // Validate the 0th stride is not smaller than the byte size of each row
+                if (extent0SizeInBytes > strides[0])
+                {
+                    return E.E_INVALIDARG;
+                }
+
+                uint extent01SizeInBytes;
+
+                try
+                {
+                    extent01SizeInBytes = checked((extents[1] - 1) * strides[0] + extent0SizeInBytes);
+                }
+                catch (OverflowException)
+                {
+                    return E.E_INVALIDARG;
+                }
+
+                // For 2D textures, the size must match the rows * stride, plus the byte size of the last row (no trailing padding)
+                if (dimensions == 2)
+                {
+                    if (extent01SizeInBytes != dataSize)
+                    {
+                        return E.E_NOT_SUFFICIENT_BUFFER;
+                    }
+                }
+                else
+                {
+                    uint stridedExtent01SizeInBytes;
+
+                    try
+                    {
+                        stridedExtent01SizeInBytes = checked(extents[1] * strides[1]);
+                    }
+                    catch (OverflowException)
+                    {
+                        return E.E_INVALIDARG;
+                    }
+
+                    // Validate the 1th stride is not smaller than the byte size of a 2D slice, with padding
+                    if (stridedExtent01SizeInBytes > strides[2])
+                    {
+                        return E.E_INVALIDARG;
+                    }
+
+                    uint extent012SizeInBytes;
+
+                    try
+                    {
+                        extent012SizeInBytes = (extents[2] - 1) * strides[1] + extent01SizeInBytes;
+                    }
+                    catch (OverflowException)
+                    {
+                        return E.E_INVALIDARG;
+                    }
+
+                    if (extent012SizeInBytes != dataSize)
+                    {
+                        return E.E_NOT_SUFFICIENT_BUFFER;
+                    }
+                }
+            }
+
+            return S.S_OK;
+        }
+
+        /// <summary>
+        /// Initializes the staging buffer and optional strides with pre-validated data.
+        /// </summary>
+        /// <param name="this">The current <see cref="D2D1ResourceTextureManagerImpl"/> object.</param>
+        /// <param name="dimensions">The number of dimensions in the resource texture. This must match the number used to load the texture.</param>
+        /// <param name="data">The data to be placed into the resource texture.</param>
+        /// <param name="strides">The stride to advance through the input data, according to dimension.</param>
+        /// <param name="dataSize">The size of the data buffer to be used to update the resource texture.</param>
+        /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+        /// <remarks>
+        /// <para>This method is invoked with pre-validated data and doesn't check the input arguments.</para>
+        /// <para>This method is invoked either when initializing the texture, or when doing a full update with no existing texture.</para>
+        /// </remarks>
+        private static int InitializeStagingBufferAndStrides(
+            D2D1ResourceTextureManagerImpl* @this,
+            uint dimensions,
+            byte* data,
+            uint* strides,
+            uint dataSize)
+        {
+            // Allocate the data buffer (this is the one most likely to potentially throw)
+            if (dataSize > 0)
+            {
+                try
+                {
+                    @this->data = (byte*)NativeMemory.Alloc(dataSize);
+                }
+                catch (OutOfMemoryException)
+                {
+                    return E.E_OUTOFMEMORY;
+                }
+
+                Buffer.MemoryCopy(data, @this->data, dataSize, dataSize);
+
+                @this->dataSize = dataSize;
+            }
+
+            // If there are strides (ie. the texture has dimension greater than 1), initialize them as well
+            if (strides is not null)
+            {
+                try
+                {
+                    @this->strides = (uint*)NativeMemory.Alloc(sizeof(uint) * (dimensions - 1));
+                }
+                catch (OutOfMemoryException)
+                {
+                    return E.E_OUTOFMEMORY;
+                }
+
+                Buffer.MemoryCopy(
+                    source: strides,
+                    destination: @this->strides,
+                    destinationSizeInBytes: sizeof(uint) * (dimensions - 1),
+                    sourceBytesToCopy: sizeof(uint) * (dimensions - 1));
+            }
+
+            return S.S_OK;
         }
     }
 }
