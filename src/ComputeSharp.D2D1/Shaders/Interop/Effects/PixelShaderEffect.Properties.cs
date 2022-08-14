@@ -140,7 +140,7 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
-        if (!IsResourceTextureManagerIndexValid(index))
+        if (!IsResourceTextureManagerIndexValid(index, out _))
         {
             return E.E_INVALIDARG;
         }
@@ -173,7 +173,7 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int SetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize)
     {
-        if (!IsResourceTextureManagerIndexValid(index))
+        if (!IsResourceTextureManagerIndexValid(index, out uint dimensions))
         {
             return E.E_INVALIDARG;
         }
@@ -219,7 +219,7 @@ unsafe partial struct PixelShaderEffect
         // Initialize the resource texture manager, if an effect context is available
         if (this.d2D1EffectContext is not null)
         {
-            resourceTextureManagerInternal.Get()->SetEffectContext(this.d2D1EffectContext);
+            resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
         }
 
         // Store the resource texture manager into the buffer
@@ -232,16 +232,21 @@ unsafe partial struct PixelShaderEffect
     /// Checks whether a given index for a resource texture manager is valid for the current effect.
     /// </summary>
     /// <param name="index">The resource texture manager index to validate.</param>
+    /// <param name="dimensions">The number of dimensions for the resource texture at the gven index.</param>
     /// <returns>Whether or not <paramref name="index"/> is valid for the current effect.</returns>
-    private bool IsResourceTextureManagerIndexValid(int index)
+    private bool IsResourceTextureManagerIndexValid(int index, out uint dimensions)
     {
         foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
         {
             if (resourceTextureDescription.Index == index)
             {
+                dimensions = (uint)resourceTextureDescription.Dimensions;
+
                 return true;
             }
         }
+
+        dimensions = 0;
 
         return false;
     }

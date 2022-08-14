@@ -19,9 +19,9 @@ partial struct D2D1ResourceTextureManagerImpl
     private unsafe static class ID2D1ResourceTextureManagerInternalMethods
     {
 #if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="SetEffectContext"/>
+        /// <inheritdoc cref="Initialize"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int SetEffectContextDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext);
+        public delegate int InitializeDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext, uint* dimensions);
 
         /// <inheritdoc cref="GetResourceTexture"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -43,9 +43,9 @@ partial struct D2D1ResourceTextureManagerImpl
         public static readonly ReleaseDelegate ReleaseWrapper = Release;
 
         /// <summary>
-        /// A cached <see cref="SetEffectContextDelegate"/> instance wrapping <see cref="SetEffectContext"/>.
+        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
         /// </summary>
-        public static readonly SetEffectContextDelegate SetEffectContextWrapper = SetEffectContext;
+        public static readonly InitializeDelegate InitializeWrapper = Initialize;
 
         /// <summary>
         /// A cached <see cref="GetResourceTextureDelegate"/> instance wrapping <see cref="GetResourceTexture"/>.
@@ -80,9 +80,9 @@ partial struct D2D1ResourceTextureManagerImpl
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.SetEffectContext"/>
+        /// <inheritdoc cref="ID2D1ResourceTextureManagerInternal.Initialize"/>
         [UnmanagedCallersOnly]
-        public static int SetEffectContext(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext)
+        public static int Initialize(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext, uint* dimensions)
         {
             @this = (D2D1ResourceTextureManagerImpl*)&((void**)@this)[-1];
 
@@ -93,6 +93,20 @@ partial struct D2D1ResourceTextureManagerImpl
 
             lock (@this->lockHandle.Target!)
             {
+                // If the dimensions are available, validate them
+                if (dimensions is not null)
+                {
+                    uint expectedDimensions = *dimensions;
+
+                    if (@this->resourceTextureProperties.extents is not null &&
+                        @this->resourceTextureProperties.dimensions != expectedDimensions)
+                    {
+                        return E.E_INVALIDARG;
+                    }
+
+                    @this->expectedDimensions = expectedDimensions;
+                }
+
                 // If this is the first time the method is called, just store the context.
                 // Before doing so, get an ID2D1Multithread instance, to ensure thread safety.
                 // For additional info, see docs on ID2D1EffectFactoryExtensions.GetD2D1Multithread.

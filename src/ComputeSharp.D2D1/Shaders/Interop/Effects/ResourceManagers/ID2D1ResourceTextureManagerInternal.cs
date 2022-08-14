@@ -47,13 +47,15 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal
     /// Sets the <see cref="ID2D1EffectContext"/> for the current <c>ID2D1ResourceTextureManagerInternal</c> instance.
     /// </summary>
     /// <param name="effectContext">The input <see cref="ID2D1EffectContext"/> for the manager.</param>
+    /// <param name="dimensions">A pointer to an optional amount of dimensions for the target resource texture, for validation.</param>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int SetEffectContext(ID2D1EffectContext* effectContext)
+    public int Initialize(ID2D1EffectContext* effectContext, uint* dimensions)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManagerInternal*, ID2D1EffectContext*, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManagerInternal*, ID2D1EffectContext*, uint*, int>)this.lpVtbl[3])(
             (ID2D1ResourceTextureManagerInternal*)Unsafe.AsPointer(ref this),
-            effectContext);
+            effectContext,
+            dimensions);
     }
 
     /// <summary>

@@ -71,7 +71,9 @@ namespace ComputeSharp.D2D1.Interop;
 /// [uuid(5CBB1024-8EA1-4689-81BF-8AD190B5EF5D)]
 /// interface ID2D1ResourceTextureManager : IUnknown
 /// {
-///     HRESULT SetEffectContext([in] ID2D1EffectContext *effectContext);
+///     HRESULT Initialize(
+///         [in]           ID2D1EffectContext *effectContext,
+///         [in, optional] const UINT32       *dimensions);
 /// 
 ///     HRESULT GetResourceTexture([out] ID2D1ResourceTexture **resourceTexture);
 /// };
@@ -79,12 +81,18 @@ namespace ComputeSharp.D2D1.Interop;
 /// </para>
 /// <para>
 /// Note that due to the fact <c>ID2D1EffectContext</c> and <c>ID2D1ResourceTexture</c> are not thread safe, they are only
-/// safe to use without additional synchronization when <c>SetEffectContext</c> and <c>GetResourceTexture</c> are called.
+/// safe to use without additional synchronization when <c>Initialize</c> and <c>GetResourceTexture</c> are called.
 /// This happens from the internal <c>ID2D1EffectImpl</c> object, which is invoked by D2D, which will handle taking the
 /// necessary lock before invoking these APIs. Due to the fact the context has to be stored internally, custom implementations
 /// have to make sure to retrieve the right <c>ID2D1Multithread</c> instance from the input context and use that to synchronize
 /// all accesses to those two objects from all APIs (including those exposed by <c>ID2D1ResourceTextureManager</c>). The
 /// built-in implementation of these two interfaces provided by <see cref="D2D1ResourceTextureManager"/> takes care of all this.
+/// </para>
+/// <para>
+/// The <c>dimensions</c> parameter in <c>ID2D1ResourceTextureManager::Initialize</c> is optional, and can be passed by an <c>ID2D1Effect</c>
+/// when initializing an input resurce texture manager, if the dimensions of the resource texture at the target index are known in advance.
+/// This can allow the manager to perform additional validation when the resource texture is initialized. Not providing a value is not an
+/// error, but if a resource texture with invalid size is used the effect might fail to render later on and be more difficult to troubleshoot.
 /// </para>
 /// </remarks>
 public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface

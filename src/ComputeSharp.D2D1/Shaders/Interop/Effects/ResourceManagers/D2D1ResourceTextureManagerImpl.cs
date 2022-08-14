@@ -66,13 +66,13 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         lpVtbl[5 + 0] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, Guid*, void**, int>)&ID2D1ResourceTextureManagerInternalMethods.QueryInterface;
         lpVtbl[5 + 1] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.AddRef;
         lpVtbl[5 + 2] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.Release;
-        lpVtbl[5 + 3] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, ID2D1EffectContext*, int>)&ID2D1ResourceTextureManagerInternalMethods.SetEffectContext;
+        lpVtbl[5 + 3] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, ID2D1EffectContext*, uint*, int>)&ID2D1ResourceTextureManagerInternalMethods.Initialize;
         lpVtbl[5 + 4] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, ID2D1ResourceTexture**, int>)&ID2D1ResourceTextureManagerInternalMethods.GetResourceTexture;
 #else
         lpVtbl[5 + 0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.QueryInterfaceWrapper);
         lpVtbl[5 + 1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.AddRefWrapper);
         lpVtbl[5 + 2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.ReleaseWrapper);
-        lpVtbl[5 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.SetEffectContextWrapper);
+        lpVtbl[5 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.InitializeWrapper);
         lpVtbl[5 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.GetResourceTextureWrapper);
 #endif
 
@@ -147,6 +147,12 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     private GCHandle lockHandle;
 
     /// <summary>
+    /// The expected dimensions for the slot the manager has been assigned to in an effect.
+    /// </summary>
+    /// <remarks>If <c>0</c>, it has not been set, so it can be ignored.</remarks>
+    private uint expectedDimensions;
+
+    /// <summary>
     /// The factory method for <see cref="D2D1ResourceTextureManagerImpl"/> instances.
     /// </summary>
     /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
@@ -168,6 +174,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         @this->strides = null;
         @this->dataSize = 0;
         @this->lockHandle = GCHandle.Alloc(new object());
+        @this->expectedDimensions = 0;
 
         *resourceTextureManager = @this;
     }

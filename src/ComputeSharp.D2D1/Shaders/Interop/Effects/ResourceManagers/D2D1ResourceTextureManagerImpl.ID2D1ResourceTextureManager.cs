@@ -29,6 +29,15 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
                 return E.E_NOT_VALID_STATE;
             }
 
+            // If the manager has been assigned to an effect and the dimensions are available, validate them.
+            // Check and ignore if the input properties are null (validation for that is done afterwards).
+            if (@this->expectedDimensions != 0 &&
+                resourceTextureProperties is not null &&
+                resourceTextureProperties->dimensions != @this->expectedDimensions)
+            {
+                return E.E_INVALIDARG;
+            }
+
             // If the method has already been called, just forward the call
             if (@this->d2D1EffectContext is not null)
             {
