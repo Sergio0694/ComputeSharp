@@ -27,11 +27,17 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
     public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
+        if (d2D1Factory1 is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
+        }
+
         RegisterForD2D1Factory1<T>(d2D1Factory1, null, out effectId);
     }
 
@@ -42,12 +48,18 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
     public static void RegisterForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
+        if (d2D1Factory1 is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
+        }
+
         RegisterForD2D1Factory1(d2D1Factory1, static () => new TMapper(), out effectId);
     }
 
@@ -58,11 +70,17 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
     /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
     public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
+        if (d2D1Factory1 is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
+        }
+
         effectId = default;
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
@@ -484,6 +502,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to create an effect for.</typeparam>
     /// <param name="d2D1DeviceContext">A pointer to the <c>ID2D1DeviceContext</c> instance to use.</param>
     /// <param name="d2D1Effect">A pointer to the resulting <c>ID2D1Effect*</c> pointer to produce.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1DeviceContext"/> or <paramref name="d2D1Effect"/> are <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">
     /// Thrown if this method is called before initializing a shader effect for the shader type <typeparamref name="T"/>.
     /// To do so, make sure to call either <see cref="RegisterForD2D1Factory1{T}(void*, out Guid)"/> (or an overload), or
@@ -493,6 +512,16 @@ public static unsafe class D2D1PixelShaderEffect
     public static void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
+        if (d2D1DeviceContext is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1DeviceContext), "The input ID2D1DeviceContext object cannot be null.");
+        }
+
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The pointer to the target ID2D1Effect result cannot be null.");
+        }
+
         if (!PixelShaderEffect.For<T>.TryGetId(out Guid id))
         {
             ThrowHelper.ThrowInvalidOperationException("The effect for the input shader type has not been initialized yet.");
@@ -509,10 +538,16 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to set the constant buffer for.</typeparam>
     /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> is <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1DeviceContext object cannot be null.");
+        }
+
         D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
 
         Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
@@ -524,14 +559,25 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <c>ID2D1ResourceTextureManager</c> object (see <see cref="D2D1ResourceTextureManager"/>).</param>
     /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int index)
     {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (resourceTextureManager is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(resourceTextureManager), "The input ID2D1ResourceTextureManager object cannot be null.");
+        }
+
         ((ID2D1Effect*)d2D1Effect)->SetValue(
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)&resourceTextureManager,
-            dataSize: (uint)sizeof(void*));
+            dataSize: (uint)sizeof(void*)).Assert();
     }
 
     /// <summary>
@@ -540,9 +586,20 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance..</param>
     /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int index)
     {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (resourceTextureManager is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(resourceTextureManager), "The input D2D1ResourceTextureManager object cannot be null.");
+        }
+
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
 
         Guid uuidOfResourceTextureManager = ID2D1ResourceTextureManager.Guid;
@@ -553,6 +610,6 @@ public static unsafe class D2D1PixelShaderEffect
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)resourceTextureManager2.GetAddressOf(),
-            dataSize: (uint)sizeof(void*));
+            dataSize: (uint)sizeof(void*)).Assert();
     }
 }

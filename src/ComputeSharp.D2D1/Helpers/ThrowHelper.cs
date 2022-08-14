@@ -35,6 +35,18 @@ internal static class ThrowHelper
     }
 
     /// <summary>
+    /// Throws a new <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <param name="name">The argument name.</param>
+    /// <param name="message">The message to include in the exception.</param>
+    /// <exception cref="ArgumentNullException">Thrown with the specified parameters.</exception>
+    [DoesNotReturn]
+    public static void ThrowArgumentNullException(string? name, string? message)
+    {
+        throw new ArgumentNullException(name, message);
+    }
+
+    /// <summary>
     /// Throws a new <see cref="ArgumentOutOfRangeException"/>.
     /// </summary>
     /// <param name="name">The argument name.</param>
