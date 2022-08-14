@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
@@ -251,6 +252,8 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
             extents.Length != extendModes.Length ||
             (data.Length > 0 && strides.Length != extents.Length - 1))
         {
+            GC.SuppressFinalize(this);
+
             Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
         }
 
@@ -289,7 +292,10 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// </summary>
     ~D2D1ResourceTextureManager()
     {
-        this.d2D1ResourceManagerImpl->Release();
+        if (this.d2D1ResourceManagerImpl is not null)
+        {
+            this.d2D1ResourceManagerImpl->Release();
+        }
     }
 
     /// <summary>
@@ -330,8 +336,24 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
                 data: pData,
                 dataCount: (uint)data.Length);
 
+            GC.KeepAlive(this);
+
             Marshal.ThrowExceptionForHR(hresult);
         }
+    }
+
+    /// <summary>
+    /// Gets the underlying <see cref="ID2D1ResourceTextureManager"/> object.
+    /// </summary>
+    /// <param name="resourceTextureManager">The underlying <see cref="ID2D1ResourceTextureManager"/> object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void GetD2D1ResourceTextureManager(ID2D1ResourceTextureManager** resourceTextureManager)
+    {
+        _ = this.d2D1ResourceManagerImpl->AddRef();
+
+        *resourceTextureManager = (ID2D1ResourceTextureManager*)this.d2D1ResourceManagerImpl;
+
+        GC.KeepAlive(this);
     }
 
     /// <inheritdoc/>
@@ -341,6 +363,8 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         fixed (IntPtr* pPpv = &ppv)
         {
             int hresult = this.d2D1ResourceManagerImpl->QueryInterface(pIid, (void**)pPpv);
+
+            GC.KeepAlive(this);
 
             return hresult switch
             {

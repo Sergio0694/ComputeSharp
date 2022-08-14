@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
@@ -602,9 +601,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
 
-        Guid uuidOfResourceTextureManager = ID2D1ResourceTextureManager.Guid;
-
-        _ = ((ICustomQueryInterface)resourceTextureManager).GetInterface(ref uuidOfResourceTextureManager, out *(IntPtr*)resourceTextureManager2.GetAddressOf());
+        resourceTextureManager.GetD2D1ResourceTextureManager(resourceTextureManager2.GetAddressOf());
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,

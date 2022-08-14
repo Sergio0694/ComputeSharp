@@ -214,7 +214,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
-    private uint AddRef()
+    public uint AddRef()
     {
         return (uint)Interlocked.Increment(ref this.referenceCount);
     }
