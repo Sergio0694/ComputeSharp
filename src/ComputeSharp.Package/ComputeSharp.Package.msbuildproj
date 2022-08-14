@@ -30,6 +30,12 @@
     <!-- Include the custom .targets file to check the source generator -->
     <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="buildTransitive\ComputeSharp.targets" Pack="true" />
     <None Include="..\ComputeSharp\ComputeSharp.targets" PackagePath="build\ComputeSharp.targets" Pack="true" />
+
+    <!-- Include the DXC compiler files -->
+    <None Include="..\ComputeSharp.Dynamic\Libraries\x64\dxcompiler.dll" PackagePath="analyzers\dotnet\cs\Libraries\x64\dxcompiler.dll" Pack="true" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\x64\dxil.dll" PackagePath="analyzers\dotnet\cs\Libraries\x64\dxil.dll" Pack="true" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll" PackagePath="analyzers\dotnet\cs\Libraries\arm64\dxcompiler.dll" Pack="true" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll" PackagePath="analyzers\dotnet\cs\Libraries\arm64\dxil.dll" Pack="true" />
   </ItemGroup>
 
 </Project>

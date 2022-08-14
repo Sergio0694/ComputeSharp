@@ -94,10 +94,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\x64\dxcompiler.dll"
+          Link="Libraries\x64\dxcompiler.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\x64\dxil.dll"
+          Link="Libraries\x64\dxil.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll"
+          Link="Libraries\arm64\dxcompiler.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll"
+          Link="Libraries\arm64\dxil.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Shared project with common helpers -->
