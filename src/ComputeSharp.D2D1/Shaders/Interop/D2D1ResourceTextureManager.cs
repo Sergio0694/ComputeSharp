@@ -109,33 +109,16 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         D2D1ChannelDepth channelDepth,
         D2D1Filter filter,
         ReadOnlySpan<D2D1ExtendMode> extendModes)
+        : this(
+              null,
+              extents,
+              bufferPrecision,
+              channelDepth,
+              filter,
+              extendModes,
+              ReadOnlySpan<byte>.Empty,
+              ReadOnlySpan<uint>.Empty)
     {
-        fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
-        {
-            D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl);
-        }
-
-        fixed (uint* pExtents = extents)
-        fixed (D2D1ExtendMode* pExtendModes = extendModes)
-        {
-            D2D1_RESOURCE_TEXTURE_PROPERTIES d2D1ResourceTextureProperties;
-            d2D1ResourceTextureProperties.extents = pExtents;
-            d2D1ResourceTextureProperties.dimensions = (uint)extents.Length;
-            d2D1ResourceTextureProperties.bufferPrecision = (D2D1_BUFFER_PRECISION)bufferPrecision;
-            d2D1ResourceTextureProperties.channelDepth = (D2D1_CHANNEL_DEPTH)channelDepth;
-            d2D1ResourceTextureProperties.filter = (D2D1_FILTER)filter;
-            d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
-
-            int hresult = D2D1ResourceTextureManagerImpl.Initialize(
-                @this: this.d2D1ResourceManagerImpl,
-                resourceId: null,
-                resourceTextureProperties: &d2D1ResourceTextureProperties,
-                data: null,
-                strides: null,
-                dataSize: 0);
-
-            Marshal.ThrowExceptionForHR(hresult);
-        }
     }
 
     /// <summary>
@@ -155,33 +138,16 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         D2D1ChannelDepth channelDepth,
         D2D1Filter filter,
         ReadOnlySpan<D2D1ExtendMode> extendModes)
+        : this(
+              &resourceId,
+              extents,
+              bufferPrecision,
+              channelDepth,
+              filter,
+              extendModes,
+              ReadOnlySpan<byte>.Empty,
+              ReadOnlySpan<uint>.Empty)
     {
-        fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
-        {
-            D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl);
-        }
-
-        fixed (uint* pExtents = extents)
-        fixed (D2D1ExtendMode* pExtendModes = extendModes)
-        {
-            D2D1_RESOURCE_TEXTURE_PROPERTIES d2D1ResourceTextureProperties;
-            d2D1ResourceTextureProperties.extents = pExtents;
-            d2D1ResourceTextureProperties.dimensions = (uint)extents.Length;
-            d2D1ResourceTextureProperties.bufferPrecision = (D2D1_BUFFER_PRECISION)bufferPrecision;
-            d2D1ResourceTextureProperties.channelDepth = (D2D1_CHANNEL_DEPTH)channelDepth;
-            d2D1ResourceTextureProperties.filter = (D2D1_FILTER)filter;
-            d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
-
-            int hresult = D2D1ResourceTextureManagerImpl.Initialize(
-                @this: this.d2D1ResourceManagerImpl,
-                resourceId: &resourceId,
-                resourceTextureProperties: &d2D1ResourceTextureProperties,
-                data: null,
-                strides: null,
-                dataSize: 0);
-
-            Marshal.ThrowExceptionForHR(hresult);
-        }
     }
 
     /// <summary>
@@ -203,35 +169,16 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         ReadOnlySpan<D2D1ExtendMode> extendModes,
         ReadOnlySpan<byte> data,
         ReadOnlySpan<uint> strides)
+        : this(
+              null,
+              extents,
+              bufferPrecision,
+              channelDepth,
+              filter,
+              extendModes,
+              data,
+              strides)
     {
-        fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
-        {
-            D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl);
-        }
-
-        fixed (uint* pExtents = extents)
-        fixed (D2D1ExtendMode* pExtendModes = extendModes)
-        fixed (byte* pData = data)
-        fixed (uint* pStrides = strides)
-        {
-            D2D1_RESOURCE_TEXTURE_PROPERTIES d2D1ResourceTextureProperties;
-            d2D1ResourceTextureProperties.extents = pExtents;
-            d2D1ResourceTextureProperties.dimensions = (uint)extents.Length;
-            d2D1ResourceTextureProperties.bufferPrecision = (D2D1_BUFFER_PRECISION)bufferPrecision;
-            d2D1ResourceTextureProperties.channelDepth = (D2D1_CHANNEL_DEPTH)channelDepth;
-            d2D1ResourceTextureProperties.filter = (D2D1_FILTER)filter;
-            d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
-
-            int hresult = D2D1ResourceTextureManagerImpl.Initialize(
-                @this: this.d2D1ResourceManagerImpl,
-                resourceId: null,
-                resourceTextureProperties: &d2D1ResourceTextureProperties,
-                data: pData,
-                strides: pStrides,
-                dataSize: (uint)data.Length);
-
-            Marshal.ThrowExceptionForHR(hresult);
-        }
     }
 
     /// <summary>
@@ -255,7 +202,50 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         ReadOnlySpan<D2D1ExtendMode> extendModes,
         ReadOnlySpan<byte> data,
         ReadOnlySpan<uint> strides)
+        : this(
+              &resourceId,
+              extents,
+              bufferPrecision,
+              channelDepth,
+              filter,
+              extendModes,
+              data,
+              strides)
     {
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="D2D1ResourceTextureManager"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="resourceId">The resource id for the resource to create.</param>
+    /// <param name="extents">The extents of the resource to create.</param>
+    /// <param name="bufferPrecision">The buffer precision for the resource to create.</param>
+    /// <param name="channelDepth">The channel depth for the resource to create.</param>
+    /// <param name="filter">The filter for the resource to create.</param>
+    /// <param name="extendModes">The extend modes for the resource to create.</param>
+    /// <param name="data">The data to load in the resource to create.</param>
+    /// <param name="strides">The strides for the data supplied for the resource to create.</param>
+    /// <exception cref="Exception">Thrown if creating or initializing the <see cref="D2D1ResourceTextureManager"/> instance failed.</exception>
+    private D2D1ResourceTextureManager(
+        Guid* resourceId,
+        ReadOnlySpan<uint> extents,
+        D2D1BufferPrecision bufferPrecision,
+        D2D1ChannelDepth channelDepth,
+        D2D1Filter filter,
+        ReadOnlySpan<D2D1ExtendMode> extendModes,
+        ReadOnlySpan<byte> data,
+        ReadOnlySpan<uint> strides)
+    {
+        // Manually validate the parameters here to ensure the native objects wouldn't try
+        // to read out of bounds and potentially AV. For those cases, we just throw here.
+        if (extents.Length == 0 ||
+            extendModes.Length == 0 ||
+            extents.Length != extendModes.Length ||
+            (data.Length > 0 && strides.Length != extents.Length - 1))
+        {
+            Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
+        }
+
         fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
         {
             D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl);
@@ -276,7 +266,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
 
             int hresult = D2D1ResourceTextureManagerImpl.Initialize(
                 @this: this.d2D1ResourceManagerImpl,
-                resourceId: &resourceId,
+                resourceId: resourceId,
                 resourceTextureProperties: &d2D1ResourceTextureProperties,
                 data: pData,
                 strides: pStrides,
@@ -312,12 +302,23 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         fixed (uint* pStrides = strides)
         fixed (byte* pData = data)
         {
+            int dimensions = strides.Length + 1;
+
+            // Ensure that if the extents are not null, their length is correct. This is again to
+            // avoid the native method assuming they'd be longer than they are and causing an AV.
+            if (pMinimumExtents is not null &&
+                pMaximumExtents is not null &&
+                (minimumExtents.Length != dimensions || maximimumExtents.Length != dimensions))
+            {
+                Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
+            }
+
             int hresult = D2D1ResourceTextureManagerImpl.Update(
                 @this: this.d2D1ResourceManagerImpl,
                 minimumExtents: pMinimumExtents,
                 maximimumExtents: pMaximumExtents,
                 strides: pStrides,
-                dimensions: (uint)(strides.Length + 1),
+                dimensions: (uint)dimensions,
                 data: pData,
                 dataCount: (uint)data.Length);
 
@@ -377,6 +378,15 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         ReadOnlySpan<byte> data,
         ReadOnlySpan<uint> strides)
     {
+        // Validate parameters early from here too to avoid AVs in the native method
+        if (extents.Length == 0 ||
+            extendModes.Length == 0 ||
+            extents.Length != extendModes.Length ||
+            (data.Length > 0 && strides.Length != extents.Length - 1))
+        {
+            Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
+        }
+
         fixed (uint* pExtents = extents)
         fixed (D2D1ExtendMode* pExtendModes = extendModes)
         fixed (byte* pData = data)
@@ -421,11 +431,21 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         fixed (uint* pStrides = strides)
         fixed (byte* pData = data)
         {
+            int dimensions = strides.Length + 1;
+
+            // Same validation as the overload above
+            if (pMinimumExtents is not null &&
+                pMaximumExtents is not null &&
+                (minimumExtents.Length != dimensions || maximimumExtents.Length != dimensions))
+            {
+                Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
+            }
+
             int hresult = ((ID2D1ResourceTextureManager*)resourceTextureManager)->Update(
                 minimumExtents: pMinimumExtents,
                 maximimumExtents: pMaximumExtents,
                 strides: pStrides,
-                dimensions: (uint)(strides.Length + 1),
+                dimensions: (uint)dimensions,
                 data: pData,
                 dataCount: (uint)data.Length);
 
