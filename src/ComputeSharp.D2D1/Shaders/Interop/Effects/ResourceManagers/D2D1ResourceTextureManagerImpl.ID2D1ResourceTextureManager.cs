@@ -599,19 +599,8 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
                 }
                 else
                 {
-                    uint stridedExtent01SizeInBytes;
-
-                    try
-                    {
-                        stridedExtent01SizeInBytes = checked(extents[1] * strides[1]);
-                    }
-                    catch (OverflowException)
-                    {
-                        return E.E_INVALIDARG;
-                    }
-
                     // Validate the 1th stride is not smaller than the byte size of a 2D slice, with padding
-                    if (stridedExtent01SizeInBytes > strides[2])
+                    if (extent01SizeInBytes > strides[1])
                     {
                         return E.E_INVALIDARG;
                     }

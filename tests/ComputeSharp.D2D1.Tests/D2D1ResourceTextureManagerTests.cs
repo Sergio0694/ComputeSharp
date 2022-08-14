@@ -442,15 +442,7 @@ public partial class D2D1ResourceTextureManagerTests
         {
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
-            float4 result = default;
-
-            if (xy.X < this.width &&
-                xy.Y == 0)
-            {
-                result = this.source[xy.X];
-            }
-
-            return result;
+            return this.source[xy.X];
         }
     }
 
@@ -546,15 +538,116 @@ public partial class D2D1ResourceTextureManagerTests
         {
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
-            float4 result = default;
+            return this.source[xy];
+        }
+    }
 
-            if (xy.X < this.width &&
-                xy.Y < this.height)
+    [TestMethod]
+    [DataRow(64, 64, 3, 0, 0, 0, 64, 64, 3)]
+    [DataRow(64, 64, 3, 10, 22, 1, 44, 33, 1)]
+    [DataRow(64, 64, 3, 10, 22, 1, 44, 33, 2)]
+    [DataRow(64, 64, 3, 10, 22, 0, 44, 33, 2)]
+    [DataRow(512, 512, 6, 245, 0, 2, 188, 1, 4)]
+    [DataRow(512, 512, 6, 245, 0, 2, 188, 467, 3)]
+    [DataRow(512, 512, 6, 245, 113, 1, 256, 322, 2)]
+    public unsafe void UpdateResourceTexture3D(
+        int width,
+        int height,
+        int depth,
+        int startOffsetX,
+        int startOffsetY,
+        int startOffsetZ,
+        int updateLengthX,
+        int updateLengthY,
+        int updateLengthZ)
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture3DShader>(d2D1Factory2.Get(), null, out _);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture3DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        CopyFromResourceTexture3DShader shader = new(width, height, depth);
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+
+        byte[] texture = new byte[width * height * depth];
+
+        D2D1ResourceTextureManager resourceTextureManager = new(
+            extents: stackalloc[] { (uint)width, (uint)height, (uint)depth },
+            bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
+            channelDepth: D2D1ChannelDepth.One,
+            filter: D2D1Filter.MinMagMipPoint,
+            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            data: texture,
+            strides: stackalloc uint[] { (uint)width, (uint)(width * height) });
+
+        byte[] data = RandomNumberGenerator.GetBytes(updateLengthX * updateLengthY * updateLengthZ);
+
+        resourceTextureManager.Update(
+            minimumExtents: stackalloc uint[] { (uint)startOffsetX, (uint)startOffsetY, (uint)startOffsetZ },
+            maximimumExtents: stackalloc uint[] { (uint)(startOffsetX + updateLengthX), (uint)(startOffsetY + updateLengthY), (uint)(startOffsetZ + updateLengthZ) },
+            strides: stackalloc uint[] { (uint)updateLengthX, (uint)(updateLengthX * updateLengthY) },
+            data: data);
+
+        for (int z = 0; z < updateLengthZ; z++)
+        {
+            for (int y = 0; y < updateLengthY; y++)
             {
-                result = this.source[xy];
-            }
+                ReadOnlySpan<byte> source = data.AsSpan(z * updateLengthX * updateLengthY + y * updateLengthX, updateLengthX);
+                Span<byte> destination = texture.AsSpan((startOffsetZ + z) * (width * height) + (startOffsetY + y) * width + startOffsetX, updateLengthX);
 
-            return result;
+                source.CopyTo(destination);
+            }
+        }
+
+        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, 0);
+
+        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)width, (uint)(height * depth));
+
+        D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+
+        using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+        byte[] resultingBytes = new byte[width * height * depth];
+        int i = 0;
+
+        for (int y = 0; y < height * depth; y++)
+        {
+            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + d2D1MappedRect.pitch * y, width))
+            {
+                resultingBytes[i++] = pixel.B;
+            }
+        }
+
+        Assert.IsTrue(texture.AsSpan().SequenceEqual(resultingBytes));
+    }
+
+    [D2DInputCount(0)]
+    [D2DRequiresScenePosition]
+    [AutoConstructor]
+    private partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
+    {
+        private int width;
+        private int height;
+        private int depth;
+
+        [D2DResourceTextureIndex(0)]
+        private D2D1ResourceTexture3D<float> source;
+
+        public float4 Execute()
+        {
+            int2 xy = (int2)D2D.GetScenePosition().XY;
+
+            int x = xy.X;
+            int y = (int)((uint)xy.Y % (uint)this.height);
+            int z = (int)((uint)xy.Y / (uint)this.height);
+
+            return this.source[x, y, z];
         }
     }
 }
