@@ -218,29 +218,6 @@ partial class IShaderGenerator
         /// <exception cref="Win32Exception">Thrown if a library fails to load.</exception>
         private static void LoadNativeDxcLibraries()
         {
-            // Extracts a specified native library for a given runtime identifier
-            static string ExtractLibrary(string folder, string rid, string name)
-            {
-                string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
-                string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
-
-                _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
-
-                using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename);
-
-                try
-                {
-                    using Stream destinationStream = File.Open(targetFilename, FileMode.CreateNew, FileAccess.Write);
-
-                    sourceStream.CopyTo(destinationStream);
-                }
-                catch (IOException)
-                {
-                }
-
-                return targetFilename;
-            }
-
             // Loads a target native library
             static unsafe void LoadLibrary(string filename)
             {
@@ -267,10 +244,10 @@ partial class IShaderGenerator
                     _ => throw new NotSupportedException("Invalid process architecture")
                 };
 
-                string folder = Path.Combine(Path.GetTempPath(), "ComputeSharp.SourceGenerators", Path.GetRandomFileName());
+                string folder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Libraries", rid);
 
-                LoadLibrary(ExtractLibrary(folder, rid, "dxil"));
-                LoadLibrary(ExtractLibrary(folder, rid, "dxcompiler"));
+                LoadLibrary(Path.Combine(folder, "dxil.dll"));
+                LoadLibrary(Path.Combine(folder, "dxcompiler.dll"));
 
                 areDxcLibrariesLoaded = true;
             }
