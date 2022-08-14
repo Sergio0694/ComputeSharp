@@ -183,12 +183,19 @@ unsafe partial struct PixelShaderEffect
             return E.E_POINTER;
         }
 
+        void* value = *(void**)data;
+
+        if (value is null)
+        {
+            return E.E_POINTER;
+        }
+
         if (dataSize != (uint)sizeof(void*))
         {
             return E.E_INVALIDARG;
         }
 
-        using ComPtr<IUnknown> unknown = *(IUnknown**)data;
+        using ComPtr<IUnknown> unknown = (IUnknown*)value;
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
         // Check that the input object implements ID2D1ResourceTextureManager

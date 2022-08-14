@@ -527,8 +527,6 @@ public static unsafe class D2D1PixelShaderEffect
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int index)
     {
-        // TODO: validate args
-
         ((ID2D1Effect*)d2D1Effect)->SetValue(
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
@@ -545,8 +543,6 @@ public static unsafe class D2D1PixelShaderEffect
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int index)
     {
-        // TODO: validate args
-
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
 
         Guid uuidOfResourceTextureManager = ID2D1ResourceTextureManager.Guid;
