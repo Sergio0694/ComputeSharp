@@ -56,17 +56,17 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>
 /// An RCW (runtime callable wrapper, see <see href="https://docs.microsoft.com/dotnet/standard/native-interop/runtime-callable-wrapper"/>),
 /// is also available for all of these APIs, implemented by the same <see cref="D2D1PixelShaderEffect"/>. In this case, the constructor can
-/// be used to create an initialize an instance (equivalent to calling <see cref="Create"/> and <see cref="Initialize"/>, and then
+/// be used to create and initialize an instance (equivalent to calling <see cref="Create"/> and <see cref="Initialize"/>, and then
 /// <see cref="Update(ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{byte})"/> is available for texture data updates.
 /// The instance implements <see cref="ICustomQueryInterface"/>, which can be used in advanced scenarios to retrieve the underlying COM object.
 /// </para>
 /// <para>
 /// The <c>ID2D1ResourceTextureManager</c> contract allows callers to create a resource texture at any time even before the effect
 /// has been initialized and the manager assigned to it. In that case, the manager will buffer the data internally, and will defer
-/// the creation of the actual resource texture until when it's possible for it to do so, at which point it will also free up the buffer.
+/// the creation of the actual resource texture until it's possible for it to do so, at which point it will also free the buffer.
 /// </para>
 /// <para>
-/// If there was a need to have for a custom resource manager, in order for external implementations to be accepted by the effect objects
+/// If implementing a custom resource manager was needed, in order for external implementations to be accepted by the effect objects
 /// created by <see cref="D2D1PixelShaderEffect"/>, the <c>ID2D1ResourceTextureManagerInternal</c> interface also needs to be implemented:
 /// <code>
 /// [uuid(5CBB1024-8EA1-4689-81BF-8AD190B5EF5D)]
