@@ -69,7 +69,7 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        if (data is null || actualSize is null)
+        if (data is null)
         {
             return E.E_POINTER;
         }
@@ -86,15 +86,18 @@ unsafe partial struct PixelShaderEffect
             return E.E_NOT_VALID_STATE;
         }
 
-        if (@this->constantBufferSize == 0)
-        {
-            *actualSize = 0;
-        }
-        else
+        uint writtenBytes = 0;
+
+        if (@this->constantBufferSize > 0)
         {
             Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->constantBufferSize);
 
-            *actualSize = (uint)@this->constantBufferSize;
+            writtenBytes = (uint)@this->constantBufferSize;
+        }
+
+        if (actualSize is not null)
+        {
+            *actualSize = writtenBytes;
         }
 
         return S.S_OK;
@@ -145,7 +148,7 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        if (data is null || actualSize is null)
+        if (data is null)
         {
             return E.E_POINTER;
         }
@@ -159,7 +162,10 @@ unsafe partial struct PixelShaderEffect
 
         resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
 
-        *actualSize = (uint)sizeof(void*);
+        if (actualSize is not null)
+        {
+            *actualSize = (uint)sizeof(void*);
+        }
 
         return S.S_OK;
     }
