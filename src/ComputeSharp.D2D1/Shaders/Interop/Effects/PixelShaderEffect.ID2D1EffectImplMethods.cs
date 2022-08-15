@@ -172,10 +172,26 @@ internal unsafe partial struct PixelShaderEffect
                 foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(@this->resourceTextureDescriptions, @this->resourceTextureDescriptionCount))
                 {
                     using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                    
+                    // If the current resource texture manager is not set, we cannot render, as there's an unbound resource texture
+                    if (resourceTextureManager.Get() is null)
+                    {
+                        hresult = E.E_NOT_VALID_STATE;
+
+                        break;
+                    }
+                    
                     using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
 
-                    // Get the ID2D1ResourceTextureManagerInternal object (as above, this is guaranteed to succeed here)
-                    _ = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
+                    // Get the ID2D1ResourceTextureManagerInternal object
+                    hresult = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
+
+                    // This cast should always succeed, as when an input resource texture managers is set it's
+                    // also checked for ID2D1ResourceTextureManagerInternal, but still validate for good measure.
+                    if (!Windows.SUCCEEDED(hresult))
+                    {
+                        break;
+                    }
 
                     using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
 
