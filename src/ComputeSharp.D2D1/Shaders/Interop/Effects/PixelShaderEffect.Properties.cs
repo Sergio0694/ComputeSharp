@@ -20,7 +20,7 @@ unsafe partial struct PixelShaderEffect
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.setFunction"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int PropertySetBindingDelegate(IUnknown* effect, byte* data, uint dataSize);
+    private delegate int PropertySetFunctionDelegate(IUnknown* effect, byte* data, uint dataSize);
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBufferImpl"/>.
@@ -28,9 +28,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBufferImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
+    private static readonly PropertySetFunctionDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
 #endif
 
     /// <summary>

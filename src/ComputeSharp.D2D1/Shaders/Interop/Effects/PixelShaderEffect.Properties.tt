@@ -27,9 +27,9 @@ for (int i = 0; i < 16; i++)
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager<#=i#>Wrapper = GetResourceTextureManager<#=i#>Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager<#=i#>"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager<#=i#>"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager<#=i#>Wrapper = SetResourceTextureManager<#=i#>Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager<#=i#>Wrapper = SetResourceTextureManager<#=i#>Impl;
 <#
     if (i < 15) WriteLine("");
 }

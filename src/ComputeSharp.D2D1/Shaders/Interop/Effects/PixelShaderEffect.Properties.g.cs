@@ -20,9 +20,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager0Wrapper = GetResourceTextureManager0Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager0"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager0"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager0Wrapper = SetResourceTextureManager0Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager0Wrapper = SetResourceTextureManager0Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager1"/>.
@@ -30,9 +30,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager1Wrapper = GetResourceTextureManager1Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager1"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager1"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager1Wrapper = SetResourceTextureManager1Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager1Wrapper = SetResourceTextureManager1Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager2"/>.
@@ -40,9 +40,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager2Wrapper = GetResourceTextureManager2Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager2"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager2"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager2Wrapper = SetResourceTextureManager2Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager2Wrapper = SetResourceTextureManager2Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager3"/>.
@@ -50,9 +50,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager3Wrapper = GetResourceTextureManager3Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager3"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager3"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager3Wrapper = SetResourceTextureManager3Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager3Wrapper = SetResourceTextureManager3Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager4"/>.
@@ -60,9 +60,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager4Wrapper = GetResourceTextureManager4Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager4"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager4"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager4Wrapper = SetResourceTextureManager4Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager4Wrapper = SetResourceTextureManager4Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager5"/>.
@@ -70,9 +70,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager5Wrapper = GetResourceTextureManager5Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager5"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager5"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager5Wrapper = SetResourceTextureManager5Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager5Wrapper = SetResourceTextureManager5Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager6"/>.
@@ -80,9 +80,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager6Wrapper = GetResourceTextureManager6Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager6"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager6"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager6Wrapper = SetResourceTextureManager6Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager6Wrapper = SetResourceTextureManager6Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager7"/>.
@@ -90,9 +90,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager7Wrapper = GetResourceTextureManager7Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager7"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager7"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager7Wrapper = SetResourceTextureManager7Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager7Wrapper = SetResourceTextureManager7Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager8"/>.
@@ -100,9 +100,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager8Wrapper = GetResourceTextureManager8Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager8"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager8"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager8Wrapper = SetResourceTextureManager8Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager8Wrapper = SetResourceTextureManager8Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager9"/>.
@@ -110,9 +110,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager9Wrapper = GetResourceTextureManager9Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager9"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager9"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager9Wrapper = SetResourceTextureManager9Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager9Wrapper = SetResourceTextureManager9Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager10"/>.
@@ -120,9 +120,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager10Wrapper = GetResourceTextureManager10Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager10"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager10"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager10Wrapper = SetResourceTextureManager10Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager10Wrapper = SetResourceTextureManager10Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager11"/>.
@@ -130,9 +130,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager11Wrapper = GetResourceTextureManager11Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager11"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager11"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager11Wrapper = SetResourceTextureManager11Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager11Wrapper = SetResourceTextureManager11Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager12"/>.
@@ -140,9 +140,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager12Wrapper = GetResourceTextureManager12Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager12"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager12"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager12Wrapper = SetResourceTextureManager12Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager12Wrapper = SetResourceTextureManager12Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager13"/>.
@@ -150,9 +150,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager13Wrapper = GetResourceTextureManager13Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager13"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager13"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager13Wrapper = SetResourceTextureManager13Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager13Wrapper = SetResourceTextureManager13Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager14"/>.
@@ -160,9 +160,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager14Wrapper = GetResourceTextureManager14Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager14"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager14"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager14Wrapper = SetResourceTextureManager14Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager14Wrapper = SetResourceTextureManager14Impl;
 
     /// <summary>
     /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager15"/>.
@@ -170,9 +170,9 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertyGetFunctionDelegate GetResourceTextureManager15Wrapper = GetResourceTextureManager15Impl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetBindingDelegate"/> instance wrapping <see cref="SetResourceTextureManager15"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager15"/>.
     /// </summary>
-    private static readonly PropertySetBindingDelegate SetResourceTextureManager15Wrapper = SetResourceTextureManager15Impl;
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager15Wrapper = SetResourceTextureManager15Impl;
 #endif
 
     /// <summary>
