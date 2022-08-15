@@ -159,6 +159,13 @@ internal unsafe partial struct PixelShaderEffect
         {
             int hresult = S.S_OK;
 
+            // Validate the constant buffer
+            if (@this->constantBufferSize > 0 &&
+                @this->constantBuffer is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
             // First, set the constant buffer, if available
             if (@this->constantBuffer is not null)
             {
