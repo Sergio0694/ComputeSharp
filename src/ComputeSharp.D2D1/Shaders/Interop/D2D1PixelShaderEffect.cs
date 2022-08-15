@@ -557,10 +557,10 @@ public static unsafe class D2D1PixelShaderEffect
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <c>ID2D1ResourceTextureManager</c> object (see <see cref="D2D1ResourceTextureManager"/>).</param>
-    /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int index)
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int resourceTextureIndex)
     {
         if (d2D1Effect is null)
         {
@@ -573,7 +573,7 @@ public static unsafe class D2D1PixelShaderEffect
         }
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)&resourceTextureManager,
             dataSize: (uint)sizeof(void*)).Assert();
@@ -584,10 +584,10 @@ public static unsafe class D2D1PixelShaderEffect
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance..</param>
-    /// <param name="index">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int index)
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int resourceTextureIndex)
     {
         if (d2D1Effect is null)
         {
@@ -604,7 +604,7 @@ public static unsafe class D2D1PixelShaderEffect
         resourceTextureManager.GetD2D1ResourceTextureManager(resourceTextureManager2.GetAddressOf());
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)resourceTextureManager2.GetAddressOf(),
             dataSize: (uint)sizeof(void*)).Assert();
