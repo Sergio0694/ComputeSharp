@@ -465,7 +465,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         {
             int dimensions = strides.Length + 1;
 
-            // Same validation as the overload above
+            // Same validation as in the Update instance method above
             if (pMinimumExtents is not null &&
                 pMaximumExtents is not null &&
                 (minimumExtents.Length != dimensions || maximimumExtents.Length != dimensions))
