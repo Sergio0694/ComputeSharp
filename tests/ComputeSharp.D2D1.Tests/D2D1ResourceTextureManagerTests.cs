@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -648,6 +649,40 @@ public partial class D2D1ResourceTextureManagerTests
             int z = (int)((uint)xy.Y / (uint)this.height);
 
             return this.source[x, y, z];
+        }
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Win32Exception))]
+    public unsafe void NullResourceTexture_DrawImageFails()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<NullResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<NullResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(NullResourceTextureShader), d2D1Effect.Get());
+
+        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), 128, 128);
+
+        D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+    }
+
+    [D2DInputCount(0)]
+    [D2DRequiresScenePosition]
+    private partial struct NullResourceTextureShader : ID2D1PixelShader
+    {
+        [D2DResourceTextureIndex(0)]
+        private D2D1ResourceTexture2D<float4> source;
+
+        public float4 Execute()
+        {
+            return source[0, 0];
         }
     }
 }
