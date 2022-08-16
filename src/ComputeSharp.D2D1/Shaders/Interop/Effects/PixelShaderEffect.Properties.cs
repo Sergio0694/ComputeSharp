@@ -136,14 +136,14 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the resource texture manager for a given index.
     /// </summary>
-    /// <param name="index">The index of the resource texture manager to get.</param>
+    /// <param name="resourceTextureIndex">The index of the resource texture to get the manager for.</param>
     /// <param name="data">A pointer to a variable that stores the data that this function retrieves on the property.</param>
     /// <param name="dataSize">The number of bytes in the property to retrieve.</param>
     /// <param name="actualSize">A optional pointer to a variable that stores the actual number of bytes retrieved on the property.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
+    private int GetResourceTextureManagerAtIndex(int resourceTextureIndex, byte* data, uint dataSize, uint* actualSize)
     {
-        if (!IsResourceTextureManagerIndexValid(index, out _))
+        if (!IsResourceTextureManagerIndexValid(resourceTextureIndex, out _))
         {
             return E.E_INVALIDARG;
         }
@@ -158,7 +158,7 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
+        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureIndex];
 
         resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
 
@@ -173,13 +173,13 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Sets the resource texture manager for a given index.
     /// </summary>
-    /// <param name="index">The index of the resource texture manager to set.</param>
+    /// <param name="resourceTextureIndex">The index of the resource texture to set the manager for.</param>
     /// <param name="data">A pointer to the data to be set on the property.</param>
     /// <param name="dataSize">The number of bytes in the property set by the function.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    private int SetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize)
+    private int SetResourceTextureManagerAtIndex(int resourceTextureIndex, byte* data, uint dataSize)
     {
-        if (!IsResourceTextureManagerIndexValid(index, out uint dimensions))
+        if (!IsResourceTextureManagerIndexValid(resourceTextureIndex, out uint dimensions))
         {
             return E.E_INVALIDARG;
         }
@@ -229,7 +229,7 @@ unsafe partial struct PixelShaderEffect
         }
 
         // Store the resource texture manager into the buffer
-        this.resourceTextureManagerBuffer[index] = resourceTextureManager.Detach();
+        this.resourceTextureManagerBuffer[resourceTextureIndex] = resourceTextureManager.Detach();
 
         return S.S_OK;
     }
@@ -237,14 +237,14 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Checks whether a given index for a resource texture manager is valid for the current effect.
     /// </summary>
-    /// <param name="index">The resource texture manager index to validate.</param>
+    /// <param name="resourceTextureIndex">The index of the resource texture to validate.</param>
     /// <param name="dimensions">The number of dimensions for the resource texture at the gven index.</param>
-    /// <returns>Whether or not <paramref name="index"/> is valid for the current effect.</returns>
-    private bool IsResourceTextureManagerIndexValid(int index, out uint dimensions)
+    /// <returns>Whether or not <paramref name="resourceTextureIndex"/> is valid for the current effect.</returns>
+    private bool IsResourceTextureManagerIndexValid(int resourceTextureIndex, out uint dimensions)
     {
         foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
         {
-            if (resourceTextureDescription.Index == index)
+            if (resourceTextureDescription.Index == resourceTextureIndex)
             {
                 dimensions = (uint)resourceTextureDescription.Dimensions;
 
