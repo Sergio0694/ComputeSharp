@@ -104,8 +104,8 @@ public static unsafe class D2D1PixelShaderEffect
     <Inputs>
         {effectInputsBuilder}
     </Inputs>
-    <Property name='Buffer' type='blob'>
-        <Property name='DisplayName' type='string' value='Buffer'/>
+    <Property name='ConstantBuffer' type='blob'>
+        <Property name='DisplayName' type='string' value='ConstantBuffer'/>
     </Property>
     <Property name='ResourceTextureManager0' type='iunknown'>
         <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
@@ -158,7 +158,7 @@ public static unsafe class D2D1PixelShaderEffect
 </Effect>";
 
         fixed (char* pXml = xml)
-        fixed (char* pBufferPropertyName = "Buffer")
+        fixed (char* pBufferPropertyName = "ConstantBuffer")
         fixed (char* pResourceTextureManager0PropertyName = "ResourceTextureManager0")
         fixed (char* pResourceTextureManager1PropertyName = "ResourceTextureManager1")
         fixed (char* pResourceTextureManager2PropertyName = "ResourceTextureManager2")
@@ -360,8 +360,8 @@ public static unsafe class D2D1PixelShaderEffect
         // Write the last part of the XML (including the buffer property)
         writer.WriteAsUtf8(@"
     </Inputs>
-    <Property name='Buffer' type='blob'>
-        <Property name='DisplayName' type='string' value='Buffer'/>
+    <Property name='ConstantBuffer' type='blob'>
+        <Property name='DisplayName' type='string' value='ConstantBuffer'/>
     </Property>
     <Property name='ResourceTextureManager0' type='iunknown'>
         <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
@@ -418,7 +418,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         // Bindings
         writer.Write(17);
-        writer.WriteAsUtf8("Buffer");
+        writer.WriteAsUtf8("ConstantBuffer");
         writer.Write((byte)'\0');
         writer.Write((nint)PixelShaderEffect.GetConstantBuffer);
         writer.Write((nint)PixelShaderEffect.SetConstantBuffer);
