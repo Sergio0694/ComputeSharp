@@ -21,6 +21,24 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
+  <!-- T4 template generation service -->
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PixelShaderEffect.Properties.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PixelShaderEffect.Properties.g.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
   <!-- Enable trimming support on .NET 6 -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>

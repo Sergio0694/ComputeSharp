@@ -5,7 +5,9 @@
 
 #pragma warning disable CS0649
 
+#if NET6_0_OR_GREATER
 using TerraFX.Interop.Windows;
+#endif
 
 namespace TerraFX.Interop.DirectX
 {
@@ -15,9 +17,17 @@ namespace TerraFX.Interop.DirectX
         public ushort* propertyName;
 
         [NativeTypeName("PD2D1_PROPERTY_SET_FUNCTION")]
-        public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, HRESULT> setFunction;
+#if NET6_0_OR_GREATER
+        public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> setFunction;
+#else
+        public void* setFunction;
+#endif
 
         [NativeTypeName("PD2D1_PROPERTY_GET_FUNCTION")]
-        public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, HRESULT> getFunction;
+#if NET6_0_OR_GREATER
+        public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> getFunction;
+#else
+        public void* getFunction;
+#endif
     }
 }

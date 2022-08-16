@@ -337,10 +337,16 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to set the constant buffer for.</typeparam>
     /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1DrawInfo">A pointer to the <c>ID2D1DrawInfo</c> instance to use.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1DrawInfo"/> is <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setpixelshaderconstantbuffer"/>.</remarks>
     public static unsafe void SetConstantBufferForD2D1DrawInfo<T>(in T shader, void* d2D1DrawInfo)
         where T : unmanaged, ID2D1PixelShader
     {
+        if (d2D1DrawInfo is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1DrawInfo), "The input ID2D1DrawInfo object cannot be null.");
+        }
+
         D2D1DrawInfoDispatchDataLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
 
         Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);

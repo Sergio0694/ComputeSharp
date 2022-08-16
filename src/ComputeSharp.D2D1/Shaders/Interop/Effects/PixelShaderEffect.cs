@@ -2,13 +2,13 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
 namespace ComputeSharp.D2D1.Interop.Effects;
@@ -38,24 +38,6 @@ internal unsafe partial struct PixelShaderEffect
     /// <inheritdoc cref="Release"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate uint ReleaseDelegate(PixelShaderEffect* @this);
-
-    /// <inheritdoc cref="GetConstantBuffer"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int GetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize, uint* actualSize);
-
-    /// <inheritdoc cref="SetConstantBuffer"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int SetConstantBufferDelegate(IUnknown* effect, byte* data, uint dataSize);
-
-    /// <summary>
-    /// A cached <see cref="GetConstantBufferDelegate"/> instance wrapping <see cref="GetConstantBuffer"/>.
-    /// </summary>
-    public static readonly GetConstantBufferDelegate GetConstantBufferWrapper = GetConstantBuffer;
-
-    /// <summary>
-    /// A cached <see cref="SetConstantBufferDelegate"/> instance wrapping <see cref="SetConstantBuffer"/>.
-    /// </summary>
-    public static readonly SetConstantBufferDelegate SetConstantBufferWrapper = SetConstantBuffer;
 #endif
 
     /// <summary>
@@ -133,19 +115,19 @@ internal unsafe partial struct PixelShaderEffect
     private volatile int referenceCount;
 
     /// <summary>
+    /// The <see cref="Guid"/> for the shader.
+    /// </summary>
+    private Guid shaderId;
+
+    /// <summary>
     /// The constant buffer data, if set.
     /// </summary>
     private byte* constantBuffer;
 
     /// <summary>
-    /// The size of <see cref="constantBuffer"/>, if set.
+    /// The size of <see cref="constantBuffer"/>.
     /// </summary>
     private int constantBufferSize;
-
-    /// <summary>
-    /// The <see cref="Guid"/> for the shader.
-    /// </summary>
-    private Guid shaderId;
 
     /// <summary>
     /// The number of inputs for the shader.
@@ -201,6 +183,19 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1ChannelDepth channelDepth;
 
     /// <summary>
+    /// The number of available resource texture descriptions.
+    /// </summary>
+    private int resourceTextureDescriptionCount;
+
+    /// <summary>
+    /// The buffer with the available resource texture descriptions for the shader.
+    /// </summary>
+    /// <remarks>
+    /// This buffer is also shared among effect instances, like <see cref="inputDescriptions"/>.
+    /// </remarks>
+    private D2D1ResourceTextureDescription* resourceTextureDescriptions;
+
+    /// <summary>
     /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
     /// </summary>
     private GCHandle d2D1TransformMapperHandle;
@@ -211,9 +206,20 @@ internal unsafe partial struct PixelShaderEffect
     private ID2D1DrawInfo* d2D1DrawInfo;
 
     /// <summary>
+    /// The <see cref="ID2D1EffectContext"/> instance currently in use.
+    /// </summary>
+    private ID2D1EffectContext* d2D1EffectContext;
+
+    /// <summary>
+    /// The resource texture managers for the current instance.
+    /// </summary>
+    private ResourceTextureManagerBuffer resourceTextureManagerBuffer;
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+    /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
     /// <param name="inputCount">The number of inputs for the shader.</param>
     /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
     /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
@@ -223,11 +229,14 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
     /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
     /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
+    /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
+    /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
     /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
         Guid shaderId,
+        int constantBufferSize,
         int inputCount,
         D2D1PixelShaderInputType* inputTypes,
         int inputDescriptionCount,
@@ -237,6 +246,8 @@ internal unsafe partial struct PixelShaderEffect
         int bytecodeSize,
         D2D1BufferPrecision bufferPrecision,
         D2D1ChannelDepth channelDepth,
+        int resourceTextureDescriptionCount,
+        D2D1ResourceTextureDescription* resourceTextureDescriptions,
         D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
@@ -259,6 +270,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
         @this->referenceCount = 1;
         @this->shaderId = shaderId;
+        @this->constantBuffer = null;
+        @this->constantBufferSize = constantBufferSize;
         @this->inputCount = inputCount;
         @this->inputTypes = inputTypes;
         @this->inputDescriptionCount = inputDescriptionCount;
@@ -268,52 +281,15 @@ internal unsafe partial struct PixelShaderEffect
         @this->bytecodeSize = bytecodeSize;
         @this->bufferPrecision = bufferPrecision;
         @this->channelDepth = channelDepth;
+        @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
+        @this->resourceTextureDescriptions = resourceTextureDescriptions;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
+        @this->d2D1DrawInfo = null;
+        @this->d2D1EffectContext = null;
+
+        @this->resourceTextureManagerBuffer.AsSpan().Clear();
 
         *effectImpl = (IUnknown*)@this;
-
-        return S.S_OK;
-    }
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    public static int GetConstantBuffer(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
-    {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
-
-        if (@this->constantBufferSize == 0)
-        {
-            *actualSize = 0;
-        }
-        else
-        {
-            int bytesToCopy = Math.Min((int)dataSize, @this->constantBufferSize);
-
-            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, bytesToCopy);
-
-            *actualSize = (uint)bytesToCopy;
-        }
-
-        return S.S_OK;
-    }
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly]
-    public static int SetConstantBuffer(IUnknown* effect, byte* data, uint dataSize)
-    {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
-
-        if (@this->constantBuffer is not null)
-        {
-            NativeMemory.Free(@this->constantBuffer);
-        }
-
-        void* buffer = NativeMemory.Alloc(dataSize);
-
-        Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
-
-        @this->constantBuffer = (byte*)buffer;
-        @this->constantBufferSize = (int)dataSize;
 
         return S.S_OK;
     }
@@ -377,6 +353,23 @@ internal unsafe partial struct PixelShaderEffect
             if (this.d2D1DrawInfo is not null)
             {
                 _ = this.d2D1DrawInfo->Release();
+            }
+
+            if (this.d2D1EffectContext is not null)
+            {
+                _ = this.d2D1EffectContext->Release();
+            }
+
+            // Use the list of resource texture descriptions to see the indices that might have accepted a resource texture manager.
+            // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
+            foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
+            {
+                ID2D1ResourceTextureManager* resourceTextureManager = resourceTextureManagerBuffer[resourceTextureDescription.Index];
+
+                if (resourceTextureManager is not null)
+                {
+                    _ = ((IUnknown*)resourceTextureManager)->Release();
+                }
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));

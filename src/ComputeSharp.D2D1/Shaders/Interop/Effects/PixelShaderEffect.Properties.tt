@@ -1,0 +1,98 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ output extension=".g.cs"#>
+using System.Runtime.CompilerServices;
+#if !NET6_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
+#endif
+
+namespace ComputeSharp.D2D1.Interop.Effects;
+
+/// <inheritdoc/>
+unsafe partial struct PixelShaderEffect
+{
+#if !NET6_0_OR_GREATER
+<#
+for (int i = 0; i < 16; i++)
+{
+#>
+    /// <summary>
+    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetResourceTextureManager<#=i#>"/>.
+    /// </summary>
+    private static readonly PropertyGetFunctionDelegate GetResourceTextureManager<#=i#>Wrapper = GetResourceTextureManager<#=i#>Impl;
+
+    /// <summary>
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetResourceTextureManager<#=i#>"/>.
+    /// </summary>
+    private static readonly PropertySetFunctionDelegate SetResourceTextureManager<#=i#>Wrapper = SetResourceTextureManager<#=i#>Impl;
+<#
+    if (i < 15) WriteLine("");
+}
+#>
+#endif
+
+<#
+for (int i = 0; i < 16; i++)
+{
+#>
+    /// <summary>
+    /// Gets the get accessor for the resource manager at index <#=i#>.
+    /// </summary>
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager<#=i#>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+#if NET6_0_OR_GREATER
+            return &GetResourceTextureManager<#=i#>Impl;
+#else
+            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager<#=i#>Wrapper);
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Gets the set accessor for the resource manager at index <#=i#>.
+    /// </summary>
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager<#=i#>
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+#if NET6_0_OR_GREATER
+            return &SetResourceTextureManager<#=i#>Impl;
+#else
+            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager<#=i#>Wrapper);
+#endif
+        }
+    }
+
+<#
+}
+#>
+<#
+for (int i = 0; i < 16; i++)
+{
+#>
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    private static int GetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    {
+        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(<#=i#>, data, dataSize, actualSize);
+    }
+
+    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    private static int SetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize)
+    {
+        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(<#=i#>, data, dataSize);
+    }
+<#
+}
+#>
+}
