@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 #if NET6_0_OR_GREATER
+using System.Buffers.Text;
 using System.Numerics;
 #endif
 using System.Runtime.CompilerServices;
@@ -64,18 +65,37 @@ internal ref struct ArrayPoolBinaryWriter
     }
 
     /// <summary>
-    /// Writes a value of type <typeparamref name="T"/> into the buffer.
+    /// Writes the raw value of type <typeparamref name="T"/> into the buffer.
     /// </summary>
     /// <typeparam name="T">The type of value to write.</typeparam>
     /// <param name="value">The value to write.</param>
-    public unsafe void Write<T>(scoped in T value)
+    /// <remarks>This method will just blit the data of <paramref name="value"/> into the target buffer.</remarks>
+    public unsafe void WriteRaw<T>(scoped in T value)
         where T : unmanaged
     {
         Span<byte> span = GetSpan(sizeof(T));
 
-        MemoryMarshal.Write(span, ref Unsafe.AsRef(in value));
+        Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), value);
 
         Advance(sizeof(T));
+    }
+
+    /// <summary>
+    /// Writes an <see langword="int"/> value as UTF8 bytes into the buffer.
+    /// </summary>
+    /// <param name="value">The value to write.</param>
+    public void WriteAsUtf8(int value)
+    {
+#if NET6_0_OR_GREATER
+        Span<byte> span = GetSpan(sizeof(int));
+
+        _ = Utf8Formatter.TryFormat(value, span, out _);
+
+        Advance(sizeof(int));
+#else
+        // Just accept the allocation on .NET Standard 2.0
+        WriteAsUtf8(value.ToString());
+#endif
     }
 
     /// <summary>

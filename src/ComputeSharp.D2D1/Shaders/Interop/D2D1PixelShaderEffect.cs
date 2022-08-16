@@ -331,11 +331,11 @@ public static unsafe class D2D1PixelShaderEffect
         using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
-        writer.Write(D2D1EffectRegistrationData.V1.BlobId);
+        writer.WriteRaw(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
-        writer.Write(PixelShaderEffect.For<T>.Id);
-        writer.Write(PixelShaderEffect.For<T>.InputCount);
+        writer.WriteRaw(PixelShaderEffect.For<T>.Id);
+        writer.WriteRaw(PixelShaderEffect.For<T>.InputCount);
         
         // Build the XML text
         writer.WriteAsUtf8(@"<?xml version='1.0'?>
@@ -353,7 +353,7 @@ public static unsafe class D2D1PixelShaderEffect
         for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
         {
             writer.WriteAsUtf8("<Input name='Source");
-            writer.WriteAsUtf8(i.ToString(CultureInfo.InvariantCulture));
+            writer.WriteAsUtf8(i);
             writer.WriteAsUtf8($"'/>");
         }
 
@@ -414,81 +414,81 @@ public static unsafe class D2D1PixelShaderEffect
 </Effect>");
 
         // Null terminator for the text
-        writer.Write((byte)'\0');
+        writer.WriteRaw((byte)'\0');
 
         // Bindings
-        writer.Write(17);
+        writer.WriteRaw(17);
         writer.WriteAsUtf8("ConstantBuffer");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetConstantBuffer);
-        writer.Write((nint)PixelShaderEffect.SetConstantBuffer);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetConstantBuffer);
+        writer.WriteRaw((nint)PixelShaderEffect.SetConstantBuffer);
         writer.WriteAsUtf8("ResourceTextureManager0");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager0);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager0);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager0);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager0);
         writer.WriteAsUtf8("ResourceTextureManager1");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager1);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager1);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager1);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager1);
         writer.WriteAsUtf8("ResourceTextureManager2");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager2);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager2);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager2);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager2);
         writer.WriteAsUtf8("ResourceTextureManager3");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager3);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager3);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager3);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager3);
         writer.WriteAsUtf8("ResourceTextureManager4");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager4);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager4);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager4);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager4);
         writer.WriteAsUtf8("ResourceTextureManager5");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager5);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager5);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager5);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager5);
         writer.WriteAsUtf8("ResourceTextureManager6");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager6);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager6);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager6);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager6);
         writer.WriteAsUtf8("ResourceTextureManager7");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager7);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager7);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager7);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager7);
         writer.WriteAsUtf8("ResourceTextureManager8");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager8);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager8);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager8);
         writer.WriteAsUtf8("ResourceTextureManager9");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager9);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager9);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager9);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager9);
         writer.WriteAsUtf8("ResourceTextureManager10");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager10);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager10);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager10);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager10);
         writer.WriteAsUtf8("ResourceTextureManager11");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager11);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager11);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager11);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager11);
         writer.WriteAsUtf8("ResourceTextureManager12");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager12);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager12);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager12);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager12);
         writer.WriteAsUtf8("ResourceTextureManager13");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager13);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager13);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager13);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager13);
         writer.WriteAsUtf8("ResourceTextureManager14");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager14);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager14);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager14);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager14);
         writer.WriteAsUtf8("ResourceTextureManager15");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager15);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager15);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager15);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager15);
 
         // Effect factory
-        writer.Write((nint)PixelShaderEffect.For<T>.Factory);
+        writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);
 
         effectId = PixelShaderEffect.For<T>.Id;
 
