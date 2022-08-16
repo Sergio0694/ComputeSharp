@@ -13,8 +13,10 @@ namespace ComputeSharp.D2D1.Interop;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The built-in <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nn-d2d1_1-id2d1effect"><c>ID2D1Effect</c></see>
-/// implementation provided by <see cref="D2D1PixelShaderEffect"/> uses resource texture manager objects to handle resource textures.
+/// The built-in <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nn-d2d1effectauthor-id2d1effectimpl"><c>ID2D1EffectImpl</c></see>
+/// implementation provided by <see cref="D2D1PixelShaderEffect"/> (which makes it possible to register and create
+/// <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nn-d2d1_1-id2d1effect"><c>ID2D1Effect</c></see>
+/// instances that can be used to run D2D1 pixel shaders) uses resource texture manager objects to handle resource textures.
 /// </para>
 /// <para>
 /// These managers are COM objects implementing the following interface:
@@ -43,12 +45,14 @@ namespace ComputeSharp.D2D1.Interop;
 /// These can be used to create resource textures, pass them to effects, and also share resources among different effects.
 /// </para>
 /// <para>
-/// For details of how these work, <c>Initialize</c> maps to <c>ID2D1EffectContext::CreateResourceTexture</c>, whereas
-/// <c>Update</c> maps to <c>ID2D1ResourceTexture::Update</c>. The same behavior and parameters as those methods is used.
+/// For details of how these work, <c>Initialize</c> maps to
+/// <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1effectcontext-createresourcetexture"><c>ID2D1EffectContext::CreateResourceTexture</c></see>,
+/// whereas <c>Update</c> maps to <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1resourcetexture-update"><c>ID2D1ResourceTexture::Update</c></see>.
+/// The same behavior and parameters as those methods is used.
 /// </para>
 /// <para>
 /// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1ResourceTextureManager"/>.
-/// That is, <see cref="Create"/> is first use to create an <c>ID2D1ResourceTextureManager</c> instance. Then, <see cref="Initialize"/>
+/// That is, <see cref="Create"/> is first used to create an <c>ID2D1ResourceTextureManager</c> instance. Then, <see cref="Initialize"/>
 /// can be used to initialize the resource texture held by the manager. The manager can also be assigned to an effect at any time,
 /// using the available property indices from <see cref="D2D1PixelShaderEffectProperty"/>. To update texture data after its initial
 /// creation, <see cref="Update(void*, ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{byte})"/> can be used.
@@ -56,7 +60,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>
 /// An RCW (runtime callable wrapper, see <see href="https://docs.microsoft.com/dotnet/standard/native-interop/runtime-callable-wrapper"/>),
 /// is also available for all of these APIs, implemented by the same <see cref="D2D1PixelShaderEffect"/>. In this case, the constructor can
-/// be used to create and initialize an instance (equivalent to calling <see cref="Create"/> and <see cref="Initialize"/>, and then
+/// be used to create and initialize an instance (equivalent to calling <see cref="Create"/> and <see cref="Initialize"/>), and then
 /// <see cref="Update(ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{uint}, ReadOnlySpan{byte})"/> is available for texture data updates.
 /// The instance implements <see cref="ICustomQueryInterface"/>, which can be used in advanced scenarios to retrieve the underlying COM object.
 /// </para>
@@ -66,7 +70,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// the creation of the actual resource texture until it's possible for it to do so, at which point it will also free the buffer.
 /// </para>
 /// <para>
-/// If implementing a custom resource manager was needed, in order for external implementations to be accepted by the effect objects
+/// If implementing a custom resource manager is needed, in order for external implementations to be accepted by the effect objects
 /// created by <see cref="D2D1PixelShaderEffect"/>, the <c>ID2D1ResourceTextureManagerInternal</c> interface also needs to be implemented:
 /// <code>
 /// [uuid(5CBB1024-8EA1-4689-81BF-8AD190B5EF5D)]
@@ -81,13 +85,13 @@ namespace ComputeSharp.D2D1.Interop;
 /// </code>
 /// </para>
 /// <para>
-/// Note that due to the fact <c>ID2D1EffectContext</c> and <c>ID2D1ResourceTexture</c> are not thread safe, they are only
-/// safe to use without additional synchronization when <c>Initialize</c> and <c>GetResourceTexture</c> are called.
-/// This happens from the internal <c>ID2D1EffectImpl</c> object, which is invoked by D2D, which will handle taking the
-/// necessary lock before invoking these APIs. Due to the fact the context has to be stored internally, custom implementations
-/// have to make sure to retrieve the right <c>ID2D1Multithread</c> instance from the input context and use that to synchronize
-/// all accesses to those two objects from all APIs (including those exposed by <c>ID2D1ResourceTextureManager</c>). The
-/// built-in implementation of these two interfaces provided by <see cref="D2D1ResourceTextureManager"/> takes care of all this.
+/// Note that due to the fact <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nn-d2d1effectauthor-id2d1effectcontext"><c>ID2D1EffectContext</c></see>
+/// and <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nn-d2d1effectauthor-id2d1resourcetexture"><c>ID2D1ResourceTexture</c></see> are not thread safe,
+/// they are only safe to use without additional synchronization when <c>Initialize</c> and <c>GetResourceTexture</c> are called. This happens from the internal
+/// <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nn-d2d1_1-id2d1multithread"><c>ID2D1EffectImpl</c></see> object, which is invoked by D2D, which will handle
+/// taking the necessary lock before invoking these APIs. Due to the fact the context has to be stored internally, custom implementations have to make sure to retrieve the
+/// right <c>ID2D1Multithread</c> instance from the effect context and use that to synchronize all accesses to those two objects from all APIs (including those exposed by
+/// <c>ID2D1ResourceTextureManager</c>). The built-in implementation of these two interfaces provided by <see cref="D2D1ResourceTextureManager"/> takes care of all this.
 /// </para>
 /// <para>
 /// The <c>dimensions</c> parameter in <c>ID2D1ResourceTextureManager::Initialize</c> is optional, and can be passed by an <c>ID2D1Effect</c>
