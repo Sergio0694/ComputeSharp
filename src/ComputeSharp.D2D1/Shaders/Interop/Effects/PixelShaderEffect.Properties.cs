@@ -225,7 +225,17 @@ unsafe partial struct PixelShaderEffect
         // Initialize the resource texture manager, if an effect context is available
         if (this.d2D1EffectContext is not null)
         {
-            resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
+            result = resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
+
+            // ID2D1ResourceTextureManager::Initialize should generally return either S_OK for first
+            // initialization, S_FALSE if an ID2D1EffectContext is already present (which is allowed, to
+            // enable sharing resource texture managers across different source textures and effects), or
+            // E_INVALIDARG if the manager has already been initialized through the public interface,
+            // and the stored dimensions for that don't match the ones for this resource texture index.
+            if (!Windows.SUCCEEDED(result))
+            {
+                return result;
+            }
         }
 
         // Store the resource texture manager into the buffer
