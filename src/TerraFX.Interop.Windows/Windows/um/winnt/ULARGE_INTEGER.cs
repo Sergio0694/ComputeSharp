@@ -3,9 +3,7 @@
 // Ported from um/winnt.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 
 namespace TerraFX.Interop.Windows
 {
@@ -23,24 +21,6 @@ namespace TerraFX.Interop.Windows
         [FieldOffset(0)]
         [NativeTypeName("ULONGLONG")]
         public ulong QuadPart;
-
-        public ref uint LowPart
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Anonymous.LowPart, 1));
-            }
-        }
-
-        public ref uint HighPart
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Anonymous.HighPart, 1));
-            }
-        }
 
         internal partial struct _Anonymous_e__Struct
         {

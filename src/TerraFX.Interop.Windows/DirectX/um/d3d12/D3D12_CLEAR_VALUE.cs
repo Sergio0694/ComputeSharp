@@ -26,15 +26,6 @@ namespace TerraFX.Interop.DirectX
             }
         }
 
-        public ref D3D12_DEPTH_STENCIL_VALUE DepthStencil
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Anonymous.DepthStencil, 1));
-            }
-        }
-
         [StructLayout(LayoutKind.Explicit)]
         internal unsafe partial struct _Anonymous_e__Union
         {
