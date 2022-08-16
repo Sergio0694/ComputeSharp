@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
@@ -119,6 +120,41 @@ public partial class D2D1PixelShaderEffectTests
         public float4 Execute()
         {
             return dummy;
+        }
+    }
+
+    [TestMethod]
+    public unsafe void GetValueSize_ConstantBuffer()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<ConstantBufferSizeTestShader>(d2D1Factory2.Get(), null, out _);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<ConstantBufferSizeTestShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        uint size = d2D1Effect.Get()->GetValueSize(D2D1PixelShaderEffectProperty.ConstantBuffer);
+
+        Assert.AreEqual(D2D1PixelShader.GetConstantBufferSize<ConstantBufferSizeTestShader>(), (int)size);
+    }
+
+    [D2DInputCount(0)]
+    [D2DRequiresScenePosition]
+    [AutoConstructor]
+    private partial struct ConstantBufferSizeTestShader : ID2D1PixelShader
+    {
+        private float a;
+        private float b;
+        private float3 c;
+        private int d;
+        private int e;
+
+        public float4 Execute()
+        {
+            return a + b + c.X + d + e;
         }
     }
 }

@@ -69,12 +69,22 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        // This is a call likely from ID2D1Effect::GetValueSize, to query the property size
+        if (data is null &&
+            dataSize == 0 &&
+            actualSize is not null)
+        {
+            *actualSize = (uint)@this->constantBufferSize;
+
+            return S.S_FALSE;
+        }
+
         if (data is null)
         {
             return E.E_POINTER;
         }
-
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
         if (dataSize < @this->constantBufferSize)
         {
