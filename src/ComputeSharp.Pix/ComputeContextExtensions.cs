@@ -20,7 +20,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEvent(this in ComputeContext context, Color color, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         int argb = color.ToArgb();
         uint pixColor = Pix.PIX_COLOR((byte)((argb & 0x00FF0000) >> 16), (byte)((argb & 0x0000FF00) >> 8), (byte)(argb & 0x000000FF));
@@ -37,7 +37,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEvent(this in ComputeContext context, byte index, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         uint pixColor = Pix.PIX_COLOR_INDEX(index);
 
@@ -52,7 +52,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEvent(this in ComputeContext context, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->BeginEvent(0, message);
     }
@@ -78,7 +78,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEventUnsafe(this in ComputeContext context, Color color, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         int argb = color.ToArgb();
         uint pixColor = Pix.PIX_COLOR((byte)((argb & 0x00FF0000) >> 16), (byte)((argb & 0x0000FF00) >> 8), (byte)(argb & 0x000000FF));
@@ -107,7 +107,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEventUnsafe(this in ComputeContext context, byte index, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         uint pixColor = Pix.PIX_COLOR_INDEX(index);
 
@@ -134,7 +134,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void BeginEventUnsafe(this in ComputeContext context, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->BeginEventUnsafe(0, message);
     }
@@ -146,7 +146,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void EndEvent(this in ComputeContext context)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         Pix.PIXEndEventOnCommandList(commandList.D3D12GraphicsCommandList);
     }
@@ -160,7 +160,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void Log(this in ComputeContext context, Color color, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         int argb = color.ToArgb();
         uint pixColor = Pix.PIX_COLOR((byte)((argb & 0x00FF0000) >> 16), (byte)((argb & 0x0000FF00) >> 8), (byte)(argb & 0x000000FF));
@@ -177,7 +177,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void Log(this in ComputeContext context, byte index, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         uint pixColor = Pix.PIX_COLOR_INDEX(index);
 
@@ -192,7 +192,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void Log(this in ComputeContext context, string message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->SetPixMarker(0, message);
     }
@@ -218,7 +218,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void LogUnsafe(this in ComputeContext context, Color color, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         int argb = color.ToArgb();
         uint pixColor = Pix.PIX_COLOR((byte)((argb & 0x00FF0000) >> 16), (byte)((argb & 0x0000FF00) >> 8), (byte)(argb & 0x000000FF));
@@ -247,7 +247,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void LogUnsafe(this in ComputeContext context, byte index, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         uint pixColor = Pix.PIX_COLOR_INDEX(index);
 
@@ -274,7 +274,7 @@ public static class ComputeContextExtensions
     [Conditional("USE_PIX")]
     public static unsafe void LogUnsafe(this in ComputeContext context, ReadOnlySpan<byte> message)
     {
-        ref CommandList commandList = ref ComputeContext.GetCommandList(in context, pipelineState: null);
+        ref CommandList commandList = ref context.GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->SetPixMarkerUnsafe(0, message);
     }
