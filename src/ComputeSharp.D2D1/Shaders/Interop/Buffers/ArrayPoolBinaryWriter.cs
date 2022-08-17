@@ -81,17 +81,31 @@ internal ref struct ArrayPoolBinaryWriter
     }
 
     /// <summary>
+    /// Writes the raw data from the input <see cref="ReadOnlySpan{T}"/> into the buffer.
+    /// </summary>
+    /// <param name="data">The data to write.</param>
+    public unsafe void WriteRaw(scoped ReadOnlySpan<byte> data)
+    {
+        Span<byte> span = GetSpan(data.Length);
+
+        data.CopyTo(span);
+
+        Advance(data.Length);
+    }
+
+    /// <summary>
     /// Writes an <see langword="int"/> value as UTF8 bytes into the buffer.
     /// </summary>
     /// <param name="value">The value to write.</param>
     public void WriteAsUtf8(int value)
     {
 #if NET6_0_OR_GREATER
-        Span<byte> span = GetSpan(sizeof(int));
+        // Get a span of at least 10 elements (10 is the length of int.MaxValue as text)
+        Span<byte> span = GetSpan(10);
 
-        _ = Utf8Formatter.TryFormat(value, span, out _);
+        _ = Utf8Formatter.TryFormat(value, span, out int bytesWritten);
 
-        Advance(sizeof(int));
+        Advance(bytesWritten);
 #else
         // Just accept the allocation on .NET Standard 2.0
         WriteAsUtf8(value.ToString());
