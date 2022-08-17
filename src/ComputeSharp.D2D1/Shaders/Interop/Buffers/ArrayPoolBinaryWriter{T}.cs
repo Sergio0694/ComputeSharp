@@ -143,7 +143,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// </summary>
     /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private readonly void ResizeBuffer(int sizeHint)
+    private readonly unsafe void ResizeBuffer(int sizeHint)
     {
         uint minimumSize = (uint)this.index + (uint)sizeHint;
 
@@ -159,7 +159,7 @@ internal ref struct ArrayPoolBufferWriter<T>
 
         T[] newArray = ArrayPool<T>.Shared.Rent((int)minimumSize);
 
-        Buffer.BlockCopy(this.array!, 0, newArray, 0, this.index);
+        Buffer.BlockCopy(this.array!, 0, newArray, 0, this.index * sizeof(T));
 
         ArrayPool<T>.Shared.Return(this.array!);
 
