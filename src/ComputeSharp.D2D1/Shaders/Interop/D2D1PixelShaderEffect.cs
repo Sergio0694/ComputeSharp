@@ -328,7 +328,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
-        using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+        using ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
         writer.WriteRaw(D2D1EffectRegistrationData.V1.BlobId);
