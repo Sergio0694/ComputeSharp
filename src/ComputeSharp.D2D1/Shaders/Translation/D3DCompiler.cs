@@ -214,77 +214,27 @@ internal static unsafe partial class D3DCompiler
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"D2D_FUNCTION"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> D2D_FUNCTION => new[] { (byte)'D', (byte)'2', (byte)'D', (byte)'_', (byte)'F', (byte)'U', (byte)'N', (byte)'C', (byte)'T', (byte)'I', (byte)'O', (byte)'N', (byte)'\0' };
+        public static ReadOnlySpan<byte> D2D_FUNCTION => "D2D_FUNCTION"u8;
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"D2D_FULL_SHADER"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> D2D_FULL_SHADER => new[] { (byte)'D', (byte)'2', (byte)'D', (byte)'_', (byte)'F', (byte)'U', (byte)'L', (byte)'L', (byte)'_', (byte)'S', (byte)'H', (byte)'A', (byte)'D', (byte)'E', (byte)'R', (byte)'\0' };
+        public static ReadOnlySpan<byte> D2D_FULL_SHADER => "D2D_FULL_SHADER"u8;
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>'\0'</c> ASCII character.
         /// </summary>
-        public static ReadOnlySpan<byte> NullTerminator => new[] { (byte)'\0' };
+        public static ReadOnlySpan<byte> NullTerminator => ""u8;
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"D2D_ENTRY"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> D2D_ENTRY => new[] { (byte)'D', (byte)'2', (byte)'D', (byte)'_', (byte)'E', (byte)'N', (byte)'T', (byte)'R', (byte)'Y', (byte)'\0' };
+        public static ReadOnlySpan<byte> D2D_ENTRY => "D2D_ENTRY"u8;
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"Execute"</c> ASCII text.
         /// </summary>
-        public static ReadOnlySpan<byte> Execute => new[] { (byte)'E', (byte)'x', (byte)'e', (byte)'c', (byte)'u', (byte)'t', (byte)'e', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0_level_9_1"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> lib_4_0_level_9_1 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'1', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0_level_9_3"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> lib_4_0_level_9_3 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'3', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_0"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> lib_4_0 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_4_1"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> lib_4_1 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'4', (byte)'_', (byte)'1', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"lib_5_0"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> lib_5_0 => new[] { (byte)'l', (byte)'i', (byte)'b', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0_level_9_1"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> ps_4_0_level_9_1 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'1', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0_level_9_3"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> ps_4_0_level_9_3 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'_', (byte)'l', (byte)'e', (byte)'v', (byte)'e', (byte)'l', (byte)'_', (byte)'9', (byte)'_', (byte)'3', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_0"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> ps_4_0 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'0', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_4_1"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> ps_4_1 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'4', (byte)'_', (byte)'1', (byte)'\0' };
-
-        /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> with the <c>"ps_5_0"</c> ASCII text.
-        /// </summary>
-        private static ReadOnlySpan<byte> ps_5_0 => new[] { (byte)'p', (byte)'s', (byte)'_', (byte)'5', (byte)'_', (byte)'0', (byte)'\0' };
+        public static ReadOnlySpan<byte> Execute => "Execute"u8;
 
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> for a given shader profile, for a library.
@@ -295,11 +245,11 @@ internal static unsafe partial class D3DCompiler
         {
             return shaderProfile switch
             {
-                D2D1ShaderProfile.PixelShader40Level91 => lib_4_0_level_9_1,
-                D2D1ShaderProfile.PixelShader40Level93 => lib_4_0_level_9_3,
-                D2D1ShaderProfile.PixelShader40 => lib_4_0,
-                D2D1ShaderProfile.PixelShader41 => lib_4_1,
-                _ => lib_5_0
+                D2D1ShaderProfile.PixelShader40Level91 => "lib_4_0_level_9_1"u8,
+                D2D1ShaderProfile.PixelShader40Level93 => "lib_4_0_level_9_3"u8,
+                D2D1ShaderProfile.PixelShader40 => "lib_4_0"u8,
+                D2D1ShaderProfile.PixelShader41 => "lib_4_1"u8,
+                _ => "lib_5_0"u8
             };
         }
 
@@ -312,11 +262,11 @@ internal static unsafe partial class D3DCompiler
         {
             return shaderProfile switch
             {
-                D2D1ShaderProfile.PixelShader40Level91 => ps_4_0_level_9_1,
-                D2D1ShaderProfile.PixelShader40Level93 => ps_4_0_level_9_3,
-                D2D1ShaderProfile.PixelShader40 => ps_4_0,
-                D2D1ShaderProfile.PixelShader41 => ps_4_1,
-                _ => ps_5_0
+                D2D1ShaderProfile.PixelShader40Level91 => "ps_4_0_level_9_1"u8,
+                D2D1ShaderProfile.PixelShader40Level93 => "ps_4_0_level_9_3"u8,
+                D2D1ShaderProfile.PixelShader40 => "ps_4_0"u8,
+                D2D1ShaderProfile.PixelShader41 => "ps_4_1"u8,
+                _ => "ps_5_0"u8
             };
         }
     }
