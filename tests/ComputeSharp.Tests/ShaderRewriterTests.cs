@@ -279,4 +279,32 @@ public partial class ShaderRewriterTests
             buffer2[7] = exponentUppercaseField;
         }
     }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void InterlockedOperations(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(16);
+
+        device.Get().For(16, new InterlockedOperationsShader(buffer));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < result.Length; i++)
+        {
+            Assert.AreEqual(i, result[i]);
+        }
+    }
+
+    [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
+    internal readonly partial struct InterlockedOperationsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            Hlsl.InterlockedAdd(buffer[ThreadIds.X], ThreadIds.X);
+        }
+    }
 }
