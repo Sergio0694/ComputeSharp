@@ -292,7 +292,7 @@ public partial class ShaderRewriterTests
 
         for (int i = 0; i < result.Length; i++)
         {
-            Assert.AreEqual(i, result[i]);
+            Assert.AreEqual(i * 2, result[i]);
         }
     }
 
@@ -304,7 +304,13 @@ public partial class ShaderRewriterTests
 
         public void Execute()
         {
+            // InterlockedExchange 0, which effectively just writes 0 to the target.
+            // Then InterlockedAdd to increment the value to ThreadIds.X. Finally,
+            // InterlockedCompareExchange with the expected value, setting twice as much.
+            // The result each value in the buffer should have after this is ThreadIds.X * 2.
+            Hlsl.InterlockedExchange(ref buffer[ThreadIds.X], 0, out _);
             Hlsl.InterlockedAdd(ref buffer[ThreadIds.X], ThreadIds.X);
+            Hlsl.InterlockedCompareExchange(ref buffer[ThreadIds.X], ThreadIds.X, ThreadIds.X * 2, out _);
         }
     }
 }
