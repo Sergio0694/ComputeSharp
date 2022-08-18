@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -123,7 +122,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
             CompilationUnitSyntax compilationUnit = item.Hierarchy.GetSyntax(loadBytecodeMethod);
             SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.TESTMETHOD", text);
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{item.BytecodeInfo.MethodName}", text);
         });
     }
 }
