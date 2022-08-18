@@ -82,12 +82,12 @@ partial class D2DPixelShaderSourceGenerator
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
         public static D2D1ShaderProfile GetShaderProfile(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
-            if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
+            if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out attributeData))
+            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }

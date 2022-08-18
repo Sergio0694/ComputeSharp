@@ -4,7 +4,7 @@ namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// An attribute that indicates the compile options that should be used when compiling a given D2D1 shader.
-/// This applies when the shader is precompiled (through <see cref="D2DEmbeddedBytecodeAttribute"/>) as well.
+/// This applies when the shader is precompiled (through <see cref="D2DShaderProfileAttribute"/>) as well.
 /// <para>
 /// This attribute can be used to annotate shader types as follows:
 /// <code>

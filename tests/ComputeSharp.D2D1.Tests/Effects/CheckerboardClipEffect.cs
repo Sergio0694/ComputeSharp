@@ -3,7 +3,7 @@
 [D2DInputCount(1)]
 [D2DInputSimple(0)]
 [D2DRequiresScenePosition]
-[D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
+[D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [AutoConstructor]
 public partial struct CheckerboardClipEffect : ID2D1PixelShader
 {

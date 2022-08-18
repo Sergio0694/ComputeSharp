@@ -1,7 +1,7 @@
 ﻿namespace ComputeSharp.D2D1;
 
 /// <summary>
-/// A <see langword="enum"/> to be used with <see cref="D2DEmbeddedBytecodeAttribute"/> to indicate the shader profile to use to precompile a shader.
+/// A <see langword="enum"/> to be used with <see cref="D2DShaderProfileAttribute"/> to indicate the shader profile to use to precompile a shader.
 /// </summary>
 public enum D2D1ShaderProfile
 {

@@ -212,7 +212,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(2)]
     [D2DInputComplex(1)]
     [D2DInputComplex(3)]
-    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     partial struct ShaderWithResourceTextures : ID2D1PixelShader
     {
@@ -291,7 +291,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(0)]
     [D2DInputSimple(1)]
     [D2DInputSimple(2)]
-    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader40Level91)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     private readonly partial struct ShaderWithEmbeddedBytecode : ID2D1PixelShader
     {
         public float4 Execute()
@@ -337,7 +337,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(0)]
     [D2DInputSimple(1)]
     [D2DInputSimple(2)]
-    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader40Level91)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     [D2DCompileOptions(D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2)]
     private readonly partial struct ShaderWithEmbeddedBytecodeAndCompileOptions : ID2D1PixelShader
     {

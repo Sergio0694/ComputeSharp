@@ -72,7 +72,7 @@
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1Filter.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1Filter.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1PixelOptions.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1PixelOptions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DCompileOptionsAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DCompileOptionsAttribute.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DEmbeddedBytecodeAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DEmbeddedBytecodeAttribute.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DShaderProfileAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DShaderProfileAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DInputComplexAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DInputComplexAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DInputCountAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DInputCountAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DInputSimpleAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DInputSimpleAttribute.cs" />

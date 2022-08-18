@@ -28,7 +28,7 @@ namespace ComputeSharp.D2D1;
 /// <para>
 /// </para>
 /// <para>
-/// Methods can also be annotated with <see cref="D2DEmbeddedBytecodeAttribute"/> and <see cref="D2DCompileOptionsAttribute"/>
+/// Methods can also be annotated with <see cref="D2DShaderProfileAttribute"/> and <see cref="D2DCompileOptionsAttribute"/>
 /// to further customize the shader profile to use when compiling the HLSL source, and the compile options to use.
 /// </para>
 /// </summary>

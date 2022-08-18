@@ -20,7 +20,7 @@ public partial class D2DPixelShaderSourceTests
             return float4(rgb, 1);
         }
         ")]
-    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DCompileOptions(D2D1CompileOptions.OptimizationLevel0)]
     private static partial ReadOnlySpan<byte> InvertEffect();
 
