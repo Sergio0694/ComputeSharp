@@ -463,7 +463,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithDxcCompilationException = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithFxcCompilationException = new DiagnosticDescriptor(
         id: "CMPSD2D0034",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
         messageFormat: "The shader of type {0} failed to compile due to an HLSL compiler error (Message: \"{1}\")",
@@ -743,5 +743,101 @@ partial class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "The element type of D2D1 resource texture fields in a D2D1 shader must be either float or float4.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid HLSL source in <c>[D2DPixelShaderSource]</c>.
+    /// <para>
+    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSource = new DiagnosticDescriptor(
+        id: "CMPSD2D0052",
+        title: "Invalid [D2DPixelShaderSource] HLSL source argument",
+        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Methods using [D2DPixelShaderSource] must pass a valid string as the HLSL source argument.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader failed due to a Win32 exception.
+    /// <para>
+    /// Format: <c>"Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: \"{3}\")"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithWin32Exception = new DiagnosticDescriptor(
+        id: "CMPSD2D0053",
+        title: "D2D shader compilation failed due to Win32 exception",
+        messageFormat: "Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: \"{3}\")",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The embedded bytecode for an input HLSl source failed to be compiled due to a Win32 exception.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader failed due to an HLSL compilation exception.
+    /// <para>
+    /// Format: <c>"Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to an HLSL compiler error (Message: \"{2}\")"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithFxcCompilationException = new DiagnosticDescriptor(
+        id: "CMPSD2D0054",
+        title: "D2D shader compilation failed due to an HLSL compiler error",
+        messageFormat: "Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to an HLSL compiler error (Message: \"{2}\")",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The embedded bytecode for an input HLSl source failed to be compiled due to an HLSL compiler error.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader with no shader profile set.
+    /// <para>
+    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingShaderProfileForD2DPixelShaderSource = new DiagnosticDescriptor(
+        id: "CMPSD2D0055",
+        title: "Missing shader profile for D2D pixel shader source",
+        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Precompiled shaders using [D2DPixelShaderSource] must explicitly indicate the shader profile to use.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader with no compile options set.
+    /// <para>
+    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingCompileOptionsForD2DPixelShaderSource = new DiagnosticDescriptor(
+        id: "CMPSD2D0056",
+        title: "Missing compile options for D2D pixel shader source",
+        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Precompiled shaders using [D2DPixelShaderSource] must explicitly indicate the compile options.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a method with [D2DPixelShaderSource] has an invalid return type.
+    /// <para>
+    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan&lt;byte&gt;)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSourceMethodReturnType = new DiagnosticDescriptor(
+        id: "CMPSD2D0057",
+        title: "Missing compile options for D2D pixel shader source",
+        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan<byte>)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Methods using using [D2DPixelShaderSource] must use ReadOnlySpan<byte> as the return type.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

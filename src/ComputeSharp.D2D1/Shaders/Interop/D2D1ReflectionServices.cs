@@ -21,7 +21,7 @@ public static class D2D1ReflectionServices
     /// <typeparam name="T">The type of D2D1 shader to retrieve info for.</typeparam>
     /// <returns>The resulting <see cref="D2D1ShaderInfo"/> instance.</returns>
     /// <remarks>
-    /// If the target shader type <typeparamref name="T"/> is precompiled (ie. it's annotated with <see cref="D2DEmbeddedBytecodeAttribute"/>), that bytecode will
+    /// If the target shader type <typeparamref name="T"/> is precompiled (ie. it's annotated with <see cref="D2DShaderProfileAttribute"/>), that bytecode will
     /// be reused to reflect on the shader, so the same shader profile and compile options will be reused, which can make the returned metadata more accurate.
     /// <para>
     /// If the shader is not precompiled, it will be compiled on the fly using the default settings for both the shader profile and the compile options. That is,

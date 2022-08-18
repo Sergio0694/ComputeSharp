@@ -11,8 +11,6 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -25,7 +23,7 @@ partial class ID2D1ShaderGenerator
     /// <summary>
     /// A helper with all logic to generate the <c>LoadBytecode</c> method.
     /// </summary>
-    private static partial class LoadBytecode
+    internal static partial class LoadBytecode
     {
         /// <summary>
         /// Extracts the shader profile for the current shader.
@@ -34,12 +32,12 @@ partial class ID2D1ShaderGenerator
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
         public static D2D1ShaderProfile? GetShaderProfile(INamedTypeSymbol structDeclarationSymbol)
         {
-            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out AttributeData? attributeData))
+            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DEmbeddedBytecodeAttribute", out attributeData))
+            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
@@ -142,7 +140,7 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
+        /// Gets an <see cref="ImmutableArray{T}"/> instance with the compiled bytecode for the current shader.
         /// </summary>
         /// <param name="sourceInfo">The source info for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
@@ -200,7 +198,7 @@ partial class ID2D1ShaderGenerator
             catch (FxcCompilationException e)
             {
                 options = default;
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:
@@ -212,7 +210,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="message">The input exception message.</param>
         /// <returns>The updated exception message.</returns>
-        private static string FixupExceptionMessage(string message)
+        internal static string FixupExceptionMessage(string message)
         {
             // Add square brackets around error headers
             message = Regex.Replace(message, @"((?:error|warning) \w+):", static m => $"[{m.Groups[1].Value}]:");

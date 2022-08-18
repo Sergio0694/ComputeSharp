@@ -27,7 +27,7 @@ public sealed partial class PixelateEffect : ID2D1TransformMapper<PixelateEffect
     [D2DInputCount(1)]
     [D2DInputComplex(0)]
     [D2DRequiresScenePosition]
-    [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader40)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader40)]
     [AutoConstructor]
     public partial struct Shader : ID2D1PixelShader
     {

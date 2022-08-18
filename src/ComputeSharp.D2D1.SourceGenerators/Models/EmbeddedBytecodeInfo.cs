@@ -7,7 +7,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators.Models;
 
 /// <summary>
-/// A model representing a shared and its compiled bytecode, if available.
+/// A model representing info on a shader that has requested to be precompiled at build time.
 /// </summary>
 /// <param name="HlslSource">The HLSL source for the shader.</param>
 /// <param name="ShaderProfile">The shader profile to use to compile the shader, if requested.</param>

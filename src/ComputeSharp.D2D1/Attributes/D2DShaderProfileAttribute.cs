@@ -3,12 +3,12 @@
 namespace ComputeSharp.D2D1;
 
 /// <summary>
-/// An attribute that indicates that a given D2D1 shader should be precompiled at build time and embedded
-/// directly into the containing assembly as static bytecode, to avoid compiling it at runtime.
+/// An attribute that indicates that a given D2D1 shader should be precompiled at build time using a specific shader
+/// profile and embedded directly into the containing assembly as static bytecode, to avoid compiling it at runtime.
 /// <para>
 /// This attribute can be used to annotate shader types as follows:
 /// <code>
-/// [D2DEmbeddedBytecode(D2D1ShaderProfile.PixelShader50)]
+/// [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 /// struct MyShader : ID2D1PixelShader
 /// {
 /// }
@@ -24,20 +24,20 @@ namespace ComputeSharp.D2D1;
 /// This attribute can also be added to a whole assembly, and will be used by default if not overridden by a shader type.
 /// </para>
 /// </summary>
-[AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly, AllowMultiple = false)]
-public sealed class D2DEmbeddedBytecodeAttribute : Attribute
+[AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly | AttributeTargets.Method, AllowMultiple = false)]
+public sealed class D2DShaderProfileAttribute : Attribute
 {
     /// <summary>
-    /// Creates a new <see cref="D2DEmbeddedBytecodeAttribute"/> instance with the specified parameters.
+    /// Creates a new <see cref="D2DShaderProfileAttribute"/> instance with the specified parameters.
     /// </summary>
     /// <param name="shaderProfile">The target shader profile to use to compile the shader.</param>
-    public D2DEmbeddedBytecodeAttribute(D2D1ShaderProfile shaderProfile)
+    public D2DShaderProfileAttribute(D2D1ShaderProfile shaderProfile)
     {
         ShaderProfile = shaderProfile;
     }
 
     /// <summary>
-    /// Gets the number of threads in each thread group for the X axis
+    /// The shader profile used to compile the annotated D2D1 pixel shader.
     /// </summary>
     public D2D1ShaderProfile ShaderProfile { get; }
 }

@@ -163,7 +163,7 @@ public enum D2D1CompileOptions
 
     /// <summary>
     /// The default options for shaders compiled by ComputeSharp.D2D1. Specifically, this combination
-    /// of options is the one used by precompiled shaders (ie. when using <see cref="D2DEmbeddedBytecodeAttribute"/>),
+    /// of options is the one used by precompiled shaders (ie. when using <see cref="D2DShaderProfileAttribute"/>),
     /// and when using <see cref="D2D1PixelShader.LoadBytecode{T}()"/> or any of the overloads.
     /// </summary>
     /// <remarks>

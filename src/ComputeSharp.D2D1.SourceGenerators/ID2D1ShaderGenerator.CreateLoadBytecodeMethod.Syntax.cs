@@ -214,7 +214,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="bytecode">The input shader bytecode to serialize.</param>
         /// <returns>A formatted <see cref="string"/> with the serialized data.</returns>
-        private static string BuildShaderBytecodeExpressionString(ReadOnlySpan<byte> bytecode)
+        internal static string BuildShaderBytecodeExpressionString(ReadOnlySpan<byte> bytecode)
         {
             //The estimation is 4 characters per byte (up to "255" in hex), plus ", " to separate sequential values
             using ArrayPoolStringBuilder builder = ArrayPoolStringBuilder.Create(bytecode.Length * 6);
