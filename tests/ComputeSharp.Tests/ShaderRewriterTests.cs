@@ -304,7 +304,7 @@ public partial class ShaderRewriterTests
 
         public void Execute()
         {
-            Hlsl.InterlockedAdd(buffer[ThreadIds.X], ThreadIds.X);
+            Hlsl.InterlockedAdd(ref buffer[ThreadIds.X], ThreadIds.X);
         }
     }
 }

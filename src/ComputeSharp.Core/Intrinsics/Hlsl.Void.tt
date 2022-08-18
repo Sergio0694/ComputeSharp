@@ -72,7 +72,7 @@ foreach (var intrinsic in Intrinsics)
         }
 
         Write($"public static void {intrinsic.Name}(");
-        Write(string.Join(", ", intrinsic.Parameters.Where(p => p.Name is not "").Zip(overload, (a, b) => $"{(a.IsOut ? "out " : "")}{b} {a.Name}")));
+        Write(string.Join(", ", intrinsic.Parameters.Where(p => p.Name is not "").Zip(overload, (a, b) => $"{(a.IsRef ? "ref " : a.IsOut ? "out " : "")}{b} {a.Name}")));
         Write(")");
 
         Write(" => throw new InvalidExecutionContextException(");
