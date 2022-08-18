@@ -1,4 +1,7 @@
-﻿using ComputeSharp.D2D1.Tests.Effects;
+﻿using System.IO;
+using System.Reflection;
+using ComputeSharp.BokehBlur.Processors;
+using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
@@ -47,5 +50,18 @@ public class EndToEndTests
     public unsafe void CheckerboardClip()
     {
         D2D1TestRunner.RunAndCompareShader(new CheckerboardClipEffect(1280, 840, 32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
+    }
+
+    [TestMethod]
+    public void BokehBlur()
+    {
+        BokehBlurEffect bokehBlurEffect = new(32, 1);
+
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+        string temporaryPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "temp");
+
+        bokehBlurEffect.ApplyEffect(
+            Path.Combine(assetsPath, "Landscape.png"),
+            Path.Combine(temporaryPath, "Landscape_BokehBlur.png"));
     }
 }
