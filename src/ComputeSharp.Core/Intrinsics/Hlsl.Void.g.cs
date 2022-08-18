@@ -346,7 +346,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAdd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedAdd(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic add of a value to a destination.
@@ -357,19 +357,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAdd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)})");
-
-    /// <summary>
-    /// Performs a guaranteed atomic add of a value to a destination.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="value">The input value.</param>
-    /// <param name="original">The original input value.</param>
-    /// <remarks>
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    public static void InterlockedAdd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedAdd(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic add of a value to a destination.
@@ -381,7 +369,19 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAdd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedAdd(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic add of a value to a destination.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedadd"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static void InterlockedAdd(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAdd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic and of a value to a destination.
@@ -392,7 +392,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAnd(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedAnd(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic and of a value to a destination.
@@ -403,7 +403,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAnd(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedAnd(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic and of a value to a destination.
@@ -415,7 +415,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAnd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedAnd(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic and of a value to a destination.
@@ -427,7 +427,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedand"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedAnd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedAnd(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedAnd)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Atomically compares the destination with the comparison value. If they are identical, the destination
@@ -441,7 +441,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcompareexchange"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedCompareExchange(int destination, int comparison, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedCompareExchange(ref int destination, int comparison, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Atomically compares the destination with the comparison value. If they are identical, the destination
@@ -455,7 +455,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcompareexchange"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedCompareExchange(uint destination, uint comparison, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedCompareExchange(ref uint destination, uint comparison, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Atomically compares the destination to the comparison value. If they
@@ -468,7 +468,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcomparestore"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedCompareStore(int destination, int comparison, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedCompareStore(ref int destination, int comparison, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Atomically compares the destination to the comparison value. If they
@@ -481,7 +481,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedcomparestore"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedCompareStore(uint destination, uint comparison, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedCompareStore(ref uint destination, uint comparison, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedCompareStore)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Assigns value to dest and returns the original value.
@@ -493,7 +493,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedexchange"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedExchange(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedExchange(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Assigns value to dest and returns the original value.
@@ -505,7 +505,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedexchange"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedExchange(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedExchange(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedExchange)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic max.
@@ -516,7 +516,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMax(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedMax(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic max.
@@ -527,19 +527,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMax(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)})");
-
-    /// <summary>
-    /// Performs a guaranteed atomic max.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="value">The input value.</param>
-    /// <param name="original">The original input value.</param>
-    /// <remarks>
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    public static void InterlockedMax(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedMax(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic max.
@@ -551,7 +539,19 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMax(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedMax(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic max.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmax"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static void InterlockedMax(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMax)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic min.
@@ -562,7 +562,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMin(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedMin(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic min.
@@ -573,19 +573,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMin(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)})");
-
-    /// <summary>
-    /// Performs a guaranteed atomic min.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="value">The input value.</param>
-    /// <param name="original">The original input value.</param>
-    /// <remarks>
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    public static void InterlockedMin(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedMin(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic min.
@@ -597,7 +585,19 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedMin(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedMin(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic min.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedmin"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static void InterlockedMin(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedMin)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic or.
@@ -608,7 +608,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedOr(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedOr(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic or.
@@ -619,7 +619,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedOr(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedOr(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic or.
@@ -631,7 +631,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedOr(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedOr(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic or.
@@ -643,7 +643,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedOr(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedOr(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedOr)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic xor.
@@ -654,7 +654,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedXor(int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)})");
+    public static void InterlockedXor(ref int destination, int value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)})");
 
     /// <summary>
     /// Performs a guaranteed atomic xor.
@@ -665,19 +665,7 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedXor(uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)})");
-
-    /// <summary>
-    /// Performs a guaranteed atomic xor.
-    /// </summary>
-    /// <param name="destination">The destination value.</param>
-    /// <param name="value">The input value.</param>
-    /// <param name="original">The original input value.</param>
-    /// <remarks>
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    public static void InterlockedXor(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+    public static void InterlockedXor(ref uint destination, uint value) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)})");
 
     /// <summary>
     /// Performs a guaranteed atomic xor.
@@ -689,5 +677,17 @@ partial class Hlsl
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    public static void InterlockedXor(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
+    public static void InterlockedXor(ref int destination, int value, out int original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(int)}, {typeof(int)}, {typeof(int)})");
+
+    /// <summary>
+    /// Performs a guaranteed atomic xor.
+    /// </summary>
+    /// <param name="destination">The destination value.</param>
+    /// <param name="value">The input value.</param>
+    /// <param name="original">The original input value.</param>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/interlockedxor"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static void InterlockedXor(ref uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(InterlockedXor)}({typeof(uint)}, {typeof(uint)}, {typeof(uint)})");
 }

@@ -279,4 +279,38 @@ public partial class ShaderRewriterTests
             buffer2[7] = exponentUppercaseField;
         }
     }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void InterlockedOperations(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(16);
+
+        device.Get().For(16, new InterlockedOperationsShader(buffer));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < result.Length; i++)
+        {
+            Assert.AreEqual(i * 2, result[i]);
+        }
+    }
+
+    [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
+    internal readonly partial struct InterlockedOperationsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            // InterlockedExchange 0, which effectively just writes 0 to the target.
+            // Then InterlockedAdd to increment the value to ThreadIds.X. Finally,
+            // InterlockedCompareExchange with the expected value, setting twice as much.
+            // The result each value in the buffer should have after this is ThreadIds.X * 2.
+            Hlsl.InterlockedExchange(ref buffer[ThreadIds.X], 0, out _);
+            Hlsl.InterlockedAdd(ref buffer[ThreadIds.X], ThreadIds.X);
+            Hlsl.InterlockedCompareExchange(ref buffer[ThreadIds.X], ThreadIds.X, ThreadIds.X * 2, out _);
+        }
+    }
 }
