@@ -248,6 +248,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     this.d2D1EffectContext->Release();
 
                     this.d2D1Multithread->Leave();
+                    this.d2D1Multithread->Release();
                 }
 
                 if (this.resourceId is not null)
