@@ -27,6 +27,7 @@
       "src\\TerraFX.Interop.Windows\\TerraFX.Interop.Windows.shproj",
       "tests\\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj",
       "tests\\ComputeSharp.D2D1.Tests\\ComputeSharp.D2D1.Tests.csproj",
+      "tests\\ComputeSharp.Tests.DeviceLost\\ComputeSharp.Tests.DeviceLost.csproj",
       "tests\\ComputeSharp.Tests.DisableDynamicCompilation\\ComputeSharp.Tests.DisableDynamicCompilation.csproj",
       "tests\\ComputeSharp.Tests.Internals\\ComputeSharp.Tests.Internals.csproj",
       "tests\\ComputeSharp.Tests.NativeLibrariesResolver\\ComputeSharp.Tests.NativeLibrariesResolver.csproj",
