@@ -50,6 +50,9 @@
     <None Update="Assets\ZonePlate.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\ComputeSharp.Tests\Assets\CityWith1920x1280Resizing.png" Link="Assets\City.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
