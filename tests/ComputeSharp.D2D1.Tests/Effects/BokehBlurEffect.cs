@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -292,8 +293,8 @@ public sealed partial class BokehBlurEffect
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
         // Register all necessary effects
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<VerticalConvolution>(d2D1Factory2.Get(), out _);
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<HorizontalConvolutionAndAccumulatePartials>(d2D1Factory2.Get(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new VerticalConvolution(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new HorizontalConvolutionAndAccumulatePartials(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
@@ -304,9 +305,9 @@ public sealed partial class BokehBlurEffect
         using ComPtr<ID2D1Effect> inverseGammaExposureEffect = default;
 
         // Create an instance of each effect
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForReals.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForImaginaries.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffect.GetAddressOf());
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForReals.GetAddressOf());
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForImaginaries.GetAddressOf());
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffect.GetAddressOf());
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<GammaHighlight>(d2D1DeviceContext.Get(), (void**)gammaExposureEffect.GetAddressOf());
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<InverseGammaHighlight>(d2D1DeviceContext.Get(), (void**)inverseGammaExposureEffect.GetAddressOf());
 
@@ -343,9 +344,9 @@ public sealed partial class BokehBlurEffect
         D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffect.Get(), kernelImaginary, 3);
 
         // Set the constant buffers
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution((int)width, (int)height), verticalConvolutionEffectForReals.Get());
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution((int)width, (int)height), verticalConvolutionEffectForImaginaries.Get());
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials((int)width, (int)height, KernelParameters[0].Z, KernelParameters[0].W), horizontalConvolutionEffect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectForReals.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectForImaginaries.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)width, (int)height, KernelParameters[0].Z, KernelParameters[0].W), horizontalConvolutionEffect.Get());
 
         // Build the effect graph:
         //
@@ -378,94 +379,147 @@ public sealed partial class BokehBlurEffect
     }
 
     /// <summary>
-    /// Kernel for the vertical convolution pass for real or imaginary components.
+    /// The vertical convolution shader and transform.
     /// </summary>
-    [D2DInputCount(1)]
-    [D2DInputComplex(0)]
-    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-    [D2DRequiresScenePosition]
-    [AutoConstructor]
-    internal partial struct VerticalConvolution : ID2D1PixelShader
+    private sealed partial class VerticalConvolution : ID2D1TransformMapper<VerticalConvolution.Shader>
     {
-        private readonly int width;
-        private readonly int height;
-
-        [D2DResourceTextureIndex(1)]
-        private readonly D2D1ResourceTexture1D<float> kernel;
+        /// <inheritdoc/>
+        public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
+        {
+            output = Rectangle.Inflate(inputs[0], 0, 100);
+            opaqueOutput = Rectangle.Empty;
+        }
 
         /// <inheritdoc/>
-        public float4 Execute()
+        public void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
         {
-            int2 position = (int2)D2D.GetScenePosition().XY;
-            float4 result = float4.Zero;
-            int maxY = this.height;
-            int maxX = this.width;
-            int kernelLength = this.kernel.Width;
-            int radiusY = kernelLength >> 1;
-            int offsetX = Hlsl.Clamp(position.X, 0, maxX);
+            invalidOutput = invalidInput;
+        }
 
-            for (int i = 0; i < kernelLength; i++)
+        /// <inheritdoc/>
+        public void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+        {
+            inputs.Fill(output);
+        }
+
+        /// <summary>
+        /// Kernel for the vertical convolution pass for real or imaginary components.
+        /// </summary>
+        [D2DInputCount(1)]
+        [D2DInputComplex(0)]
+        [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DRequiresScenePosition]
+        [AutoConstructor]
+        public partial struct Shader : ID2D1PixelShader
+        {
+            private readonly int width;
+            private readonly int height;
+
+            [D2DResourceTextureIndex(1)]
+            private readonly D2D1ResourceTexture1D<float> kernel;
+
+            /// <inheritdoc/>
+            public float4 Execute()
             {
-                int offsetY = Hlsl.Clamp(position.Y + i - radiusY, 0, maxY);
-                float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                float4 color = D2D.SampleInputAtPosition(0, uv);
-                float factor = this.kernel[i];
+                int2 position = (int2)D2D.GetScenePosition().XY;
+                float4 result = float4.Zero;
+                int maxY = this.height;
+                int maxX = this.width;
+                int kernelLength = this.kernel.Width;
+                int radiusY = kernelLength >> 1;
+                int offsetX = Hlsl.Clamp(position.X, 0, maxX);
 
-                result += factor * color;
+                for (int i = 0; i < kernelLength; i++)
+                {
+                    int offsetY = Hlsl.Clamp(position.Y + i - radiusY, 0, maxY);
+                    float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
+                    float4 color = D2D.SampleInputAtPosition(0, uv);
+                    float factor = this.kernel[i];
+
+                    result += factor * color;
+                }
+
+                return result;
             }
-
-            return result;
         }
     }
 
     /// <summary>
-    /// Kernel for the horizontal convolution pass.
+    /// The horizontal convolutin and partial accumulation effect and transform.
     /// </summary>
-    [D2DInputCount(2)]
-    [D2DInputComplex(0)]
-    [D2DInputComplex(1)]
-    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-    [D2DRequiresScenePosition]
-    [AutoConstructor]
-    internal partial struct HorizontalConvolutionAndAccumulatePartials : ID2D1PixelShader
+    private sealed partial class HorizontalConvolutionAndAccumulatePartials : ID2D1TransformMapper<HorizontalConvolutionAndAccumulatePartials.Shader>
     {
-        private readonly int width;
-        private readonly int height;
-        private readonly float z;
-        private readonly float w;
-
-        [D2DResourceTextureIndex(2)]
-        private readonly D2D1ResourceTexture1D<float> kernelReals;
-
-        [D2DResourceTextureIndex(3)]
-        private readonly D2D1ResourceTexture1D<float> kernelImaginaries;
+        /// <inheritdoc/>
+        public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
+        {
+            output = Rectangle.Inflate(inputs[0], 100, 0);
+            opaqueOutput = Rectangle.Empty;
+        }
 
         /// <inheritdoc/>
-        public float4 Execute()
+        public void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
         {
-            int2 position = (int2)D2D.GetScenePosition().XY;
-            float4 real = float4.Zero;
-            float4 imaginary = float4.Zero;
-            int maxY = this.width;
-            int maxX = this.width;
-            int kernelLength = this.kernelReals.Width;
-            int radiusX = kernelLength >> 1;
-            int offsetY = Hlsl.Clamp(position.Y, 0, maxY);
+            invalidOutput = invalidInput;
+        }
 
-            for (int i = 0; i < kernelLength; i++)
+        /// <inheritdoc/>
+        public void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+        {
+            inputs.Fill(output);
+        }
+
+        /// <summary>
+        /// Kernel for the horizontal convolution pass.
+        /// </summary>
+        [D2DInputCount(2)]
+        [D2DInputComplex(0)]
+        [D2DInputComplex(1)]
+        [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+        [D2DInputDescription(1, D2D1Filter.MinMagMipPoint)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DRequiresScenePosition]
+        [AutoConstructor]
+        public partial struct Shader : ID2D1PixelShader
+        {
+            private readonly int width;
+            private readonly int height;
+            private readonly float z;
+            private readonly float w;
+
+            [D2DResourceTextureIndex(2)]
+            private readonly D2D1ResourceTexture1D<float> kernelReals;
+
+            [D2DResourceTextureIndex(3)]
+            private readonly D2D1ResourceTexture1D<float> kernelImaginaries;
+
+            /// <inheritdoc/>
+            public float4 Execute()
             {
-                int offsetX = Hlsl.Clamp(position.X + i - radiusX, 0, maxX);
-                float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                float4 sourceReal = D2D.SampleInputAtPosition(0, uv);
-                float4 sourceImaginary = D2D.SampleInputAtPosition(1, uv);
-                float realFactor = kernelReals[i];
-                float imaginaryFactor = kernelImaginaries[i];
+                int2 position = (int2)D2D.GetScenePosition().XY;
+                float4 real = float4.Zero;
+                float4 imaginary = float4.Zero;
+                int maxY = this.width;
+                int maxX = this.width;
+                int kernelLength = this.kernelReals.Width;
+                int radiusX = kernelLength >> 1;
+                int offsetY = Hlsl.Clamp(position.Y, 0, maxY);
 
-                real += realFactor * sourceReal - imaginaryFactor * sourceImaginary;
-                imaginary += realFactor * sourceImaginary + imaginaryFactor * sourceReal;
+                for (int i = 0; i < kernelLength; i++)
+                {
+                    int offsetX = Hlsl.Clamp(position.X + i - radiusX, 0, maxX);
+                    float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
+                    float4 sourceReal = D2D.SampleInputAtPosition(0, uv);
+                    float4 sourceImaginary = D2D.SampleInputAtPosition(1, uv);
+                    float realFactor = kernelReals[i];
+                    float imaginaryFactor = kernelImaginaries[i];
+
+                    real += realFactor * sourceReal - imaginaryFactor * sourceImaginary;
+                    imaginary += realFactor * sourceImaginary + imaginaryFactor * sourceReal;
+                }
+
+                return real * z + imaginary * w;
             }
-
-            return real * z + imaginary * w;
         }
     }
 
@@ -474,6 +528,7 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
+    [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     internal readonly partial struct GammaHighlight : ID2D1PixelShader
@@ -494,6 +549,7 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
+    [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     internal readonly partial struct InverseGammaHighlight : ID2D1PixelShader
