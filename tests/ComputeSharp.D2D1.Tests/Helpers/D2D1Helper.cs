@@ -13,8 +13,9 @@ internal static class D2D1Helper
     /// <summary>
     /// Creates an <see cref="ID2D1Factory2"/> instance.
     /// </summary>
+    /// <param name="singleThreaded">Indicates whether or not the factory should be created as single threaded.</param>
     /// <returns>A new <see cref="ID2D1Factory2"/> instance.</returns>
-    public static unsafe ComPtr<ID2D1Factory2> CreateD2D1Factory2()
+    public static unsafe ComPtr<ID2D1Factory2> CreateD2D1Factory2(bool singleThreaded = false)
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = default;
 
@@ -22,7 +23,7 @@ internal static class D2D1Helper
 
         // Create a Direct2D factory
         DirectX.D2D1CreateFactory(
-            factoryType: D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED,
+            factoryType: singleThreaded ? D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED : D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED,
             riid: Windows.__uuidof<ID2D1Factory2>(),
             pFactoryOptions: &d2D1FactoryOptions,
             ppIFactory: (void**)d2D1Factory2.GetAddressOf()).Assert();

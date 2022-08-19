@@ -116,9 +116,18 @@ partial struct D2D1ResourceTextureManagerImpl
 
                     int hresult = effectContext->GetD2D1Multithread(d2D1Multithread.GetAddressOf());
 
-                    // If an ID2D1Multithread object is available, we can safely store the context
+                    // If an ID2D1Multithread object is available, we can safely store the context. That
+                    // is, under the condition that the required multithread support is also available.
                     if (Windows.SUCCEEDED(hresult))
                     {
+                        if (@this->requiresMultithread > d2D1Multithread.Get()->GetMultithreadProtected())
+                        {
+                            return E.E_INVALIDARG;
+                        }
+
+                        // Now, the effect context can actually be stored safely while holding the lock.
+                        // This is guaranteed to be the case here, as this method is only called (as per
+                        // contact of the COM interface) from ID2D1EffectImpl, which holds the D2D lock.
                         _ = effectContext->AddRef();
 
                         @this->d2D1EffectContext = effectContext;
