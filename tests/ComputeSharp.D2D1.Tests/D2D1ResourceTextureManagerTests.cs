@@ -99,6 +99,64 @@ public partial class D2D1ResourceTextureManagerTests
     }
 
     [TestMethod]
+    public unsafe void VerifyReferenceCounting()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), null, out _);
+
+        using ComPtr<IUnknown> resourceTextureManager = default;
+
+        D2D1ResourceTextureManager.Create((void**)resourceTextureManager.GetAddressOf());
+
+        _ = resourceTextureManager.Get()->AddRef();
+
+        // Right after creation, the manager has only 1 ref count
+        Assert.AreEqual(1u, resourceTextureManager.Get()->Release());
+
+        using (ComPtr<ID2D1Effect> d2D1Effect = default)
+        {
+            D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<DummyShaderWithResourceTexture>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+            D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager.Get(), 0);
+
+            _ = resourceTextureManager.Get()->AddRef();
+
+            // After setting a manager to an effect, the manager also has a reference
+            Assert.AreEqual(2u, resourceTextureManager.Get()->Release());
+
+            D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager.Get(), 0);
+
+            _ = resourceTextureManager.Get()->AddRef();
+
+            // Adding the same manager again doesn't increment ref count
+            Assert.AreEqual(2u, resourceTextureManager.Get()->Release());
+        }
+
+        _ = resourceTextureManager.Get()->AddRef();
+
+        // If the effect is released, that extra manager reference is also released
+        Assert.AreEqual(1u, resourceTextureManager.Get()->Release());
+    }
+
+    [D2DInputCount(0)]
+    [D2DRequiresScenePosition]
+    private partial struct DummyShaderWithResourceTexture : ID2D1PixelShader
+    {
+        [D2DResourceTextureIndex(0)]
+        private D2D1ResourceTexture2D<float4> source;
+
+        public float4 Execute()
+        {
+            int2 xy = (int2)D2D.GetScenePosition().XY;
+
+            return this.source[xy];
+        }
+    }
+
+    [TestMethod]
     public unsafe void LoadPixelsFromResourceTexture2D_CreateAfterGettingEffectContext()
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
@@ -399,7 +457,7 @@ public partial class D2D1ResourceTextureManagerTests
             extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
             data: texture,
             strides: null);
-        
+
         byte[] data = RandomNumberGenerator.GetBytes(updateLength);
 
         resourceTextureManager.Update(
@@ -409,7 +467,7 @@ public partial class D2D1ResourceTextureManagerTests
             data: data);
 
         data.CopyTo(texture.AsSpan(startOffset));
-        
+
         D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, 0);
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)width, 1);

@@ -248,8 +248,16 @@ unsafe partial struct PixelShaderEffect
             }
         }
 
+        ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[resourceTextureIndex];
+
+        // If there's already an existing manager at this index, release it
+        if (currentResourceTextureManager is not null)
+        {
+            ((IUnknown*)currentResourceTextureManager)->Release();
+        }
+
         // Store the resource texture manager into the buffer
-        this.resourceTextureManagerBuffer[resourceTextureIndex] = resourceTextureManager.Detach();
+        currentResourceTextureManager = resourceTextureManager.Detach();
 
         return S.S_OK;
     }
