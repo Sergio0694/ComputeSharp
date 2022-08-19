@@ -384,9 +384,9 @@ public sealed partial class BokehBlurEffect
             // Set the constant buffers
             for (int i = 0; i < numberOfComponents; i++)
             {
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectsForReals[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectsForImaginaries[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)width, (int)height, KernelParameters[i].Z, KernelParameters[i].W), horizontalConvolutionEffects[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForReals[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForImaginaries[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, KernelParameters[i].Z, KernelParameters[i].W), horizontalConvolutionEffects[i].Get());
             }
 
             // Build the effect graph:
@@ -454,10 +454,17 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     private sealed partial class VerticalConvolution : ID2D1TransformMapper<VerticalConvolution.Shader>
     {
+        /// <summary>
+        /// The length of the convolution kernel.
+        /// </summary>
+        private int kernelLength;
+
         /// <inheritdoc/>
         public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
         {
-            output = Rectangle.Inflate(inputs[0], 0, 100);
+            this.kernelLength = shader.kernelLength;
+
+            output = inputs[0];
             opaqueOutput = Rectangle.Empty;
         }
 
@@ -470,7 +477,9 @@ public sealed partial class BokehBlurEffect
         /// <inheritdoc/>
         public void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
         {
-            inputs.Fill(output);
+            Rectangle input = Rectangle.Inflate(output, 0, this.kernelLength);
+
+            inputs.Fill(input);
         }
 
         /// <summary>
@@ -485,8 +494,7 @@ public sealed partial class BokehBlurEffect
         [AutoConstructor]
         public partial struct Shader : ID2D1PixelShader
         {
-            private readonly int width;
-            private readonly int height;
+            public readonly int kernelLength;
 
             [D2DResourceTextureIndex(1)]
             private readonly D2D1ResourceTexture1D<float> kernel;
@@ -494,19 +502,13 @@ public sealed partial class BokehBlurEffect
             /// <inheritdoc/>
             public float4 Execute()
             {
-                int2 position = (int2)D2D.GetScenePosition().XY;
                 float4 result = float4.Zero;
-                int maxY = this.height;
-                int maxX = this.width;
-                int kernelLength = this.kernel.Width;
-                int radiusY = kernelLength >> 1;
-                int offsetX = Hlsl.Clamp(position.X, 0, maxX);
+                int length = this.kernelLength;
+                int radiusY = length >> 1;
 
-                for (int i = 0; i < kernelLength; i++)
+                for (int i = 0; i < length; i++)
                 {
-                    int offsetY = Hlsl.Clamp(position.Y + i - radiusY, 0, maxY);
-                    float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                    float4 color = D2D.SampleInput(0, uv);
+                    float4 color = D2D.SampleInputAtOffset(0, new float2(0, i - radiusY));
                     float factor = this.kernel[i];
 
                     result += factor * color;
@@ -522,10 +524,17 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     private sealed partial class HorizontalConvolutionAndAccumulatePartials : ID2D1TransformMapper<HorizontalConvolutionAndAccumulatePartials.Shader>
     {
+        /// <summary>
+        /// The length of the convolution kernel.
+        /// </summary>
+        private int kernelLength;
+
         /// <inheritdoc/>
         public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
         {
-            output = Rectangle.Inflate(inputs[0], 100, 0);
+            this.kernelLength = shader.kernelLength;
+
+            output = inputs[0];
             opaqueOutput = Rectangle.Empty;
         }
 
@@ -538,7 +547,9 @@ public sealed partial class BokehBlurEffect
         /// <inheritdoc/>
         public void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
         {
-            inputs.Fill(output);
+            Rectangle input = Rectangle.Inflate(output, this.kernelLength, 0);
+
+            inputs.Fill(input);
         }
 
         /// <summary>
@@ -555,8 +566,7 @@ public sealed partial class BokehBlurEffect
         [AutoConstructor]
         public partial struct Shader : ID2D1PixelShader
         {
-            private readonly int width;
-            private readonly int height;
+            public readonly int kernelLength;
             private readonly float z;
             private readonly float w;
 
@@ -569,21 +579,15 @@ public sealed partial class BokehBlurEffect
             /// <inheritdoc/>
             public float4 Execute()
             {
-                int2 position = (int2)D2D.GetScenePosition().XY;
                 float4 real = float4.Zero;
                 float4 imaginary = float4.Zero;
-                int maxY = this.width;
-                int maxX = this.width;
-                int kernelLength = this.kernelReals.Width;
-                int radiusX = kernelLength >> 1;
-                int offsetY = Hlsl.Clamp(position.Y, 0, maxY);
+                int length = this.kernelLength;
+                int radiusX = length >> 1;
 
-                for (int i = 0; i < kernelLength; i++)
+                for (int i = 0; i < length; i++)
                 {
-                    int offsetX = Hlsl.Clamp(position.X + i - radiusX, 0, maxX);
-                    float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                    float4 sourceReal = D2D.SampleInput(0, uv);
-                    float4 sourceImaginary = D2D.SampleInput(1, uv);
+                    float4 sourceReal = D2D.SampleInputAtOffset(0, new float2(i - radiusX, 0));
+                    float4 sourceImaginary = D2D.SampleInputAtOffset(1, new float2(i - radiusX, 0));
                     float realFactor = kernelReals[i];
                     float imaginaryFactor = kernelImaginaries[i];
 
