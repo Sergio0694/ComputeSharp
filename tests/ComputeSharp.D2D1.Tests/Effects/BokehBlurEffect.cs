@@ -292,6 +292,16 @@ public sealed partial class BokehBlurEffect
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
+        D2D1_RENDERING_CONTROLS d2D1RenderingControls = default;
+
+        d2D1DeviceContext.Get()->GetRenderingControls(&d2D1RenderingControls);
+
+        // Set the buffer precision for the whole context to 32 bits per channel. This avoids
+        // color banding issues due to intermediate buffers clamping to just 8 bits per channel.
+        d2D1RenderingControls.bufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
+
+        d2D1DeviceContext.Get()->SetRenderingControls(&d2D1RenderingControls);
+
         // Register all necessary effects
         D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new VerticalConvolution(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new HorizontalConvolutionAndAccumulatePartials(), out _);
