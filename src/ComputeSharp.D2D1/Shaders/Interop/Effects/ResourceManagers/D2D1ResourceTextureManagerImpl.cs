@@ -234,13 +234,18 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     // Enter the lock, and then free the effect context. That is guaranteed to
                     // not be null here, as it is only ever set if ID2D1Multithread is retrieved.
                     this.d2D1Multithread->Enter();
-                    this.d2D1EffectContext->Release();
 
                     // Release the resource too if it has been created
                     if (this.d2D1ResourceTexture is not null)
                     {
                         this.d2D1ResourceTexture->Release();
                     }
+
+                    // Now that the resource, if any, has been released, the effect context can also
+                    // be released. This must be done only after any associated resource textures have
+                    // been released. Releasing an effect context first, in case it was the last reference
+                    // to it, will otherwise cause the Release() call on the resource texture to explode.
+                    this.d2D1EffectContext->Release();
 
                     this.d2D1Multithread->Leave();
                 }
