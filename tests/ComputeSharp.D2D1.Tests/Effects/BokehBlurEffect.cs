@@ -298,84 +298,150 @@ public sealed partial class BokehBlurEffect
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
-        using ComPtr<ID2D1Effect> verticalConvolutionEffectForReals = default;
-        using ComPtr<ID2D1Effect> verticalConvolutionEffectForImaginaries = default;
-        using ComPtr<ID2D1Effect> horizontalConvolutionEffect = default;
+        int numberOfComponents = KernelParameters.Length;
+
         using ComPtr<ID2D1Effect> gammaExposureEffect = default;
         using ComPtr<ID2D1Effect> inverseGammaExposureEffect = default;
+        using ComPtr<ID2D1Effect> compositeEffect = default;
+        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForReals = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
+        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForImaginaries = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
+        Span<ComPtr<ID2D1Effect>> horizontalConvolutionEffects = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
 
-        // Create an instance of each effect
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForReals.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectForImaginaries.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffect.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<GammaHighlight>(d2D1DeviceContext.Get(), (void**)gammaExposureEffect.GetAddressOf());
-        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<InverseGammaHighlight>(d2D1DeviceContext.Get(), (void**)inverseGammaExposureEffect.GetAddressOf());
+        try
+        {
+            // Create an instance of each effect        
+            D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<GammaHighlight>(d2D1DeviceContext.Get(), (void**)gammaExposureEffect.GetAddressOf());
+            D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<InverseGammaHighlight>(d2D1DeviceContext.Get(), (void**)inverseGammaExposureEffect.GetAddressOf());
 
-        ReadOnlyMemory<byte> pixels = ImageHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectsForReals[i].GetAddressOf());
+                D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectsForImaginaries[i].GetAddressOf());
+                D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffects[i].GetAddressOf());
+            }
 
-        // Load the source bitmap and create a destination bitmap
-        using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), pixels, width, height, gammaExposureEffect.Get());
-        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), width, height);
+            // If partials need to be summed, also create the composite effect
+            if (numberOfComponents > 1)
+            {
+                d2D1DeviceContext.Get()->CreateEffect(
+                    effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Composite)),
+                    effect: compositeEffect.GetAddressOf()).Assert();
 
-        // Create the resource texture for the real kernel
-        D2D1ResourceTextureManager kernelReals = new(
-            extents: stackalloc uint[] { (uint)KernelSize },
-            bufferPrecision: D2D1BufferPrecision.Float32,
-            channelDepth: D2D1ChannelDepth.One,
-            filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
-            data: MemoryMarshal.AsBytes(Kernels[0].Real.AsSpan()),
-            strides: ReadOnlySpan<uint>.Empty);
+                D2D1_COMPOSITE_MODE d2D1CompositeMode = D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_PLUS;
 
-        // Also create the one for the imaginary kernel
-        D2D1ResourceTextureManager kernelImaginary = new(
-            extents: stackalloc uint[] { (uint)KernelSize },
-            bufferPrecision: D2D1BufferPrecision.Float32,
-            channelDepth: D2D1ChannelDepth.One,
-            filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
-            data: MemoryMarshal.AsBytes(Kernels[0].Imaginary.AsSpan()),
-            strides: ReadOnlySpan<uint>.Empty);
+                // Set the mode to plus
+                compositeEffect.Get()->SetValue((uint)D2D1_COMPOSITE_PROP.D2D1_COMPOSITE_PROP_MODE, (byte*)&d2D1CompositeMode, sizeof(D2D1_COMPOSITE_MODE)).Assert();
+            }
 
-        // Assign the resource textures
-        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectForReals.Get(), kernelReals, 1);
-        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectForImaginaries.Get(), kernelImaginary, 1);
-        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffect.Get(), kernelReals, 2);
-        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffect.Get(), kernelImaginary, 3);
+            ReadOnlyMemory<byte> pixels = ImageHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
 
-        // Set the constant buffers
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectForReals.Get());
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectForImaginaries.Get());
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)width, (int)height, KernelParameters[0].Z, KernelParameters[0].W), horizontalConvolutionEffect.Get());
+            // Load the source bitmap and create a destination bitmap
+            using ComPtr<ID2D1Bitmap> d2D1BitmapSource = D2D1Helper.CreateD2D1BitmapAndSetAsSource(d2D1DeviceContext.Get(), pixels, width, height, gammaExposureEffect.Get());
+            using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), width, height);
 
-        // Build the effect graph:
-        //
-        // [INPUT] ---> [GAMMA EXPOSURE] ---> [VERTICAL REAL] ------
-        //                      \                                   \
-        //                       -----------> [VERTICAL IMAGINARY] ----> [HORIZONTAL] ---> [INVERSE GAMMA EXPOSURE] ---> [OUTPUT]
-        verticalConvolutionEffectForReals.Get()->SetInputEffect(0, gammaExposureEffect.Get());
-        verticalConvolutionEffectForImaginaries.Get()->SetInputEffect(0, gammaExposureEffect.Get());
-        horizontalConvolutionEffect.Get()->SetInputEffect(0, verticalConvolutionEffectForReals.Get());
-        horizontalConvolutionEffect.Get()->SetInputEffect(1, verticalConvolutionEffectForImaginaries.Get());
-        inverseGammaExposureEffect.Get()->SetInputEffect(0, horizontalConvolutionEffect.Get());
+            (D2D1ResourceTextureManager Reals, D2D1ResourceTextureManager Imaginaries)[] kernels = new (D2D1ResourceTextureManager, D2D1ResourceTextureManager)[numberOfComponents];
+            uint kernelSize = (uint)KernelSize;
 
-        d2D1DeviceContext.Get()->BeginDraw();
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                // Create the resource texture for the real kernel
+                D2D1ResourceTextureManager kernelReals = new(
+                    extents: new Span<uint>(&kernelSize, 1),
+                    bufferPrecision: D2D1BufferPrecision.Float32,
+                    channelDepth: D2D1ChannelDepth.One,
+                    filter: D2D1Filter.MinMagMipPoint,
+                    extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
+                    data: MemoryMarshal.AsBytes(Kernels[i].Real.AsSpan()),
+                    strides: ReadOnlySpan<uint>.Empty);
 
-        // Draw the final result
-        d2D1DeviceContext.Get()->DrawImage(
-            effect: inverseGammaExposureEffect.Get(),
-            targetOffset: null,
-            imageRectangle: null,
-            interpolationMode: D2D1_INTERPOLATION_MODE.D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-            compositeMode: D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_SOURCE_COPY);
+                // Also create the one for the imaginary kernel
+                D2D1ResourceTextureManager kernelImaginary = new(
+                    extents: new Span<uint>(&kernelSize, 1),
+                    bufferPrecision: D2D1BufferPrecision.Float32,
+                    channelDepth: D2D1ChannelDepth.One,
+                    filter: D2D1Filter.MinMagMipPoint,
+                    extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
+                    data: MemoryMarshal.AsBytes(Kernels[i].Imaginary.AsSpan()),
+                    strides: ReadOnlySpan<uint>.Empty);
 
-        d2D1DeviceContext.Get()->EndDraw().Assert();
+                kernels[i] = (kernelReals, kernelImaginary);
+            }
 
-        using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+            // Assign the resource textures
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForReals[i].Get(), kernels[i].Reals, 1);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForImaginaries[i].Get(), kernels[i].Imaginaries, 1);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Reals, 2);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Imaginaries, 3);
+            }
 
-        _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+            // Set the constant buffers
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectsForReals[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)width, (int)height), verticalConvolutionEffectsForImaginaries[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)width, (int)height, KernelParameters[i].Z, KernelParameters[i].W), horizontalConvolutionEffects[i].Get());
+            }
 
-        ImageHelper.SaveBitmapToFile(destinationPath, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+            // Build the effect graph:
+            //
+            // [INPUT] ---> [GAMMA EXPOSURE] ---> [VERTICAL REAL] ------
+            //                      \                                   \
+            //                       -----------> [VERTICAL IMAGINARY] ----> [HORIZONTAL] ---> [INVERSE GAMMA EXPOSURE] ---> [OUTPUT]
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                verticalConvolutionEffectsForReals[i].Get()->SetInputEffect(0, gammaExposureEffect.Get());
+                verticalConvolutionEffectsForImaginaries[i].Get()->SetInputEffect(0, gammaExposureEffect.Get());
+                horizontalConvolutionEffects[i].Get()->SetInputEffect(0, verticalConvolutionEffectsForReals[i].Get());
+                horizontalConvolutionEffects[i].Get()->SetInputEffect(1, verticalConvolutionEffectsForImaginaries[i].Get());
+            }
+
+            // Connect to the output node
+            if (numberOfComponents == 1)
+            {
+                inverseGammaExposureEffect.Get()->SetInputEffect(0, horizontalConvolutionEffects[0].Get());
+            }
+            else
+            {
+                compositeEffect.Get()->SetInputCount((uint)numberOfComponents);
+
+                // Aggregate all partial results with the composite effect
+                for (int i = 0; i < numberOfComponents; i++)
+                {
+                    compositeEffect.Get()->SetInputEffect((uint)i, horizontalConvolutionEffects[i].Get());
+                }
+
+                inverseGammaExposureEffect.Get()->SetInputEffect(0, compositeEffect.Get());
+            }
+
+            d2D1DeviceContext.Get()->BeginDraw();
+
+            // Draw the final result
+            d2D1DeviceContext.Get()->DrawImage(
+                effect: inverseGammaExposureEffect.Get(),
+                targetOffset: null,
+                imageRectangle: null,
+                interpolationMode: D2D1_INTERPOLATION_MODE.D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+                compositeMode: D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_SOURCE_COPY);
+
+            d2D1DeviceContext.Get()->EndDraw().Assert();
+
+            using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
+
+            _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+
+            ImageHelper.SaveBitmapToFile(destinationPath, width, height, d2D1MappedRect.pitch, d2D1MappedRect.bits);
+        }
+        finally
+        {
+            for (int i = 0; i < numberOfComponents; i++)
+            {
+                verticalConvolutionEffectsForReals[i].Dispose();
+                verticalConvolutionEffectsForImaginaries[i].Dispose();
+                horizontalConvolutionEffects[i].Dispose();
+            }
+        }
     }
 
     /// <summary>
