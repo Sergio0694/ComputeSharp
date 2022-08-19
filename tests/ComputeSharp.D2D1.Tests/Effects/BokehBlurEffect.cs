@@ -303,6 +303,8 @@ public sealed partial class BokehBlurEffect
         using ComPtr<ID2D1Effect> gammaExposureEffect = default;
         using ComPtr<ID2D1Effect> inverseGammaExposureEffect = default;
         using ComPtr<ID2D1Effect> compositeEffect = default;
+        using ComPtr<ID2D1Effect> borderEffect = default;
+
         Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForReals = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
         Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForImaginaries = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
         Span<ComPtr<ID2D1Effect>> horizontalConvolutionEffects = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
@@ -319,6 +321,17 @@ public sealed partial class BokehBlurEffect
                 D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectsForImaginaries[i].GetAddressOf());
                 D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffects[i].GetAddressOf());
             }
+
+            // Create the border effect to clamp the input image
+            d2D1DeviceContext.Get()->CreateEffect(
+                effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Border)),
+                effect: borderEffect.GetAddressOf()).Assert();
+
+            D2D1_BORDER_EDGE_MODE d2D1BorderEdgeMode = D2D1_BORDER_EDGE_MODE.D2D1_BORDER_EDGE_MODE_CLAMP;
+
+            // Set the border mode to clamp on both axes
+            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.D2D1_BORDER_PROP_EDGE_MODE_X, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
+            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.D2D1_BORDER_PROP_EDGE_MODE_Y, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
 
             // If partials need to be summed, also create the composite effect
             if (numberOfComponents > 1)
@@ -391,13 +404,15 @@ public sealed partial class BokehBlurEffect
 
             // Build the effect graph:
             //
-            // [INPUT] ---> [GAMMA EXPOSURE] ---> [VERTICAL REAL] ------
-            //                      \                                   \
-            //                       -----------> [VERTICAL IMAGINARY] ----> [HORIZONTAL] ---> [INVERSE GAMMA EXPOSURE] ---> [OUTPUT]
+            // [INPUT] ---> [BORDER] --> [GAMMA EXPOSURE] ---> [VERTICAL REAL] ----
+            //                                 \                                   \
+            //                                  -----> [VERTICAL IMAGINARY] ----> [HORIZONTAL] ---> [INVERSE GAMMA EXPOSURE] ---> [OUTPUT]
+            borderEffect.Get()->SetInputEffect(0, gammaExposureEffect.Get());
+
             for (int i = 0; i < numberOfComponents; i++)
             {
-                verticalConvolutionEffectsForReals[i].Get()->SetInputEffect(0, gammaExposureEffect.Get());
-                verticalConvolutionEffectsForImaginaries[i].Get()->SetInputEffect(0, gammaExposureEffect.Get());
+                verticalConvolutionEffectsForReals[i].Get()->SetInputEffect(0, borderEffect.Get());
+                verticalConvolutionEffectsForImaginaries[i].Get()->SetInputEffect(0, borderEffect.Get());
                 horizontalConvolutionEffects[i].Get()->SetInputEffect(0, verticalConvolutionEffectsForReals[i].Get());
                 horizontalConvolutionEffects[i].Get()->SetInputEffect(1, verticalConvolutionEffectsForImaginaries[i].Get());
             }
