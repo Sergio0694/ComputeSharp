@@ -214,7 +214,9 @@ public partial class D2D1ResourceTextureManagerTests
     }
 
     [TestMethod]
-    public unsafe void LoadPixelsFromResourceTexture2D_CreateBeforeGettingEffectContext()
+    [DataRow(1)]
+    [DataRow(2)]
+    public unsafe void LoadPixelsFromResourceTexture2D_CreateBeforeGettingEffectContext(int drawCount)
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
@@ -242,6 +244,8 @@ public partial class D2D1ResourceTextureManagerTests
             Assert.Inconclusive();
         }
 
+        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
+
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager.Get(),
             resourceId: Guid.NewGuid(),
@@ -253,15 +257,20 @@ public partial class D2D1ResourceTextureManagerTests
             data: MemoryMarshal.AsBytes(pixels.Span),
             strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
 
-        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager.Get(), 0);
+        for (int i = 0; i < drawCount; i++)
+        {
+            // We need to reassign the resource texture manager before each draw, so the D2D runtime can see
+            // some effect property has changed, and it will call PrepareForRender. That's where the resource
+            // texture will be retrieved. When drawCount is more than 1, this test is used to validate that
+            // getting the resource texture multiple times from the same manager also works correctly.
+            D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager.Get(), 0);
 
-        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
-
-        D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+            D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+        }
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = D2D1Helper.CreateD2D1Bitmap1Buffer(d2D1DeviceContext.Get(), d2D1BitmapTarget.Get(), out D2D1_MAPPED_RECT d2D1MappedRect);
 
-        string destinationPath = Path.Combine(assemblyPath, "temp", "IndexedFromResourceTexture2D_Before.png");
+        string destinationPath = Path.Combine(assemblyPath, "temp", $"IndexedFromResourceTexture2D_Before_Draw{drawCount}.png");
 
         _ = Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
 
