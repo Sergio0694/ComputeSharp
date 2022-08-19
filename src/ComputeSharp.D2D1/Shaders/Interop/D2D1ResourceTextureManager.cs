@@ -116,6 +116,17 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// <param name="filter">The filter for the resource to create.</param>
     /// <param name="extendModes">The extend modes for the resource to create.</param>
     /// <exception cref="Exception">Thrown if creating or initializing the <see cref="D2D1ResourceTextureManager"/> instance failed.</exception>
+    /// <remarks>
+    /// <para>
+    /// Since <see cref="D2D1ResourceTextureManager"/> has a finalizer, which can be invoked at any point on the finalizer
+    /// thread, it can only be used in effects associated with a device context using a factory that supports multithreaded
+    /// use (ie. the underlying <c>ID2D1Factory</c> has to be created using <c>D2D1_FACTORY_TYPE_MULTI_THREADED </c>).
+    /// Not doing so will cause the resource texture manager to fail to be initialized when used in an effect.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1/ne-d2d1-d2d1_factory_type"/>.
+    /// </para>
+    /// </remarks>
     public D2D1ResourceTextureManager(
         ReadOnlySpan<uint> extents,
         D2D1BufferPrecision bufferPrecision,
@@ -144,6 +155,17 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// <param name="filter">The filter for the resource to create.</param>
     /// <param name="extendModes">The extend modes for the resource to create.</param>
     /// <exception cref="Exception">Thrown if creating or initializing the <see cref="D2D1ResourceTextureManager"/> instance failed.</exception>
+    /// <remarks>
+    /// <para>
+    /// Since <see cref="D2D1ResourceTextureManager"/> has a finalizer, which can be invoked at any point on the finalizer
+    /// thread, it can only be used in effects associated with a device context using a factory that supports multithreaded
+    /// use (ie. the underlying <c>ID2D1Factory</c> has to be created using <c>D2D1_FACTORY_TYPE_MULTI_THREADED </c>).
+    /// Not doing so will cause the resource texture manager to fail to be initialized when used in an effect.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1/ne-d2d1-d2d1_factory_type"/>.
+    /// </para>
+    /// </remarks>
     public D2D1ResourceTextureManager(
         Guid resourceId,
         ReadOnlySpan<uint> extents,
@@ -174,6 +196,17 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// <param name="data">The data to load in the resource to create.</param>
     /// <param name="strides">The strides for the data supplied for the resource to create.</param>
     /// <exception cref="Exception">Thrown if creating or initializing the <see cref="D2D1ResourceTextureManager"/> instance failed.</exception>
+    /// <remarks>
+    /// <para>
+    /// Since <see cref="D2D1ResourceTextureManager"/> has a finalizer, which can be invoked at any point on the finalizer
+    /// thread, it can only be used in effects associated with a device context using a factory that supports multithreaded
+    /// use (ie. the underlying <c>ID2D1Factory</c> has to be created using <c>D2D1_FACTORY_TYPE_MULTI_THREADED </c>).
+    /// Not doing so will cause the resource texture manager to fail to be initialized when used in an effect.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1/ne-d2d1-d2d1_factory_type"/>.
+    /// </para>
+    /// </remarks>
     public D2D1ResourceTextureManager(
         ReadOnlySpan<uint> extents,
         D2D1BufferPrecision bufferPrecision,
@@ -206,6 +239,17 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// <param name="data">The data to load in the resource to create.</param>
     /// <param name="strides">The strides for the data supplied for the resource to create.</param>
     /// <exception cref="Exception">Thrown if creating or initializing the <see cref="D2D1ResourceTextureManager"/> instance failed.</exception>
+    /// <remarks>
+    /// <para>
+    /// Since <see cref="D2D1ResourceTextureManager"/> has a finalizer, which can be invoked at any point on the finalizer
+    /// thread, it can only be used in effects associated with a device context using a factory that supports multithreaded
+    /// use (ie. the underlying <c>ID2D1Factory</c> has to be created using <c>D2D1_FACTORY_TYPE_MULTI_THREADED </c>).
+    /// Not doing so will cause the resource texture manager to fail to be initialized when used in an effect.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1/ne-d2d1-d2d1_factory_type"/>.
+    /// </para>
+    /// </remarks>
     public D2D1ResourceTextureManager(
         Guid resourceId,
         ReadOnlySpan<uint> extents,
@@ -263,7 +307,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
 
         fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
         {
-            D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl);
+            D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl, requiresMultithread: true);
         }
 
         fixed (uint* pExtents = extents)
@@ -382,9 +426,13 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// Creates a new <c>ID2D1ResourceTextureManager</c> instance.
     /// </summary>
     /// <param name="resourceTextureManager">A pointer to the resulting <c>ID2D1ResourceTextureManager</c> instance.</param>
+    /// <remarks>
+    /// The resulting <c>ID2D1ResourceTextureManager</c> instance does not require multithread support for the factory that is
+    /// assigned to it when initialized from an effect. Callers have the responsibility of ensuring thread safety when using it.
+    /// </remarks>
     public static void Create(void** resourceTextureManager)
     {
-        D2D1ResourceTextureManagerImpl.Factory((D2D1ResourceTextureManagerImpl**)resourceTextureManager);
+        D2D1ResourceTextureManagerImpl.Factory((D2D1ResourceTextureManagerImpl**)resourceTextureManager, requiresMultithread: false);
     }
 
     /// <summary>

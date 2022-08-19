@@ -96,6 +96,15 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     private volatile int referenceCount;
 
     /// <summary>
+    /// Indicates whether the current instance requires multithread support to work safely.
+    /// </summary>
+    /// <remarks>
+    /// This is used when the object is wrapped in a RCW with a finalizer, which could run at any time.
+    /// In that case, multithread support is required, and using a single thread factory is an error.
+    /// </remarks>
+    private int requiresMultithread;
+
+    /// <summary>
     /// The <see cref="ID2D1EffectContext"/> object currently wrapped by the current instance.
     /// </summary>
     private ID2D1EffectContext* d2D1EffectContext;
@@ -156,7 +165,8 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     /// The factory method for <see cref="D2D1ResourceTextureManagerImpl"/> instances.
     /// </summary>
     /// <param name="resourceTextureManager">The resulting resource texture manager instance.</param>
-    public static void Factory(D2D1ResourceTextureManagerImpl** resourceTextureManager)
+    /// <param name="requiresMultithread">Indicates whether the current instance requires multithread support to work safely.</param>
+    public static void Factory(D2D1ResourceTextureManagerImpl** resourceTextureManager, bool requiresMultithread)
     {
         D2D1ResourceTextureManagerImpl* @this = (D2D1ResourceTextureManagerImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1ResourceTextureManagerImpl));
 
@@ -168,6 +178,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         @this->d2D1EffectContext = null;
         @this->d2D1Multithread = null;
         @this->d2D1ResourceTexture = null;
+        @this->requiresMultithread = requiresMultithread ? 1 : 0;
         @this->resourceId = null;
         @this->resourceTextureProperties = default;
         @this->data = null;
