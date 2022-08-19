@@ -170,6 +170,8 @@ partial struct D2D1ResourceTextureManagerImpl
                     return E.E_NOT_VALID_STATE;
                 }
 
+                using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
+
                 // Create the resource now, as it hasn't been created yet
                 int result = @this->d2D1EffectContext->CreateResourceTexture(
                     resourceId: @this->resourceId,
@@ -177,12 +179,19 @@ partial struct D2D1ResourceTextureManagerImpl
                     data: @this->data,
                     strides: @this->strides,
                     dataSize: @this->dataSize,
-                    resourceTexture: resourceTexture);
+                    resourceTexture: d2D1ResourceTexture.GetAddressOf());
 
                 // If creation was successful, release the buffered data. Going forwards,
                 // the resource texture will be used directly for all updates requested.
                 if (result == S.S_OK)
                 {
+                    // Store the resource texture for later
+                    d2D1ResourceTexture.CopyTo(&@this->d2D1ResourceTexture);
+
+                    // Also return it to callers
+                    d2D1ResourceTexture.CopyTo(resourceTexture);
+
+                    // Free the staging buffers
                     NativeMemory.Free(@this->resourceTextureProperties.extents);
                     NativeMemory.Free(@this->resourceTextureProperties.extendModes);
                     NativeMemory.Free(@this->data);
