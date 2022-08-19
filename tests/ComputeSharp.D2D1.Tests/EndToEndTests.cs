@@ -55,7 +55,7 @@ public class EndToEndTests
     [TestMethod]
     public void BokehBlur()
     {
-        BokehBlurEffect bokehBlurEffect = new(32, 1);
+        BokehBlurEffect bokehBlurEffect = new(32, 3);
 
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string temporaryPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "temp");

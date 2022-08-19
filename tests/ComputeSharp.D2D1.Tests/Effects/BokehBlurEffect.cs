@@ -327,6 +327,11 @@ public sealed partial class BokehBlurEffect
                     effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Composite)),
                     effect: compositeEffect.GetAddressOf()).Assert();
 
+                D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
+
+                // Set the channel precision to 32 bits manually to avoid banding
+                compositeEffect.Get()->SetValue((uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION, (byte*)&d2D1BufferPrecision, sizeof(D2D1_BUFFER_PRECISION)).Assert();
+
                 D2D1_COMPOSITE_MODE d2D1CompositeMode = D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_PLUS;
 
                 // Set the mode to plus
@@ -474,6 +479,7 @@ public sealed partial class BokehBlurEffect
         [D2DInputCount(1)]
         [D2DInputComplex(0)]
         [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+        [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [AutoConstructor]
@@ -543,6 +549,7 @@ public sealed partial class BokehBlurEffect
         [D2DInputComplex(1)]
         [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
         [D2DInputDescription(1, D2D1Filter.MinMagMipPoint)]
+        [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [AutoConstructor]
@@ -595,6 +602,7 @@ public sealed partial class BokehBlurEffect
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
     [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+    [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     internal readonly partial struct GammaHighlight : ID2D1PixelShader
@@ -616,6 +624,7 @@ public sealed partial class BokehBlurEffect
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
     [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
+    [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [AutoConstructor]
     internal readonly partial struct InverseGammaHighlight : ID2D1PixelShader
