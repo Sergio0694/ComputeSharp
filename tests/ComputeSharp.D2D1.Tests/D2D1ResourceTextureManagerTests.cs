@@ -141,6 +141,32 @@ public partial class D2D1ResourceTextureManagerTests
         Assert.AreEqual(1u, resourceTextureManager.Get()->Release());
     }
 
+    [TestMethod]
+    [ExpectedException(typeof(Win32Exception))]
+    public unsafe void SingleThreadedFactory_AssigningRCWManagerFails()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2(singleThreaded: true);
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), null, out _);
+
+        D2D1ResourceTextureManager resourceTextureManager = new(
+            extents: stackalloc uint[] { 128, 128 },
+            bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
+            channelDepth: D2D1ChannelDepth.Four,
+            filter: D2D1Filter.MinMagMipPoint,
+            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            data: ReadOnlySpan<byte>.Empty,
+            strides: ReadOnlySpan<uint>.Empty);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<DummyShaderWithResourceTexture>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, 0);
+    }
+
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     private partial struct DummyShaderWithResourceTexture : ID2D1PixelShader
