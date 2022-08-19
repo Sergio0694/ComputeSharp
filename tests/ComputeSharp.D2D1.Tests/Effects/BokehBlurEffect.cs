@@ -434,7 +434,7 @@ public sealed partial class BokehBlurEffect
                 {
                     int offsetY = Hlsl.Clamp(position.Y + i - radiusY, 0, maxY);
                     float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                    float4 color = D2D.SampleInputAtPosition(0, uv);
+                    float4 color = D2D.SampleInput(0, uv);
                     float factor = this.kernel[i];
 
                     result += factor * color;
@@ -509,8 +509,8 @@ public sealed partial class BokehBlurEffect
                 {
                     int offsetX = Hlsl.Clamp(position.X + i - radiusX, 0, maxX);
                     float2 uv = new((float)offsetX / maxX, (float)offsetY / maxY);
-                    float4 sourceReal = D2D.SampleInputAtPosition(0, uv);
-                    float4 sourceImaginary = D2D.SampleInputAtPosition(1, uv);
+                    float4 sourceReal = D2D.SampleInput(0, uv);
+                    float4 sourceImaginary = D2D.SampleInput(1, uv);
                     float realFactor = kernelReals[i];
                     float imaginaryFactor = kernelImaginaries[i];
 
