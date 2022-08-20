@@ -125,12 +125,13 @@ internal unsafe struct CommandList : IDisposable
     /// </summary>
     /// <returns>A double pointer to the current <see cref="ID3D12CommandList"/> object to execute.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ref ID3D12CommandList* GetD3D12CommandListPinnableAddressOf()
+    public readonly ref ID3D12CommandList* GetD3D12CommandListPinnableAddressOf()
     {
-        fixed (ID3D12GraphicsCommandList** d3D12GraphicsCommandList = this.d3D12GraphicsCommandList)
-        {
-            return ref *(ID3D12CommandList**)d3D12GraphicsCommandList;
-        }
+        // This method should return a ref ID3D12CommandList*, so it can't just call this.d3D12GraphicsCommandList.GetPinnableReference().
+        // That would return a ref ID3D12GraphicsCommandList*, and there's currently no way to cast that without wasting performance (ie.
+        // a function pointer cast and calli is needed). Instead, we can reinterpret the reference to the field, and then just call
+        // GetPinnableReference() on the new reference, which this time will return the ref ID3D12CommandList* we wanted.
+        return ref Unsafe.As<ComPtr<ID3D12GraphicsCommandList>, ComPtr<ID3D12CommandList>>(ref Unsafe.AsRef(in this.d3D12GraphicsCommandList)).GetPinnableReference();
     }
 
     /// <summary>
