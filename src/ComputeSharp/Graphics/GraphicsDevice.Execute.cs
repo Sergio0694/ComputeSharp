@@ -9,7 +9,6 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
-using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;

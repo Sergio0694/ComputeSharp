@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
