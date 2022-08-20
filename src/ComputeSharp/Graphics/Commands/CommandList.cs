@@ -48,8 +48,8 @@ internal unsafe struct CommandList : IDisposable
 
         device.GetCommandListAndAllocator(
             d3D12CommandListType,
-            out *(ID3D12GraphicsCommandList**)Unsafe.AsPointer(ref this.d3D12GraphicsCommandList),
-            out *(ID3D12CommandAllocator**)Unsafe.AsPointer(ref this.d3D12CommandAllocator));
+            out this.d3D12GraphicsCommandList.GetPinnableReference(),
+            out this.d3D12CommandAllocator.GetPinnableReference());
 
         // Set the heap descriptor if the command list is not for copy operations
         if (d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
@@ -73,8 +73,8 @@ internal unsafe struct CommandList : IDisposable
 
         device.GetCommandListAndAllocator(
             d3D12PipelineState,
-            out *(ID3D12GraphicsCommandList**)Unsafe.AsPointer(ref this.d3D12GraphicsCommandList),
-            out *(ID3D12CommandAllocator**)Unsafe.AsPointer(ref this.d3D12CommandAllocator));
+            out this.d3D12GraphicsCommandList.GetPinnableReference(),
+            out this.d3D12CommandAllocator.GetPinnableReference());
 
         // Set the heap descriptor for the command list
         device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
@@ -125,9 +125,13 @@ internal unsafe struct CommandList : IDisposable
     /// </summary>
     /// <returns>A double pointer to the current <see cref="ID3D12CommandList"/> object to execute.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ID3D12CommandList** GetD3D12CommandListAddressOf()
+    public readonly ref ID3D12CommandList* GetD3D12CommandListPinnableAddressOf()
     {
-        return (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf();
+        // This method should return a ref ID3D12CommandList*, so it can't just call this.d3D12GraphicsCommandList.GetPinnableReference().
+        // That would return a ref ID3D12GraphicsCommandList*, and there's currently no way to cast that without wasting performance (ie.
+        // a function pointer cast and calli is needed). Instead, we can reinterpret the reference to the field, and then just call
+        // GetPinnableReference() on the new reference, which this time will return the ref ID3D12CommandList* we wanted.
+        return ref Unsafe.As<ComPtr<ID3D12GraphicsCommandList>, ComPtr<ID3D12CommandList>>(ref Unsafe.AsRef(in this.d3D12GraphicsCommandList)).GetPinnableReference();
     }
 
     /// <summary>
