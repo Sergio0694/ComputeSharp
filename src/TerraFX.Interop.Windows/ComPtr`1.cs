@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using static TerraFX.Interop.Windows.Windows;
 using static TerraFX.Interop.Windows.S;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TerraFX.Interop.Windows
 {
@@ -248,12 +249,10 @@ namespace TerraFX.Interop.Windows
         /// <returns>The raw pointer to the current <see cref="ComPtr{T}"/> instance.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [UnscopedRef]
         public readonly ref T* GetPinnableReference()
         {
-            fixed (T** ptr = &ptr_)
-            {
-                return ref *ptr;
-            }
+            return ref Unsafe.AsRef(in this).ptr_;
         }
 
         /// <summary>Releases the current COM object in use and gets the address of the <see cref="ComPtr{T}"/> instance as a raw <typeparamref name="T"/> double pointer. This method is only valid when the current <see cref="ComPtr{T}"/> instance is on the stack or pinned.</summary>
