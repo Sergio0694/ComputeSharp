@@ -67,7 +67,10 @@ unsafe partial class GraphicsDevice
         }
 
         // Execute the command list
-        d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
+        fixed (ID3D12CommandList** d3D12CommandList = &commandList.GetD3D12CommandListPinnableAddressOf())
+        {
+            d3D12CommandQueue->ExecuteCommandLists(1, d3D12CommandList);
+        }
 
 #if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref d3D12FenceValue);
@@ -98,7 +101,10 @@ unsafe partial class GraphicsDevice
     internal ValueTask ExecuteCommandListAsync(ref CommandList commandList)
     {
         // Execute the command list
-        this.d3D12ComputeCommandQueue.Get()->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
+        fixed (ID3D12CommandList** d3D12CommandList = &commandList.GetD3D12CommandListPinnableAddressOf())
+        {
+            this.d3D12ComputeCommandQueue.Get()->ExecuteCommandLists(1, d3D12CommandList);
+        }
 
 #if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref this.nextD3D12ComputeFenceValue);
