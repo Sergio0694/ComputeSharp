@@ -10,26 +10,6 @@ namespace ComputeSharp;
 public partial struct Float4
 {
     /// <summary>
-    /// Gets an <see cref="Float4"/> value with the <see cref="X"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Float4 UnitX => new(1, 0, 0, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Float4"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Float4 UnitY => new(0, 1, 0, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Float4"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Float4 UnitZ => new(0, 0, 1, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Float4"/> value with the <see cref="W"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Float4 UnitW => new(0, 0, 0, 1);
-
-    /// <summary>
     /// Creates a new <see cref="Float4"/> instance with the specified parameters.
     /// </summary>
     /// <param name="x">The value to assign to the first vector component.</param>

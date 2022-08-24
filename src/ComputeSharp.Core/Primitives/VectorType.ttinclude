@@ -140,6 +140,40 @@ public unsafe partial struct <#=typeName#>
 <#
     }
 
+    string unitName, unitOne, unitZero, unitOneXmlName, unitZeroXmlName;
+
+    if (elementTypeName == "Bool")
+    {
+        unitName = "True";
+        unitOne = "true";
+        unitZero = "false";
+        unitOneXmlName = "<see langword=\"true\"/>";
+        unitZeroXmlName = "<see langword=\"false\"/>";
+    }
+    else
+    {
+        unitName = "Unit";
+        unitOne = "1";
+        unitZero = "0";
+        unitOneXmlName = "1";
+        unitZeroXmlName = "0";
+    }
+
+    // Generate the True<N> and Unit<N> properties
+    for (int j = 0; j < i; j++)
+    {
+        string unitComponentName = ("XYZW"[j]).ToString();
+        string[] unitArguments = Enumerable.Range(0, i).Select(x => x == j ? unitOne : unitZero).ToArray();
+        string unitArgumentExpression = string.Join(", ", unitArguments);
+#>
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with the <see cref="<#=unitComponentName#>"/> component set to <#=unitOneXmlName#>, and the others to <#=unitZeroXmlName#>.
+    /// </summary>
+    public static <#=typeName#> <#=unitName#><#=unitComponentName#> => new(<#=unitArgumentExpression#>);
+<#
+    }
+
     PushIndent("    ");
 
     // Generate the combinatorial swizzling properties

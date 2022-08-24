@@ -49,6 +49,26 @@ public unsafe partial struct Bool4
     public static Bool4 True => true;
 
     /// <summary>
+    /// Gets a <see cref="Bool4"/> value with the <see cref="X"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool4 TrueX => new(true, false, false, false);
+
+    /// <summary>
+    /// Gets a <see cref="Bool4"/> value with the <see cref="Y"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool4 TrueY => new(false, true, false, false);
+
+    /// <summary>
+    /// Gets a <see cref="Bool4"/> value with the <see cref="Z"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool4 TrueZ => new(false, false, true, false);
+
+    /// <summary>
+    /// Gets a <see cref="Bool4"/> value with the <see cref="W"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool4 TrueW => new(false, false, false, true);
+
+    /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

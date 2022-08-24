@@ -48,6 +48,16 @@ public unsafe partial struct Float2
     public static Float2 One => 1;
 
     /// <summary>
+    /// Gets a <see cref="Float2"/> value with the <see cref="X"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Float2 UnitX => new(1, 0);
+
+    /// <summary>
+    /// Gets a <see cref="Float2"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Float2 UnitY => new(0, 1);
+
+    /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref float X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

@@ -48,6 +48,16 @@ public unsafe partial struct Double2
     public static Double2 One => 1;
 
     /// <summary>
+    /// Gets a <see cref="Double2"/> value with the <see cref="X"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Double2 UnitX => new(1, 0);
+
+    /// <summary>
+    /// Gets a <see cref="Double2"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Double2 UnitY => new(0, 1);
+
+    /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref double X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

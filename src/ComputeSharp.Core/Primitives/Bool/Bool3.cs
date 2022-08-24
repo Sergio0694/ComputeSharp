@@ -8,21 +8,6 @@ namespace ComputeSharp;
 public partial struct Bool3
 {
     /// <summary>
-    /// Gets an <see cref="Bool3"/> value with the <see cref="X"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
-    /// </summary>
-    public static Bool3 TrueX => new(true, false, false);
-
-    /// <summary>
-    /// Gets an <see cref="Bool3"/> value with the <see cref="Y"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
-    /// </summary>
-    public static Bool3 TrueY => new(false, true, false);
-
-    /// <summary>
-    /// Gets an <see cref="Bool3"/> value with the <see cref="Z"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
-    /// </summary>
-    public static Bool3 TrueZ => new(false, false, true);
-
-    /// <summary>
     /// Creates a new <see cref="Bool3"/> instance with the specified parameters.
     /// </summary>
     /// <param name="x">The value to assign to the first vector component.</param>

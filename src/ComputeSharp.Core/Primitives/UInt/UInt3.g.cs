@@ -51,6 +51,21 @@ public unsafe partial struct UInt3
     public static UInt3 One => 1;
 
     /// <summary>
+    /// Gets a <see cref="UInt3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static UInt3 UnitX => new(1, 0, 0);
+
+    /// <summary>
+    /// Gets a <see cref="UInt3"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static UInt3 UnitY => new(0, 1, 0);
+
+    /// <summary>
+    /// Gets a <see cref="UInt3"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static UInt3 UnitZ => new(0, 0, 1);
+
+    /// <summary>
     /// Gets a reference to the <see cref="uint"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref uint X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
