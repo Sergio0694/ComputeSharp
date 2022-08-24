@@ -41,6 +41,16 @@ public unsafe partial struct Double3
     public readonly ref double this[int i] => ref *(double*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Double3"/> value with all components set to 0.
+    /// </summary>
+    public static Double3 Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="Double3"/> value with all components set to 1.
+    /// </summary>
+    public static Double3 One => 1;
+
+    /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref double X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

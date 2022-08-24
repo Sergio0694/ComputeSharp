@@ -33,6 +33,16 @@ public unsafe partial struct Bool2
     public readonly ref bool this[int i] => ref *(bool*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Bool2"/> value with all components set to <see langword="false"/>.
+    /// </summary>
+    public static Bool2 False => false;
+
+    /// <summary>
+    /// Gets a <see cref="Bool2"/> value with all components set to <see langword="true"/>.
+    /// </summary>
+    public static Bool2 True => true;
+
+    /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

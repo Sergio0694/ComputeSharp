@@ -8,16 +8,6 @@ namespace ComputeSharp;
 public partial struct Double2
 {
     /// <summary>
-    /// Gets an <see cref="Double2"/> value with all components set to 0.
-    /// </summary>
-    public static Double2 Zero => 0;
-
-    /// <summary>
-    /// Gets an <see cref="Double2"/> value with all components set to 1.
-    /// </summary>
-    public static Double2 One => 1;
-
-    /// <summary>
     /// Gets an <see cref="Double2"/> value with the <see cref="X"/> component set to 1, and the others to 0.
     /// </summary>
     public static Double2 UnitX => new(1, 0);

@@ -10,16 +10,6 @@ namespace ComputeSharp;
 public partial struct Float3
 {
     /// <summary>
-    /// Gets an <see cref="Float3"/> value with all components set to 0.
-    /// </summary>
-    public static Float3 Zero => 0;
-
-    /// <summary>
-    /// Gets an <see cref="Float3"/> value with all components set to 1.
-    /// </summary>
-    public static Float3 One => 1;
-
-    /// <summary>
     /// Gets an <see cref="Float3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
     /// </summary>
     public static Float3 UnitX => new(1, 0, 0);

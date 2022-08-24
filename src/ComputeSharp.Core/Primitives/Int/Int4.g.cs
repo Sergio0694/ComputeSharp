@@ -44,6 +44,16 @@ public unsafe partial struct Int4
     public readonly ref int this[int i] => ref *(int*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Int4"/> value with all components set to 0.
+    /// </summary>
+    public static Int4 Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="Int4"/> value with all components set to 1.
+    /// </summary>
+    public static Int4 One => 1;
+
+    /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref int X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

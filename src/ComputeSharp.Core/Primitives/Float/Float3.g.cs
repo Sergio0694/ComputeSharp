@@ -41,6 +41,16 @@ public unsafe partial struct Float3
     public readonly ref float this[int i] => ref *(float*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Float3"/> value with all components set to 0.
+    /// </summary>
+    public static Float3 Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="Float3"/> value with all components set to 1.
+    /// </summary>
+    public static Float3 One => 1;
+
+    /// <summary>
     /// Gets a reference to the <see cref="float"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref float X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

@@ -108,7 +108,38 @@ public unsafe partial struct <#=typeName#>
     /// <param name="i">The index of the component to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
+
 <#
+    // Generate the true/false and zero/one properties
+    if (elementTypeName == "Bool")
+    {
+#>
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to <see langword="false"/>.
+    /// </summary>
+    public static <#=typeName#> False => false;
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to <see langword="true"/>.
+    /// </summary>
+    public static <#=typeName#> True => true;
+<#
+    }
+    else
+    {
+#>
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to 0.
+    /// </summary>
+    public static <#=typeName#> Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to 1.
+    /// </summary>
+    public static <#=typeName#> One => 1;
+<#
+    }
+
     PushIndent("    ");
 
     // Generate the combinatorial swizzling properties
@@ -161,7 +192,6 @@ public unsafe partial struct <#=typeName#>
 #if !SOURCE_GENERATOR
 
 <#
-
     if (elementTypeName == "Bool")
     {
 #>
@@ -222,7 +252,6 @@ public unsafe partial struct <#=typeName#>
 
 #endif
 <#
-
     // Generate the negation operator
     if (elementTypeName != "UInt")
     {
