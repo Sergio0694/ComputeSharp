@@ -536,6 +536,106 @@ public unsafe partial struct UInt2
     public static Bool2 operator <=(UInt2 left, UInt2 right) => default;
 
     /// <summary>
+    /// Bitwise negates a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="xy">The <see cref="UInt2"/> value to bitwise negate.</param>
+    /// <returns>The bitwise negated value of <paramref name="xy"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator ~(UInt2 xy) => default;
+
+#if NEEDS_CSHARP_11
+    /// <summary>
+    /// Shifts right a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="xy">The <see cref="UInt2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator >>(UInt2 xy, Int2 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="xy">The <see cref="UInt2"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator >>(UInt2 xy, UInt2 amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="xy">The <see cref="UInt2"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator <<(UInt2 xy, Int2 amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="xy">The <see cref="UInt2"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xy"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator <<(UInt2 xy, UInt2 amount) => default;
+#endif
+
+    /// <summary>
+    /// Bitwise ands a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="Int2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator &(UInt2 left, Int2 right) => default;
+
+    /// <summary>
+    /// Bitwise ands a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="UInt2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator &(UInt2 left, UInt2 right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="Int2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator |(UInt2 left, Int2 right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="UInt2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator |(UInt2 left, UInt2 right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="Int2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator ^(UInt2 left, Int2 right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="UInt2"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="UInt2"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="UInt2"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static UInt2 operator ^(UInt2 left, UInt2 right) => default;
+
+    /// <summary>
     /// Compares two <see cref="UInt2"/> values to see if they are equal.
     /// </summary>
     /// <param name="left">The first <see cref="UInt2"/> value to compare.</param>
