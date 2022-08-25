@@ -494,7 +494,6 @@ public unsafe partial struct <#=typeName#>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=typeName#> operator ~(<#=typeName#> <#=argumentName#>) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="<#=typeName#>"/> value.
     /// </summary>
@@ -530,7 +529,6 @@ public unsafe partial struct <#=typeName#>
     /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=typeName#> operator <<(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="<#=typeName#>"/> value.

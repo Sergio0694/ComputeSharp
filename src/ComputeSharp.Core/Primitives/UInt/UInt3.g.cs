@@ -1870,7 +1870,6 @@ public unsafe partial struct UInt3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3 operator ~(UInt3 xyz) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt3"/> value.
     /// </summary>
@@ -1906,7 +1905,6 @@ public unsafe partial struct UInt3
     /// <returns>The result of shifting <paramref name="xyz"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3 operator <<(UInt3 xyz, UInt3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt3"/> value.

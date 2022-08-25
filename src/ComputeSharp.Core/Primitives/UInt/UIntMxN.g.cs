@@ -188,7 +188,6 @@ public unsafe partial struct UInt1x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator ~(UInt1x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt1x1"/> value.
     /// </summary>
@@ -224,7 +223,6 @@ public unsafe partial struct UInt1x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x1 operator <<(UInt1x1 matrix, UInt1x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt1x1"/> value.
@@ -490,7 +488,6 @@ public unsafe partial struct UInt1x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator ~(UInt1x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt1x2"/> value.
     /// </summary>
@@ -526,7 +523,6 @@ public unsafe partial struct UInt1x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x2 operator <<(UInt1x2 matrix, UInt1x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt1x2"/> value.
@@ -810,7 +806,6 @@ public unsafe partial struct UInt1x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator ~(UInt1x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt1x3"/> value.
     /// </summary>
@@ -846,7 +841,6 @@ public unsafe partial struct UInt1x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x3 operator <<(UInt1x3 matrix, UInt1x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt1x3"/> value.
@@ -1142,7 +1136,6 @@ public unsafe partial struct UInt1x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator ~(UInt1x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt1x4"/> value.
     /// </summary>
@@ -1178,7 +1171,6 @@ public unsafe partial struct UInt1x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt1x4 operator <<(UInt1x4 matrix, UInt1x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt1x4"/> value.
@@ -1450,7 +1442,6 @@ public unsafe partial struct UInt2x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator ~(UInt2x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt2x1"/> value.
     /// </summary>
@@ -1486,7 +1477,6 @@ public unsafe partial struct UInt2x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x1 operator <<(UInt2x1 matrix, UInt2x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt2x1"/> value.
@@ -1795,7 +1785,6 @@ public unsafe partial struct UInt2x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator ~(UInt2x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt2x2"/> value.
     /// </summary>
@@ -1831,7 +1820,6 @@ public unsafe partial struct UInt2x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x2 operator <<(UInt2x2 matrix, UInt2x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt2x2"/> value.
@@ -2160,7 +2148,6 @@ public unsafe partial struct UInt2x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator ~(UInt2x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt2x3"/> value.
     /// </summary>
@@ -2196,7 +2183,6 @@ public unsafe partial struct UInt2x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x3 operator <<(UInt2x3 matrix, UInt2x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt2x3"/> value.
@@ -2551,7 +2537,6 @@ public unsafe partial struct UInt2x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator ~(UInt2x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt2x4"/> value.
     /// </summary>
@@ -2587,7 +2572,6 @@ public unsafe partial struct UInt2x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt2x4 operator <<(UInt2x4 matrix, UInt2x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt2x4"/> value.
@@ -2865,7 +2849,6 @@ public unsafe partial struct UInt3x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator ~(UInt3x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt3x1"/> value.
     /// </summary>
@@ -2901,7 +2884,6 @@ public unsafe partial struct UInt3x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x1 operator <<(UInt3x1 matrix, UInt3x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt3x1"/> value.
@@ -3237,7 +3219,6 @@ public unsafe partial struct UInt3x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator ~(UInt3x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt3x2"/> value.
     /// </summary>
@@ -3273,7 +3254,6 @@ public unsafe partial struct UInt3x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x2 operator <<(UInt3x2 matrix, UInt3x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt3x2"/> value.
@@ -3642,7 +3622,6 @@ public unsafe partial struct UInt3x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator ~(UInt3x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt3x3"/> value.
     /// </summary>
@@ -3678,7 +3657,6 @@ public unsafe partial struct UInt3x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x3 operator <<(UInt3x3 matrix, UInt3x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt3x3"/> value.
@@ -4086,7 +4064,6 @@ public unsafe partial struct UInt3x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator ~(UInt3x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt3x4"/> value.
     /// </summary>
@@ -4122,7 +4099,6 @@ public unsafe partial struct UInt3x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt3x4 operator <<(UInt3x4 matrix, UInt3x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt3x4"/> value.
@@ -4412,7 +4388,6 @@ public unsafe partial struct UInt4x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator ~(UInt4x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt4x1"/> value.
     /// </summary>
@@ -4448,7 +4423,6 @@ public unsafe partial struct UInt4x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x1 operator <<(UInt4x1 matrix, UInt4x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt4x1"/> value.
@@ -4811,7 +4785,6 @@ public unsafe partial struct UInt4x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator ~(UInt4x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt4x2"/> value.
     /// </summary>
@@ -4847,7 +4820,6 @@ public unsafe partial struct UInt4x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x2 operator <<(UInt4x2 matrix, UInt4x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt4x2"/> value.
@@ -5256,7 +5228,6 @@ public unsafe partial struct UInt4x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator ~(UInt4x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt4x3"/> value.
     /// </summary>
@@ -5292,7 +5263,6 @@ public unsafe partial struct UInt4x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x3 operator <<(UInt4x3 matrix, UInt4x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt4x3"/> value.
@@ -5753,7 +5723,6 @@ public unsafe partial struct UInt4x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator ~(UInt4x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt4x4"/> value.
     /// </summary>
@@ -5789,7 +5758,6 @@ public unsafe partial struct UInt4x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4x4 operator <<(UInt4x4 matrix, UInt4x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt4x4"/> value.

@@ -4956,7 +4956,6 @@ public unsafe partial struct UInt4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4 operator ~(UInt4 xyzw) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="UInt4"/> value.
     /// </summary>
@@ -4992,7 +4991,6 @@ public unsafe partial struct UInt4
     /// <returns>The result of shifting <paramref name="xyzw"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static UInt4 operator <<(UInt4 xyzw, UInt4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="UInt4"/> value.

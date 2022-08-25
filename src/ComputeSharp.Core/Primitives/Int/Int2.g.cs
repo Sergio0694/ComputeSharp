@@ -701,7 +701,6 @@ public unsafe partial struct Int2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2 operator ~(Int2 xy) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int2"/> value.
     /// </summary>
@@ -737,7 +736,6 @@ public unsafe partial struct Int2
     /// <returns>The result of shifting <paramref name="xy"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2 operator <<(Int2 xy, UInt2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int2"/> value.
