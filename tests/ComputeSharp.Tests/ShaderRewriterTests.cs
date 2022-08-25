@@ -191,6 +191,52 @@ public partial class ShaderRewriterTests
         }
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void BooleanHlslOperators(Device device)
+    {
+        int[] data = { 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
+
+        device.Get().For(1, new BooleanOperatorsShader(buffer));
+
+        int[] results = buffer.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1 },
+            actual: results);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct BooleanOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            bool4 a = new int4(buffer[0], buffer[1], buffer[2], buffer[3]) == 1;
+            bool4 b = new int4(buffer[4], buffer[5], buffer[6], buffer[7]) == 1;
+
+            bool4 c = a & b;
+            bool4 d = a | b;
+            bool4 e = a ^ b;
+
+            buffer[8] = c.X ? 1 : 0;
+            buffer[9] = c.Y ? 1 : 0;
+            buffer[10] = c.Z ? 1 : 0;
+            buffer[11] = c.W ? 1 : 0;
+            buffer[12] = d.X ? 1 : 0;
+            buffer[13] = d.Y ? 1 : 0;
+            buffer[14] = d.Z ? 1 : 0;
+            buffer[15] = d.W ? 1 : 0;
+            buffer[16] = e.X ? 1 : 0;
+            buffer[17] = e.Y ? 1 : 0;
+            buffer[18] = e.Z ? 1 : 0;
+            buffer[19] = e.W ? 1 : 0;
+        }
+    }
+
     // See: https://github.com/Sergio0694/ComputeSharp/issues/259
     [CombinatorialTestMethod]
     [AllDevices]
