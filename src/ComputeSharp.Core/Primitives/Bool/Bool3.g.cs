@@ -1517,6 +1517,33 @@ public unsafe partial struct Bool3
     public static Bool3 operator !(Bool3 xyz) => default;
 
     /// <summary>
+    /// Ands two <see cref="Bool3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool3"/> value to and.</param>
+    /// <param name="right">The <see cref="Bool3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3 operator &(Bool3 left, Bool3 right) => default;
+
+    /// <summary>
+    /// Ors two <see cref="Bool3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool3"/> value to or.</param>
+    /// <param name="right">The <see cref="Bool3"/> value to combine.</param>
+    /// <returns>The result of performing the or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3 operator |(Bool3 left, Bool3 right) => default;
+
+    /// <summary>
+    /// Xors two <see cref="Bool3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool3"/> value to xor.</param>
+    /// <param name="right">The <see cref="Bool3"/> value to combine.</param>
+    /// <returns>The result of performing the xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool3 operator ^(Bool3 left, Bool3 right) => default;
+
+    /// <summary>
     /// Compares two <see cref="Bool3"/> values to see if they are equal.
     /// </summary>
     /// <param name="left">The first <see cref="Bool3"/> value to compare.</param>

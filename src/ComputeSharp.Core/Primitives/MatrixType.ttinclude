@@ -407,6 +407,38 @@ public unsafe partial struct <#=fullTypeName#>
     public static <#=fullTypeName#> operator ^(<#=fullTypeName#> left, UInt<#=rows#>x<#=columns#> right) => default;
 <#
     }
+    else if (typeName == "Bool")
+    {
+        WriteLine("");
+#>
+    /// <summary>
+    /// Ands two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=fullTypeName#>"/> value to and.</param>
+    /// <param name="right">The <see cref="<#=fullTypeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator &(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Ors two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=fullTypeName#>"/> value to or.</param>
+    /// <param name="right">The <see cref="<#=fullTypeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator |(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+
+    /// <summary>
+    /// Xors two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=fullTypeName#>"/> value to xor.</param>
+    /// <param name="right">The <see cref="<#=fullTypeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator ^(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+<#
+    }
 
     WriteLine("");
 #>
