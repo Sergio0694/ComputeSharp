@@ -36,6 +36,31 @@ public unsafe partial struct Bool3
     public readonly ref bool this[int i] => ref *(bool*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Bool3"/> value with all components set to <see langword="false"/>.
+    /// </summary>
+    public static Bool3 False => false;
+
+    /// <summary>
+    /// Gets a <see cref="Bool3"/> value with all components set to <see langword="true"/>.
+    /// </summary>
+    public static Bool3 True => true;
+
+    /// <summary>
+    /// Gets a <see cref="Bool3"/> value with the <see cref="X"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool3 TrueX => new(true, false, false);
+
+    /// <summary>
+    /// Gets a <see cref="Bool3"/> value with the <see cref="Y"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool3 TrueY => new(false, true, false);
+
+    /// <summary>
+    /// Gets a <see cref="Bool3"/> value with the <see cref="Z"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
+    /// </summary>
+    public static Bool3 TrueZ => new(false, false, true);
+
+    /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));

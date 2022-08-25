@@ -8,36 +8,6 @@ namespace ComputeSharp;
 public partial struct Int4
 {
     /// <summary>
-    /// Gets an <see cref="Int4"/> value with all components set to 0.
-    /// </summary>
-    public static Int4 Zero => 0;
-
-    /// <summary>
-    /// Gets an <see cref="Int4"/> value with all components set to 1.
-    /// </summary>
-    public static Int4 One => 1;
-
-    /// <summary>
-    /// Gets an <see cref="Int4"/> value with the <see cref="X"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Int4 UnitX => new(1, 0, 0, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Int4"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Int4 UnitY => new(0, 1, 0, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Int4"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Int4 UnitZ => new(0, 0, 1, 0);
-
-    /// <summary>
-    /// Gets an <see cref="Int4"/> value with the <see cref="W"/> component set to 1, and the others to 0.
-    /// </summary>
-    public static Int4 UnitW => new(0, 0, 0, 1);
-
-    /// <summary>
     /// Creates a new <see cref="Int4"/> instance with the specified parameters.
     /// </summary>
     /// <param name="x">The value to assign to the first vector component.</param>

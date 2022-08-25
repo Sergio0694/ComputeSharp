@@ -108,7 +108,72 @@ public unsafe partial struct <#=typeName#>
     /// <param name="i">The index of the component to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
+
 <#
+    // Generate the true/false and zero/one properties
+    if (elementTypeName == "Bool")
+    {
+#>
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to <see langword="false"/>.
+    /// </summary>
+    public static <#=typeName#> False => false;
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to <see langword="true"/>.
+    /// </summary>
+    public static <#=typeName#> True => true;
+<#
+    }
+    else
+    {
+#>
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to 0.
+    /// </summary>
+    public static <#=typeName#> Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with all components set to 1.
+    /// </summary>
+    public static <#=typeName#> One => 1;
+<#
+    }
+
+    string unitName, unitOne, unitZero, unitOneXmlName, unitZeroXmlName;
+
+    if (elementTypeName == "Bool")
+    {
+        unitName = "True";
+        unitOne = "true";
+        unitZero = "false";
+        unitOneXmlName = "<see langword=\"true\"/>";
+        unitZeroXmlName = "<see langword=\"false\"/>";
+    }
+    else
+    {
+        unitName = "Unit";
+        unitOne = "1";
+        unitZero = "0";
+        unitOneXmlName = "1";
+        unitZeroXmlName = "0";
+    }
+
+    // Generate the True<N> and Unit<N> properties
+    for (int j = 0; j < i; j++)
+    {
+        string unitComponentName = ("XYZW"[j]).ToString();
+        string[] unitArguments = Enumerable.Range(0, i).Select(x => x == j ? unitOne : unitZero).ToArray();
+        string unitArgumentExpression = string.Join(", ", unitArguments);
+#>
+
+    /// <summary>
+    /// Gets a <see cref="<#=typeName#>"/> value with the <see cref="<#=unitComponentName#>"/> component set to <#=unitOneXmlName#>, and the others to <#=unitZeroXmlName#>.
+    /// </summary>
+    public static <#=typeName#> <#=unitName#><#=unitComponentName#> => new(<#=unitArgumentExpression#>);
+<#
+    }
+
     PushIndent("    ");
 
     // Generate the combinatorial swizzling properties
@@ -161,7 +226,6 @@ public unsafe partial struct <#=typeName#>
 #if !SOURCE_GENERATOR
 
 <#
-
     if (elementTypeName == "Bool")
     {
 #>
@@ -222,7 +286,6 @@ public unsafe partial struct <#=typeName#>
 
 #endif
 <#
-
     // Generate the negation operator
     if (elementTypeName != "UInt")
     {
@@ -326,6 +389,115 @@ public unsafe partial struct <#=typeName#>
     /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool<#=i#> operator <=(<#=typeName#> left, <#=typeName#> right) => default;
+<#
+    }
+
+    // Generate the bitwise operators
+    if (elementTypeName == "Int" || elementTypeName == "UInt")
+    {
+        string argumentName = "xyzw".Substring(0, i);
+
+        WriteLine("");
+#>
+    /// <summary>
+    /// Bitwise negates a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to bitwise negate.</param>
+    /// <returns>The bitwise negated value of <paramref name="<#=argumentName#>"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator ~(<#=typeName#> <#=argumentName#>) => default;
+
+#if NEEDS_CSHARP_11
+    /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>(<#=typeName#> <#=argumentName#>, Int<#=i#> amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator >>(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator <<(<#=typeName#> <#=argumentName#>, Int<#=i#> amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator <<(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
+#endif
+
+    /// <summary>
+    /// Bitwise ands a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="Int<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator &(<#=typeName#> left, Int<#=i#> right) => default;
+
+    /// <summary>
+    /// Bitwise ands a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="UInt<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator &(<#=typeName#> left, UInt<#=i#> right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="Int<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator |(<#=typeName#> left, Int<#=i#> right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="UInt<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator |(<#=typeName#> left, UInt<#=i#> right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="Int<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator ^(<#=typeName#> left, Int<#=i#> right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="UInt<#=i#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator ^(<#=typeName#> left, UInt<#=i#> right) => default;
 <#
     }
 

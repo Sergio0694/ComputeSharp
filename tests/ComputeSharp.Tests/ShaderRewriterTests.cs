@@ -130,6 +130,67 @@ public partial class ShaderRewriterTests
         }
     }
 
+    // See: https://github.com/Sergio0694/ComputeSharp/issues/361
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void BitwiseHlslOperators(Device device)
+    {
+        int[] data = { 186456131, 215486738, unchecked((int)416439712738), unchecked((int)1437124371243), 0, 0, 0, 0 };
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
+
+        device.Get().For(1, new BitwiseOperatorsShader(buffer));
+
+        int[] results = buffer.ToArray();
+
+        int2 a = new(data[0], data[1]);
+        uint2 b = new((uint)data[2], (uint)data[3]);
+
+        int2 c = new(~a.X, ~a.Y);
+        int2 d = new(a.X & (int)b.X, a.Y & (int)b.Y);
+        int2 e = new(a.X | (int)b.X, a.Y | (int)b.Y);
+        int2 f = new(a.X ^ (int)b.X, a.Y ^ (int)b.Y);
+
+        Assert.AreEqual(results[0], c.X);
+        Assert.AreEqual(results[1], c.Y);
+        Assert.AreEqual(results[2], d.X);
+        Assert.AreEqual(results[3], d.Y);
+        Assert.AreEqual(results[4], e.X);
+        Assert.AreEqual(results[5], e.Y);
+        Assert.AreEqual(results[6], f.X);
+        Assert.AreEqual(results[7], f.Y);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct BitwiseOperatorsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+
+        public void Execute()
+        {
+            int2 a = new(buffer[0], buffer[1]);
+            uint2 b = new((uint)buffer[2], (uint)buffer[3]);
+
+            int2 c = ~a;
+            int2 d = a & b;
+            int2 e = a | b;
+            int2 f = a ^ b;
+
+#if NEEDS_CSHARP_11
+            // TODO: add bit shifting tests
+#endif
+
+            buffer[0] = c.X;
+            buffer[1] = c.Y;
+            buffer[2] = d.X;
+            buffer[3] = d.Y;
+            buffer[4] = e.X;
+            buffer[5] = e.Y;
+            buffer[6] = f.X;
+            buffer[7] = f.Y;
+        }
+    }
+
     // See: https://github.com/Sergio0694/ComputeSharp/issues/259
     [CombinatorialTestMethod]
     [AllDevices]

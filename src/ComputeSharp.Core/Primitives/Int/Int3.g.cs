@@ -41,6 +41,31 @@ public unsafe partial struct Int3
     public readonly ref int this[int i] => ref *(int*)UndefinedData;
 
     /// <summary>
+    /// Gets a <see cref="Int3"/> value with all components set to 0.
+    /// </summary>
+    public static Int3 Zero => 0;
+
+    /// <summary>
+    /// Gets a <see cref="Int3"/> value with all components set to 1.
+    /// </summary>
+    public static Int3 One => 1;
+
+    /// <summary>
+    /// Gets a <see cref="Int3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Int3 UnitX => new(1, 0, 0);
+
+    /// <summary>
+    /// Gets a <see cref="Int3"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Int3 UnitY => new(0, 1, 0);
+
+    /// <summary>
+    /// Gets a <see cref="Int3"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
+    /// </summary>
+    public static Int3 UnitZ => new(0, 0, 1);
+
+    /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the <c>X</c> component.
     /// </summary>
     public readonly ref int X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
@@ -1603,6 +1628,106 @@ public unsafe partial struct Int3
     /// <returns>The result of comparing <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Bool3 operator <=(Int3 left, Int3 right) => default;
+
+    /// <summary>
+    /// Bitwise negates a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="xyz">The <see cref="Int3"/> value to bitwise negate.</param>
+    /// <returns>The bitwise negated value of <paramref name="xyz"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator ~(Int3 xyz) => default;
+
+#if NEEDS_CSHARP_11
+    /// <summary>
+    /// Shifts right a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="xyz">The <see cref="Int3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator >>(Int3 xyz, Int3 amount) => default;
+
+    /// <summary>
+    /// Shifts right a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="xyz">The <see cref="Int3"/> value to shift right.</param>
+    /// <param name="amount">The amount to shift each element right by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> right by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator >>(Int3 xyz, UInt3 amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="xyz">The <see cref="Int3"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator <<(Int3 xyz, Int3 amount) => default;
+
+    /// <summary>
+    /// Shifts left a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="xyz">The <see cref="Int3"/> value to shift left.</param>
+    /// <param name="amount">The amount to shift each element left by.</param>
+    /// <returns>The result of shifting <paramref name="xyz"/> left by <paramref name="amount"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator <<(Int3 xyz, UInt3 amount) => default;
+#endif
+
+    /// <summary>
+    /// Bitwise ands a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="Int3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator &(Int3 left, Int3 right) => default;
+
+    /// <summary>
+    /// Bitwise ands a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise and.</param>
+    /// <param name="right">The <see cref="UInt3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator &(Int3 left, UInt3 right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="Int3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator |(Int3 left, Int3 right) => default;
+
+    /// <summary>
+    /// Bitwise ors a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise or.</param>
+    /// <param name="right">The <see cref="UInt3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator |(Int3 left, UInt3 right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="Int3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator ^(Int3 left, Int3 right) => default;
+
+    /// <summary>
+    /// Bitwise xors a <see cref="Int3"/> value.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to bitwise xor.</param>
+    /// <param name="right">The <see cref="UInt3"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator ^(Int3 left, UInt3 right) => default;
 
     /// <summary>
     /// Compares two <see cref="Int3"/> values to see if they are equal.
