@@ -10,11 +10,11 @@ namespace ComputeSharp;
 partial class Hlsl
 {
 <#
-// Numeric to bool
+List<(string Type, List<(string Source, string Target)> Info)> intrinsics = new List<(string, List<(string, string)>)>();
+
+// Prepare the intrinsic names
 foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
 {
-    int index = 0;
-
     List<(string Source, string Target)> typeNames = new List<(string, string)>();
 
     typeNames.Add((type.ToLower(), "bool"));
@@ -34,8 +34,15 @@ foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
         }
     }
 
-    // Produce the intrinsics
-    foreach (var pair in typeNames)
+    intrinsics.Add((type, typeNames));
+}
+
+// Numeric to bool
+foreach (var intrinsic in intrinsics)
+{
+    int index = 0;
+
+    foreach (var pair in intrinsic.Info)
     {
         if (index++ != 0) WriteLine("");
 #>
@@ -46,35 +53,15 @@ foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
     /// <returns>The converted <see cref="<#=pair.Target#>"/> value.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("<#=pair.Target.ToLower()#>")]
-    public static <#=pair.Target#> <#=type#>ToBool(<#=pair.Source#> x) => default;
+    public static <#=pair.Target#> <#=intrinsic.Type#>ToBool(<#=pair.Source#> x) => default;
 <#
     }
 }
 
 // Bool to numeric
-foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
+foreach (var intrinsic in intrinsics)
 {
-    List<(string Source, string Target)> typeNames = new List<(string, string)>();
-
-    typeNames.Add((type.ToLower(), "bool"));
-
-    // Vector types
-    for (int i = 2; i <= 4; i++)
-    {
-        typeNames.Add(($"{type}{i}", $"Bool{i}"));
-    }
-
-    // Matrix types
-    for (int i = 1; i <= 4; i++)
-    {
-        for (int j = 1; j <= 4; j++)
-        {
-            typeNames.Add(($"{type}{i}x{j}", $"Bool{i}x{j}"));
-        }
-    }
-
-    // Produce the intrinsics
-    foreach (var pair in typeNames)
+    foreach (var pair in intrinsic.Info)
     {
         WriteLine("");
 #>
@@ -85,7 +72,7 @@ foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
     /// <returns>The converted <see cref="<#=pair.Source#>"/> value.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("<#=pair.Source.ToLower()#>")]
-    public static <#=pair.Source#> BoolTo<#=type#>(<#=pair.Target#> x) => default;
+    public static <#=pair.Source#> BoolTo<#=intrinsic.Type#>(<#=pair.Target#> x) => default;
 <#
     }
 }
