@@ -237,6 +237,163 @@ public partial class ShaderRewriterTests
         }
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void ToBooleanConversionHlslIntrinsics(Device device)
+    {
+        float[] data1 = new[] { 3.14f, 0, 1.44f, 0, 0, 0.4445f };
+        int[] data2 = new[] { 3, 0, 1, 0, 0, 156 };
+
+        using ReadOnlyBuffer<float> buffer1 = device.Get().AllocateReadOnlyBuffer(data1);
+        using ReadOnlyBuffer<int> buffer2 = device.Get().AllocateReadOnlyBuffer(data2);
+        using ReadWriteBuffer<int> buffer3 = device.Get().AllocateReadWriteBuffer<int>(18, AllocationMode.Clear);
+
+        device.Get().For(1, new ToBooleanConversionIntrinsicsShader(buffer1, buffer2, buffer3));
+
+        int[] results = buffer3.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1 },
+            actual: results);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ToBooleanConversionIntrinsicsShader : IComputeShader
+    {
+        public readonly ReadOnlyBuffer<float> buffer1;
+        public readonly ReadOnlyBuffer<int> buffer2;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            float f1 = buffer1[0];
+            float f2 = buffer1[1];
+            float4 f4 = new(buffer1[2], buffer1[3], buffer1[4], buffer1[5]);
+
+            int i1 = buffer2[0];
+            int i2 = buffer2[1];
+            int4 i4 = new(buffer2[2], buffer2[3], buffer2[4], buffer2[5]);
+
+            uint u1 = (uint)buffer2[0];
+            uint u2 = (uint)buffer2[1];
+            uint4 u4 = new((uint)buffer2[2], (uint)buffer2[3], (uint)buffer2[4], (uint)buffer2[5]);
+
+            result[0] = Hlsl.FloatToBool(f1) ? 1 : 0;
+            result[1] = Hlsl.FloatToBool(f2) ? 1 : 0;
+
+            bool4 f4b = Hlsl.FloatToBool(f4);
+
+            result[2] = f4b[0] ? 1 : 0;
+            result[3] = f4b[1] ? 1 : 0;
+            result[4] = f4b[2] ? 1 : 0;
+            result[5] = f4b[3] ? 1 : 0;
+
+            result[6] = Hlsl.IntToBool(i1) ? 1 : 0;
+            result[7] = Hlsl.IntToBool(i2) ? 1 : 0;
+
+            bool4 i4b = Hlsl.IntToBool(i4);
+
+            result[8] = i4b[0] ? 1 : 0;
+            result[9] = i4b[1] ? 1 : 0;
+            result[10] = i4b[2] ? 1 : 0;
+            result[11] = i4b[3] ? 1 : 0;
+
+            result[12] = Hlsl.UIntToBool(u1) ? 1 : 0;
+            result[13] = Hlsl.UIntToBool(u2) ? 1 : 0;
+
+            bool4 u4b = Hlsl.UIntToBool(u4);
+
+            result[14] = u4b[0] ? 1 : 0;
+            result[15] = u4b[1] ? 1 : 0;
+            result[16] = u4b[2] ? 1 : 0;
+            result[17] = u4b[3] ? 1 : 0;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void FromBooleanConversionHlslIntrinsics(Device device)
+    {
+        int[] data = new[] { 1, 0, 1, 0, 0, 1 };
+
+        using ReadOnlyBuffer<int> buffer1 = device.Get().AllocateReadOnlyBuffer(data);
+        using ReadWriteBuffer<float> buffer2 = device.Get().AllocateReadWriteBuffer<float>(6, AllocationMode.Clear);
+        using ReadWriteBuffer<int> buffer3 = device.Get().AllocateReadWriteBuffer<int>(6, AllocationMode.Clear);
+        using ReadWriteBuffer<uint> buffer4 = device.Get().AllocateReadWriteBuffer<uint>(6, AllocationMode.Clear);
+
+        device.Get().For(1, new FromBooleanConversionIntrinsicsShader(buffer1, buffer2, buffer3, buffer4));
+
+        float[] results1 = buffer2.ToArray();
+        int[] results2 = buffer3.ToArray();
+        uint[] results3 = buffer4.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new float[] { 1, 0, 1, 0, 0, 1 },
+            actual: results1);
+
+        CollectionAssert.AreEqual(
+            expected: new int[] { 1, 0, 1, 0, 0, 1 },
+            actual: results2);
+
+        CollectionAssert.AreEqual(
+            expected: new uint[] { 1, 0, 1, 0, 0, 1 },
+            actual: results3);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct FromBooleanConversionIntrinsicsShader : IComputeShader
+    {
+        public readonly ReadOnlyBuffer<int> source;
+        public readonly ReadWriteBuffer<float> destination1;
+        public readonly ReadWriteBuffer<int> destination2;
+        public readonly ReadWriteBuffer<uint> destination3;
+
+        public void Execute()
+        {
+            bool b1 = source[0] != 0;
+            bool b2 = source[1] != 0;
+            bool4 b4 = new(source[2] != 0, source[3] != 0, source[4] != 0, source[5] != 0);
+
+            bool b11 = source[0] != 0;
+            bool b22 = source[1] != 0;
+            bool4 b44 = new(source[2] != 0, source[3] != 0, source[4] != 0, source[5] != 0);
+
+            bool b111 = source[0] != 0;
+            bool b222 = source[1] != 0;
+            bool4 b444 = new(source[2] != 0, source[3] != 0, source[4] != 0, source[5] != 0);
+
+            destination1[0] = Hlsl.BoolToFloat(b1);
+            destination1[1] = Hlsl.BoolToFloat(b2);
+
+            float4 f4 = Hlsl.BoolToFloat(b4);
+
+            destination1[2] = f4.X;
+            destination1[3] = f4.Y;
+            destination1[4] = f4.Z;
+            destination1[5] = f4.W;
+
+            destination2[0] = Hlsl.BoolToInt(b11);
+            destination2[1] = Hlsl.BoolToInt(b22);
+
+            int4 i4 = Hlsl.BoolToInt(b44);
+
+            destination2[2] = i4.X;
+            destination2[3] = i4.Y;
+            destination2[4] = i4.Z;
+            destination2[5] = i4.W;
+
+            destination3[0] = Hlsl.BoolToUInt(b111);
+            destination3[1] = Hlsl.BoolToUInt(b222);
+
+            uint4 u4 = Hlsl.BoolToUInt(b444);
+
+            destination3[2] = u4.X;
+            destination3[3] = u4.Y;
+            destination3[4] = u4.Z;
+            destination3[5] = u4.W;
+        }
+    }
+
     // See: https://github.com/Sergio0694/ComputeSharp/issues/259
     [CombinatorialTestMethod]
     [AllDevices]
