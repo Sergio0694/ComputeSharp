@@ -57,6 +57,39 @@ public readonly struct Bool
 #endif
 
     /// <summary>
+    /// Inverts the <see cref="bool"/> value represented by a given <see cref="Bool"/> instance.
+    /// </summary>
+    /// <param name="x">The input <see cref="Bool"/> instance.</param>
+    public static Bool operator !(Bool x) => new(!x.Value);
+
+    /// <summary>
+    /// Ands two <see cref="Bool"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool"/> value to and.</param>
+    /// <param name="right">The <see cref="Bool"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool operator &(Bool left, Bool right) => default;
+
+    /// <summary>
+    /// Ors two <see cref="Bool"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool"/> value to or.</param>
+    /// <param name="right">The <see cref="Bool"/> value to combine.</param>
+    /// <returns>The result of performing the or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool operator |(Bool left, Bool right) => default;
+
+    /// <summary>
+    /// Xors two <see cref="Bool"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Bool"/> value to xor.</param>
+    /// <param name="right">The <see cref="Bool"/> value to combine.</param>
+    /// <returns>The result of performing the xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Bool operator ^(Bool left, Bool right) => default;
+
+    /// <summary>
     /// Checks whether or not two <see cref="Bool"/> instances represent the same <see cref="bool"/> value.
     /// </summary>
     /// <param name="left">The left <see cref="Bool"/> instance.</param>
@@ -69,12 +102,6 @@ public readonly struct Bool
     /// <param name="left">The left <see cref="Bool"/> instance.</param>
     /// <param name="right">The right <see cref="Bool"/> instance.</param>
     public static bool operator !=(Bool left, Bool right) => left.Value != right.Value;
-
-    /// <summary>
-    /// Inverts the <see cref="bool"/> value represented by a given <see cref="Bool"/> instance.
-    /// </summary>
-    /// <param name="x">The input <see cref="Bool"/> instance.</param>
-    public static Bool operator !(Bool x) => new(!x.Value);
 
     /// <summary>
     /// Converts a given <see cref="Bool"/> instance to its corresponding <see cref="bool"/> value.

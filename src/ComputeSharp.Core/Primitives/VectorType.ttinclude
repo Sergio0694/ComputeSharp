@@ -500,6 +500,40 @@ public unsafe partial struct <#=typeName#>
     public static <#=typeName#> operator ^(<#=typeName#> left, UInt<#=i#> right) => default;
 <#
     }
+    else if (elementTypeName == "Bool")
+    {
+        string argumentName = "xyzw".Substring(0, i);
+
+        WriteLine("");
+#>
+    /// <summary>
+    /// Ands two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to and.</param>
+    /// <param name="right">The <see cref="<#=typeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the bitwise and between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator &(<#=typeName#> left, <#=typeName#> right) => default;
+
+    /// <summary>
+    /// Ors two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to or.</param>
+    /// <param name="right">The <see cref="<#=typeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the or between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator |(<#=typeName#> left, <#=typeName#> right) => default;
+
+    /// <summary>
+    /// Xors two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=typeName#>"/> value to xor.</param>
+    /// <param name="right">The <see cref="<#=typeName#>"/> value to combine.</param>
+    /// <returns>The result of performing the xor between <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator ^(<#=typeName#> left, <#=typeName#> right) => default;
+<#
+    }
 
     WriteLine("");
 #>
