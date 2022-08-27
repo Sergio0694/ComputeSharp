@@ -363,7 +363,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     // Allow specialized types to track the method invocation, if needed
                     TrackKnownMethodInvocation(metadataName);
 
-                    return updatedNode.WithExpression(ParseExpression(mapping!));
+                    return updatedNode.WithExpression(IdentifierName(mapping!));
                 }
 
                 // Update the name if the target is a local function. The exact schema for the
@@ -372,7 +372,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 {
                     var functionIdentifier = $"__{this.currentMethod!.Identifier.Text}__{method.Name}";
 
-                    return updatedNode.WithExpression(ParseExpression(functionIdentifier));
+                    return updatedNode.WithExpression(IdentifierName(functionIdentifier));
                 }
 
                 // If the method is an external static method, import and rewrite it as well.
@@ -398,7 +398,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
                     }
 
-                    return updatedNode.WithExpression(ParseExpression(methodIdentifier));
+                    return updatedNode.WithExpression(IdentifierName(methodIdentifier));
                 }
             }
             else

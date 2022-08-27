@@ -106,7 +106,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
                     mapping = HlslKnownMethods.GetMappedNameWithParameters(method.Name, method.Parameters.Select(static p => p.Type.Name));
                 }
 
-                return updatedNode.WithExpression(ParseExpression(mapping!));
+                return updatedNode.WithExpression(IdentifierName(mapping!));
             }
         }
 
