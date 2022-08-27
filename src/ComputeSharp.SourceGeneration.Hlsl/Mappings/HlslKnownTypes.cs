@@ -218,6 +218,14 @@ internal static partial class HlslKnownTypes
         // Local function to recursively gather nested types
         static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes, HashSet<INamedTypeSymbol> invalidTypes)
         {
+            // Explicitly prevent bool from being a field in a custom struct
+            if (type.SpecialType == SpecialType.System_Boolean)
+            {
+                invalidTypes.Add(type);
+
+                return;
+            }
+
             if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
 
             // Check if the type is unsupported
