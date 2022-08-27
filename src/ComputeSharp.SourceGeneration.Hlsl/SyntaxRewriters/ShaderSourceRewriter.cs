@@ -353,8 +353,13 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 // If the invocation consists of invoking a static method that has a direct
                 // mapping to HLSL, rewrite the expression in the current invocation node.
                 // For instance: Math.Abs(expr) => abs(expr).
-                if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping))
+                if (HlslKnownMethods.TryGetMappedName(metadataName, out string? mapping, out bool requiresParametersMapping))
                 {
+                    if (requiresParametersMapping)
+                    {
+                        mapping = HlslKnownMethods.GetMappedNameWithParameters(method.Name, method.Parameters.Select(static p => p.Type.Name));
+                    }
+
                     // Allow specialized types to track the method invocation, if needed
                     TrackKnownMethodInvocation(metadataName);
 

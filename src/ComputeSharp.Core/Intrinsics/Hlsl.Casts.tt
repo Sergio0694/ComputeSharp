@@ -1,0 +1,80 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+using ComputeSharp.Core.Intrinsics.Attributes;
+
+namespace ComputeSharp;
+
+/// <inheritdoc cref="Hlsl"/>
+partial class Hlsl
+{
+<#
+List<(string Type, List<(string Source, string Target)> Info)> intrinsics = new List<(string, List<(string, string)>)>();
+
+// Prepare the intrinsic names
+foreach (var type in new[] { "Float", "Double", "Int", "UInt" })
+{
+    List<(string Source, string Target)> typeNames = new List<(string, string)>();
+
+    typeNames.Add((type.ToLower(), "bool"));
+
+    // Vector types
+    for (int i = 2; i <= 4; i++)
+    {
+        typeNames.Add(($"{type}{i}", $"Bool{i}"));
+    }
+
+    // Matrix types
+    for (int i = 1; i <= 4; i++)
+    {
+        for (int j = 1; j <= 4; j++)
+        {
+            typeNames.Add(($"{type}{i}x{j}", $"Bool{i}x{j}"));
+        }
+    }
+
+    intrinsics.Add((type, typeNames));
+}
+
+// Numeric to bool
+foreach (var intrinsic in intrinsics)
+{
+    int index = 0;
+
+    foreach (var pair in intrinsic.Info)
+    {
+        if (index++ != 0) WriteLine("");
+#>
+    /// <summary>
+    /// Converts the input <see cref="<#=pair.Source#>"/> value into a <see cref="<#=pair.Target#>"/> value (non-zero elements map to <see langword="true"/>, zero elements map to <see langword="false"/>).
+    /// </summary>
+    /// <param name="x">The input <see cref="<#=pair.Source#>"/> value.</param>
+    /// <returns>The converted <see cref="<#=pair.Target#>"/> value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("<#=pair.Target.ToLower()#>", RequiresParametersMatching = true)]
+    public static <#=pair.Target#> <#=intrinsic.Type#>ToBool(<#=pair.Source#> x) => default;
+<#
+    }
+}
+
+// Bool to numeric
+foreach (var intrinsic in intrinsics)
+{
+    foreach (var pair in intrinsic.Info)
+    {
+        WriteLine("");
+#>
+    /// <summary>
+    /// Converts the input <see cref="<#=pair.Target#>"/> value into a <see cref="<#=pair.Source#>"/> value (<see langword="true"/> elements map to 1, <see langword="false"/> map to 0).
+    /// </summary>
+    /// <param name="x">The input <see cref="<#=pair.Target#>"/> value.</param>
+    /// <returns>The converted <see cref="<#=pair.Source#>"/> value.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("<#=pair.Source.ToLower()#>", RequiresParametersMatching = true)]
+    public static <#=pair.Source#> BoolTo<#=intrinsic.Type#>(<#=pair.Target#> x) => default;
+<#
+    }
+}
+#>
+}
