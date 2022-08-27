@@ -20,10 +20,10 @@ public unsafe partial struct Bool2
     private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool2), sizeof(Bool4));
 
     [FieldOffset(0)]
-    private bool x;
+    private int x;
 
     [FieldOffset(4)]
-    private bool y;
+    private int y;
 
     /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Bool2"/> instance.
@@ -55,12 +55,12 @@ public unsafe partial struct Bool2
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
     /// </summary>
-    public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
+    public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.x)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>Y</c> component.
     /// </summary>
-    public readonly ref bool Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
+    public readonly ref bool Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.y)), 1));
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="X"/>.
@@ -233,12 +233,12 @@ public unsafe partial struct Bool2
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>R</c> component.
     /// </summary>
-    public readonly ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
+    public readonly ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.x)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>G</c> component.
     /// </summary>
-    public readonly ref bool G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
+    public readonly ref bool G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.y)), 1));
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="R"/>.
@@ -414,9 +414,9 @@ public unsafe partial struct Bool2
     public override readonly string ToString()
     {
 #if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[32], $"<{this.x}, {this.y}>");
+        return string.Create(null, stackalloc char[32], $"<{this.x != 0}, {this.y != 0}>");
 #else
-        return $"<{this.x}, {this.y}>";
+        return $"<{this.x != 0}, {this.y != 0}>";
 #endif
     }
 

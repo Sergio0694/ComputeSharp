@@ -35,6 +35,8 @@ namespace ComputeSharp;
 void GenerateMatrixProperties(string typeName, int rows, int columns, int elementSize)
 {
     string elementTypeName = typeName.ToLower();
+    bool isBoolType = elementTypeName == "bool";
+    string fieldElementTypeName = isBoolType ? "int" : elementTypeName;
     string fullTypeName = $"{typeName}{rows}x{columns}";
     string rowTypeName = columns > 1 ? $"{typeName}{columns}" : elementTypeName;
     List<string> fieldNames = new List<string>();
@@ -56,7 +58,7 @@ public unsafe partial struct <#=fullTypeName#>
     for (int j = 1; j <= columns; j++)
     {
         WriteLine($"[FieldOffset({((i - 1) * columns + j - 1) * elementSize})]");
-        WriteLine($"private {elementTypeName} m{i}{j};");
+        WriteLine($"private {fieldElementTypeName} m{i}{j};");
         WriteLine("");
 
         fieldNames.Add($"m{i}{j}");
@@ -79,7 +81,15 @@ public unsafe partial struct <#=fullTypeName#>
 
     foreach (string fieldName in fieldNames)
     {
-        WriteLine($"this.{fieldName} = {fieldName};");
+        if (isBoolType)
+        {
+            // For bools, normalize from bool to int
+            WriteLine($"this.{fieldName} = {fieldName} ? 1 : 0;");
+        }
+        else
+        {
+            WriteLine($"this.{fieldName} = {fieldName};");
+        }
     }
 
     PopIndent();
@@ -113,7 +123,15 @@ public unsafe partial struct <#=fullTypeName#>
         for (int i = 1; i <= rows; i++)
         for (int j = 1; j <= columns; j++)
         {
-            WriteLine($"this.m{i}{j} = row{i}.{"XYZW"[j - 1]};");
+            if (isBoolType)
+            {
+                // Also normalize bools here as well
+                WriteLine($"this.m{i}{j} = row{i}.{"XYZW"[j - 1]} ? 1 : 0;");
+            }
+            else
+            {
+                WriteLine($"this.m{i}{j} = row{i}.{"XYZW"[j - 1]};");
+            }
         }
 
         PopIndent();
@@ -165,7 +183,20 @@ public unsafe partial struct <#=fullTypeName#>
     /// <summary>
     /// Gets a reference to the <see cref="<#=elementTypeName#>"/> value representing the component at position [<#=i#>, <#=j#>].
     /// </summary>
+<#
+    if (isBoolType)
+    {
+#>
+    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m<#=i#><#=j#>)), 1));
+<#
+    }
+    else
+    {
+#>
     public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m<#=i#><#=j#>), 1));
+<#
+    }
+#>
 <#
     }
 
@@ -187,7 +218,14 @@ public unsafe partial struct <#=fullTypeName#>
     for (int i = 1; i <= rows; i++)
     for (int j = 1; j <= columns; j++)
     {
-        WriteLine($"matrix.m{i}{j} = x;");
+        if (isBoolType)
+        {
+            WriteLine($"matrix.m{i}{j} = x ? 1 : 0;");
+        }
+        else
+        {
+            WriteLine($"matrix.m{i}{j} = x;");
+        }
     }
 
     WriteLine("");
