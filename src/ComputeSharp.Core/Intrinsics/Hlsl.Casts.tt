@@ -52,7 +52,7 @@ foreach (var intrinsic in intrinsics)
     /// <param name="x">The input <see cref="<#=pair.Source#>"/> value.</param>
     /// <returns>The converted <see cref="<#=pair.Target#>"/> value.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    [HlslIntrinsicName("<#=pair.Target.ToLower()#>")]
+    [HlslIntrinsicName("<#=pair.Target.ToLower()#>", RequiresParametersMatching = true)]
     public static <#=pair.Target#> <#=intrinsic.Type#>ToBool(<#=pair.Source#> x) => default;
 <#
     }
@@ -71,7 +71,7 @@ foreach (var intrinsic in intrinsics)
     /// <param name="x">The input <see cref="<#=pair.Target#>"/> value.</param>
     /// <returns>The converted <see cref="<#=pair.Source#>"/> value.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    [HlslIntrinsicName("<#=pair.Source.ToLower()#>")]
+    [HlslIntrinsicName("<#=pair.Source.ToLower()#>", RequiresParametersMatching = true)]
     public static <#=pair.Source#> BoolTo<#=intrinsic.Type#>(<#=pair.Target#> x) => default;
 <#
     }
