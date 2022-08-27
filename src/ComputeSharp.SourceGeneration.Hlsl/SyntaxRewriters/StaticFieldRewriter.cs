@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -98,8 +99,13 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
             method.IsStatic)
         {
             // Rewrite HLSL intrinsic methods
-            if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+            if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping, out bool requiresParametersMapping))
             {
+                if (requiresParametersMapping)
+                {
+                    mapping = HlslKnownMethods.GetMappedNameWithParameters(method.Name, method.Parameters.Select(static p => p.Type.Name));
+                }
+
                 return updatedNode.WithExpression(ParseExpression(mapping!));
             }
         }
