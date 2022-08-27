@@ -388,7 +388,7 @@ public partial class BufferTests
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
     [ExpectedException(typeof(UnsupportedDoubleOperationException))]
-    public void Dispatch_ReadWriteBuffer_DoublePrecision_ThrowsExceptionIfUnsupported(Device device, Type resourceType)
+    public void Dispatch_Buffer_DoublePrecision_ThrowsExceptionIfUnsupported(Device device, Type resourceType)
     {
         if (device.Get().IsDoublePrecisionSupportAvailable())
         {
@@ -396,6 +396,23 @@ public partial class BufferTests
         }
 
         using Buffer<double> buffer = device.Get().AllocateBuffer<double>(resourceType, 32);
+
+        Assert.Fail();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(UploadBuffer<>))]
+    [Resource(typeof(ReadBackBuffer<>))]
+    [ExpectedException(typeof(UnsupportedDoubleOperationException))]
+    public void Dispatch_TransferBuffer_DoublePrecision_ThrowsExceptionIfUnsupported(Device device, Type resourceType)
+    {
+        if (device.Get().IsDoublePrecisionSupportAvailable())
+        {
+            Assert.Inconclusive();
+        }
+
+        using TransferBuffer<double> buffer = device.Get().AllocateTransferBuffer<double>(resourceType, 32);
 
         Assert.Fail();
     }
