@@ -578,11 +578,11 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidDiscoveredType = new DiagnosticDescriptor(
         id: "CMPSD2D0041",
         title: "Invalid discovered type",
-        messageFormat: "The D2D1 shader of type {0} uses the invalid type {1} (only some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used)",
+        messageFormat: "The D2D1 shader of type {0} uses the invalid type {1} (only some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used, and custom types containing these types can be used, and bool fields in custom struct types have to be replaced with the ComputeSharp.Bool type for alignment reasons)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "D2D1 shaders can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used).",
+        description: "D2D1 shaders can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used, and custom types containing these types can be used, and bool fields in custom struct types have to be replaced with the ComputeSharp.Bool type for alignment reasons).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

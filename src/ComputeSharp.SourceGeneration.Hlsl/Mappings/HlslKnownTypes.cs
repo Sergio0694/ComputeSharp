@@ -67,6 +67,7 @@ internal static partial class HlslKnownTypes
         Dictionary<string, string> knownTypes = new()
         {
             [typeof(bool).FullName] = "bool",
+            [typeof(Bool).FullName] = "bool",
             [typeof(int).FullName] = "int",
             [typeof(uint).FullName] = "uint",
             [typeof(float).FullName] = "float",
@@ -218,6 +219,14 @@ internal static partial class HlslKnownTypes
         // Local function to recursively gather nested types
         static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes, HashSet<INamedTypeSymbol> invalidTypes)
         {
+            // Explicitly prevent bool from being a field in a custom struct
+            if (type.SpecialType == SpecialType.System_Boolean)
+            {
+                invalidTypes.Add(type);
+
+                return;
+            }
+
             if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
 
             // Check if the type is unsupported
@@ -248,6 +257,15 @@ internal static partial class HlslKnownTypes
         // Explore all input types and their nested types
         foreach (INamedTypeSymbol type in discoveredTypes)
         {
+            // Special case for bool types. These types are blocked if they appear as fields in custom struct types,
+            // but are otherwise allowed. For instance, it is fine to use them in captured values for a shader (as
+            // the dispatch data loader will perform the correct marshalling) as well as in locals/parameters. This
+            // branch prevents crawling a processed type if it's just bool at the top level (ie. not a custom struct).
+            if (type.SpecialType == SpecialType.System_Boolean)
+            {
+                continue;
+            }
+
             ExploreTypes(type, customTypes, invalidTypes2);
         }
 

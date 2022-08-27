@@ -1697,6 +1697,38 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
+    [TestMethod]
+    public void InvalidDiscoveredType_CustomType_SystemBoolean()
+    {
+        string source = @"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public class ReadWriteBuffer<T> { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            public struct Foo
+            {
+                public bool bar;
+            }
+
+            public struct MyShader : IComputeShader
+            {
+                public readonly ReadWriteBuffer<Foo> buffer;
+
+                public void Execute()
+                {
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

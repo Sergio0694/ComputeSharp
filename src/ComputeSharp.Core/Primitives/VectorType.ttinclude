@@ -49,6 +49,8 @@ void GenerateVectorProperties(string typeName, int elementSize)
 {
     string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
     string hlslElementTypeName = elementTypeName.ToLower();
+    bool isBoolType = hlslElementTypeName == "bool";
+    string fieldElementTypeName = isBoolType ? "int" : hlslElementTypeName;
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
     string formattable = elementTypeName == "Bool" ? "" : "ISpanFormattable";
 
@@ -96,7 +98,7 @@ public unsafe partial struct <#=typeName#>
     foreach (char name in "xyzw".Substring(0, i))
     {
         WriteLine($"[FieldOffset({"xyzw".IndexOf(name) * elementSize})]");
-        WriteLine($"private {hlslElementTypeName} {name};");
+        WriteLine($"private {fieldElementTypeName} {name};");
         WriteLine("");
     }
 
@@ -201,7 +203,16 @@ public unsafe partial struct <#=typeName#>
 
             // Property
             Write($"public readonly {refType} {propertyType} {propertyName} ");
-            WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.{fieldName}), 1));");
+
+            if (isBoolType)
+            {
+                // For bool types, also reinterpret cast from int to bool (the backing field is int to ensure all 4 bytes are initialized)
+                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.{fieldName})), 1));");
+            }
+            else
+            {
+                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.{fieldName}), 1));");
+            }
         }
         else
         {
@@ -233,9 +244,9 @@ public unsafe partial struct <#=typeName#>
     public override readonly string ToString()
     {
 #if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[32], $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>");
+        return string.Create(null, stackalloc char[32], $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c} != 0}}"))#>>");
 #else
-        return $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>";
+        return $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c} != 0}}"))#>>";
 #endif
     }
 <#

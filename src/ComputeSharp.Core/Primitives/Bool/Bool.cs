@@ -6,14 +6,14 @@ namespace ComputeSharp;
 /// <summary>
 /// A <see langword="struct"/> that can be used in place of the <see cref="bool"/> type in HLSL shaders.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = sizeof(int), Pack = 4)]
+[StructLayout(LayoutKind.Explicit, Size = 4, Pack = 4)]
 public readonly struct Bool
 {
     /// <summary>
-    /// The wrapped <see cref="bool"/> value for the current instance.
+    /// The wrapped <see cref="int"/> value for the current instance.
     /// </summary>
     [FieldOffset(0)]
-    private readonly bool Value;
+    private readonly int Value;
 
     /// <summary>
     /// Creates a new <see cref="Bool"/> instance for a given <see cref="bool"/> value.
@@ -21,7 +21,7 @@ public readonly struct Bool
     /// <param name="value">.</param>
     private Bool(bool value)
     {
-        Value = value;
+        Value = value ? 1 : 0;
     }
 
     /// <inheritdoc/>
@@ -39,20 +39,20 @@ public readonly struct Bool
     /// <inheritdoc/>
     public override string ToString()
     {
-        return Value.ToString();
+        return ((bool)this).ToString();
     }
 
     /// <inheritdoc cref="bool.ToString(IFormatProvider?)"/>
     public string ToString(IFormatProvider? formatProvider)
     {
-        return Value.ToString();
+        return ((bool)this).ToString(formatProvider);
     }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc cref="bool.TryFormat(Span{char}, out int)"/>
     public bool TryFormat(Span<char> destination, out int charsWritten)
     {
-        return Value.TryFormat(destination, out charsWritten);
+        return ((bool)this).TryFormat(destination, out charsWritten);
     }
 #endif
 
@@ -60,7 +60,7 @@ public readonly struct Bool
     /// Inverts the <see cref="bool"/> value represented by a given <see cref="Bool"/> instance.
     /// </summary>
     /// <param name="x">The input <see cref="Bool"/> instance.</param>
-    public static Bool operator !(Bool x) => new(!x.Value);
+    public static Bool operator !(Bool x) => new(!(bool)x);
 
     /// <summary>
     /// Ands two <see cref="Bool"/> values.
@@ -107,7 +107,7 @@ public readonly struct Bool
     /// Converts a given <see cref="Bool"/> instance to its corresponding <see cref="bool"/> value.
     /// </summary>
     /// <param name="x">The input <see cref="Bool"/> instance.</param>
-    public static implicit operator bool(Bool x) => x.Value;
+    public static implicit operator bool(Bool x) => x.Value != 0;
 
     /// <summary>
     /// Converts a <see cref="bool"/> value to a corresponding <see cref="Bool"/> instance.

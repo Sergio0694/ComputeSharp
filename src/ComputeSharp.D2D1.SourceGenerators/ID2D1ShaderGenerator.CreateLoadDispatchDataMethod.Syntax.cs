@@ -70,6 +70,18 @@ partial class ID2D1ShaderGenerator
             {
                 switch (fieldInfo)
                 {
+                    case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
+
+                        // Read a boolean value and cast it to Bool first, which will apply the correct size expansion. This will generate the following:
+                        //
+                        // global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Bool>(
+                        //     ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET>)) = (global::ComputeSharp.Bool)<FIELD_PATH>
+                        statements.Add(ExpressionStatement(
+                            AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Bool>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset}))"),
+                                ParseExpression($"(global::ComputeSharp.Bool){string.Join(".", primitive.FieldPath)}"))));
+                        break;
                     case FieldInfo.Primitive primitive:
 
                         // Read a primitive value and serialize it into the target buffer. This will generate:

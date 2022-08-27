@@ -20,16 +20,16 @@ public unsafe partial struct Bool4
     private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4), sizeof(Bool4));
 
     [FieldOffset(0)]
-    private bool x;
+    private int x;
 
     [FieldOffset(4)]
-    private bool y;
+    private int y;
 
     [FieldOffset(8)]
-    private bool z;
+    private int z;
 
     [FieldOffset(12)]
-    private bool w;
+    private int w;
 
     /// <summary>
     /// Gets a reference to a specific component in the current <see cref="Bool4"/> instance.
@@ -71,22 +71,22 @@ public unsafe partial struct Bool4
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
     /// </summary>
-    public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
+    public readonly ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.x)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>Y</c> component.
     /// </summary>
-    public readonly ref bool Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
+    public readonly ref bool Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.y)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>Z</c> component.
     /// </summary>
-    public readonly ref bool Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.z), 1));
+    public readonly ref bool Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.z)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>W</c> component.
     /// </summary>
-    public readonly ref bool W => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.w), 1));
+    public readonly ref bool W => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.w)), 1));
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="X"/>.
@@ -2107,22 +2107,22 @@ public unsafe partial struct Bool4
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>R</c> component.
     /// </summary>
-    public readonly ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
+    public readonly ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.x)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>G</c> component.
     /// </summary>
-    public readonly ref bool G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
+    public readonly ref bool G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.y)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>B</c> component.
     /// </summary>
-    public readonly ref bool B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.z), 1));
+    public readonly ref bool B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.z)), 1));
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the <c>A</c> component.
     /// </summary>
-    public readonly ref bool A => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.w), 1));
+    public readonly ref bool A => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.w)), 1));
 
     /// <summary>
     /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="R"/>.
@@ -4146,9 +4146,9 @@ public unsafe partial struct Bool4
     public override readonly string ToString()
     {
 #if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[32], $"<{this.x}, {this.y}, {this.z}, {this.w}>");
+        return string.Create(null, stackalloc char[32], $"<{this.x != 0}, {this.y != 0}, {this.z != 0}, {this.w != 0}>");
 #else
-        return $"<{this.x}, {this.y}, {this.z}, {this.w}>";
+        return $"<{this.x != 0}, {this.y != 0}, {this.z != 0}, {this.w != 0}>";
 #endif
     }
 
