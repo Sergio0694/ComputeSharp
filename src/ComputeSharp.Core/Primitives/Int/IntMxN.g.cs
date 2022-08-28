@@ -126,6 +126,32 @@ public unsafe partial struct Int1x1
     public static Int1x1 operator *(Int1x1 left, Int1x1 right) => default;
 
     /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int1x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int1x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x1 operator *(int x, Int1x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x1 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x1, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x1 operator *(Int1x1 x, int y) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int1x1"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int1x1"/> value to subtract.</param>
@@ -415,6 +441,110 @@ public unsafe partial struct Int1x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x2 operator *(Int1x2 left, Int1x2 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int1x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int1x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(int x, Int1x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(Int1x2 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second Int2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, Int2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static int operator *(Int1x2 x, Int2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x1 input value.</param>
+    /// <param name="y">The second Int1x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x1, Int1x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(Int1x1 x, Int1x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second Int2x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, Int2x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x1 operator *(Int1x2 x, Int2x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second Int2x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, Int2x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(Int1x2 x, Int2x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second Int2x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, Int2x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(Int1x2 x, Int2x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x2 input value.</param>
+    /// <param name="y">The second Int2x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x2, Int2x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(Int1x2 x, Int2x4 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int1x2"/> values.
@@ -723,6 +853,110 @@ public unsafe partial struct Int1x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x3 operator *(Int1x3 left, Int1x3 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int1x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int1x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(int x, Int1x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(Int1x3 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second Int3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, Int3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static int operator *(Int1x3 x, Int3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x1 input value.</param>
+    /// <param name="y">The second Int1x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x1, Int1x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(Int1x1 x, Int1x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second Int3x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, Int3x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x1 operator *(Int1x3 x, Int3x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second Int3x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, Int3x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(Int1x3 x, Int3x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second Int3x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, Int3x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(Int1x3 x, Int3x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x3 input value.</param>
+    /// <param name="y">The second Int3x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x3, Int3x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(Int1x3 x, Int3x4 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int1x3"/> values.
@@ -1044,6 +1278,110 @@ public unsafe partial struct Int1x4
     public static Int1x4 operator *(Int1x4 left, Int1x4 right) => default;
 
     /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int1x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int1x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(int x, Int1x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(Int1x4 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second Int4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, Int4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static int operator *(Int1x4 x, Int4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x1 input value.</param>
+    /// <param name="y">The second Int1x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x1, Int1x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(Int1x1 x, Int1x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second Int4x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, Int4x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x1 operator *(Int1x4 x, Int4x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second Int4x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, Int4x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x2 operator *(Int1x4 x, Int4x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second Int4x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, Int4x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x3 operator *(Int1x4 x, Int4x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int1x4 input value.</param>
+    /// <param name="y">The second Int4x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int1x4, Int4x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int1x4 operator *(Int1x4 x, Int4x4 y) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int1x4"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int1x4"/> value to subtract.</param>
@@ -1339,6 +1677,97 @@ public unsafe partial struct Int2x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x1 operator *(Int2x1 left, Int2x1 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int2x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int2x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(int x, Int2x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x1 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x1, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(Int2x1 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x1 input value.</param>
+    /// <param name="y">The second Int1x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x1, Int1x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(Int2x1 x, Int1x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x1 input value.</param>
+    /// <param name="y">The second Int1x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x1, Int1x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x2 operator *(Int2x1 x, Int1x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x1 input value.</param>
+    /// <param name="y">The second Int1x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x1, Int1x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(Int2x1 x, Int1x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x1 input value.</param>
+    /// <param name="y">The second Int1x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x1, Int1x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(Int2x1 x, Int1x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x2 input value.</param>
+    /// <param name="y">The second Int2x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x2, Int2x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(Int2x2 x, Int2x1 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int2x1"/> values.
@@ -1671,6 +2100,32 @@ public unsafe partial struct Int2x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x2 operator *(Int2x2 left, Int2x2 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int2x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int2x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x2 operator *(int x, Int2x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x2 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x2, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x2 operator *(Int2x2 x, int y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int2x2"/> values.
@@ -2021,6 +2476,110 @@ public unsafe partial struct Int2x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x3 operator *(Int2x3 left, Int2x3 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int2x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int2x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(int x, Int2x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(Int2x3 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second Int3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, Int3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2 operator *(Int2x3 x, Int3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x2 input value.</param>
+    /// <param name="y">The second Int2x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x2, Int2x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(Int2x2 x, Int2x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second Int3x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, Int3x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(Int2x3 x, Int3x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second Int3x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, Int3x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x2 operator *(Int2x3 x, Int3x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second Int3x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, Int3x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(Int2x3 x, Int3x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x3 input value.</param>
+    /// <param name="y">The second Int3x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x3, Int3x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(Int2x3 x, Int3x4 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int2x3"/> values.
@@ -2397,6 +2956,110 @@ public unsafe partial struct Int2x4
     public static Int2x4 operator *(Int2x4 left, Int2x4 right) => default;
 
     /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int2x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int2x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(int x, Int2x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(Int2x4 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second Int4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, Int4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2 operator *(Int2x4 x, Int4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x2 input value.</param>
+    /// <param name="y">The second Int2x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x2, Int2x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(Int2x2 x, Int2x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second Int4x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, Int4x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x1 operator *(Int2x4 x, Int4x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second Int4x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, Int4x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x2 operator *(Int2x4 x, Int4x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second Int4x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, Int4x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x3 operator *(Int2x4 x, Int4x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int2x4 input value.</param>
+    /// <param name="y">The second Int4x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int2x4, Int4x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int2x4 operator *(Int2x4 x, Int4x4 y) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int2x4"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int2x4"/> value to subtract.</param>
@@ -2697,6 +3360,97 @@ public unsafe partial struct Int3x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x1 operator *(Int3x1 left, Int3x1 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int3x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int3x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(int x, Int3x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x1 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x1, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(Int3x1 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x1 input value.</param>
+    /// <param name="y">The second Int1x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x1, Int1x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(Int3x1 x, Int1x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x1 input value.</param>
+    /// <param name="y">The second Int1x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x1, Int1x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(Int3x1 x, Int1x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x1 input value.</param>
+    /// <param name="y">The second Int1x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x1, Int1x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x3 operator *(Int3x1 x, Int1x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x1 input value.</param>
+    /// <param name="y">The second Int1x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x1, Int1x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(Int3x1 x, Int1x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x3 input value.</param>
+    /// <param name="y">The second Int3x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x3, Int3x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(Int3x3 x, Int3x1 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int3x1"/> values.
@@ -3054,6 +3808,110 @@ public unsafe partial struct Int3x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x2 operator *(Int3x2 left, Int3x2 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int3x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int3x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(int x, Int3x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(Int3x2 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second Int2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, Int2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3 operator *(Int3x2 x, Int2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second Int2x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, Int2x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(Int3x2 x, Int2x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second Int2x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, Int2x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(Int3x2 x, Int2x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second Int2x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, Int2x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x3 operator *(Int3x2 x, Int2x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x2 input value.</param>
+    /// <param name="y">The second Int2x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x2, Int2x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(Int3x2 x, Int2x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x3 input value.</param>
+    /// <param name="y">The second Int3x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x3, Int3x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(Int3x3 x, Int3x2 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int3x2"/> values.
@@ -3441,6 +4299,32 @@ public unsafe partial struct Int3x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x3 operator *(Int3x3 left, Int3x3 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int3x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int3x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x3 operator *(int x, Int3x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x3 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x3, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x3 operator *(Int3x3 x, int y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int3x3"/> values.
@@ -3866,6 +4750,110 @@ public unsafe partial struct Int3x4
     public static Int3x4 operator *(Int3x4 left, Int3x4 right) => default;
 
     /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int3x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int3x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(int x, Int3x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(Int3x4 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second Int4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, Int4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3 operator *(Int3x4 x, Int4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x3 input value.</param>
+    /// <param name="y">The second Int3x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x3, Int3x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(Int3x3 x, Int3x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second Int4x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, Int4x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x1 operator *(Int3x4 x, Int4x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second Int4x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, Int4x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x2 operator *(Int3x4 x, Int4x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second Int4x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, Int4x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x3 operator *(Int3x4 x, Int4x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int3x4 input value.</param>
+    /// <param name="y">The second Int4x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int3x4, Int4x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int3x4 operator *(Int3x4 x, Int4x4 y) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int3x4"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int3x4"/> value to subtract.</param>
@@ -4177,6 +5165,97 @@ public unsafe partial struct Int4x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x1 operator *(Int4x1 left, Int4x1 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int4x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int4x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(int x, Int4x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x1 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x1, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(Int4x1 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x1 input value.</param>
+    /// <param name="y">The second Int1x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x1, Int1x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(Int4x1 x, Int1x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x1 input value.</param>
+    /// <param name="y">The second Int1x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x1, Int1x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(Int4x1 x, Int1x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x1 input value.</param>
+    /// <param name="y">The second Int1x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x1, Int1x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(Int4x1 x, Int1x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x1 input value.</param>
+    /// <param name="y">The second Int1x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x1, Int1x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x4 operator *(Int4x1 x, Int1x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x4 input value.</param>
+    /// <param name="y">The second Int4x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x4, Int4x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(Int4x4 x, Int4x1 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int4x1"/> values.
@@ -4559,6 +5638,110 @@ public unsafe partial struct Int4x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x2 operator *(Int4x2 left, Int4x2 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int4x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int4x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(int x, Int4x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(Int4x2 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second Int2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, Int2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4 operator *(Int4x2 x, Int2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second Int2x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, Int2x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(Int4x2 x, Int2x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second Int2x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, Int2x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(Int4x2 x, Int2x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second Int2x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, Int2x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(Int4x2 x, Int2x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x2 input value.</param>
+    /// <param name="y">The second Int2x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x2, Int2x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x4 operator *(Int4x2 x, Int2x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x4 input value.</param>
+    /// <param name="y">The second Int4x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x4, Int4x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(Int4x4 x, Int4x2 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int4x2"/> values.
@@ -4983,6 +6166,110 @@ public unsafe partial struct Int4x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x3 operator *(Int4x3 left, Int4x3 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int4x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int4x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(int x, Int4x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(Int4x3 x, int y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second Int3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, Int3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4 operator *(Int4x3 x, Int3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second Int3x1 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, Int3x1)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x1 operator *(Int4x3 x, Int3x1 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second Int3x2 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, Int3x2)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x2 operator *(Int4x3 x, Int3x2 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second Int3x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, Int3x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(Int4x3 x, Int3x3 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x3 input value.</param>
+    /// <param name="y">The second Int3x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x3, Int3x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x4 operator *(Int4x3 x, Int3x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x4 input value.</param>
+    /// <param name="y">The second Int4x3 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x4, Int4x3)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x3 operator *(Int4x4 x, Int4x3 y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int4x3"/> values.
@@ -5455,6 +6742,32 @@ public unsafe partial struct Int4x4
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x4 operator *(Int4x4 left, Int4x4 right) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first int input value.</param>
+    /// <param name="y">The second Int4x4 input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(int, Int4x4)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x4 operator *(int x, Int4x4 y) => default;
+
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first Int4x4 input value.</param>
+    /// <param name="y">The second int input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Int4x4, int)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    public static Int4x4 operator *(Int4x4 x, int y) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int4x4"/> values.
