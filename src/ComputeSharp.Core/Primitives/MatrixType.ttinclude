@@ -310,6 +310,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static <#=mulOverload.Return#> operator *(<#=mulOverload.Params[0]#> x, <#=mulOverload.Params[1]#> y) => default;
 <#
     }

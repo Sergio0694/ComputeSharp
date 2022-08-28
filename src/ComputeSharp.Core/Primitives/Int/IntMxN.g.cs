@@ -136,6 +136,7 @@ public unsafe partial struct Int1x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x1 operator *(int x, Int1x1 y) => default;
 
     /// <summary>
@@ -149,6 +150,7 @@ public unsafe partial struct Int1x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x1 operator *(Int1x1 x, int y) => default;
 
     /// <summary>
@@ -453,6 +455,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(int x, Int1x2 y) => default;
 
     /// <summary>
@@ -466,6 +469,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(Int1x2 x, int y) => default;
 
     /// <summary>
@@ -479,6 +483,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static int operator *(Int1x2 x, Int2 y) => default;
 
     /// <summary>
@@ -492,6 +497,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(Int1x1 x, Int1x2 y) => default;
 
     /// <summary>
@@ -505,6 +511,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x1 operator *(Int1x2 x, Int2x1 y) => default;
 
     /// <summary>
@@ -518,6 +525,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(Int1x2 x, Int2x2 y) => default;
 
     /// <summary>
@@ -531,6 +539,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(Int1x2 x, Int2x3 y) => default;
 
     /// <summary>
@@ -544,6 +553,7 @@ public unsafe partial struct Int1x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(Int1x2 x, Int2x4 y) => default;
 
     /// <summary>
@@ -865,6 +875,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(int x, Int1x3 y) => default;
 
     /// <summary>
@@ -878,6 +889,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(Int1x3 x, int y) => default;
 
     /// <summary>
@@ -891,6 +903,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static int operator *(Int1x3 x, Int3 y) => default;
 
     /// <summary>
@@ -904,6 +917,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(Int1x1 x, Int1x3 y) => default;
 
     /// <summary>
@@ -917,6 +931,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x1 operator *(Int1x3 x, Int3x1 y) => default;
 
     /// <summary>
@@ -930,6 +945,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(Int1x3 x, Int3x2 y) => default;
 
     /// <summary>
@@ -943,6 +959,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(Int1x3 x, Int3x3 y) => default;
 
     /// <summary>
@@ -956,6 +973,7 @@ public unsafe partial struct Int1x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(Int1x3 x, Int3x4 y) => default;
 
     /// <summary>
@@ -1288,6 +1306,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(int x, Int1x4 y) => default;
 
     /// <summary>
@@ -1301,6 +1320,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(Int1x4 x, int y) => default;
 
     /// <summary>
@@ -1314,6 +1334,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static int operator *(Int1x4 x, Int4 y) => default;
 
     /// <summary>
@@ -1327,6 +1348,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(Int1x1 x, Int1x4 y) => default;
 
     /// <summary>
@@ -1340,6 +1362,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x1 operator *(Int1x4 x, Int4x1 y) => default;
 
     /// <summary>
@@ -1353,6 +1376,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x2 operator *(Int1x4 x, Int4x2 y) => default;
 
     /// <summary>
@@ -1366,6 +1390,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x3 operator *(Int1x4 x, Int4x3 y) => default;
 
     /// <summary>
@@ -1379,6 +1404,7 @@ public unsafe partial struct Int1x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int1x4 operator *(Int1x4 x, Int4x4 y) => default;
 
     /// <summary>
@@ -1689,6 +1715,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(int x, Int2x1 y) => default;
 
     /// <summary>
@@ -1702,6 +1729,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(Int2x1 x, int y) => default;
 
     /// <summary>
@@ -1715,6 +1743,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(Int2x1 x, Int1x1 y) => default;
 
     /// <summary>
@@ -1728,6 +1757,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x2 operator *(Int2x1 x, Int1x2 y) => default;
 
     /// <summary>
@@ -1741,6 +1771,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(Int2x1 x, Int1x3 y) => default;
 
     /// <summary>
@@ -1754,6 +1785,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(Int2x1 x, Int1x4 y) => default;
 
     /// <summary>
@@ -1767,6 +1799,7 @@ public unsafe partial struct Int2x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(Int2x2 x, Int2x1 y) => default;
 
     /// <summary>
@@ -2112,6 +2145,7 @@ public unsafe partial struct Int2x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x2 operator *(int x, Int2x2 y) => default;
 
     /// <summary>
@@ -2125,6 +2159,7 @@ public unsafe partial struct Int2x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x2 operator *(Int2x2 x, int y) => default;
 
     /// <summary>
@@ -2488,6 +2523,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(int x, Int2x3 y) => default;
 
     /// <summary>
@@ -2501,6 +2537,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(Int2x3 x, int y) => default;
 
     /// <summary>
@@ -2514,6 +2551,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2 operator *(Int2x3 x, Int3 y) => default;
 
     /// <summary>
@@ -2527,6 +2565,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(Int2x2 x, Int2x3 y) => default;
 
     /// <summary>
@@ -2540,6 +2579,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(Int2x3 x, Int3x1 y) => default;
 
     /// <summary>
@@ -2553,6 +2593,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x2 operator *(Int2x3 x, Int3x2 y) => default;
 
     /// <summary>
@@ -2566,6 +2607,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(Int2x3 x, Int3x3 y) => default;
 
     /// <summary>
@@ -2579,6 +2621,7 @@ public unsafe partial struct Int2x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(Int2x3 x, Int3x4 y) => default;
 
     /// <summary>
@@ -2966,6 +3009,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(int x, Int2x4 y) => default;
 
     /// <summary>
@@ -2979,6 +3023,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(Int2x4 x, int y) => default;
 
     /// <summary>
@@ -2992,6 +3037,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2 operator *(Int2x4 x, Int4 y) => default;
 
     /// <summary>
@@ -3005,6 +3051,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(Int2x2 x, Int2x4 y) => default;
 
     /// <summary>
@@ -3018,6 +3065,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x1 operator *(Int2x4 x, Int4x1 y) => default;
 
     /// <summary>
@@ -3031,6 +3079,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x2 operator *(Int2x4 x, Int4x2 y) => default;
 
     /// <summary>
@@ -3044,6 +3093,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x3 operator *(Int2x4 x, Int4x3 y) => default;
 
     /// <summary>
@@ -3057,6 +3107,7 @@ public unsafe partial struct Int2x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int2x4 operator *(Int2x4 x, Int4x4 y) => default;
 
     /// <summary>
@@ -3372,6 +3423,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(int x, Int3x1 y) => default;
 
     /// <summary>
@@ -3385,6 +3437,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(Int3x1 x, int y) => default;
 
     /// <summary>
@@ -3398,6 +3451,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(Int3x1 x, Int1x1 y) => default;
 
     /// <summary>
@@ -3411,6 +3465,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(Int3x1 x, Int1x2 y) => default;
 
     /// <summary>
@@ -3424,6 +3479,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x3 operator *(Int3x1 x, Int1x3 y) => default;
 
     /// <summary>
@@ -3437,6 +3493,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(Int3x1 x, Int1x4 y) => default;
 
     /// <summary>
@@ -3450,6 +3507,7 @@ public unsafe partial struct Int3x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(Int3x3 x, Int3x1 y) => default;
 
     /// <summary>
@@ -3820,6 +3878,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(int x, Int3x2 y) => default;
 
     /// <summary>
@@ -3833,6 +3892,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(Int3x2 x, int y) => default;
 
     /// <summary>
@@ -3846,6 +3906,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3 operator *(Int3x2 x, Int2 y) => default;
 
     /// <summary>
@@ -3859,6 +3920,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(Int3x2 x, Int2x1 y) => default;
 
     /// <summary>
@@ -3872,6 +3934,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(Int3x2 x, Int2x2 y) => default;
 
     /// <summary>
@@ -3885,6 +3948,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x3 operator *(Int3x2 x, Int2x3 y) => default;
 
     /// <summary>
@@ -3898,6 +3962,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(Int3x2 x, Int2x4 y) => default;
 
     /// <summary>
@@ -3911,6 +3976,7 @@ public unsafe partial struct Int3x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(Int3x3 x, Int3x2 y) => default;
 
     /// <summary>
@@ -4311,6 +4377,7 @@ public unsafe partial struct Int3x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x3 operator *(int x, Int3x3 y) => default;
 
     /// <summary>
@@ -4324,6 +4391,7 @@ public unsafe partial struct Int3x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x3 operator *(Int3x3 x, int y) => default;
 
     /// <summary>
@@ -4760,6 +4828,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(int x, Int3x4 y) => default;
 
     /// <summary>
@@ -4773,6 +4842,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(Int3x4 x, int y) => default;
 
     /// <summary>
@@ -4786,6 +4856,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3 operator *(Int3x4 x, Int4 y) => default;
 
     /// <summary>
@@ -4799,6 +4870,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(Int3x3 x, Int3x4 y) => default;
 
     /// <summary>
@@ -4812,6 +4884,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x1 operator *(Int3x4 x, Int4x1 y) => default;
 
     /// <summary>
@@ -4825,6 +4898,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x2 operator *(Int3x4 x, Int4x2 y) => default;
 
     /// <summary>
@@ -4838,6 +4912,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x3 operator *(Int3x4 x, Int4x3 y) => default;
 
     /// <summary>
@@ -4851,6 +4926,7 @@ public unsafe partial struct Int3x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int3x4 operator *(Int3x4 x, Int4x4 y) => default;
 
     /// <summary>
@@ -5177,6 +5253,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(int x, Int4x1 y) => default;
 
     /// <summary>
@@ -5190,6 +5267,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(Int4x1 x, int y) => default;
 
     /// <summary>
@@ -5203,6 +5281,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(Int4x1 x, Int1x1 y) => default;
 
     /// <summary>
@@ -5216,6 +5295,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(Int4x1 x, Int1x2 y) => default;
 
     /// <summary>
@@ -5229,6 +5309,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(Int4x1 x, Int1x3 y) => default;
 
     /// <summary>
@@ -5242,6 +5323,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x4 operator *(Int4x1 x, Int1x4 y) => default;
 
     /// <summary>
@@ -5255,6 +5337,7 @@ public unsafe partial struct Int4x1
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(Int4x4 x, Int4x1 y) => default;
 
     /// <summary>
@@ -5650,6 +5733,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(int x, Int4x2 y) => default;
 
     /// <summary>
@@ -5663,6 +5747,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(Int4x2 x, int y) => default;
 
     /// <summary>
@@ -5676,6 +5761,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4 operator *(Int4x2 x, Int2 y) => default;
 
     /// <summary>
@@ -5689,6 +5775,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(Int4x2 x, Int2x1 y) => default;
 
     /// <summary>
@@ -5702,6 +5789,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(Int4x2 x, Int2x2 y) => default;
 
     /// <summary>
@@ -5715,6 +5803,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(Int4x2 x, Int2x3 y) => default;
 
     /// <summary>
@@ -5728,6 +5817,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x4 operator *(Int4x2 x, Int2x4 y) => default;
 
     /// <summary>
@@ -5741,6 +5831,7 @@ public unsafe partial struct Int4x2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(Int4x4 x, Int4x2 y) => default;
 
     /// <summary>
@@ -6178,6 +6269,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(int x, Int4x3 y) => default;
 
     /// <summary>
@@ -6191,6 +6283,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(Int4x3 x, int y) => default;
 
     /// <summary>
@@ -6204,6 +6297,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4 operator *(Int4x3 x, Int3 y) => default;
 
     /// <summary>
@@ -6217,6 +6311,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x1 operator *(Int4x3 x, Int3x1 y) => default;
 
     /// <summary>
@@ -6230,6 +6325,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x2 operator *(Int4x3 x, Int3x2 y) => default;
 
     /// <summary>
@@ -6243,6 +6339,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(Int4x3 x, Int3x3 y) => default;
 
     /// <summary>
@@ -6256,6 +6353,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x4 operator *(Int4x3 x, Int3x4 y) => default;
 
     /// <summary>
@@ -6269,6 +6367,7 @@ public unsafe partial struct Int4x3
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x3 operator *(Int4x4 x, Int4x3 y) => default;
 
     /// <summary>
@@ -6754,6 +6853,7 @@ public unsafe partial struct Int4x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x4 operator *(int x, Int4x4 y) => default;
 
     /// <summary>
@@ -6767,6 +6867,7 @@ public unsafe partial struct Int4x4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
+    [HlslIntrinsicName("mul")]
     public static Int4x4 operator *(Int4x4 x, int y) => default;
 
     /// <summary>
