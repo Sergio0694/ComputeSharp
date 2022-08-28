@@ -118,6 +118,66 @@ internal static unsafe class ID3D12DeviceExtensions
     }
 
     /// <summary>
+    /// Creates a committed resource for a given 1D texture type.
+    /// </summary>
+    /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
+    /// <param name="resourceType">The resource type currently in use.</param>
+    /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+    /// <param name="width">The width of the texture resource.</param>
+    /// <param name="isCacheCoherentUMA">Indicates whether or not the current device has a cache coherent UMA architecture.</param>
+    /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
+    /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
+    public static ComPtr<ID3D12Resource> CreateCommittedResource(
+        this ref ID3D12Device d3D12Device,
+        ResourceType resourceType,
+        DXGI_FORMAT dxgiFormat,
+        uint width,
+        bool isCacheCoherentUMA,
+        out D3D12_RESOURCE_STATES d3D12ResourceStates)
+    {
+        D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+        (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
+        {
+            ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+            ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+        };
+
+        using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+        D3D12_HEAP_PROPERTIES d3D12HeapProperties;
+        d3D12HeapProperties.CreationNodeMask = 1;
+        d3D12HeapProperties.VisibleNodeMask = 1;
+
+        if (isCacheCoherentUMA)
+        {
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
+            d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+            d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+        }
+        else
+        {
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+            d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+        }
+
+        D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex1D(dxgiFormat, width, mipLevels: 1, flags: d3D12ResourceFlags);
+
+        d3D12Device.CreateCommittedResource(
+            &d3D12HeapProperties,
+            D3D12_HEAP_FLAG_NONE,
+            &d3D12ResourceDescription,
+            d3D12ResourceStates,
+            null,
+            Windows.__uuidof<ID3D12Resource>(),
+            d3D12Resource.GetVoidAddressOf()).Assert();
+
+        return d3D12Resource.Move();
+    }
+
+    /// <summary>
     /// Creates a committed resource for a given 2D texture type.
     /// </summary>
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
@@ -549,6 +609,38 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
         return d3D12GraphicsCommandList.Move();
+    }
+
+    /// <summary>
+    /// Gets the layout data for a target resource.
+    /// </summary>
+    /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to get the layout info.</param>
+    /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+    /// <param name="width">The width of the texture resource.</param>
+    /// <param name="d3D12PlacedSubresourceFootprint">The resulting layout info for the resource.</param>
+    /// <param name="rowSizeInBytes">The size in bytes of each row in the resource.</param>
+    /// <param name="totalSizeInBytes">The total number of bytes for the resource.</param>
+    public static void GetCopyableFootprint(
+        this ref ID3D12Device d3D12Device,
+        DXGI_FORMAT dxgiFormat,
+        uint width,
+        out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+        out ulong rowSizeInBytes,
+        out ulong totalSizeInBytes)
+    {
+        D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex1D(dxgiFormat, width);
+        ulong a;
+        ulong b;
+
+        fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
+        {
+            uint _;
+
+            d3D12Device.GetCopyableFootprints(&d3D12ResourceDescription, 0, 1, 0, p, &_, &a, &b);
+        }
+
+        rowSizeInBytes = a;
+        totalSizeInBytes = b;
     }
 
     /// <summary>

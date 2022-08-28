@@ -23,10 +23,10 @@ using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 namespace ComputeSharp.Resources;
 
 /// <summary>
-/// A <see langword="class"/> representing a typed 2D texture stored on GPU memory.
+/// A <see langword="class"/> representing a typed 1D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -62,18 +62,16 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     private D3D12_RESOURCE_STATES d3D12ResourceState;
 
     /// <summary>
-    /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
+    /// Creates a new <see cref="Texture1D{T}"/> instance with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.</param>
     /// <param name="width">The width of the texture.</param>
-    /// <param name="height">The height of the texture.</param>
     /// <param name="resourceType">The resource type for the current texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
-    private protected Texture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
+    private protected Texture1D(GraphicsDevice device, int width, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
         using var _0 = device.GetReferenceTrackingLease();
 
@@ -81,7 +79,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {
-            UnsupportedTextureTypeException.ThrowForTexture2D<T>();
+            UnsupportedTextureTypeException.ThrowForTexture1D<T>();
         }
 
         GraphicsDevice = device;
@@ -93,7 +91,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             allocationMode,
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             out this.d3D12ResourceState);
 
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
@@ -102,7 +99,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             resourceType,
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             device.IsCacheCoherentUMA,
             out this.d3D12ResourceState);
 #endif
@@ -114,7 +110,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         device.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             out this.d3D12PlacedSubresourceFootprint,
             out _,
             out _);
@@ -125,11 +120,11 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         switch (resourceType)
         {
             case ResourceType.ReadOnly:
-                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE2D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE1D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadWrite:
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE2D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE2D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE1D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE1D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
                 break;
         }
 
@@ -145,11 +140,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     public int Width => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Width;
 
     /// <summary>
-    /// Gets the height of the current texture.
-    /// </summary>
-    public int Height => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Height;
-
-    /// <summary>
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
     internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
@@ -160,23 +150,18 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
 
     /// <summary>
-    /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target memory area.
+    /// Reads the contents of the specified range from the current <see cref="Texture1D{T}"/> instance and writes them into a target memory area.
     /// </summary>
     /// <param name="destination">The target memory area to write data to.</param>
     /// <param name="size">The size of the target memory area to write data to.</param>
     /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
-    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
     /// <param name="width">The width of the memory area to copy.</param>
-    /// <param name="height">The height of the memory area to copy.</param>
-    internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int width, int height)
+    internal void CopyTo(ref T destination, int size, int sourceOffsetX, int width)
     {
         Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+        Guard.IsGreaterThanOrEqualTo(size, width);
 
         using var _0 = GraphicsDevice.GetReferenceTrackingLease();
         using var _1 = GetReferenceTrackingLease();
@@ -186,7 +171,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintDestination,
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
@@ -221,10 +205,10 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
                 destinationZ: 0,
                 d3D12ResourceSource: D3D12Resource,
                 sourceX: (uint)sourceOffsetX,
-                sourceY: (uint)sourceOffsetY,
+                sourceY: 0,
                 sourceZ: 0,
                 (uint)width,
-                (uint)height,
+                height: 1,
                 depth: 1);
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
@@ -239,39 +223,29 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
 
         fixed (void* destinationPointer = &destination)
         {
-            MemoryHelper.Copy(
-                resource.Pointer,
-                (uint)height,
-                rowSizeInBytes,
-                d3D12PlacedSubresourceFootprintDestination.Footprint.RowPitch,
-                destinationPointer);
+            Buffer.MemoryCopy(
+                source: resource.Pointer,
+                destination: destinationPointer,
+                destinationSizeInBytes: rowSizeInBytes,
+                sourceBytesToCopy: rowSizeInBytes);
         }
     }
 
     /// <summary>
-    /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Texture2D{T}"/> instance.
+    /// Reads the contents of the specified range from the current <see cref="Texture1D{T}"/> instance and writes them into a target <see cref="Texture1D{T}"/> instance.
     /// </summary>
-    /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
+    /// <param name="destination">The target <see cref="Texture1D{T}"/> instance to write data to.</param>
     /// <param name="destinationOffsetX">The horizontal offset within <paramref name="destination"/>.</param>
-    /// <param name="destinationOffsetY">The vertical offset within <paramref name="destination"/>.</param>
     /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
-    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
     /// <param name="width">The width of the memory area to copy.</param>
-    /// <param name="height">The height of the memory area to copy.</param>
-    internal void CopyTo(Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
+    internal void CopyTo(Texture1D<T> destination, int sourceOffsetX, int destinationOffsetX, int width)
     {
         Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
         using var _0 = GraphicsDevice.GetReferenceTrackingLease();
         using var _1 = GetReferenceTrackingLease();
@@ -298,15 +272,15 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
             d3D12ResourceDestination: destination.D3D12Resource,
             (uint)destinationOffsetX,
-            (uint)destinationOffsetY,
+            destinationY: 0,
             destinationZ: 0,
             d3D12ResourceSource: D3D12Resource,
             (uint)sourceOffsetX,
-            (uint)sourceOffsetY,
+            sourceY: 0,
             sourceZ: 0,
             (uint)width,
-            (uint)height,
-            1);
+            height: 1,
+            depth: 1);
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
@@ -318,29 +292,20 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <summary>
-    /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="ReadBackTexture2D{T}"/> instance.
+    /// Reads the contents of the specified range from the current <see cref="Texture1D{T}"/> instance and writes them into a target <see cref="ReadBackTexture1D{T}"/> instance.
     /// </summary>
-    /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
+    /// <param name="destination">The target <see cref="ReadBackTexture1D{T}"/> instance to write data to.</param>
     /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
-    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
     /// <param name="destinationOffsetX">The horizontal offset within <paramref name="destination"/>.</param>
-    /// <param name="destinationOffsetY">The vertical offset within <paramref name="destination"/>.</param>
     /// <param name="width">The width of the memory area to copy.</param>
-    /// <param name="height">The height of the memory area to copy.</param>
-    internal void CopyTo(ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
+    internal void CopyTo(ReadBackTexture1D<T> destination, int sourceOffsetX, int destinationOffsetX, int width)
     {
         Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
         Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
         using var _0 = GraphicsDevice.GetReferenceTrackingLease();
         using var _1 = GetReferenceTrackingLease();
@@ -363,15 +328,15 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
                 d3D12ResourceDestination: destination.D3D12Resource,
                 d3D12PlacedSubresourceFootprintDestination,
                 (uint)destinationOffsetX,
-                (uint)destinationOffsetY,
+                destinationY: 0,
                 destinationZ: 0,
                 d3D12ResourceSource: D3D12Resource,
                 (uint)sourceOffsetX,
-                (uint)sourceOffsetY,
+                sourceY: 0,
                 sourceZ: 0,
                 (uint)width,
-                (uint)height,
-                1);
+                height: 1,
+                depth: 1);
         }
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
@@ -383,23 +348,18 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <summary>
-    /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture2D{T}"/> instance.
+    /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture1D{T}"/> instance.
     /// </summary>
     /// <param name="source">The input memory area to read data from.</param>
     /// <param name="size">The size of the memory area to read data from.</param>
     /// <param name="destinationOffsetX">The horizontal offset in the destination texture.</param>
-    /// <param name="destinationOffsetY">The vertical offset in the destination texture.</param>
     /// <param name="width">The width of the memory area to write to.</param>
-    /// <param name="height">The height of the memory area to write to.</param>
-    internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int width, int height)
+    internal void CopyFrom(ref T source, int size, int destinationOffsetX, int width)
     {
         Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+        Guard.IsGreaterThanOrEqualTo(size, width);
 
         using var _0 = GraphicsDevice.GetReferenceTrackingLease();
         using var _1 = GetReferenceTrackingLease();
@@ -409,7 +369,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintSource,
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
@@ -432,12 +391,11 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
         fixed (void* sourcePointer = &source)
         {
-            MemoryHelper.Copy(
-                sourcePointer,
-                resource.Pointer,
-                (uint)height,
-                rowSizeInBytes,
-                d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch);
+            Buffer.MemoryCopy(
+                source: sourcePointer,
+                destination: resource.Pointer,
+                destinationSizeInBytes: rowSizeInBytes,
+                sourceBytesToCopy: rowSizeInBytes);
         }
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
@@ -450,7 +408,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
             d3D12ResourceDestination: D3D12Resource,
             destinationX: (uint)destinationOffsetX,
-            destinationY: (uint)destinationOffsetY,
+            destinationY: 0,
             destinationZ: 0,
             d3D12ResourceSource: d3D12Resource.Get(),
             &d3D12PlacedSubresourceFootprintSource,
@@ -458,7 +416,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             sourceY: 0,
             sourceZ: 0,
             (uint)width,
-            (uint)height,
+            height: 1,
             depth: 1);
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
@@ -470,29 +428,20 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <summary>
-    /// Writes the contents of a given <see cref="UploadTexture2D{T}"/> instance to a specified area of the current <see cref="Texture2D{T}"/> instance.
+    /// Writes the contents of a given <see cref="UploadTexture1D{T}"/> instance to a specified area of the current <see cref="Texture1D{T}"/> instance.
     /// </summary>
-    /// <param name="source">The input <see cref="UploadTexture2D{T}"/> instance to read data from.</param>
+    /// <param name="source">The input <see cref="UploadTexture1D{T}"/> instance to read data from.</param>
     /// <param name="sourceOffsetX">The horizontal offset within <paramref name="source"/>.</param>
-    /// <param name="sourceOffsetY">The vertical offset within <paramref name="source"/>.</param>
     /// <param name="destinationOffsetX">The horizontal offset in the destination texture.</param>
-    /// <param name="destinationOffsetY">The vertical offset in the destination texture.</param>
     /// <param name="width">The width of the memory area to write to.</param>
-    /// <param name="height">The height of the memory area to write to.</param>
-    internal void CopyFrom(UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
+    internal void CopyFrom(UploadTexture1D<T> source, int sourceOffsetX, int destinationOffsetX, int width)
     {
         Guard.IsInRange(sourceOffsetX, 0, source.Width);
-        Guard.IsInRange(sourceOffsetY, 0, source.Height);
         Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, source.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
 
         using var _0 = GraphicsDevice.GetReferenceTrackingLease();
         using var _1 = GetReferenceTrackingLease();
@@ -514,15 +463,15 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
             copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                 d3D12ResourceDestination: D3D12Resource,
                 (uint)destinationOffsetX,
-                (uint)destinationOffsetY,
+                destinationY: 0,
                 destinationZ: 0,
                 d3D12ResourceSource: source.D3D12Resource,
                 d3D12PlacedSubresourceFootprintSource,
                 (uint)sourceOffsetX,
-                (uint)sourceOffsetY,
+                sourceY: 0,
                 sourceZ: 0,
                 (uint)width,
-                (uint)height,
+                height: 1,
                 depth: 1);
         }
 

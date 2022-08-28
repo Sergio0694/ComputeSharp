@@ -91,6 +91,57 @@ internal static unsafe class AllocatorExtensions
     }
 
     /// <summary>
+    /// Creates a resource for a given 1D texture type.
+    /// </summary>
+    /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
+    /// <param name="pool">The <see cref="D3D12MA_Pool"/> instance to use, if any.</param>
+    /// <param name="resourceType">The resource type currently in use.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+    /// <param name="width">The width of the texture resource.</param>
+    /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
+    /// <returns>An <see cref="ComPtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
+    public static ComPtr<D3D12MA_Allocation> CreateResource(
+        this ref D3D12MA_Allocator allocator,
+        D3D12MA_Pool* pool,
+        ResourceType resourceType,
+        AllocationMode allocationMode,
+        DXGI_FORMAT dxgiFormat,
+        uint width,
+        out D3D12_RESOURCE_STATES d3D12ResourceStates)
+    {
+        D3D12MA_ALLOCATION_FLAGS allocationFlags = allocationMode == AllocationMode.Default ? D3D12MA_ALLOCATION_FLAG_NONE : D3D12MA_ALLOCATION_FLAG_COMMITTED;
+        D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+        (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
+        {
+            ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+            ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+        };
+
+        using ComPtr<D3D12MA_Allocation> allocation = default;
+
+        D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex1D(dxgiFormat, width, mipLevels: 1, flags: d3D12ResourceFlags);
+
+        D3D12MA_ALLOCATION_DESC allocationDesc = default;
+        allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
+        allocationDesc.Flags = allocationFlags;
+        allocationDesc.CustomPool = pool;
+
+        allocator.CreateResource(
+            &allocationDesc,
+            &d3D12ResourceDescription,
+            d3D12ResourceStates,
+            null,
+            allocation.GetAddressOf(),
+            null,
+            null).Assert();
+
+        return allocation.Move();
+    }
+
+    /// <summary>
     /// Creates a resource for a given 2D texture type.
     /// </summary>
     /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
