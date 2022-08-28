@@ -53,10 +53,22 @@ void GenerateVectorProperties(string typeName, int elementSize)
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
     string formattable = elementTypeName == "Bool" ? "" : "ISpanFormattable";
 
+    List<string> namespaces = new List<string>
+    {
+        "System.Diagnostics.CodeAnalysis",
+        "System.Runtime.CompilerServices",
+        "System.Runtime.InteropServices"
+    };
+
     if (elementTypeName != "Bool")
     {
-        WriteLine("using System;");
-        WriteLine("using System.Globalization;");
+        namespaces.Add("System");
+        namespaces.Add("System.Globalization");
+    }
+
+    foreach (string name in namespaces.OrderBy(name => name))
+    {
+        WriteLine($"using {name};");
     }
 
     if (elementTypeName == "Float" || elementTypeName == "Int")
@@ -64,9 +76,6 @@ void GenerateVectorProperties(string typeName, int elementSize)
         WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
     }
 #>
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 #endif
