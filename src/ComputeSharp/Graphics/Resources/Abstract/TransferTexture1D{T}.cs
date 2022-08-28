@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Buffers;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -12,10 +14,10 @@ using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 namespace ComputeSharp.Resources;
 
 /// <summary>
-/// A <see langword="class"/> representing a typed 2D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
+/// A <see langword="class"/> representing a typed 1D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResource
+public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -41,25 +43,23 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
     private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
 
     /// <summary>
-    /// Creates a new <see cref="TransferTexture2D{T}"/> instance with the specified parameters.
+    /// Creates a new <see cref="TransferTexture1D{T}"/> instance with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.</param>
     /// <param name="width">The width of the texture.</param>
-    /// <param name="height">The height of the texture.</param>
     /// <param name="resourceType">The resource type for the current texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-    private protected TransferTexture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode)
+    private protected TransferTexture1D(GraphicsDevice device, int width, ResourceType resourceType, AllocationMode allocationMode)
     {
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
         using var _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
-        if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
+        if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE1D))
         {
-            UnsupportedTextureTypeException.ThrowForTexture2D<T>();
+            UnsupportedTextureTypeException.ThrowForTexture1D<T>();
         }
 
         GraphicsDevice = device;
@@ -67,7 +67,6 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
         device.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
-            (uint)height,
             out this.d3D12PlacedSubresourceFootprint,
             out _,
             out ulong totalSizeInBytes);
@@ -95,11 +94,6 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
     public int Width => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Width;
 
     /// <summary>
-    /// Gets the height of the current texture.
-    /// </summary>
-    public int Height => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Height;
-
-    /// <summary>
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
     internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
@@ -110,14 +104,26 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
     internal ref readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT D3D12PlacedSubresourceFootprint => ref this.d3D12PlacedSubresourceFootprint;
 
     /// <inheritdoc/>
-    public TextureView2D<T> View
+    public Memory<T> Memory
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = this.GetReferenceTrackingLease();
+            using var _0 = GetReferenceTrackingLease();
 
-            return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+            return new MemoryManager(this).Memory;
+        }
+    }
+
+    /// <inheritdoc/>
+    public Span<T> Span
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            using var _0 = GetReferenceTrackingLease();
+
+            return new(this.mappedData, Width);
         }
     }
 
@@ -144,6 +150,58 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResou
         if (GraphicsDevice != device)
         {
             GraphicsDeviceMismatchException.Throw(this, device);
+        }
+    }
+
+    /// <summary>
+    /// A <see cref="MemoryManager{T}"/> implementation wrapping a <see cref="TransferTexture1D{T}"/> instance.
+    /// </summary>
+    private sealed class MemoryManager : MemoryManager<T>
+    {
+        /// <summary>
+        /// The <see cref="TransferTexture1D{T}"/> in use.
+        /// </summary>
+        private readonly TransferTexture1D<T> buffer;
+
+        /// <summary>
+        /// Creates a new <see cref="MemoryManager"/> instance for a given buffer.
+        /// </summary>
+        /// <param name="buffer">The <see cref="TransferTexture1D{T}"/> in use.</param>
+        public MemoryManager(TransferTexture1D<T> buffer)
+        {
+            this.buffer = buffer;
+        }
+
+        /// <inheritdoc/>
+        public override Memory<T> Memory
+        {
+            get => CreateMemory(this.buffer.Width);
+        }
+
+        /// <inheritdoc/>
+        public override Span<T> GetSpan()
+        {
+            return this.buffer.Span;
+        }
+
+        /// <inheritdoc/>
+        public override MemoryHandle Pin(int elementIndex = 0)
+        {
+            Guard.IsEqualTo(elementIndex, 0);
+
+            using var _0 = this.buffer.GetReferenceTrackingLease();
+
+            return new(this.buffer.mappedData);
+        }
+
+        /// <inheritdoc/>
+        public override void Unpin()
+        {
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
         }
     }
 }

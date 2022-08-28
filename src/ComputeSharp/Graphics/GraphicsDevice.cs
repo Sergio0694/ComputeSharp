@@ -263,6 +263,40 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
 
     /// <summary>
     /// Checks whether the current device supports the creation of
+    /// <see cref="ReadOnlyTexture1D{T}"/> resources for a specified type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of values to check support for.</typeparam>
+    /// <returns>Whether <see cref="ReadOnlyTexture1D{T}"/> instances can be created by the current device.</returns>
+    public bool IsReadOnlyTexture1DSupportedForType<T>()
+        where T : unmanaged
+    {
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE1D);
+    }
+
+    /// <summary>
+    /// Checks whether the current device supports the creation of
+    /// <see cref="ReadWriteTexture1D{T}"/> resources for a specified type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of values to check support for.</typeparam>
+    /// <returns>Whether <see cref="ReadWriteTexture1D{T}"/> instances can be created by the current device.</returns>
+    public bool IsReadWriteTexture1DSupportedForType<T>()
+        where T : unmanaged
+    {
+        using var _0 = GetReferenceTrackingLease();
+
+        ThrowIfDeviceLost();
+
+        return this.d3D12Device.Get()->IsDxgiFormatSupported(
+            DXGIFormatHelper.GetForType<T>(),
+            D3D12_FORMAT_SUPPORT1_TEXTURE1D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+    }
+
+    /// <summary>
+    /// Checks whether the current device supports the creation of
     /// <see cref="ReadOnlyTexture2D{T}"/> resources for a specified type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of values to check support for.</typeparam>
