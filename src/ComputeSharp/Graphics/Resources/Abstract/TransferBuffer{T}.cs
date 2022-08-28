@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources;
@@ -42,6 +45,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
     /// <param name="length">The number of items to store in the current buffer.</param>
     /// <param name="resourceType">The resource type for the current buffer.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
@@ -50,6 +54,12 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         using var _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
+
+        if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
+            device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
+        {
+            UnsupportedDoubleOperationException.Throw<T>();
+        }
 
         GraphicsDevice = device;
         Length = length;

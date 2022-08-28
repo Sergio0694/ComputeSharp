@@ -1075,6 +1075,7 @@ partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1126,6 +1127,7 @@ partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadBackBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+    [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
