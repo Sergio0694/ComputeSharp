@@ -292,6 +292,31 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
+    {
+        var updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
+        
+        // Process binary operations to see if the target operator method is an intrinsic
+        if (SemanticModel.For(node).GetOperation(node) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        {
+            // If the operator is indeed an HLSL overload, replace the expression with an invocation.
+            // That is, do the following transformation:
+            //
+            // x * y => <INTRINSIC>(x, y)
+            if (HlslKnownOperators.TryGetMappedName(method.GetFullMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
+            {
+                return
+                    InvocationExpression(IdentifierName(mapped!))
+                    .AddArgumentListArguments(
+                        Argument(updatedNode.Left),
+                        Argument(updatedNode.Right));
+            }
+        }
+        
+        return updatedNode;
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
