@@ -1,5 +1,4 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+﻿<#@include file="..\Intrinsics\Hlsl.MulOverloads.ttinclude" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -12,6 +11,12 @@ void GenerateAllMatrixProperties(string typeName, int elementSize)
 #>
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+<#
+    if (typeName == "Float" || typeName == "Int")
+    {
+        WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
+    }
+#>
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
@@ -291,7 +296,60 @@ public unsafe partial struct <#=fullTypeName#>
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+<#
+    if (typeName == "Float" || typeName == "Int")
+    {
+        // Add explicit operators when needed, see notes in VectorType.ttinclude for info
+        WriteLine("");
+#>
+    /// <summary>
+    /// Multiplies a pair of <see cref="<#=fullTypeName#>"/> and <see cref="<#=elementTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <param name="right">The <see cref="<#=elementTypeName#>"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=elementTypeName#> right) => default;
 
+    /// <summary>
+    /// Multiplies a pair of <see cref="<#=elementTypeName#>"/> and <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=elementTypeName#>"/> value to multiply.</param>
+    /// <param name="right">The <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator *(<#=elementTypeName#> left, <#=fullTypeName#> right) => default;
+<#
+
+        // Process all operators for the mul() intrinsic (see comments in VectorType.ttinclude for info on the filters below)
+        foreach (var mulOverload in MulOverloads.Where(overload =>
+            !(overload.Params[0] == fullTypeName && overload.Params[1] == fullTypeName) &&
+            Regex.IsMatch(overload.Params[0], @"\d") &&
+            Regex.IsMatch(overload.Params[1], @"\d") &&
+            (overload.Return == fullTypeName && overload.Params.Contains(fullTypeName) ||
+             !overload.Params.Contains(overload.Return) && overload.Params[0] == fullTypeName)))
+        {
+            WriteLine("");
+#>
+    /// <summary>
+    /// Multiplies two values using matrix math.
+    /// </summary>
+    /// <param name="x">The first <#=mulOverload.Params[0]#> input value.</param>
+    /// <param name="y">The second <#=mulOverload.Params[1]#> input value.</param>
+    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
+    /// <remarks>
+    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(<#=mulOverload.Params[0]#>, <#=mulOverload.Params[1]#>)"/> with the same input arguments.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
+    public static <#=mulOverload.Return#> operator *(<#=mulOverload.Params[0]#> x, <#=mulOverload.Params[1]#> y) => default;
+<#
+        }
+    }
+
+    WriteLine("");
+#>
     /// <summary>
     /// Subtracts two <see cref="<#=fullTypeName#>"/> values.
     /// </summary>

@@ -84,7 +84,7 @@ public partial class ShaderRewriterTests
         }
     }
 
-    // See: https://github.com/Sergio0694/ComputeSharp/issues/233
+    // See https://github.com/Sergio0694/ComputeSharp/issues/233
     [CombinatorialTestMethod]
     [AllDevices]
     public void CustomHlslOperators(Device device)
@@ -130,7 +130,7 @@ public partial class ShaderRewriterTests
         }
     }
 
-    // See: https://github.com/Sergio0694/ComputeSharp/issues/361
+    // See https://github.com/Sergio0694/ComputeSharp/issues/361
     [CombinatorialTestMethod]
     [AllDevices]
     public void BitwiseHlslOperators(Device device)
@@ -394,7 +394,7 @@ public partial class ShaderRewriterTests
         }
     }
 
-    // See: https://github.com/Sergio0694/ComputeSharp/issues/259
+    // See https://github.com/Sergio0694/ComputeSharp/issues/259
     [CombinatorialTestMethod]
     [AllDevices]
     public void ConstantsInShaderConstantFields(Device device)
@@ -575,6 +575,139 @@ public partial class ShaderRewriterTests
             Hlsl.InterlockedExchange(ref buffer[ThreadIds.X], 0, out _);
             Hlsl.InterlockedAdd(ref buffer[ThreadIds.X], ThreadIds.X);
             Hlsl.InterlockedCompareExchange(ref buffer[ThreadIds.X], ThreadIds.X, ThreadIds.X * 2, out _);
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/156
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void GlslStyleMulOperators(Device device)
+    {
+        float[] data1 = { 0.727829933f, 0.6413954f, 0.9373726f, 0.7044427f, 0.46349f, 0.8098116f, 0.604649544f, 0.309247822f, 0.470999569f, 0.7374923f, 0.6993038f, 0.518516064f, 0.44598946f };
+        int[] data2 = { 287, 295, 953, 465, 1011, 308, 982, 186, 323, 325, 156, 454, 580 };
+
+        using ReadOnlyBuffer<float> buffer1 = device.Get().AllocateReadOnlyBuffer(data1);
+        using ReadOnlyBuffer<int> buffer2 = device.Get().AllocateReadOnlyBuffer(data2);
+        using ReadWriteBuffer<float> buffer3 = device.Get().AllocateReadWriteBuffer<float>(22, AllocationMode.Clear);
+        using ReadWriteBuffer<int> buffer4 = device.Get().AllocateReadWriteBuffer<int>(22, AllocationMode.Clear);
+
+        device.Get().For(1, new GlslStyleMulOperatorsShader(buffer1, buffer2, buffer3, buffer4));
+
+        float[] results1 = buffer3.ToArray();
+        int[] results2 = buffer4.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: results1.AsSpan(11).ToArray(),
+            actual: results1.AsSpan(0, 11).ToArray());
+
+        CollectionAssert.AreEqual(
+            expected: results2.AsSpan(11).ToArray(),
+            actual: results2.AsSpan(0, 11).ToArray());
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct GlslStyleMulOperatorsShader : IComputeShader
+    {
+        public readonly ReadOnlyBuffer<float> source1;
+        public readonly ReadOnlyBuffer<int> source2;
+        public readonly ReadWriteBuffer<float> destination1;
+        public readonly ReadWriteBuffer<int> destination2;
+
+        public void Execute()
+        {
+            float2 f2 = new(source1[0], source1[1]);
+            float f = source1[2];
+            float2x2 f22 = new(source1[3], source1[4], source1[5], source1[6]);
+            float2x3 f23 = new(source1[7], source1[8], source1[9], source1[10], source1[11], source1[12]);
+
+            float2 rf1 = f2 * f;
+            float2 rf2 = f * f2;
+            float2 rf3 = f2 * f22;
+            float3 rf4 = f2 * f23;
+
+            float2 f2_copy1 = f2;
+
+            f2_copy1 *= f22;
+
+            float2 rf5 = new(f2.X * f, f2.Y * f);
+            float2 rf6 = Hlsl.Mul(f, f2);
+            float2 rf7 = Hlsl.Mul(f2, f22);
+            float3 rf8 = Hlsl.Mul(f2, f23);
+
+            var f2_copy2 = f2;
+
+            f2_copy2 = Hlsl.Mul(f2_copy2, f22);
+
+            destination1[0] = rf1.X;
+            destination1[1] = rf1.Y;
+            destination1[2] = rf2.X;
+            destination1[3] = rf2.Y;
+            destination1[4] = rf3.X;
+            destination1[5] = rf3.Y;
+            destination1[6] = rf4.X;
+            destination1[7] = rf4.Y;
+            destination1[8] = rf4.Z;
+            destination1[9] = f2_copy1.X;
+            destination1[10] = f2_copy1.Y;
+
+            destination1[11] = rf5.X;
+            destination1[12] = rf5.Y;
+            destination1[13] = rf6.X;
+            destination1[14] = rf6.Y;
+            destination1[15] = rf7.X;
+            destination1[16] = rf7.Y;
+            destination1[17] = rf8.X;
+            destination1[18] = rf8.Y;
+            destination1[19] = rf8.Z;
+            destination1[20] = f2_copy2.X;
+            destination1[21] = f2_copy2.Y;
+
+            int2 i2 = new(source2[0], source2[1]);
+            int i = source2[2];
+            int2x2 i22 = new(source2[3], source2[4], source2[5], source2[6]);
+            int2x3 i23 = new(source2[7], source2[8], source2[9], source2[10], source2[11], source2[12]);
+
+            int2 ri1 = i2 * i;
+            int2 ri2 = i * i2;
+            int2 ri3 = i2 * i22;
+            int3 ri4 = i2 * i23;
+
+            int2 i2_copy1 = i2;
+
+            i2_copy1 *= i22;
+
+            int2 ri5 = new(i2.X * i, i2.Y * i);
+            int2 ri6 = Hlsl.Mul(i, i2);
+            int2 ri7 = Hlsl.Mul(i2, i22);
+            int3 ri8 = Hlsl.Mul(i2, i23);
+
+            var i2_copy2 = i2;
+
+            i2_copy2 = Hlsl.Mul(i2_copy2, i22);
+
+            destination2[0] = ri1.X;
+            destination2[1] = ri1.Y;
+            destination2[2] = ri2.X;
+            destination2[3] = ri2.Y;
+            destination2[4] = ri3.X;
+            destination2[5] = ri3.Y;
+            destination2[6] = ri4.X;
+            destination2[7] = ri4.Y;
+            destination2[8] = ri4.Z;
+            destination2[9] = i2_copy1.X;
+            destination2[10] = i2_copy1.Y;
+
+            destination2[11] = ri5.X;
+            destination2[12] = ri5.Y;
+            destination2[13] = ri6.X;
+            destination2[14] = ri6.Y;
+            destination2[15] = ri7.X;
+            destination2[16] = ri7.Y;
+            destination2[17] = ri8.X;
+            destination2[18] = ri8.Y;
+            destination2[19] = ri8.Z;
+            destination2[20] = i2_copy2.X;
+            destination2[21] = i2_copy2.Y;
         }
     }
 }

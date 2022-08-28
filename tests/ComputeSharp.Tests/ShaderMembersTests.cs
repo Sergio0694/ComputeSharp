@@ -85,7 +85,7 @@ public partial class ShaderMembersTests
         }
     }
 
-    // See: https://github.com/Sergio0694/ComputeSharp/issues/193
+    // See https://github.com/Sergio0694/ComputeSharp/issues/193
     [CombinatorialTestMethod]
     [AllDevices]
     public void BoolInstanceFields(Device device)
@@ -135,7 +135,7 @@ public partial class ShaderMembersTests
         }
     }
 
-    // See: https://github.com/Sergio0694/ComputeSharp/issues/193
+    // See https://github.com/Sergio0694/ComputeSharp/issues/193
     [CombinatorialTestMethod]
     [AllDevices]
     public void BoolInstanceFieldInCustomStruct(Device device)
