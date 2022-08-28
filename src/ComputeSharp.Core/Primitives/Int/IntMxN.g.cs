@@ -127,6 +127,24 @@ public unsafe partial struct Int1x1
     public static Int1x1 operator *(Int1x1 left, Int1x1 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int1x1"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int1x1"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator *(Int1x1 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int1x1"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int1x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x1 operator *(int left, Int1x1 right) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int1x1"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int1x1"/> value to subtract.</param>
@@ -416,6 +434,24 @@ public unsafe partial struct Int1x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x2 operator *(Int1x2 left, Int1x2 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int1x2"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int1x2"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator *(Int1x2 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int1x2"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int1x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x2 operator *(int left, Int1x2 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -808,6 +844,24 @@ public unsafe partial struct Int1x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x3 operator *(Int1x3 left, Int1x3 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int1x3"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int1x3"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator *(Int1x3 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int1x3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int1x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x3 operator *(int left, Int1x3 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -1213,6 +1267,24 @@ public unsafe partial struct Int1x4
     public static Int1x4 operator *(Int1x4 left, Int1x4 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int1x4"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int1x4"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator *(Int1x4 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int1x4"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int1x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int1x4 operator *(int left, Int1x4 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int1x4 input value.</param>
@@ -1592,6 +1664,24 @@ public unsafe partial struct Int2x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x1 operator *(Int2x1 left, Int2x1 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int2x1"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int2x1"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator *(Int2x1 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int2x1"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int2x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x1 operator *(int left, Int2x1 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -1996,6 +2086,24 @@ public unsafe partial struct Int2x2
     public static Int2x2 operator *(Int2x2 left, Int2x2 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int2x2"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int2x2"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator *(Int2x2 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int2x2"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int2x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x2 operator *(int left, Int2x2 right) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int2x2"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int2x2"/> value to subtract.</param>
@@ -2344,6 +2452,24 @@ public unsafe partial struct Int2x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x3 operator *(Int2x3 left, Int2x3 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int2x3"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int2x3"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator *(Int2x3 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int2x3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int2x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x3 operator *(int left, Int2x3 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -2804,6 +2930,24 @@ public unsafe partial struct Int2x4
     public static Int2x4 operator *(Int2x4 left, Int2x4 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int2x4"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int2x4"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator *(Int2x4 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int2x4"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int2x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2x4 operator *(int left, Int2x4 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int2x4 input value.</param>
@@ -3188,6 +3332,24 @@ public unsafe partial struct Int3x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x1 operator *(Int3x1 left, Int3x1 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int3x1"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3x1"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator *(Int3x1 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int3x1"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int3x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x1 operator *(int left, Int3x1 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -3615,6 +3777,24 @@ public unsafe partial struct Int3x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x2 operator *(Int3x2 left, Int3x2 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int3x2"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3x2"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator *(Int3x2 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int3x2"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int3x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x2 operator *(int left, Int3x2 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -4088,6 +4268,24 @@ public unsafe partial struct Int3x3
     public static Int3x3 operator *(Int3x3 left, Int3x3 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int3x3"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3x3"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator *(Int3x3 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int3x3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int3x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x3 operator *(int left, Int3x3 right) => default;
+
+    /// <summary>
     /// Subtracts two <see cref="Int3x3"/> values.
     /// </summary>
     /// <param name="left">The first <see cref="Int3x3"/> value to subtract.</param>
@@ -4511,6 +4709,24 @@ public unsafe partial struct Int3x4
     public static Int3x4 operator *(Int3x4 left, Int3x4 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int3x4"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3x4"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator *(Int3x4 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int3x4"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int3x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3x4 operator *(int left, Int3x4 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int3x4 input value.</param>
@@ -4906,6 +5122,24 @@ public unsafe partial struct Int4x1
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x1 operator *(Int4x1 left, Int4x1 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int4x1"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int4x1"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator *(Int4x1 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int4x1"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int4x1"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x1 operator *(int left, Int4x1 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -5358,6 +5592,24 @@ public unsafe partial struct Int4x2
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x2 operator *(Int4x2 left, Int4x2 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int4x2"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int4x2"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator *(Int4x2 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int4x2"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int4x2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x2 operator *(int left, Int4x2 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -5866,6 +6118,24 @@ public unsafe partial struct Int4x3
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x3 operator *(Int4x3 left, Int4x3 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int4x3"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int4x3"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator *(Int4x3 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int4x3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int4x3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x3 operator *(int left, Int4x3 right) => default;
 
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -6422,6 +6692,24 @@ public unsafe partial struct Int4x4
     /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x4 operator *(Int4x4 left, Int4x4 right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="Int4x4"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int4x4"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator *(Int4x4 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int4x4"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int4x4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4x4 operator *(int left, Int4x4 right) => default;
 
     /// <summary>
     /// Subtracts two <see cref="Int4x4"/> values.

@@ -297,15 +297,39 @@ public unsafe partial struct <#=fullTypeName#>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 <#
-    // Process all operators for the mul() intrinsic (see comments in VectorType.ttinclude for info on the filters below)
-    foreach (var mulOverload in MulOverloads.Where(overload =>
-        !(overload.Params[0] == fullTypeName && overload.Params[1] == fullTypeName) &&
-        Regex.IsMatch(overload.Params[0], @"\d") &&
-        Regex.IsMatch(overload.Params[1], @"\d") &&
-        (overload.Return == fullTypeName && overload.Params.Contains(fullTypeName) ||
-         !overload.Params.Contains(overload.Return) && overload.Params[0] == fullTypeName)))
+    if (typeName == "Float" || typeName == "Int")
     {
+        // Add explicit operators when needed, see notes in VectorType.ttinclude for info
         WriteLine("");
+#>
+    /// <summary>
+    /// Multiplies a pair of <see cref="<#=fullTypeName#>"/> and <see cref="<#=elementTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <param name="right">The <see cref="<#=elementTypeName#>"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=elementTypeName#> right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="<#=elementTypeName#>"/> and <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="<#=elementTypeName#>"/> value to multiply.</param>
+    /// <param name="right">The <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator *(<#=elementTypeName#> left, <#=fullTypeName#> right) => default;
+<#
+
+        // Process all operators for the mul() intrinsic (see comments in VectorType.ttinclude for info on the filters below)
+        foreach (var mulOverload in MulOverloads.Where(overload =>
+            !(overload.Params[0] == fullTypeName && overload.Params[1] == fullTypeName) &&
+            Regex.IsMatch(overload.Params[0], @"\d") &&
+            Regex.IsMatch(overload.Params[1], @"\d") &&
+            (overload.Return == fullTypeName && overload.Params.Contains(fullTypeName) ||
+             !overload.Params.Contains(overload.Return) && overload.Params[0] == fullTypeName)))
+        {
+            WriteLine("");
 #>
     /// <summary>
     /// Multiplies two values using matrix math.
@@ -321,6 +345,7 @@ public unsafe partial struct <#=fullTypeName#>
     [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static <#=mulOverload.Return#> operator *(<#=mulOverload.Params[0]#> x, <#=mulOverload.Params[1]#> y) => default;
 <#
+        }
     }
 
     WriteLine("");

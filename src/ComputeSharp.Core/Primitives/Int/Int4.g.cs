@@ -4232,6 +4232,24 @@ public unsafe partial struct Int4
     public static Int4 operator *(Int4 left, Int4 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int4"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int4"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4 operator *(Int4 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int4"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int4"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int4 operator *(int left, Int4 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int4 input value.</param>

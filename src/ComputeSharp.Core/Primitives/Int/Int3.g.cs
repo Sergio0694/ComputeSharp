@@ -1586,6 +1586,24 @@ public unsafe partial struct Int3
     public static Int3 operator *(Int3 left, Int3 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int3"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int3"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator *(Int3 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int3"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int3"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int3 operator *(int left, Int3 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int3 input value.</param>

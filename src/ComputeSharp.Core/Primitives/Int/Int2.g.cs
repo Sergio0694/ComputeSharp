@@ -500,6 +500,24 @@ public unsafe partial struct Int2
     public static Int2 operator *(Int2 left, Int2 right) => default;
 
     /// <summary>
+    /// Multiplies a pair of <see cref="Int2"/> and <see cref="int"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="Int2"/> value to multiply.</param>
+    /// <param name="right">The <see cref="int"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator *(Int2 left, int right) => default;
+
+    /// <summary>
+    /// Multiplies a pair of <see cref="int"/> and <see cref="Int2"/> values.
+    /// </summary>
+    /// <param name="left">The <see cref="int"/> value to multiply.</param>
+    /// <param name="right">The <see cref="Int2"/> value to multiply.</param>
+    /// <returns>The result of multiplying <paramref name="left"/> and <paramref name="right"/>.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static Int2 operator *(int left, Int2 right) => default;
+
+    /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
     /// <param name="x">The first Int2 input value.</param>
