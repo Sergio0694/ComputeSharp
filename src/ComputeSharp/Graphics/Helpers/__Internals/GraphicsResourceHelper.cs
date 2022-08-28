@@ -80,6 +80,119 @@ public static class GraphicsResourceHelper
     /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
     /// </summary>
     /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
+    /// <param name="texture">The input <see cref="ReadOnlyTexture1D{T}"/> instance to check.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+    /// <returns>The GPU descriptor handle for the texture.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture1D<T> texture, GraphicsDevice device)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using var _0 = texture.GetReferenceTrackingLease();
+
+        texture.ThrowIfDeviceMismatch(device);
+
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
+    }
+
+    /// <summary>
+    /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+    /// </summary>
+    /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to check.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+    /// <returns>The GPU descriptor handle for the texture.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture1D<T> texture, GraphicsDevice device)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using var _0 = texture.GetReferenceTrackingLease();
+
+        texture.ThrowIfDeviceMismatch(device);
+
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
+    }
+
+    /// <summary>
+    /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+    /// </summary>
+    /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
+    /// <param name="texture">The input <see cref="IReadOnlyTexture1D{T}"/> instance to check.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+    /// <returns>The GPU descriptor handle for the texture.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(IReadOnlyTexture1D<T> texture, GraphicsDevice device)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        if (texture is IGraphicsResource resource)
+        {
+            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
+
+            return *(ulong*)&d3D12GpuDescriptorHandle;
+        }
+
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
+    }
+
+    /// <summary>
+    /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of normalized values stored in the input texture.</typeparam>
+    /// <param name="texture">The input <see cref="IReadOnlyNormalizedTexture1D{TPixel}"/> instance to check.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+    /// <returns>The GPU descriptor handle for the texture.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadOnlyNormalizedTexture1D<TPixel> texture, GraphicsDevice device)
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        if (texture is IGraphicsResource resource)
+        {
+            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
+
+            return *(ulong*)&d3D12GpuDescriptorHandle;
+        }
+
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
+    }
+
+    /// <summary>
+    /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of normalized values stored in the input texture.</typeparam>
+    /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to check.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+    /// <returns>The GPU descriptor handle for the texture.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadWriteNormalizedTexture1D<TPixel> texture, GraphicsDevice device)
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        if (texture is IGraphicsResource resource)
+        {
+            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
+
+            return *(ulong*)&d3D12GpuDescriptorHandle;
+        }
+
+        return ThrowHelper.ThrowArgumentException<ulong>("The input texture is not a valid instance.");
+    }
+
+    /// <summary>
+    /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+    /// </summary>
+    /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
     /// <param name="texture">The input <see cref="ReadOnlyTexture2D{T}"/> instance to check.</param>
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the texture.</returns>
