@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ComputeSharp.Core.Intrinsics.Attributes;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
@@ -509,7 +510,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int2 operator *(int x, Int2 y) => default;
 
     /// <summary>
@@ -523,7 +524,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int2 operator *(Int2 x, int y) => default;
 
     /// <summary>
@@ -537,7 +538,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static int operator *(Int2 x, Int2x1 y) => default;
 
     /// <summary>
@@ -551,7 +552,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int2 operator *(Int2 x, Int2x2 y) => default;
 
     /// <summary>
@@ -565,7 +566,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int3 operator *(Int2 x, Int2x3 y) => default;
 
     /// <summary>
@@ -579,7 +580,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int4 operator *(Int2 x, Int2x4 y) => default;
 
     /// <summary>
@@ -593,7 +594,7 @@ public unsafe partial struct Int2
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
+    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
     public static Int2 operator *(Int2x2 x, Int2 y) => default;
 
     /// <summary>
