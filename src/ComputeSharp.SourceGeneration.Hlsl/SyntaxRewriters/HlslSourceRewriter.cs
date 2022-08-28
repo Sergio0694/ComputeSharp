@@ -292,6 +292,33 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     }
 
     /// <inheritdoc/>
+    public override SyntaxNode? VisitAssignmentExpression(AssignmentExpressionSyntax node)
+    {
+        var updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
+
+        if (SemanticModel.For(node).GetOperation(node) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
+        {
+            // If the compound assignment is using an HLSL operator, replace the expression with an invocation and assignment.
+            // That is, do the following transformation:
+            //
+            // x *= y => x = <INTRINSIC>(x, y)
+            if (HlslKnownOperators.TryGetMappedName(method.GetFullMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
+            {
+                return
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        updatedNode.Left,
+                        InvocationExpression(IdentifierName(mapped!))
+                        .AddArgumentListArguments(
+                            Argument(updatedNode.Left),
+                            Argument(updatedNode.Right)));
+            }
+        }
+
+        return updatedNode;
+    }
+
+    /// <inheritdoc/>
     public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
     {
         var updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
