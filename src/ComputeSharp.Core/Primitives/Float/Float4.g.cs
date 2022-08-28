@@ -4241,7 +4241,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float4 operator *(float x, Float4 y) => default;
 
     /// <summary>
@@ -4255,7 +4255,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float4 operator *(Float4 x, float y) => default;
 
     /// <summary>
@@ -4269,7 +4269,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static float operator *(Float4 x, Float4x1 y) => default;
 
     /// <summary>
@@ -4283,7 +4283,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float2 operator *(Float4 x, Float4x2 y) => default;
 
     /// <summary>
@@ -4297,7 +4297,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float3 operator *(Float4 x, Float4x3 y) => default;
 
     /// <summary>
@@ -4311,7 +4311,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float4 operator *(Float4 x, Float4x4 y) => default;
 
     /// <summary>
@@ -4325,7 +4325,7 @@ public unsafe partial struct Float4
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
-    [HlslIntrinsicName("mul")]
+    [HlslIntrinsicName("mul", RequiresParametersMapping = true)]
     public static Float4 operator *(Float4x4 x, Float4 y) => default;
 
     /// <summary>
