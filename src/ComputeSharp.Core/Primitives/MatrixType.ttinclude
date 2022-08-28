@@ -297,9 +297,11 @@ public unsafe partial struct <#=fullTypeName#>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 <#
-    // Process all operators for the mul() intrinsic
+    // Process all operators for the mul() intrinsic (see comments in VectorType.ttinclude for info on the filters below)
     foreach (var mulOverload in MulOverloads.Where(overload =>
         !(overload.Params[0] == fullTypeName && overload.Params[1] == fullTypeName) &&
+        Regex.IsMatch(overload.Params[0], @"\d") &&
+        Regex.IsMatch(overload.Params[1], @"\d") &&
         (overload.Return == fullTypeName && overload.Params.Contains(fullTypeName) ||
          !overload.Params.Contains(overload.Return) && overload.Params[0] == fullTypeName)))
     {

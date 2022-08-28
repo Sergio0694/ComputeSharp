@@ -4234,34 +4234,6 @@ public unsafe partial struct Float4
     /// <summary>
     /// Multiplies two values using matrix math.
     /// </summary>
-    /// <param name="x">The first float input value.</param>
-    /// <param name="y">The second Float4 input value.</param>
-    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
-    /// <remarks>
-    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(float, Float4)"/> with the same input arguments.</para>
-    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
-    public static Float4 operator *(float x, Float4 y) => default;
-
-    /// <summary>
-    /// Multiplies two values using matrix math.
-    /// </summary>
-    /// <param name="x">The first Float4 input value.</param>
-    /// <param name="y">The second float input value.</param>
-    /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>
-    /// <remarks>
-    /// <para>This operator is equivalent to using <see cref="Hlsl.Mul(Float4, float)"/> with the same input arguments.</para>
-    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-mul"/>.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
-    /// </remarks>
-    [HlslIntrinsicName("mul", RequiresParametersMatching = true)]
-    public static Float4 operator *(Float4 x, float y) => default;
-
-    /// <summary>
-    /// Multiplies two values using matrix math.
-    /// </summary>
     /// <param name="x">The first Float4 input value.</param>
     /// <param name="y">The second Float4x1 input value.</param>
     /// <returns>The result of <paramref name="x"/> times <paramref name="y"/>. The result has the dimension <paramref name="x"/>-rows by <paramref name="y"/>-columns.</returns>

@@ -360,9 +360,27 @@ public unsafe partial struct <#=typeName#>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => default;
 <#
-    // Process all operators for the mul() intrinsic
+    // Process all operators for the mul() intrinsic. We apply the following filtering:
+    //   1) Operators where both arguments are of the containing type are skipped. This is because
+    //      this operation is already defined as an elementwise product for all vector/matrix types.
+    //      Defining the operator would cause a conflict, plus it would alter the semantics anyway.
+    //   2) Operators where either parameter is a primitive type (ie. not a vector) are skipped. This
+    //      is because such operation is already implicitly defined (it's an elementwise product where
+    //      the scalar is auto-promoted to the same vector/matrix type of the other argument). Again,
+    //      defining the operator would cause the semantics of such expressions to change to a cross
+    //      product, so these operators are intentionally skipped to keep code consistent with HLSL.
+    //   3) Among all available overloads, only either of these two cases are selected:
+    //        - The containing type matches the return type and the first parameter type of the operator.
+    //          This ensures that all overloads where the return type matches the containing type and the
+    //          first parameter are generated inside the containing type, as one would do manually as well.
+    //        - The return type is unlike both parameter types, but the containing type matches the type of
+    //          the first parameter. This is the case when the operator (ie. the cross product) produces a
+    //          result that's of a completely different type. In this case, the overload maps to a generated
+    //          operator declared in the type that matches the type of the first parameter, as a convention.
     foreach (var mulOverload in MulOverloads.Where(overload =>
         !(overload.Params[0] == typeName && overload.Params[1] == typeName) &&
+        Regex.IsMatch(overload.Params[0], @"\d") &&
+        Regex.IsMatch(overload.Params[1], @"\d") &&
         (overload.Return == typeName && overload.Params.Contains(typeName) ||
          !overload.Params.Contains(overload.Return) && overload.Params[0] == typeName)))
     {
