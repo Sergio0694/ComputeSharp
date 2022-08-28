@@ -62,6 +62,24 @@ public static unsafe class InteropServices
     /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The input <see cref="Texture1D{T}"/> instance in use.</param>
+    /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+    /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+    /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
+    /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+    public static void GetID3D12Resource<T>(Texture1D<T> texture, Guid* riid, void** ppvObject)
+        where T : unmanaged
+    {
+        using var _0 = texture.GetReferenceTrackingLease();
+
+        texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+    }
+
+    /// <summary>
+    /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+    /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="texture">The input <see cref="Texture2D{T}"/> instance in use.</param>
     /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
     /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
@@ -185,6 +203,27 @@ public static unsafe class InteropServices
         using var _0 = buffer.GetReferenceTrackingLease();
 
         return buffer.D3D12Resource->QueryInterface(riid, ppvObject);
+    }
+
+    /// <summary>
+    /// Tries to get the underlying COM object for a given resource, as a specified interface. This method invokes
+    /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The input <see cref="Texture1D{T}"/> instance in use.</param>
+    /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+    /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+    /// <returns>
+    /// <c>S_OK</c> if the interface is supported, and <c>E_NOINTERFACE</c> otherwise.
+    /// If ppvObject (the address) is nullptr, then this method returns <c>E_POINTER</c>.
+    /// </returns>
+    /// <exception cref="ObjectDisposedException">The <paramref name="texture"/> instance has been disposed.</exception>
+    public static int TryGetID3D12Resource<T>(Texture1D<T> texture, Guid* riid, void** ppvObject)
+        where T : unmanaged
+    {
+        using var _0 = texture.GetReferenceTrackingLease();
+
+        return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }
 
     /// <summary>
