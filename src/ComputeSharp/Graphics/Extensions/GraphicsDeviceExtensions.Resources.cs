@@ -161,6 +161,196 @@ partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A zeroed <see cref="ReadOnlyTexture1D{T}"/> instance of size [<paramref name="width"/>].</returns>
+    public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source, int width)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadOnlyTexture1D<T>(source.AsSpan(0, width));
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source, int offset, int width)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadOnlyTexture1D<T>(source.AsSpan(offset, width));
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <returns>A read write <see cref="ReadOnlyTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        ReadOnlyTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+    public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        ReadOnlyTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A zeroed <see cref="ReadOnlyTexture1D{T, TPixel}"/> instance of size [<paramref name="width"/>].</returns>
+    public static ReadOnlyTexture1D<T, TPixel> AllocateReadOnlyTexture1D<T, TPixel>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T, TPixel> AllocateReadOnlyTexture1D<T, TPixel>(this GraphicsDevice device, T[] source, int width)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadOnlyTexture1D<T, TPixel>(source.AsSpan(0, width));
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T, TPixel> AllocateReadOnlyTexture1D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadOnlyTexture1D<T, TPixel>(source.AsSpan(offset, width));
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <returns>A read write <see cref="ReadOnlyTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadOnlyTexture1D<T, TPixel> AllocateReadOnlyTexture1D<T, TPixel>(this GraphicsDevice device, T[] source)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        ReadOnlyTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new readonly 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture1D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+    public static ReadOnlyTexture1D<T, TPixel> AllocateReadOnlyTexture1D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        ReadOnlyTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
     /// Allocates a new readonly 2D texture with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -652,6 +842,196 @@ partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A zeroed <see cref="ReadWriteTexture1D{T}"/> instance of size [<paramref name="width"/>].</returns>
+    public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source, int width)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadWriteTexture1D<T>(source.AsSpan(0, width));
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source, int offset, int width)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadWriteTexture1D<T>(source.AsSpan(offset, width));
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <returns>A read write <see cref="ReadWriteTexture1D{T}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        ReadWriteTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+    public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        ReadWriteTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A zeroed <see cref="ReadWriteTexture1D{T, TPixel}"/> instance of size [<paramref name="width"/>].</returns>
+    public static ReadWriteTexture1D<T, TPixel> AllocateReadWriteTexture1D<T, TPixel>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T, TPixel> AllocateReadWriteTexture1D<T, TPixel>(this GraphicsDevice device, T[] source, int width)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadWriteTexture1D<T, TPixel>(source.AsSpan(0, width));
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T, TPixel> AllocateReadWriteTexture1D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        return device.AllocateReadWriteTexture1D<T, TPixel>(source.AsSpan(offset, width));
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+    /// <returns>A read write <see cref="ReadWriteTexture1D{T, TPixel}"/> instance with the contents of the input array.</returns>
+    public static ReadWriteTexture1D<T, TPixel> AllocateReadWriteTexture1D<T, TPixel>(this GraphicsDevice device, T[] source)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+        Guard.IsNotNull(source);
+
+        ReadWriteTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Allocates a new writeable 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture1D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+    public static ReadWriteTexture1D<T, TPixel> AllocateReadWriteTexture1D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        ReadWriteTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
+
+        texture.CopyFrom(source);
+
+        return texture;
+    }
+
+    /// <summary>
     /// Allocates a new writeable 2D texture with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -1085,6 +1465,22 @@ partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Allocates a new upload 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A <see cref="UploadTexture1D{T}"/> instance of size [<paramref name="width"/>].</returns>
+    public static UploadTexture1D<T> AllocateUploadTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
+    }
+
+    /// <summary>
     /// Allocates a new upload 2D texture with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
@@ -1134,6 +1530,22 @@ partial class GraphicsDeviceExtensions
         Guard.IsNotNull(device);
 
         return new(device, length, allocationMode);
+    }
+
+    /// <summary>
+    /// Allocates a new readback 1D texture with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+    /// <param name="width">The width of the texture.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A <see cref="ReadBackTexture1D{T}"/> instance of size [<paramref name="width"/>].</returns>
+    public static ReadBackTexture1D<T> AllocateReadBackTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(device);
+
+        return new(device, width, allocationMode);
     }
 
     /// <summary>
