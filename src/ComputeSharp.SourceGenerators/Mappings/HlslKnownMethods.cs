@@ -10,6 +10,9 @@ partial class HlslKnownMethods
     {
         return new Dictionary<string, string?>
         {
+            [$"ComputeSharp.ReadOnlyTexture1D`2.Sample({typeof(float).FullName})"] = null,
+            [$"ComputeSharp.IReadOnlyTexture1D`1.Sample({typeof(float).FullName})"] = null,
+            [$"ComputeSharp.IReadOnlyNormalizedTexture1D`1.Sample({typeof(float).FullName})"] = null,
             [$"ComputeSharp.ReadOnlyTexture2D`2.Sample({typeof(float).FullName}, {typeof(float).FullName})"] = "float2",
             [$"ComputeSharp.ReadOnlyTexture2D`2.Sample({typeof(Float2).FullName})"] = null,
             [$"ComputeSharp.IReadOnlyTexture2D`1.Sample({typeof(float).FullName}, {typeof(float).FullName})"] = "float2",
