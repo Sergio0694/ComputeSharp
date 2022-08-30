@@ -1,0 +1,149 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace ComputeSharp.Tests;
+
+[TestClass]
+[TestCategory("ResourceDimensions")]
+public partial class ResourceDimensionsTests
+{
+<#
+// Map of all resource types with dimensions accessors
+var typesMap = new Dictionary<string, string[]>
+{
+    ["ConstantBuffer<float>"] = new[] { "Length" },
+    ["ReadOnlyBuffer<float>"] = new[] { "Length" },
+    ["ReadWriteBuffer<float>"] = new[] { "Length" },
+    ["ReadOnlyTexture2D<float>"] = new[] { "Width", "Height" },
+    ["ReadWriteTexture2D<float>"] = new[] { "Width", "Height" },
+    ["ReadOnlyTexture2D<Rgba32, float4>"] = new[] { "Width", "Height" },
+    ["ReadWriteTexture2D<Rgba32, float4>"] = new[] { "Width", "Height" },
+    ["ReadOnlyTexture3D<float>"] = new[] { "Width", "Height", "Depth" },
+    ["ReadWriteTexture3D<float>"] = new[] { "Width", "Height", "Depth" },
+    ["ReadOnlyTexture3D<Rgba32, float4>"] = new[] { "Width", "Height", "Depth" },
+    ["ReadWriteTexture3D<Rgba32, float4>"] = new[] { "Width", "Height", "Depth" }
+};
+
+// Map of all resource types that also have a supported interface
+var interfacesMap = new Dictionary<string, string>
+{
+    ["ReadWriteTexture2D<float>"] = "IReadOnlyTexture2D<float>",
+    ["ReadOnlyTexture2D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture2D<float4>",
+    ["ReadWriteTexture2D<Rgba32, float4>"] = "IReadWriteNormalizedTexture2D<float4>",
+    ["ReadWriteTexture3D<float>"] = "IReadOnlyTexture3D<float>",
+    ["ReadOnlyTexture3D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture3D<float4>",
+    ["ReadWriteTexture3D<Rgba32, float4>"] = "IReadWriteNormalizedTexture3D<float4>"
+};
+
+// Map of all resource that need a readonly wrapper
+var readonlyWrappersMap = new HashSet<string>
+{
+    "IReadOnlyTexture2D<float>",
+    "IReadOnlyTexture3D<float>"
+};
+
+// Map of data row items to test multiple dimension combinations
+var dataRows = new Dictionary<int, int[][]>
+{
+    [1] = new[] { new[] { 8 }, new[] { 64 }, new[] { 128 }, new[] { 376 } },
+    [2] = new[] { new[] { 8, 12 }, new[] { 64, 13 }, new[] { 128, 32 }, new[] { 376, 112 } },
+    [3] = new[] { new[] { 8, 12, 3 }, new[] { 64, 24, 4 }, new[] { 128, 32, 4 }, new[] { 376, 64, 3 } }
+};
+
+int index = 0;
+
+foreach (var pair in typesMap)
+{
+    var numberOfDimensions = pair.Value.Length;
+    var numberOfTypeParameters = Regex.Match(pair.Key, @"<([\w, ]+)>").Groups[1].Value.Split(',').Length;
+    var resourceName = Regex.Match(pair.Key, @"\w+").Value;
+    var shaderResourceTypes = new List<string> { pair.Key };
+
+    if (interfacesMap.TryGetValue(pair.Key, out var interfaceType)) shaderResourceTypes.Add(interfaceType);
+
+    foreach (var shaderResourceType in shaderResourceTypes)
+    {
+        if (index++ != 0) WriteLine("");
+
+        var shaderResourceName = Regex.Match(shaderResourceType, @"\w+").Value;
+        var testMethodName = $"{resourceName}_T{numberOfTypeParameters}_As{shaderResourceName}";
+#>
+    [CombinatorialTestMethod]
+    [AllDevices]
+<#
+        foreach (var dataRow in dataRows[numberOfDimensions])
+        {
+            WriteLine($"    [Data({string.Join(", ", dataRow)})]");
+        }
+
+        string parameters = string.Join(", ", Enumerable
+            .Range(0, numberOfDimensions)
+            .Select(x => $"int axis{x}"));
+
+        string arguments = string.Join(", ", Enumerable
+            .Range(0, numberOfDimensions)
+            .Select(x => $"axis{x}"));
+
+        bool needsReadonlyWrapper = readonlyWrappersMap.Contains(shaderResourceType);
+#>
+    public void <#=testMethodName#>(Device device, <#=parameters#>)
+    {
+        using <#=pair.Key#> resource = device.Get().Allocate<#=pair.Key#>(<#=arguments#>);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(<#=numberOfDimensions#>);
+
+<#
+        if (needsReadonlyWrapper)
+        {
+#>
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(resource, ResourceState.ReadOnly);
+            context.For(1, new <#=testMethodName#>Shader(resource.AsReadOnly(), result));
+        }
+<#
+        }
+        else
+        {
+#>
+        device.Get().For(1, new <#=testMethodName#>Shader(resource, result));
+<#
+        }
+#>
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { <#=arguments#> },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct <#=testMethodName#>Shader : IComputeShader
+    {
+        public readonly <#=shaderResourceType#> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+<#
+        for (int i = 0; i < pair.Value.Length; i++)
+        {
+#>
+            result[<#=i#>] = source.<#=pair.Value[i]#>;
+<#
+        }
+#>
+        }
+    }
+<#
+    }
+}
+#>
+}
