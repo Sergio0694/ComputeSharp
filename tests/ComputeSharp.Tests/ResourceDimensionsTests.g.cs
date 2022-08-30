@@ -14,38 +14,6 @@ public partial class ResourceDimensionsTests
     [Data(64)]
     [Data(128)]
     [Data(376)]
-    public void ConstantBuffer_T1_AsConstantBuffer(Device device, int axis0)
-    {
-        using ConstantBuffer<float> resource = device.Get().AllocateConstantBuffer<float>(axis0);
-        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
-
-        device.Get().For(1, new ConstantBuffer_T1_AsConstantBufferShader(resource, result));
-
-        int[] dimensions = result.ToArray();
-
-        CollectionAssert.AreEqual(
-            expected: new[] { axis0 },
-            actual: dimensions);
-    }
-
-    [AutoConstructor]
-    internal readonly partial struct ConstantBuffer_T1_AsConstantBufferShader : IComputeShader
-    {
-        public readonly ConstantBuffer<float> source;
-        public readonly ReadWriteBuffer<int> result;
-
-        public void Execute()
-        {
-            result[0] = source.Length;
-        }
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
-    [Data(8)]
-    [Data(64)]
-    [Data(128)]
-    [Data(376)]
     public void ReadOnlyBuffer_T1_AsReadOnlyBuffer(Device device, int axis0)
     {
         using ReadOnlyBuffer<float> resource = device.Get().AllocateReadOnlyBuffer<float>(axis0);

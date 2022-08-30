@@ -18,7 +18,6 @@ public partial class ResourceDimensionsTests
 // Map of all resource types with dimensions accessors
 var typesMap = new Dictionary<string, string[]>
 {
-    ["ConstantBuffer<float>"] = new[] { "Length" },
     ["ReadOnlyBuffer<float>"] = new[] { "Length" },
     ["ReadWriteBuffer<float>"] = new[] { "Length" },
     ["ReadOnlyTexture2D<float>"] = new[] { "Width", "Height" },
