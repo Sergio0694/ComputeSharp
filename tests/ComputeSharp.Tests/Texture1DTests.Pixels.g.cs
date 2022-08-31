@@ -1,13 +1,10 @@
 ﻿using System;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests;
 
-[TestClass]
-[TestCategory("Texture1D")]
-public partial class Texture1DTests
+partial class Texture1DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]
