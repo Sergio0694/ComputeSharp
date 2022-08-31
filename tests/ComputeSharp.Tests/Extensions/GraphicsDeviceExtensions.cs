@@ -31,6 +31,48 @@ public static class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Allocates a new <see cref="Texture1D{T}"/> instance of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the texture.</typeparam>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
+    /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="width">The width of the texture to create.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A <see cref="Texture1D{T}"/> instance of the requested size.</returns>
+    public static Texture1D<T> AllocateTexture1D<T>(this GraphicsDevice device, Type type, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        return type switch
+        {
+            _ when type == typeof(ReadOnlyTexture1D<>) => device.AllocateReadOnlyTexture1D<T>(width, allocationMode),
+            _ when type == typeof(ReadWriteTexture1D<>) => device.AllocateReadWriteTexture1D<T>(width, allocationMode),
+            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+        };
+    }
+
+    /// <summary>
+    /// Allocates a new <see cref="Texture1D{T}"/> instance of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
+    /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="width">The width of the texture to create.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A <see cref="Texture1D{T}"/> instance of the requested size.</returns>
+    public static Texture1D<T> AllocateTexture1D<T, TPixel>(this GraphicsDevice device, Type type, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        return type switch
+        {
+            _ when type == typeof(ReadOnlyTexture1D<,>) => device.AllocateReadOnlyTexture1D<T, TPixel>(width, allocationMode),
+            _ when type == typeof(ReadWriteTexture1D<,>) => device.AllocateReadWriteTexture1D<T, TPixel>(width, allocationMode),
+            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+        };
+    }
+
+    /// <summary>
     /// Allocates a new <see cref="Texture2D{T}"/> instance of the specified type.
     /// </summary>
     /// <typeparam name="T">The type of items in the texture.</typeparam>
@@ -219,6 +261,25 @@ public static class GraphicsDeviceExtensions
             _ when type == typeof(ConstantBuffer<>) => device.AllocateConstantBuffer(data),
             _ when type == typeof(ReadOnlyBuffer<>) => device.AllocateReadOnlyBuffer(data),
             _ when type == typeof(ReadWriteBuffer<>) => device.AllocateReadWriteBuffer(data),
+            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+        };
+    }
+
+    /// <summary>
+    /// Allocates a new <see cref="Texture1D{T}"/> instance of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the texture.</typeparam>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
+    /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="data">The data to load on the texture.</param>
+    /// <returns>A <see cref="Texture1D{T}"/> instance of the requested type.</returns>
+    public static Texture1D<T> AllocateTexture1D<T>(this GraphicsDevice device, Type type, T[] data)
+        where T : unmanaged
+    {
+        return type switch
+        {
+            _ when type == typeof(ReadOnlyTexture1D<>) => device.AllocateReadOnlyTexture1D(data),
+            _ when type == typeof(ReadWriteTexture1D<>) => device.AllocateReadWriteTexture1D(data),
             _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
         };
     }
