@@ -20,6 +20,10 @@ var typesMap = new Dictionary<string, string[]>
 {
     ["ReadOnlyBuffer<float>"] = new[] { "Length" },
     ["ReadWriteBuffer<float>"] = new[] { "Length" },
+    ["ReadOnlyTexture1D<float>"] = new[] { "Width" },
+    ["ReadWriteTexture1D<float>"] = new[] { "Width" },
+    ["ReadOnlyTexture1D<Rgba32, float4>"] = new[] { "Width" },
+    ["ReadWriteTexture1D<Rgba32, float4>"] = new[] { "Width" },
     ["ReadOnlyTexture2D<float>"] = new[] { "Width", "Height" },
     ["ReadWriteTexture2D<float>"] = new[] { "Width", "Height" },
     ["ReadOnlyTexture2D<Rgba32, float4>"] = new[] { "Width", "Height" },
@@ -33,6 +37,9 @@ var typesMap = new Dictionary<string, string[]>
 // Map of all resource types that also have a supported interface
 var interfacesMap = new Dictionary<string, string>
 {
+    ["ReadWriteTexture1D<float>"] = "IReadOnlyTexture1D<float>",
+    ["ReadOnlyTexture1D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture1D<float4>",
+    ["ReadWriteTexture1D<Rgba32, float4>"] = "IReadWriteNormalizedTexture1D<float4>",
     ["ReadWriteTexture2D<float>"] = "IReadOnlyTexture2D<float>",
     ["ReadOnlyTexture2D<Rgba32, float4>"] = "IReadOnlyNormalizedTexture2D<float4>",
     ["ReadWriteTexture2D<Rgba32, float4>"] = "IReadWriteNormalizedTexture2D<float4>",
@@ -44,6 +51,7 @@ var interfacesMap = new Dictionary<string, string>
 // Map of all resource that need a readonly wrapper
 var readonlyWrappersMap = new HashSet<string>
 {
+    "IReadOnlyTexture1D<float>",
     "IReadOnlyTexture2D<float>",
     "IReadOnlyTexture3D<float>"
 };

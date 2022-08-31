@@ -74,6 +74,234 @@ public partial class ResourceDimensionsTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadOnlyTexture1D_T1_AsReadOnlyTexture1D(Device device, int axis0)
+    {
+        using ReadOnlyTexture1D<float> resource = device.Get().AllocateReadOnlyTexture1D<float>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadOnlyTexture1D_T1_AsReadOnlyTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadOnlyTexture1D_T1_AsReadOnlyTexture1DShader : IComputeShader
+    {
+        public readonly ReadOnlyTexture1D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadWriteTexture1D_T1_AsReadWriteTexture1D(Device device, int axis0)
+    {
+        using ReadWriteTexture1D<float> resource = device.Get().AllocateReadWriteTexture1D<float>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadWriteTexture1D_T1_AsReadWriteTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadWriteTexture1D_T1_AsReadWriteTexture1DShader : IComputeShader
+    {
+        public readonly ReadWriteTexture1D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadWriteTexture1D_T1_AsIReadOnlyTexture1D(Device device, int axis0)
+    {
+        using ReadWriteTexture1D<float> resource = device.Get().AllocateReadWriteTexture1D<float>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(resource, ResourceState.ReadOnly);
+            context.For(1, new ReadWriteTexture1D_T1_AsIReadOnlyTexture1DShader(resource.AsReadOnly(), result));
+        }
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadWriteTexture1D_T1_AsIReadOnlyTexture1DShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture1D<float> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadOnlyTexture1D_T2_AsReadOnlyTexture1D(Device device, int axis0)
+    {
+        using ReadOnlyTexture1D<Rgba32, float4> resource = device.Get().AllocateReadOnlyTexture1D<Rgba32, float4>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadOnlyTexture1D_T2_AsReadOnlyTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadOnlyTexture1D_T2_AsReadOnlyTexture1DShader : IComputeShader
+    {
+        public readonly ReadOnlyTexture1D<Rgba32, float4> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadOnlyTexture1D_T2_AsIReadOnlyNormalizedTexture1D(Device device, int axis0)
+    {
+        using ReadOnlyTexture1D<Rgba32, float4> resource = device.Get().AllocateReadOnlyTexture1D<Rgba32, float4>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadOnlyTexture1D_T2_AsIReadOnlyNormalizedTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadOnlyTexture1D_T2_AsIReadOnlyNormalizedTexture1DShader : IComputeShader
+    {
+        public readonly IReadOnlyNormalizedTexture1D<float4> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadWriteTexture1D_T2_AsReadWriteTexture1D(Device device, int axis0)
+    {
+        using ReadWriteTexture1D<Rgba32, float4> resource = device.Get().AllocateReadWriteTexture1D<Rgba32, float4>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadWriteTexture1D_T2_AsReadWriteTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadWriteTexture1D_T2_AsReadWriteTexture1DShader : IComputeShader
+    {
+        public readonly ReadWriteTexture1D<Rgba32, float4> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(8)]
+    [Data(64)]
+    [Data(128)]
+    [Data(376)]
+    public void ReadWriteTexture1D_T2_AsIReadWriteNormalizedTexture1D(Device device, int axis0)
+    {
+        using ReadWriteTexture1D<Rgba32, float4> resource = device.Get().AllocateReadWriteTexture1D<Rgba32, float4>(axis0);
+        using ReadWriteBuffer<int> result = device.Get().AllocateReadWriteBuffer<int>(1);
+
+        device.Get().For(1, new ReadWriteTexture1D_T2_AsIReadWriteNormalizedTexture1DShader(resource, result));
+
+        int[] dimensions = result.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { axis0 },
+            actual: dimensions);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadWriteTexture1D_T2_AsIReadWriteNormalizedTexture1DShader : IComputeShader
+    {
+        public readonly IReadWriteNormalizedTexture1D<float4> source;
+        public readonly ReadWriteBuffer<int> result;
+
+        public void Execute()
+        {
+            result[0] = source.Width;
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [Data(8, 12)]
     [Data(64, 13)]
     [Data(128, 32)]
