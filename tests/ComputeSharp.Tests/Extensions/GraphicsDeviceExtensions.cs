@@ -141,6 +141,26 @@ public static class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Allocates a new <see cref="TransferTexture1D{T}"/> instance of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the buffer.</typeparam>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
+    /// <param name="type">The type of buffer to allocate.</param>
+    /// <param name="width">The width of the texture to create.</param>
+    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+    /// <returns>A <see cref="TransferTexture1D{T}"/> instance of the requested size.</returns>
+    public static TransferTexture1D<T> AllocateTransferTexture1D<T>(this GraphicsDevice device, Type type, int width, AllocationMode allocationMode = AllocationMode.Default)
+        where T : unmanaged
+    {
+        return type switch
+        {
+            _ when type == typeof(UploadTexture1D<>) => device.AllocateUploadTexture1D<T>(width, allocationMode),
+            _ when type == typeof(ReadBackTexture1D<>) => device.AllocateReadBackTexture1D<T>(width, allocationMode),
+            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+        };
+    }
+
+    /// <summary>
     /// Allocates a new <see cref="TransferTexture2D{T}"/> instance of the specified type.
     /// </summary>
     /// <typeparam name="T">The type of items in the buffer.</typeparam>
