@@ -11,7 +11,7 @@ using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests;
 
-public partial class Texture2DTests
+partial class Texture2DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]
