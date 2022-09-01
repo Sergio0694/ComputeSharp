@@ -55,12 +55,16 @@ partial class HlslKnownTypes
         return typeName switch
         {
             "ComputeSharp.ReadOnlyBuffer`1" or
+            "ComputeSharp.ReadOnlyTexture1D`1" or
+            "ComputeSharp.ReadOnlyTexture1D`2" or
             "ComputeSharp.ReadOnlyTexture2D`1" or
             "ComputeSharp.ReadOnlyTexture2D`2" or
             "ComputeSharp.ReadOnlyTexture3D`1" or
             "ComputeSharp.ReadOnlyTexture3D`2" or
+            "ComputeSharp.IReadOnlyTexture1D`1" or
             "ComputeSharp.IReadOnlyTexture2D`1" or
             "ComputeSharp.IReadOnlyTexture3D`1" => true,
+            "ComputeSharp.IReadOnlyNormalizedTexture1D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture2D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture3D`1" => true,
             _ => false
@@ -77,10 +81,13 @@ partial class HlslKnownTypes
         return typeName switch
         {
             "ComputeSharp.ReadWriteBuffer`1" or
+            "ComputeSharp.ReadWriteTexture1D`1" or
+            "ComputeSharp.ReadWriteTexture1D`2" or
             "ComputeSharp.ReadWriteTexture2D`1" or
             "ComputeSharp.ReadWriteTexture2D`2" or
             "ComputeSharp.ReadWriteTexture3D`1" or
             "ComputeSharp.ReadWriteTexture3D`2" or
+            "ComputeSharp.IReadWriteNormalizedTexture1D`1" or
             "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
             "ComputeSharp.IReadWriteNormalizedTexture3D`1" => true,
             _ => false
@@ -99,16 +106,23 @@ partial class HlslKnownTypes
             "ComputeSharp.ConstantBuffer`1" or
             "ComputeSharp.ReadOnlyBuffer`1" or
             "ComputeSharp.ReadWriteBuffer`1" or
+            "ComputeSharp.ReadOnlyTexture1D`1" or
+            "ComputeSharp.ReadOnlyTexture1D`2" or
             "ComputeSharp.ReadOnlyTexture2D`1" or
             "ComputeSharp.ReadOnlyTexture2D`2" or
+            "ComputeSharp.ReadWriteTexture1D`1" or
+            "ComputeSharp.ReadWriteTexture1D`2" or
             "ComputeSharp.ReadWriteTexture2D`1" or
             "ComputeSharp.ReadWriteTexture2D`2" or
             "ComputeSharp.ReadOnlyTexture3D`1" or
             "ComputeSharp.ReadOnlyTexture3D`2" or
             "ComputeSharp.ReadWriteTexture3D`1" or
             "ComputeSharp.ReadWriteTexture3D`2" or
+            "ComputeSharp.IReadOnlyTexture1D`1" or
             "ComputeSharp.IReadOnlyTexture2D`1" or
             "ComputeSharp.IReadOnlyTexture3D`1" or
+            "ComputeSharp.IReadOnlyNormalizedTexture1D`1" or
+            "ComputeSharp.IReadWriteNormalizedTexture1D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture2D`1" or
             "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
             "ComputeSharp.IReadOnlyNormalizedTexture3D`1" or
@@ -143,6 +157,10 @@ partial class HlslKnownTypes
                 "ComputeSharp.ConstantBuffer`1" => mappedElementType,
                 "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mappedElementType}>",
                 "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mappedElementType}>",
+                "ComputeSharp.ReadOnlyTexture1D`1" => $"Texture1D<{mappedElementType}>",
+                "ComputeSharp.ReadOnlyTexture1D`2" => $"Texture1D<unorm {mappedElementType}>",
+                "ComputeSharp.ReadWriteTexture1D`1" => $"RWTexture1D<{mappedElementType}>",
+                "ComputeSharp.ReadWriteTexture1D`2" => $"RWTexture1D<unorm {mappedElementType}>",
                 "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mappedElementType}>",
                 "ComputeSharp.ReadOnlyTexture2D`2" => $"Texture2D<unorm {mappedElementType}>",
                 "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mappedElementType}>",
@@ -151,8 +169,11 @@ partial class HlslKnownTypes
                 "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mappedElementType}>",
                 "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mappedElementType}>",
                 "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadOnlyTexture1D`1" => $"Texture1D<{mappedElementType}>",
                 "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<{mappedElementType}>",
                 "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<{mappedElementType}>",
+                "ComputeSharp.IReadOnlyNormalizedTexture1D`1" => $"Texture1D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadWriteNormalizedTexture1D`1" => $"RWTexture1D<unorm {mappedElementType}>",
                 "ComputeSharp.IReadOnlyNormalizedTexture2D`1" => $"Texture2D<unorm {mappedElementType}>",
                 "ComputeSharp.IReadWriteNormalizedTexture2D`1" => $"RWTexture2D<unorm {mappedElementType}>",
                 "ComputeSharp.IReadOnlyNormalizedTexture3D`1" => $"Texture3D<unorm {mappedElementType}>",

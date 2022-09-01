@@ -44,8 +44,8 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
     /// Creates a new <see cref="TransferTexture3D{T}"/> instance with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.</param>
-    /// <param name="height">The height of the texture.</param>
     /// <param name="width">The width of the texture.</param>
+    /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="resourceType">The resource type for the current texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>

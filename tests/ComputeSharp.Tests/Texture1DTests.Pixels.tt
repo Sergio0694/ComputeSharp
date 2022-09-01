@@ -29,7 +29,7 @@ using ComputeSharp.Tests.Extensions;
 
 namespace ComputeSharp.Tests;
 
-partial class Texture3DTests
+partial class Texture1DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]
@@ -41,7 +41,7 @@ foreach (var (t, tPixel) in EnumerateTypes())
 <#
 }
 #>
-    public void Dispatch_NormalizedTexture3D(Device device, Type t, Type tPixel)
+    public void Dispatch_NormalizedTexture1D(Device device, Type t, Type tPixel)
     {
 <#
 foreach (var (t, tPixel) in EnumerateTypes())
@@ -49,10 +49,10 @@ foreach (var (t, tPixel) in EnumerateTypes())
 #>
         if (t == typeof(<#=t#>) && tPixel == typeof(<#=tPixel#>))
         {
-            using ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
-            using ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
+            using ReadOnlyTexture1D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture1D<<#=t#>, <#=tPixel#>>(128);
+            using ReadWriteTexture1D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture1D<<#=t#>, <#=tPixel#>>(128);
 
-            device.Get().For(128, 128, 2, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
+            device.Get().For(128, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
         }
 <#
 }
@@ -67,12 +67,12 @@ foreach (var (t, tPixel) in EnumerateTypes())
     [AutoConstructor]
     internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
     {
-        public readonly ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source;
-        public readonly ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination;
+        public readonly ReadOnlyTexture1D<<#=t#>, <#=tPixel#>> source;
+        public readonly ReadWriteTexture1D<<#=t#>, <#=tPixel#>> destination;
 
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
+            destination[ThreadIds.X] = (source[ThreadIds.X] + destination[ThreadIds.X]) / 2;
         }
     }
 <#

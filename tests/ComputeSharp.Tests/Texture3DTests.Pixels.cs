@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests;
 
-public partial class Texture3DTests
+partial class Texture3DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]

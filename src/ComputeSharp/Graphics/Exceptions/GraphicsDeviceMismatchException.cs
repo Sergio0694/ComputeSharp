@@ -59,6 +59,18 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of values in the input buffer.</typeparam>
+    /// <param name="texture">The input <see cref="Texture1D{T}"/> that was used.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
+    internal static void Throw<T>(Texture1D<T> texture, GraphicsDevice device)
+        where T : unmanaged
+    {
+        throw Create(texture, texture.GraphicsDevice, device);
+    }
+
+    /// <summary>
+    /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of values in the input buffer.</typeparam>
     /// <param name="texture">The input <see cref="Texture2D{T}"/> that was used.</param>
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
     internal static void Throw<T>(Texture2D<T> texture, GraphicsDevice device)
@@ -89,6 +101,18 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
         where T : unmanaged
     {
         throw Create(buffer, buffer.GraphicsDevice, device);
+    }
+
+    /// <summary>
+    /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of values in the input buffer.</typeparam>
+    /// <param name="texture">The input <see cref="TransferTexture1D{T}"/> that was used.</param>
+    /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
+    internal static void Throw<T>(TransferTexture1D<T> texture, GraphicsDevice device)
+        where T : unmanaged
+    {
+        throw Create(texture, texture.GraphicsDevice, device);
     }
 
     /// <summary>

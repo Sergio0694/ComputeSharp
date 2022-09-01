@@ -33,6 +33,7 @@ public sealed class UnsupportedTextureTypeException : NotSupportedException
 
         builder.AppendLine(rank switch
         {
+            1 => $"{nameof(GraphicsDevice.IsReadOnlyTexture1DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture1DSupportedForType)}<T>().",
             2 => $"{nameof(GraphicsDevice.IsReadOnlyTexture2DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture2DSupportedForType)}<T>().",
             3 => $"{nameof(GraphicsDevice.IsReadOnlyTexture3DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture3DSupportedForType)}<T>().",
             _ => ThrowHelper.ThrowArgumentException<string>("Invalid texture rank.")
@@ -41,6 +42,16 @@ public sealed class UnsupportedTextureTypeException : NotSupportedException
         builder.Append("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
 
         return new(builder.ToString());
+    }
+
+    /// <summary>
+    /// Throws a new <see cref="UnsupportedTextureTypeException"/> instance from the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of values in the texture that couldn't be created.</typeparam>
+    internal static void ThrowForTexture1D<T>()
+        where T : unmanaged
+    {
+        throw Create(1, typeof(T));
     }
 
     /// <summary>

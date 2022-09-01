@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using CommunityToolkit.HighPerformance;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -11,12 +13,12 @@ using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests;
 
-partial class Texture2DTests
+partial class Texture1DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]
-    [Resource(typeof(ReadOnlyTexture2D<,>))]
-    [Resource(typeof(ReadWriteTexture2D<,>))]
+    [Resource(typeof(ReadOnlyTexture1D<,>))]
+    [Resource(typeof(ReadWriteTexture1D<,>))]
     [Data(typeof(Bgra32), typeof(float4))]
     [Data(typeof(R16), typeof(float))]
     [Data(typeof(R8), typeof(float))]
@@ -30,20 +32,19 @@ partial class Texture2DTests
             where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
-            using Texture2D<T> texture = device.Get().AllocateTexture2D<T, TPixel>(textureType, 128, 128);
+            using Texture1D<T> texture = device.Get().AllocateTexture1D<T, TPixel>(textureType, 128);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
-            Assert.AreEqual(texture.Height, 128);
             Assert.AreSame(texture.GraphicsDevice, device.Get());
 
-            if (textureType == typeof(ReadOnlyTexture2D<,>))
+            if (textureType == typeof(ReadOnlyTexture1D<,>))
             {
-                Assert.IsTrue(texture is ReadOnlyTexture2D<T, TPixel>);
+                Assert.IsTrue(texture is ReadOnlyTexture1D<T, TPixel>);
             }
             else
             {
-                Assert.IsTrue(texture is ReadWriteTexture2D<T, TPixel>);
+                Assert.IsTrue(texture is ReadWriteTexture1D<T, TPixel>);
             }
         }
 
@@ -59,59 +60,43 @@ partial class Texture2DTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
+        using var original = Image.Load<ImageSharpRgba32>(Path.Combine(imagingPath, "city.jpg"));
         using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
-        using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
-        using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
+        if (!original.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> originalMemory))
+        {
+            Assert.Inconclusive();
+        }
 
-        device.Get().For(sampled.Width, sampled.Height, new SamplingComputeShader(source, destination));
+        Span<Rgba32> row = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(originalMemory.Span.Slice(0, original.Width));
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using ReadOnlyTexture1D<Rgba32, float4> source = device.Get().AllocateReadOnlyTexture1D<Rgba32, float4>(row);
+        using ReadWriteTexture1D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture1D<Rgba32, float4>(sampled.Width);
 
-        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+        device.Get().For(sampled.Width, new SamplingComputeShader(source, destination));
+
+        Rgba32[] processed = destination.ToArray();
+
+        if (!sampled.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> sampledMemory))
+        {
+            Assert.Inconclusive();
+        }
+
+        using var sampledRow = Image.WrapMemory(sampledMemory.Slice(0, sampled.Width), sampled.Width, 1);
+        using var processedRow = Image.WrapMemory(processed.AsMemory().Cast<Rgba32, ImageSharpRgba32>(), sampled.Width, 1);
+
+        TolerantImageComparer.AssertEqual(sampledRow, processedRow, 0.0000017f);
     }
 
     [AutoConstructor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {
-        public readonly IReadOnlyNormalizedTexture2D<float4> source;
-        public readonly IReadWriteNormalizedTexture2D<float4> destination;
+        public readonly IReadOnlyNormalizedTexture1D<float4> source;
+        public readonly IReadWriteNormalizedTexture1D<float4> destination;
 
         public void Execute()
         {
-            destination[ThreadIds.XY] = source.Sample(ThreadIds.Normalized.XY);
-        }
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
-    public void SampleFromSourceTexture_PixelShader(Device device)
-    {
-        _ = device.Get();
-
-        string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
-        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
-
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
-
-        using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
-        using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
-
-        device.Get().ForEach(destination, new SamplingPixelShader(source));
-
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
-
-        TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
-    }
-
-    [AutoConstructor]
-    public readonly partial struct SamplingPixelShader : IPixelShader<float4>
-    {
-        public readonly IReadOnlyNormalizedTexture2D<float4> texture;
-
-        public float4 Execute()
-        {
-            return texture.Sample(ThreadIds.Normalized.XY);
+            destination[ThreadIds.X] = source.Sample(ThreadIds.Normalized.X);
         }
     }
 
@@ -130,17 +115,17 @@ partial class Texture2DTests
             where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
-            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
+            using ReadWriteTexture1D<T, TPixel> texture = device.Get().AllocateReadWriteTexture1D<T, TPixel>(64);
 
             using (var context = device.Get().CreateComputeContext())
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 
-                IReadOnlyNormalizedTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture1D<TPixel> wrapper1 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper1);
 
-                IReadOnlyNormalizedTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture1D<TPixel> wrapper2 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper2);
                 Assert.AreSame(wrapper1, wrapper2);
@@ -168,7 +153,7 @@ partial class Texture2DTests
             where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
-            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
+            using ReadWriteTexture1D<T, TPixel> texture = device.Get().AllocateReadWriteTexture1D<T, TPixel>(64);
 
             _ = texture.AsReadOnly();
 

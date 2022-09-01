@@ -4,7 +4,7 @@ using ComputeSharp.Tests.Extensions;
 
 namespace ComputeSharp.Tests;
 
-public partial class Texture2DTests
+partial class Texture2DTests
 {
     [CombinatorialTestMethod]
     [AllDevices]

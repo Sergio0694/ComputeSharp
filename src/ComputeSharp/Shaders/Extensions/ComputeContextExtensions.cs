@@ -35,6 +35,22 @@ public static class ComputeContextExtensions
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
@@ -54,6 +70,24 @@ public static class ComputeContextExtensions
     /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
     {
         Guard.IsNotNull(texture);
 
@@ -96,6 +130,22 @@ public static class ComputeContextExtensions
         using NativeObject.Lease lease = default;
 
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -151,6 +201,22 @@ public static class ComputeContextExtensions
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to clear.</param>
+    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to clear.</param>
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
@@ -176,6 +242,24 @@ public static class ComputeContextExtensions
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
         context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -212,6 +296,24 @@ public static class ComputeContextExtensions
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, true);
+    }
+
+    /// <summary>
+    /// Clears a specific resource.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        using NativeObject.Lease lease = default;
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -256,6 +358,25 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, T value)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to fill.</param>
     /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
     public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, T value)
@@ -286,6 +407,29 @@ public static class ComputeContextExtensions
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteNormalizedTexture1D{TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture, TPixel value)
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        using NativeObject.Lease lease = default;
+
+        context.Fill(
+            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
+            handles.Gpu,
+            handles.Cpu,
+            DXGIFormatHelper.ExtendToNormalizedValue(value));
     }
 
     /// <summary>
@@ -425,6 +569,95 @@ public static class ComputeContextExtensions
         Guard.IsNotNull(texture);
 
         context.Run(texture, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<float> texture, ResourceState resourceState)
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float2> texture, ResourceState resourceState)
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float3> texture, ResourceState resourceState)
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float4> texture, ResourceState resourceState)
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture1D{T,TPixel}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture1D<T, TPixel> texture, ResourceState resourceState)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(texture);
+
+        using NativeObject.Lease lease = default;
+
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource, out Unsafe.AsRef(in lease));
+
+        context.Transition(d3D12Resource, states.Before, states.After);
     }
 
     /// <summary>
@@ -590,7 +823,7 @@ public static class ComputeContextExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to transition.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to transition.</param>
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, ResourceState resourceState)
         where T : unmanaged, IPixel<T, TPixel>
