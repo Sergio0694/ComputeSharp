@@ -21,18 +21,16 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Get all method declarations with the [D2DPixelShaderSource] attribute
-        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> methodSymbols =
+        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> methodDeclarationsAndSymbols =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
-                static (node, _) => node is MethodDeclarationSyntax { Parent: ClassDeclarationSyntax, AttributeLists.Count: > 0 },
-                static (context, _) => (
-                    (MethodDeclarationSyntax)context.Node,
-                    Symbol: (IMethodSymbol)context.SemanticModel.GetDeclaredSymbol(context.Node)!))
-            .Where(static pair => pair.Symbol.HasAttributeWithFullyQualifiedName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute"));
+            .ForAttributeWithMetadataName(
+                typeof(D2DPixelShaderSourceAttribute).FullName,
+                static (node, token) => node is MethodDeclarationSyntax,
+                static (context, token) => ((MethodDeclarationSyntax)context.TargetNode, (IMethodSymbol)context.TargetSymbol));
 
         // Gather info for all annotated methods
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
-            methodSymbols
+            methodDeclarationsAndSymbols
             .Select(static (item, _) =>
             {
                 ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
