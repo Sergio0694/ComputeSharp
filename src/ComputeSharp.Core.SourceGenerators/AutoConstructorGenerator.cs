@@ -23,11 +23,10 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         // Get all declared struct symbols with the [AutoConstructor] attribute
         IncrementalValuesProvider<INamedTypeSymbol> structDeclarations =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                "ComputeSharp.AutoConstructorAttribute",
                 static (node, token) => node is StructDeclarationSyntax structDeclaration,
-                static (context, token) => (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token))
-            .Where(static symbol => symbol is not null &&
-                                    symbol.GetAttributes().Any(static a => a.AttributeClass?.ToDisplayString() == typeof(AutoConstructorAttribute).FullName))!;
+                static (context, token) => (INamedTypeSymbol)context.TargetSymbol);
 
         // Get the type hierarchy and fields info
         IncrementalValuesProvider<(HierarchyInfo Left, ConstructorInfo Right)> constructorInfo =
