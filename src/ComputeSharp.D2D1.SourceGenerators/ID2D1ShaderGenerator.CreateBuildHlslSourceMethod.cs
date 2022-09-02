@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618, RS1024
+#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
