@@ -29,19 +29,16 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Get all declared methods (including global function declarations) with the [ShaderMethod] attribute
-        IncrementalValuesProvider<(CSharpSyntaxNode Syntax, IMethodSymbol Symbol)> structDeclarations =
+        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> methodDeclarationsAndSymbols =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                typeof(ShaderMethodAttribute).FullName,
                 static (node, token) => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 } or LocalFunctionStatementSyntax { Parent: GlobalStatementSyntax { Parent: CompilationUnitSyntax }, AttributeLists.Count: > 0 },
-                static (context, token) => (
-                    Syntax: (CSharpSyntaxNode)context.Node,
-                    Symbol: (IMethodSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
-            .Where(static item => item.Symbol is not null &&
-                                  item.Symbol.GetAttributes().Any(static a => a.AttributeClass?.ToDisplayString() == typeof(ShaderMethodAttribute).FullName))!;
+                static (context, token) => ((MethodDeclarationSyntax)context.TargetNode, (IMethodSymbol)context.TargetSymbol));
 
         // Get the source info for each method
         IncrementalValuesProvider<Result<HlslMethodSourceInfo>> methodSourceInfoWithErrors =
-            structDeclarations
+            methodDeclarationsAndSymbols
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {

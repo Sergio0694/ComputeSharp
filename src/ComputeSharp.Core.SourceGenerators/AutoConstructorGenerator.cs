@@ -21,16 +21,16 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Get all declared struct symbols with the [AutoConstructor] attribute
-        IncrementalValuesProvider<INamedTypeSymbol> structDeclarations =
+        IncrementalValuesProvider<INamedTypeSymbol> structSymbols =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "ComputeSharp.AutoConstructorAttribute",
+                typeof(AutoConstructorAttribute).FullName,
                 static (node, token) => node is StructDeclarationSyntax structDeclaration,
                 static (context, token) => (INamedTypeSymbol)context.TargetSymbol);
 
         // Get the type hierarchy and fields info
         IncrementalValuesProvider<(HierarchyInfo Left, ConstructorInfo Right)> constructorInfo =
-            structDeclarations
+            structSymbols
             .Select(static (item, token) => (Hierarchy: HierarchyInfo.From(item), Info: Ctor.GetData(item)))
             .Where(static item => !item.Info.Parameters.IsEmpty)
             .WithComparers(HierarchyInfo.Comparer.Default, ConstructorInfo.Comparer.Default);
