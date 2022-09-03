@@ -31,7 +31,7 @@ public partial class D2D1PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void RegisterForD2D1Factory1_WithTransformMapperFactory_NullD2D1Factory1()
     {
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(null, () => new PixelateEffect(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<PixelateEffect.Shader, PixelateEffect>(null, out _);
     }
 
     [TestMethod]

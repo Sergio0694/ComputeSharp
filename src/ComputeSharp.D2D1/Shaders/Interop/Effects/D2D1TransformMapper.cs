@@ -93,4 +93,36 @@ internal abstract class D2D1TransformMapper
             this.transformMapper.MapInvalidOutput(inputIndex, invalidInput, out invalidOutput);
         }
     }
+
+    /// <summary>
+    /// A generic <see cref="ID2D1TransformMapperFactory{T}"/> implementation for a mapper with a parameterless constructor.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
+    /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
+    public sealed class FactoryOf<T, TMapper> : ID2D1TransformMapperFactory<T>
+        where T : unmanaged, ID2D1PixelShader
+        where TMapper : class, ID2D1TransformMapper<T>, new()
+    {
+        /// <summary>
+        /// Creates a new <see cref="FactoryOf{T, TMapper}"/> instance.
+        /// </summary>
+        private FactoryOf()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="FactoryOf{T, TMapper}"/> instance for a given transform mapper.
+        /// </summary>
+        /// <returns>A new <see cref="FactoryOf{T, TMapper}"/> instance.</returns>
+        public static FactoryOf<T, TMapper> Get()
+        {
+            return new();
+        }
+
+        /// <inheritdoc/>
+        public ID2D1TransformMapper<T> Create()
+        {
+            return new TMapper();
+        }
+    }
 }

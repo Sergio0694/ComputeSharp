@@ -59,7 +59,7 @@ public static unsafe class D2D1PixelShaderEffect
             ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
         }
 
-        RegisterForD2D1Factory1(d2D1Factory1, static () => new TMapper(), out effectId);
+        RegisterForD2D1Factory1(d2D1Factory1, D2D1TransformMapper.FactoryOf<T, TMapper>.Get(), out effectId);
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, ID2D1TransformMapperFactory<T>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         if (d2D1Factory1 is null)
@@ -258,7 +258,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(ID2D1TransformMapperFactory{T}?, out Guid)"/>.</remarks>
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
@@ -273,12 +273,12 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(Func{ID2D1TransformMapper{T}}?, out Guid)"/>.</remarks>
+    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(ID2D1TransformMapperFactory{T}?, out Guid)"/>.</remarks>
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T, TMapper>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
-        return GetRegistrationBlob(static () => new TMapper(), out effectId);
+        return GetRegistrationBlob(D2D1TransformMapper.FactoryOf<T, TMapper>.Get(), out effectId);
     }
 
     /// <summary>
@@ -321,7 +321,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
     /// </para>
     /// </remarks>
-    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(Func<ID2D1TransformMapper<T>>? mapperFactory, out Guid effectId)
+    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(ID2D1TransformMapperFactory<T>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
         effectId = default;

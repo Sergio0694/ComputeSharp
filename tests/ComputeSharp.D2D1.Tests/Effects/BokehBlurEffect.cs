@@ -303,8 +303,8 @@ public sealed partial class BokehBlurEffect
         d2D1DeviceContext.Get()->SetRenderingControls(&d2D1RenderingControls);
 
         // Register all necessary effects
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new VerticalConvolution(), out _);
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), static () => new HorizontalConvolutionAndAccumulatePartials(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), new VerticalConvolution(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), new HorizontalConvolutionAndAccumulatePartials(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
@@ -477,12 +477,18 @@ public sealed partial class BokehBlurEffect
     /// <summary>
     /// The vertical convolution shader and transform.
     /// </summary>
-    private sealed partial class VerticalConvolution : ID2D1TransformMapper<VerticalConvolution.Shader>
+    private sealed partial class VerticalConvolution : ID2D1TransformMapperFactory<VerticalConvolution.Shader>, ID2D1TransformMapper<VerticalConvolution.Shader>
     {
         /// <summary>
         /// The length of the convolution kernel.
         /// </summary>
         private int kernelLength;
+
+        /// <inheritdoc/>
+        public ID2D1TransformMapper<Shader> Create()
+        {
+            return new VerticalConvolution();
+        }
 
         /// <inheritdoc/>
         public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
@@ -547,12 +553,18 @@ public sealed partial class BokehBlurEffect
     /// <summary>
     /// The horizontal convolutin and partial accumulation effect and transform.
     /// </summary>
-    private sealed partial class HorizontalConvolutionAndAccumulatePartials : ID2D1TransformMapper<HorizontalConvolutionAndAccumulatePartials.Shader>
+    private sealed partial class HorizontalConvolutionAndAccumulatePartials : ID2D1TransformMapperFactory<HorizontalConvolutionAndAccumulatePartials.Shader>, ID2D1TransformMapper<HorizontalConvolutionAndAccumulatePartials.Shader>
     {
         /// <summary>
         /// The length of the convolution kernel.
         /// </summary>
         private int kernelLength;
+
+        /// <inheritdoc/>
+        public ID2D1TransformMapper<Shader> Create()
+        {
+            return new HorizontalConvolutionAndAccumulatePartials();
+        }
 
         /// <inheritdoc/>
         public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)

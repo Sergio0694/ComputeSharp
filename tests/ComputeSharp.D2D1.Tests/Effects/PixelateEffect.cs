@@ -3,8 +3,14 @@ using System.Drawing;
 
 namespace ComputeSharp.D2D1.Tests.Effects;
 
-public sealed partial class PixelateEffect : ID2D1TransformMapper<PixelateEffect.Shader>
+public sealed partial class PixelateEffect : ID2D1TransformMapperFactory<PixelateEffect.Shader>, ID2D1TransformMapper<PixelateEffect.Shader>
 {
+    /// <inheritdoc/>
+    public ID2D1TransformMapper<Shader> Create()
+    {
+        return new PixelateEffect();
+    }
+
     /// <inheritdoc/>
     void ID2D1TransformMapper<Shader>.MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
     {

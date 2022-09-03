@@ -38,7 +38,7 @@ public class EndToEndTests
     {
         D2D1TestRunner.RunAndCompareShader(
             new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 840, 16)),
-            static () => new PixelateEffect(),
+            new PixelateEffect(),
             "Landscape.png",
             "Landscape_Pixelate.png");
     }
@@ -46,7 +46,7 @@ public class EndToEndTests
     [TestMethod]
     public unsafe void ZonePlate()
     {
-        D2D1TestRunner.RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), null, 1280, 720, "ZonePlate.png");
+        D2D1TestRunner.RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), 1280, 720, "ZonePlate.png");
     }
 
     [TestMethod]
