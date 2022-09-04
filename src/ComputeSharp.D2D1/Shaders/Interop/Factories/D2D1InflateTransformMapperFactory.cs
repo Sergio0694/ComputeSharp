@@ -64,6 +64,9 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
     /// </summary>
     public sealed class DynamicAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
     {
+        /// <summary>
+        /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic inflate amount.
+        /// </summary>
         public D2D1TransformMapperFactory<T>.Accessor<int>? Accessor { get; init; }
 
         /// <inheritdoc/>
@@ -80,6 +83,9 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
     /// </summary>
     public sealed class DynamicLeftTopRightBottomAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
     {
+        /// <summary>
+        /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic inflate LTRB amount.
+        /// </summary>
         public D2D1TransformMapperFactory<T>.Accessor<(int, int, int, int)>? Accessor { get; init; }
 
         /// <inheritdoc/>

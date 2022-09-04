@@ -135,19 +135,6 @@ internal struct Rectangle64 : IEquatable<Rectangle64>
     /// <summary>
     /// Inflates the current rectangle by a specified amount.
     /// </summary>
-    /// <param name="x">The horizontal inflation amount.</param>
-    /// <param name="y">The vertical inflation amount.</param>
-    public void Inflate(long x, long y)
-    {
-        this.x -= x;
-        this.y -= y;
-        this.width += (2 * x);
-        this.height += (2 * y);
-    }
-
-    /// <summary>
-    /// Inflates the current rectangle by a specified amount.
-    /// </summary>
     /// <param name="left">The amount fo use to inflate the left edge.</param>
     /// <param name="top"></param>
     /// <param name="right"></param>

@@ -1,4 +1,5 @@
-﻿using ComputeSharp.D2D1.Shaders.Interop.Factories;
+﻿using System.Numerics;
+using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 namespace ComputeSharp.D2D1;
 
@@ -50,6 +51,26 @@ public static class D2D1TransformMapperFactory<T>
     public static ID2D1TransformMapperFactory<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
     {
         return new D2D1InflateTransformMapperFactory<T> { Parameters = new D2D1InflateTransformMapperFactory<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor } };
+    }
+
+    /// <summary>
+    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// </summary>
+    /// <param name="matrix">The fixed transformation matrix to use.</param>
+    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
+    public static ID2D1TransformMapperFactory<T> Transform(Matrix3x2 matrix)
+    {
+        return new D2D1AffineTransformMapperFactory<T> { Parameters = new D2D1AffineTransformMapperFactory<T>.FixedMatrix { Amount = matrix } };
+    }
+
+    /// <summary>
+    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// </summary>
+    /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the transformation matrix to use.</param>
+    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
+    public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
+    {
+        return new D2D1AffineTransformMapperFactory<T> { Parameters = new D2D1AffineTransformMapperFactory<T>.DynamicMatrix { Accessor = accessor } };
     }
 
     /// <summary>
