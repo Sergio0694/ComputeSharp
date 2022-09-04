@@ -6,6 +6,10 @@
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
