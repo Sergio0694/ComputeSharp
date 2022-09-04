@@ -46,9 +46,9 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     private readonly bool isEntryPoint;
 
     /// <summary>
-    /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
+    /// The identifier of the current <see cref="MethodDeclarationSyntax"/> or <see cref="LocalFunctionStatementSyntax"/> tree being visited.
     /// </summary>
-    private MethodDeclarationSyntax? currentMethod;
+    private SyntaxToken currentMethodIdentifier;
 
     /// <summary>
     /// The current depth inside local declarations.
@@ -111,7 +111,12 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
     {
-        this.currentMethod = node;
+        if (node is null)
+        {
+            return null;
+        }
+
+        this.currentMethodIdentifier = node.Identifier;
 
         var updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
 
@@ -132,6 +137,40 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
             var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
             // Add the tracked implicit declarations (at the start of the body)
+            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
+        }
+
+        return updatedNode;
+    }
+
+    /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
+    public LocalFunctionStatementSyntax? Visit(LocalFunctionStatementSyntax? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+
+        this.currentMethodIdentifier = node.Identifier;
+
+        var updatedNode = (LocalFunctionStatementSyntax?)base.Visit(node)!;
+
+        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+
+        if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+        {
+            Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
+        }
+
+        if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+        {
+            Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
+        }
+
+        if (updatedNode is not null)
+        {
+            var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
+
             updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
         }
 
@@ -200,35 +239,62 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
     {
-        this.localFunctionDepth++;
-
-        var updatedNode =
-            ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
-            .WithBlockBody()
-            .WithAttributeLists(List<AttributeListSyntax>())
-            .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
-
-        updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
-
-        if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+        // If the current identifier matches the one for the current method, it means the local function
+        // statement is the one being inspected, and it's nto coming from a local function in a method
+        // being parsed. That is, this was a blobal method that was annotated in source.
+        if (node.Identifier == this.currentMethodIdentifier)
         {
-            Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
-        }
+            var updatedNode =
+                ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
+                .WithBlockBody()
+                .WithAttributeLists(List<AttributeListSyntax>());
 
-        if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+            {
+                Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
+            }
+
+            return updatedNode;
+        }
+        else
         {
-            Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
+            this.localFunctionDepth++;
+
+            var updatedNode =
+                ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
+                .WithBlockBody()
+                .WithAttributeLists(List<AttributeListSyntax>())
+                .WithIdentifier(Identifier($"__{this.currentMethodIdentifier.Text}__{node.Identifier.Text}"));
+
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+            {
+                Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
+            }
+
+            this.localFunctionDepth--;
+
+            // HLSL doesn't support local functions, so we first process them as usual and then remove
+            // them from the current syntax tree completely. These will be added to the shader source
+            // as external static method with a special name to avoid conflicts with other methods.
+            // The name will simply be in the format: "__<MethodName>__<FunctionName>".
+            this.localFunctions.Add(updatedNode.Identifier.Text, updatedNode);
+
+            return null;
         }
-
-        this.localFunctionDepth--;
-
-        // HLSL doesn't support local functions, so we first process them as usual and then remove
-        // them from the current syntax tree completely. These will be added to the shader source
-        // as external static method with a special name to avoid conflicts with other methods.
-        // The name will simply be in the format: "__<MethodName>__<FunctionName>".
-        this.localFunctions.Add(updatedNode.Identifier.Text, updatedNode);
-
-        return null;
     }
 
     /// <inheritdoc/>
@@ -370,7 +436,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 // updated name is detailed in the override handling the local function statement.
                 if (method.MethodKind == MethodKind.LocalFunction)
                 {
-                    var functionIdentifier = $"__{this.currentMethod!.Identifier.Text}__{method.Name}";
+                    var functionIdentifier = $"__{this.currentMethodIdentifier.Text}__{method.Name}";
 
                     return updatedNode.WithExpression(IdentifierName(functionIdentifier));
                 }
