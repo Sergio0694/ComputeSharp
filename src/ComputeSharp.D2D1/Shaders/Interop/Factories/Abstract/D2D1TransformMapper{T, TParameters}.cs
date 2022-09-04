@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 
