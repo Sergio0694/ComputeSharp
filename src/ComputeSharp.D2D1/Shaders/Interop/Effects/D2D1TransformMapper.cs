@@ -111,13 +111,9 @@ internal abstract class D2D1TransformMapper
         }
 
         /// <summary>
-        /// Creates a new <see cref="FactoryOf{T, TMapper}"/> instance for a given transform mapper.
+        /// Gets the shared <see cref="FactoryOf{T, TMapper}"/> instance for a given transform mapper.
         /// </summary>
-        /// <returns>A new <see cref="FactoryOf{T, TMapper}"/> instance.</returns>
-        public static FactoryOf<T, TMapper> Get()
-        {
-            return new();
-        }
+        public static FactoryOf<T, TMapper> Instance { get; } = new();
 
         /// <inheritdoc/>
         public ID2D1TransformMapper<T> Create()

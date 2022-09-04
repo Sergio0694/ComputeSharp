@@ -59,7 +59,7 @@ public static unsafe class D2D1PixelShaderEffect
             ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
         }
 
-        RegisterForD2D1Factory1(d2D1Factory1, D2D1TransformMapper.FactoryOf<T, TMapper>.Get(), out effectId);
+        RegisterForD2D1Factory1(d2D1Factory1, D2D1TransformMapper.FactoryOf<T, TMapper>.Instance, out effectId);
     }
 
     /// <summary>
@@ -278,7 +278,7 @@ public static unsafe class D2D1PixelShaderEffect
         where T : unmanaged, ID2D1PixelShader
         where TMapper : class, ID2D1TransformMapper<T>, new()
     {
-        return GetRegistrationBlob(D2D1TransformMapper.FactoryOf<T, TMapper>.Get(), out effectId);
+        return GetRegistrationBlob(D2D1TransformMapper.FactoryOf<T, TMapper>.Instance, out effectId);
     }
 
     /// <summary>
