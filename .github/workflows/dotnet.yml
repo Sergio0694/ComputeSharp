@@ -140,6 +140,9 @@ jobs:
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET 6)
       run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
+    - name: Run ComputeSharp.Tests.GlobalStatements (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
     - name: Run ComputeSharp.Tests.Internals (.NET 6)
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -149,6 +152,9 @@ jobs:
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET Core 3.1)
       run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
       shell: cmd
+    - name: Run ComputeSharp.Tests.GlobalStatements (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
     - name: Run ComputeSharp.Tests.Internals (.NET Core 3.1)
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -157,6 +163,9 @@ jobs:
       shell: cmd
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET Framework 4.7.2)
       run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.GlobalStatements (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
       shell: cmd
     - name: Run ComputeSharp.Tests.Internals (.NET Framework 4.7.2)
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"

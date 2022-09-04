@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ComputeSharp.Core.Extensions;
 
@@ -17,13 +18,22 @@ internal static class MethodInfoExtensions
     {
         string parameters = string.Join(", ", method.GetParameters().Select(static p => p.ParameterType.FullName));
 
+        // Fixup the method name for static local functions in global statements. This only needs to
+        // be done when the method is in a type with fully qualified name "Program", as that's the only
+        // case where it might happen. If the declaring type has a name, it can't be that for sure.
+        (string declaringType, string methodName) = (method.DeclaringType!.FullName!, method.Name) switch
+        {
+            ("Program", var name) => ("Program", Regex.Replace(name, @"<<Main>\$>g__(\w+)\|\d+_\d+", static m => m.Groups[1].Value)),
+            (var type, var name) => (type, name)
+        };
+
         if (method.IsGenericMethod)
         {
             string arguments = string.Join(", ", method.GetGenericArguments().Select(static t => t.FullName));
 
-            return $"{method.DeclaringType!.FullName!}.{method.Name}<{arguments}>({parameters})";
+            return $"{declaringType}.{methodName}<{arguments}>({parameters})";
         }
 
-        return $"{method.DeclaringType!.FullName!}.{method.Name}({parameters})";
+        return $"{declaringType}.{methodName}({parameters})";
     }
 }

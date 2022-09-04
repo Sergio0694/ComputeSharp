@@ -77,10 +77,10 @@ public sealed partial class ShaderMethodSourceAttribute : Attribute
             return ThrowArgumentExceptionForNonStaticMethod(name);
         }
 
-        var attributes = function.Method.DeclaringType!.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
+        IEnumerable<ShaderMethodSourceAttribute> attributes = function.Method.DeclaringType!.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
         string methodName = function.Method.GetFullyQualifiedName();
 
-        foreach (var attribute in attributes)
+        foreach (ShaderMethodSourceAttribute attribute in attributes)
         {
             if (attribute.methodName.Equals(methodName))
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -27,13 +28,13 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Get all declared methods with the [ShaderMethod] attribute
-        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> structDeclarations =
+        // Get all declared methods (including global function declarations) with the [ShaderMethod] attribute
+        IncrementalValuesProvider<(CSharpSyntaxNode Syntax, IMethodSymbol Symbol)> structDeclarations =
             context.SyntaxProvider
             .CreateSyntaxProvider(
-                static (node, token) => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 } methodDeclaration,
+                static (node, token) => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 } or LocalFunctionStatementSyntax { Parent: GlobalStatementSyntax { Parent: CompilationUnitSyntax }, AttributeLists.Count: > 0 },
                 static (context, token) => (
-                    Syntax: (MethodDeclarationSyntax)context.Node,
+                    Syntax: (CSharpSyntaxNode)context.Node,
                     Symbol: (IMethodSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
             .Where(static item => item.Symbol is not null &&
                                   item.Symbol.GetAttributes().Any(static a => a.AttributeClass?.ToDisplayString() == typeof(ShaderMethodAttribute).FullName))!;
@@ -81,12 +82,12 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// Processes a given target method.
         /// </summary>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
-        /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> node to process.</param>
+        /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> or <see cref="LocalFunctionStatementSyntax"/> node to process.</param>
         /// <param name="methodSymbol">The <see cref="IMethodSymbol"/> instance for the current method.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         public static HlslMethodSourceInfo GetData(
             Compilation compilation,
-            MethodDeclarationSyntax methodDeclaration,
+            CSharpSyntaxNode methodDeclaration,
             IMethodSymbol methodSymbol,
             out ImmutableArray<Diagnostic> diagnostics)
         {
@@ -116,14 +117,14 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// Gets a sequence of processed methods from a target method declaration.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
-        /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> instance for the current method.</param>
+        /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> or <see cref="LocalFunctionStatementSyntax"/> instance for the current method.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
         private static (string TargetMethod, ImmutableArray<(string Signature, string Definition)> DependentMethods) GetProcessedMethods(
             ImmutableArray<Diagnostic>.Builder diagnostics,
-            MethodDeclarationSyntax methodDeclaration,
+            CSharpSyntaxNode methodDeclaration,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions)
@@ -132,10 +133,16 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
 
             ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, diagnostics);
 
+            // Process the possible syntax nodes
+            SyntaxNode visitedMethod = methodDeclaration switch
+            {
+                MethodDeclarationSyntax methodDeclarationSyntax => shaderSourceRewriter.Visit(methodDeclarationSyntax)!.WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier)),
+                LocalFunctionStatementSyntax functionStatementSyntax => shaderSourceRewriter.Visit(functionStatementSyntax)!.WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier)),
+                _ => throw new ArgumentException("Invalid method declaration syntax node type.")
+            };
+
             // Rewrite the method syntax tree
-            var targetMethod = shaderSourceRewriter
-                .Visit(methodDeclaration)!
-                .WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier))
+            string targetMethod = visitedMethod
                 .WithoutTrivia()
                 .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
