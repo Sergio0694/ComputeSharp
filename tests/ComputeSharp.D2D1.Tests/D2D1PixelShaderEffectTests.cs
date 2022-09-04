@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
@@ -24,14 +25,37 @@ public partial class D2D1PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void RegisterForD2D1Factory1_WithTransformMapper_NullD2D1Factory1()
     {
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<PixelateEffect.Shader, PixelateEffect>(null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyTransformMapper.Shader, DummyTransformMapper>(null, out _);
+    }
+
+    public sealed partial class DummyTransformMapper : ID2D1TransformMapper<DummyTransformMapper.Shader>
+    {
+        public void MapInputsToOutput(in Shader shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
+        {
+            output = default;
+            opaqueOutput = default;
+        }
+
+        public void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
+        {
+            invalidOutput = default;
+        }
+
+        public void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+        {
+        }
+
+        public partial struct Shader : ID2D1PixelShader
+        {
+            public float4 Execute() => default;
+        }
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void RegisterForD2D1Factory1_WithTransformMapperFactory_NullD2D1Factory1()
     {
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<PixelateEffect.Shader, PixelateEffect>(null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<PixelateEffect>(null, null, out _);
     }
 
     [TestMethod]
