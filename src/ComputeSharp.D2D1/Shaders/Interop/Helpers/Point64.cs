@@ -8,7 +8,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Point"/> type.
 /// </summary>
-internal struct Point64 : IEquatable<Point64>
+internal struct Point64
 {
     /// <summary>
     /// The left coordinate of the current point.
@@ -77,11 +77,5 @@ internal struct Point64 : IEquatable<Point64>
         // [ x, y] [ M31, M32 ] = [ x * M11 + y * M21 + M31, x * M12 + y * M22 + m32]
         this.x = (long)Math.Round(this.x * matrix.M11 + this.y * matrix.M21 + matrix.M31);
         this.y = (long)Math.Round(this.x * matrix.M12 + this.y * matrix.M22 + matrix.M32);
-    }
-
-    /// <inheritdoc/>
-    public readonly bool Equals(Point64 other)
-    {
-        return this.x == other.x && this.y == other.y;
     }
 }

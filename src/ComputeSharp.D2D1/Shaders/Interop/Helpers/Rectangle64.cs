@@ -7,7 +7,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Rectangle"/> type.
 /// </summary>
-internal struct Rectangle64 : IEquatable<Rectangle64>
+internal struct Rectangle64
 {
     /// <summary>
     /// The left coordinate of the current rectangle.
@@ -81,15 +81,6 @@ internal struct Rectangle64 : IEquatable<Rectangle64>
     }
 
     /// <summary>
-    /// Gets whether the current instance represents an empty rectangle.
-    /// </summary>
-    public bool IsEmpty
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.x == long.MaxValue && this.y == long.MaxValue && this.width == long.MinValue && this.height == long.MinValue;
-    }
-
-    /// <summary>
     /// Gets a <see cref="Rectangle64"/> instance representing an empty rectangle.
     /// </summary>
     /// <remarks>
@@ -156,12 +147,6 @@ internal struct Rectangle64 : IEquatable<Rectangle64>
         Intersect(new Rectangle64(int.MinValue / 2, int.MinValue / 2, int.MaxValue, int.MaxValue));
 
         return new((int)this.x, (int)this.y, (int)this.width, (int)this.height);
-    }
-
-    /// <inheritdoc/>
-    public readonly bool Equals(Rectangle64 other)
-    {
-        return this.x == other.x && this.y == other.y && this.width == other.width && this.height == other.height;
     }
 
     /// <summary>
