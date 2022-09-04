@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 

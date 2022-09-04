@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
-namespace ComputeSharp.D2D1;
+namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// Provides built-in transform mapper factories for common transform mapping operations.

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.Tests.Helpers;

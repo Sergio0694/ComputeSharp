@@ -1,4 +1,5 @@
-﻿using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
+﻿using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
