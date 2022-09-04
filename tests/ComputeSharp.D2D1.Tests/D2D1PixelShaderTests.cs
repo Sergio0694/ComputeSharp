@@ -15,7 +15,7 @@ public partial class D2D1PixelShaderTests
     public unsafe void GetInputCount()
     {
         Assert.AreEqual(D2D1PixelShader.GetInputCount<InvertEffect>(), 1);
-        Assert.AreEqual(D2D1PixelShader.GetInputCount<PixelateEffect.Shader>(), 1);
+        Assert.AreEqual(D2D1PixelShader.GetInputCount<PixelateEffect>(), 1);
         Assert.AreEqual(D2D1PixelShader.GetInputCount<ZonePlateEffect>(), 0);
         Assert.AreEqual(D2D1PixelShader.GetInputCount<ShaderWithMultipleInputs>(), 7);
     }
@@ -109,7 +109,7 @@ public partial class D2D1PixelShaderTests
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<CheckerboardClipEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<InvertEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<InvertWithThresholdEffect>().Length, 0);
-        Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<PixelateEffect.Shader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<PixelateEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<ZonePlateEffect>().Length, 0);
 
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<ShaderWithMultipleInputs>().Length, 0);
@@ -175,7 +175,7 @@ public partial class D2D1PixelShaderTests
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<CheckerboardClipEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<InvertEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<InvertWithThresholdEffect>().Length, 0);
-        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<PixelateEffect.Shader>().Length, 0);
+        Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<PixelateEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<ZonePlateEffect>().Length, 0);
 
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<ShaderWithMultipleInputs>().Length, 0);

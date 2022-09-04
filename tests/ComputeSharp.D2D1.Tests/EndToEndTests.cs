@@ -37,8 +37,8 @@ public class EndToEndTests
     public unsafe void Pixelate()
     {
         D2D1TestRunner.RunAndCompareShader(
-            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 840, 16)),
-            new PixelateEffect(),
+            new PixelateEffect(new PixelateEffect.Constants(1280, 840, 16)),
+            D2D1TransformMapperFactory<PixelateEffect>.Inflate(16),
             "Landscape.png",
             "Landscape_Pixelate.png");
     }
