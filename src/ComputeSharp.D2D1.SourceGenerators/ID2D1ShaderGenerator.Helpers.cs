@@ -16,7 +16,7 @@ partial class ID2D1ShaderGenerator
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to check.</param>
     /// <param name="d2D1PixelShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="ID2D1PixelShader"/>.</param>
     /// <returns>Whether or not <paramref name="typeSymbol"/> implements <paramref name="d2D1PixelShaderSymbol"/>.</returns>
-    private static bool IsD2D1PixelShaderType(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1PixelShaderSymbol)
+    public static bool IsD2D1PixelShaderType(INamedTypeSymbol typeSymbol, INamedTypeSymbol d2D1PixelShaderSymbol)
     {
         foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {
