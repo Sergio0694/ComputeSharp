@@ -178,7 +178,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 0.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager0
+#else
+    public static void* GetResourceTextureManager0
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -186,7 +190,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager0Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager0Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager0Wrapper);
 #endif
         }
     }
@@ -194,7 +198,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 0.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager0
+#else
+    public static void* SetResourceTextureManager0
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -202,7 +210,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager0Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager0Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager0Wrapper);
 #endif
         }
     }
@@ -210,7 +218,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 1.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager1
+#else
+    public static void* GetResourceTextureManager1
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -218,7 +230,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager1Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager1Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager1Wrapper);
 #endif
         }
     }
@@ -226,7 +238,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 1.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager1
+#else
+    public static void* SetResourceTextureManager1
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -234,7 +250,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager1Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager1Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager1Wrapper);
 #endif
         }
     }
@@ -242,7 +258,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 2.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager2
+#else
+    public static void* GetResourceTextureManager2
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -250,7 +270,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager2Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager2Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager2Wrapper);
 #endif
         }
     }
@@ -258,7 +278,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 2.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager2
+#else
+    public static void* SetResourceTextureManager2
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -266,7 +290,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager2Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager2Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager2Wrapper);
 #endif
         }
     }
@@ -274,7 +298,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 3.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager3
+#else
+    public static void* GetResourceTextureManager3
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -282,7 +310,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager3Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager3Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager3Wrapper);
 #endif
         }
     }
@@ -290,7 +318,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 3.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager3
+#else
+    public static void* SetResourceTextureManager3
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -298,7 +330,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager3Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager3Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager3Wrapper);
 #endif
         }
     }
@@ -306,7 +338,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 4.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager4
+#else
+    public static void* GetResourceTextureManager4
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -314,7 +350,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager4Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager4Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager4Wrapper);
 #endif
         }
     }
@@ -322,7 +358,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 4.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager4
+#else
+    public static void* SetResourceTextureManager4
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -330,7 +370,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager4Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager4Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager4Wrapper);
 #endif
         }
     }
@@ -338,7 +378,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 5.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager5
+#else
+    public static void* GetResourceTextureManager5
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -346,7 +390,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager5Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager5Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager5Wrapper);
 #endif
         }
     }
@@ -354,7 +398,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 5.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager5
+#else
+    public static void* SetResourceTextureManager5
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -362,7 +410,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager5Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager5Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager5Wrapper);
 #endif
         }
     }
@@ -370,7 +418,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 6.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager6
+#else
+    public static void* GetResourceTextureManager6
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -378,7 +430,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager6Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager6Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager6Wrapper);
 #endif
         }
     }
@@ -386,7 +438,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 6.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager6
+#else
+    public static void* SetResourceTextureManager6
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -394,7 +450,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager6Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager6Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager6Wrapper);
 #endif
         }
     }
@@ -402,7 +458,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 7.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager7
+#else
+    public static void* GetResourceTextureManager7
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -410,7 +470,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager7Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager7Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager7Wrapper);
 #endif
         }
     }
@@ -418,7 +478,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 7.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager7
+#else
+    public static void* SetResourceTextureManager7
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -426,7 +490,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager7Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager7Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager7Wrapper);
 #endif
         }
     }
@@ -434,7 +498,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 8.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager8
+#else
+    public static void* GetResourceTextureManager8
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -442,7 +510,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager8Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager8Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager8Wrapper);
 #endif
         }
     }
@@ -450,7 +518,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 8.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager8
+#else
+    public static void* SetResourceTextureManager8
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -458,7 +530,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager8Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager8Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager8Wrapper);
 #endif
         }
     }
@@ -466,7 +538,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 9.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager9
+#else
+    public static void* GetResourceTextureManager9
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -474,7 +550,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager9Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager9Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager9Wrapper);
 #endif
         }
     }
@@ -482,7 +558,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 9.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager9
+#else
+    public static void* SetResourceTextureManager9
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -490,7 +570,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager9Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager9Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager9Wrapper);
 #endif
         }
     }
@@ -498,7 +578,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 10.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager10
+#else
+    public static void* GetResourceTextureManager10
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -506,7 +590,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager10Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager10Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager10Wrapper);
 #endif
         }
     }
@@ -514,7 +598,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 10.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager10
+#else
+    public static void* SetResourceTextureManager10
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -522,7 +610,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager10Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager10Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager10Wrapper);
 #endif
         }
     }
@@ -530,7 +618,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 11.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager11
+#else
+    public static void* GetResourceTextureManager11
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -538,7 +630,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager11Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager11Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager11Wrapper);
 #endif
         }
     }
@@ -546,7 +638,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 11.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager11
+#else
+    public static void* SetResourceTextureManager11
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -554,7 +650,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager11Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager11Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager11Wrapper);
 #endif
         }
     }
@@ -562,7 +658,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 12.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager12
+#else
+    public static void* GetResourceTextureManager12
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -570,7 +670,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager12Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager12Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager12Wrapper);
 #endif
         }
     }
@@ -578,7 +678,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 12.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager12
+#else
+    public static void* SetResourceTextureManager12
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -586,7 +690,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager12Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager12Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager12Wrapper);
 #endif
         }
     }
@@ -594,7 +698,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 13.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager13
+#else
+    public static void* GetResourceTextureManager13
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -602,7 +710,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager13Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager13Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager13Wrapper);
 #endif
         }
     }
@@ -610,7 +718,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 13.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager13
+#else
+    public static void* SetResourceTextureManager13
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -618,7 +730,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager13Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager13Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager13Wrapper);
 #endif
         }
     }
@@ -626,7 +738,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 14.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager14
+#else
+    public static void* GetResourceTextureManager14
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -634,7 +750,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager14Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager14Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager14Wrapper);
 #endif
         }
     }
@@ -642,7 +758,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 14.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager14
+#else
+    public static void* SetResourceTextureManager14
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -650,7 +770,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager14Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager14Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager14Wrapper);
 #endif
         }
     }
@@ -658,7 +778,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the resource manager at index 15.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager15
+#else
+    public static void* GetResourceTextureManager15
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -666,7 +790,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager15Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager15Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager15Wrapper);
 #endif
         }
     }
@@ -674,7 +798,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the resource manager at index 15.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager15
+#else
+    public static void* SetResourceTextureManager15
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -682,7 +810,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager15Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager15Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager15Wrapper);
 #endif
         }
     }
