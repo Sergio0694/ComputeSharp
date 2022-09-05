@@ -53,7 +53,8 @@ internal struct Point64
     /// Transforms the current point using an input matrix.
     /// </summary>
     /// <param name="matrix">The transformation matrix to use.</param>
-    public void Transform(in Matrix3x2 matrix)
+    /// <returns>The transformed points, with no rounding.</returns>
+    public (double X, double Y) Transform(in Matrix3x2 matrix)
     {
         // A 3x2 transformation matrix can be thought of a 2x2 matrix with an extra
         // 1x2 row representing absolute offsets. As such, these do not compute into
@@ -75,7 +76,8 @@ internal struct Point64
         //         [ M11, M12 ]
         //         [ M21, M22 ]
         // [ x, y] [ M31, M32 ] = [ x * M11 + y * M21 + M31, x * M12 + y * M22 + m32]
-        this.x = (long)Math.Round(this.x * matrix.M11 + this.y * matrix.M21 + matrix.M31);
-        this.y = (long)Math.Round(this.x * matrix.M12 + this.y * matrix.M22 + matrix.M32);
+        return (
+            Math.Round((double)this.x * matrix.M11 + (double)this.y * matrix.M21 + matrix.M31),
+            Math.Round((double)this.x * matrix.M12 + (double)this.y * matrix.M22 + matrix.M32));
     }
 }

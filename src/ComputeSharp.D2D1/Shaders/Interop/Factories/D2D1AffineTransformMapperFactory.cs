@@ -88,16 +88,22 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
             Point64 bottomRight = new(rectangle.Right, rectangle.Bottom);
 
             // Transform them with the current matrix
-            topLeft.Transform(in matrix);
-            topRight.Transform(in matrix);
-            bottomLeft.Transform(in matrix);
-            bottomRight.Transform(in matrix);
+            var transformedTopLeft = topLeft.Transform(in matrix);
+            var transformedTopRight = topRight.Transform(in matrix);
+            var transformedBottomLeft = bottomLeft.Transform(in matrix);
+            var transformedBottomRight = bottomRight.Transform(in matrix);
 
             // Calculate the bounding box of the transformed points
-            long x = Math.Min(Math.Min(topLeft.X, topRight.X), Math.Min(bottomLeft.X, bottomRight.X));
-            long y = Math.Min(Math.Min(topLeft.Y, topRight.Y), Math.Min(bottomLeft.Y, bottomRight.Y));
-            long width = Math.Max(Math.Max(topLeft.X, topRight.X), Math.Max(bottomLeft.X, bottomRight.X)) - rectangle.Left;
-            long height = Math.Max(Math.Max(topLeft.Y, topRight.Y), Math.Max(bottomLeft.Y, bottomRight.Y)) - rectangle.Top;
+            double left = Math.Min(Math.Min(transformedTopLeft.X, transformedTopRight.X), Math.Min(transformedBottomLeft.X, transformedBottomRight.X));
+            double top = Math.Min(Math.Min(transformedTopLeft.Y, transformedTopRight.Y), Math.Min(transformedBottomLeft.Y, transformedBottomRight.Y));
+            double right = Math.Max(Math.Max(transformedTopLeft.X, transformedTopRight.X), Math.Max(transformedBottomLeft.X, transformedBottomRight.X));
+            double bottom = Math.Max(Math.Max(transformedTopLeft.Y, transformedTopRight.Y), Math.Max(transformedBottomLeft.Y, transformedBottomRight.Y));
+
+            // Round each coordinate as needed and compute the rectangle bounds
+            long x = (long)Math.Floor(left);
+            long y = (long)Math.Floor(top);
+            long width = (long)Math.Ceiling(right) - x;
+            long height = (long)Math.Ceiling(bottom) - y;            
 
             rectangle = new(x, y, width, height);
         }
