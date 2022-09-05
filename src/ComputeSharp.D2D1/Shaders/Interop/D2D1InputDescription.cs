@@ -10,6 +10,27 @@
 public readonly struct D2D1InputDescription
 {
     /// <summary>
+    /// The index of the resource the description belongs to.
+    /// </summary>
+    /// <remarks>
+    /// This field and the ones below are explicity used because this type is in the type layout of <see cref="Effects.PixelShaderEffect"/>.
+    /// Since that type is used in an unmanaged context, MCG will produce a shadow copy to inform the runtime marshaller. Such a shallow copy
+    /// cannot process the type if it has unspeakable names in any of its members, which is the case for the generated fields. As such, this
+    /// type has to use explicit fields here and not readonly autoproperties, or compiling a project using ComputeSharp.D2D1 would fail on UWP.
+    /// </remarks>
+    private readonly int index;
+
+    /// <summary>
+    /// The type of filter to apply to the input texture.
+    /// </summary>
+    private readonly D2D1Filter filter;
+
+    /// <summary>
+    /// The mip level to retrieve from the upstream transform, if specified.
+    /// </summary>
+    private readonly int levelOfDetailCount;
+
+    /// <summary>
     /// Creates a new <see cref="D2D1InputDescription"/> instance with the specified parameters.
     /// </summary>
     /// <param name="index">The index of the resource the description belongs to.</param>
@@ -17,23 +38,23 @@ public readonly struct D2D1InputDescription
     /// <param name="levelOfDetailCount">The mip level to retrieve from the upstream transform, if specified.</param>
     internal D2D1InputDescription(int index, D2D1Filter filter, int levelOfDetailCount)
     {
-        Index = index;
-        Filter = filter;
-        LevelOfDetailCount = levelOfDetailCount;
+        this.index = index;
+        this.filter = filter;
+        this.levelOfDetailCount = levelOfDetailCount;
     }
 
     /// <summary>
     /// Gets the index of the resource the description belongs to.
     /// </summary>
-    public int Index { get; }
+    public int Index => this.index;
 
     /// <summary>
     /// Gets the type of filter to apply to the input texture.
     /// </summary>
-    public D2D1Filter Filter { get; }
+    public D2D1Filter Filter => this.filter;
 
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.
     /// </summary>
-    public int LevelOfDetailCount { get; }
+    public int LevelOfDetailCount => this.levelOfDetailCount;
 }
