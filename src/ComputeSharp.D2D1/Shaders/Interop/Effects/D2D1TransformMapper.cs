@@ -61,14 +61,23 @@ internal abstract class D2D1TransformMapper
         /// </summary>
         /// <param name="transformMapper">The <see cref="ID2D1TransformMapper{T}"/> instance to usse, if there is one.</param>
         /// <returns>A new <see cref="For{T}"/> instance wrapping <paramref name="transformMapper"/>, or <see langword="null"/>.</returns>
-        public static For<T>? Get(ID2D1TransformMapper<T>? transformMapper)
+        public static D2D1TransformMapper? Get(ID2D1TransformMapper<T>? transformMapper)
         {
             if (transformMapper is null)
             {
                 return null;
             }
 
-            return new(transformMapper);
+            // If one of the built-in transform mapper factories from D2D1TransformMapperFactory<T> was used,
+            // the returned ID2D1TransformMapper<T> instance will already inherit from D2D1TransformMapper.
+            // If that's the case, that object can be returned directly, saving one allocation and avoiding
+            // an extra interface stub dispatch call every time one of the transform mapping APIs is called.
+            if (transformMapper is D2D1TransformMapper d2D1TransformMapper)
+            {
+                return d2D1TransformMapper;
+            }
+
+            return new For<T>(transformMapper);
         }
 
         /// <inheritdoc/>
