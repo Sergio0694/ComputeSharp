@@ -43,7 +43,11 @@ for (int i = 0; i < 16; i++)
     /// <summary>
     /// Gets the get accessor for the resource manager at index <#=i#>.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager<#=i#>
+#else
+    public static void* GetResourceTextureManager<#=i#>
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -51,7 +55,7 @@ for (int i = 0; i < 16; i++)
 #if NET6_0_OR_GREATER
             return &GetResourceTextureManager<#=i#>Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager<#=i#>Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetResourceTextureManager<#=i#>Wrapper);
 #endif
         }
     }
@@ -59,7 +63,11 @@ for (int i = 0; i < 16; i++)
     /// <summary>
     /// Gets the set accessor for the resource manager at index <#=i#>.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager<#=i#>
+#else
+    public static void* SetResourceTextureManager<#=i#>
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -67,7 +75,7 @@ for (int i = 0; i < 16; i++)
 #if NET6_0_OR_GREATER
             return &SetResourceTextureManager<#=i#>Impl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager<#=i#>Wrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetResourceTextureManager<#=i#>Wrapper);
 #endif
         }
     }

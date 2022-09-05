@@ -36,7 +36,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the get accessor for the constant buffer.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetConstantBuffer
+#else
+    public static void* GetConstantBuffer
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -44,7 +48,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &GetConstantBufferImpl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int>)(void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
 #endif
         }
     }
@@ -52,7 +56,11 @@ unsafe partial struct PixelShaderEffect
     /// <summary>
     /// Gets the set accessor for the constant buffer.
     /// </summary>
+#if NET6_0_OR_GREATER
     public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetConstantBuffer
+#else
+    public static void* SetConstantBuffer
+#endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -60,7 +68,7 @@ unsafe partial struct PixelShaderEffect
 #if NET6_0_OR_GREATER
             return &SetConstantBufferImpl;
 #else
-            return (delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int>)(void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
+            return (void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
 #endif
         }
     }

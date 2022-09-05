@@ -202,10 +202,18 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// Gets the factory for the current effect.
         /// </summary>
+#if NET6_0_OR_GREATER
         public static delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
+#else
+        public static void* Factory
+#endif
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET6_0_OR_GREATER
             get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
+#else
+            get => (void*)Marshal.GetFunctionPointerForDelegate(EffectFactory);
+#endif
         }
 
         /// <summary>
