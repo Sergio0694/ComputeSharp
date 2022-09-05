@@ -10,6 +10,7 @@
 internal abstract class D2D1TransformMapperFactory<T, TSelf, TParameters, TTransformMapper> : ID2D1TransformMapperFactory<T>
     where T : unmanaged, ID2D1PixelShader
     where TSelf : D2D1TransformMapperFactory<T, TSelf, TParameters, TTransformMapper>, new()
+    where TParameters : unmanaged
     where TTransformMapper : D2D1TransformMapper<T, TParameters>, new()
 {
     /// <summary>

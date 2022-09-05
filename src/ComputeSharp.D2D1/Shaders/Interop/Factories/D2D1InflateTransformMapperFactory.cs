@@ -102,13 +102,13 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
     public sealed class TransformMapper : D2D1TransformMapper<T, (int Left, int Top, int Right, int Bottom)>
     {
         /// <inheritdoc/>
-        protected override void TransformInputToOutput((int Left, int Top, int Right, int Bottom) parameters, ref Rectangle64 rectangle)
+        protected override void TransformInputToOutput(in (int Left, int Top, int Right, int Bottom) parameters, ref Rectangle64 rectangle)
         {
             rectangle.Inflate(parameters.Left, parameters.Top, parameters.Right, parameters.Bottom);
         }
 
         /// <inheritdoc/>
-        protected override void TransformOutputToInput((int Left, int Top, int Right, int Bottom) parameters, ref Rectangle64 rectangle)
+        protected override void TransformOutputToInput(in (int Left, int Top, int Right, int Bottom) parameters, ref Rectangle64 rectangle)
         {
             rectangle.Inflate(parameters.Left, parameters.Top, parameters.Right, parameters.Bottom);
         }

@@ -53,13 +53,13 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
     public sealed class TransformMapper : D2D1TransformMapper<T, Matrix3x2>
     {
         /// <inheritdoc/>
-        protected override void TransformInputToOutput(Matrix3x2 parameters, ref Rectangle64 rectangle)
+        protected override void TransformInputToOutput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
         {
-            Transform(parameters, ref rectangle);
+            Transform(in parameters, ref rectangle);
         }
 
         /// <inheritdoc/>
-        protected override void TransformOutputToInput(Matrix3x2 parameters, ref Rectangle64 rectangle)
+        protected override void TransformOutputToInput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
         {
             if (!Matrix3x2.Invert(parameters, out Matrix3x2 matrix))
             {
@@ -71,7 +71,7 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
                 Throw();
             }
 
-            Transform(matrix, ref rectangle);
+            Transform(in matrix, ref rectangle);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
         /// </summary>
         /// <param name="matrix">The transform matrix to use.</param>
         /// <param name="rectangle">The rectangle to transform.</param>
-        private static void Transform(Matrix3x2 matrix, ref Rectangle64 rectangle)
+        private static void Transform(in Matrix3x2 matrix, ref Rectangle64 rectangle)
         {
             // Get the rectangle corners
             Point64 topLeft = new(rectangle.Left, rectangle.Top);

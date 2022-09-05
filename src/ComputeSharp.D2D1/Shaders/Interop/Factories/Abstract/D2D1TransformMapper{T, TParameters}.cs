@@ -12,11 +12,12 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 /// <typeparam name="TParameters">The type of parameters that the transform mapper will use.</typeparam>
 internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapper<T>
     where T : unmanaged, ID2D1PixelShader
+    where TParameters : unmanaged
 {
     /// <summary>
-    /// The current pixel shader value, which can be used to extract parameters from.
+    /// The parameters to use in this transform mapper.
     /// </summary>
-    private T shader;
+    private TParameters parameters;
 
     /// <inheritdoc cref="D2D1TransformMapperFactory{T, TSelf, TParameters, TTransformMapper}.Parameters"/>
     public D2D1TransformMapperParametersAccessor<T, TParameters>? Parameters { get; init; }
@@ -26,19 +27,19 @@ internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapp
     /// </summary>
     /// <param name="parameters">The parameters to be used to inform the transformation.</param>
     /// <param name="rectangle">The input rectangle to transform to output.</param>
-    protected abstract void TransformInputToOutput(TParameters parameters, ref Rectangle64 rectangle);
+    protected abstract void TransformInputToOutput(in TParameters parameters, ref Rectangle64 rectangle);
 
     /// <summary>
     /// Transforms an output rectangle to an input rectangle.
     /// </summary>
     /// <param name="parameters">The parameters to be used to inform the transformation.</param>
     /// <param name="rectangle">The output rectangle to transform to input.</param>
-    protected abstract void TransformOutputToInput(TParameters parameters, ref Rectangle64 rectangle);
+    protected abstract void TransformOutputToInput(in TParameters parameters, ref Rectangle64 rectangle);
 
     /// <inheritdoc/>
     void ID2D1TransformMapper<T>.MapInputsToOutput(in T shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
     {
-        this.shader = shader;
+        this.parameters = Parameters!.Get(in shader);
 
         if (inputs.IsEmpty)
         {
@@ -56,7 +57,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapp
                 output64.Union(Rectangle64.FromRectangle(input));
             }
 
-            TransformInputToOutput(Parameters!.Get(in shader), ref output64);
+            TransformInputToOutput(in this.parameters, ref output64);
 
             output = output64.ToRectangleWithD2D1LogicallyInfiniteClamping();
             opaqueOutput = Rectangle.Empty;
@@ -68,7 +69,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapp
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(invalidInput);
 
-        TransformInputToOutput(Parameters!.Get(in shader), ref output64);
+        TransformInputToOutput(in this.parameters, ref output64);
 
         invalidOutput = output64.ToRectangleWithD2D1LogicallyInfiniteClamping();
     }
@@ -78,7 +79,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapp
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(output);
 
-        TransformOutputToInput(Parameters!.Get(in shader), ref output64);
+        TransformOutputToInput(in this.parameters, ref output64);
 
         inputs.Fill(output64.ToRectangleWithD2D1LogicallyInfiniteClamping());
     }
