@@ -7,10 +7,10 @@ using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 /// <summary>
-/// A custom <see cref="D2D1TransformMapperFactory{T, TSelf, TParameters, TTransformMapper}"/> implementation for an affine transform.
+/// A custom <see cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}"/> implementation for an affine transform.
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperFactory<T, D2D1AffineTransformMapperFactory<T>, Matrix3x2, D2D1AffineTransformMapperFactory<T>.TransformMapper>
+internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperFactory<T, Matrix3x2, D2D1AffineTransformMapperFactory<T>.TransformMapper>
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>

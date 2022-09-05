@@ -5,10 +5,10 @@ using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 /// <summary>
-/// A custom <see cref="D2D1TransformMapperFactory{T, TSelf, TParameters, TTransformMapper}"/> implementation for an inflate transform.
+/// A custom <see cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}"/> implementation for an inflate transform.
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapperFactory<T, D2D1InflateTransformMapperFactory<T>, (int, int, int, int), D2D1InflateTransformMapperFactory<T>.TransformMapper>
+internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapperFactory<T, (int, int, int, int), D2D1InflateTransformMapperFactory<T>.TransformMapper>
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>

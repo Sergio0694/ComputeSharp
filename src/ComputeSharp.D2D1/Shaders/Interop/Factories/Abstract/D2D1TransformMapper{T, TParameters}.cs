@@ -19,7 +19,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : ID2D1TransformMapp
     /// </summary>
     private TParameters parameters;
 
-    /// <inheritdoc cref="D2D1TransformMapperFactory{T, TSelf, TParameters, TTransformMapper}.Parameters"/>
+    /// <inheritdoc cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}.Parameters"/>
     public D2D1TransformMapperParametersAccessor<T, TParameters>? Parameters { get; init; }
 
     /// <summary>
