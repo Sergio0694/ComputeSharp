@@ -68,7 +68,7 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
         /// <summary>
         /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic inflate amount.
         /// </summary>
-        public D2D1TransformMapperFactory<T>.Accessor<int>? Accessor { get; init; }
+        public required D2D1TransformMapperFactory<T>.Accessor<int> Accessor { get; init; }
 
         /// <inheritdoc/>
         public override (int, int, int, int) Get(in T shader)
@@ -87,7 +87,7 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
         /// <summary>
         /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic inflate LTRB amount.
         /// </summary>
-        public D2D1TransformMapperFactory<T>.Accessor<(int, int, int, int)>? Accessor { get; init; }
+        public required D2D1TransformMapperFactory<T>.Accessor<(int, int, int, int)> Accessor { get; init; }
 
         /// <inheritdoc/>
         public override (int, int, int, int) Get(in T shader)
