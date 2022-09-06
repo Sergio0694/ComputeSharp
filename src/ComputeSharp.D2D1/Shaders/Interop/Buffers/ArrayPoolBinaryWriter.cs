@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
+#if NET6_0_OR_GREATER
 using System.Numerics;
+#endif
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -55,7 +58,7 @@ internal ref struct ArrayPoolBinaryWriter
                 ThrowObjectDisposedException();
             }
 
-            return array!.AsSpan(0, this.index);
+            return array.AsSpan(0, this.index);
         }
     }
 
@@ -108,7 +111,7 @@ internal ref struct ArrayPoolBinaryWriter
             ThrowArgumentOutOfRangeExceptionForNegativeCount();
         }
 
-        if (this.index > array!.Length - count)
+        if (this.index > array.Length - count)
         {
             ThrowArgumentExceptionForAdvancedTooFar();
         }
@@ -152,7 +155,7 @@ internal ref struct ArrayPoolBinaryWriter
             sizeHint = 1;
         }
 
-        if (sizeHint > array!.Length - this.index)
+        if (sizeHint > array.Length - this.index)
         {
             ResizeBuffer(sizeHint);
         }
@@ -204,6 +207,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
     /// </summary>
+    [DoesNotReturn]
     private static void ThrowArgumentOutOfRangeExceptionForNegativeCount()
     {
         throw new ArgumentOutOfRangeException("count", "The count can't be a negative value.");
@@ -212,6 +216,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the size hint is negative.
     /// </summary>
+    [DoesNotReturn]
     private static void ThrowArgumentOutOfRangeExceptionForNegativeSizeHint()
     {
         throw new ArgumentOutOfRangeException("sizeHint", "The size hint can't be a negative value.");
@@ -220,6 +225,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
     /// </summary>
+    [DoesNotReturn]
     private static void ThrowArgumentExceptionForAdvancedTooFar()
     {
         throw new ArgumentException("The buffer writer has advanced too far.");
@@ -228,6 +234,7 @@ internal ref struct ArrayPoolBinaryWriter
     /// <summary>
     /// Throws an <see cref="ObjectDisposedException"/> when <see cref="array"/> is <see langword="null"/>.
     /// </summary>
+    [DoesNotReturn]
     private static void ThrowObjectDisposedException()
     {
         throw new ObjectDisposedException("The current buffer has already been disposed.");
