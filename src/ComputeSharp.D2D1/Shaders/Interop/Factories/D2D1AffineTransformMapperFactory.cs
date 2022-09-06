@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
@@ -94,18 +95,43 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
             var transformedBottomRight = bottomRight.Transform(in matrix);
 
             // Calculate the bounding box of the transformed points
-            double left = Math.Min(Math.Min(transformedTopLeft.X, transformedTopRight.X), Math.Min(transformedBottomLeft.X, transformedBottomRight.X));
-            double top = Math.Min(Math.Min(transformedTopLeft.Y, transformedTopRight.Y), Math.Min(transformedBottomLeft.Y, transformedBottomRight.Y));
-            double right = Math.Max(Math.Max(transformedTopLeft.X, transformedTopRight.X), Math.Max(transformedBottomLeft.X, transformedBottomRight.X));
-            double bottom = Math.Max(Math.Max(transformedTopLeft.Y, transformedTopRight.Y), Math.Max(transformedBottomLeft.Y, transformedBottomRight.Y));
+            double transformedLeft = Math.Min(Math.Min(transformedTopLeft.X, transformedTopRight.X), Math.Min(transformedBottomLeft.X, transformedBottomRight.X));
+            double transformedTop = Math.Min(Math.Min(transformedTopLeft.Y, transformedTopRight.Y), Math.Min(transformedBottomLeft.Y, transformedBottomRight.Y));
+            double transformedRight = Math.Max(Math.Max(transformedTopLeft.X, transformedTopRight.X), Math.Max(transformedBottomLeft.X, transformedBottomRight.X));
+            double transformedBottom = Math.Max(Math.Max(transformedTopLeft.Y, transformedTopRight.Y), Math.Max(transformedBottomLeft.Y, transformedBottomRight.Y));
 
             // Round each coordinate as needed and compute the rectangle bounds
-            long x = (long)Math.Floor(left);
-            long y = (long)Math.Floor(top);
-            long width = (long)Math.Ceiling(right) - x;
-            long height = (long)Math.Ceiling(bottom) - y;            
+            long left = (long)Math.Floor(Math.Max(transformedLeft, long.MinValue));
+            long top = (long)Math.Floor(Math.Max(transformedTop, long.MinValue));
+            long right = (long)Math.Ceiling(Math.Min(transformedRight, long.MaxValue));
+            long bottom = (long)Math.Ceiling(Math.Min(transformedBottom, long.MaxValue));
 
-            rectangle = new(x, y, width, height);
+            // Calculate the width and height, with clamping in case of overflows
+            long width = SubtractAndClampToMaxIfOverflow(right, left);
+            long height = SubtractAndClampToMaxIfOverflow(bottom, top);
+
+            rectangle = new(left, top, width, height);
+        }
+
+        /// <summary>
+        /// Subtracts two values and clamps to <see cref="long.MaxValue"/> if there is an overflow.
+        /// </summary>
+        /// <param name="x">The first value.</param>
+        /// <param name="y">The value to subtract.</param>
+        /// <returns>The result of the subtraction, clamped to <see cref="long.MaxValue"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static long SubtractAndClampToMaxIfOverflow(long x, long y)
+        {
+            long z = unchecked(x - y);
+
+            // Overflow in (x - y) with carry occurs if and only if x and y have opposite signs
+            // and the sign of (x - y) with carry is opposite of x (or equivalently same as y).
+            if (((x ^ y) & (z ^ x)) < 0)
+            {
+                return long.MaxValue;
+            }
+
+            return z;
         }
     }
 }
