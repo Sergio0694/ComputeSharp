@@ -60,7 +60,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
     public static ID2D1TransformMapperFactory<T> Transform(Matrix3x2 matrix)
     {
-        return new D2D1AffineTransformMapperFactory<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory<T>.ConstantMatrix { Amount = matrix } };
+        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.ConstantMatrix { Amount = matrix } };
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
     public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
     {
-        return new D2D1AffineTransformMapperFactory<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory<T>.DynamicMatrix { Accessor = accessor } };
+        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.DynamicMatrix { Accessor = accessor } };
     }
 
     /// <summary>
