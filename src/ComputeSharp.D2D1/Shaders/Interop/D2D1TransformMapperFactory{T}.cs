@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 namespace ComputeSharp.D2D1.Interop;
@@ -40,6 +41,11 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(Accessor<int> accessor)
     {
+        if (accessor is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<int> object cannot be null.");
+        }
+
         return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicAmount { Accessor = accessor } };
     }
 
@@ -50,6 +56,11 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
     {
+        if (accessor is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<(int Left, int Top, int Right, int Bottom)> object cannot be null.");
+        }
+
         return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor } };
     }
 
@@ -70,6 +81,11 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
     public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
     {
+        if (accessor is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> object cannot be null.");
+        }
+
         return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.DynamicMatrix { Accessor = accessor } };
     }
 
