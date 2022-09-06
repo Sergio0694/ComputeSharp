@@ -101,6 +101,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// </summary>
     /// <param name="sizeHint">The capacity to request.</param>
     /// <returns>A <see cref="Span{T}"/> to write data to.</returns>
+    [UnscopedRef]
     internal readonly Span<T> GetSpan(int sizeHint = 0)
     {
         CheckBufferAndEnsureCapacity(sizeHint);
