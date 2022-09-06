@@ -25,7 +25,7 @@ internal static class D2D1TestRunner
     /// <param name="shader">The shader to run.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
-        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
+        ID2D1TransformMapperFactory<T>? transformMapperFactory,
         string originalFileName,
         string expectedFileName,
         [CallerMemberName] string destinationFileName = "")
@@ -55,7 +55,6 @@ internal static class D2D1TestRunner
     /// Executes a pixel shader and compares the expected results.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
     /// <param name="width">The resulting width.</param>
     /// <param name="height">The resulting height.</param>
     /// <param name="expectedFileName">The name of the expected result image.</param>
@@ -63,7 +62,6 @@ internal static class D2D1TestRunner
     /// <param name="shader">The shader to run.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
-        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
         int width,
         int height,
         string expectedFileName,
@@ -81,7 +79,7 @@ internal static class D2D1TestRunner
         // Run the shader
         ExecutePixelShaderAndSaveToFile(
             in shader,
-            transformMapperFactory,
+            null,
             width,
             height,
             destinationPath);
@@ -98,9 +96,9 @@ internal static class D2D1TestRunner
     /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
     /// <param name="sourcePath">The source path for the image to run the shader on.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
-    public static unsafe void ExecutePixelShaderAndSaveToFile<T>(
+    private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
+        ID2D1TransformMapperFactory<T>? transformMapperFactory,
         string sourcePath,
         string destinationPath)
         where T : unmanaged, ID2D1PixelShader
@@ -139,9 +137,9 @@ internal static class D2D1TestRunner
     /// <param name="height">The resulting height.</param>
     /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
-    public static unsafe void ExecutePixelShaderAndSaveToFile<T>(
+    private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        Func<ID2D1TransformMapper<T>>? transformMapperFactory,
+        ID2D1TransformMapperFactory<T>? transformMapperFactory,
         int width,
         int height,
         string destinationPath)

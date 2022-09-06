@@ -107,14 +107,14 @@ internal unsafe partial struct PixelShaderEffect
         /// <summary>
         /// The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.
         /// </summary>
-        private static Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory;
+        private static ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory;
 
         /// <summary>
         /// Initializes the <see cref="For{T}"/> shared state.
         /// </summary>
         /// <param name="d2D1DrawTransformMapperFactory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
         /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
-        public static void Initialize(Func<ID2D1TransformMapper<T>>? d2D1DrawTransformMapperFactory)
+        public static void Initialize(ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory)
         {
             // This conceptually acts as a static constructor, and this type is
             // internal, so in this very specific case locking on the type is fine.
@@ -253,7 +253,7 @@ internal unsafe partial struct PixelShaderEffect
             // and managed exceptions should never cross the ABI boundary. If it throws, just return the HRESULT.
             try
             {
-                ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Invoke();
+                ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Create();
 
                 d2D1TransformMapper = D2D1TransformMapper.For<T>.Get(d2D1DrawTransformMapper);
             }

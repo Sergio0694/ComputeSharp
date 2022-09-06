@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.Tests.Helpers;
@@ -37,8 +38,8 @@ public class EndToEndTests
     public unsafe void Pixelate()
     {
         D2D1TestRunner.RunAndCompareShader(
-            new PixelateEffect.Shader(new PixelateEffect.Shader.Constants(1280, 840, 16)),
-            static () => new PixelateEffect(),
+            new PixelateEffect(new PixelateEffect.Constants(1280, 840, 16)),
+            D2D1TransformMapperFactory<PixelateEffect>.Inflate(16),
             "Landscape.png",
             "Landscape_Pixelate.png");
     }
@@ -46,7 +47,7 @@ public class EndToEndTests
     [TestMethod]
     public unsafe void ZonePlate()
     {
-        D2D1TestRunner.RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), null, 1280, 720, "ZonePlate.png");
+        D2D1TestRunner.RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), 1280, 720, "ZonePlate.png");
     }
 
     [TestMethod]
