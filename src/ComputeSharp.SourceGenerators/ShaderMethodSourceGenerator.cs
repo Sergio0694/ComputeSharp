@@ -69,7 +69,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = Execute.GetSyntax(item);
             string filename = item.MetadataName.Replace('`', '-').Replace('+', '.');
 
-            context.AddSource(filename, compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{filename}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 

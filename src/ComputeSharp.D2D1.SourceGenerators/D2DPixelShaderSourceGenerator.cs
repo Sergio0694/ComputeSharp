@@ -122,7 +122,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
             CompilationUnitSyntax compilationUnit = item.Hierarchy.GetSyntax(loadBytecodeMethod);
             SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.{item.BytecodeInfo.MethodName}", text);
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{item.BytecodeInfo.MethodName}.g.cs", text);
         });
     }
 }
