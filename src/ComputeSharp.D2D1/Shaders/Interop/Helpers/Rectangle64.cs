@@ -112,15 +112,15 @@ internal struct Rectangle64
     /// <param name="rectangle">The input <see cref="Rectangle64"/> instance to compute the intersection with.</param>
     public void Intersect(Rectangle64 rectangle)
     {
-        long maxLeft = Math.Max(this.x, rectangle.x);
-        long maxTop = Math.Max(this.y, rectangle.y);
-        long width = Math.Max(Math.Min(this.Right, rectangle.Right) - maxLeft, 0);
-        long height = Math.Max(Math.Min(this.Bottom, rectangle.Bottom) - maxTop, 0);
+        long left = Math.Max(this.x, rectangle.x);
+        long top = Math.Max(this.y, rectangle.y);
+        long right = Math.Min(this.Right, rectangle.Right);
+        long bottom = Math.Min(this.Bottom, rectangle.Bottom);
 
-        this.x = maxLeft;
-        this.y = maxTop;
-        this.width = width;
-        this.height = height;
+        this.x = left;
+        this.y = top;
+        this.width = Math.Max(right - left, 0);
+        this.height = Math.Max(bottom - top, 0);
     }
 
     /// <summary>
