@@ -22,7 +22,7 @@ public sealed class GlobalUsingDirectivesGenerator : IIncrementalGenerator
 
             string globalUsingDirectives = reader.ReadToEnd();
 
-            context.AddSource("GlobalUsingDirectives", globalUsingDirectives);
+            context.AddSource("GlobalUsingDirectives.g.cs", globalUsingDirectives);
         });
     }
 }
