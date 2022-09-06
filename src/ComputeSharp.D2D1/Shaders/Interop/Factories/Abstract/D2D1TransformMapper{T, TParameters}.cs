@@ -22,8 +22,8 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     /// </summary>
     private TParameters parameters;
 
-    /// <inheritdoc cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}.Parameters"/>
-    public D2D1TransformMapperParametersAccessor<T, TParameters>? Parameters { get; init; }
+    /// <inheritdoc cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}.ParametersAccessor"/>
+    public D2D1TransformMapperParametersAccessor<T, TParameters>? ParametersAccessor { get; init; }
 
     /// <summary>
     /// Transforms an input rectangle to an output rectangle.
@@ -72,7 +72,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     /// <inheritdoc/>
     public void MapInputsToOutput(in T shader, ReadOnlySpan<Rectangle> inputs, ReadOnlySpan<Rectangle> opaqueInputs, out Rectangle output, out Rectangle opaqueOutput)
     {
-        this.parameters = Parameters!.Get(in shader);
+        this.parameters = ParametersAccessor!.Get(in shader);
 
         if (inputs.IsEmpty)
         {

@@ -17,7 +17,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(int amount)
     {
-        return new D2D1InflateTransformMapperFactory<T> { Parameters = new D2D1InflateTransformMapperFactory<T>.FixedAmount { Amount = amount } };
+        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.ConstantAmount { Amount = amount } };
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(int left, int top, int right, int bottom)
     {
-        return new D2D1InflateTransformMapperFactory<T> { Parameters = new D2D1InflateTransformMapperFactory<T>.FixedLeftTopRightBottomAmount { Left = left, Top = top, Right = right, Bottom = bottom } };
+        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.ConstantLeftTopRightBottomAmount { Left = left, Top = top, Right = right, Bottom = bottom } };
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(Accessor<int> accessor)
     {
-        return new D2D1InflateTransformMapperFactory<T> { Parameters = new D2D1InflateTransformMapperFactory<T>.DynamicAmount { Accessor = accessor } };
+        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicAmount { Accessor = accessor } };
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
     public static ID2D1TransformMapperFactory<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
     {
-        return new D2D1InflateTransformMapperFactory<T> { Parameters = new D2D1InflateTransformMapperFactory<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor } };
+        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor } };
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
     public static ID2D1TransformMapperFactory<T> Transform(Matrix3x2 matrix)
     {
-        return new D2D1AffineTransformMapperFactory<T> { Parameters = new D2D1AffineTransformMapperFactory<T>.FixedMatrix { Amount = matrix } };
+        return new D2D1AffineTransformMapperFactory<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory<T>.ConstantMatrix { Amount = matrix } };
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
     public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
     {
-        return new D2D1AffineTransformMapperFactory<T> { Parameters = new D2D1AffineTransformMapperFactory<T>.DynamicMatrix { Accessor = accessor } };
+        return new D2D1AffineTransformMapperFactory<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory<T>.DynamicMatrix { Accessor = accessor } };
     }
 
     /// <summary>

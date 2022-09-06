@@ -14,11 +14,11 @@ internal abstract class D2D1TransformMapperFactory<T, TParameters, TTransformMap
     /// <inheritdoc/>
     ID2D1TransformMapper<T> ID2D1TransformMapperFactory<T>.Create()
     {
-        return new TTransformMapper { Parameters = Parameters };
+        return new TTransformMapper { ParametersAccessor = ParametersAccessor };
     }
 
     /// <summary>
     /// The <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> instance to use to retrieve parameters for the transform mapper.
     /// </summary>
-    public D2D1TransformMapperParametersAccessor<T, TParameters>? Parameters { get; init; }
+    public D2D1TransformMapperParametersAccessor<T, TParameters>? ParametersAccessor { get; init; }
 }

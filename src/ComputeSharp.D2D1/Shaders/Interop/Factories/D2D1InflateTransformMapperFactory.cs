@@ -12,9 +12,9 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a fixed inflate amount.
+    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant inflate amount.
     /// </summary>
-    public sealed class FixedAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
+    public sealed class ConstantAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
     {
         /// <summary>
         /// Gets the fixed inflate amount.
@@ -29,27 +29,27 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
     }
 
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a fixed inflate LTRB amount.
+    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant inflate LTRB amount.
     /// </summary>
-    public sealed class FixedLeftTopRightBottomAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
+    public sealed class ConstantLeftTopRightBottomAmount : D2D1TransformMapperParametersAccessor<T, (int, int, int, int)>
     {
         /// <summary>
-        /// The fixed left inflate amount.
+        /// The constant left inflate amount.
         /// </summary>
         public int Left { get; init; }
 
         /// <summary>
-        /// The fixed top inflate amount.
+        /// The constant top inflate amount.
         /// </summary>
         public int Top { get; init; }
 
         /// <summary>
-        /// The fixed right inflate amount.
+        /// The constant right inflate amount.
         /// </summary>
         public int Right { get; init; }
 
         /// <summary>
-        /// The fixed bottom inflate amount.
+        /// The constant bottom inflate amount.
         /// </summary>
         public int Bottom { get; init; }
 

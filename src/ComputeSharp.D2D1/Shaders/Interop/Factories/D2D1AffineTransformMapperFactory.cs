@@ -14,9 +14,9 @@ internal sealed class D2D1AffineTransformMapperFactory<T> : D2D1TransformMapperF
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a fixed affine transform matrix.
+    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant affine transform matrix.
     /// </summary>
-    public sealed class FixedMatrix : D2D1TransformMapperParametersAccessor<T, Matrix3x2>
+    public sealed class ConstantMatrix : D2D1TransformMapperParametersAccessor<T, Matrix3x2>
     {
         /// <summary>
         /// Gets the fixed affine transform matrix.
