@@ -75,7 +75,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this);
+        ref CommandList commandList = ref GetCommandList();
 
         commandList.D3D12GraphicsCommandList->UnorderedAccessViewBarrier(d3D12Resource);
     }
@@ -95,7 +95,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
+        ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->ClearUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, isNormalized);
     }
@@ -115,7 +115,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
+        ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->FillUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, value);
     }
@@ -200,7 +200,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -237,7 +237,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -266,7 +266,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this, pipelineState: null);
+        ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
         commandList.D3D12GraphicsCommandList->TransitionBarrier(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
     }
@@ -332,16 +332,16 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <summary>
     /// Gets the current <see cref="CommandList"/> instance.
     /// </summary>
-    /// <param name="this">The current <see cref="ComputeContext"/> instance.</param>
     /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the <see cref="CommandList"/> has not been initialized yet.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ref CommandList GetCommandList(in ComputeContext @this)
+    [UnscopedRef]
+    private readonly unsafe ref CommandList GetCommandList()
     {
         // This method has to take the context by readonly reference to allow callers to be marked as readonly.
         // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
         // original context would not see the changes done by the following queued dispatches.
-        ref CommandList commandList = ref Unsafe.AsRef(in @this).commandList;
+        ref CommandList commandList = ref Unsafe.AsRef(in this.commandList);
 
         if (!commandList.IsAllocated)
         {
@@ -354,29 +354,29 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <summary>
     /// Gets the current <see cref="CommandList"/> instance, and initializes it as needed.
     /// </summary>
-    /// <param name="this">The current <see cref="ComputeContext"/> instance.</param>
     /// <param name="pipelineState">The input <see cref="ID3D12PipelineState"/> to load.</param>
     /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
+    [UnscopedRef]
+    internal readonly unsafe ref CommandList GetCommandList(ID3D12PipelineState* pipelineState)
     {
-        ref ComputeContext context = ref Unsafe.AsRef(in @this);
+        ref CommandList commandList = ref Unsafe.AsRef(in this.commandList);
 
-        if (context.commandList.IsAllocated)
+        if (commandList.IsAllocated)
         {
             // Skip setting the pipeline state if the new state is null. This is the case when the upcoming
             // operation is not a shader dispatch, but just a resource clear. In this case there is no state.
             if (pipelineState is not null)
             {
-                context.commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
+                commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
             }
         }
         else
         {
-            context.commandList = new CommandList(context.device!, pipelineState);
+            commandList = new CommandList(this.device!, pipelineState);
         }
 
-        return ref context.commandList;
+        return ref commandList;
     }
 
     /// <summary>

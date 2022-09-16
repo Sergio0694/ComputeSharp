@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
@@ -84,80 +82,96 @@ public static unsafe class D2D1PixelShaderEffect
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
-        // Setup the input string
-        StringBuilder effectInputsBuilder = new();
+        using ArrayPoolBufferWriter<char> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
+        // Build the XML text
+        writer.WriteRaw("""
+            <?xml version='1.0'?>
+            <Effect>
+                <Property name='DisplayName' type='string' value='
+            """);
+        writer.WriteRaw(typeof(T).FullName!);
+        writer.WriteRaw("""
+            '/>
+                <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
+                <Property name='Category' type='string' value='Stylize'/>
+                <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
+                <Inputs>
+
+            """);
+
+        // Add the input nodes
         for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
         {
-            effectInputsBuilder.Append("<Input name='Source");
-            effectInputsBuilder.Append(i);
-            effectInputsBuilder.Append("'/>");
+            writer.WriteRaw("        <Input name='Source");
+            writer.WriteAsUnicode(i);
+            writer.WriteRaw("""
+                '/>
+
+                """);
         }
 
-        // Prepare the XML with a variable number of inputs
-        string xml = @$"<?xml version='1.0'?>
-<Effect>
-    <Property name='DisplayName' type='string' value='{typeof(T).FullName}'/>
-    <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
-    <Property name='Category' type='string' value='Stylize'/>
-    <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
-    <Inputs>
-        {effectInputsBuilder}
-    </Inputs>
-    <Property name='ConstantBuffer' type='blob'>
-        <Property name='DisplayName' type='string' value='ConstantBuffer'/>
-    </Property>
-    <Property name='ResourceTextureManager0' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
-    </Property>
-    <Property name='ResourceTextureManager1' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager1'/>
-    </Property>
-    <Property name='ResourceTextureManager2' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager2'/>
-    </Property>
-    <Property name='ResourceTextureManager3' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager3'/>
-    </Property>
-    <Property name='ResourceTextureManager4' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager4'/>
-    </Property>
-    <Property name='ResourceTextureManager5' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager5'/>
-    </Property>
-    <Property name='ResourceTextureManager6' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager6'/>
-    </Property>
-    <Property name='ResourceTextureManager7' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager7'/>
-    </Property>
-    <Property name='ResourceTextureManager8' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager8'/>
-    </Property>
-    <Property name='ResourceTextureManager9' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager9'/>
-    </Property>
-    <Property name='ResourceTextureManager10' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager10'/>
-    </Property>
-    <Property name='ResourceTextureManager11' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager11'/>
-    </Property>
-    <Property name='ResourceTextureManager12' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager12'/>
-    </Property>
-    <Property name='ResourceTextureManager13' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager13'/>
-    </Property>
-    <Property name='ResourceTextureManager14' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager14'/>
-    </Property>
-    <Property name='ResourceTextureManager15' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
-    </Property>
-</Effect>";
+        // Write the last part of the XML (including the buffer property)
+        writer.WriteRaw("""
+                </Inputs>
+                <Property name='ConstantBuffer' type='blob'>
+                    <Property name='DisplayName' type='string' value='ConstantBuffer'/>
+                </Property>
+                <Property name='ResourceTextureManager0' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
+                </Property>
+                <Property name='ResourceTextureManager1' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager1'/>
+                </Property>
+                <Property name='ResourceTextureManager2' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager2'/>
+                </Property>
+                <Property name='ResourceTextureManager3' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager3'/>
+                </Property>
+                <Property name='ResourceTextureManager4' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager4'/>
+                </Property>
+                <Property name='ResourceTextureManager5' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager5'/>
+                </Property>
+                <Property name='ResourceTextureManager6' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager6'/>
+                </Property>
+                <Property name='ResourceTextureManager7' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager7'/>
+                </Property>
+                <Property name='ResourceTextureManager8' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager8'/>
+                </Property>
+                <Property name='ResourceTextureManager9' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager9'/>
+                </Property>
+                <Property name='ResourceTextureManager10' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager10'/>
+                </Property>
+                <Property name='ResourceTextureManager11' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager11'/>
+                </Property>
+                <Property name='ResourceTextureManager12' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager12'/>
+                </Property>
+                <Property name='ResourceTextureManager13' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager13'/>
+                </Property>
+                <Property name='ResourceTextureManager14' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager14'/>
+                </Property>
+                <Property name='ResourceTextureManager15' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
+                </Property>
+            </Effect>
+            """);
 
-        fixed (char* pXml = xml)
+        // Null terminator for the text
+        writer.WriteRaw('\0');
+
+        fixed (char* pXml = writer.WrittenSpan)
         fixed (char* pBufferPropertyName = "ConstantBuffer")
         fixed (char* pResourceTextureManager0PropertyName = "ResourceTextureManager0")
         fixed (char* pResourceTextureManager1PropertyName = "ResourceTextureManager1")
@@ -328,167 +342,175 @@ public static unsafe class D2D1PixelShaderEffect
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
-        using ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+        using ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
-        writer.Write(D2D1EffectRegistrationData.V1.BlobId);
+        writer.WriteRaw(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
-        writer.Write(PixelShaderEffect.For<T>.Id);
-        writer.Write(PixelShaderEffect.For<T>.InputCount);
+        writer.WriteRaw(PixelShaderEffect.For<T>.Id);
+        writer.WriteRaw(PixelShaderEffect.For<T>.InputCount);
         
         // Build the XML text
-        writer.WriteAsUtf8(@"<?xml version='1.0'?>
-<Effect>
-    <Property name='DisplayName' type='string' value='");
+        writer.WriteRaw("""
+            <?xml version='1.0'?>
+            <Effect>
+                <Property name='DisplayName' type='string' value='
+            """u8);
         writer.WriteAsUtf8(typeof(T).FullName!);
-        writer.WriteAsUtf8(@"'/>
-    <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
-    <Property name='Category' type='string' value='Stylize'/>
-    <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
-    <Inputs>
-        ");
+        writer.WriteRaw("""
+            '/>
+                <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
+                <Property name='Category' type='string' value='Stylize'/>
+                <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
+                <Inputs>
+
+            """u8);
 
         // Add the input nodes
         for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
         {
-            writer.WriteAsUtf8("<Input name='Source");
-            writer.WriteAsUtf8(i.ToString(CultureInfo.InvariantCulture));
-            writer.WriteAsUtf8($"'/>");
+            writer.WriteRaw("        <Input name='Source"u8);
+            writer.WriteAsUtf8(i);
+            writer.WriteRaw("""
+                '/>
+
+                """u8);
         }
 
         // Write the last part of the XML (including the buffer property)
-        writer.WriteAsUtf8(@"
-    </Inputs>
-    <Property name='ConstantBuffer' type='blob'>
-        <Property name='DisplayName' type='string' value='ConstantBuffer'/>
-    </Property>
-    <Property name='ResourceTextureManager0' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
-    </Property>
-    <Property name='ResourceTextureManager1' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager1'/>
-    </Property>
-    <Property name='ResourceTextureManager2' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager2'/>
-    </Property>
-    <Property name='ResourceTextureManager3' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager3'/>
-    </Property>
-    <Property name='ResourceTextureManager4' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager4'/>
-    </Property>
-    <Property name='ResourceTextureManager5' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager5'/>
-    </Property>
-    <Property name='ResourceTextureManager6' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager6'/>
-    </Property>
-    <Property name='ResourceTextureManager7' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager7'/>
-    </Property>
-    <Property name='ResourceTextureManager8' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager8'/>
-    </Property>
-    <Property name='ResourceTextureManager9' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager9'/>
-    </Property>
-    <Property name='ResourceTextureManager10' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager10'/>
-    </Property>
-    <Property name='ResourceTextureManager11' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager11'/>
-    </Property>
-    <Property name='ResourceTextureManager12' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager12'/>
-    </Property>
-    <Property name='ResourceTextureManager13' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager13'/>
-    </Property>
-    <Property name='ResourceTextureManager14' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager14'/>
-    </Property>
-    <Property name='ResourceTextureManager15' type='iunknown'>
-        <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
-    </Property>
-</Effect>");
+        writer.WriteRaw("""
+                </Inputs>
+                <Property name='ConstantBuffer' type='blob'>
+                    <Property name='DisplayName' type='string' value='ConstantBuffer'/>
+                </Property>
+                <Property name='ResourceTextureManager0' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
+                </Property>
+                <Property name='ResourceTextureManager1' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager1'/>
+                </Property>
+                <Property name='ResourceTextureManager2' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager2'/>
+                </Property>
+                <Property name='ResourceTextureManager3' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager3'/>
+                </Property>
+                <Property name='ResourceTextureManager4' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager4'/>
+                </Property>
+                <Property name='ResourceTextureManager5' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager5'/>
+                </Property>
+                <Property name='ResourceTextureManager6' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager6'/>
+                </Property>
+                <Property name='ResourceTextureManager7' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager7'/>
+                </Property>
+                <Property name='ResourceTextureManager8' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager8'/>
+                </Property>
+                <Property name='ResourceTextureManager9' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager9'/>
+                </Property>
+                <Property name='ResourceTextureManager10' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager10'/>
+                </Property>
+                <Property name='ResourceTextureManager11' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager11'/>
+                </Property>
+                <Property name='ResourceTextureManager12' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager12'/>
+                </Property>
+                <Property name='ResourceTextureManager13' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager13'/>
+                </Property>
+                <Property name='ResourceTextureManager14' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager14'/>
+                </Property>
+                <Property name='ResourceTextureManager15' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
+                </Property>
+            </Effect>
+            """u8);
 
         // Null terminator for the text
-        writer.Write((byte)'\0');
+        writer.WriteRaw((byte)'\0');
 
         // Bindings
-        writer.Write(17);
-        writer.WriteAsUtf8("ConstantBuffer");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetConstantBuffer);
-        writer.Write((nint)PixelShaderEffect.SetConstantBuffer);
-        writer.WriteAsUtf8("ResourceTextureManager0");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager0);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager0);
-        writer.WriteAsUtf8("ResourceTextureManager1");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager1);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager1);
-        writer.WriteAsUtf8("ResourceTextureManager2");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager2);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager2);
-        writer.WriteAsUtf8("ResourceTextureManager3");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager3);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager3);
-        writer.WriteAsUtf8("ResourceTextureManager4");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager4);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager4);
-        writer.WriteAsUtf8("ResourceTextureManager5");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager5);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager5);
-        writer.WriteAsUtf8("ResourceTextureManager6");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager6);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager6);
-        writer.WriteAsUtf8("ResourceTextureManager7");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager7);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager7);
-        writer.WriteAsUtf8("ResourceTextureManager8");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager8);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager8);
-        writer.WriteAsUtf8("ResourceTextureManager9");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager9);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager9);
-        writer.WriteAsUtf8("ResourceTextureManager10");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager10);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager10);
-        writer.WriteAsUtf8("ResourceTextureManager11");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager11);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager11);
-        writer.WriteAsUtf8("ResourceTextureManager12");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager12);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager12);
-        writer.WriteAsUtf8("ResourceTextureManager13");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager13);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager13);
-        writer.WriteAsUtf8("ResourceTextureManager14");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager14);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager14);
-        writer.WriteAsUtf8("ResourceTextureManager15");
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager15);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager15);
+        writer.WriteRaw(17);
+        writer.WriteRaw("ConstantBuffer"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetConstantBuffer);
+        writer.WriteRaw((nint)PixelShaderEffect.SetConstantBuffer);
+        writer.WriteRaw("ResourceTextureManager0"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager0);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager0);
+        writer.WriteRaw("ResourceTextureManager1"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager1);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager1);
+        writer.WriteRaw("ResourceTextureManager2"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager2);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager2);
+        writer.WriteRaw("ResourceTextureManager3"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager3);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager3);
+        writer.WriteRaw("ResourceTextureManager4"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager4);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager4);
+        writer.WriteRaw("ResourceTextureManager5"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager5);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager5);
+        writer.WriteRaw("ResourceTextureManager6"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager6);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager6);
+        writer.WriteRaw("ResourceTextureManager7"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager7);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager7);
+        writer.WriteRaw("ResourceTextureManager8"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager8);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager8);
+        writer.WriteRaw("ResourceTextureManager9"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager9);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager9);
+        writer.WriteRaw("ResourceTextureManager10"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager10);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager10);
+        writer.WriteRaw("ResourceTextureManager11"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager11);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager11);
+        writer.WriteRaw("ResourceTextureManager12"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager12);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager12);
+        writer.WriteRaw("ResourceTextureManager13"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager13);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager13);
+        writer.WriteRaw("ResourceTextureManager14"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager14);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager14);
+        writer.WriteRaw("ResourceTextureManager15"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager15);
+        writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager15);
 
         // Effect factory
-        writer.Write((nint)PixelShaderEffect.For<T>.Factory);
+        writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);
 
         effectId = PixelShaderEffect.For<T>.Id;
 

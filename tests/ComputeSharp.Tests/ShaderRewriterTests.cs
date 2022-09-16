@@ -135,7 +135,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void BitwiseHlslOperators(Device device)
     {
-        int[] data = { 186456131, 215486738, unchecked((int)416439712738), unchecked((int)1437124371243), 0, 0, 0, 0 };
+        int[] data = { 186456131, 215486738, unchecked((int)416439712738), unchecked((int)1437124371243), 0, 0, 0, 0, 0, 0, 0, 0 };
 
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
 
@@ -151,6 +151,9 @@ public partial class ShaderRewriterTests
         int2 e = new(a.X | (int)b.X, a.Y | (int)b.Y);
         int2 f = new(a.X ^ (int)b.X, a.Y ^ (int)b.Y);
 
+        int2 g = new(a.X >> 5, a.Y >> 12);
+        int2 h = new(a.X << 22, a.Y << 17);
+
         Assert.AreEqual(results[0], c.X);
         Assert.AreEqual(results[1], c.Y);
         Assert.AreEqual(results[2], d.X);
@@ -159,6 +162,10 @@ public partial class ShaderRewriterTests
         Assert.AreEqual(results[5], e.Y);
         Assert.AreEqual(results[6], f.X);
         Assert.AreEqual(results[7], f.Y);
+        Assert.AreEqual(results[8], g.X);
+        Assert.AreEqual(results[9], g.Y);
+        Assert.AreEqual(results[10], h.X);
+        Assert.AreEqual(results[11], h.Y);
     }
 
     [AutoConstructor]
@@ -176,9 +183,10 @@ public partial class ShaderRewriterTests
             int2 e = a | b;
             int2 f = a ^ b;
 
-#if NEEDS_CSHARP_11
-            // TODO: add bit shifting tests
-#endif
+            int2 sr = new(5, 12);
+            uint2 sl = new(22, 17);
+            int2 g = a >> sr;
+            int2 h = a << sl;
 
             buffer[0] = c.X;
             buffer[1] = c.Y;
@@ -188,6 +196,10 @@ public partial class ShaderRewriterTests
             buffer[5] = e.Y;
             buffer[6] = f.X;
             buffer[7] = f.Y;
+            buffer[8] = g.X;
+            buffer[9] = g.Y;
+            buffer[10] = h.X;
+            buffer[11] = h.Y;
         }
     }
 

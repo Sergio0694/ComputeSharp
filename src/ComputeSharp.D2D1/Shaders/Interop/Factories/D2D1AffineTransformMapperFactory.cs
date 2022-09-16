@@ -106,12 +106,12 @@ internal sealed class D2D1AffineTransformMapperFactory
             /// <summary>
             /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
             /// </summary>
-            public D2D1TransformMapperFactory<T>.Accessor<Matrix3x2>? Accessor { get; init; }
+            public required D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> Accessor { get; init; }
 
             /// <inheritdoc/>
             public override Matrix3x2 Get(in T shader)
             {
-                return Accessor!(in shader);
+                return Accessor(in shader);
             }
         }
 

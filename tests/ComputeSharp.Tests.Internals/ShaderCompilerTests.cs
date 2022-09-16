@@ -11,24 +11,25 @@ namespace ComputeSharp.Tests.Internals;
 [TestCategory("ShaderCompiler")]
 public class ShaderCompilerTests
 {
-    private const string ShaderSource = @"
-    cbuffer _ : register(b0)
-    {
-        uint __x;
-        uint __y;
-        uint __z;
-    }
-
-    RWStructuredBuffer<float> buffer : register(u0);
-
-    [NumThreads(32, 1, 1)]
-    void Execute(uint3 ids : SV_DispatchThreadId)
-    {
-        if (ids.x < __x && ids.y < __y && ids.z < __z)
+    private const string ShaderSource = """
+        cbuffer _ : register(b0)
         {
-            buffer[ids.x] *= 2;
+            uint __x;
+            uint __y;
+            uint __z;
         }
-    }";
+
+        RWStructuredBuffer<float> buffer : register(u0);
+
+        [NumThreads(32, 1, 1)]
+        void Execute(uint3 ids : SV_DispatchThreadId)
+        {
+            if (ids.x < __x && ids.y < __y && ids.z < __z)
+            {
+                buffer[ids.x] *= 2;
+            }
+        }
+        """;
 
     [TestMethod]
     public void CompileTest_Ok()

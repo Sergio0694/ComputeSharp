@@ -1,8 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #pragma warning disable CS0660, CS0661
@@ -34,16 +34,24 @@ public unsafe partial struct Bool1x1
     /// Gets a reference to a specific row in the current <see cref="Bool1x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref bool this[int row] => ref *(bool*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref bool this[int row] => ref *(bool*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -51,8 +59,12 @@ public unsafe partial struct Bool1x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -61,13 +73,18 @@ public unsafe partial struct Bool1x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Creates a new <see cref="Bool1x1"/> value with the same value for all its components.
@@ -165,16 +182,24 @@ public unsafe partial struct Bool1x2
     /// Gets a reference to a specific row in the current <see cref="Bool1x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -182,8 +207,12 @@ public unsafe partial struct Bool1x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -192,18 +221,24 @@ public unsafe partial struct Bool1x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Creates a new <see cref="Bool1x2"/> value with the same value for all its components.
@@ -313,16 +348,24 @@ public unsafe partial struct Bool1x3
     /// Gets a reference to a specific row in the current <see cref="Bool1x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -330,8 +373,12 @@ public unsafe partial struct Bool1x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -340,23 +387,30 @@ public unsafe partial struct Bool1x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Creates a new <see cref="Bool1x3"/> value with the same value for all its components.
@@ -472,16 +526,24 @@ public unsafe partial struct Bool1x4
     /// Gets a reference to a specific row in the current <see cref="Bool1x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -489,8 +551,12 @@ public unsafe partial struct Bool1x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -499,28 +565,36 @@ public unsafe partial struct Bool1x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref bool M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m14)), 1));
+    [UnscopedRef]
+    public ref bool M14 => ref Unsafe.As<int, bool>(ref this.m14);
 
     /// <summary>
     /// Creates a new <see cref="Bool1x4"/> value with the same value for all its components.
@@ -627,16 +701,24 @@ public unsafe partial struct Bool2x1
     /// Gets a reference to a specific row in the current <see cref="Bool2x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref bool this[int row] => ref *(bool*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref bool this[int row] => ref *(bool*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -644,8 +726,12 @@ public unsafe partial struct Bool2x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -654,18 +740,24 @@ public unsafe partial struct Bool2x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Creates a new <see cref="Bool2x1"/> value with the same value for all its components.
@@ -793,16 +885,24 @@ public unsafe partial struct Bool2x2
     /// Gets a reference to a specific row in the current <see cref="Bool2x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -810,8 +910,12 @@ public unsafe partial struct Bool2x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -820,28 +924,36 @@ public unsafe partial struct Bool2x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Creates a new <see cref="Bool2x2"/> value with the same value for all its components.
@@ -977,16 +1089,24 @@ public unsafe partial struct Bool2x3
     /// Gets a reference to a specific row in the current <see cref="Bool2x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -994,8 +1114,12 @@ public unsafe partial struct Bool2x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -1004,38 +1128,48 @@ public unsafe partial struct Bool2x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Creates a new <see cref="Bool2x3"/> value with the same value for all its components.
@@ -1185,16 +1319,24 @@ public unsafe partial struct Bool2x4
     /// Gets a reference to a specific row in the current <see cref="Bool2x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1202,8 +1344,12 @@ public unsafe partial struct Bool2x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1212,48 +1358,60 @@ public unsafe partial struct Bool2x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref bool M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m14)), 1));
+    [UnscopedRef]
+    public ref bool M14 => ref Unsafe.As<int, bool>(ref this.m14);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref bool M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m24)), 1));
+    [UnscopedRef]
+    public ref bool M24 => ref Unsafe.As<int, bool>(ref this.m24);
 
     /// <summary>
     /// Creates a new <see cref="Bool2x4"/> value with the same value for all its components.
@@ -1363,16 +1521,24 @@ public unsafe partial struct Bool3x1
     /// Gets a reference to a specific row in the current <see cref="Bool3x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref bool this[int row] => ref *(bool*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref bool this[int row] => ref *(bool*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1380,8 +1546,12 @@ public unsafe partial struct Bool3x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1390,23 +1560,30 @@ public unsafe partial struct Bool3x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Creates a new <see cref="Bool3x1"/> value with the same value for all its components.
@@ -1548,16 +1725,24 @@ public unsafe partial struct Bool3x2
     /// Gets a reference to a specific row in the current <see cref="Bool3x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1565,8 +1750,12 @@ public unsafe partial struct Bool3x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1575,38 +1764,48 @@ public unsafe partial struct Bool3x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Creates a new <see cref="Bool3x2"/> value with the same value for all its components.
@@ -1763,16 +1962,24 @@ public unsafe partial struct Bool3x3
     /// Gets a reference to a specific row in the current <see cref="Bool3x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1780,8 +1987,12 @@ public unsafe partial struct Bool3x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1790,53 +2001,66 @@ public unsafe partial struct Bool3x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref bool M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m33)), 1));
+    [UnscopedRef]
+    public ref bool M33 => ref Unsafe.As<int, bool>(ref this.m33);
 
     /// <summary>
     /// Creates a new <see cref="Bool3x3"/> value with the same value for all its components.
@@ -2014,16 +2238,24 @@ public unsafe partial struct Bool3x4
     /// Gets a reference to a specific row in the current <see cref="Bool3x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -2031,8 +2263,12 @@ public unsafe partial struct Bool3x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -2041,68 +2277,84 @@ public unsafe partial struct Bool3x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref bool M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m14)), 1));
+    [UnscopedRef]
+    public ref bool M14 => ref Unsafe.As<int, bool>(ref this.m14);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref bool M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m24)), 1));
+    [UnscopedRef]
+    public ref bool M24 => ref Unsafe.As<int, bool>(ref this.m24);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref bool M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m33)), 1));
+    [UnscopedRef]
+    public ref bool M33 => ref Unsafe.As<int, bool>(ref this.m33);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref bool M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m34)), 1));
+    [UnscopedRef]
+    public ref bool M34 => ref Unsafe.As<int, bool>(ref this.m34);
 
     /// <summary>
     /// Creates a new <see cref="Bool3x4"/> value with the same value for all its components.
@@ -2221,16 +2473,24 @@ public unsafe partial struct Bool4x1
     /// Gets a reference to a specific row in the current <see cref="Bool4x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref bool this[int row] => ref *(bool*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref bool this[int row] => ref *(bool*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -2238,8 +2498,12 @@ public unsafe partial struct Bool4x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -2248,28 +2512,36 @@ public unsafe partial struct Bool4x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref bool M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m41)), 1));
+    [UnscopedRef]
+    public ref bool M41 => ref Unsafe.As<int, bool>(ref this.m41);
 
     /// <summary>
     /// Creates a new <see cref="Bool4x1"/> value with the same value for all its components.
@@ -2425,16 +2697,24 @@ public unsafe partial struct Bool4x2
     /// Gets a reference to a specific row in the current <see cref="Bool4x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2442,8 +2722,12 @@ public unsafe partial struct Bool4x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2452,48 +2736,60 @@ public unsafe partial struct Bool4x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref bool M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m41)), 1));
+    [UnscopedRef]
+    public ref bool M41 => ref Unsafe.As<int, bool>(ref this.m41);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref bool M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m42)), 1));
+    [UnscopedRef]
+    public ref bool M42 => ref Unsafe.As<int, bool>(ref this.m42);
 
     /// <summary>
     /// Creates a new <see cref="Bool4x2"/> value with the same value for all its components.
@@ -2671,16 +2967,24 @@ public unsafe partial struct Bool4x3
     /// Gets a reference to a specific row in the current <see cref="Bool4x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2688,8 +2992,12 @@ public unsafe partial struct Bool4x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2698,68 +3006,84 @@ public unsafe partial struct Bool4x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref bool M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m33)), 1));
+    [UnscopedRef]
+    public ref bool M33 => ref Unsafe.As<int, bool>(ref this.m33);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref bool M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m41)), 1));
+    [UnscopedRef]
+    public ref bool M41 => ref Unsafe.As<int, bool>(ref this.m41);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref bool M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m42)), 1));
+    [UnscopedRef]
+    public ref bool M42 => ref Unsafe.As<int, bool>(ref this.m42);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref bool M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m43)), 1));
+    [UnscopedRef]
+    public ref bool M43 => ref Unsafe.As<int, bool>(ref this.m43);
 
     /// <summary>
     /// Creates a new <see cref="Bool4x3"/> value with the same value for all its components.
@@ -2965,16 +3289,24 @@ public unsafe partial struct Bool4x4
     /// Gets a reference to a specific row in the current <see cref="Bool4x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -2982,8 +3314,12 @@ public unsafe partial struct Bool4x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -2992,88 +3328,108 @@ public unsafe partial struct Bool4x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref bool M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m11)), 1));
+    [UnscopedRef]
+    public ref bool M11 => ref Unsafe.As<int, bool>(ref this.m11);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref bool M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m12)), 1));
+    [UnscopedRef]
+    public ref bool M12 => ref Unsafe.As<int, bool>(ref this.m12);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref bool M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m13)), 1));
+    [UnscopedRef]
+    public ref bool M13 => ref Unsafe.As<int, bool>(ref this.m13);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref bool M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m14)), 1));
+    [UnscopedRef]
+    public ref bool M14 => ref Unsafe.As<int, bool>(ref this.m14);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref bool M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m21)), 1));
+    [UnscopedRef]
+    public ref bool M21 => ref Unsafe.As<int, bool>(ref this.m21);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref bool M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m22)), 1));
+    [UnscopedRef]
+    public ref bool M22 => ref Unsafe.As<int, bool>(ref this.m22);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref bool M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m23)), 1));
+    [UnscopedRef]
+    public ref bool M23 => ref Unsafe.As<int, bool>(ref this.m23);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref bool M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m24)), 1));
+    [UnscopedRef]
+    public ref bool M24 => ref Unsafe.As<int, bool>(ref this.m24);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref bool M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m31)), 1));
+    [UnscopedRef]
+    public ref bool M31 => ref Unsafe.As<int, bool>(ref this.m31);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref bool M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m32)), 1));
+    [UnscopedRef]
+    public ref bool M32 => ref Unsafe.As<int, bool>(ref this.m32);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref bool M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m33)), 1));
+    [UnscopedRef]
+    public ref bool M33 => ref Unsafe.As<int, bool>(ref this.m33);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref bool M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m34)), 1));
+    [UnscopedRef]
+    public ref bool M34 => ref Unsafe.As<int, bool>(ref this.m34);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref bool M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m41)), 1));
+    [UnscopedRef]
+    public ref bool M41 => ref Unsafe.As<int, bool>(ref this.m41);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref bool M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m42)), 1));
+    [UnscopedRef]
+    public ref bool M42 => ref Unsafe.As<int, bool>(ref this.m42);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref bool M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m43)), 1));
+    [UnscopedRef]
+    public ref bool M43 => ref Unsafe.As<int, bool>(ref this.m43);
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [4, 4].
     /// </summary>
-    public readonly ref bool M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.m44)), 1));
+    [UnscopedRef]
+    public ref bool M44 => ref Unsafe.As<int, bool>(ref this.m44);
 
     /// <summary>
     /// Creates a new <see cref="Bool4x4"/> value with the same value for all its components.

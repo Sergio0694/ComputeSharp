@@ -53,10 +53,22 @@ void GenerateVectorProperties(string typeName, int elementSize)
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
     string formattable = elementTypeName == "Bool" ? "" : "ISpanFormattable";
 
+    List<string> namespaces = new List<string>
+    {
+        "System.Diagnostics.CodeAnalysis",
+        "System.Runtime.CompilerServices",
+        "System.Runtime.InteropServices"
+    };
+
     if (elementTypeName != "Bool")
     {
-        WriteLine("using System;");
-        WriteLine("using System.Globalization;");
+        namespaces.Add("System");
+        namespaces.Add("System.Globalization");
+    }
+
+    foreach (string name in namespaces.OrderBy(name => name))
+    {
+        WriteLine($"using {name};");
     }
 
     if (elementTypeName == "Float" || elementTypeName == "Int")
@@ -64,11 +76,8 @@ void GenerateVectorProperties(string typeName, int elementSize)
         WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
     }
 #>
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #nullable enable
@@ -113,7 +122,8 @@ public unsafe partial struct <#=typeName#>
     /// </summary>
     /// <param name="i">The index of the component to access.</param>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
+    [UnscopedRef]
+    public ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
 
 <#
     // Generate the true/false and zero/one properties
@@ -194,7 +204,7 @@ public unsafe partial struct <#=typeName#>
 
         string propertyType = propertyName.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{propertyName.Length}";
         bool isReadonly = propertyName.Distinct().Count() < propertyName.Length;
-        string refType = isReadonly ? "ref readonly" : "ref";
+        string refType = isReadonly ? "readonly ref readonly" : "ref";
 
         // XML docs
         WriteLine("/// <summary>");
@@ -206,16 +216,16 @@ public unsafe partial struct <#=typeName#>
             char fieldName = "xyzw"["xyzwrgba".IndexOf(propertyName.ToLower()) % 4];
 
             // Property
-            Write($"public readonly {refType} {propertyType} {propertyName} ");
+            WriteLine("[UnscopedRef]");
 
             if (isBoolType)
             {
                 // For bool types, also reinterpret cast from int to bool (the backing field is int to ensure all 4 bytes are initialized)
-                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.As<int, bool>(ref Unsafe.AsRef(in this.{fieldName})), 1));");
+                WriteLine($"public {refType} {propertyType} {propertyName} => ref Unsafe.As<int, bool>(ref this.{fieldName});");
             }
             else
             {
-                WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.{fieldName}), 1));");
+                WriteLine($"public {refType} {propertyType} {propertyName} => ref this.{fieldName};");
             }
         }
         else
@@ -229,7 +239,8 @@ public unsafe partial struct <#=typeName#>
             WriteLine("/// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>");
 
             // Property
-            Write($"public readonly {refType} {propertyType} {propertyName} ");
+            WriteLine("[UnscopedRef]");
+            Write($"public {refType} {propertyType} {propertyName} ");
             WriteLine($"=> ref *({propertyType}*)UndefinedData;");
         }
     }
@@ -492,7 +503,6 @@ public unsafe partial struct <#=typeName#>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=typeName#> operator ~(<#=typeName#> <#=argumentName#>) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="<#=typeName#>"/> value.
     /// </summary>
@@ -528,7 +538,6 @@ public unsafe partial struct <#=typeName#>
     /// <returns>The result of shifting <paramref name="<#=argumentName#>"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static <#=typeName#> operator <<(<#=typeName#> <#=argumentName#>, UInt<#=i#> amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="<#=typeName#>"/> value.

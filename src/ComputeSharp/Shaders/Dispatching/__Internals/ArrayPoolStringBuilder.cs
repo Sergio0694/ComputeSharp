@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.__Internals;
@@ -39,7 +40,10 @@ public ref struct ArrayPoolStringBuilder
         return builder;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
+    /// </summary>
+    [UnscopedRef]
     public ReadOnlySpan<char> WrittenSpan
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

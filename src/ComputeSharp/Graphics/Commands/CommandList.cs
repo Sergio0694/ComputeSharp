@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Core.Extensions;
@@ -125,6 +126,7 @@ internal unsafe struct CommandList : IDisposable
     /// </summary>
     /// <returns>A double pointer to the current <see cref="ID3D12CommandList"/> object to execute.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [UnscopedRef]
     public readonly ref ID3D12CommandList* GetD3D12CommandListPinnableAddressOf()
     {
         // This method should return a ref ID3D12CommandList*, so it can't just call this.d3D12GraphicsCommandList.GetPinnableReference().

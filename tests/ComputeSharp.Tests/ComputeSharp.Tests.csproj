@@ -40,6 +40,7 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
+    <Compile Include="..\..\src\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="Properties\Polyfills\UnscopedRefAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>

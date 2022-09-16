@@ -1,9 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Intrinsics.Attributes;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.Core.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #pragma warning disable CS0660, CS0661
@@ -35,16 +35,24 @@ public unsafe partial struct Int1x1
     /// Gets a reference to a specific row in the current <see cref="Int1x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref int this[int row] => ref *(int*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref int this[int row] => ref *(int*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x1"/> instance.
@@ -52,8 +60,12 @@ public unsafe partial struct Int1x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x1"/> instance.
@@ -62,13 +74,18 @@ public unsafe partial struct Int1x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Creates a new <see cref="Int1x1"/> value with the same value for all its components.
@@ -197,7 +214,6 @@ public unsafe partial struct Int1x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x1 operator ~(Int1x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int1x1"/> value.
     /// </summary>
@@ -233,7 +249,6 @@ public unsafe partial struct Int1x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x1 operator <<(Int1x1 matrix, UInt1x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int1x1"/> value.
@@ -338,16 +353,24 @@ public unsafe partial struct Int1x2
     /// Gets a reference to a specific row in the current <see cref="Int1x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[int row] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[int row] => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x2"/> instance.
@@ -355,8 +378,12 @@ public unsafe partial struct Int1x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x2"/> instance.
@@ -365,18 +392,24 @@ public unsafe partial struct Int1x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Creates a new <see cref="Int1x2"/> value with the same value for all its components.
@@ -590,7 +623,6 @@ public unsafe partial struct Int1x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x2 operator ~(Int1x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int1x2"/> value.
     /// </summary>
@@ -626,7 +658,6 @@ public unsafe partial struct Int1x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x2 operator <<(Int1x2 matrix, UInt1x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int1x2"/> value.
@@ -742,16 +773,24 @@ public unsafe partial struct Int1x3
     /// Gets a reference to a specific row in the current <see cref="Int1x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[int row] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[int row] => ref *(Int3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x3"/> instance.
@@ -759,8 +798,12 @@ public unsafe partial struct Int1x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x3"/> instance.
@@ -769,23 +812,30 @@ public unsafe partial struct Int1x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Creates a new <see cref="Int1x3"/> value with the same value for all its components.
@@ -1000,7 +1050,6 @@ public unsafe partial struct Int1x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x3 operator ~(Int1x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int1x3"/> value.
     /// </summary>
@@ -1036,7 +1085,6 @@ public unsafe partial struct Int1x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x3 operator <<(Int1x3 matrix, UInt1x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int1x3"/> value.
@@ -1157,16 +1205,24 @@ public unsafe partial struct Int1x4
     /// Gets a reference to a specific row in the current <see cref="Int1x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[int row] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int4 this[int row] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x4"/> instance.
@@ -1174,8 +1230,12 @@ public unsafe partial struct Int1x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int1x4"/> instance.
@@ -1184,28 +1244,36 @@ public unsafe partial struct Int1x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref int M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public ref int M14 => ref this.m14;
 
     /// <summary>
     /// Creates a new <see cref="Int1x4"/> value with the same value for all its components.
@@ -1421,7 +1489,6 @@ public unsafe partial struct Int1x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x4 operator ~(Int1x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int1x4"/> value.
     /// </summary>
@@ -1457,7 +1524,6 @@ public unsafe partial struct Int1x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int1x4 operator <<(Int1x4 matrix, UInt1x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int1x4"/> value.
@@ -1568,16 +1634,24 @@ public unsafe partial struct Int2x1
     /// Gets a reference to a specific row in the current <see cref="Int2x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref int this[int row] => ref *(int*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref int this[int row] => ref *(int*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x1"/> instance.
@@ -1585,8 +1659,12 @@ public unsafe partial struct Int2x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x1"/> instance.
@@ -1595,18 +1673,24 @@ public unsafe partial struct Int2x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Creates a new <see cref="Int2x1"/> value with the same value for all its components.
@@ -1806,7 +1890,6 @@ public unsafe partial struct Int2x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x1 operator ~(Int2x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int2x1"/> value.
     /// </summary>
@@ -1842,7 +1925,6 @@ public unsafe partial struct Int2x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x1 operator <<(Int2x1 matrix, UInt2x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int2x1"/> value.
@@ -1976,16 +2058,24 @@ public unsafe partial struct Int2x2
     /// Gets a reference to a specific row in the current <see cref="Int2x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[int row] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[int row] => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x2"/> instance.
@@ -1993,8 +2083,12 @@ public unsafe partial struct Int2x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x2"/> instance.
@@ -2003,28 +2097,36 @@ public unsafe partial struct Int2x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Creates a new <see cref="Int2x2"/> value with the same value for all its components.
@@ -2156,7 +2258,6 @@ public unsafe partial struct Int2x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x2 operator ~(Int2x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int2x2"/> value.
     /// </summary>
@@ -2192,7 +2293,6 @@ public unsafe partial struct Int2x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x2 operator <<(Int2x2 matrix, UInt2x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int2x2"/> value.
@@ -2332,16 +2432,24 @@ public unsafe partial struct Int2x3
     /// Gets a reference to a specific row in the current <see cref="Int2x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[int row] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[int row] => ref *(Int3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x3"/> instance.
@@ -2349,8 +2457,12 @@ public unsafe partial struct Int2x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x3"/> instance.
@@ -2359,38 +2471,48 @@ public unsafe partial struct Int2x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Creates a new <see cref="Int2x3"/> value with the same value for all its components.
@@ -2608,7 +2730,6 @@ public unsafe partial struct Int2x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x3 operator ~(Int2x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int2x3"/> value.
     /// </summary>
@@ -2644,7 +2765,6 @@ public unsafe partial struct Int2x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x3 operator <<(Int2x3 matrix, UInt2x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int2x3"/> value.
@@ -2796,16 +2916,24 @@ public unsafe partial struct Int2x4
     /// Gets a reference to a specific row in the current <see cref="Int2x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[int row] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int4 this[int row] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x4"/> instance.
@@ -2813,8 +2941,12 @@ public unsafe partial struct Int2x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int2x4"/> instance.
@@ -2823,48 +2955,60 @@ public unsafe partial struct Int2x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref int M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public ref int M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref int M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public ref int M24 => ref this.m24;
 
     /// <summary>
     /// Creates a new <see cref="Int2x4"/> value with the same value for all its components.
@@ -3084,7 +3228,6 @@ public unsafe partial struct Int2x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x4 operator ~(Int2x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int2x4"/> value.
     /// </summary>
@@ -3120,7 +3263,6 @@ public unsafe partial struct Int2x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int2x4 operator <<(Int2x4 matrix, UInt2x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int2x4"/> value.
@@ -3230,16 +3372,24 @@ public unsafe partial struct Int3x1
     /// Gets a reference to a specific row in the current <see cref="Int3x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref int this[int row] => ref *(int*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref int this[int row] => ref *(int*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x1"/> instance.
@@ -3247,8 +3397,12 @@ public unsafe partial struct Int3x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x1"/> instance.
@@ -3257,23 +3411,30 @@ public unsafe partial struct Int3x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Creates a new <see cref="Int3x1"/> value with the same value for all its components.
@@ -3474,7 +3635,6 @@ public unsafe partial struct Int3x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x1 operator ~(Int3x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int3x1"/> value.
     /// </summary>
@@ -3510,7 +3670,6 @@ public unsafe partial struct Int3x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x1 operator <<(Int3x1 matrix, UInt3x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int3x1"/> value.
@@ -3657,16 +3816,24 @@ public unsafe partial struct Int3x2
     /// Gets a reference to a specific row in the current <see cref="Int3x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[int row] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[int row] => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x2"/> instance.
@@ -3674,8 +3841,12 @@ public unsafe partial struct Int3x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x2"/> instance.
@@ -3684,38 +3855,48 @@ public unsafe partial struct Int3x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Creates a new <see cref="Int3x2"/> value with the same value for all its components.
@@ -3933,7 +4114,6 @@ public unsafe partial struct Int3x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x2 operator ~(Int3x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int3x2"/> value.
     /// </summary>
@@ -3969,7 +4149,6 @@ public unsafe partial struct Int3x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x2 operator <<(Int3x2 matrix, UInt3x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int3x2"/> value.
@@ -4128,16 +4307,24 @@ public unsafe partial struct Int3x3
     /// Gets a reference to a specific row in the current <see cref="Int3x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[int row] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[int row] => ref *(Int3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x3"/> instance.
@@ -4145,8 +4332,12 @@ public unsafe partial struct Int3x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x3"/> instance.
@@ -4155,53 +4346,66 @@ public unsafe partial struct Int3x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref int M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public ref int M33 => ref this.m33;
 
     /// <summary>
     /// Creates a new <see cref="Int3x3"/> value with the same value for all its components.
@@ -4338,7 +4542,6 @@ public unsafe partial struct Int3x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x3 operator ~(Int3x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int3x3"/> value.
     /// </summary>
@@ -4374,7 +4577,6 @@ public unsafe partial struct Int3x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x3 operator <<(Int3x3 matrix, UInt3x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int3x3"/> value.
@@ -4551,16 +4753,24 @@ public unsafe partial struct Int3x4
     /// Gets a reference to a specific row in the current <see cref="Int3x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[int row] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int4 this[int row] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x4"/> instance.
@@ -4568,8 +4778,12 @@ public unsafe partial struct Int3x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int3x4"/> instance.
@@ -4578,68 +4792,84 @@ public unsafe partial struct Int3x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref int M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public ref int M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref int M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public ref int M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref int M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public ref int M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref int M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
+    [UnscopedRef]
+    public ref int M34 => ref this.m34;
 
     /// <summary>
     /// Creates a new <see cref="Int3x4"/> value with the same value for all its components.
@@ -4863,7 +5093,6 @@ public unsafe partial struct Int3x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x4 operator ~(Int3x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int3x4"/> value.
     /// </summary>
@@ -4899,7 +5128,6 @@ public unsafe partial struct Int3x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int3x4 operator <<(Int3x4 matrix, UInt3x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int3x4"/> value.
@@ -5014,16 +5242,24 @@ public unsafe partial struct Int4x1
     /// Gets a reference to a specific row in the current <see cref="Int4x1"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref int this[int row] => ref *(int*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref int this[int row] => ref *(int*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x1"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x1"/> instance.
@@ -5031,8 +5267,12 @@ public unsafe partial struct Int4x1
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x1"/> instance.
@@ -5041,28 +5281,36 @@ public unsafe partial struct Int4x1
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref int M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public ref int M41 => ref this.m41;
 
     /// <summary>
     /// Creates a new <see cref="Int4x1"/> value with the same value for all its components.
@@ -5264,7 +5512,6 @@ public unsafe partial struct Int4x1
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x1 operator ~(Int4x1 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int4x1"/> value.
     /// </summary>
@@ -5300,7 +5547,6 @@ public unsafe partial struct Int4x1
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x1 operator <<(Int4x1 matrix, UInt4x1 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int4x1"/> value.
@@ -5460,16 +5706,24 @@ public unsafe partial struct Int4x2
     /// Gets a reference to a specific row in the current <see cref="Int4x2"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[int row] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[int row] => ref *(Int2*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x2"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x2"/> instance.
@@ -5477,8 +5731,12 @@ public unsafe partial struct Int4x2
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x2"/> instance.
@@ -5487,48 +5745,60 @@ public unsafe partial struct Int4x2
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref int M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public ref int M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref int M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public ref int M42 => ref this.m42;
 
     /// <summary>
     /// Creates a new <see cref="Int4x2"/> value with the same value for all its components.
@@ -5748,7 +6018,6 @@ public unsafe partial struct Int4x2
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x2 operator ~(Int4x2 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int4x2"/> value.
     /// </summary>
@@ -5784,7 +6053,6 @@ public unsafe partial struct Int4x2
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x2 operator <<(Int4x2 matrix, UInt4x2 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int4x2"/> value.
@@ -5962,16 +6230,24 @@ public unsafe partial struct Int4x3
     /// Gets a reference to a specific row in the current <see cref="Int4x3"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[int row] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[int row] => ref *(Int3*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x3"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x3"/> instance.
@@ -5979,8 +6255,12 @@ public unsafe partial struct Int4x3
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x3"/> instance.
@@ -5989,68 +6269,84 @@ public unsafe partial struct Int4x3
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref int M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public ref int M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref int M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public ref int M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref int M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public ref int M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref int M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
+    [UnscopedRef]
+    public ref int M43 => ref this.m43;
 
     /// <summary>
     /// Creates a new <see cref="Int4x3"/> value with the same value for all its components.
@@ -6274,7 +6570,6 @@ public unsafe partial struct Int4x3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x3 operator ~(Int4x3 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int4x3"/> value.
     /// </summary>
@@ -6310,7 +6605,6 @@ public unsafe partial struct Int4x3
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x3 operator <<(Int4x3 matrix, UInt4x3 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int4x3"/> value.
@@ -6512,16 +6806,24 @@ public unsafe partial struct Int4x4
     /// Gets a reference to a specific row in the current <see cref="Int4x4"/> instance.
     /// </summary>
     /// <param name="row">The row to access.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[int row] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int4 this[int row] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x4"/> instance.
     /// </summary>
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Int2*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x4"/> instance.
@@ -6529,8 +6831,12 @@ public unsafe partial struct Int4x4
     /// <param name="xy0">The identifier of the first item to index.</param>
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [UnscopedRef]
+    public ref Int3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Int3*)UndefinedData;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Int4x4"/> instance.
@@ -6539,88 +6845,108 @@ public unsafe partial struct Int4x4
     /// <param name="xy1">The identifier of the second item to index.</param>
     /// <param name="xy2">The identifier of the third item to index.</param>
     /// <param name="xy3">The identifier of the fourth item to index.</param>
-    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-    public readonly ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
+    /// <remarks>
+    /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>s
+    [UnscopedRef]
+    public ref Int4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Int4*)UndefinedData;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 1].
     /// </summary>
-    public readonly ref int M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
+    [UnscopedRef]
+    public ref int M11 => ref this.m11;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 2].
     /// </summary>
-    public readonly ref int M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
+    [UnscopedRef]
+    public ref int M12 => ref this.m12;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 3].
     /// </summary>
-    public readonly ref int M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
+    [UnscopedRef]
+    public ref int M13 => ref this.m13;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [1, 4].
     /// </summary>
-    public readonly ref int M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
+    [UnscopedRef]
+    public ref int M14 => ref this.m14;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 1].
     /// </summary>
-    public readonly ref int M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
+    [UnscopedRef]
+    public ref int M21 => ref this.m21;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 2].
     /// </summary>
-    public readonly ref int M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
+    [UnscopedRef]
+    public ref int M22 => ref this.m22;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 3].
     /// </summary>
-    public readonly ref int M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
+    [UnscopedRef]
+    public ref int M23 => ref this.m23;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [2, 4].
     /// </summary>
-    public readonly ref int M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
+    [UnscopedRef]
+    public ref int M24 => ref this.m24;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 1].
     /// </summary>
-    public readonly ref int M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
+    [UnscopedRef]
+    public ref int M31 => ref this.m31;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 2].
     /// </summary>
-    public readonly ref int M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
+    [UnscopedRef]
+    public ref int M32 => ref this.m32;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 3].
     /// </summary>
-    public readonly ref int M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
+    [UnscopedRef]
+    public ref int M33 => ref this.m33;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [3, 4].
     /// </summary>
-    public readonly ref int M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
+    [UnscopedRef]
+    public ref int M34 => ref this.m34;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 1].
     /// </summary>
-    public readonly ref int M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
+    [UnscopedRef]
+    public ref int M41 => ref this.m41;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 2].
     /// </summary>
-    public readonly ref int M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
+    [UnscopedRef]
+    public ref int M42 => ref this.m42;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 3].
     /// </summary>
-    public readonly ref int M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
+    [UnscopedRef]
+    public ref int M43 => ref this.m43;
 
     /// <summary>
     /// Gets a reference to the <see cref="int"/> value representing the component at position [4, 4].
     /// </summary>
-    public readonly ref int M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m44), 1));
+    [UnscopedRef]
+    public ref int M44 => ref this.m44;
 
     /// <summary>
     /// Creates a new <see cref="Int4x4"/> value with the same value for all its components.
@@ -6764,7 +7090,6 @@ public unsafe partial struct Int4x4
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x4 operator ~(Int4x4 matrix) => default;
 
-#if NEEDS_CSHARP_11
     /// <summary>
     /// Shifts right a <see cref="Int4x4"/> value.
     /// </summary>
@@ -6800,7 +7125,6 @@ public unsafe partial struct Int4x4
     /// <returns>The result of shifting <paramref name="matrix"/> left by <paramref name="amount"/>.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public static Int4x4 operator <<(Int4x4 matrix, UInt4x4 amount) => default;
-#endif
 
     /// <summary>
     /// Bitwise ands a <see cref="Int4x4"/> value.
