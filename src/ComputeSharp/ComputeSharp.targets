@@ -7,7 +7,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if using Roslyn < 4.3 (ComputeSharp's generators require Roslyn 4.3) -->
+  <!-- Remove the analyzer if using Roslyn < 4.4 (ComputeSharp's generators require Roslyn 4.4) -->
   <Target Name="_ComputeSharpRemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
@@ -27,10 +27,10 @@
       <ComputeSharpCurrentCompilerVersion>@(ComputeSharpCurrentCompilerAssemblyIdentity->'%(Version)')</ComputeSharpCurrentCompilerVersion>
 
       <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
-      <ComputeSharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpCurrentCompilerVersion), 4.3))">true</ComputeSharpCurrentCompilerVersionIsNotNewEnough>
+      <ComputeSharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(ComputeSharpCurrentCompilerVersion), 4.4))">true</ComputeSharpCurrentCompilerVersionIsNotNewEnough>
     </PropertyGroup>
 
-    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <!-- If the Roslyn version is < 4.4, disable the source generators -->
     <ItemGroup Condition ="'$(ComputeSharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
       <Analyzer Remove="@(_ComputeSharpAnalyzer)"/>
     </ItemGroup>
@@ -38,7 +38,7 @@
     <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
          emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
          disabled, and that ComputeSharp will not work at all unless a more up to date IDE or compiler version are used. -->
-    <Error Condition ="'$(ComputeSharpCurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. ComputeSharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS2022) or .NET SDK version."/>  
+    <Error Condition ="'$(ComputeSharpCurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp source generators have been disabled on the current configuration, as they need Roslyn 4.4 in order to work. ComputeSharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS2022) or .NET SDK version."/>  
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->
