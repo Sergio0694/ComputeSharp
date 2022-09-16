@@ -488,7 +488,7 @@ public static class ComputeContextExtensions
     public static void For<T>(this in ComputeContext context, int x, in T shader)
         where T : struct, IComputeShader
     {
-        context.Run(x, 1, 1, ref Unsafe.AsRef(in shader));
+        context.Run(x, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -502,7 +502,7 @@ public static class ComputeContextExtensions
     public static void For<T>(this in ComputeContext context, int x, int y, in T shader)
         where T : struct, IComputeShader
     {
-        context.Run(x, y, 1, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>

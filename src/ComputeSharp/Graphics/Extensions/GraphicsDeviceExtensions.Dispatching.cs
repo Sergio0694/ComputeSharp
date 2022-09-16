@@ -22,7 +22,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(x, 1, 1, ref Unsafe.AsRef(in shader));
+        context.Run(x, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(x, y, 1, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>

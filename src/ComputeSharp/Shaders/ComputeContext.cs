@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
@@ -123,62 +124,39 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// Runs the input shader with the specified parameters.
     /// </summary>
     /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    internal readonly unsafe void Run<T>(int x, ref T shader)
+        where T : struct, IComputeShader
+    {
+
+        Run(x, 1, 1, 64, 1, 1, ref shader);
+    }
+
+    /// <summary>
+    /// Runs the input shader with the specified parameters.
+    /// </summary>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="y">The number of iterations to run on the Y axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    internal readonly unsafe void Run<T>(int x, int y, ref T shader)
+        where T : struct, IComputeShader
+    {
+
+        Run(x, y, 1, 8, 8, 1, ref shader);
+    }
+
+    /// <summary>
+    /// Runs the input shader with the specified parameters.
+    /// </summary>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
         where T : struct, IComputeShader
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        // Here we calculate the optimized [numthreads] values. Using small thread group sizes leads to the
-        // best average performance due to better occupancy of the GPU with different shaders, using any
-        // number of registers and any amount of thread local storage. We use 64 for 1D dispatches, otherwise
-        // a multiple of 32 that is greater than or equal to 64, which still results in an evenly divisible
-        // number of waves per thread group on all existing GPU devices. All GPUs will generally have a wavefront
-        // size of either 16 (eg. Intel mobile GPUs), 32 (nvidia GPUs) or 64 (AMD GPUs), so in all cases 64 will
-        // be a multiple of that, guaranteeing that all thread waves will be saturated when dispatching shaders.
-
-        bool xIs1 = x == 1;
-        bool yIs1 = y == 1;
-        bool zIs1 = z == 1;
-        int mask = *(byte*)&xIs1 << 2 | *(byte*)&yIs1 << 1 | *(byte*)&zIs1;
-        int threadsX;
-        int threadsY;
-        int threadsZ;
-
-        switch (mask - 1)
-        {
-            case 0: // (_, _, 1)
-                threadsX = threadsY = 8;
-                threadsZ = 1;
-                break;
-            case 1: // (_, 1, _)
-                threadsX = threadsZ = 8;
-                threadsY = 1;
-                break;
-            case 2: // (_, 1, 1)
-                threadsX = 64;
-                threadsY = threadsZ = 1;
-                break;
-            case 3: // (1, _, _)
-                threadsX = 1;
-                threadsY = threadsZ = 8;
-                break;
-            case 4: // (1, _, 1)
-                threadsX = threadsZ = 1;
-                threadsY = 64;
-                break;
-            case 5: // (1, 1, _)
-                threadsX = threadsY = 1;
-                threadsZ = 64;
-                break;
-            default: // (_, _, _)
-                threadsX = threadsY = threadsZ = 4;
-                break;
-        }
-
-        Run(x, y, z, threadsX, threadsY, threadsZ, ref shader);
+        Run(x, y, z, 4, 4, 4, ref shader);
     }
 
     /// <summary>
