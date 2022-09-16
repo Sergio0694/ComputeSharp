@@ -218,18 +218,13 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Hierarchy, item.Source.HlslSource))
             .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default);
 
-        // Check whether raw multiline string literals can be used (C# preview)
-        IncrementalValueProvider<bool> canUseRawMultiLineStringLiterals =
-            context.ParseOptionsProvider
-            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.Preview });
-
         // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseRawMultiLineStringLiterals), static (context, item) =>
+        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.HlslSource, item.Left.Hierarchy.Hierarchy.Length, item.Right);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get a filtered sequence to enable caching
