@@ -20,42 +20,40 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Get all method declarations with the [D2DPixelShaderSource] attribute
-        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> methodDeclarationsAndSymbols =
+        // Get all method declarations with the [D2DPixelShaderSource] attribute and gather all necessary info
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 typeof(D2DPixelShaderSourceAttribute).FullName,
-                static (node, token) => node is MethodDeclarationSyntax,
-                static (context, token) => ((MethodDeclarationSyntax)context.TargetNode, (IMethodSymbol)context.TargetSymbol));
+                static (node, _) => node is MethodDeclarationSyntax,
+                static (context, _) =>
+                {
+                    MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
+                    IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-        // Gather info for all annotated methods
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
-            methodDeclarationsAndSymbols
-            .Select(static (item, _) =>
-            {
-                ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+                    ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
-                // Get all necessary info for the current shader
-                ImmutableArray<SyntaxKind> modifiers = item.Syntax.Modifiers.Select(token => token.Kind()).ToImmutableArray();
-                string methodName = item.Symbol.Name;
-                string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, item.Symbol);
-                string hlslSource = Execute.GetHlslSource(diagnostics, item.Symbol);
-                D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, item.Symbol);
-                D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, item.Symbol);
+                    // Get all necessary info for the current shader
+                    ImmutableArray<SyntaxKind> modifiers = methodDeclaration.Modifiers.Select(token => token.Kind()).ToImmutableArray();
+                    string methodName = methodSymbol.Name;
+                    string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
+                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
+                    D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
+                    D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
 
-                HlslShaderMethodSourceInfo sourceInfo = new(
-                    modifiers,
-                    methodName,
-                    invalidReturnType,
-                    hlslSource,
-                    shaderProfile,
-                    compileOptions,
-                    HasErrors: diagnostics.Count > 0);
+                    HlslShaderMethodSourceInfo sourceInfo = new(
+                        modifiers,
+                        methodName,
+                        invalidReturnType,
+                        hlslSource,
+                        shaderProfile,
+                        compileOptions,
+                        HasErrors: diagnostics.Count > 0);
 
-                HierarchyInfo hierarchy = HierarchyInfo.From(item.Symbol.ContainingType!);
+                    HierarchyInfo hierarchy = HierarchyInfo.From(methodSymbol.ContainingType!);
 
-                return (hierarchy, sourceInfo, diagnostics.ToImmutable());
-            });
+                    return (hierarchy, sourceInfo, diagnostics.ToImmutable());
+                });
 
         // Output the diagnostics
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostics));

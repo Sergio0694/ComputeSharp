@@ -26,8 +26,8 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 typeof(AutoConstructorAttribute).FullName,
-                static (node, token) => node is StructDeclarationSyntax structDeclaration,
-                static (context, token) =>
+                static (node, _) => node is StructDeclarationSyntax structDeclaration,
+                static (context, _) =>
                 {
                     INamedTypeSymbol typeSymbol = (INamedTypeSymbol)context.TargetSymbol;
 
