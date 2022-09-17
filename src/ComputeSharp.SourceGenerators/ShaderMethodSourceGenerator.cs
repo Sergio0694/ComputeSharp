@@ -28,42 +28,34 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Get all declared methods (including global function declarations) with the [ShaderMethod] attribute
-        IncrementalValuesProvider<(MethodDeclarationSyntax Syntax, IMethodSymbol Symbol)> methodDeclarationsAndSymbols =
+        // Get all declared methods (including global function declarations) with the [ShaderMethod] attribute, and their info
+        IncrementalValuesProvider<ShaderMethodInfo> methodInfoWithErrors =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 typeof(ShaderMethodAttribute).FullName,
-                static (node, token) => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 } or LocalFunctionStatementSyntax { Parent: GlobalStatementSyntax { Parent: CompilationUnitSyntax }, AttributeLists.Count: > 0 },
-                static (context, token) => ((MethodDeclarationSyntax)context.TargetNode, (IMethodSymbol)context.TargetSymbol));
+                static (node, _) => node is MethodDeclarationSyntax { AttributeLists.Count: > 0 } or LocalFunctionStatementSyntax { Parent: GlobalStatementSyntax { Parent: CompilationUnitSyntax } },
+                static (context, token) =>
+                {
+                    HlslMethodSourceInfo hlslMethodSourceInfo = Execute.GetData(
+                        context.SemanticModel.Compilation,
+                        (CSharpSyntaxNode)context.TargetNode,
+                        (IMethodSymbol)context.TargetSymbol,
+                        out ImmutableArray<DiagnosticInfo> diagnostics);
 
-        // Get the source info for each method
-        IncrementalValuesProvider<Result<HlslMethodSourceInfo>> methodSourceInfoWithErrors =
-            methodDeclarationsAndSymbols
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                HlslMethodSourceInfo sourceInfo = Execute.GetData(
-                    item.Right,
-                    item.Left.Syntax,
-                    item.Left.Symbol,
-                    out ImmutableArray<DiagnosticInfo> diagnostics);
+                    return new ShaderMethodInfo(hlslMethodSourceInfo, diagnostics);
+                });
 
-                return new Result<HlslMethodSourceInfo>(sourceInfo, diagnostics);
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(methodSourceInfoWithErrors.Select(static (item, token) => item.Errors));
-
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<HlslMethodSourceInfo> methodSourceInfo =
-            methodSourceInfoWithErrors
-            .Select(static (item, token) => item.Value);
+        // Output the diagnostics, if any
+        context.ReportDiagnostics(
+            methodInfoWithErrors
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Generate the [ShaderMethodSource] attributes
-        context.RegisterSourceOutput(methodSourceInfo, static (context, item) =>
+        context.RegisterSourceOutput(methodInfoWithErrors, static (context, item) =>
         {
-            CompilationUnitSyntax compilationUnit = Execute.GetSyntax(item);
-            string filename = item.MetadataName.Replace('`', '-').Replace('+', '.');
+            CompilationUnitSyntax compilationUnit = Execute.GetSyntax(item.HlslMethodSource);
+            string filename = item.HlslMethodSource.MetadataName.Replace('`', '-').Replace('+', '.');
 
             context.AddSource($"{filename}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
