@@ -64,20 +64,20 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
+                        diagnostics,
                         typeSymbol,
                         shaderType,
                         out int resourceCount,
-                        out int root32BitConstantCount,
-                        out ImmutableArray<DiagnosticInfo> dispatchDataDiagnostics);
+                        out int root32BitConstantCount);
 
                     token.ThrowIfCancellationRequested();
 
                     // BuildHlslSource() info
                     HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
+                        diagnostics,
                         context.SemanticModel.Compilation,
                         typeDeclaration,
-                        typeSymbol,
-                        out ImmutableArray<DiagnosticInfo> hlslSourceDiagnostics);
+                        typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -92,19 +92,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     // TryGetBytecode() info
                     ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
+                        diagnostics,
                         typeSymbol,
                         !hlslSourceInfo.Delegates.IsEmpty,
-                        IsDynamicCompilationSupported(context.SemanticModel.Compilation),
-                        out ImmutableArray<DiagnosticInfo> threadIdsDiagnostics);
+                        IsDynamicCompilationSupported(context.SemanticModel.Compilation));
 
                     token.ThrowIfCancellationRequested();
-
-                    // Ensure the bytecode generation is disabled if any errors are present
-                    if (!dispatchDataDiagnostics.IsDefaultOrEmpty ||
-                        !hlslSourceDiagnostics.IsDefaultOrEmpty)
-                    {
-                        threadIds = new ThreadIdsInfo(true, 0, 0, 0);
-                    }
 
                     return new ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),

@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
@@ -131,9 +130,7 @@ internal static class ISymbolExtensions
     /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
     public static bool HasAttributeWithFullyQualifiedName(this ISymbol symbol, string name)
     {
-        ImmutableArray<AttributeData> attributes = symbol.GetAttributes();
-
-        foreach (AttributeData attribute in attributes)
+        foreach (AttributeData attribute in symbol.GetAttributes())
         {
             if (attribute.AttributeClass?.HasFullyQualifiedName(name) == true)
             {
@@ -153,9 +150,7 @@ internal static class ISymbolExtensions
     /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
     public static bool TryGetAttributeWithFullMetadataName(this ISymbol symbol, string name, out AttributeData? attributeData)
     {
-        ImmutableArray<AttributeData> attributes = symbol.GetAttributes();
-
-        foreach (AttributeData attribute in attributes)
+        foreach (AttributeData attribute in symbol.GetAttributes())
         {
             if (attribute.AttributeClass?.GetFullMetadataName() == name)
             {
