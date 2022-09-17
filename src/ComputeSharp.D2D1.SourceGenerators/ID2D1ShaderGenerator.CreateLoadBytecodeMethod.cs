@@ -79,34 +79,6 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Gets a <see cref="Diagnostic"/>-s for invalid assembly-level <c>[D2D1CompileOptions]</c> attribute, if one is present.
-        /// </summary>
-        /// <param name="assemblySymbol">The input <see cref="IAssemblySymbol"/> instance to process.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> for the operation.</param>
-        /// <returns>The diagnostic for the attribute, if invalid.</returns>
-        public static Diagnostic? GetAssemblyLevelCompileOptionsDiagnostics(IAssemblySymbol assemblySymbol, CancellationToken cancellationToken)
-        {
-            // In order to emit diagnostics for [D2D1CompileOptions] attributes at the assembly level, the following is needed:
-            //   - The type symbol for the assembly, to get the AttributeData object for the [D2D1CompileOptions] attribute, if used.
-            //   - The syntax node representing the attribute targeting the assembly, to get a location (this is retrieved from the AttributeData).
-            //   - The input D2D1CompileOptions value, which can be retrieved from the constructor arguments of the AttributeData object.
-            if (assemblySymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
-            {
-                D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
-
-                if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-                {
-                    return Diagnostic.Create(
-                        InvalidPackMatrixColumnMajorOption,
-                        attributeData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation(),
-                        assemblySymbol);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Extracts the metadata definition for the current shader.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
