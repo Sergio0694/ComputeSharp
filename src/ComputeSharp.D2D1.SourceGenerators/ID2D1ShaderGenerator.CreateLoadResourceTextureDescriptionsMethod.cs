@@ -106,30 +106,5 @@ partial class ID2D1ShaderGenerator
                 diagnostics.Add(RepeatedD2DResourceTextureIndices, structDeclarationSymbol, structDeclarationSymbol);
             }
         }
-
-        /// <summary>
-        /// Gets the diagnostics for a field with invalid <c>[D2DResourceTextureIndex]</c> attribute use, if that is the case.
-        /// </summary>
-        /// <param name="fieldSymbol">The input <see cref="IFieldSymbol"/> instance to process.</param>
-        /// <returns>The resulting <see cref="Diagnostic"/> instance for <paramref name="fieldSymbol"/>, if needed.</returns>
-        public static Diagnostic? GetDiagnosticForFieldWithInvalidD2DResourceTextureIndexAttribute(IFieldSymbol fieldSymbol)
-        {
-            if (fieldSymbol.HasAttributeWithFullyQualifiedName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute"))
-            {
-                string metadataName = fieldSymbol.Type.GetFullMetadataName();
-
-                if (!HlslKnownTypes.IsResourceTextureType(metadataName))
-                {
-                    return Diagnostic.Create(
-                        InvalidD2DResourceTextureIndexAttributeUse,
-                        fieldSymbol.Locations.FirstOrDefault(),
-                        fieldSymbol.Name,
-                        fieldSymbol.ContainingType,
-                        fieldSymbol.Type);
-                }
-            }
-
-            return null;
-        }
     }
 }
