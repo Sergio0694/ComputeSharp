@@ -21,65 +21,63 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Get all method declarations with the [D2DPixelShaderSource] attribute and gather all necessary info
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
+        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> shaderInfoWithErrors =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 typeof(D2DPixelShaderSourceAttribute).FullName,
                 static (node, _) => node is MethodDeclarationSyntax,
-                static (context, _) =>
+                static (context, token) =>
                 {
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
                     ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
-                    // Get all necessary info for the current shader
+                    // Get the processed HLSL first and check for cancellation
+                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Get the remaining info for the current shader
                     ImmutableArray<SyntaxKind> modifiers = methodDeclaration.Modifiers.Select(token => token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
-                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
                     D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
                     D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
 
-                    HlslShaderMethodSourceInfo sourceInfo = new(
-                        modifiers,
-                        methodName,
-                        invalidReturnType,
-                        hlslSource,
-                        shaderProfile,
-                        compileOptions,
-                        HasErrors: diagnostics.Count > 0);
-
-                    HierarchyInfo hierarchy = HierarchyInfo.From(methodSymbol.ContainingType!);
-
-                    return (hierarchy, sourceInfo, diagnostics.ToImmutable());
+                    return new D2D1PixelShaderSourceInfo(
+                        Hierarchy: HierarchyInfo.From(methodSymbol.ContainingType!),
+                        HlslShaderMethodSource: new HlslShaderMethodSourceInfo(
+                            modifiers,
+                            methodName,
+                            invalidReturnType,
+                            hlslSource,
+                            shaderProfile,
+                            compileOptions,
+                            HasErrors: diagnostics.Count > 0),
+                        Diagnostcs: diagnostics.ToImmutable());
                 });
 
         // Output the diagnostics
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostics));
-
-        // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source)> shaderInfo =
-            shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Source));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostcs));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
-            shaderInfo
+            shaderInfoWithErrors
             .Select(static (item, token) =>
             {
                 ImmutableArray<byte> bytecode = Execute.GetBytecode(
-                    item.Source,
+                    item.HlslShaderMethodSource,
                     token,
                     out DiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
                 EmbeddedBytecodeMethodInfo bytecodeInfo = new(
-                    item.Source.Modifiers,
-                    item.Source.MethodName,
-                    item.Source.InvalidReturnType,
-                    item.Source.HlslSource,
+                    item.HlslShaderMethodSource.Modifiers,
+                    item.HlslShaderMethodSource.MethodName,
+                    item.HlslShaderMethodSource.InvalidReturnType,
+                    item.HlslShaderMethodSource.HlslSource,
                     bytecode);
 
                 return (item.Hierarchy, bytecodeInfo, diagnostic);
