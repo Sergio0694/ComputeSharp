@@ -61,7 +61,7 @@ public sealed class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressor : 
                     }
 
                     // Also check if the containing type is in fact a D2D1 pixel shader type
-                    if (ID2D1ShaderGenerator.IsD2D1PixelShaderType(structSymbol, pixelShaderInterfaceSymbol))
+                    if (ID2D1ShaderGenerator.IsD2D1PixelShaderType(structSymbol, semanticModel.Compilation))
                     {
                         context.ReportSuppression(Suppression.Create(UninitializedD2D1ResourceTextureField, diagnostic));
                     }
