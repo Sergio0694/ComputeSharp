@@ -22,7 +22,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\DeferredDiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Result{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeInfo.cs" />
   </ItemGroup>
 </Project>
