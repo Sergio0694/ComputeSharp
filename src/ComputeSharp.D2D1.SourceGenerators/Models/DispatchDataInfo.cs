@@ -13,15 +13,21 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
 internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, int ConstantBufferSizeInBytes)
 {
+    /// <inheritdoc/>
+    public bool Equals(DispatchDataInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<DispatchDataInfo, Comparer>
+    private sealed class Comparer : Comparer<DispatchDataInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, DispatchDataInfo obj)
         {
-            hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
+            hashCode.AddRange(obj.FieldInfos);
             hashCode.Add(obj.ConstantBufferSizeInBytes);
         }
 
@@ -29,7 +35,7 @@ internal sealed record DispatchDataInfo(ImmutableArray<FieldInfo> FieldInfos, in
         protected override bool AreEqual(DispatchDataInfo x, DispatchDataInfo y)
         {
             return
-                x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
+                x.FieldInfos.SequenceEqual(y.FieldInfos) &&
                 x.ConstantBufferSizeInBytes == y.ConstantBufferSizeInBytes;
         }
     }

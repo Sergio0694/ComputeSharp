@@ -131,14 +131,12 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Filter all items to enable caching at a coarse level, and remove diagnostics
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, ResourceTextureDescriptionsInfo ResourceTextureDescriptions, HlslShaderSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch, item.InputTypes, item.ResourceTextureDescriptions, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, InputTypesInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch, item.InputTypes, item.ResourceTextureDescriptions, item.Source));
 
         // Filter items to enable caching for the input count methods
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.InputTypes.InputTypes.Length))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<int>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.InputTypes.InputTypes.Length));
 
         // Generate the GetInputCount() methods
         context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
@@ -152,8 +150,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputTypesInfo InputTypes)> inputTypesInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.InputTypes))
-            .WithComparers(HierarchyInfo.Comparer.Default, InputTypesInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.InputTypes));
 
         // Generate the GetInputType() methods
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
@@ -167,8 +164,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, ResourceTextureDescriptionsInfo ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.ResourceTextureDescriptions))
-            .WithComparers(HierarchyInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.ResourceTextureDescriptions));
 
         // Generate the LoadResourceTextureDescriptions() methods
         context.RegisterSourceOutput(resourceTextureDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -182,8 +178,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Dispatch));
 
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -206,8 +201,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Source.HlslSource))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Source.HlslSource));
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
@@ -221,8 +215,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo Source)> shaderBytecodeInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Source));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
@@ -268,8 +261,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
-            .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo));
 
         // Generate the LoadBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
@@ -295,8 +287,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 OutputBufferInfo outputBufferInfo = new(bufferPrecision, channelDepth);
 
                 return (item.Hierarchy, outputBufferInfo);
-            })
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<OutputBufferInfo>.Default);
+            });
 
         // Generate the GetOutputBuffer() methods
         context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
@@ -331,8 +322,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputDescriptionsInfo Info)> inputDescriptionsInfo =
             inputDescriptionsInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Info.Value))
-            .WithComparers(HierarchyInfo.Comparer.Default, InputDescriptionsInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Info.Value));
 
         // Generate the LoadInputDescriptions() methods
         context.RegisterSourceOutput(inputDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -355,8 +345,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 token.ThrowIfCancellationRequested();
 
                 return (item.Hierarchy, pixelOptions);
-            })
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<D2D1PixelOptions>.Default);
+            });
 
         // Generate the GetPixelOptions() methods
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>

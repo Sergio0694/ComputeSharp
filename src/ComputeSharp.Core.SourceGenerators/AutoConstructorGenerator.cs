@@ -43,8 +43,7 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
 
                     return (Hierarchy: hierarchyInfo, constructorInfo);
                 })
-            .Where(static item => item.Hierarchy is not null)
-            .WithComparers(HierarchyInfo.Comparer.Default, ConstructorInfo.Comparer.Default);
+            .Where(static item => item.Hierarchy is not null);
 
         // Generate the constructors
         context.RegisterSourceOutput(constructorInfo, static (context, item) =>

@@ -61,8 +61,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Filter all items to enable caching at a coarse level, and remove diagnostics
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderMethodSourceInfo Source)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderMethodSourceInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.Source));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
@@ -108,8 +107,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
-            .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeMethodInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo));
 
         // Generate the shader bytecode methods
         context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>

@@ -17,7 +17,37 @@ internal abstract record FieldInfo
     /// <param name="FieldName">The name of the resource field.</param>
     /// <param name="TypeName">The full metadata name for the resource type.</param>
     /// <param name="Offset">The offset for the resource within the root signature.</param>
-    public sealed record Resource(string FieldName, string TypeName, int Offset) : FieldInfo;
+    public sealed record Resource(string FieldName, string TypeName, int Offset) : FieldInfo
+    {
+        /// <inheritdoc/>
+        public bool Equals(Resource? obj) => Comparer.Default.Equals(this, obj);
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
+        /// <summary>
+        /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="Resource"/>.
+        /// </summary>
+        private sealed class Comparer : Comparer<Resource, Comparer>
+        {
+            /// <inheritdoc/>
+            protected override void AddToHashCode(ref HashCode hashCode, Resource obj)
+            {
+                hashCode.Add(obj.FieldName);
+                hashCode.Add(obj.TypeName);
+                hashCode.Add(obj.Offset);
+            }
+
+            /// <inheritdoc/>
+            protected override bool AreEqual(Resource x, Resource y)
+            {
+                return
+                    x.FieldName == y.FieldName &&
+                    x.TypeName == y.TypeName &&
+                    x.Offset == y.Offset;
+            }
+        }
+    }
 
     /// <summary>
     /// A captured primitive value (either a scalar, a vector, or a linear matrix).
@@ -25,7 +55,37 @@ internal abstract record FieldInfo
     /// <param name="FieldPath">The path of the field with respect to the shader instance.</param>
     /// <param name="TypeName">The full metadata name for the primitive type.</param>
     /// <param name="Offset">The byte offset of the value within the root signature.</param>
-    public sealed record Primitive(ImmutableArray<string> FieldPath, string TypeName, int Offset) : FieldInfo;
+    public sealed record Primitive(ImmutableArray<string> FieldPath, string TypeName, int Offset) : FieldInfo
+    {
+        /// <inheritdoc/>
+        public bool Equals(Primitive? obj) => Comparer.Default.Equals(this, obj);
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
+        /// <summary>
+        /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="Primitive"/>.
+        /// </summary>
+        private sealed class Comparer : Comparer<Primitive, Comparer>
+        {
+            /// <inheritdoc/>
+            protected override void AddToHashCode(ref HashCode hashCode, Primitive obj)
+            {
+                hashCode.AddRange(obj.FieldPath);
+                hashCode.Add(obj.TypeName);
+                hashCode.Add(obj.Offset);
+            }
+
+            /// <inheritdoc/>
+            protected override bool AreEqual(Primitive x, Primitive y)
+            {
+                return
+                    x.FieldPath.SequenceEqual(y.FieldPath) &&
+                    x.TypeName == y.TypeName &&
+                    x.Offset == y.Offset;
+            }
+        }
+    }
 
     /// <summary>
     /// A captured non linear matrix value.
@@ -42,70 +102,41 @@ internal abstract record FieldInfo
         string ElementName,
         int Rows,
         int Columns,
-        ImmutableArray<int> Offsets) : FieldInfo;
-
-    /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="FieldInfo"/>.
-    /// </summary>
-    public sealed class Comparer : Comparer<FieldInfo, Comparer>
+        ImmutableArray<int> Offsets) : FieldInfo
     {
         /// <inheritdoc/>
-        protected override void AddToHashCode(ref HashCode hashCode, FieldInfo obj)
-        {
-            switch (obj)
-            {
-                case Resource resource:
-                    hashCode.Add(resource.FieldName);
-                    hashCode.Add(resource.TypeName);
-                    hashCode.Add(resource.Offset);
-                    break;
-                case Primitive primitive:
-                    hashCode.AddRange(primitive.FieldPath);
-                    hashCode.Add(primitive.TypeName);
-                    hashCode.Add(primitive.Offset);
-                    break;
-                case NonLinearMatrix matrix:
-                    hashCode.AddRange(matrix.FieldPath);
-                    hashCode.Add(matrix.TypeName);
-                    hashCode.Add(matrix.ElementName);
-                    hashCode.Add(matrix.Rows);
-                    hashCode.Add(matrix.Columns);
-                    hashCode.AddRange(matrix.Offsets);
-                    break;
-                default:
-                    break;
-            }
-        }
+        public bool Equals(NonLinearMatrix? obj) => Comparer.Default.Equals(this, obj);
 
         /// <inheritdoc/>
-        protected override bool AreEqual(FieldInfo x, FieldInfo y)
+        public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
+        /// <summary>
+        /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="NonLinearMatrix"/>.
+        /// </summary>
+        private sealed class Comparer : Comparer<NonLinearMatrix, Comparer>
         {
-            if (x is Resource resourceX && y is Resource resourceY)
+            /// <inheritdoc/>
+            protected override void AddToHashCode(ref HashCode hashCode, NonLinearMatrix obj)
             {
-                return
-                    resourceX.FieldName == resourceY.FieldName &&
-                    resourceX.TypeName == resourceY.TypeName &&
-                    resourceX.Offset == resourceY.Offset;
-            }
-            else if (x is Primitive primitiveX && y is Primitive primitiveY)
-            {
-                return
-                    primitiveX.FieldPath.SequenceEqual(primitiveY.FieldPath) &&
-                    primitiveX.TypeName == primitiveY.TypeName &&
-                    primitiveX.Offset == primitiveY.Offset;
-            }
-            else if (x is NonLinearMatrix matrixX && y is NonLinearMatrix matrixY)
-            {
-                return
-                    matrixX.FieldPath.SequenceEqual(matrixY.FieldPath) &&
-                    matrixX.TypeName == matrixY.TypeName &&
-                    matrixX.ElementName == matrixY.ElementName &&
-                    matrixX.Rows == matrixY.Rows &&
-                    matrixY.Columns == matrixY.Columns &&
-                    matrixX.Offsets.SequenceEqual(matrixY.Offsets);
+                hashCode.AddRange(obj.FieldPath);
+                hashCode.Add(obj.TypeName);
+                hashCode.Add(obj.ElementName);
+                hashCode.Add(obj.Rows);
+                hashCode.Add(obj.Columns);
+                hashCode.AddRange(obj.Offsets);
             }
 
-            return false;
+            /// <inheritdoc/>
+            protected override bool AreEqual(NonLinearMatrix x, NonLinearMatrix y)
+            {
+                return
+                    x.FieldPath.SequenceEqual(y.FieldPath) &&
+                    x.TypeName == y.TypeName &&
+                    x.ElementName == y.ElementName &&
+                    x.Rows == y.Rows &&
+                    x.Columns == y.Columns &&
+                    x.Offsets.SequenceEqual(y.Offsets);
+            }
         }
     }
 }

@@ -21,10 +21,16 @@ internal sealed record HlslMethodSourceInfo(
     ImmutableArray<(string Name, string Value)> DefinedConstants,
     ImmutableArray<(string Signature, string Definition)> DependentMethods)
 {
+    /// <inheritdoc/>
+    public bool Equals(HlslMethodSourceInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslMethodSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<HlslMethodSourceInfo, Comparer>
+    private sealed class Comparer : Comparer<HlslMethodSourceInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, HlslMethodSourceInfo obj)

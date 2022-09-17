@@ -11,10 +11,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="ResourceTextureDescriptions">The resource textures for the current shader.</param>
 internal sealed record ResourceTextureDescriptionsInfo(ImmutableArray<ResourceTextureDescription> ResourceTextureDescriptions)
 {
+    /// <inheritdoc/>
+    public bool Equals(ResourceTextureDescriptionsInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="ResourceTextureDescriptionsInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<ResourceTextureDescriptionsInfo, Comparer>
+    private sealed class Comparer : Comparer<ResourceTextureDescriptionsInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, ResourceTextureDescriptionsInfo obj)

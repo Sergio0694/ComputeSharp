@@ -15,10 +15,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="Bytecode">The compiled shader bytecode, if available.</param>
 internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, D2D1CompileOptions? CompileOptions, ImmutableArray<byte> Bytecode)
 {
+    /// <inheritdoc/>
+    public bool Equals(EmbeddedBytecodeInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<EmbeddedBytecodeInfo, Comparer>
+    private sealed class Comparer : Comparer<EmbeddedBytecodeInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, EmbeddedBytecodeInfo obj)

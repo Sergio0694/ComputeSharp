@@ -63,8 +63,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Get the hierarchy info and delegate field names for each shader type
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo Info)> hierarchyAndDispatchIdInfo =
             shaderDeclarations
-            .Select(static (item, token) => (item.Hierarchy, new DispatchIdInfo(GetDispatchId.GetInfo(item.Symbol))))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchIdInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, new DispatchIdInfo(GetDispatchId.GetInfo(item.Symbol))));
 
         // Generate the GetDispatchId() methods
         context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(supportsDynamicShaders), static (context, item) =>
@@ -141,14 +140,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Filter all items to enable caching at a coarse level, and remove diagnostics
         IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value))
-            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<ThreadIdsInfo>.Default);
+            .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value));
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
             shaderInfo
-            .Select(static (item, token) => item.Dispatch)
-            .WithComparer(DispatchDataInfo.Comparer.Default);
+            .Select(static (item, token) => item.Dispatch);
 
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -167,8 +164,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo, bool SupportsDynamicShaders)> hlslSourceInfo =
             shaderInfo
             .Combine(supportsDynamicShaders)
-            .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
+            .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right));
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -193,8 +189,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 token.ThrowIfCancellationRequested();
 
                 return (item.Dispatch.Hierarchy, dispatchMetadataInfo);
-            })
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchMetadataInfo.Comparer.Default);
+            });
 
         // Generate the LoadDispatchMetadata() methods
         context.RegisterSourceOutput(dispatchMetadataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
@@ -208,8 +203,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Transform the raw HLSL source to compile
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, EqualityComparer<ThreadIdsInfo>.Default);
+            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
@@ -251,8 +245,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
-            .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
+            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo));
 
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>

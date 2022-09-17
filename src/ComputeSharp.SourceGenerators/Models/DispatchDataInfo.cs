@@ -22,17 +22,23 @@ internal sealed record DispatchDataInfo(
     int ResourceCount,
     int Root32BitConstantCount)
 {
+    /// <inheritdoc/>
+    public bool Equals(DispatchDataInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<DispatchDataInfo, Comparer>
+    private sealed class Comparer : Comparer<DispatchDataInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, DispatchDataInfo obj)
         {
-            hashCode.Add(HierarchyInfo.Comparer.Default.GetHashCode(obj.Hierarchy));
+            hashCode.Add(obj.Hierarchy);
             hashCode.Add(obj.Type);
-            hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
+            hashCode.AddRange(obj.FieldInfos);
             hashCode.Add(obj.ResourceCount);
             hashCode.Add(obj.Root32BitConstantCount);
         }
@@ -41,9 +47,9 @@ internal sealed record DispatchDataInfo(
         protected override bool AreEqual(DispatchDataInfo x, DispatchDataInfo y)
         {
             return
-                HierarchyInfo.Comparer.Default.Equals(x.Hierarchy, y.Hierarchy) &&
+                x.Hierarchy == y.Hierarchy &&
                 x.Type == y.Type &&
-                x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
+                x.FieldInfos.SequenceEqual(y.FieldInfos) &&
                 x.ResourceCount == y.ResourceCount &&
                 x.Root32BitConstantCount == y.Root32BitConstantCount;
         }

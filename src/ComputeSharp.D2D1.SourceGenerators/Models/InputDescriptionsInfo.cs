@@ -11,10 +11,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="InputDescriptions">The input descriptions for a given shader.</param>
 internal sealed record InputDescriptionsInfo(ImmutableArray<InputDescription> InputDescriptions)
 {
+    /// <inheritdoc/>
+    public bool Equals(InputDescriptionsInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="InputDescriptionsInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<InputDescriptionsInfo, Comparer>
+    private sealed class Comparer : Comparer<InputDescriptionsInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, InputDescriptionsInfo obj)

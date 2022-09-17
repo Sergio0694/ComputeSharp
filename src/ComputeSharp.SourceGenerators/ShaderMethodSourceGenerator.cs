@@ -57,8 +57,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<HlslMethodSourceInfo> methodSourceInfo =
             methodSourceInfoWithErrors
-            .Select(static (item, token) => item.Value)
-            .WithComparer(HlslMethodSourceInfo.Comparer.Default);
+            .Select(static (item, token) => item.Value);
 
         // Generate the [ShaderMethodSource] attributes
         context.RegisterSourceOutput(methodSourceInfo, static (context, item) =>

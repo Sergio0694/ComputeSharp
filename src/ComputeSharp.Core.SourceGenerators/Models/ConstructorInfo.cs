@@ -13,10 +13,16 @@ namespace ComputeSharp.Core.SourceGenerators.Models;
 /// <param name="DefaultedFields">The names of ignored fields that should be defaulted.</param>
 internal sealed record ConstructorInfo(ImmutableArray<ParameterInfo> Parameters, ImmutableArray<string> DefaultedFields)
 {
+    /// <inheritdoc/>
+    public bool Equals(ConstructorInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="ConstructorInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<ConstructorInfo, Comparer>
+    private sealed class Comparer : Comparer<ConstructorInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, ConstructorInfo obj)

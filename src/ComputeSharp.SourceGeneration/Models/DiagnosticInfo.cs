@@ -13,10 +13,16 @@ namespace ComputeSharp.SourceGeneration.Models;
 /// <param name="Args">The diagnostic args.</param>
 internal sealed record DiagnosticInfo(DiagnosticDescriptor Descriptor, params object[] Args)
 {
+    /// <inheritdoc/>
+    public bool Equals(DiagnosticInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DiagnosticInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<DiagnosticInfo, Comparer>
+    private sealed class Comparer : Comparer<DiagnosticInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, DiagnosticInfo obj)

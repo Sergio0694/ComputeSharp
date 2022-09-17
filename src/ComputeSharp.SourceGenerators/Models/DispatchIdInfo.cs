@@ -12,10 +12,16 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="Delegates">The list of delegate field names for the shader.</param>
 internal sealed record DispatchIdInfo(ImmutableArray<string> Delegates)
 {
+    /// <inheritdoc/>
+    public bool Equals(DispatchIdInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchIdInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<DispatchIdInfo, Comparer>
+    private sealed class Comparer : Comparer<DispatchIdInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, DispatchIdInfo obj)

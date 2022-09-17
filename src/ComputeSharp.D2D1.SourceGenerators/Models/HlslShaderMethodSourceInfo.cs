@@ -26,10 +26,16 @@ internal sealed record HlslShaderMethodSourceInfo(
     D2D1CompileOptions CompileOptions,
     bool HasErrors)
 {
+    /// <inheritdoc/>
+    public bool Equals(HlslShaderMethodSourceInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderMethodSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<HlslShaderMethodSourceInfo, Comparer>
+    private sealed class Comparer : Comparer<HlslShaderMethodSourceInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, HlslShaderMethodSourceInfo obj)
