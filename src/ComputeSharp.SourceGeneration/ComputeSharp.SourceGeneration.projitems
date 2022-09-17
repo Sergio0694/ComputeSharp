@@ -15,7 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HashCodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IEqualityComparerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImmutableArrayExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IncrementalValuesProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Comparer{T,TSelf}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
