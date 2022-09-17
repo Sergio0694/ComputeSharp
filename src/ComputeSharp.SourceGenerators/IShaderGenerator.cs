@@ -25,188 +25,178 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Check whether [SkipLocalsInit] can be used
         IncrementalValueProvider<bool> canUseSkipLocalsInit =
             context.CompilationProvider
-            .Select(static (compilation, token) =>
+            .Select(static (compilation, _) =>
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
                 compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
 
         // Check whether or not dynamic shaders are supported
         IncrementalValueProvider<bool> supportsDynamicShaders =
             context.CompilationProvider
-            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
-                static identity => identity.Name is "ComputeSharp.Dynamic"));
+            .Select(static (compilation, _) => IsDynamicCompilationSupported(compilation));
 
-        // Get all declared struct types and their type symbols
-        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
+        // Discover all shader types and extract all the necessary info from each of them
+        IncrementalValuesProvider<ShaderInfo> shaderInfoWithErrors =
             context.SyntaxProvider
             .CreateSyntaxProvider(
-                static (node, token) => node is StructDeclarationSyntax structDeclaration,
-                static (context, token) => (
-                    (StructDeclarationSyntax)context.Node,
-                    Symbol: (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
-            .Where(static pair => pair.Symbol is { Interfaces.IsEmpty: false })!;
+                static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
+                static (context, token) =>
+                {
+                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
 
-        // Get the symbol for the IComputeShader and IPixelShader<TPixel> interfaces
-        IncrementalValueProvider<(INamedTypeSymbol Compute, INamedTypeSymbol Pixel) > shaderInterfaces =
-            context.CompilationProvider
-            .Select(static (compilation, token) => (
-                Compute: compilation.GetTypeByMetadataName(typeof(IComputeShader).FullName)!,
-                Pixel: compilation.GetTypeByMetadataName(typeof(IPixelShader<>).FullName)!));
+                    // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
+                    if (context.SemanticModel.GetDeclaredSymbol(typeDeclaration, token) is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    {
+                        return default;
+                    }
 
-        // Filter struct declarations that implement a shader interface, and also gather the hierarchy info and shader type
-        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol, HierarchyInfo Hierarchy, Type Type)> shaderDeclarations =
-            structDeclarations
-            .Combine(shaderInterfaces)
-            .Select(static (item, token) => (item.Left, Type: GetShaderType(item.Left.Symbol, item.Right.Compute, item.Right.Pixel)))
-            .Where(static item => item.Type is not null)
-            .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol), item.Type!));
+                    // Get the shader type, or return if none is present
+                    if (GetShaderType(typeSymbol, context.SemanticModel.Compilation) is not ShaderType shaderType)
+                    {
+                        return default;
+                    }
 
-        // Get the hierarchy info and delegate field names for each shader type
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo Info)> hierarchyAndDispatchIdInfo =
-            shaderDeclarations
-            .Select(static (item, token) => (item.Hierarchy, new DispatchIdInfo(GetDispatchId.GetInfo(item.Symbol))));
+                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
+
+                    // GetDispatchId() info
+                    ImmutableArray<string> dispatchIdInfo = GetDispatchId.GetInfo(typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // LoadDispatchData() info
+                    ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
+                        typeSymbol,
+                        shaderType,
+                        out int resourceCount,
+                        out int root32BitConstantCount,
+                        out ImmutableArray<DiagnosticInfo> dispatchDataDiagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // BuildHlslSource() info
+                    HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
+                        context.SemanticModel.Compilation,
+                        typeDeclaration,
+                        typeSymbol,
+                        out ImmutableArray<DiagnosticInfo> hlslSourceDiagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // GetDispatchMetadata() info
+                    DispatchMetadataInfo dispatchMetadataInfo = LoadDispatchMetadata.GetInfo(
+                        root32BitConstantCount,
+                        hlslSourceInfo.ImplicitTextureType is not null,
+                        hlslSourceInfo.IsSamplerUsed,
+                        fieldInfos);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // TryGetBytecode() info
+                    ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
+                        typeSymbol,
+                        !hlslSourceInfo.Delegates.IsEmpty,
+                        IsDynamicCompilationSupported(context.SemanticModel.Compilation),
+                        out ImmutableArray<DiagnosticInfo> threadIdsDiagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Ensure the bytecode generation is disabled if any errors are present
+                    if (!dispatchDataDiagnostics.IsDefaultOrEmpty ||
+                        !hlslSourceDiagnostics.IsDefaultOrEmpty)
+                    {
+                        threadIds = new ThreadIdsInfo(true, 0, 0, 0);
+                    }
+
+                    return new ShaderInfo(
+                        Hierarchy: HierarchyInfo.From(typeSymbol),
+                        DispatchId: new DispatchIdInfo(dispatchIdInfo),
+                        DispatchData: new DispatchDataInfo(
+                            shaderType,
+                            fieldInfos,
+                            resourceCount,
+                            root32BitConstantCount),
+                        DispatchMetadata: dispatchMetadataInfo,
+                        HlslShaderSource: hlslSourceInfo,
+                        ThreadIds: threadIds,
+                        Diagnostcs: diagnostics.ToImmutable());
+                })
+            .Where(static item => item is not null)!;
+
+        // Output the diagnostics, if any
+        context.ReportDiagnostics(
+            shaderInfoWithErrors
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+
+        // Get the GetDispatchId() info (hierarchy and dispatch id info)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo DispatchId)> dispatchIdInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchId));
 
         // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(supportsDynamicShaders), static (context, item) =>
+        context.RegisterSourceOutput(dispatchIdInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.DispatchId.Delegates);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
-        // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
-            shaderDeclarations
-            .Combine(supportsDynamicShaders)
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                // LoadDispatchData() info
-                ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
-                    item.Left.Left.Symbol,
-                    item.Left.Left.Type,
-                    out int resourceCount,
-                    out int root32BitConstantCount,
-                    out ImmutableArray<DiagnosticInfo> dispatchDataDiagnostics);
-
-                token.ThrowIfCancellationRequested();
-
-                DispatchDataInfo dispatchDataInfo = new(
-                    item.Left.Left.Hierarchy,
-                    item.Left.Left.Type,
-                    fieldInfos,
-                    resourceCount,
-                    root32BitConstantCount);
-
-                token.ThrowIfCancellationRequested();
-
-                // BuildHlslSource() info
-                HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
-                    item.Right,
-                    item.Left.Left.Syntax,
-                    item.Left.Left.Symbol,
-                    out ImmutableArray<DiagnosticInfo> hlslSourceDiagnostics);
-
-                token.ThrowIfCancellationRequested();
-
-                // TryGetBytecode() info
-                ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
-                    item.Left.Left.Symbol,
-                    !hlslSourceInfo.Delegates.IsEmpty,
-                    item.Left.Right,
-                    out ImmutableArray<DiagnosticInfo> threadIdsDiagnostics);
-
-                token.ThrowIfCancellationRequested();
-
-                // Ensure the bytecode generation is disabled if any errors are present
-                if (!dispatchDataDiagnostics.IsDefaultOrEmpty ||
-                    !hlslSourceDiagnostics.IsDefaultOrEmpty)
-                {
-                    threadIds = new ThreadIdsInfo(true, 0, 0, 0);
-                }
-
-                return (
-                    new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
-                    new Result<HlslShaderSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
-                    new Result<ThreadIdsInfo>(threadIds, threadIdsDiagnostics));
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Hlsl.Errors));
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.ThreadIds.Errors));
-
-        // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
+        // Get the LoadDispatchData() info (hierarchy and dispatch data info)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo DispatchData) Info, bool CanUseSkipLocalsInit) > dispatchDataInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value));
-
-        // Get a filtered sequence to enable caching
-        IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
-            shaderInfo
-            .Select(static (item, token) => item.Dispatch);
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchData))
+            .Combine(canUseSkipLocalsInit);
 
         // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(
-                item.Left.Type,
-                item.Left.FieldInfos,
-                item.Left.ResourceCount,
-                item.Left.Root32BitConstantCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: item.Right);
+                item.Info.DispatchData.Type,
+                item.Info.DispatchData.FieldInfos,
+                item.Info.DispatchData.ResourceCount,
+                item.Info.DispatchData.Root32BitConstantCount);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo, bool SupportsDynamicShaders)> hlslSourceInfo =
-            shaderInfo
-            .Combine(supportsDynamicShaders)
-            .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right));
+        // Get the BuildHlslSource info (hierarchy, HLSL source and parsing options)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Info, (bool CanUseSkipLocalsInit, bool SupportsDynamicShaders) Options)> hlslSourceInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource))
+            .Combine(canUseSkipLocalsInit.Combine(supportsDynamicShaders));
 
         // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders, item.Left.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: item.Right);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Info.HlslShaderSource, item.Options.SupportsDynamicShaders, item.Info.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, item.Options.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the dispatch metadata info
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo MetadataInfo)> dispatchMetadataInfo =
-            shaderInfo
-            .Select(static (item, token) =>
-            {
-                DispatchMetadataInfo dispatchMetadataInfo = LoadDispatchMetadata.GetInfo(
-                    item.Dispatch.Root32BitConstantCount,
-                    item.Hlsl.ImplicitTextureType is not null,
-                    item.Hlsl.IsSamplerUsed,
-                    item.Dispatch.FieldInfos);
-
-                token.ThrowIfCancellationRequested();
-
-                return (item.Dispatch.Hierarchy, dispatchMetadataInfo);
-            });
+        // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchMetadataInfo DispatchMetadata) Info, bool CanUseSkipLocalsInit)> dispatchMetadataInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchMetadata))
+            .Combine(canUseSkipLocalsInit);
 
         // Generate the LoadDispatchMetadata() methods
-        context.RegisterSourceOutput(dispatchMetadataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(dispatchMetadataInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Left.MetadataInfo);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: item.Right);
+            MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Info.DispatchMetadata);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, item.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Transform the raw HLSL source to compile
+        // Transform the raw HLSL source to compile (this step aggregates the HLSL source to ensure compilation is only done for actual HLSL changes)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds));
+            shaderInfoWithErrors
+            .Select(static (item, token) => (item.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.HlslShaderSource), item.ThreadIds));
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
@@ -239,19 +229,20 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Output the diagnostics
         context.ReportDiagnostics(embeddedBytecodeDiagnostics);
 
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
+        // Get the TryGetBytecode() info (hierarchy and compiled bytecode)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode) Info, bool SupportsDynamicShaders)> embeddedBytecodeInfo =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo));
+            .Select(static (item, token) => (item.Hierarchy, item.EmbeddedBytecode))
+            .Combine(supportsDynamicShaders);
 
         // Generate the TryGetBytecode() methods
-        context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
+        context.RegisterSourceOutput(embeddedBytecodeInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Info.EmbeddedBytecode, item.SupportsDynamicShaders, out Func<SyntaxNode, SourceText> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, tryGetBytecodeMethod, canUseSkipLocalsInit: false);
             SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}.g.cs", text);
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}.g.cs", text);
         });
     }
 }

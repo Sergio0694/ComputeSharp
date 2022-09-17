@@ -22,6 +22,14 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        // Check whether [SkipLocalsInit] can be used
+        IncrementalValueProvider<bool> canUseSkipLocalsInit =
+            context.CompilationProvider
+            .Select(static (compilation, _) =>
+                compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
+                compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
+
+        // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<D2D1ShaderInfo> shaderInfoWithErrors =
             context.SyntaxProvider
             .CreateSyntaxProvider(
@@ -123,14 +131,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 })
             .Where(static item => item is not null)!;
 
-        // Check whether [SkipLocalsInit] can be used
-        IncrementalValueProvider<bool> canUseSkipLocalsInit =
-            context.CompilationProvider
-            .Select(static (compilation, _) =>
-                compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
-                compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
-
-        // Output the diagnostics
+        // Output the diagnostics, if any
         context.ReportDiagnostics(
             shaderInfoWithErrors
             .Select(static (item, _) => item.Diagnostcs)
@@ -258,7 +259,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Output the diagnostics
         context.ReportDiagnostics(embeddedBytecodeDiagnostics);
 
-        // Get the filtered sequence to enable caching
+        // Get the LoadBytecode() info (hierarchy and compiled bytecode)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.BytecodeInfo));

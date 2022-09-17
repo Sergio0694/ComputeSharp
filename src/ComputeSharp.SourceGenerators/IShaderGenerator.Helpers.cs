@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,31 +16,43 @@ partial class IShaderGenerator
     /// Gets the shader type for a given shader, if any.
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to check.</param>
-    /// <param name="iComputeShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="IComputeShader"/>.</param>
-    /// <param name="iPixelShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="IPixelShader{TPixel}"/>.</param>
-    /// <returns>Either <see cref="IComputeShader"/> or <see cref="IPixelShader{TPixel}"/>, or <see langword="null"/>.</returns>
-    private static Type? GetShaderType(
-        INamedTypeSymbol typeSymbol,
-        INamedTypeSymbol iComputeShaderSymbol,
-        INamedTypeSymbol iPixelShaderSymbol)
+    /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
+    /// <returns>The shader type for <paramref name="typeSymbol"/>, or <see langword="null"/>.</returns>
+    private static ShaderType? GetShaderType(INamedTypeSymbol typeSymbol, Compilation compilation)
     {
         foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {
-            if (interfaceSymbol.Name == nameof(IComputeShader) &&
-                 SymbolEqualityComparer.Default.Equals(interfaceSymbol, iComputeShaderSymbol))
+            if (interfaceSymbol.Name == nameof(IComputeShader))
             {
-                return typeof(IComputeShader);
-            }
+                INamedTypeSymbol computeShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader")!;
 
-            if (interfaceSymbol.IsGenericType &&
-                interfaceSymbol.Name == nameof(IPixelShader<byte>) &&
-                SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, iPixelShaderSymbol))
+                if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol))
+                {
+                    return ShaderType.ComputeShader;
+                }
+            }
+            else if (interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) })
             {
-                return typeof(IPixelShader<>);
+                INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IPixelShader`1")!;
+
+                if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
+                {
+                    return ShaderType.PixelShader;
+                }
             }
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Checks whether dynamic shaders are supported in a given compilation.
+    /// </summary>
+    /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
+    /// <returns>Whether dynamic shaders are supported in the input compilation.</returns>
+    private static bool IsDynamicCompilationSupported(Compilation compilation)
+    {
+        return compilation.ReferencedAssemblyNames.Any(static identity => identity.Name is "ComputeSharp.Dynamic");
     }
 
     /// <summary>

@@ -18,10 +18,9 @@ partial class IShaderGenerator
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.
         /// </summary>
-        /// <param name="delegateFieldNames">The names of all <see cref="System.Delegate"/> instance fields within the current shader type.</param>\
-        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
+        /// <param name="delegateFieldNames">The names of all <see cref="System.Delegate"/> instance fields within the current shader type.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(ImmutableArray<string> delegateFieldNames, bool supportsDynamicShaders)
+        public static MethodDeclarationSyntax GetSyntax(ImmutableArray<string> delegateFieldNames)
         {
             // This code produces a method declaration as follows:
             //
@@ -35,18 +34,17 @@ partial class IShaderGenerator
                     Identifier("GetDispatchId"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithBody(GetShaderHashCodeBody(delegateFieldNames, supportsDynamicShaders));
+                .WithBody(GetShaderHashCodeBody(delegateFieldNames));
         }
 
         /// <summary>
         /// Gets a <see cref="BlockSyntax"/> instance with the logic to compute the hashcode of a given shader type.
         /// </summary>
         /// <param name="delegateFieldNames">The names of all <see cref="System.Delegate"/> instance fields within the current shader type.</param>
-        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <returns>The <see cref="BlockSyntax"/> instance to hash the input shader.</returns>
-        private static BlockSyntax GetShaderHashCodeBody(ImmutableArray<string> delegateFieldNames, bool supportsDynamicShaders)
+        private static BlockSyntax GetShaderHashCodeBody(ImmutableArray<string> delegateFieldNames)
         {
-            if (delegateFieldNames.Length == 0 || !supportsDynamicShaders)
+            if (delegateFieldNames.Length == 0)
             {
                 // return 0;
                 return
@@ -56,17 +54,18 @@ partial class IShaderGenerator
                         Literal(0))));
             }
 
-            List<StatementSyntax> blockStatements = new(4);
-
-            // global::System.HashCode hashCode = default;
-            blockStatements.Add(LocalDeclarationStatement(
+            List<StatementSyntax> blockStatements = new(4)
+            {
+                // global::System.HashCode hashCode = default;
+                LocalDeclarationStatement(
                 VariableDeclaration(IdentifierName("global::System.HashCode"))
                 .AddVariables(
                     VariableDeclarator(Identifier("hashCode"))
                     .WithInitializer(EqualsValueClause(
                         LiteralExpression(
                             SyntaxKind.DefaultLiteralExpression,
-                            Token(SyntaxKind.DefaultKeyword)))))));
+                            Token(SyntaxKind.DefaultKeyword))))))
+            };
 
             foreach (string fieldName in delegateFieldNames)
             {
