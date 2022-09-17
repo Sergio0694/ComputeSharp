@@ -2,8 +2,8 @@
 using System.Collections.Immutable;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -117,25 +117,13 @@ partial class IShaderGenerator
 
                     sizeHint += textBuilder.Length;
 
-                    // Create a token to represent the raw multiline string literal expression. Here some spaces are
-                    // also added to properly align the resulting text with one indentation below the declaring string constant.
-                    // The spaces are: 4 for each containing type, 4 for the containing method, and 4 for the one additional indentation.
-                    // An extra newline and indentation has to be added to the raw text when there is no trailing newline, as not doing
-                    // so would otherwise case the terminating """ token to fall on the same line, which is invalid syntax. This is only
-                    // needed to make the code valid, as the actual literal context of the string is not affected and remains the same.
-                    string indentation = new(' ', 4 * hierarchyDepth + 4 + 4);
-                    SyntaxToken textToken = Token(
-                        TriviaList(),
-                        SyntaxKind.MultiLineRawStringLiteralToken,
-                        $"\"\"\"\n{indentation}{text.Replace("\n", $"\n{indentation}")}{(text.EndsWith("\n") ? "" : $"\n{indentation}")}\"\"\"",
-                        text,
-                        TriviaList());
-
                     statements.Add(
                         ExpressionStatement(
                             InvocationExpression(
                                 MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, textToken)))));
+                                .AddArgumentListArguments(Argument(LiteralExpression(
+                                    SyntaxKind.StringLiteralExpression,
+                                    SyntaxTokenHelper.CreateRawMultilineStringLiteral(text, hierarchyDepth))))));
 
                     textBuilder.Clear();
                 }

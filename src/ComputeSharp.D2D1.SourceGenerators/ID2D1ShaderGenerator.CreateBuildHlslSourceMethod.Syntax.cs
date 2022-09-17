@@ -1,5 +1,5 @@
 ﻿using ComputeSharp.D2D1.__Internals;
-using Microsoft.CodeAnalysis;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -22,17 +22,6 @@ partial class ID2D1ShaderGenerator
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(string hlslSource, int hierarchyDepth)
         {
-            // Create a token to represent the raw multiline string literal expression with the HLSL source. Here some spaces are
-            // also added to properly align the resulting text with one indentation below the declaring string constant.
-            // The spaces are: 4 for each containing type, 4 for the containing method, and 4 for the one additional indentation.
-            string indentation = new(' ', 4 * hierarchyDepth + 4 + 4);
-            SyntaxToken hlslSourceLiteralToken = Token(
-                TriviaList(),
-                SyntaxKind.MultiLineRawStringLiteralToken,
-                $"\"\"\"\n{indentation}{hlslSource.Replace("\n", $"\n{indentation}")}\"\"\"",
-                hlslSource,
-                TriviaList());
-
             // This code produces a method declaration as follows:
             //
             // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.BuildHlslSource(out string hlslSource)
@@ -49,7 +38,9 @@ partial class ID2D1ShaderGenerator
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
                         IdentifierName("hlslSource"),
-                        LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralToken)))));
+                        LiteralExpression(
+                            SyntaxKind.StringLiteralExpression,
+                            SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth))))));
         }
     }
 }
