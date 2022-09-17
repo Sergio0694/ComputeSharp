@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -34,7 +35,7 @@ partial class IShaderGenerator
             Type shaderInterfaceType,
             out int resourceCount,
             out int root32BitConstantCount,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<DiagnosticInfo> diagnostics)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -87,7 +88,7 @@ partial class IShaderGenerator
                 }
             }
 
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            ImmutableArray<DiagnosticInfo>.Builder builder = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
             // Setup the resource and byte offsets for tracking. Pixel shaders have only two
             // implicitly captured int values, as they're always dispatched over a 2D texture.

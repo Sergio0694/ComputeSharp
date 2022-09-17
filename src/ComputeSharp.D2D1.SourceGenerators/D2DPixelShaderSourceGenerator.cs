@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -31,7 +32,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-                    ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
                     // Get the processed HLSL first and check for cancellation
                     string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
@@ -59,17 +60,20 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                 });
 
         // Output the diagnostics
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostcs));
+        context.ReportDiagnostics(
+            shaderInfoWithErrors
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderInfoWithErrors
             .Select(static (item, token) =>
             {
                 ImmutableArray<byte> bytecode = Execute.GetBytecode(
                     item.HlslShaderMethodSource,
                     token,
-                    out DiagnosticInfo? diagnostic);
+                    out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
@@ -84,7 +88,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
             .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
@@ -92,11 +96,8 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
             .Select(static (item, token) =>
             {
                 INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-                
-                return Diagnostic.Create(
-                    item.Left.Diagnostic!.Descriptor,
-                    typeSymbol.Locations.FirstOrDefault(),
-                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
             });
 
         // Output the diagnostics

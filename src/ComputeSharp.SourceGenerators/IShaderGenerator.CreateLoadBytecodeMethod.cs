@@ -42,9 +42,9 @@ partial class IShaderGenerator
             INamedTypeSymbol structDeclarationSymbol,
             bool isDynamicShader,
             bool supportsDynamicShaders,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<DiagnosticInfo> diagnostics)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            ImmutableArray<DiagnosticInfo>.Builder builder = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
             AttributeData? attribute = structDeclarationSymbol
                 .GetAttributes()
@@ -149,7 +149,7 @@ partial class IShaderGenerator
             ThreadIdsInfo threadIds,
             string hlslSource,
             CancellationToken token,
-            out DiagnosticInfo? diagnostic)
+            out DeferredDiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
@@ -189,11 +189,11 @@ partial class IShaderGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (DxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:

@@ -46,7 +46,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
                     item.Right,
                     item.Left.Syntax,
                     item.Left.Symbol,
-                    out ImmutableArray<Diagnostic> diagnostics);
+                    out ImmutableArray<DiagnosticInfo> diagnostics);
 
                 return new Result<HlslMethodSourceInfo>(sourceInfo, diagnostics);
             });
@@ -85,9 +85,9 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             Compilation compilation,
             CSharpSyntaxNode methodDeclaration,
             IMethodSymbol methodSymbol,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<DiagnosticInfo> diagnostics)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            ImmutableArray<DiagnosticInfo>.Builder builder = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -112,14 +112,14 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// <summary>
         /// Gets a sequence of processed methods from a target method declaration.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> or <see cref="LocalFunctionStatementSyntax"/> instance for the current method.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
         private static (string TargetMethod, ImmutableArray<(string Signature, string Definition)> DependentMethods) GetProcessedMethods(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             CSharpSyntaxNode methodDeclaration,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,

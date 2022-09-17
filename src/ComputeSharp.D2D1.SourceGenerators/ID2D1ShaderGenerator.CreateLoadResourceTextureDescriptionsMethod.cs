@@ -4,6 +4,7 @@ using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
@@ -20,12 +21,12 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the resource texture descriptions for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <param name="resourceTextureDescriptions">The produced resource texture descriptions for the shader.</param>
         public static void GetInfo(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             int inputCount,
             out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions)

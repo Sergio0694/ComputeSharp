@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
-using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators.Models;
 
@@ -29,7 +28,7 @@ internal sealed record D2D1ShaderInfo(
     OutputBufferInfo OutputBuffer,
     InputDescriptionsInfo InputDescriptions,
     D2D1PixelOptions PixelOptions,
-    ImmutableArray<Diagnostic> Diagnostcs)
+    ImmutableArray<DiagnosticInfo> Diagnostcs)
 {
     /// <inheritdoc/>
     public bool Equals(D2D1ShaderInfo? obj) => Comparer.Default.Equals(this, obj);

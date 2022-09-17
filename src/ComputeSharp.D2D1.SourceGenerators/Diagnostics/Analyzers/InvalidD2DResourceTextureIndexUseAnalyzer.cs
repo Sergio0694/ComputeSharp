@@ -39,7 +39,7 @@ public sealed class InvalidD2DResourceTextureIndexUseAnalyzer : DiagnosticAnalyz
                 {
                     Diagnostic diagnostic = Diagnostic.Create(
                         InvalidD2DResourceTextureIndexAttributeUse,
-                        fieldSymbol.Locations.FirstOrDefault(),
+                        fieldSymbol.Locations.First(),
                         fieldSymbol.Name,
                         fieldSymbol.ContainingType,
                         fieldSymbol.Type);

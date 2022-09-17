@@ -88,7 +88,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     item.Left.Left.Type,
                     out int resourceCount,
                     out int root32BitConstantCount,
-                    out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
+                    out ImmutableArray<DiagnosticInfo> dispatchDataDiagnostics);
 
                 token.ThrowIfCancellationRequested();
 
@@ -106,7 +106,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     item.Right,
                     item.Left.Left.Syntax,
                     item.Left.Left.Symbol,
-                    out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
+                    out ImmutableArray<DiagnosticInfo> hlslSourceDiagnostics);
 
                 token.ThrowIfCancellationRequested();
 
@@ -115,7 +115,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     item.Left.Left.Symbol,
                     !hlslSourceInfo.Delegates.IsEmpty,
                     item.Left.Right,
-                    out ImmutableArray<Diagnostic> threadIdsDiagnostics);
+                    out ImmutableArray<DiagnosticInfo> threadIdsDiagnostics);
 
                 token.ThrowIfCancellationRequested();
 
@@ -206,11 +206,11 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Dispatch.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.Hlsl), item.ThreadIds));
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, token, out DiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, token, out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
@@ -224,7 +224,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
             .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
@@ -232,11 +232,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) =>
             {
                 INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-                
-                return Diagnostic.Create(
-                    item.Left.Diagnostic!.Descriptor,
-                    typeSymbol.Locations.FirstOrDefault(),
-                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
             });
 
         // Output the diagnostics

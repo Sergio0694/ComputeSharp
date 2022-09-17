@@ -7,6 +7,7 @@ using ComputeSharp.Core.Helpers;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
@@ -23,12 +24,12 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             ITypeSymbol structDeclarationSymbol,
             out int constantBufferSizeInBytes)
         {

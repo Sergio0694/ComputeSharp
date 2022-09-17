@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
@@ -130,7 +131,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
 
         // Output the diagnostics
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostcs));
+        context.ReportDiagnostics(
+            shaderInfoWithErrors
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Get the GetInputCount() info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
@@ -217,7 +221,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
@@ -225,7 +229,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     item.Source,
                     token,
                     out D2D1CompileOptions options,
-                    out DiagnosticInfo? diagnostic);
+                    out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
@@ -239,7 +243,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
             .Select(static (item, _) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
@@ -247,11 +251,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) =>
             {
                 INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-                
-                return Diagnostic.Create(
-                    item.Left.Diagnostic!.Descriptor,
-                    typeSymbol.Locations.FirstOrDefault(),
-                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
             });
 
         // Output the diagnostics

@@ -48,10 +48,10 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the compile options for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -123,7 +123,7 @@ partial class ID2D1ShaderGenerator
             HlslShaderSourceInfo sourceInfo,
             CancellationToken token,
             out D2D1CompileOptions options,
-            out DiagnosticInfo? diagnostic)
+            out DeferredDiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
@@ -165,12 +165,12 @@ partial class ID2D1ShaderGenerator
             catch (Win32Exception e)
             {
                 options = default;
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
                 options = default;
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:

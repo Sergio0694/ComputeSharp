@@ -6,6 +6,7 @@ using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using ComputeSharp.SourceGenerators.Models;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
@@ -39,9 +40,9 @@ partial class IShaderGenerator
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<DiagnosticInfo> diagnostics)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            ImmutableArray<DiagnosticInfo>.Builder builder = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
             // Detect invalid properties
             DetectAndReportInvalidPropertyDeclarations(builder, structDeclarationSymbol);
@@ -94,7 +95,7 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets a sequence of captured fields and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
@@ -103,7 +104,7 @@ partial class IShaderGenerator
             ImmutableArray<(string MetadataName, string Name, string HlslType)>,
             ImmutableArray<(string Name, string HlslType)>)
             GetInstanceFields(
-                ImmutableArray<Diagnostic>.Builder diagnostics,
+                ImmutableArray<DiagnosticInfo>.Builder diagnostics,
                 INamedTypeSymbol structDeclarationSymbol,
                 ICollection<INamedTypeSymbol> types,
                 bool isComputeShader)
@@ -186,7 +187,7 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets a sequence of shader static fields and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
@@ -194,7 +195,7 @@ partial class IShaderGenerator
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -256,12 +257,12 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string Type, int? Count)> GetSharedBuffers(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
         {
@@ -312,7 +313,7 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
@@ -322,7 +323,7 @@ partial class IShaderGenerator
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods, bool IsSamplerUser) GetProcessedMethods(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
@@ -441,10 +442,10 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <param name="sourceSymbol">The symbol for the current object being processed.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         internal static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             ISymbol sourceSymbol,
             IEnumerable<INamedTypeSymbol> types)
         {
@@ -503,9 +504,9 @@ partial class IShaderGenerator
         /// <summary>
         /// Finds and reports all invalid declared properties in a shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {
