@@ -2,8 +2,8 @@
 using System.Collections.Immutable;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -24,13 +24,12 @@ partial class IShaderGenerator
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
-        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
             ImmutableArray<StatementSyntax> bodyStatements = supportsDynamicShaders
-                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth, useRawMultiLineStringLiteralExpression)
+                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth)
                 : GenerateEmptyMethodBody();
 
             // This code produces a method declaration as follows:
@@ -82,9 +81,8 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
-        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
+        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth)
         {
             ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
             StringBuilder textBuilder = new();
@@ -119,30 +117,13 @@ partial class IShaderGenerator
 
                     sizeHint += textBuilder.Length;
 
-                    // If raw multiline string literal expressions are used, create a token to represent it. Here some spaces are
-                    // also added to properly align the resulting text with one indentation below the declaring string constant.
-                    // The spaces are: 4 for each containing type, 4 for the containing method, and 4 for the one additional indentation.
-                    // An extra newline and indentation has to be added to the raw text when there is no trailing newline, as not doing
-                    // so would otherwise case the terminating """ token to fall on the same line, which is invalid syntax. This is only
-                    // needed to make the code valid, as the actual literal context of the string is not affected and remains the same.
-                    string indentation = new(' ', 4 * hierarchyDepth + 4 + 4);
-                    SyntaxToken textToken = useRawMultiLineStringLiteralExpression switch
-                    {
-                        true =>
-                            Token(
-                                TriviaList(),
-                                SyntaxKind.MultiLineRawStringLiteralToken,
-                                $"\"\"\"\n{indentation}{text.Replace("\n", $"\n{indentation}")}{(text.EndsWith("\n") ? "" : $"\n{indentation}")}\"\"\"",
-                                text,
-                                TriviaList()),
-                        false => Literal(text)
-                    };
-
                     statements.Add(
                         ExpressionStatement(
                             InvocationExpression(
                                 MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, textToken)))));
+                                .AddArgumentListArguments(Argument(LiteralExpression(
+                                    SyntaxKind.StringLiteralExpression,
+                                    SyntaxTokenHelper.CreateRawMultilineStringLiteral(text, hierarchyDepth))))));
 
                     textBuilder.Clear();
                 }

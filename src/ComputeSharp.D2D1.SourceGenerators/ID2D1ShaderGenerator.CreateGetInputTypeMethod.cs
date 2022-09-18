@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
@@ -19,14 +20,14 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the input info for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputCount">The number of shader inputs to declare.</param>
         /// <param name="inputSimpleIndices">The indicess of the simple shader inputs.</param>
         /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="combinedInputTypes">The combined and serialized input types for each available input.</param>
         public static void GetInfo(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,

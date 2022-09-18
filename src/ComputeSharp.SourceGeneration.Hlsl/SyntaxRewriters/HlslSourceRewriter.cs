@@ -6,6 +6,7 @@ using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -42,9 +43,9 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
 
     /// <summary>
-    /// The collection of produced <see cref="Diagnostic"/> instances.
+    /// The collection of produced <see cref="DiagnosticInfo"/> instances.
     /// </summary>
-    protected readonly ImmutableArray<Diagnostic>.Builder Diagnostics;
+    protected readonly ImmutableArray<DiagnosticInfo>.Builder Diagnostics;
 
     /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
@@ -52,12 +53,12 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     protected HlslSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArray<Diagnostic>.Builder diagnostics)
+        ImmutableArray<DiagnosticInfo>.Builder diagnostics)
     {
         SemanticModel = semanticModel;
         DiscoveredTypes = discoveredTypes;

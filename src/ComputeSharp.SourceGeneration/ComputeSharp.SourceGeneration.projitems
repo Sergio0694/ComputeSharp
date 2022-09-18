@@ -15,14 +15,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\HashCodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IEqualityComparerExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ImmutableArrayExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IncrementalValuesProviderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Comparer{T,TSelf}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DeferredDiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HierarchyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\Result{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TypeInfo.cs" />
   </ItemGroup>
 </Project>

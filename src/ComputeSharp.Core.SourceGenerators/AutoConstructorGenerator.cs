@@ -20,20 +20,30 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Get all declared struct symbols with the [AutoConstructor] attribute
-        IncrementalValuesProvider<INamedTypeSymbol> structSymbols =
+        // Get all declared struct symbols with the [AutoConstructor] attribute and
+        // extract the type hierarchy and fields info for each of the annotated types
+        IncrementalValuesProvider<(HierarchyInfo Left, ConstructorInfo Right)> constructorInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 typeof(AutoConstructorAttribute).FullName,
-                static (node, token) => node is StructDeclarationSyntax structDeclaration,
-                static (context, token) => (INamedTypeSymbol)context.TargetSymbol);
+                static (node, _) => node is StructDeclarationSyntax structDeclaration,
+                static (context, _) =>
+                {
+                    INamedTypeSymbol typeSymbol = (INamedTypeSymbol)context.TargetSymbol;
 
-        // Get the type hierarchy and fields info
-        IncrementalValuesProvider<(HierarchyInfo Left, ConstructorInfo Right)> constructorInfo =
-            structSymbols
-            .Select(static (item, token) => (Hierarchy: HierarchyInfo.From(item), Info: Ctor.GetData(item)))
-            .Where(static item => !item.Info.Parameters.IsEmpty)
-            .WithComparers(HierarchyInfo.Comparer.Default, ConstructorInfo.Comparer.Default);
+                    ConstructorInfo constructorInfo = Ctor.GetData(typeSymbol);
+
+                    // If the type has no parameters, just do nothing
+                    if (constructorInfo.Parameters.IsEmpty)
+                    {
+                        return default;
+                    }
+
+                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(typeSymbol);
+
+                    return (Hierarchy: hierarchyInfo, constructorInfo);
+                })
+            .Where(static item => item.Hierarchy is not null);
 
         // Generate the constructors
         context.RegisterSourceOutput(constructorInfo, static (context, item) =>

@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -33,32 +32,25 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets the thread ids values for a given shader type, if available.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The thread ids for the precompiled shader, if available.</returns>
         public static ThreadIdsInfo GetInfo(
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             bool isDynamicShader,
-            bool supportsDynamicShaders,
-            out ImmutableArray<Diagnostic> diagnostics)
+            bool supportsDynamicShaders)
         {
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
-
-            AttributeData? attribute = structDeclarationSymbol
-                .GetAttributes()
-                .FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(EmbeddedBytecodeAttribute).FullName);
-
-            if (attribute is null)
+            // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
+            if (!structDeclarationSymbol.TryGetAttributeWithFullMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
             {
                 // Emit the diagnostics if dynamic shaders are not supported
                 if (!supportsDynamicShaders)
                 {
-                    builder.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
+                    diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
                 }
-
-                diagnostics = builder.ToImmutable();
 
                 return new(true, 0, 0, 0);
             }
@@ -68,7 +60,7 @@ partial class IShaderGenerator
             int threadsZ;
 
             // Check for a dispatch axis argument first
-            if (attribute.ConstructorArguments.Length == 1)
+            if (attribute!.ConstructorArguments.Length == 1)
             {
                 int dispatchAxis = (int)attribute.ConstructorArguments[0].Value!;
 
@@ -87,9 +79,7 @@ partial class IShaderGenerator
                 // Validate the dispatch axis argument
                 if ((threadsX, threadsY, threadsZ) is (0, 0, 0))
                 {
-                    builder.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
-
-                    diagnostics = builder.ToImmutable();
+                    diagnostics.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
 
                     return new(true, 0, 0, 0);
                 }
@@ -104,9 +94,7 @@ partial class IShaderGenerator
                 explicitThreadsZ is < 1 or > 64)
             {
                 // Failed to validate the thread number arguments
-                builder.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
-
-                diagnostics = builder.ToImmutable();
+                diagnostics.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
 
                 return new(true, 0, 0, 0);
             }
@@ -120,14 +108,17 @@ partial class IShaderGenerator
             // If the current shader is dynamic, emit a diagnostic error
             if (isDynamicShader)
             {
-                builder.Add(EmbeddedBytecodeWithDynamicShader, structDeclarationSymbol, structDeclarationSymbol);
-
-                diagnostics = builder.ToImmutable();
+                diagnostics.Add(EmbeddedBytecodeWithDynamicShader, structDeclarationSymbol, structDeclarationSymbol);
 
                 return new(true, 0, 0, 0);
             }
 
-            diagnostics = builder.ToImmutable();
+            // Ensure the bytecode generation is disabled if any errors are present. This step is done last to ensure that
+            // all available diagnostics are still emitted correctly before reaching this point, instead of being disabled.
+            if (diagnostics.Count > 0)
+            {
+                return new(true, 0, 0, 0);
+            }
 
             return new(false, threadsX, threadsY, threadsZ);
         }
@@ -149,7 +140,7 @@ partial class IShaderGenerator
             ThreadIdsInfo threadIds,
             string hlslSource,
             CancellationToken token,
-            out DiagnosticInfo? diagnostic)
+            out DeferredDiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
@@ -189,11 +180,11 @@ partial class IShaderGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (DxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
+                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithDxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
             End:

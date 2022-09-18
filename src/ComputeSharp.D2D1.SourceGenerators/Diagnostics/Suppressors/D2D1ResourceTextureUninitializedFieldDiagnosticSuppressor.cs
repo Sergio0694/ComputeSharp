@@ -48,8 +48,7 @@ public sealed class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressor : 
                 ISymbol? declaredSymbol = semanticModel.GetDeclaredSymbol(syntaxNode, context.CancellationToken);
 
                 // Check if the field is in a struct and it's of a D2D1 resource texture type
-                if (declaredSymbol is IFieldSymbol fieldSymbol &&
-                    fieldSymbol.ContainingType is { TypeKind: TypeKind.Struct } structSymbol &&
+                if (declaredSymbol is IFieldSymbol { ContainingType: { TypeKind: TypeKind.Struct } structSymbol } fieldSymbol &&
                     HlslKnownTypes.IsResourceTextureType(fieldSymbol.Type.GetFullMetadataName()))
                 {
                     // Get the ID2D1PixelShader interface symbol to the check the containing type of the field
@@ -61,7 +60,7 @@ public sealed class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressor : 
                     }
 
                     // Also check if the containing type is in fact a D2D1 pixel shader type
-                    if (ID2D1ShaderGenerator.IsD2D1PixelShaderType(structSymbol, pixelShaderInterfaceSymbol))
+                    if (ID2D1ShaderGenerator.IsD2D1PixelShaderType(structSymbol, semanticModel.Compilation))
                     {
                         context.ReportSuppression(Suppression.Create(UninitializedD2D1ResourceTextureField, diagnostic));
                     }

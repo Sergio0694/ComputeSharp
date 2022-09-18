@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -23,18 +24,18 @@ partial class IShaderGenerator
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
-        /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
+        /// <param name="shaderType">The type of shader currently being processed.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
         /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             ITypeSymbol structDeclarationSymbol,
-            Type shaderInterfaceType,
+            ShaderType shaderType,
             out int resourceCount,
-            out int root32BitConstantCount,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out int root32BitConstantCount)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -87,11 +88,9 @@ partial class IShaderGenerator
                 }
             }
 
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
-
             // Setup the resource and byte offsets for tracking. Pixel shaders have only two
             // implicitly captured int values, as they're always dispatched over a 2D texture.
-            bool isComputeShader = shaderInterfaceType == typeof(IComputeShader);
+            bool isComputeShader = shaderType == ShaderType.ComputeShader;
             int initialRawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
             StrongBox<int> resourceOffsetAsBox = new();
             StrongBox<int> rawDataOffsetAsBox = new(initialRawDataOffset);
@@ -123,10 +122,8 @@ partial class IShaderGenerator
 
             if (rootSignatureDwordSize > 64)
             {
-                builder.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
-
-            diagnostics = builder.ToImmutable();
 
             return fieldInfos;
         }

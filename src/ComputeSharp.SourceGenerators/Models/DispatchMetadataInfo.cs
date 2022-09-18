@@ -17,10 +17,16 @@ internal sealed record DispatchMetadataInfo(
     bool IsSamplerUsed,
     ImmutableArray<ResourceDescriptor> ResourceDescriptors)
 {
+    /// <inheritdoc/>
+    public bool Equals(DispatchMetadataInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchMetadataInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<DispatchMetadataInfo, Comparer>
+    private sealed class Comparer : Comparer<DispatchMetadataInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, DispatchMetadataInfo obj)

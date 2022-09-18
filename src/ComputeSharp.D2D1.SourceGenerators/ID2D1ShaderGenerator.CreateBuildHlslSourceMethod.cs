@@ -6,6 +6,7 @@ using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -28,7 +29,7 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
@@ -37,7 +38,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -94,13 +95,13 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets a sequence of captured fields and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <param name="valueFields">The sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</param>
         /// <param name="resourceTextureFields">The sequence of captured resource textures in <paramref name="structDeclarationSymbol"/>.</param>
         private static void GetInstanceFields(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types,
             out ImmutableArray<(string Name, string HlslType)> valueFields,
@@ -182,7 +183,7 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets a sequence of shader static fields and their mapped names.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
@@ -191,7 +192,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -251,7 +252,7 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
@@ -261,7 +262,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods) GetProcessedMethods(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
@@ -370,12 +371,12 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets the sequence of processed discovered custom types.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             IEnumerable<INamedTypeSymbol> types)
         {
@@ -434,9 +435,9 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Finds and reports all invalid declared properties in a shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<Diagnostic>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {
@@ -457,12 +458,12 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Reports diagnostics for invalid uses of <c>[D2DRequiresScenePosition]</c> in a shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="requiresScenePosition">Whether the shader type is declaring the need for scene position.</param>
         /// <param name="usesPositionDependentMethods">Whether the shader is using APIs that rely on scene position.</param>
         private static void ReportInvalidD2DRequiresScenePositionUse(
-            ImmutableArray<Diagnostic>.Builder diagnostics,
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             bool requiresScenePosition,
             bool usesPositionDependentMethods)

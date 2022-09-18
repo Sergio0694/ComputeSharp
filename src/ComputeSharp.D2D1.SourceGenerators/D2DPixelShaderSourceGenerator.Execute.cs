@@ -26,10 +26,10 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Validates that the return type of the annotated method is valid and returns the type name.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string? GetInvalidReturnType(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static string? GetInvalidReturnType(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             if (!(methodSymbol.ReturnType is INamedTypeSymbol
                 {
@@ -55,10 +55,10 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Extracts the HLSL source from a method with the <see cref="D2DPixelShaderSourceAttribute"/> annotation.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string GetHlslSource(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static string GetHlslSource(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             _ = methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
 
@@ -77,10 +77,10 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Extracts the shader profile for a target method, if present.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
-        public static D2D1ShaderProfile GetShaderProfile(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1ShaderProfile GetShaderProfile(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
@@ -104,10 +104,10 @@ partial class D2DPixelShaderSourceGenerator
         /// <summary>
         /// Extracts the compile options for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions GetCompileOptions(ImmutableArray<Diagnostic>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1CompileOptions GetCompileOptions(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -135,7 +135,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderMethodSourceInfo sourceInfo, CancellationToken token, out DiagnosticInfo? diagnostic)
+        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderMethodSourceInfo sourceInfo, CancellationToken token, out DeferredDiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
@@ -169,7 +169,7 @@ partial class D2DPixelShaderSourceGenerator
             }
             catch (Win32Exception e)
             {
-                diagnostic = new DiagnosticInfo(
+                diagnostic = DeferredDiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithWin32Exception,
                     sourceInfo.MethodName,
                     e.HResult,
@@ -177,7 +177,7 @@ partial class D2DPixelShaderSourceGenerator
             }
             catch (FxcCompilationException e)
             {
-                diagnostic = new DiagnosticInfo(
+                diagnostic = DeferredDiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
                     sourceInfo.MethodName,
                     ID2D1ShaderGenerator.LoadBytecode.FixupExceptionMessage(e.Message));

@@ -6,6 +6,7 @@ using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -63,7 +64,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
     public ShaderSourceRewriter(
         INamedTypeSymbol shaderType,
@@ -71,7 +72,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArray<Diagnostic>.Builder diagnostics,
+        ImmutableArray<DiagnosticInfo>.Builder diagnostics,
         bool isEntryPoint)
         : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
@@ -89,13 +90,13 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     public ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArray<Diagnostic>.Builder diagnostics)
+        ImmutableArray<DiagnosticInfo>.Builder diagnostics)
         : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
         this.staticMethods = staticMethods;

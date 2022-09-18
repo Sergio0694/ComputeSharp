@@ -605,13 +605,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with invalid thread ids values.
     /// <para>
-    /// Format: <c>"The shader of type {0} is annotated with invalid thread ids values ({1}, {2}, {3})"</c>.
+    /// Format: <c>"The shader of type {0} is annotated with invalid thread ids values"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeThreadIds = new DiagnosticDescriptor(
         id: "CMPS0044",
         title: "Invalid thread ids for shader with embedded bytecode",
-        messageFormat: "The shader of type {0} is annotated with invalid thread ids values ({1}, {2}, {3})",
+        messageFormat: "The shader of type {0} is annotated with invalid thread ids values",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

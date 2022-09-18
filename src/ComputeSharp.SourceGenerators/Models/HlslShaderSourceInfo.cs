@@ -39,10 +39,16 @@ internal sealed record HlslShaderSourceInfo(
     ImmutableArray<string> MethodSignatures,
     ImmutableArray<string> Delegates)
 {
+    /// <inheritdoc/>
+    public bool Equals(HlslShaderSourceInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<HlslShaderSourceInfo, Comparer>
+    private sealed class Comparer : Comparer<HlslShaderSourceInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, HlslShaderSourceInfo obj)

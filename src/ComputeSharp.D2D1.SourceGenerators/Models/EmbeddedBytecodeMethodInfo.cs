@@ -23,10 +23,16 @@ internal sealed record EmbeddedBytecodeMethodInfo(
     string HlslSource,
     ImmutableArray<byte> Bytecode)
 {
+    /// <inheritdoc/>
+    public bool Equals(EmbeddedBytecodeMethodInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeMethodInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<EmbeddedBytecodeMethodInfo, Comparer>
+    private sealed class Comparer : Comparer<EmbeddedBytecodeMethodInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, EmbeddedBytecodeMethodInfo obj)

@@ -111,10 +111,16 @@ internal sealed partial record HierarchyInfo(string FilenameHint, string FullyQu
             .NormalizeWhitespace(eol: "\n");
     }
 
+    /// <inheritdoc/>
+    public bool Equals(HierarchyInfo? obj) => Comparer.Default.Equals(this, obj);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HierarchyInfo"/>.
     /// </summary>
-    public sealed class Comparer : Comparer<HierarchyInfo, Comparer>
+    private sealed class Comparer : Comparer<HierarchyInfo, Comparer>
     {
         /// <inheritdoc/>
         protected override void AddToHashCode(ref HashCode hashCode, HierarchyInfo obj)

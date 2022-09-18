@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
@@ -20,17 +21,16 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the input descriptions for the current shader.
         /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputDescriptions">The produced input descriptions for the shader.</param>
-        /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
         public static void GetInfo(
+            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
-            out ImmutableArray<InputDescription> inputDescriptions,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out ImmutableArray<InputDescription> inputDescriptions)
         {
             int inputCount = 0;
             ImmutableArray<InputDescription>.Builder inputDescriptionsBuilder = ImmutableArray.CreateBuilder<InputDescription>();
-            ImmutableArray<Diagnostic>.Builder diagnosticsBuilder = ImmutableArray.CreateBuilder<Diagnostic>();       
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
@@ -60,15 +60,15 @@ partial class ID2D1ShaderGenerator
             // Validate the input count (ignore if invalid, this will be validated by GetInputType() generator)
             if (inputCount is not (>= 0 and <= 8))
             {
-                goto End;
+                return;
             }
 
             // All simple indices must be in range
             if (inputDescriptionsBuilder.Any(description => description.Index >= inputCount))
             {
-                diagnosticsBuilder.Add(OutOfRangeInputDescriptionIndex, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(OutOfRangeInputDescriptionIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             HashSet<uint> inputDescriptionIndices = new(inputDescriptionsBuilder.Select(description => description.Index));
@@ -76,15 +76,12 @@ partial class ID2D1ShaderGenerator
             // All input description indices must be unique
             if (inputDescriptionIndices.Count != inputDescriptionsBuilder.Count)
             {
-                diagnosticsBuilder.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
 
-                goto End;
+                return;
             }
 
             inputDescriptions = inputDescriptionsBuilder.ToImmutable();
-
-            End:
-            diagnostics = diagnosticsBuilder.ToImmutable();
         }
     }
 }

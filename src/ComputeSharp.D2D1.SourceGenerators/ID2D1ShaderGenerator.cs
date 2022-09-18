@@ -25,129 +25,122 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Check whether [SkipLocalsInit] can be used
         IncrementalValueProvider<bool> canUseSkipLocalsInit =
             context.CompilationProvider
-            .Select(static (compilation, token) =>
+            .Select(static (compilation, _) =>
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
                 compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
 
-        // Get all declared struct types and their type symbols
-        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
+        // Discover all shader types and extract all the necessary info from each of them
+        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfoWithErrors =
             context.SyntaxProvider
             .CreateSyntaxProvider(
-                static (node, token) => node is StructDeclarationSyntax structDeclaration,
-                static (context, token) => (
-                    (StructDeclarationSyntax)context.Node,
-                    Symbol: (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
-            .Where(static pair => pair.Symbol is { Interfaces.IsEmpty: false })!;
+                static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
+                static (context, token) =>
+                {
+                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
 
-        // Get the symbol for the ID2D1PixelShader interface
-        IncrementalValueProvider<INamedTypeSymbol> pixelShaderInterface =
-            context.CompilationProvider
-            .Select(static (compilation, token) => compilation.GetTypeByMetadataName(typeof(ID2D1PixelShader).FullName)!);
+                    // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
+                    if (context.SemanticModel.GetDeclaredSymbol(typeDeclaration, token) is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    {
+                        return default;
+                    }
 
-        // Filter struct declarations that implement the shader interface, and also gather the hierarchy info
-        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol, HierarchyInfo Hierarchy)> shaderDeclarations =
-            structDeclarations
-            .Combine(pixelShaderInterface)
-            .Where(static item => IsD2D1PixelShaderType(item.Left.Symbol, item.Right))
-            .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol)));
+                    // Check that the shader implements the ID2D1PixelShader interface
+                    if (!IsD2D1PixelShaderType(typeSymbol, context.SemanticModel.Compilation))
+                    {
+                        return default;
+                    }
 
-        // Get the dispatch data, input types, resource texture descriptions, HLSL source and embedded bytecode info. This info
-        // is computed on the same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, ResourceTextureDescriptionsInfo ResourceTextureDescriptions, HlslShaderSourceInfo Source, ImmutableArray<Diagnostic> Diagnostics)> shaderInfoWithErrors =
-            shaderDeclarations
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
-                // LoadDispatchData() info
-                ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
-                    diagnostics,
-                    item.Left.Symbol,
-                    out int constantBufferSizeInBytes);
+                    // LoadDispatchData() info
+                    ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
+                        diagnostics,
+                        typeSymbol,
+                        out int constantBufferSizeInBytes);
 
-                token.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
 
-                DispatchDataInfo dispatchDataInfo = new(fieldInfos, constantBufferSizeInBytes);
+                    // Get the input info for GetInputInfo()
+                    GetInputType.GetInfo(
+                        diagnostics,
+                        typeSymbol,
+                        out int inputCount,
+                        out ImmutableArray<int> inputSimpleIndices,
+                        out ImmutableArray<int> inputComplexIndices,
+                        out ImmutableArray<uint> inputTypes);
 
-                // Get the input info for GetInputInfo()
-                GetInputType.GetInfo(
-                    diagnostics,
-                    item.Left.Symbol,
-                    out int inputCount,
-                    out ImmutableArray<int> inputSimpleIndices,
-                    out ImmutableArray<int> inputComplexIndices,
-                    out ImmutableArray<uint> inputTypes);
+                    // Get the resource texture info for LoadResourceTextureDescriptions()
+                    LoadResourceTextureDescriptions.GetInfo(
+                        diagnostics,
+                        typeSymbol,
+                        inputCount,
+                        out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
 
-                InputTypesInfo inputTypesInfo = new(inputTypes);
+                    // Get HLSL source for BuildHlslSource()
+                    string hlslSource = BuildHlslSource.GetHlslSource(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeDeclaration,
+                        typeSymbol,
+                        inputCount,
+                        inputSimpleIndices,
+                        inputComplexIndices);
 
-                // Get the resource texture info for LoadResourceTextureDescriptions()
-                LoadResourceTextureDescriptions.GetInfo(
-                    diagnostics,
-                    item.Left.Symbol,
-                    inputCount,
-                    out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
+                    token.ThrowIfCancellationRequested();
 
-                ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo = new(resourceTextureDescriptions);
+                    // Get the shader profile and linking info for LoadBytecode()
+                    D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(typeSymbol);
+                    D2D1CompileOptions? compileOptions = LoadBytecode.GetCompileOptions(diagnostics, typeSymbol);
+                    bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(typeSymbol, inputCount);
 
-                // Get HLSL source for BuildHlslSource()
-                string hlslSource = BuildHlslSource.GetHlslSource(
-                    diagnostics,
-                    item.Right,
-                    item.Left.Syntax,
-                    item.Left.Symbol,
-                    inputCount,
-                    inputSimpleIndices,
-                    inputComplexIndices);
+                    token.ThrowIfCancellationRequested();
 
-                token.ThrowIfCancellationRequested();
+                    // Get the info for GetOutputBuffer()
+                    GetOutputBuffer.GetInfo(typeSymbol, out D2D1BufferPrecision bufferPrecision, out D2D1ChannelDepth channelDepth);
 
-                // Get the shader profile and linking info for LoadBytecode()
-                D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(item.Left.Symbol);
-                D2D1CompileOptions? compileOptions = LoadBytecode.GetCompileOptions(diagnostics, item.Left.Symbol);
-                bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(item.Left.Symbol, inputCount);
+                    token.ThrowIfCancellationRequested();
 
-                HlslShaderSourceInfo sourceInfo = new(
-                    hlslSource,
-                    shaderProfile,
-                    compileOptions,
-                    isLinkingSupported,
-                    HasErrors: diagnostics.Count > 0);
+                    // Get the info for LoadInputDescriptions()
+                    LoadInputDescriptions.GetInfo(
+                        diagnostics,
+                        typeSymbol,
+                        out ImmutableArray<InputDescription> inputDescriptions);
 
-                token.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
 
-                return (
-                    item.Left.Hierarchy,
-                    dispatchDataInfo,
-                    inputTypesInfo,
-                    resourceTextureDescriptionsInfo,
-                    sourceInfo,
-                    diagnostics.ToImmutableArray());
-            });
+                    // Get the info for GetPixelOptions()
+                    GetPixelOptions.GetInfo(typeSymbol, out D2D1PixelOptions pixelOptions);
 
-        // Output the diagnostics
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Diagnostics));
+                    token.ThrowIfCancellationRequested();
 
-        // Get all errors for invalid [D2D1CompileOptions] attributes added to the assembly level
-        IncrementalValuesProvider<Diagnostic> d2DCompileOptionsAtAssemblyLevelErrors =
-            context.CompilationProvider
-            .SelectMany(static (compilation, token) => ImmutableArray.Create(LoadBytecode.GetAssemblyLevelCompileOptionsDiagnostics(compilation.Assembly, token)))
+                    return new D2D1ShaderInfo(
+                        Hierarchy: HierarchyInfo.From(typeSymbol),
+                        DispatchData: new DispatchDataInfo(fieldInfos, constantBufferSizeInBytes),
+                        InputTypes: new InputTypesInfo(inputTypes),
+                        ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
+                        HlslShaderSource: new HlslShaderSourceInfo(
+                            hlslSource,
+                            shaderProfile,
+                            compileOptions,
+                            isLinkingSupported,
+                            HasErrors: diagnostics.Count > 0),
+                        OutputBuffer: new OutputBufferInfo(bufferPrecision, channelDepth),
+                        InputDescriptions: new InputDescriptionsInfo(inputDescriptions),
+                        PixelOptions: pixelOptions,
+                        Diagnostcs: diagnostics.ToImmutable());
+                })
             .Where(static item => item is not null)!;
 
-        // Output the diagnostics
-        context.ReportDiagnostics(d2DCompileOptionsAtAssemblyLevelErrors.Select(static (item, token) => item));
-
-        // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch, InputTypesInfo InputTypes, ResourceTextureDescriptionsInfo ResourceTextureDescriptions, HlslShaderSourceInfo Source)> shaderInfo =
+        // Output the diagnostics, if any
+        context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch, item.InputTypes, item.ResourceTextureDescriptions, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default, InputTypesInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            .Select(static (item, _) => item.Diagnostcs)
+            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
-        // Filter items to enable caching for the input count methods
+        // Get the GetInputCount() info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.InputTypes.InputTypes.Length))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<int>.Default);
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.InputTypes.InputTypes.Length));
 
         // Generate the GetInputCount() methods
         context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
@@ -158,11 +151,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetInputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get a filtered sequence to enable caching
+        // Get the GetInputType() info (hierarchy and input types)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputTypesInfo InputTypes)> inputTypesInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.InputTypes))
-            .WithComparers(HierarchyInfo.Comparer.Default, InputTypesInfo.Comparer.Default);
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.InputTypes));
 
         // Generate the GetInputType() methods
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
@@ -173,38 +165,27 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetInputType)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get a filtered sequence to enable caching
+        // Get the LoadResourceTextureDescriptions() info (hierarchy and resource texture descriptions)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, ResourceTextureDescriptionsInfo ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.ResourceTextureDescriptions))
-            .WithComparers(HierarchyInfo.Comparer.Default, ResourceTextureDescriptionsInfo.Comparer.Default);
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.ResourceTextureDescriptions));
 
         // Generate the LoadResourceTextureDescriptions() methods
-        context.RegisterSourceOutput(resourceTextureDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.Left.ResourceTextureDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get a filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Dispatch))
-            .WithComparers(HierarchyInfo.Comparer.Default, DispatchDataInfo.Comparer.Default);
-
-        // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
-        {
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Left.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: item.Right);
-
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
+        // Get the info for InitializeFromDispatchData() (hierarchy and dispatch data)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> initializeFromDispatchDataInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
 
         // Generate the InitializeFromDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
+        context.RegisterSourceOutput(initializeFromDispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Dispatch);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: false);
@@ -212,34 +193,41 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(InitializeFromDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Source.HlslSource))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default);
+        // Get the info for LoadDispatchData() (same as InitializeFromDispatchData(), but with [SkipLocalsInit] support flag as well)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo Dispatch) Info, bool CanUseSkipLocalsInit)> dispatchDataInfo =
+            initializeFromDispatchDataInfo
+            .Combine(canUseSkipLocalsInit);
 
-        // Check whether raw multiline string literals can be used (C# preview)
-        IncrementalValueProvider<bool> canUseRawMultiLineStringLiterals =
-            context.ParseOptionsProvider
-            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.Preview });
-
-        // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseRawMultiLineStringLiterals), static (context, item) =>
+        // Generate the LoadDispatchData() methods
+        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.HlslSource, item.Left.Hierarchy.Hierarchy.Length, item.Right);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Dispatch);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get a filtered sequence to enable caching
+        // Get the BuildHlslSource() info (hierarchy and HLSL source)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource));
+
+        // Generate the BuildHlslSource() methods
+        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+        });
+
+        // Get a filtered sequence to enable caching for the HLSL source info, before the shader compilation step
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo Source)> shaderBytecodeInfo =
-            shaderInfo
-            .Select(static (item, token) => (item.Hierarchy, item.Source))
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<HlslShaderSourceInfo>.Default);
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
@@ -247,7 +235,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     item.Source,
                     token,
                     out D2D1CompileOptions options,
-                    out DiagnosticInfo? diagnostic);
+                    out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
@@ -261,29 +249,25 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             });
 
         // Gather the diagnostics
-        IncrementalValuesProvider<Diagnostic> embeddedBytecodeDiagnostics =
+        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
+            .Select(static (item, _) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
             .Where(static item => item.Diagnostic is not null)
             .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
+            .Select(static (item, _) =>
             {
                 INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-                
-                return Diagnostic.Create(
-                    item.Left.Diagnostic!.Descriptor,
-                    typeSymbol.Locations.FirstOrDefault(),
-                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
             });
 
         // Output the diagnostics
         context.ReportDiagnostics(embeddedBytecodeDiagnostics);
 
-        // Get the filtered sequence to enable caching
+        // Get the LoadBytecode() info (hierarchy and compiled bytecode)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
-            .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
+            .Select(static (item, _) => (item.Hierarchy, item.BytecodeInfo));
 
         // Generate the LoadBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
@@ -295,103 +279,47 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}.g.cs", text);
         });
 
-        // Get the output buffer data, which can be computed separately from all other generation steps.
-        // Caching at a fine grained level can be enabled immediately, as both models are comparable.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, OutputBufferInfo Info)> outputBufferInfo =
-            shaderDeclarations
-            .Select(static (item, token) =>
-            {
-                // GetOutputBuffer() info
-                GetOutputBuffer.GetInfo(item.Symbol, out D2D1BufferPrecision bufferPrecision, out D2D1ChannelDepth channelDepth);
-
-                token.ThrowIfCancellationRequested();
-
-                OutputBufferInfo outputBufferInfo = new(bufferPrecision, channelDepth);
-
-                return (item.Hierarchy, outputBufferInfo);
-            })
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<OutputBufferInfo>.Default);
+        // Get the GetOutputBuffer() info (hierarchy and output buffers)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, OutputBufferInfo OutputBuffer)> outputBufferInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.OutputBuffer));
 
         // Generate the GetOutputBuffer() methods
         context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getOutputBufferMethod = GetOutputBuffer.GetSyntax(item.Info);
+            MethodDeclarationSyntax getOutputBufferMethod = GetOutputBuffer.GetSyntax(item.OutputBuffer);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getOutputBufferMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetOutputBuffer)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the input description data, which can also be computed separately from all other generation steps.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<InputDescriptionsInfo> Info)> inputDescriptionsInfoWithErrors =
-            shaderDeclarations
-            .Select(static (item, token) =>
-            {
-                // LoadInputDescriptions() info
-                LoadInputDescriptions.GetInfo(
-                    item.Symbol,
-                    out ImmutableArray<InputDescription> inputDescriptions,
-                    out ImmutableArray<Diagnostic> diagnostics);
-
-                token.ThrowIfCancellationRequested();
-
-                InputDescriptionsInfo inputDescriptionsInfo = new(inputDescriptions);
-
-                return (item.Hierarchy, new Result<InputDescriptionsInfo>(inputDescriptionsInfo, diagnostics));
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(inputDescriptionsInfoWithErrors.Select(static (item, token) => item.Info.Errors));
-
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputDescriptionsInfo Info)> inputDescriptionsInfo =
-            inputDescriptionsInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Info.Value))
-            .WithComparers(HierarchyInfo.Comparer.Default, InputDescriptionsInfo.Comparer.Default);
+        // Get the LoadInputDescriptions() info (hierarchy and input descriptions)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions) Info, bool CanUseSkipLocalsInit) > inputDescriptionsInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions))
+            .Combine(canUseSkipLocalsInit);
 
         // Generate the LoadInputDescriptions() methods
-        context.RegisterSourceOutput(inputDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Left.Info);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadInputDescriptionsMethod, canUseSkipLocalsInit: item.Right);
+            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadInputDescriptionsMethod, item.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the pixel options, again independently from other generation steps.
-        // This can also be immediately cached at a fine grained level.
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOptions Options)> pixelOptionsInfo =
-            shaderDeclarations
-            .Select(static (item, token) =>
-            {
-                // GetPixelOptions() info
-                GetPixelOptions.GetInfo(item.Symbol, out D2D1PixelOptions pixelOptions);
-
-                token.ThrowIfCancellationRequested();
-
-                return (item.Hierarchy, pixelOptions);
-            })
-            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<D2D1PixelOptions>.Default);
+        // Get the GetPixelOptions() info (hierarchy and pixel options)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOptions PixelOptions)> pixelOptionsInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.PixelOptions));
 
         // Generate the GetPixelOptions() methods
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getPixelOptionsMethod = GetPixelOptions.GetSyntax(item.Options);
+            MethodDeclarationSyntax getPixelOptionsMethod = GetPixelOptions.GetSyntax(item.PixelOptions);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getPixelOptionsMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetPixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
-
-        // Get all diagnostics for invalid [D2DResourceTextureIndex] uses
-        IncrementalValuesProvider<Diagnostic> invalidD2DResourceTextureIndexUseErrors =
-            context.SyntaxProvider
-            .CreateSyntaxProvider(
-                static (node, _) => node is FieldDeclarationSyntax { AttributeLists.Count: > 0 },
-                static (context, _) => ((FieldDeclarationSyntax)context.Node).Declaration.Variables.Select(v => (IFieldSymbol)context.SemanticModel.GetDeclaredSymbol(v)!))
-            .SelectMany(static (item, _) => item)
-            .Select(static (item, token) => LoadResourceTextureDescriptions.GetDiagnosticForFieldWithInvalidD2DResourceTextureIndexAttribute(item))
-            .Where(static diagnostic => diagnostic is not null)!;
-
-        // Output the diagnostics
-        context.ReportDiagnostics(invalidD2DResourceTextureIndexUseErrors);
     }
 }
