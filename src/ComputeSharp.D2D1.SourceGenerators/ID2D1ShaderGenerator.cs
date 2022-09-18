@@ -171,35 +171,40 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) => (item.Hierarchy, item.ResourceTextureDescriptions));
 
         // Generate the LoadResourceTextureDescriptions() methods
-        context.RegisterSourceOutput(resourceTextureDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.Left.ResourceTextureDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the info for both LoadDispatchData() and InitializeFromDispatchData() (hierarchy and dispatch data)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
+        // Get the info for InitializeFromDispatchData() (hierarchy and dispatch data)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> initializeFromDispatchDataInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
 
-        // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
-        {
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Left.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: item.Right);
-
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
         // Generate the InitializeFromDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
+        context.RegisterSourceOutput(initializeFromDispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Dispatch);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(InitializeFromDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+        });
+
+        // Get the info for LoadDispatchData() (same as InitializeFromDispatchData(), but with [SkipLocalsInit] support flag as well)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo Dispatch) Info, bool CanUseSkipLocalsInit)> dispatchDataInfo =
+            initializeFromDispatchDataInfo
+            .Combine(canUseSkipLocalsInit);
+
+        // Generate the LoadDispatchData() methods
+        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
+        {
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Dispatch);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
+
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the BuildHlslSource() info (hierarchy and HLSL source)
@@ -289,17 +294,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the LoadInputDescriptions() info (hierarchy and input descriptions)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions)> inputDescriptionsInfo =
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions) Info, bool CanUseSkipLocalsInit) > inputDescriptionsInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions));
+            .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions))
+            .Combine(canUseSkipLocalsInit);
 
         // Generate the LoadInputDescriptions() methods
-        context.RegisterSourceOutput(inputDescriptionsInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Left.InputDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadInputDescriptionsMethod, canUseSkipLocalsInit: item.Right);
+            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadInputDescriptionsMethod, item.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the GetPixelOptions() info (hierarchy and pixel options)
