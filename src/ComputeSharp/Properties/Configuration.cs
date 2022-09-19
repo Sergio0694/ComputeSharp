@@ -19,6 +19,11 @@ internal static class Configuration
     private const string EnableDeviceRemovedExtendedDataInfo = "COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA";
 
     /// <summary>
+    /// The configuration property name for <see cref="IsGpuTimeoutDisabled"/>.
+    /// </summary>
+    private const string DisableGpuTimeout = "COMPUTESHARP_DISABLE_GPU_TIMEOUT";
+
+    /// <summary>
     /// Indicates whether or not the debug output is enabled.
     /// </summary>
     public static readonly bool IsDebugOutputEnabled = GetConfigurationValue(EnableDebugOutput);
@@ -29,6 +34,11 @@ internal static class Configuration
     public static readonly bool IsDeviceRemovedExtendedDataEnabled = GetConfigurationValue(EnableDeviceRemovedExtendedDataInfo);
 
     /// <summary>
+    /// Indicates whether or not the GPU timeout is disabled.
+    /// </summary>
+    public static readonly bool IsGpuTimeoutDisabled = GetConfigurationValue(DisableGpuTimeout);
+
+    /// <summary>
     /// Gets a configuration value for a specified property.
     /// </summary>
     /// <param name="propertyName">The property name to retrieve the value for.</param>
@@ -36,7 +46,7 @@ internal static class Configuration
     private static bool GetConfigurationValue(string propertyName)
     {
 #if DEBUG
-        if (Debugger.IsAttached)
+        if (Debugger.IsAttached && propertyName != DisableGpuTimeout)
         {
             return true;
         }
