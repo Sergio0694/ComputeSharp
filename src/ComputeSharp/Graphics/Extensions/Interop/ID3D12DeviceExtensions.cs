@@ -365,7 +365,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
         if (Configuration.IsGpuTimeoutDisabled)
         {
-            d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT;
+            d3D12CommandQueueDesc.Flags |= D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT;
         }
 
         d3D12Device.CreateCommandQueue(
