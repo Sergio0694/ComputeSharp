@@ -1,8 +1,9 @@
 ﻿using System;
 #if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
-#endif
+#else
 using CommunityToolkit.Diagnostics;
+#endif
 using ComputeSharp.Core.Extensions;
 #if !NET6_0_OR_GREATER
 using ComputeSharp.Graphics.Resources.Enums;
@@ -361,6 +362,11 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12CommandQueueDesc.Priority = (int)D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
         d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
         d3D12CommandQueueDesc.NodeMask = 0;
+
+        if (Configuration.IsGpuTimeoutDisabled)
+        {
+            d3D12CommandQueueDesc.Flags |= D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT;
+        }
 
         d3D12Device.CreateCommandQueue(
             &d3D12CommandQueueDesc,
