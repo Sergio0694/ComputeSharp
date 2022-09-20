@@ -27,8 +27,8 @@ public partial class D2D1ShaderCompilerTests
             """;
 
         ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
-            source,
-            "PSMain",
+            source.AsSpan(),
+            "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default);
 
@@ -79,8 +79,8 @@ public partial class D2D1ShaderCompilerTests
             """;
 
         ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
-            source,
-            "PSMain",
+            source.AsSpan(),
+            "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
 
@@ -106,8 +106,8 @@ public partial class D2D1ShaderCompilerTests
             """;
 
         ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
-            source,
-            "Execute",
+            source.AsSpan(),
+            "Execute".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default);
 
@@ -133,8 +133,8 @@ public partial class D2D1ShaderCompilerTests
             """;
 
         ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
-            source,
-            "PSMain",
+            source.AsSpan(),
+            "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default);
 
@@ -181,8 +181,8 @@ public partial class D2D1ShaderCompilerTests
             """;
 
         ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
-            source,
-            "PSMain",
+            source.AsSpan(),
+            "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40,
             D2D1CompileOptions.Default);
 

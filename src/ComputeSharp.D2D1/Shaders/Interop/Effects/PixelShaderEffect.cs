@@ -286,8 +286,7 @@ internal unsafe partial struct PixelShaderEffect
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
-
-        @this->resourceTextureManagerBuffer.AsSpan().Clear();
+        @this->resourceTextureManagerBuffer = default;
 
         *effectImpl = (IUnknown*)@this;
 

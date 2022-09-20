@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 #pragma warning disable CS0649
@@ -108,16 +107,6 @@ partial struct PixelShaderEffect
 
                 return ref @this[index];
             }
-        }
-
-        /// <summary>
-        /// Gets a <see cref="Span{T}"/> with the <see cref="ID2D1ResourceTextureManager"/> items in the current instance.
-        /// </summary>
-        /// <returns>A <see cref="Span{T}"/> with the <see cref="ID2D1ResourceTextureManager"/> items in the current instance.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<ID2D1ResourceTextureManager> AsSpan()
-        {
-            return new((ID2D1ResourceTextureManager**)Unsafe.AsPointer(ref this), 16);
         }
     }
 }

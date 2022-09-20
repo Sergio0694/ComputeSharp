@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+#if NETCOREAPP3_1_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
@@ -46,7 +48,9 @@ internal static class HRESULTExtensions
     /// Throws a <see cref="Win32Exception"/>.
     /// </summary>
     /// <param name="result">The input return code.</param>
+#if NETCOREAPP3_1_OR_GREATER
     [DoesNotReturn]
+#endif
     private static void ThrowWin32Exception(int result)
     {
         throw new Win32Exception(result);

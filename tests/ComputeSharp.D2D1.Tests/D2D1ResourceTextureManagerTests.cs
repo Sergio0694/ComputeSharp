@@ -588,7 +588,9 @@ public partial class D2D1ResourceTextureManagerTests
             data: texture,
             strides: null);
 
-        byte[] data = RandomNumberGenerator.GetBytes(updateLength);
+        byte[] data = new byte[updateLength];
+
+        RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
             minimumExtents: stackalloc uint[] { (uint)startOffset },
@@ -674,7 +676,9 @@ public partial class D2D1ResourceTextureManagerTests
             data: texture,
             strides: stackalloc uint[] { (uint)width });
 
-        byte[] data = RandomNumberGenerator.GetBytes(updateLengthX * updateLengthY);
+        byte[] data = new byte[updateLengthX * updateLengthY];
+
+        RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
             minimumExtents: stackalloc uint[] { (uint)startOffsetX, (uint)startOffsetY },
@@ -775,7 +779,9 @@ public partial class D2D1ResourceTextureManagerTests
             data: texture,
             strides: stackalloc uint[] { (uint)width, (uint)(width * height) });
 
-        byte[] data = RandomNumberGenerator.GetBytes(updateLengthX * updateLengthY * updateLengthZ);
+        byte[] data = new byte[updateLengthX * updateLengthY * updateLengthZ];
+
+        RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
             minimumExtents: stackalloc uint[] { (uint)startOffsetX, (uint)startOffsetY, (uint)startOffsetZ },

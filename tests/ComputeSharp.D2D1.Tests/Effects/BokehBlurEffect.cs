@@ -325,9 +325,9 @@ public sealed partial class BokehBlurEffect
         using ComPtr<ID2D1Effect> compositeEffect = default;
         using ComPtr<ID2D1Effect> borderEffect = default;
 
-        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForReals = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
-        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForImaginaries = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
-        Span<ComPtr<ID2D1Effect>> horizontalConvolutionEffects = stackalloc ComPtr<ID2D1Effect>[numberOfComponents];
+        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForReals = new ComPtr<ID2D1Effect>[numberOfComponents];
+        Span<ComPtr<ID2D1Effect>> verticalConvolutionEffectsForImaginaries = new ComPtr<ID2D1Effect>[numberOfComponents];
+        Span<ComPtr<ID2D1Effect>> horizontalConvolutionEffects = new ComPtr<ID2D1Effect>[numberOfComponents];
 
         try
         {
