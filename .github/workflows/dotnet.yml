@@ -231,15 +231,31 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Run ComputeSharp.D2D1.Tests
-      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.D2D1.Tests (.NET 6)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET 6)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.D2D1.Tests (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.D2D1.Tests (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors
