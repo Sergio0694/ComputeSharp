@@ -3,10 +3,7 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 
 namespace TerraFX.Interop.DirectX
 {
@@ -16,15 +13,6 @@ namespace TerraFX.Interop.DirectX
 
         [NativeTypeName("D3D12_CLEAR_VALUE::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:2710:5)")]
         public _Anonymous_e__Union Anonymous;
-
-        public Span<float> Color
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return MemoryMarshal.CreateSpan(ref Anonymous.Color[0], 4);
-            }
-        }
 
         [StructLayout(LayoutKind.Explicit)]
         internal unsafe partial struct _Anonymous_e__Union
