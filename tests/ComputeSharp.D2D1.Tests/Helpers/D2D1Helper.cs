@@ -1,9 +1,32 @@
 ﻿using System;
+using System.Drawing;
 using ComputeSharp.D2D1.Tests.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct2D;
+using Win32.Graphics.Direct3D11;
+using Win32.Graphics.Dxgi;
 
 namespace ComputeSharp.D2D1.Tests.Helpers;
+
+using D2D1_ALPHA_MODE = Win32.Graphics.Direct2D.Common.AlphaMode;
+using D2D1_BITMAP_OPTIONS = Win32.Graphics.Direct2D.BitmapOptions;
+using D2D1_DEVICE_CONTEXT_OPTIONS = Win32.Graphics.Direct2D.DeviceContextOptions;
+using D2D1_FACTORY_OPTIONS = Win32.Graphics.Direct2D.FactoryOptions;
+using D2D1_FACTORY_TYPE = Win32.Graphics.Direct2D.FactoryType;
+using D2D1_INTERPOLATION_MODE = Win32.Graphics.Direct2D.InterpolationMode;
+using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
+using D2D1_MAP_OPTIONS = Win32.Graphics.Direct2D.MapOptions;
+using D2D_RECT_U = Win32.Graphics.Direct2D.Common.RectU;
+using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
+using D2D1_BITMAP_PROPERTIES = Win32.Graphics.Direct2D.BitmapProperties;
+using D2D1_BITMAP_PROPERTIES1 = Win32.Graphics.Direct2D.BitmapProperties1;
+using D3D_FEATURE_LEVEL = Win32.Graphics.Direct3D.FeatureLevel;
+using D3D_DRIVER_TYPE = Win32.Graphics.Direct3D.DriverType;
+using D3D11_CREATE_DEVICE_FLAG = Win32.Graphics.Direct3D11.CreateDeviceFlags;
+using DXGI_FORMAT = Win32.Graphics.Dxgi.Common.Format;
+using Win32 = Win32.Apis;
+using D2D1 = Win32.Graphics.Direct2D.Apis;
+using D3D11 = Win32.Graphics.Direct3D11.Apis;
 
 /// <summary>
 /// A <see langword="class"/> that uses the D2D1 APIs to configure and run effects.
@@ -22,9 +45,9 @@ internal static class D2D1Helper
         D2D1_FACTORY_OPTIONS d2D1FactoryOptions = default;
 
         // Create a Direct2D factory
-        DirectX.D2D1CreateFactory(
-            factoryType: singleThreaded ? D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED : D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED,
-            riid: Windows.__uuidof<ID2D1Factory2>(),
+        D2D1.D2D1CreateFactory(
+            factoryType: singleThreaded ? D2D1_FACTORY_TYPE.SingleThreaded : D2D1_FACTORY_TYPE.MultiThreaded,
+            riid: Win32.__uuidof<ID2D1Factory2>(),
             pFactoryOptions: &d2D1FactoryOptions,
             ppIFactory: (void**)d2D1Factory2.GetAddressOf()).Assert();
 
@@ -40,25 +63,24 @@ internal static class D2D1Helper
     {
         using ComPtr<ID3D11Device> d3D11Device = default;
 
-        uint creationFlags = (uint)D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_BGRA_SUPPORT;
         D3D_FEATURE_LEVEL* featureLevels = stackalloc[]
         {
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_1,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_10_1,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_10_0,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_9_3,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_9_2,
-            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_9_1
+            D3D_FEATURE_LEVEL.Level_11_1,
+            D3D_FEATURE_LEVEL.Level_11_0,
+            D3D_FEATURE_LEVEL.Level_10_1,
+            D3D_FEATURE_LEVEL.Level_10_0,
+            D3D_FEATURE_LEVEL.Level_9_3,
+            D3D_FEATURE_LEVEL.Level_9_2,
+            D3D_FEATURE_LEVEL.Level_9_1
         };
         D3D_FEATURE_LEVEL d3DFeatureLevel;
 
         // Create the Direct3D 11 API device and context
-        DirectX.D3D11CreateDevice(
+        D3D11.D3D11CreateDevice(
             pAdapter: null,
-            DriverType: D3D_DRIVER_TYPE.D3D_DRIVER_TYPE_HARDWARE,
-            Software: HMODULE.NULL,
-            Flags: creationFlags,
+            DriverType: D3D_DRIVER_TYPE.Hardware,
+            Software: IntPtr.Zero,
+            Flags: D3D11_CREATE_DEVICE_FLAG.BgraSupport,
             pFeatureLevels: featureLevels,
             FeatureLevels: 7,
             SDKVersion: D3D11.D3D11_SDK_VERSION,
@@ -92,7 +114,7 @@ internal static class D2D1Helper
 
         // Create a D2D1 device context
         d2D1Device->CreateDeviceContext(
-            options: D2D1_DEVICE_CONTEXT_OPTIONS.D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
+            options: D2D1_DEVICE_CONTEXT_OPTIONS.None,
             deviceContext: d2D1DeviceContext.GetAddressOf()).Assert();
 
         return d2D1DeviceContext.Move();
@@ -116,13 +138,11 @@ internal static class D2D1Helper
     {
         using ComPtr<ID2D1Bitmap> d2D1BitmapSource = default;
 
-        D2D_SIZE_U d2DSize = default;
-        d2DSize.width = width;
-        d2DSize.height = height;
+        Size d2DSize = new((int)width, (int)height);
 
         D2D1_BITMAP_PROPERTIES d2DBitmapProperties = default;
-        d2DBitmapProperties.pixelFormat.format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
-        d2DBitmapProperties.pixelFormat.alphaMode = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_PREMULTIPLIED;
+        d2DBitmapProperties.pixelFormat.format = DXGI_FORMAT.B8G8R8A8Unorm;
+        d2DBitmapProperties.pixelFormat.alphaMode = D2D1_ALPHA_MODE.Premultiplied;
         d2DBitmapProperties.dpiX = 96;
         d2DBitmapProperties.dpiY = 96;
 
@@ -151,16 +171,12 @@ internal static class D2D1Helper
     /// <returns>A new <see cref="ID2D1Bitmap"/> instance.</returns>
     public static unsafe ComPtr<ID2D1Bitmap> CreateD2D1BitmapAndSetAsTarget(ID2D1DeviceContext* d2D1DeviceContext, uint width, uint height)
     {
-        D2D_SIZE_U d2DSize;
-        d2DSize.width = width;
-        d2DSize.height = height;
+        Size d2DSize = new((int)width, (int)height);
 
         D2D1_BITMAP_PROPERTIES1 d2DBitmapProperties1Target = default;
-        d2DBitmapProperties1Target.pixelFormat.format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
-        d2DBitmapProperties1Target.pixelFormat.alphaMode = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_PREMULTIPLIED;
-        d2DBitmapProperties1Target.bitmapOptions =
-            D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_TARGET |
-            D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_CANNOT_DRAW;
+        d2DBitmapProperties1Target.pixelFormat.format = DXGI_FORMAT.B8G8R8A8Unorm;
+        d2DBitmapProperties1Target.pixelFormat.alphaMode = D2D1_ALPHA_MODE.Premultiplied;
+        d2DBitmapProperties1Target.bitmapOptions = D2D1_BITMAP_OPTIONS.Target | D2D1_BITMAP_OPTIONS.CannotDraw;
 
         using ComPtr<ID2D1Bitmap> d2D1Bitmap1Target = default;
 
@@ -186,12 +202,12 @@ internal static class D2D1Helper
     /// <returns>A new <see cref="ID2D1Bitmap1"/> instance.</returns>
     public static unsafe ComPtr<ID2D1Bitmap1> CreateD2D1Bitmap1Buffer(ID2D1DeviceContext* d2D1DeviceContext, ID2D1Bitmap* d2D1Bitmap, out D2D1_MAPPED_RECT d2D1MappedRect)
     {
-        D2D_SIZE_U d2DSize = d2D1Bitmap->GetPixelSize();
+        Size d2DSize = d2D1Bitmap->GetPixelSize();
 
         D2D1_BITMAP_PROPERTIES1 d2DBitmapProperties1Buffer = default;
-        d2DBitmapProperties1Buffer.pixelFormat.format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
-        d2DBitmapProperties1Buffer.pixelFormat.alphaMode = D2D1_ALPHA_MODE.D2D1_ALPHA_MODE_PREMULTIPLIED;
-        d2DBitmapProperties1Buffer.bitmapOptions = D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_CPU_READ | D2D1_BITMAP_OPTIONS.D2D1_BITMAP_OPTIONS_CANNOT_DRAW;
+        d2DBitmapProperties1Buffer.pixelFormat.format = DXGI_FORMAT.B8G8R8A8Unorm;
+        d2DBitmapProperties1Buffer.pixelFormat.alphaMode = D2D1_ALPHA_MODE.Premultiplied;
+        d2DBitmapProperties1Buffer.bitmapOptions = D2D1_BITMAP_OPTIONS.CpuRead | D2D1_BITMAP_OPTIONS.CannotDraw;
 
         using ComPtr<ID2D1Bitmap1> d2D1Bitmap1Buffer = default;
 
@@ -203,8 +219,12 @@ internal static class D2D1Helper
             bitmapProperties: &d2DBitmapProperties1Buffer,
             bitmap: d2D1Bitmap1Buffer.GetAddressOf()).Assert();
 
-        D2D_POINT_2U d2DPointDestination = default;
-        D2D_RECT_U d2DRectSource = new(0, 0, d2DSize.width, d2DSize.height);
+        Point d2DPointDestination = default;
+        D2D_RECT_U d2DRectSource = default;
+        d2DRectSource.top = 0;
+        d2DRectSource.left = 0;
+        d2DRectSource.right = (uint)d2DSize.Width;
+        d2DRectSource.bottom = (uint)d2DSize.Height;
 
         // Copy the image from the target to the readback bitmap
         d2D1Bitmap1Buffer.Get()->CopyFromBitmap(
@@ -216,7 +236,7 @@ internal static class D2D1Helper
         {
             // Map the buffer bitmap
             d2D1Bitmap1Buffer.Get()->Map(
-                options: D2D1_MAP_OPTIONS.D2D1_MAP_OPTIONS_READ,
+                options: D2D1_MAP_OPTIONS.Read,
                 mappedRect: d2D1MappedRectPtr).Assert();
         }
 
@@ -237,8 +257,8 @@ internal static class D2D1Helper
             effect: d2D1Effect,
             targetOffset: null,
             imageRectangle: null,
-            interpolationMode: D2D1_INTERPOLATION_MODE.D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
-            compositeMode: D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_SOURCE_COPY);
+            interpolationMode: D2D1_INTERPOLATION_MODE.NearestNeighbor,
+            compositeMode: D2D1_COMPOSITE_MODE.SourceCopy);
 
         d2D1DeviceContext->EndDraw().Assert();
     }

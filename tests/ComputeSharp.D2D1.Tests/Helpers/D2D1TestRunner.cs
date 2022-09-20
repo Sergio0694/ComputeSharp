@@ -4,10 +4,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Tests.Helpers;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct2D;
 
 namespace ComputeSharp.D2D1.Tests.Helpers;
+
+using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
 
 /// <summary>
 /// A test helper for D2D1 pixel shaders.

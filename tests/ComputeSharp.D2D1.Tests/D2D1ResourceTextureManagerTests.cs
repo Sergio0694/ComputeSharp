@@ -10,12 +10,15 @@ using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct2D;
 
 #pragma warning disable CS0649
 
 namespace ComputeSharp.D2D1.Tests;
+
+using HRESULT = Win32.HResult;
+using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
 
 [TestClass]
 [TestCategory("D2D1ResourceTextureManager")]
@@ -56,7 +59,7 @@ public partial class D2D1ResourceTextureManagerTests
         Guid uuidOfGarbage = Guid.NewGuid();
 
         // Any other random QueryInterface should fail
-        Assert.AreEqual(E.E_NOINTERFACE, (int)resourceTextureManager.AsIID(&uuidOfGarbage, &garbage));
+        Assert.AreEqual(HRESULT.NoInterface, resourceTextureManager.AsIID(&uuidOfGarbage, &garbage));
 
         Assert.IsTrue(garbage.Get() is null);
     }

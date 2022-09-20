@@ -2,9 +2,10 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
+
+using HRESULT = Win32.HResult;
 
 /// <summary>
 /// Helper methods to efficiently throw exceptions.
