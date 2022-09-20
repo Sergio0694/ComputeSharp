@@ -943,6 +943,52 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void Transition_ReadWriteTexture2D_Normalized_WithWriteToo(Device device)
+    {
+        _ = device.Get();
+
+        string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+        using var sampled1 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using var sampled2 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingInverted.png"));
+
+        using ReadOnlyTexture2D<Rgba32, float4> image = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+        using ReadWriteTexture2D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(image.Width, image.Height);
+        using ReadWriteTexture2D<Rgba32, float4> destination1 = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled1.Width, sampled1.Height);
+        using ReadWriteTexture2D<Rgba32, float4> destination2 = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled1.Width, sampled1.Height);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            // Dispatch before any transitions, and UAV barrier test
+            context.ForEach<ClearPixelShader, float4>(source);
+            context.Barrier(source);
+
+            // Dispatch following a UAV barrier
+            context.ForEach(source, new CopyToOutputPixelShader(image));
+
+            // Transition to readonly and first use as readonly resource
+            context.Transition(source, ResourceState.ReadOnly);
+            context.ForEach(destination1, new LinearSamplingFromNormalized2DPixelShader(source.AsReadOnly()));
+
+            // Transition back and write to it
+            context.Transition(source, ResourceState.ReadWrite);
+            context.ForEach(source, new InvertPixelShader(source));
+
+            // Transition once again to readonly and final use as readonly resource
+            context.Transition(source, ResourceState.ReadOnly);
+            context.ForEach(destination2, new LinearSamplingFromNormalized2DPixelShader(source.AsReadOnly()));
+        }
+
+        using var processed1 = destination1.ToImage<Rgba32, ImageSharpRgba32>();
+        using var processed2 = destination2.ToImage<Rgba32, ImageSharpRgba32>();
+
+        TolerantImageComparer.AssertEqual(sampled1, processed1, 0.0000017f);
+        TolerantImageComparer.AssertEqual(sampled2, processed2, 0.000002f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     public void Transition_ReadWriteTexture3D(Device device)
     {
         _ = device.Get();
@@ -1314,6 +1360,30 @@ public partial class ComputeContextTests
         public float4 Execute()
         {
             return source.Sample(ThreadIds.Normalized.XY);
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct CopyToOutputPixelShader : IPixelShader<float4>
+    {
+        public readonly IReadOnlyNormalizedTexture2D<float4> source;
+
+        /// <inheritdoc/>
+        public float4 Execute()
+        {
+            return source[ThreadIds.XY];
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct InvertPixelShader : IPixelShader<float4>
+    {
+        public readonly IReadWriteNormalizedTexture2D<float4> source;
+
+        /// <inheritdoc/>
+        public float4 Execute()
+        {
+            return new(1.0f - source[ThreadIds.XY].XYZ, source[ThreadIds.XY].W);
         }
     }
 
