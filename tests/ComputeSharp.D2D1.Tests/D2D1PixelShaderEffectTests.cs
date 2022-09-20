@@ -5,8 +5,8 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct2D;
 
 namespace ComputeSharp.D2D1.Tests;
 

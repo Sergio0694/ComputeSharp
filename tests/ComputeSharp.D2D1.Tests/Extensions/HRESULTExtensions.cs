@@ -1,17 +1,20 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+#if NETCOREAPP3_1_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
+
+using HRESULT = Win32.HResult;
 
 /// <summary>
 /// Helper methods to efficiently throw exceptions.
 /// </summary>
 /// <remarks>Trimmed down version of the same file in <c>ComputeSharp</c>.</remarks>
 [DebuggerStepThrough]
-internal static class HResultExtensions
+internal static class HRESULTExtensions
 {
     /// <summary>
     /// Throws a <see cref="Win32Exception"/> if <paramref name="result"/> represents an error.
@@ -45,7 +48,9 @@ internal static class HResultExtensions
     /// Throws a <see cref="Win32Exception"/>.
     /// </summary>
     /// <param name="result">The input return code.</param>
+#if NETCOREAPP3_1_OR_GREATER
     [DoesNotReturn]
+#endif
     private static void ThrowWin32Exception(int result)
     {
         throw new Win32Exception(result);

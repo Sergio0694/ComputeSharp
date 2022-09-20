@@ -2,6 +2,13 @@
 
 namespace ComputeSharp.D2D1.Tests.Effects;
 
+#if !NETCOREAPP3_1_OR_GREATER 
+internal static class MathF
+{
+    public const float PI = (float)Math.PI;
+}
+#endif
+
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]

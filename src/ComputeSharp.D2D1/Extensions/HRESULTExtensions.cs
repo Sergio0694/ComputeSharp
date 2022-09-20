@@ -11,7 +11,7 @@ namespace ComputeSharp.D2D1.Extensions;
 /// </summary>
 /// <remarks>Trimmed down version of the same file in <c>ComputeSharp</c>.</remarks>
 [DebuggerStepThrough]
-internal static class HResultExtensions
+internal static class HRESULTExtensions
 {
     /// <summary>
     /// Throws a <see cref="Win32Exception"/> if <paramref name="result"/> represents an error.
