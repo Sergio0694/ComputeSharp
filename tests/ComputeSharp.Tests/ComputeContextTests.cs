@@ -984,7 +984,7 @@ public partial class ComputeContextTests
         using var processed2 = destination2.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled1, processed1, 0.0000017f);
-        TolerantImageComparer.AssertEqual(sampled2, processed2, 0.000002f);
+        TolerantImageComparer.AssertEqual(sampled2, processed2, 0.0000028f);
     }
 
     [CombinatorialTestMethod]
