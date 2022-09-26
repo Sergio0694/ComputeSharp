@@ -1347,7 +1347,12 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
+            float3 xyz = ThreadIds.Normalized.XYZ;
+
+            // The source has a depth of 3, but the destination has a depth of 2
+            xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
+
+            destination[ThreadIds.XYZ] = source.Sample(xyz);
         }
     }
 
@@ -1396,7 +1401,12 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
+            float3 xyz = ThreadIds.Normalized.XYZ;
+
+            // See comment in LinearSampling3DComputeShader
+            xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
+
+            destination[ThreadIds.XYZ] = source.Sample(xyz);
         }
     }
 
