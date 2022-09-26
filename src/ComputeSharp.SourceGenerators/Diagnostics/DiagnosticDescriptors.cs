@@ -713,4 +713,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Shaders and shader methods can only use supported types (some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used, and bool fields in custom struct types have to be replaced with the ComputeSharp.Bool type for alignment reasons).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a an invalid copy operation for <c>ComputeContext</c>.
+    /// <para>
+    /// Format: <c>"The compute shader or method {0} uses the invalid type {1}"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidComputeContextCopy = new DiagnosticDescriptor(
+        id: "CMPS0051",
+        title: "Invalid ComputeContext copy operation",
+        messageFormat: "The ComputeContext type cannot be copied (consider passing it via ref readonly or in instead) and cannot be used as a field of value types (as it could be indirectly copied)",
+        category: "ComputeSharp",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The ComputeContext type cannot be copied (and values should rather be passed via ref readonly or in instead) and cannot be used as a field of value types (as it could be indirectly copied).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
