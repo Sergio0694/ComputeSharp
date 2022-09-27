@@ -94,15 +94,23 @@ partial class HlslKnownProperties
         {
             string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{typeof(ThreadIds.Normalized).Name}{Type.Delimiter}{property.Name}";
 
+            // The normalized value must be in the [0, 1] range, inclusive. As such, the expression is rewritten to be:
+            //   1D: (float)ThreadIds.<XYZ> / (float)(max(1, __<xyz> - 1));
+            //   2D: float2(ThreadIds.<XYZ>, ThreadIds.<XYZ>) / float2(max(1, int2(__<xyz>, __<xyz>) -1));
+            //   3D: float3(ThreadIds.<XYZ>, ThreadIds.<XYZ>, ThreadIds.<XYZ>) / float3(max(1, int3(__<xyz>, __<xyz>, __<xyz>) - 1));
+            //
+            // All these expressions will result in the values going in the target [0, 1] range, with the values at the two ends being
+            // exactly 0 and 1. This logic assumes that the __<xyz> values are always > 0, which is guaranteed by the fact those are the
+            // dispatching upper bounds, which is validated whenever a shader is run (as there can never be 0 iterations on any given axis).
             switch (property.Name)
             {
                 case string name when name.Length == 1:
-                    knownProperties.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])} / (float)__{char.ToLowerInvariant(name[0])}");
+                    knownProperties.Add(key, $"(float){typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])} / (float)(max(1, __{char.ToLowerInvariant(name[0])} - 1))");
                     break;
                 case string name when name.Length == 2:
                 {
                     string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])})";
-                    string denominator = $"float2(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])})";
+                    string denominator = $"float2(max(1, int2(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}) - 1))";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;
@@ -110,7 +118,7 @@ partial class HlslKnownProperties
                 case string name when name.Length == 3:
                 {
                     string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[2])})";
-                    string denominator = $"float3(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}, __{char.ToLowerInvariant(name[2])})";
+                    string denominator = $"float3(max(1, int3(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}, __{char.ToLowerInvariant(name[2])}) - 1))";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
                     break;

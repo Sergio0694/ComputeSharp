@@ -69,27 +69,42 @@ public partial class DispatchTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    public unsafe void Verify_ThreadIdsNormalized(Device device)
+    [Data(1, 1, 1)]
+    [Data(1, 1, 2)]
+    [Data(1, 2, 1)]
+    [Data(2, 1, 1)]
+    [Data(10, 1, 1)]
+    [Data(10, 1, 20)]
+    [Data(1, 2, 3)]
+    [Data(2, 3, 4)]
+    [Data(3, 2, 1)]
+    [Data(10, 20, 30)]
+    [Data(10, 2, 3)]
+    public unsafe void Verify_ThreadIdsNormalized(Device device, int width, int height, int depth)
     {
-        using ReadWriteTexture3D<float4> buffer = device.Get().AllocateReadWriteTexture3D<float4>(10, 20, 30);
+        using ReadWriteTexture3D<float4> buffer = device.Get().AllocateReadWriteTexture3D<float4>(width, height, depth);
 
         device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsNormalizedShader(buffer));
 
         float4[,,] data = buffer.ToArray();
         float* value = stackalloc float[4];
 
-        for (int z = 0; z < 30; z++)
+        for (int z = 0; z < depth; z++)
         {
-            for (int x = 0; x < 10; x++)
+            for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < 20; y++)
+                for (int y = 0; y < height; y++)
                 {
                     *(float4*)value = data[z, y, x];
 
-                    Assert.AreEqual(x / (float)buffer.Width, value[0], 0.000001f);
-                    Assert.AreEqual(y / (float)buffer.Height, value[1], 0.000001f);
-                    Assert.AreEqual(z / (float)buffer.Depth, value[2], 0.000001f);
-                    Assert.AreEqual(x / (float)buffer.Width, value[3], 0.000001f);
+                    float expectedX = width == 1 ? 0 : (x / (float)(buffer.Width - 1));
+                    float expectedY = height == 1 ? 0 : (y / (float)(buffer.Height - 1));
+                    float expectedZ = depth == 1 ? 0 : (z / (float)(buffer.Depth - 1));
+
+                    Assert.AreEqual(expectedX, value[0], 0.000001f);
+                    Assert.AreEqual(expectedY, value[1], 0.000001f);
+                    Assert.AreEqual(expectedZ, value[2], 0.000001f);
+                    Assert.AreEqual(expectedX, value[3], 0.000001f);
                 }
             }
         }

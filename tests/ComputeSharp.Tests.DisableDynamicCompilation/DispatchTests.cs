@@ -68,8 +68,8 @@ public partial class DispatchTests
         {
             for (int j = 0; j < texture.Width; j++)
             {
-                byte r = (byte)(j / (float)texture.Width * 255f);
-                byte g = (byte)(i / (float)texture.Height * 255f);
+                byte r = (byte)(j / (float)(texture.Width - 1) * 255f);
+                byte g = (byte)(i / (float)(texture.Height - 1) * 255f);
                 const byte b = (byte)(0.3f * 255f);
                 const byte a = (byte)(0.6f * 255f);
                 Rgba32 pixel = result[i, j];

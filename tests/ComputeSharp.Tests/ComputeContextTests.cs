@@ -995,7 +995,7 @@ public partial class ComputeContextTests
 
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
-        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
         var imageInfo = Image.Identify(originalPath);
 
@@ -1047,7 +1047,7 @@ public partial class ComputeContextTests
 
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
-        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
         var imageInfo = Image.Identify(originalPath);
 
@@ -1347,7 +1347,12 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
+            float3 xyz = ThreadIds.Normalized.XYZ;
+
+            // The source has a depth of 3, but the destination has a depth of 2
+            xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
+
+            destination[ThreadIds.XYZ] = source.Sample(xyz);
         }
     }
 
@@ -1396,7 +1401,12 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source.Sample(ThreadIds.Normalized.XYZ);
+            float3 xyz = ThreadIds.Normalized.XYZ;
+
+            // See comment in LinearSampling3DComputeShader
+            xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
+
+            destination[ThreadIds.XYZ] = source.Sample(xyz);
         }
     }
 

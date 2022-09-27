@@ -10,6 +10,18 @@ partial class ThreadIds
     /// These ids represent equivalent info to those from <see cref="ThreadIds"/>, but normalized in the [0, 1] range.
     /// The range used for the normalization is the one given by the target dispatch size (see <see cref="DispatchSize"/>).
     /// </summary>
+    /// <remarks>
+    /// When the dispatch size on a given axis is 1, the normalized value along that axis will be 0. Otherwise, it will just
+    /// be the normalization over [0, 1] for the current dispatch progress along that axis. That is, for instance:
+    /// <list type="number">
+    ///   <item>[0].</item>
+    ///   <item>[0, 1].</item>
+    ///   <item>[0, 0.5, 1].</item>
+    ///   <item>[0, 0.333..., 0.666..., 1].</item>
+    ///   <item>[0, 0.25, 0.5, 0.75, 1].</item>
+    /// </list>
+    /// And so on depending on the dispatch size along the requested dispatch axis.
+    /// </remarks>
     public static class Normalized
     {
         /// <summary>
