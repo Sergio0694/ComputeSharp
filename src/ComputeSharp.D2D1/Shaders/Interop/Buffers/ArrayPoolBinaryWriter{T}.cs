@@ -35,7 +35,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <summary>
     /// The starting offset within <see cref="array"/>.
     /// </summary>
-    private readonly int index;
+    private int index;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ArrayPoolBufferWriter{T}"/> class.
@@ -74,7 +74,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <para>Must be called after <see cref="GetSpan"/>.</para>
     /// <para>This and the methods below are <see langword="readonly"/> to enable mutating extensions.</para>
     /// </remarks>
-    internal readonly void Advance(int count)
+    internal void Advance(int count)
     {
         T[]? array = this.array;
 
@@ -93,7 +93,7 @@ internal ref struct ArrayPoolBufferWriter<T>
             ThrowArgumentExceptionForAdvancedTooFar();
         }
 
-        Unsafe.AsRef(in this.index) += count;
+        this.index += count;
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <param name="sizeHint">The capacity to request.</param>
     /// <returns>A <see cref="Span{T}"/> to write data to.</returns>
     [UnscopedRef]
-    internal readonly Span<T> GetSpan(int sizeHint = 0)
+    internal Span<T> GetSpan(int sizeHint = 0)
     {
         CheckBufferAndEnsureCapacity(sizeHint);
 
@@ -114,7 +114,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// </summary>
     /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly void CheckBufferAndEnsureCapacity(int sizeHint)
+    private void CheckBufferAndEnsureCapacity(int sizeHint)
     {
         T[]? array = this.array;
 
@@ -144,7 +144,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// </summary>
     /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private readonly unsafe void ResizeBuffer(int sizeHint)
+    private unsafe void ResizeBuffer(int sizeHint)
     {
         uint minimumSize = (uint)this.index + (uint)sizeHint;
 
@@ -164,7 +164,7 @@ internal ref struct ArrayPoolBufferWriter<T>
 
         ArrayPool<T>.Shared.Return(this.array!);
 
-        Unsafe.AsRef(in this.array) = newArray;
+        this.array = newArray;
     }
 
     /// <inheritdoc/>

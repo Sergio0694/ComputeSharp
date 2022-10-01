@@ -44,7 +44,7 @@ public ref struct ArrayPoolStringBuilder
     /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
     /// </summary>
     [UnscopedRef]
-    public ReadOnlySpan<char> WrittenSpan
+    public readonly ReadOnlySpan<char> WrittenSpan
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => new(this.array, 0, this.index);

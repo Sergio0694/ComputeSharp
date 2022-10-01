@@ -82,7 +82,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
-        using ArrayPoolBufferWriter<char> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+        ArrayPoolBufferWriter<char> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Build the XML text
         writer.WriteRaw("""
@@ -263,6 +263,8 @@ public static unsafe class D2D1PixelShaderEffect
 
             effectId = PixelShaderEffect.For<T>.Id;
         }
+
+        writer.Dispose();
     }
 
     /// <summary>
@@ -342,7 +344,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
-        using ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
+        ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
         writer.WriteRaw(D2D1EffectRegistrationData.V1.BlobId);
@@ -514,7 +516,11 @@ public static unsafe class D2D1PixelShaderEffect
 
         effectId = PixelShaderEffect.For<T>.Id;
 
-        return writer.WrittenSpan.ToArray();
+        byte[] registrationBlob = writer.WrittenSpan.ToArray();
+
+        writer.Dispose();
+
+        return registrationBlob;
     }
 
     /// <summary>

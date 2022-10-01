@@ -23,7 +23,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="value">The value to write.</param>
     /// <remarks>This method will just blit the data of <paramref name="value"/> into the target buffer.</remarks>
-    public static unsafe void WriteRaw<T>(this in ArrayPoolBufferWriter<byte> writer, in T value)
+    public static unsafe void WriteRaw<T>(this ref ArrayPoolBufferWriter<byte> writer, scoped in T value)
         where T : unmanaged
     {
         Span<byte> span = writer.GetSpan(sizeof(T));
@@ -39,7 +39,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// <typeparam name="T">The type of value to write.</typeparam>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="value">The value to write.</param>
-    public static unsafe void WriteRaw<T>(this in ArrayPoolBufferWriter<T> writer, in T value)
+    public static unsafe void WriteRaw<T>(this ref ArrayPoolBufferWriter<T> writer, scoped in T value)
         where T : unmanaged
     {
         Span<T> span = writer.GetSpan(1);
@@ -55,7 +55,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// <typeparam name="T">The type of values in the target writer.</typeparam>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="data">The data to write.</param>
-    public static void WriteRaw<T>(this in ArrayPoolBufferWriter<T> writer, ReadOnlySpan<T> data)
+    public static void WriteRaw<T>(this ref ArrayPoolBufferWriter<T> writer, scoped ReadOnlySpan<T> data)
         where T : unmanaged
     {
         Span<T> span = writer.GetSpan(data.Length);
@@ -71,7 +71,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// </summary>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="data">The data to write.</param>
-    public static void WriteRaw(this in ArrayPoolBufferWriter<char> writer, string data)
+    public static void WriteRaw(this ref ArrayPoolBufferWriter<char> writer, string data)
     {
         Span<char> span = writer.GetSpan(data.Length);
 
@@ -86,7 +86,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// </summary>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="value">The value to write.</param>
-    public static void WriteAsUtf8(this in ArrayPoolBufferWriter<byte> writer, int value)
+    public static void WriteAsUtf8(this ref ArrayPoolBufferWriter<byte> writer, int value)
     {
 #if NET6_0_OR_GREATER
         // Get a span of at least 10 elements (10 is the length of int.MaxValue as text)
@@ -106,7 +106,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// </summary>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="text">The text to write.</param>
-    public static void WriteAsUtf8(this in ArrayPoolBufferWriter<byte> writer, string text)
+    public static void WriteAsUtf8(this ref ArrayPoolBufferWriter<byte> writer, string text)
     {
         int maximumByteSize = Encoding.UTF8.GetMaxByteCount(text.Length);
 
@@ -122,7 +122,7 @@ internal static class ArrayPoolBinaryWriterExtensions
     /// </summary>
     /// <param name="writer">The target <see cref="ArrayPoolBufferWriter{T}"/> instance to write data to.</param>
     /// <param name="value">The value to write.</param>
-    public static void WriteAsUnicode(this in ArrayPoolBufferWriter<char> writer, int value)
+    public static void WriteAsUnicode(this ref ArrayPoolBufferWriter<char> writer, int value)
     {
 #if NET6_0_OR_GREATER
         // Get a span of at least 10 elements (10 is the length of int.MaxValue as text)
