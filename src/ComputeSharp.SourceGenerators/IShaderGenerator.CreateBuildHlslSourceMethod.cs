@@ -48,6 +48,7 @@ partial class IShaderGenerator
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // A given type can only represent a single shader type
@@ -64,12 +65,12 @@ partial class IShaderGenerator
             var (resourceFields, valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
             var delegateInstanceFields = GetDispatchId.GetInfo(structDeclarationSymbol);
             var sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
-            var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
+            var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
             var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
             var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Process the discovered types and constants
-            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes);
+            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
             var definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Get the HLSL source data with the intermediate info
@@ -315,6 +316,7 @@ partial class IShaderGenerator
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
@@ -325,6 +327,7 @@ partial class IShaderGenerator
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
             bool isComputeShader)
         {
@@ -365,6 +368,7 @@ partial class IShaderGenerator
                     semanticModel,
                     discoveredTypes,
                     staticMethods,
+                    instanceMethods,
                     constantDefinitions,
                     diagnostics,
                     isShaderEntryPoint);
@@ -436,14 +440,16 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets the sequence of processed discovered custom types.
         /// </summary>
-        /// <param name="types">The sequence of discovered custom types.</param>
-        /// <param name="sourceSymbol">The symbol for the current object being processed.</param>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        /// <param name="sourceSymbol">The symbol for the current object being processed.</param>
+        /// <param name="types">The sequence of discovered custom types.</param>
+        /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         internal static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
             ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             ISymbol sourceSymbol,
-            IEnumerable<INamedTypeSymbol> types)
+            IEnumerable<INamedTypeSymbol> types,
+            IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
             ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>();
             IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
@@ -477,6 +483,12 @@ partial class IShaderGenerator
                         FieldDeclaration(VariableDeclaration(
                             IdentifierName(mappedType!)).AddVariables(
                             VariableDeclarator(Identifier(mappedName!)))));
+                }
+
+                // Declare the methods of the current type
+                foreach (var method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+                {
+                    structDeclaration = structDeclaration.AddMembers(method.Value);
                 }
 
                 // Insert the trailing ; right after the closing bracket (after normalization)

@@ -52,6 +52,7 @@ partial class ID2D1ShaderGenerator
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Extract information on all captured fields
@@ -64,11 +65,11 @@ partial class ID2D1ShaderGenerator
 
             // Explore the syntax tree and extract the processed info
             var semanticModelProvider = new SemanticModelProvider(compilation);
-            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
+            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
             var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
 
             // Process the discovered types and constants
-            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes);
+            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
             var definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Check whether the scene position is required
@@ -258,6 +259,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
@@ -268,6 +270,7 @@ partial class ID2D1ShaderGenerator
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
             out bool needsD2D1RequiresScenePosition)
         {
@@ -303,6 +306,7 @@ partial class ID2D1ShaderGenerator
                     semanticModel,
                     discoveredTypes,
                     staticMethods,
+                    instanceMethods,
                     constantDefinitions,
                     diagnostics,
                     isShaderEntryPoint);
@@ -374,11 +378,13 @@ partial class ID2D1ShaderGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="types">The sequence of discovered custom types.</param>
+        /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
             ImmutableArray<DiagnosticInfo>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
-            IEnumerable<INamedTypeSymbol> types)
+            IEnumerable<INamedTypeSymbol> types,
+            IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
             ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>();
             IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
@@ -412,6 +418,12 @@ partial class ID2D1ShaderGenerator
                         FieldDeclaration(VariableDeclaration(
                             IdentifierName(mappedType!)).AddVariables(
                             VariableDeclarator(Identifier(mappedName!)))));
+                }
+
+                // Declare the methods of the current type
+                foreach (var method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+                {
+                    structDeclaration = structDeclaration.AddMembers(method.Value);
                 }
 
                 // Insert the trailing ; right after the closing bracket (after normalization)

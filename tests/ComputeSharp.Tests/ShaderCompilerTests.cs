@@ -416,6 +416,55 @@ namespace ComputeSharp.Tests
                 return default;
             }
         }
+
+        [TestMethod]
+        public void StructInstanceMethods()
+        {
+            _ = ReflectionServices.GetShaderInfo<StructInstanceMethodsShader>();
+        }
+
+        public struct MyStructTypeA
+        {
+            public int A;
+            public float B;
+
+            public float Sum()
+            {
+                return A + Bar();
+            }
+
+            public float Bar() => this.B;
+        }
+
+        public struct MyStructTypeB
+        {
+            public MyStructTypeA A;
+            public float B;
+
+            public float Combine()
+            {
+                return A.Sum() + this.B;
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct StructInstanceMethodsShader : IComputeShader
+        {
+            public readonly MyStructTypeA a;
+            public readonly MyStructTypeB b;
+            public readonly ReadWriteBuffer<MyStructTypeA> bufferA;
+            public readonly ReadWriteBuffer<MyStructTypeB> bufferB;
+            public readonly ReadWriteBuffer<float> results;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                float result1 = a.Sum() + a.Bar();
+                float result2 = b.Combine();
+
+                results[ThreadIds.X] = result1 + result2 + bufferA[ThreadIds.X].Sum() + bufferB[0].Combine();
+            }
+        }
     }
 }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -720,6 +722,52 @@ public partial class ShaderRewriterTests
             destination2[19] = ri8.Z;
             destination2[20] = i2_copy2.X;
             destination2[21] = i2_copy2.Y;
+        }
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/390
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void CustomStructWypeWithInstanceMethod(Device device)
+    {
+        CustomStructType[] data = Enumerable.Range(0, 1024).Select(static i => new CustomStructType() { value = i }).ToArray();
+
+        using ReadWriteBuffer<CustomStructType> source = device.Get().AllocateReadWriteBuffer(data);
+        using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length, AllocationMode.Clear);
+
+        device.Get().For(source.Length, new CustomStructTypeShader(source, destination));
+
+        CustomStructType[] results1 = source.ToArray();
+        int[] results2 = destination.ToArray();
+
+        for (int i = 0; i < source.Length; i++)
+        {
+            Assert.AreEqual(i * 2 + 1, results1[i].value);
+            Assert.AreEqual(results1[i].value, results2[i]);
+        }
+    }
+
+    public struct CustomStructType
+    {
+        public int value;
+
+        public int AddAndGetSum(int x)
+        {
+            this.value += x;
+
+            return this.value;
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct CustomStructTypeShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<CustomStructType> source;
+        public readonly ReadWriteBuffer<int> destination;
+
+        public void Execute()
+        {
+            destination[ThreadIds.X] = source[ThreadIds.X].AddAndGetSum(ThreadIds.X + 1);
         }
     }
 }
