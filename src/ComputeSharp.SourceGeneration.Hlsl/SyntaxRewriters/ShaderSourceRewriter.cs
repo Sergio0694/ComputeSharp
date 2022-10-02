@@ -32,6 +32,11 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
 
     /// <summary>
+    /// The collection of discovered instance methods for custom struct types.
+    /// </summary>
+    private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods;
+
+    /// <summary>
     /// The collection of processed local functions in the current tree.
     /// </summary>
     private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -63,6 +68,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
@@ -71,6 +77,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
         ImmutableArray<DiagnosticInfo>.Builder diagnostics,
         bool isEntryPoint)
@@ -78,6 +85,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     {
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
+        this.instanceMethods = instanceMethods;
         this.localFunctions = new();
         this.implicitVariables = new();
         this.isEntryPoint = isEntryPoint;
@@ -89,17 +97,20 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+    /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
     /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
     public ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+        IDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
         ImmutableArray<DiagnosticInfo>.Builder diagnostics)
         : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
         this.staticMethods = staticMethods;
+        this.instanceMethods = instanceMethods;
         this.implicitVariables = new();
         this.localFunctions = new();
     }
@@ -459,7 +470,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                             return updatedNode;
                         }
 
-                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Diagnostics);
+                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, this.instanceMethods, ConstantDefinitions, Diagnostics);
                         MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
 
                         this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
@@ -472,6 +483,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
             {
                 string metadataName = method.GetFullMetadataName(includeParameters: true);
 
+                // Check whether this is a Sample(...) call on a normalized texture type
                 if (HlslKnownMethods.TryGetMappedResourceSamplerAccessType(metadataName, out string? mapping))
                 {
                     // Get the syntax for the argument syntax transformation (adding the vector type constructor if needed)
@@ -483,6 +495,32 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
                     // Rewrite texture resource sampled accesses, if needed
                     return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
+                }
+
+                // If the instance is a struct type that is available in source, rewrite the instance method
+                if (operation.TargetMethod.ContainingType is { TypeKind: TypeKind.Struct } structTypeSymbol)
+                {
+                    DiscoveredTypes.Add(structTypeSymbol);
+
+                    var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
+
+                    // Same as for static methods, ensure the method is available in source, and process it if so
+                    if (!this.instanceMethods.ContainsKey(method))
+                    {
+                        if (method.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is not MethodDeclarationSyntax methodNode)
+                        {
+                            Diagnostics.Add(InvalidMethodCall, node, method);
+
+                            return updatedNode;
+                        }
+
+                        ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.instanceMethods, this.instanceMethods, ConstantDefinitions, Diagnostics);
+                        MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
+
+                        this.instanceMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                    }
+
+                    return updatedNode.WithExpression(((MemberAccessExpressionSyntax)updatedNode.Expression).WithName(IdentifierName(methodIdentifier)));
                 }
             }
         }

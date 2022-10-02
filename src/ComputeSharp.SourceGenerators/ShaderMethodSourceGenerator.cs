@@ -84,11 +84,12 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default); // Unused in this generator
 
             // Explore the syntax tree and extract the processed info
             var semanticModel = new SemanticModelProvider(compilation);
             var (entryPoint, dependentMethods) = GetProcessedMethods(builder, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
-            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(builder, methodSymbol, discoveredTypes);
+            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(builder, methodSymbol, discoveredTypes, instanceMethods);
             var definedConstants = IShaderGenerator.BuildHlslSource.GetDefinedConstants(constantDefinitions);
 
             diagnostics = builder.ToImmutable();
@@ -118,8 +119,9 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default);
 
-            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, diagnostics);
+            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, diagnostics);
 
             // Process the possible syntax nodes
             SyntaxNode visitedMethod = methodDeclaration switch
