@@ -9,6 +9,7 @@ using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Extensions;
 using ComputeSharp.D2D1.Tests.Helpers;
+using SixLabors.ImageSharp;
 using Win32;
 using Win32.Graphics.Direct2D;
 
@@ -568,10 +569,9 @@ public sealed partial class BokehBlurEffect
             /// <inheritdoc/>
             public float4 Execute()
             {
-                float4 real = float4.Zero;
-                float4 imaginary = float4.Zero;
                 int length = this.kernelLength;
                 int radiusX = length >> 1;
+                ComplexVector4 result = default;
 
                 for (int i = 0; i < length; i++)
                 {
@@ -580,11 +580,11 @@ public sealed partial class BokehBlurEffect
                     float realFactor = kernelReals[i];
                     float imaginaryFactor = kernelImaginaries[i];
 
-                    real += realFactor * sourceReal - imaginaryFactor * sourceImaginary;
-                    imaginary += realFactor * sourceImaginary + imaginaryFactor * sourceReal;
+                    result.Real += (Vector4)(realFactor * sourceReal - imaginaryFactor * sourceImaginary);
+                    result.Imaginary += (Vector4)(realFactor * sourceImaginary + imaginaryFactor * sourceReal);
                 }
 
-                return real * z + imaginary * w;
+                return result.WeightedSum(z, w);
             }
         }
     }
@@ -632,41 +632,5 @@ public sealed partial class BokehBlurEffect
 
             return pixel;
         }
-    }
-
-    /// <summary>
-    /// Represents a complex number, where the real and imaginary parts are stored as <see cref="float"/> values.
-    /// </summary>
-    private readonly struct Complex64
-    {
-        /// <summary>
-        /// The real part of the complex number.
-        /// </summary>
-        public readonly float Real;
-
-        /// <summary>
-        /// The imaginary part of the complex number.
-        /// </summary>
-        public readonly float Imaginary;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Complex64"/> struct.
-        /// </summary>
-        /// <param name="real">The real part in the complex number.</param>
-        /// <param name="imaginary">The imaginary part in the complex number.</param>
-        public Complex64(float real, float imaginary)
-        {
-            this.Real = real;
-            this.Imaginary = imaginary;
-        }
-
-        /// <summary>
-        /// Performs the multiplication operation between a <see cref="Complex64"/> instance and a <see cref="float"/> scalar.
-        /// </summary>
-        /// <param name="value">The <see cref="Complex64"/> value to multiply.</param>
-        /// <param name="scalar">The <see cref="float"/> scalar to use to multiply the <see cref="Complex64"/> value.</param>
-        /// <returns>The <see cref="Complex64"/> result.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex64 operator *(Complex64 value, float scalar) => new(value.Real * scalar, value.Imaginary * scalar);
     }
 }

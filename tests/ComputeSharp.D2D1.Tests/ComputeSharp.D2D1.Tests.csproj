@@ -26,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\ComplexVector4.cs" Link="Imaging\Primitives\ComplexVector4.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Assets\Landscape.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

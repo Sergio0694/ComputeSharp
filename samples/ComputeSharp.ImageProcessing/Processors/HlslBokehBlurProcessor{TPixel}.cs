@@ -363,13 +363,12 @@ public sealed partial class HlslBokehBlurProcessor
             /// <inheritdoc/>
             public void Execute()
             {
-                float4 real = float4.Zero;
-                float4 imaginary = float4.Zero;
                 int maxY = target.Height;
                 int maxX = target.Width;
                 int kernelLength = kernel.Length;
                 int radiusX = kernelLength >> 1;
                 int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
+                ComplexVector4 result = default;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
@@ -378,11 +377,11 @@ public sealed partial class HlslBokehBlurProcessor
                     float4 sourceImaginary = imaginaries[offsetX, offsetY];
                     Complex64 factors = kernel[i];
 
-                    real += factors.Real * sourceReal - factors.Imaginary * sourceImaginary;
-                    imaginary += factors.Real * sourceImaginary + factors.Imaginary * sourceReal;
+                    result.Real += (Vector4)(factors.Real * sourceReal - factors.Imaginary * sourceImaginary);
+                    result.Imaginary += (Vector4)(factors.Real * sourceImaginary + factors.Imaginary * sourceReal);
                 }
 
-                target[ThreadIds.XY] += real * z + imaginary * w;
+                target[ThreadIds.XY] += (float4)result.WeightedSum(z, w);
             }
         }
 
