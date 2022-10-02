@@ -497,8 +497,10 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     return RewriteSampledTextureAccess(operation, updatedNode.Expression, coordinateSyntax);
                 }
 
-                // If the instance is a struct type that is available in source, rewrite the instance method
-                if (operation.TargetMethod.ContainingType is { TypeKind: TypeKind.Struct } structTypeSymbol)
+                // If the instance is a struct type that is available in source, rewrite the instance method.
+                // This path is only taken for instance methods for external struct types, not the shader itself.
+                if (operation.TargetMethod.ContainingType is { TypeKind: TypeKind.Struct } structTypeSymbol &&
+                    !SymbolEqualityComparer.Default.Equals(this.shaderType, structTypeSymbol))
                 {
                     DiscoveredTypes.Add(structTypeSymbol);
 
@@ -520,7 +522,15 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                         this.instanceMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
                     }
 
-                    return updatedNode.WithExpression(((MemberAccessExpressionSyntax)updatedNode.Expression).WithName(IdentifierName(methodIdentifier)));
+                    // Rewrite the expression depending on its type:
+                    //   - If it's a simple member expression, change the identifier name: eg. foo.Bar(...) => foo.NewName(...)
+                    //   - If it's an identifier name, change it directly: eg. Bar(...) => NewName(...)
+                    return updatedNode.Expression switch
+                    {
+                        MemberAccessExpressionSyntax memberAccess => updatedNode.WithExpression(memberAccess.WithName(IdentifierName(methodIdentifier))),
+                        IdentifierNameSyntax identifierName => updatedNode.WithExpression(IdentifierName(methodIdentifier)),
+                        _ => throw new NotSupportedException($"Unsupported instance method expression type \"{updatedNode.Expression.GetType()}\".")
+                    };
                 }
             }
         }
