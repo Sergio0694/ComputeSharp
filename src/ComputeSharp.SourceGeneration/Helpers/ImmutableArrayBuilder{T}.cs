@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ComputeSharp.SourceGeneration.Helpers;
 
@@ -60,6 +62,48 @@ internal ref struct ImmutableArrayBuilder<T>
         this.builder!.Add(item);
     }
 
+    /// <summary>
+    /// Adds the specified items to the end of the array.
+    /// </summary>
+    /// <param name="items">The items to add at the end of the array.</param>
+    public readonly unsafe void AddRange(ReadOnlySpan<T> items)
+    {
+        if (items.IsEmpty)
+        {
+            return;
+        }
+
+        int offset = this.builder!.Count;
+
+        this.builder!.Count += items.Length;
+
+        ref T firstItem = ref Unsafe.AsRef(in this.builder!.ItemRef(offset));
+
+        if (typeof(T) == typeof(char))
+        {
+            int sizeInBytes = checked(items.Length * Unsafe.SizeOf<T>());
+
+            fixed (void* source = &Unsafe.As<T, byte>(ref MemoryMarshal.GetReference(items)))
+            fixed (void* destination = &Unsafe.As<T, byte>(ref firstItem))
+            {
+                new ReadOnlySpan<byte>(source, sizeInBytes).CopyTo(new Span<byte>(destination, sizeInBytes));
+            }
+        }
+        else
+        {
+            ref T lastItem = ref Unsafe.Add(ref firstItem, items.Length);
+            ref T sourceItem = ref MemoryMarshal.GetReference(items);
+
+            while (Unsafe.IsAddressLessThan(ref firstItem, ref lastItem))
+            {
+                firstItem = sourceItem;
+
+                firstItem = ref Unsafe.Add(ref firstItem, 1);
+                sourceItem = ref Unsafe.Add(ref sourceItem, 1);
+            }
+        }
+    }
+
     /// <inheritdoc cref="ImmutableArray{T}.Builder.ToImmutable"/>
     public readonly ImmutableArray<T> ToImmutable()
     {
@@ -70,6 +114,21 @@ internal ref struct ImmutableArrayBuilder<T>
     public readonly T[] ToArray()
     {
         return this.builder!.ToArray();
+    }
+
+    /// <inheritdoc/>
+    public override readonly unsafe string ToString()
+    {
+        if (typeof(T) == typeof(char) &&
+            this.builder!.Count > 0)
+        {
+            fixed (char* p = &Unsafe.As<T, char>(ref Unsafe.AsRef(in this.builder!.ItemRef(0))))
+            {
+                return new ReadOnlySpan<char>(p, this.builder!.Count).ToString();
+            }
+        }
+
+        return this.builder!.ToString();
     }
 
     /// <inheritdoc cref="IDisposable.Dispose"/>
