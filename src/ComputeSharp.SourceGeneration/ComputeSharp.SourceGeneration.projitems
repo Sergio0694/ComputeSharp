@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ISymbolExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Comparer{T,TSelf}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImmutableArrayBuilder{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObjectPool{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DeferredDiagnosticInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DiagnosticInfo.cs" />
