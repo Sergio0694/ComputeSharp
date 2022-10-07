@@ -119,7 +119,15 @@ internal ref struct ImmutableArrayBuilder<T>
         /// </summary>
         public Writer()
         {
-            this.array = new T[8];
+            if (typeof(T) == typeof(char))
+            {
+                this.array = new T[1024];
+            }
+            else
+            {
+                this.array = new T[8];
+            }
+
             this.index = 0;
         }
 
