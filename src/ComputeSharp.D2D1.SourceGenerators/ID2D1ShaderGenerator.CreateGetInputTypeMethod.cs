@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -83,31 +82,48 @@ partial class ID2D1ShaderGenerator
                 return;
             }
 
-            HashSet<int> inputSimpleIndicesAsSet = new(inputSimpleIndicesBuilder);
-            HashSet<int> inputComplexIndicesAsSet = new(inputComplexIndicesBuilder);
+            Span<bool> selectedSimpleInputIndices = stackalloc bool[8];
+            Span<bool> selectedComplexInputIndices = stackalloc bool[8];
 
             // All simple indices must be unique
-            if (inputSimpleIndicesAsSet.Count != inputSimpleIndicesBuilder.Count)
+            foreach (int index in inputSimpleIndicesBuilder)
             {
-                diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
+                ref bool isInputIndexUsed = ref selectedSimpleInputIndices[index];
 
-                return;
+                if (isInputIndexUsed)
+                {
+                    diagnostics.Add(RepeatedD2DInputSimpleIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
+
+                isInputIndexUsed = true;
             }
 
-            // All complex indices must be unique
-            if (inputComplexIndicesAsSet.Count != inputComplexIndicesBuilder.Count)
+            // All complex indices must be unique as well
+            foreach (int index in inputComplexIndicesBuilder)
             {
-                diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
+                ref bool isInputIndexUsed = ref selectedComplexInputIndices[index];
 
-                return;
+                if (isInputIndexUsed)
+                {
+                    diagnostics.Add(RepeatedD2DInputComplexIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
+
+                isInputIndexUsed = true;
             }
 
             // Simple and complex indices can't have indices in common
-            if (inputSimpleIndicesAsSet.Intersect(inputComplexIndicesAsSet).Any())
+            for (int i = 0; i < rawInputCount; i++)
             {
-                diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
+                if (selectedSimpleInputIndices[i] && selectedComplexInputIndices[i])
+                {
+                    diagnostics.Add(InvalidSimpleAndComplexIndicesCombination, structDeclarationSymbol, structDeclarationSymbol);
 
-                return;
+                    return;
+                }
             }
 
             // Build the combined input types list now that inputs have been validated
@@ -120,7 +136,7 @@ partial class ID2D1ShaderGenerator
                 // input is present in the set of explicitly simple inputs. These values will map to
                 // values from D2D1PixelShaderInputType, which has Simple and Complex as members.
                 // So, simple inputs map to 0, and complex inputs map to 1.
-                combinedBuilder.Add(inputSimpleIndicesAsSet.Contains(i) ? 0u : 1u);
+                combinedBuilder.Add(selectedSimpleInputIndices[i] ? 0u : 1u);
             }
 
             combinedInputTypes = combinedBuilder.MoveToImmutable();
