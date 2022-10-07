@@ -309,7 +309,7 @@ public sealed partial class BokehBlurEffect
 
         // Set the buffer precision for the whole context to 32 bits per channel. This avoids
         // color banding issues due to intermediate buffers clamping to just 8 bits per channel.
-        d2D1RenderingControls.bufferPrecision = D2D1_BUFFER_PRECISION._32bpcFloat;
+        d2D1RenderingControls.bufferPrecision = D2D1_BUFFER_PRECISION.Precision32BitFloat;
 
         d2D1DeviceContext.Get()->SetRenderingControls(&d2D1RenderingControls);
 
@@ -361,7 +361,7 @@ public sealed partial class BokehBlurEffect
                     effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in D2D1.CLSID_D2D1Composite)),
                     effect: compositeEffect.GetAddressOf()).Assert();
 
-                D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION._32bpcFloat;
+                D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.Precision32BitFloat;
 
                 // Set the channel precision to 32 bits manually to avoid banding
                 compositeEffect.Get()->SetValue((uint)D2D1_PROPERTY.Precision, (byte*)&d2D1BufferPrecision, sizeof(D2D1_BUFFER_PRECISION)).Assert();
