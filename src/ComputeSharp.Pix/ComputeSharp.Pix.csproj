@@ -36,7 +36,7 @@
          copy all libraries, and then rely on the custom .targets file to unpack them correctly. -->
     <Otherwise>
       <PropertyGroup>
-        <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220124001</WinPixEventRuntimeVersion>
+        <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220810001</WinPixEventRuntimeVersion>
       </PropertyGroup>
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
