@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 
@@ -17,7 +18,7 @@ internal static class DiagnosticsExtensions
     /// <param name="symbol">The source <see cref="ISymbol"/> to attach the diagnostics to.</param>
     /// <param name="args">The optional arguments for the formatted message to include.</param>
     public static void Add(
-        this ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+        this ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         DiagnosticDescriptor descriptor,
         ISymbol symbol,
         params object[] args)
@@ -33,7 +34,7 @@ internal static class DiagnosticsExtensions
     /// <param name="node">The source <see cref="SyntaxNode"/> to attach the diagnostics to.</param>
     /// <param name="args">The optional arguments for the formatted message to include.</param>
     public static void Add(
-        this ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+        this ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
         DiagnosticDescriptor descriptor,
         SyntaxNode node,
         params object[] args)

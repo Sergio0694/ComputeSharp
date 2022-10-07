@@ -1,8 +1,8 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using ComputeSharp.Core.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -66,8 +66,8 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         /// <returns>The <see cref="ConstructorInfo"/> instance for <paramref name="structDeclarationSymbol"/>.</returns>
         public static ConstructorInfo GetData(INamedTypeSymbol structDeclarationSymbol)
         {
-            ImmutableArray<ParameterInfo>.Builder parameters = ImmutableArray.CreateBuilder<ParameterInfo>();
-            ImmutableArray<string>.Builder defaulted = ImmutableArray.CreateBuilder<string>();
+            using ImmutableArrayBuilder<ParameterInfo> parameters = ImmutableArrayBuilder<ParameterInfo>.Rent();
+            using ImmutableArrayBuilder<string> defaulted = ImmutableArrayBuilder<string>.Rent();
 
             foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -93,7 +93,7 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
                 }
             }
 
-            return new(parameters.ToImmutableArray(), defaulted.ToImmutableArray());
+            return new(parameters.ToImmutable(), defaulted.ToImmutable());
         }
 
         /// <summary>

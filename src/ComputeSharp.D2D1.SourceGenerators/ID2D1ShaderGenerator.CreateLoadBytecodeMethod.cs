@@ -9,6 +9,7 @@ using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
@@ -51,7 +52,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static D2D1CompileOptions? GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {

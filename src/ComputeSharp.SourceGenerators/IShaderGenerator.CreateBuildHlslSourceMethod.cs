@@ -37,7 +37,7 @@ partial class IShaderGenerator
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <returns>The resulting info on the processed shader.</returns>
         public static HlslShaderSourceInfo GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol)
@@ -101,13 +101,14 @@ partial class IShaderGenerator
             ImmutableArray<(string MetadataName, string Name, string HlslType)>,
             ImmutableArray<(string Name, string HlslType)>)
             GetInstanceFields(
-                ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+                ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
                 INamedTypeSymbol structDeclarationSymbol,
                 ICollection<INamedTypeSymbol> types,
                 bool isComputeShader)
         {
-            ImmutableArray<(string, string, string)>.Builder resources = ImmutableArray.CreateBuilder<(string, string, string)>();
-            ImmutableArray<(string, string)>.Builder values = ImmutableArray.CreateBuilder<(string, string)>();
+            using ImmutableArrayBuilder<(string, string, string)> resources = ImmutableArrayBuilder<(string, string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> values = ImmutableArrayBuilder<(string, string)>.Rent();
+
             bool hlslResourceFound = false;
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
@@ -192,14 +193,14 @@ partial class IShaderGenerator
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            ImmutableArray<(string, string, string?)>.Builder builder = ImmutableArray.CreateBuilder<(string, string, string?)>();
+            using ImmutableArrayBuilder<(string, string, string?)> builder = ImmutableArrayBuilder<(string, string, string?)>.Rent();
 
             foreach (var fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
             {
@@ -259,11 +260,11 @@ partial class IShaderGenerator
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string Type, int? Count)> GetSharedBuffers(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
         {
-            ImmutableArray<(string, string, int?)>.Builder builder = ImmutableArray.CreateBuilder<(string, string, int?)>();
+            using ImmutableArrayBuilder<(string, string, int?)> builder = ImmutableArrayBuilder<(string, string, int?)>.Rent();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -321,7 +322,7 @@ partial class IShaderGenerator
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods, bool IsSamplerUser) GetProcessedMethods(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
@@ -337,8 +338,9 @@ partial class IShaderGenerator
                 where syntaxNode.IsKind(SyntaxKind.MethodDeclaration)
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
-            string? entryPoint = null;
-            ImmutableArray<(string, string)>.Builder methods = ImmutableArray.CreateBuilder<(string, string)>();
+            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
+
+            string ? entryPoint = null;
             bool isSamplerUsed = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
@@ -424,7 +426,7 @@ partial class IShaderGenerator
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         internal static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>(constantDefinitions.Count);
+            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
             foreach (var constant in constantDefinitions)
             {
@@ -434,7 +436,7 @@ partial class IShaderGenerator
                 builder.Add((constantName, constant.Value));
             }
 
-            return builder.MoveToImmutable();
+            return builder.ToImmutable();
         }
 
         /// <summary>
@@ -446,13 +448,14 @@ partial class IShaderGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         internal static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             ISymbol sourceSymbol,
             IEnumerable<INamedTypeSymbol> types,
             IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
-            ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>();
-            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
+            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+
+            IReadOnlyCollection <INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
             foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
@@ -514,7 +517,7 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {

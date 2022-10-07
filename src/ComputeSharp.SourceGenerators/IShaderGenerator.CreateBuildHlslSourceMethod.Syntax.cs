@@ -84,7 +84,8 @@ partial class IShaderGenerator
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth)
         {
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
+
             StringBuilder textBuilder = new();
             int capturedDelegates = 0;
             int prologueStatements = 0;

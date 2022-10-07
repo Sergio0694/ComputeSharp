@@ -79,7 +79,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             IMethodSymbol methodSymbol,
             out ImmutableArray<DiagnosticInfo> diagnostics)
         {
-            ImmutableArray<DiagnosticInfo>.Builder builder = ImmutableArray.CreateBuilder<DiagnosticInfo>();
+            using ImmutableArrayBuilder<DiagnosticInfo> builder = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -112,7 +112,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
         private static (string TargetMethod, ImmutableArray<(string Signature, string Definition)> DependentMethods) GetProcessedMethods(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             CSharpSyntaxNode methodDeclaration,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -137,7 +137,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
                 .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
-            ImmutableArray<(string, string)>.Builder methods = ImmutableArray.CreateBuilder<(string, string)>(shaderSourceRewriter.LocalFunctions.Count);
+            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
 
             // Emit the extracted local functions
             foreach (var localFunction in shaderSourceRewriter.LocalFunctions)

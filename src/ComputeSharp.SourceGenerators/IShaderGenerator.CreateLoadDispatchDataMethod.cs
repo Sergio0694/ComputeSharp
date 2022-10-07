@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
@@ -31,7 +32,7 @@ partial class IShaderGenerator
         /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             ITypeSymbol structDeclarationSymbol,
             ShaderType shaderType,
             out int resourceCount,
@@ -148,7 +149,7 @@ partial class IShaderGenerator
             // each row needs to be at a multiple of 16 bytes (a float4 register).
             if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
             {
-                ImmutableArray<int>.Builder builder = ImmutableArray.CreateBuilder<int>(rows);
+                using ImmutableArrayBuilder<int> builder = ImmutableArrayBuilder<int>.Rent();
 
                 for (int j = 0; j < rows; j++)
                 {
@@ -165,7 +166,7 @@ partial class IShaderGenerator
                     elementName!,
                     rows,
                     columns,
-                    builder.MoveToImmutable());
+                    builder.ToImmutable());
             }
             else
             {

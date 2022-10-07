@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -26,7 +26,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="inputComplexIndices">The indices of the complex shader inputs.</param>
         /// <param name="combinedInputTypes">The combined and serialized input types for each available input.</param>
         public static void GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int inputCount,
             out ImmutableArray<int> inputSimpleIndices,
@@ -40,8 +40,8 @@ partial class ID2D1ShaderGenerator
 
             inputCount = 0;
 
-            ImmutableArray<int>.Builder inputSimpleIndicesBuilder = ImmutableArray.CreateBuilder<int>();
-            ImmutableArray<int>.Builder inputComplexIndicesBuilder = ImmutableArray.CreateBuilder<int>();
+            using ImmutableArrayBuilder<int> inputSimpleIndicesBuilder = ImmutableArrayBuilder<int>.Rent();
+            using ImmutableArrayBuilder<int> inputComplexIndicesBuilder = ImmutableArrayBuilder<int>.Rent();
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
@@ -75,18 +75,32 @@ partial class ID2D1ShaderGenerator
             }
 
             // All simple indices must be in range
-            if (inputSimpleIndicesBuilder.Concat(inputComplexIndicesBuilder).Any(i => (uint)i >= rawInputCount))
+            foreach (int index in inputSimpleIndicesBuilder.WrittenSpan)
             {
-                diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+                if ((uint)index >= rawInputCount)
+                {
+                    diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                return;
+                    return;
+                }
+            }
+
+            // All complex indices must be in range as well
+            foreach (int index in inputComplexIndicesBuilder.WrittenSpan)
+            {
+                if ((uint)index >= rawInputCount)
+                {
+                    diagnostics.Add(OutOfRangeInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
             }
 
             Span<bool> selectedSimpleInputIndices = stackalloc bool[8];
             Span<bool> selectedComplexInputIndices = stackalloc bool[8];
 
             // All simple indices must be unique
-            foreach (int index in inputSimpleIndicesBuilder)
+            foreach (int index in inputSimpleIndicesBuilder.WrittenSpan)
             {
                 ref bool isInputIndexUsed = ref selectedSimpleInputIndices[index];
 
@@ -101,7 +115,7 @@ partial class ID2D1ShaderGenerator
             }
 
             // All complex indices must be unique as well
-            foreach (int index in inputComplexIndicesBuilder)
+            foreach (int index in inputComplexIndicesBuilder.WrittenSpan)
             {
                 ref bool isInputIndexUsed = ref selectedComplexInputIndices[index];
 
@@ -127,7 +141,7 @@ partial class ID2D1ShaderGenerator
             }
 
             // Build the combined input types list now that inputs have been validated
-            ImmutableArray<uint>.Builder combinedBuilder = ImmutableArray.CreateBuilder<uint>(inputCount);
+            using ImmutableArrayBuilder<uint> combinedBuilder = ImmutableArrayBuilder<uint>.Rent();
 
             for (int i = 0; i < inputCount; i++)
             {
@@ -139,7 +153,7 @@ partial class ID2D1ShaderGenerator
                 combinedBuilder.Add(selectedSimpleInputIndices[i] ? 0u : 1u);
             }
 
-            combinedInputTypes = combinedBuilder.MoveToImmutable();
+            combinedInputTypes = combinedBuilder.ToImmutable();
         }
     }
 }

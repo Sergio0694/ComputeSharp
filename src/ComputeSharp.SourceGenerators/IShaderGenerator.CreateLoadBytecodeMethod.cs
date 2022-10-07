@@ -11,6 +11,7 @@ using System.Threading;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -38,7 +39,7 @@ partial class IShaderGenerator
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <returns>The thread ids for the precompiled shader, if available.</returns>
         public static ThreadIdsInfo GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             bool isDynamicShader,
             bool supportsDynamicShaders)

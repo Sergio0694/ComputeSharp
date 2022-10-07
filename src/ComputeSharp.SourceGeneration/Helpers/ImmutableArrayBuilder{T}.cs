@@ -12,7 +12,7 @@ namespace ComputeSharp.SourceGeneration.Helpers;
 /// A helper type to build sequences of values with pooled buffers.
 /// </summary>
 /// <typeparam name="T">The type of items to create sequences for.</typeparam>
-internal ref struct ImmutableArrayBuilder<T>
+internal struct ImmutableArrayBuilder<T> : IDisposable
 {
     /// <summary>
     /// The shared <see cref="ObjectPool{T}"/> instance to share <see cref="Writer"/> objects.
@@ -49,6 +49,24 @@ internal ref struct ImmutableArrayBuilder<T>
         this.writer = writer;
     }
 
+    /// <summary>
+    /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
+    /// </summary>
+    public readonly ReadOnlySpan<T> WrittenSpan
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => this.writer!.WrittenSpan;
+    }
+
+    /// <summary>
+    /// Gets the number of elements currently written in the current instance.
+    /// </summary>
+    public readonly int Count
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => this.writer!.WrittenSpan.Length;
+    }
+
     /// <inheritdoc cref="ImmutableArray{T}.Builder.Add(T)"/>
     public readonly void Add(T item)
     {
@@ -62,6 +80,16 @@ internal ref struct ImmutableArrayBuilder<T>
     public readonly void AddRange(ReadOnlySpan<T> items)
     {
         this.writer!.AddRange(items);
+    }
+
+    /// <summary>
+    /// Inserts an item to the builder at the specified index.
+    /// </summary>
+    /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+    /// <param name="item">The object to insert into the <see cref="IList{T}"/>.</param>
+    public readonly void Insert(int index, T item)
+    {
+        this.writer!.Insert(index, item);
     }
 
     /// <inheritdoc cref="ImmutableArray{T}.Builder.ToImmutable"/>
@@ -84,7 +112,7 @@ internal ref struct ImmutableArrayBuilder<T>
         return this.writer!.WrittenSpan.ToString();
     }
 
-    /// <inheritdoc cref="IDisposable.Dispose"/>
+    /// <inheritdoc/>
     public void Dispose()
     {
         Writer? writer = this.writer;
@@ -131,9 +159,7 @@ internal ref struct ImmutableArrayBuilder<T>
             this.index = 0;
         }
 
-        /// <summary>
-        /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
-        /// </summary>
+        /// <inheritdoc cref="ImmutableArrayBuilder{T}.WrittenSpan"/>
         public ReadOnlySpan<T> WrittenSpan
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -156,6 +182,25 @@ internal ref struct ImmutableArrayBuilder<T>
             items.CopyTo(this.array.AsSpan(this.index));
 
             this.index += items.Length;
+        }
+
+        /// <inheritdoc cref="ImmutableArrayBuilder{T}.Insert"/>
+        public void Insert(int index, T item)
+        {
+            if (index < 0 || index > this.index)
+            {
+                ImmutableArrayBuilder.ThrowArgumentOutOfRangeExceptionForIndex();
+            }
+
+            EnsureCapacity(1);
+
+            if (index < this.index)
+            {
+                Array.Copy(this.array, index, this.array, index + 1, this.index - index);
+            }
+
+            this.array[index] = item;
+            this.index++;
         }
 
         /// <summary>
@@ -200,5 +245,19 @@ internal ref struct ImmutableArrayBuilder<T>
 
             this.array = newArray;
         }
+    }
+}
+
+/// <summary>
+/// Private helpers for the <see cref="ImmutableArrayBuilder{T}"/> type.
+/// </summary>
+file static class ImmutableArrayBuilder
+{
+    /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> for <c>"index"</c>.
+    /// </summary>
+    public static void ThrowArgumentOutOfRangeExceptionForIndex()
+    {
+        throw new ArgumentOutOfRangeException("index");
     }
 }

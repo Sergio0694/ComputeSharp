@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
@@ -26,12 +26,12 @@ partial class ID2D1ShaderGenerator
         /// <param name="inputCount">The number of inputs for the shader.</param>
         /// <param name="resourceTextureDescriptions">The produced resource texture descriptions for the shader.</param>
         public static void GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             int inputCount,
             out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
-            ImmutableArray<(int? Index, int Rank)>.Builder resourceTextureInfos = ImmutableArray.CreateBuilder<(int?, int)>();
+            using ImmutableArrayBuilder<(int? Index, int Rank)> resourceTextureInfos = ImmutableArrayBuilder<(int? Index, int Rank)>.Rent();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -72,7 +72,15 @@ partial class ID2D1ShaderGenerator
             }
 
             // Extract the resource texture descriptions for the rest of the pipeline
-            resourceTextureDescriptions = resourceTextureInfos.Select(static info => new ResourceTextureDescription((uint)(info.Index ?? 0), (uint)info.Rank)).ToImmutableArray();
+            using (ImmutableArrayBuilder<ResourceTextureDescription> resourceTextureDescriptionsBuilder = ImmutableArrayBuilder<ResourceTextureDescription>.Rent())
+            {
+                foreach ((int? index, int rank) in resourceTextureInfos.WrittenSpan)
+                {
+                    resourceTextureDescriptionsBuilder.Add(new ResourceTextureDescription((uint)(index ?? 0), (uint)rank));
+                }
+
+                resourceTextureDescriptions = resourceTextureDescriptionsBuilder.ToImmutable();
+            }
 
             // If the input count is invalid, do nothing and avoid emitting potentially incorrect
             // diagnostics based on the resource texture indices with respect to the input count.
@@ -84,25 +92,31 @@ partial class ID2D1ShaderGenerator
             }
 
             // Validate that the resource texture indices don't overlap with the shader inputs
-            if (resourceTextureInfos.Any(info => info.Index < inputCount))
+            foreach ((int? index, _) in resourceTextureInfos.WrittenSpan)
             {
-                diagnostics.Add(ResourceTextureIndexOverlappingWithInputIndex, structDeclarationSymbol, structDeclarationSymbol);
+                if (index < inputCount)
+                {
+                    diagnostics.Add(ResourceTextureIndexOverlappingWithInputIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                return;
+                    return;
+                }
             }
 
             // Validate that no resource texture has an index greater than or equal to 16
-            if (resourceTextureInfos.Any(info => info.Index >= 16))
+            foreach ((int? index, _) in resourceTextureInfos.WrittenSpan)
             {
-                diagnostics.Add(OutOfRangeResourceTextureIndex, structDeclarationSymbol, structDeclarationSymbol);
+                if (index >= 16)
+                {
+                    diagnostics.Add(OutOfRangeResourceTextureIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                return;
+                    return;
+                }
             }
 
             Span<bool> selectedResourceTextureIndices = stackalloc bool[16];
 
             // All input description indices must be unique (also take this path for invalid indices)
-            foreach ((int? index, _) in resourceTextureInfos)
+            foreach ((int? index, _) in resourceTextureInfos.WrittenSpan)
             {
                 ref bool isResourceTextureIndexUsed = ref selectedResourceTextureIndices[index ?? 0];
 

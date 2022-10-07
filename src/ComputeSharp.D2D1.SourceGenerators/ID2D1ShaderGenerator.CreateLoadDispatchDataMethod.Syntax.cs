@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -63,7 +64,36 @@ partial class ID2D1ShaderGenerator
                                     Token(SyntaxKind.DefaultKeyword))))));
             }
 
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
+
+            // global::System.Span<byte> data = stackalloc byte[<CONSTANT_BUFFER_SIZE>];
+            statements.Add(
+                LocalDeclarationStatement(
+                    VariableDeclaration(
+                        GenericName(Identifier("global::System.Span"))
+                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("data"))
+                        .WithInitializer(EqualsValueClause(
+                            StackAllocArrayCreationExpression(
+                                ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
+                                .AddRankSpecifiers(
+                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(constantBufferSizeInBytes)))))))))));
+
+            // ref byte r0 = ref data[0];
+            statements.Add(
+                LocalDeclarationStatement(
+                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("r0"))
+                        .WithInitializer(EqualsValueClause(
+                            RefExpression(
+                                ElementAccessExpression(IdentifierName("data"))
+                                .AddArgumentListArguments(Argument(
+                                    LiteralExpression(
+                                        SyntaxKind.NumericLiteralExpression,
+                                        Literal(0))))))))));
 
             // Generate loading statements for each captured field
             foreach (FieldInfo fieldInfo in fieldInfos)
@@ -122,35 +152,6 @@ partial class ID2D1ShaderGenerator
                         break;
                 }
             }
-
-            // global::System.Span<byte> data = stackalloc byte[<CONSTANT_BUFFER_SIZE>];
-            statements.Insert(0,
-                LocalDeclarationStatement(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.Span"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("data"))
-                        .WithInitializer(EqualsValueClause(
-                            StackAllocArrayCreationExpression(
-                                ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
-                                .AddRankSpecifiers(
-                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(constantBufferSizeInBytes)))))))))));
-
-            // ref byte r0 = ref data[0];
-            statements.Insert(1,
-                LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("r0"))
-                        .WithInitializer(EqualsValueClause(
-                            RefExpression(
-                                ElementAccessExpression(IdentifierName("data"))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(0))))))))));
 
             // loader.LoadConstantBuffer(data);
             statements.Add(

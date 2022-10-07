@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -55,7 +56,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
                     // GetDispatchId() info
                     ImmutableArray<string> dispatchIdInfo = GetDispatchId.GetInfo(typeSymbol);
