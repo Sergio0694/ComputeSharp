@@ -12,6 +12,17 @@
     </PropertyGroup>
   </Target>
 
+  <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Emit the [SupportedOSVersion] attribute if needed -->
+    <ItemGroup Condition="'$(SupportedOSVersion)' != ''">
+      <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
+        <_Parameter1>$(SupportedOSVersion)</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
   <!--
     The following target has been ported from TerraFX.Interop.Windows.
     See: https://github.com/terrafx/terrafx.interop.windows.

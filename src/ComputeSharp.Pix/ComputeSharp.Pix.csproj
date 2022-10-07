@@ -4,6 +4,7 @@
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.Pix.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
 
   <!-- Reference to the main library-->
