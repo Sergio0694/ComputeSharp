@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -71,14 +70,21 @@ partial class ID2D1ShaderGenerator
                 return;
             }
 
-            HashSet<uint> inputDescriptionIndices = new(inputDescriptionsBuilder.Select(description => description.Index));
+            Span<bool> selectedInputDescriptionIndices = stackalloc bool[8];
 
             // All input description indices must be unique
-            if (inputDescriptionIndices.Count != inputDescriptionsBuilder.Count)
+            foreach (InputDescription inputDescription in inputDescriptionsBuilder)
             {
-                diagnostics.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
+                ref bool isInputDescriptionIndexUsed = ref selectedInputDescriptionIndices[(int)inputDescription.Index];
 
-                return;
+                if (isInputDescriptionIndexUsed)
+                {
+                    diagnostics.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
+
+                isInputDescriptionIndexUsed = true;
             }
 
             inputDescriptions = inputDescriptionsBuilder.ToImmutable();

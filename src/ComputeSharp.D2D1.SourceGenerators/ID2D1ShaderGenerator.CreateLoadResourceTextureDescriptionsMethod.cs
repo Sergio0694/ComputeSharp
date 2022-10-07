@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -99,12 +99,21 @@ partial class ID2D1ShaderGenerator
                 return;
             }
 
-            HashSet<int> resourceTextureIndices = new(resourceTextureInfos.Where(info => info.Index.HasValue).Select(info => info.Index!.Value));
+            Span<bool> selectedResourceTextureIndices = stackalloc bool[16];
 
-            // All input description indices must be unique
-            if (resourceTextureIndices.Count != resourceTextureInfos.Count(info => info.Index.HasValue))
+            // All input description indices must be unique (also take this path for invalid indices)
+            foreach ((int? index, _) in resourceTextureInfos)
             {
-                diagnostics.Add(RepeatedD2DResourceTextureIndices, structDeclarationSymbol, structDeclarationSymbol);
+                ref bool isResourceTextureIndexUsed = ref selectedResourceTextureIndices[index ?? 0];
+
+                if (isResourceTextureIndexUsed)
+                {
+                    diagnostics.Add(RepeatedD2DResourceTextureIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
+
+                isResourceTextureIndexUsed = true;
             }
         }
     }
