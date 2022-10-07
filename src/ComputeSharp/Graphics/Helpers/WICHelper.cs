@@ -7,8 +7,6 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.Windows;
 
-#pragma warning disable CA1416
-
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <summary>

@@ -4,7 +4,6 @@
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.Dynamic.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <!-- Enable trimming support on .NET 6 -->
