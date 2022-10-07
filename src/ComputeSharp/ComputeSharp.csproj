@@ -3,6 +3,7 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <!-- Enable trimming support on .NET 6 -->
@@ -21,7 +22,7 @@
 
   <!-- .NET 6 uses the NuGet packages for TerraFX -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.0-beta3" />
+    <PackageReference Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.1" />
   </ItemGroup>
 
   <!-- .NET Standard 2.0 uses a local fork -->
