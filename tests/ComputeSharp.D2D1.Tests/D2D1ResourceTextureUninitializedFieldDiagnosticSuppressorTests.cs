@@ -5,6 +5,7 @@
 /// </summary>
 internal sealed partial class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressorTests
 {
+    [D2DInputCount(0)]
     public readonly partial struct MyShader : ID2D1PixelShader
     {
         // This test just needs to validate the project builds fine with this shader.

@@ -37,6 +37,7 @@ partial class ID2D1ShaderGenerator
             // diagnostics to, but without returning invalid values to the caller which
             // might cause generator errors (eg. -1 would cause other code to just throw).
             int rawInputCount = 0;
+            bool isInputCountPresent = false;
 
             inputCount = 0;
 
@@ -50,6 +51,7 @@ partial class ID2D1ShaderGenerator
                     case "ComputeSharp.D2D1.D2DInputCountAttribute":
                         rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
                         inputCount = Math.Max(rawInputCount, 0);
+                        isInputCountPresent = true;
                         break;
                     case "ComputeSharp.D2D1.D2DInputSimpleAttribute":
                         inputSimpleIndicesBuilder.Add((int)attributeData.ConstructorArguments[0].Value!);
@@ -65,6 +67,14 @@ partial class ID2D1ShaderGenerator
             inputSimpleIndices = inputSimpleIndicesBuilder.ToImmutable();
             inputComplexIndices = inputComplexIndicesBuilder.ToImmutable();
             combinedInputTypes = ImmutableArray<uint>.Empty;
+
+            // Ensure that the input count is present
+            if (!isInputCountPresent)
+            {
+                diagnostics.Add(MissingD2DInputCountAttribute, structDeclarationSymbol, structDeclarationSymbol);
+
+                return;
+            }
 
             // Validate the input count
             if (rawInputCount is not (>= 0 and <= 8))

@@ -737,7 +737,7 @@ partial class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidResourceTextureElementType = new DiagnosticDescriptor(
         id: "CMPSD2D0051",
-        title: "Missing [D2DResourceTextureIndex] attribute",
+        title: "Invalid D2D1 resource texture element type",
         messageFormat: "The field \"{0}\" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -839,5 +839,21 @@ partial class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "Methods using using [D2DPixelShaderSource] must use ReadOnlySpan<byte> as the return type.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DInputCount]</c> attribute is missing.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} is not annotated with the [D2DInputCount] attribute (it is mandatory for all D2D1 shader types)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingD2DInputCountAttribute = new DiagnosticDescriptor(
+        id: "CMPSD2D0058",
+        title: "Missing [D2DResourceTextureIndex] attribute",
+        messageFormat: "The D2D1 shader of type {0} is not annotated with the [D2DInputCount] attribute (it is mandatory for all D2D1 shader types)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader must be annotated with the [D2DInputCount] attribute.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
