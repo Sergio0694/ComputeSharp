@@ -3,8 +3,6 @@ using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-#pragma warning disable CA1416
-
 namespace ComputeSharp.SwapChain.Backend;
 
 internal sealed class SwapChainApplication<T> : Win32Application

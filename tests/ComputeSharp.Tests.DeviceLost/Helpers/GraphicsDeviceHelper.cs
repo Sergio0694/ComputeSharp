@@ -5,8 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-#pragma warning disable CA1416
-
 namespace ComputeSharp.Tests.DeviceLost.Helpers;
 
 /// <summary>

@@ -5,6 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64;ARM64</Platforms>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
