@@ -1,6 +1,3 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
-
-[module: SkipLocalsInit]
+﻿using System.Runtime.Versioning;
 
 [assembly: SupportedOSPlatform("windows6.1")]

@@ -1,7 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 
-[module: SkipLocalsInit]
-
 [assembly: InternalsVisibleTo("ComputeSharp")]
 [assembly: InternalsVisibleTo("ComputeSharp.Dynamic")]
 [assembly: InternalsVisibleTo("ComputeSharp.Pix")]
