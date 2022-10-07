@@ -74,7 +74,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// created by <see cref="D2D1PixelShaderEffect"/>, the <c>ID2D1ResourceTextureManagerInternal</c> interface also needs to be implemented:
 /// <code>
 /// [uuid(5CBB1024-8EA1-4689-81BF-8AD190B5EF5D)]
-/// interface ID2D1ResourceTextureManager : IUnknown
+/// interface ID2D1ResourceTextureManagerInternal : IUnknown
 /// {
 ///     HRESULT Initialize(
 ///         [in]           ID2D1EffectContext *effectContext,
@@ -94,7 +94,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <c>ID2D1ResourceTextureManager</c>). The built-in implementation of these two interfaces provided by <see cref="D2D1ResourceTextureManager"/> takes care of all this.
 /// </para>
 /// <para>
-/// The <c>dimensions</c> parameter in <c>ID2D1ResourceTextureManager::Initialize</c> is optional, and can be passed by an <c>ID2D1Effect</c>
+/// The <c>dimensions</c> parameter in <c>ID2D1ResourceTextureManagerInternal::Initialize</c> is optional, and can be passed by an <c>ID2D1Effect</c>
 /// when initializing an input resurce texture manager, if the dimensions of the resource texture at the target index are known in advance.
 /// This can allow the manager to perform additional validation when the resource texture is initialized. Not providing a value is not an
 /// error, but if a resource texture with invalid size is used the effect might fail to render later on and be more difficult to troubleshoot.
