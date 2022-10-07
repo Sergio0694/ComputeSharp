@@ -10,12 +10,6 @@
     <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
   </ItemGroup>
 
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
-
   <!-- Reference to the main non-dynamic library-->
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />

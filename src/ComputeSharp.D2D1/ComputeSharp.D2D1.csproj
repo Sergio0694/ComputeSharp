@@ -33,12 +33,6 @@
     </None>
   </ItemGroup>
 
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
-
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
 

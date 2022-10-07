@@ -15,12 +15,6 @@
     <InternalsVisibleTo Include="ComputeSharp.D2D1" />
   </ItemGroup>
 
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
-
   <!-- .NET Standard 2.0 polyfill packages -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Memory" Version="4.5.5" />

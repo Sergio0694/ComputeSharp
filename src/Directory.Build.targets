@@ -2,6 +2,16 @@
 <Project>
   <Import Project="..\Directory.Build.targets" />
 
+  <Target Name="ConfigureAssemblyTrimmingIfNeeded"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Enable trimming support on .NET 6 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+      <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+      <IsTrimmable>true</IsTrimmable>
+    </PropertyGroup>
+  </Target>
+
   <!--
     The following target has been ported from TerraFX.Interop.Windows.
     See: https://github.com/terrafx/terrafx.interop.windows.
