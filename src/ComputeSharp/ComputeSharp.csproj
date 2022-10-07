@@ -5,6 +5,14 @@
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.Dynamic" />
+    <InternalsVisibleTo Include="ComputeSharp.Pix" />
+    <InternalsVisibleTo Include="ComputeSharp.Uwp" />
+    <InternalsVisibleTo Include="ComputeSharp.WinUI" />
+    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
+  </ItemGroup>
+
   <!-- Enable trimming support on .NET 6 -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
