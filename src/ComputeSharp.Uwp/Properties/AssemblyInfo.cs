@@ -1,6 +1,3 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-[module: SkipLocalsInit]
+﻿using System.Runtime.InteropServices;
 
 [assembly: ComVisible(false)]

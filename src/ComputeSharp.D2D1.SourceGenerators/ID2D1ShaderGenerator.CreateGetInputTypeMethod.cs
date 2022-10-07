@@ -99,6 +99,9 @@ partial class ID2D1ShaderGenerator
             Span<bool> selectedSimpleInputIndices = stackalloc bool[8];
             Span<bool> selectedComplexInputIndices = stackalloc bool[8];
 
+            selectedSimpleInputIndices.Clear();
+            selectedComplexInputIndices.Clear();
+
             // All simple indices must be unique
             foreach (int index in inputSimpleIndicesBuilder.WrittenSpan)
             {

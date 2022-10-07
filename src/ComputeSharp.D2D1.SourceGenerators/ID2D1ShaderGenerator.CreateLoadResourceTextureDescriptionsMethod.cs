@@ -115,6 +115,8 @@ partial class ID2D1ShaderGenerator
 
             Span<bool> selectedResourceTextureIndices = stackalloc bool[16];
 
+            selectedResourceTextureIndices.Clear();
+
             // All input description indices must be unique (also take this path for invalid indices)
             foreach ((int? index, _) in resourceTextureInfos.WrittenSpan)
             {

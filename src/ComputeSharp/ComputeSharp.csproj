@@ -3,13 +3,16 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
+    <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
 
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.Dynamic" />
+    <InternalsVisibleTo Include="ComputeSharp.Pix" />
+    <InternalsVisibleTo Include="ComputeSharp.Uwp" />
+    <InternalsVisibleTo Include="ComputeSharp.WinUI" />
+    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />

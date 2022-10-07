@@ -4,13 +4,12 @@
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.Dynamic.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
 
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
+  </ItemGroup>
 
   <!-- Reference to the main non-dynamic library-->
   <ItemGroup>

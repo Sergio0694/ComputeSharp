@@ -3,6 +3,7 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.D2D1.xml</DocumentationFile>
+    <SupportedOSVersion>windows6.1</SupportedOSVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,12 +33,6 @@
       <LastGenOutput>PixelShaderEffect.Properties.g.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
-  <!-- Enable trimming support on .NET 6 -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
-  </PropertyGroup>
 
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />

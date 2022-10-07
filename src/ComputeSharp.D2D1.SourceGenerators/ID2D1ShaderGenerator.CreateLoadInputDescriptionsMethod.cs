@@ -76,6 +76,8 @@ partial class ID2D1ShaderGenerator
 
             Span<bool> selectedInputDescriptionIndices = stackalloc bool[8];
 
+            selectedInputDescriptionIndices.Clear();
+
             // All input description indices must be unique
             foreach (InputDescription inputDescription in inputDescriptionsBuilder.WrittenSpan)
             {
