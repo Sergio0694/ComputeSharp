@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGenerators.Models;
 
@@ -26,7 +27,8 @@ partial class IShaderGenerator
             bool isSamplerUsed,
             ImmutableArray<FieldInfo> capturedFields)
         {
-            ImmutableArray<ResourceDescriptor>.Builder descriptors = ImmutableArray.CreateBuilder<ResourceDescriptor>();
+            using ImmutableArrayBuilder<ResourceDescriptor> descriptors = ImmutableArrayBuilder<ResourceDescriptor>.Rent();
+
             int constantBufferOffset = 1;
             int readOnlyResourceOffset = 0;
             int readWriteResourceOffset = 0;

@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Globalization;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -54,7 +55,7 @@ partial class IShaderGenerator
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchMetadataLoadingStatements(DispatchMetadataInfo metadataInfo)
         {
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
             // global::System.Span<byte> span0 = stackalloc byte[5];
             statements.Add(

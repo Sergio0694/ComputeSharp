@@ -38,7 +38,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="inputComplexIndices">The indicess of the complex shader inputs.</param>
         /// <returns>The HLSL source for the shader.</returns>
         public static string GetHlslSource(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -102,14 +102,14 @@ partial class ID2D1ShaderGenerator
         /// <param name="valueFields">The sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</param>
         /// <param name="resourceTextureFields">The sequence of captured resource textures in <paramref name="structDeclarationSymbol"/>.</param>
         private static void GetInstanceFields(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types,
             out ImmutableArray<(string Name, string HlslType)> valueFields,
             out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields)
         {
-            ImmutableArray<(string, string)>.Builder values = ImmutableArray.CreateBuilder<(string, string)>();
-            ImmutableArray<(string, string, int)>.Builder resourceTextures = ImmutableArray.CreateBuilder<(string, string, int)>();
+            using ImmutableArrayBuilder<(string, string)> values = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string, int)> resourceTextures = ImmutableArrayBuilder<(string, string, int)>.Rent();
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -193,7 +193,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -201,7 +201,7 @@ partial class ID2D1ShaderGenerator
             IDictionary<IFieldSymbol, string> constantDefinitions,
             out bool needsD2D1RequiresScenePosition)
         {
-            ImmutableArray<(string, string, string?)>.Builder builder = ImmutableArray.CreateBuilder<(string, string, string?)>();
+            using ImmutableArrayBuilder<(string, string, string?)> builder = ImmutableArrayBuilder<(string, string, string?)>.Rent();
 
             needsD2D1RequiresScenePosition = false;
 
@@ -264,7 +264,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="needsD2D1RequiresScenePosition">Whether or not the shader needs the <c>[D2DRequiresScenePosition]</c> annotation.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods) GetProcessedMethods(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModelProvider semanticModel,
@@ -281,7 +281,8 @@ partial class ID2D1ShaderGenerator
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
             string? entryPoint = null;
-            ImmutableArray<(string, string)>.Builder methods = ImmutableArray.CreateBuilder<(string, string)>();
+
+            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
 
             needsD2D1RequiresScenePosition = false;
 
@@ -359,7 +360,7 @@ partial class ID2D1ShaderGenerator
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         private static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>(constantDefinitions.Count);
+            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
             foreach (var constant in constantDefinitions)
             {
@@ -369,7 +370,7 @@ partial class ID2D1ShaderGenerator
                 builder.Add((constantName, constant.Value));
             }
 
-            return builder.MoveToImmutable();
+            return builder.ToImmutable();
         }
 
         /// <summary>
@@ -381,13 +382,14 @@ partial class ID2D1ShaderGenerator
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
         private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             IEnumerable<INamedTypeSymbol> types,
             IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
-            ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>();
-            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
+            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+
+            IReadOnlyCollection <INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
             foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
@@ -449,7 +451,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArray<DiagnosticInfo>.Builder diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
             {
@@ -475,7 +477,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="requiresScenePosition">Whether the shader type is declaring the need for scene position.</param>
         /// <param name="usesPositionDependentMethods">Whether the shader is using APIs that rely on scene position.</param>
         private static void ReportInvalidD2DRequiresScenePositionUse(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             bool requiresScenePosition,
             bool usesPositionDependentMethods)

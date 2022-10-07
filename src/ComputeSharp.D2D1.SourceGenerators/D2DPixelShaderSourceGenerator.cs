@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -32,7 +33,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
                     // Get the processed HLSL first and check for cancellation
                     string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -45,7 +44,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <summary>
     /// The collection of produced <see cref="DiagnosticInfo"/> instances.
     /// </summary>
-    protected readonly ImmutableArray<DiagnosticInfo>.Builder Diagnostics;
+    protected readonly ImmutableArrayBuilder<DiagnosticInfo> Diagnostics;
 
     /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
@@ -58,7 +57,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics)
+        ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
     {
         SemanticModel = semanticModel;
         DiscoveredTypes = discoveredTypes;

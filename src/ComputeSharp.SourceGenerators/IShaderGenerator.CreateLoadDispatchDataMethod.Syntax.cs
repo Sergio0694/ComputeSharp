@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -67,14 +68,76 @@ partial class IShaderGenerator
             int resourceCount,
             int root32BitConstantsCount)
         {
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
-            bool isComputeShader = shaderType == ShaderType.ComputeShader;
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
+
+            // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];
+            statements.Add(
+                LocalDeclarationStatement(
+                    VariableDeclaration(
+                        GenericName(Identifier("global::System.Span"))
+                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("span0"))
+                        .WithInitializer(EqualsValueClause(
+                            StackAllocArrayCreationExpression(
+                                ArrayType(PredefinedType(Token(SyntaxKind.UIntKeyword)))
+                                .AddRankSpecifiers(
+                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(root32BitConstantsCount)))))))))));
+
+            if (resourceCount > 0)
+            {
+                // global::System.Span<ulong> span1 = stackalloc ulong[<RESOURCES>];
+                statements.Add(
+                    LocalDeclarationStatement(
+                        VariableDeclaration(
+                            GenericName(Identifier("global::System.Span"))
+                            .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ULongKeyword))))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("span1"))
+                            .WithInitializer(EqualsValueClause(
+                                StackAllocArrayCreationExpression(
+                                    ArrayType(PredefinedType(Token(SyntaxKind.ULongKeyword)))
+                                    .AddRankSpecifiers(
+                                        ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
+                                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(resourceCount)))))))))));
+            }
+
+            // ref uint r0 = ref span0[0];
+            statements.Add(
+                LocalDeclarationStatement(
+                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("r0"))
+                        .WithInitializer(EqualsValueClause(
+                            RefExpression(
+                                ElementAccessExpression(IdentifierName("span0"))
+                                .AddArgumentListArguments(Argument(
+                                    LiteralExpression(
+                                        SyntaxKind.NumericLiteralExpression,
+                                        Literal(0))))))))));
+
+            if (resourceCount > 0)
+            {
+                // ref ulong r1 = ref span1[0];
+                statements.Add(
+                    LocalDeclarationStatement(
+                        VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ULongKeyword))))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("r1"))
+                            .WithInitializer(EqualsValueClause(
+                                RefExpression(
+                                    ElementAccessExpression(IdentifierName("span1"))
+                                    .AddArgumentListArguments(Argument(
+                                        LiteralExpression(
+                                            SyntaxKind.NumericLiteralExpression,
+                                            Literal(0))))))))));
+            }
 
             // Append the statements for the dispatch ranges:
             //
             // span0[0] = (uint)x;
             // span0[1] = (uint)y;
-            // span0[2] = (uint)z;
             statements.Add(
                 ExpressionStatement(
                     AssignmentExpression(
@@ -91,8 +154,10 @@ partial class IShaderGenerator
                             .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))),
                         CastExpression(PredefinedType(Token(SyntaxKind.UIntKeyword)), IdentifierName("y")))));
 
-            // If the shader is a compute shader, also track the bounds on the Z axis
-            if (isComputeShader)
+            // If the shader is a compute shader, also track the bounds on the Z axis:
+            //
+            // span0[2] = (uint)z;
+            if (shaderType == ShaderType.ComputeShader)
             {
                 statements.Add(
                     ExpressionStatement(
@@ -173,35 +238,6 @@ partial class IShaderGenerator
                 }
             }
 
-            // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];
-            statements.Insert(0,
-                LocalDeclarationStatement(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.Span"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("span0"))
-                        .WithInitializer(EqualsValueClause(
-                            StackAllocArrayCreationExpression(
-                                ArrayType(PredefinedType(Token(SyntaxKind.UIntKeyword)))
-                                .AddRankSpecifiers(
-                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(root32BitConstantsCount)))))))))));
-
-            // ref uint r0 = ref span0[0];
-            statements.Insert(1,
-                LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("r0"))
-                        .WithInitializer(EqualsValueClause(
-                            RefExpression(
-                                ElementAccessExpression(IdentifierName("span0"))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(0))))))))));
-
             // loader.LoadCapturedValues(span0);
             statements.Add(
                 ExpressionStatement(
@@ -214,35 +250,6 @@ partial class IShaderGenerator
 
             if (resourceCount > 0)
             {
-                // global::System.Span<ulong> span1 = stackalloc ulong[<RESOURCES>];
-                statements.Insert(1,
-                    LocalDeclarationStatement(
-                        VariableDeclaration(
-                            GenericName(Identifier("global::System.Span"))
-                            .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ULongKeyword))))
-                        .AddVariables(
-                            VariableDeclarator(Identifier("span1"))
-                            .WithInitializer(EqualsValueClause(
-                                StackAllocArrayCreationExpression(
-                                    ArrayType(PredefinedType(Token(SyntaxKind.ULongKeyword)))
-                                    .AddRankSpecifiers(
-                                        ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(resourceCount)))))))))));
-
-                // ref ulong r1 = ref span1[0];
-                statements.Insert(3,
-                    LocalDeclarationStatement(
-                        VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ULongKeyword))))
-                        .AddVariables(
-                            VariableDeclarator(Identifier("r1"))
-                            .WithInitializer(EqualsValueClause(
-                                RefExpression(
-                                    ElementAccessExpression(IdentifierName("span1"))
-                                    .AddArgumentListArguments(Argument(
-                                        LiteralExpression(
-                                            SyntaxKind.NumericLiteralExpression,
-                                            Literal(0))))))))));
-
                 // loader.LoadCapturedResources(span1);
                 statements.Add(
                     ExpressionStatement(

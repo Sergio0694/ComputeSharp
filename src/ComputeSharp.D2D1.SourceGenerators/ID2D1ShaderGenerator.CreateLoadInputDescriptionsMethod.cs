@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -25,12 +24,13 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="inputDescriptions">The produced input descriptions for the shader.</param>
         public static void GetInfo(
-            ImmutableArray<DiagnosticInfo>.Builder diagnostics,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out ImmutableArray<InputDescription> inputDescriptions)
         {
             int inputCount = 0;
-            ImmutableArray<InputDescription>.Builder inputDescriptionsBuilder = ImmutableArray.CreateBuilder<InputDescription>();
+
+            using ImmutableArrayBuilder<InputDescription> inputDescriptionsBuilder = ImmutableArrayBuilder<InputDescription>.Rent();
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
@@ -64,21 +64,31 @@ partial class ID2D1ShaderGenerator
             }
 
             // All simple indices must be in range
-            if (inputDescriptionsBuilder.Any(description => description.Index >= inputCount))
+            foreach (InputDescription inputDescription in inputDescriptionsBuilder.WrittenSpan)
             {
-                diagnostics.Add(OutOfRangeInputDescriptionIndex, structDeclarationSymbol, structDeclarationSymbol);
+                if (inputDescription.Index >= inputCount)
+                {
+                    diagnostics.Add(OutOfRangeInputDescriptionIndex, structDeclarationSymbol, structDeclarationSymbol);
 
-                return;
+                    return;
+                }
             }
 
-            HashSet<uint> inputDescriptionIndices = new(inputDescriptionsBuilder.Select(description => description.Index));
+            Span<bool> selectedInputDescriptionIndices = stackalloc bool[8];
 
             // All input description indices must be unique
-            if (inputDescriptionIndices.Count != inputDescriptionsBuilder.Count)
+            foreach (InputDescription inputDescription in inputDescriptionsBuilder.WrittenSpan)
             {
-                diagnostics.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
+                ref bool isInputDescriptionIndexUsed = ref selectedInputDescriptionIndices[(int)inputDescription.Index];
 
-                return;
+                if (isInputDescriptionIndexUsed)
+                {
+                    diagnostics.Add(RepeatedD2DInputDescriptionIndices, structDeclarationSymbol, structDeclarationSymbol);
+
+                    return;
+                }
+
+                isInputDescriptionIndexUsed = true;
             }
 
             inputDescriptions = inputDescriptionsBuilder.ToImmutable();

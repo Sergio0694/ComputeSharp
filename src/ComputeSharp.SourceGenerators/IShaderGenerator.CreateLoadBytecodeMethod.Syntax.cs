@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -237,18 +238,17 @@ partial class IShaderGenerator
         /// <returns>A formatted <see cref="string"/> with the serialized data.</returns>
         private static string BuildShaderBytecodeExpressionString(ReadOnlySpan<byte> bytecode)
         {
-            //The estimation is 4 characters per byte (up to "255" in hex), plus ", " to separate sequential values
-            using ArrayPoolStringBuilder builder = ArrayPoolStringBuilder.Create(bytecode.Length * 6);
+            using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
 
-            builder.Append(formattedBytes[bytecode[0]]);
+            builder.AddRange(formattedBytes[bytecode[0]].AsSpan());
 
             foreach (byte b in bytecode.Slice(1))
             {
-                builder.Append(", ");
-                builder.Append(formattedBytes[b]);
+                builder.AddRange(", ".AsSpan());
+                builder.AddRange(formattedBytes[b].AsSpan());
             }
 
-            return builder.WrittenSpan.ToString();
+            return builder.ToString();
         }
     }
 }

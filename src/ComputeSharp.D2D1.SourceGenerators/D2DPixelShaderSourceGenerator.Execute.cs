@@ -7,6 +7,7 @@ using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
@@ -29,7 +30,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string? GetInvalidReturnType(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static string? GetInvalidReturnType(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
             if (!(methodSymbol.ReturnType is INamedTypeSymbol
                 {
@@ -58,7 +59,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The HLSL source to compile, if present.</returns>
-        public static string GetHlslSource(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static string GetHlslSource(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
             _ = methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
 
@@ -80,7 +81,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
-        public static D2D1ShaderProfile GetShaderProfile(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1ShaderProfile GetShaderProfile(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
@@ -107,7 +108,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
         /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions GetCompileOptions(ImmutableArray<DiagnosticInfo>.Builder diagnostics, IMethodSymbol methodSymbol)
+        public static D2D1CompileOptions GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
             if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {

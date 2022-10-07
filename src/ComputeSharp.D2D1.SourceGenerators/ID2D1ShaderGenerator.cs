@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -50,7 +51,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    ImmutableArray<DiagnosticInfo>.Builder diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(

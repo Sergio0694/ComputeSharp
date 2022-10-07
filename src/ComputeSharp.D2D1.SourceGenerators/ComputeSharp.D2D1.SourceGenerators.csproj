@@ -63,7 +63,6 @@
 
     <!-- ComputeSharp APIs -->
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
-    <Compile Include="..\ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" />
 
     <!-- ComputeSharp.D2D1 APIs -->
     <Compile Include="..\ComputeSharp.D2D1\Properties\Polyfills\StringSyntaxAttribute.cs" Link="ComputeSharp.D2D1\Properties\Polyfills\StringSyntaxAttribute.cs" />

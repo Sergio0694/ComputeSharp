@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -50,7 +51,7 @@ partial class ID2D1ShaderGenerator
                 return ImmutableArray<StatementSyntax>.Empty;
             }
 
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
             // Insert the fallback for empty shaders. This will generate the following code:
             //

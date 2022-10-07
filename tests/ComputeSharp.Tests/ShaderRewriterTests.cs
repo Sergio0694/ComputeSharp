@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

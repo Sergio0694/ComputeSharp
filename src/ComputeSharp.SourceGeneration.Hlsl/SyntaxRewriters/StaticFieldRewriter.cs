@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -31,7 +30,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics)
+        ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
         : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
     }

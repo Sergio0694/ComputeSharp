@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -62,14 +63,14 @@ partial class ID2D1ShaderGenerator
                                     Token(SyntaxKind.DefaultKeyword))))));
             }
 
-            ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
             // The size of the buffer with the input descriptions is the number of input descriptions, times the size of each
             // input description, which is a struct containing three int-sized fields (index, filter, and level of detail).
             int inputDescriptionSizeInBytes = inputDescriptions.Length * sizeof(int) * 3;
 
             // global::System.Span<byte> data = stackalloc byte[<INPUT_DESCRIPTIONS_SIZE>];
-            statements.Insert(0,
+            statements.Add(
                 LocalDeclarationStatement(
                     VariableDeclaration(
                         GenericName(Identifier("global::System.Span"))
@@ -84,7 +85,7 @@ partial class ID2D1ShaderGenerator
                                         LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputDescriptionSizeInBytes)))))))))));
 
             // ref byte r0 = ref data[0];
-            statements.Insert(1,
+            statements.Add(
                 LocalDeclarationStatement(
                     VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
                     .AddVariables(
