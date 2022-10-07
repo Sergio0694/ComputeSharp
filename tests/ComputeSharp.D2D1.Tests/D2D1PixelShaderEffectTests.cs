@@ -45,6 +45,7 @@ public partial class D2D1PixelShaderEffectTests
         {
         }
 
+        [D2DInputCount(0)]
         public partial struct Shader : ID2D1PixelShader
         {
             public float4 Execute() => default;
