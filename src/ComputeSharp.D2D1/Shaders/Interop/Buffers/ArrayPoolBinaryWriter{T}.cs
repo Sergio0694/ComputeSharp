@@ -59,7 +59,7 @@ internal ref struct ArrayPoolBufferWriter<T>
 
             if (array is null)
             {
-                ThrowObjectDisposedException();
+                ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
             }
 
             return array.AsSpan(0, this.index);
@@ -80,17 +80,17 @@ internal ref struct ArrayPoolBufferWriter<T>
 
         if (array is null)
         {
-            ThrowObjectDisposedException();
+            ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
         }
 
         if (count < 0)
         {
-            ThrowArgumentOutOfRangeExceptionForNegativeCount();
+            ArrayPoolBufferWriterHelpers.ThrowArgumentOutOfRangeExceptionForNegativeCount();
         }
 
         if (this.index > array.Length - count)
         {
-            ThrowArgumentExceptionForAdvancedTooFar();
+            ArrayPoolBufferWriterHelpers.ThrowArgumentExceptionForAdvancedTooFar();
         }
 
         this.index += count;
@@ -120,12 +120,12 @@ internal ref struct ArrayPoolBufferWriter<T>
 
         if (array is null)
         {
-            ThrowObjectDisposedException();
+            ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
         }
 
         if (sizeHint < 0)
         {
-            ThrowArgumentOutOfRangeExceptionForNegativeSizeHint();
+            ArrayPoolBufferWriterHelpers.ThrowArgumentOutOfRangeExceptionForNegativeSizeHint();
         }
 
         if (sizeHint == 0)
@@ -181,12 +181,18 @@ internal ref struct ArrayPoolBufferWriter<T>
 
         ArrayPool<T>.Shared.Return(array);
     }
+}
 
+/// <summary>
+/// Private helpers for <see cref="ArrayPoolBufferWriter{T}"/>.
+/// </summary>
+file static class ArrayPoolBufferWriterHelpers
+{
     /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
     /// </summary>
     [DoesNotReturn]
-    private static void ThrowArgumentOutOfRangeExceptionForNegativeCount()
+    public static void ThrowArgumentOutOfRangeExceptionForNegativeCount()
     {
         throw new ArgumentOutOfRangeException("count", "The count can't be a negative value.");
     }
@@ -195,7 +201,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the size hint is negative.
     /// </summary>
     [DoesNotReturn]
-    private static void ThrowArgumentOutOfRangeExceptionForNegativeSizeHint()
+    public static void ThrowArgumentOutOfRangeExceptionForNegativeSizeHint()
     {
         throw new ArgumentOutOfRangeException("sizeHint", "The size hint can't be a negative value.");
     }
@@ -204,16 +210,16 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
     /// </summary>
     [DoesNotReturn]
-    private static void ThrowArgumentExceptionForAdvancedTooFar()
+    public static void ThrowArgumentExceptionForAdvancedTooFar()
     {
         throw new ArgumentException("The buffer writer has advanced too far.");
     }
 
     /// <summary>
-    /// Throws an <see cref="ObjectDisposedException"/> when <see cref="array"/> is <see langword="null"/>.
+    /// Throws an <see cref="ObjectDisposedException"/> when the array is <see langword="null"/>.
     /// </summary>
     [DoesNotReturn]
-    private static void ThrowObjectDisposedException()
+    public static void ThrowObjectDisposedException()
     {
         throw new ObjectDisposedException("The current buffer has already been disposed.");
     }
