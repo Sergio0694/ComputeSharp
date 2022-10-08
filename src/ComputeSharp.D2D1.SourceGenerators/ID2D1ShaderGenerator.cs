@@ -208,18 +208,24 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the BuildHlslSource() info (hierarchy and HLSL source)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
+        // Check whether raw multiline string literals can be used (C# 11)
+        IncrementalValueProvider<bool> canUseRawMultilineStringLiterals =
+            context.ParseOptionsProvider
+            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp11 });
+
+        // Get the BuildHlslSource() info (hierarchy, HLSL source and parsing options)
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, string HlslSource) Info, bool CanUseRawMultilineStringLiterals)> hlslSourceInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource));
+            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource))
+            .Combine(canUseSkipLocalsInit);
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Info.HlslSource, item.Info.Hierarchy.Hierarchy.Length, item.CanUseRawMultilineStringLiterals);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FilenameHint}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get a filtered sequence to enable caching for the HLSL source info, before the shader compilation step

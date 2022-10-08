@@ -4,6 +4,7 @@ using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -24,12 +25,13 @@ partial class IShaderGenerator
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
+        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
             ImmutableArray<StatementSyntax> bodyStatements = supportsDynamicShaders
-                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth)
+                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth, useRawMultiLineStringLiteralExpression)
                 : GenerateEmptyMethodBody();
 
             // This code produces a method declaration as follows:
@@ -81,8 +83,9 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
+        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth)
+        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
         {
             using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
@@ -112,19 +115,23 @@ partial class IShaderGenerator
             {
                 if (textBuilder.Length > 0)
                 {
-                    string text = textBuilder.ToString();
+                    string hlslSource = textBuilder.ToString();
 
-                    textBuilder.Append(text);
+                    textBuilder.Append(hlslSource);
 
                     sizeHint += textBuilder.Length;
+
+                    SyntaxToken hlslSourceLiteralExpression = useRawMultiLineStringLiteralExpression switch
+                    {
+                        true => SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth),
+                        false => Literal(hlslSource)
+                    };
 
                     statements.Add(
                         ExpressionStatement(
                             InvocationExpression(
                                 MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                                .AddArgumentListArguments(Argument(LiteralExpression(
-                                    SyntaxKind.StringLiteralExpression,
-                                    SyntaxTokenHelper.CreateRawMultilineStringLiteral(text, hierarchyDepth))))));
+                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralExpression)))));
 
                     textBuilder.Clear();
                 }
