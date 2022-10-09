@@ -23,7 +23,7 @@ internal readonly partial struct HelloWorld : ID2D1PixelShader
     /// <inheritdoc/>
     public float4 Execute()
     {
-        Int2 xy = (int2)D2D.GetScenePosition().XY;
+        int2 xy = (int2)D2D.GetScenePosition().XY;
 
         // Normalized screen space UV coordinates from 0.0 to 1.0
         float2 uv = xy / (float2)this.dispatchSize;

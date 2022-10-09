@@ -9,15 +9,21 @@ namespace ComputeSharp.D2D1.Tests;
 public class ShadersTests
 {
     [TestMethod]
+    public void HelloWorld()
+    {
+        RunTest<Shaders.HelloWorld>();
+    }
+
+    [TestMethod]
     public void ColorfulInfinity()
     {
         RunTest<Shaders.ColorfulInfinity>();
     }
 
     [TestMethod]
-    public void HelloWorld()
+    public void FractalTiling()
     {
-        RunTest<Shaders.HelloWorld>();
+        RunTest<Shaders.FractalTiling>();
     }
 
     private static void RunTest<T>()
@@ -25,6 +31,6 @@ public class ShadersTests
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
 
-        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{typeof(T).Name}.png");
+        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{typeof(T).Name}.png", $"{typeof(T).Name}.png");
     }
 }
