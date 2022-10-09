@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
@@ -92,7 +92,7 @@
     <None Update="Assets\TriangleGridContouring.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\ComputeSharp.Tests\Assets\TwoTiledTruchet.png" Link="Assets\TwoTiledTruchet.png">
+    <None Update="Assets\TwoTiledTruchet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

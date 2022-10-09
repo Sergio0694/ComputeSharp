@@ -33,6 +33,12 @@ public class ShadersTests
     }
 
     [TestMethod]
+    public void TwoTiledTruchet()
+    {
+        RunTest<Shaders.TwoTiledTruchet>();
+    }
+
+    [TestMethod]
     public void Octagrams()
     {
         RunTest<Shaders.Octagrams>();
