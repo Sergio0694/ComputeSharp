@@ -38,6 +38,12 @@ public class ShadersTests
         RunTest<Shaders.Octagrams>();
     }
 
+    [TestMethod]
+    public void ProteanClouds()
+    {
+        RunTest<Shaders.ProteanClouds>();
+    }
+
     private static void RunTest<T>(float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
