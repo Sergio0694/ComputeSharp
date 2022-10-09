@@ -26,11 +26,17 @@ public class ShadersTests
         RunTest<Shaders.FractalTiling>();
     }
 
-    private static void RunTest<T>()
+    [TestMethod]
+    public void MengerJourney()
+    {
+        RunTest<Shaders.MengerJourney>(0.000011f);
+    }
+
+    private static void RunTest<T>(float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
 
-        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{typeof(T).Name}.png", $"{typeof(T).Name}.png");
+        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{typeof(T).Name}.png", $"{typeof(T).Name}.png", threshold);
     }
 }

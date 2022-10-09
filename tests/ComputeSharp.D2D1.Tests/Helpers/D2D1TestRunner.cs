@@ -27,12 +27,14 @@ internal static class D2D1TestRunner
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
     /// <param name="shader">The shader to run.</param>
+    /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
         ID2D1TransformMapperFactory<T>? transformMapperFactory,
         string originalFileName,
         string expectedFileName,
-        [CallerMemberName] string destinationFileName = "")
+        [CallerMemberName] string destinationFileName = "",
+        float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
@@ -52,7 +54,7 @@ internal static class D2D1TestRunner
             destinationPath);
 
         // Compare the results
-        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, threshold);
     }
 
     /// <summary>
@@ -64,12 +66,14 @@ internal static class D2D1TestRunner
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
     /// <param name="shader">The shader to run.</param>
+    /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
         int width,
         int height,
         string expectedFileName,
-        [CallerMemberName] string destinationFileName = "")
+        [CallerMemberName] string destinationFileName = "",
+        float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
@@ -89,7 +93,7 @@ internal static class D2D1TestRunner
             destinationPath);
 
         // Compare the results
-        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, threshold);
     }
 
     /// <summary>
