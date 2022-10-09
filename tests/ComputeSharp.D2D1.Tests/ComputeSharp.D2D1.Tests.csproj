@@ -59,6 +59,42 @@
     <None Include="..\ComputeSharp.Tests\Assets\CityWith1920x1280Resizing.png" Link="Assets\City.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ColorfulInfinity.png" Link="Assets\ColorfulInfinity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ContouredLayers.png" Link="Assets\ContouredLayers.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png" Link="Assets\ExtrudedTruchetPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\FourColorGradient.png" Link="Assets\FourColorGradient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\FractalTiling.png" Link="Assets\FractalTiling.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\HelloWorld.png" Link="Assets\HelloWorld.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\MengerJourney.png" Link="Assets\MengerJourney.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\Octagrams.png" Link="Assets\Octagrams.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ProteanClouds.png" Link="Assets\ProteanClouds.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\PyramidPattern.png" Link="Assets\PyramidPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\TriangleGridContouring.png" Link="Assets\TriangleGridContouring.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\TwoTiledTruchet.png" Link="Assets\TwoTiledTruchet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -13,8 +13,8 @@ using SixLabors.ImageSharp.Processing;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("EndToEnd")]
-public class EndToEndTests
+[TestCategory("Effects")]
+public class EffectsTests
 {
     [AssemblyInitialize]
     public static void ConfigureImageSharp(TestContext _)
