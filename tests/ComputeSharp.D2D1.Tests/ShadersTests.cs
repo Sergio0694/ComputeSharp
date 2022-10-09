@@ -14,6 +14,12 @@ public class ShadersTests
         RunTest<Shaders.ColorfulInfinity>();
     }
 
+    [TestMethod]
+    public void HelloWorld()
+    {
+        RunTest<Shaders.HelloWorld>();
+    }
+
     private static void RunTest<T>()
         where T : unmanaged, ID2D1PixelShader
     {
