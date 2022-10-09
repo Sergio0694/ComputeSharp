@@ -51,6 +51,12 @@ public class ShadersTests
     }
 
     [TestMethod]
+    public void PyramidPattern()
+    {
+        RunTest<Shaders.PyramidPattern>();
+    }
+
+    [TestMethod]
     public void TriangleGridContouring()
     {
         RunTest<Shaders.TriangleGridContouring>();

@@ -68,9 +68,6 @@
     <None Include="..\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png" Link="Assets\ExtrudedTruchetPattern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\ComputeSharp.Tests\Assets\FourColorGradient.png" Link="Assets\FourColorGradient.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\ComputeSharp.Tests\Assets\FractalTiling.png" Link="Assets\FractalTiling.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -86,7 +83,7 @@
     <None Include="..\ComputeSharp.Tests\Assets\ProteanClouds.png" Link="Assets\ProteanClouds.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\ComputeSharp.Tests\Assets\PyramidPattern.png" Link="Assets\PyramidPattern.png">
+    <None Update="Assets\PyramidPattern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\TriangleGridContouring.png">
