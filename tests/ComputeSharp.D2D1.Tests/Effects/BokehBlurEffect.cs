@@ -5,7 +5,6 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Extensions;
 using ComputeSharp.D2D1.Tests.Helpers;
@@ -15,7 +14,7 @@ using Win32.Graphics.Direct2D;
 
 #pragma warning disable IDE0065
 
-namespace ComputeSharp.BokehBlur.Processors;
+namespace ComputeSharp.D2D1.Tests.Effects;
 
 using D2D1_BORDER_EDGE_MODE = BorderEdgeMode;
 using D2D1_BORDER_PROP = BorderProp;
