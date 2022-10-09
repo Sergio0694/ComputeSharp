@@ -32,6 +32,12 @@ public class ShadersTests
         RunTest<Shaders.MengerJourney>(0.000011f);
     }
 
+    [TestMethod]
+    public void Octagrams()
+    {
+        RunTest<Shaders.Octagrams>();
+    }
+
     private static void RunTest<T>(float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
