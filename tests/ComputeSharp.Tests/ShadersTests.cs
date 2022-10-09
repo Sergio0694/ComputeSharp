@@ -178,6 +178,10 @@ public class ShadersTests
                 static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
                     where T : struct, IPixelShader<float4>
                 {
+                    ShaderInfo info = ReflectionServices.GetShaderInfo<T, float4>();
+
+                    Assert.IsFalse(info.RequiresDoublePrecisionSupport);
+
                     texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
                 }
 
