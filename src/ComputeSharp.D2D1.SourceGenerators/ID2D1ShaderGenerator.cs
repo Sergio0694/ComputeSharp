@@ -217,7 +217,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<((HierarchyInfo Hierarchy, string HlslSource) Info, bool CanUseRawMultilineStringLiterals)> hlslSourceInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource))
-            .Combine(canUseSkipLocalsInit);
+            .Combine(canUseRawMultilineStringLiterals);
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
