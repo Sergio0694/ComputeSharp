@@ -6,11 +6,11 @@
     <Features>strict</Features>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.4.0-2.final" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.4.0-2.final" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Centralized location for all generated artifacts -->
@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <!-- If the current branch and action match a release for NuGet, override the relative build properties -->
-  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">    
+  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">
     <IsCommitOnReleaseBranch>true</IsCommitOnReleaseBranch>
     <ComputeSharpPackageVersionFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[1].Value)</ComputeSharpPackageVersionFromReleaseBranch>
     <ComputeSharpPackageVersionSuffixFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[2].Value)</ComputeSharpPackageVersionSuffixFromReleaseBranch>
@@ -59,7 +59,7 @@
     <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>    
+    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
@@ -72,7 +72,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>    
+  <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 

@@ -41,12 +41,12 @@ indent_size = 2
 indent_size = 2
 insert_final_newline = true
 
-# C# files
-[*.cs]
-
 # XAML files
 [*.xaml]
 indent_size = 4
+
+# C# files
+[*.cs]
 
 #### .NET Coding Conventions ####
 
