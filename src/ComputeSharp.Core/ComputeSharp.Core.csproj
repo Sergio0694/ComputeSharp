@@ -13,6 +13,7 @@
     <InternalsVisibleTo Include="ComputeSharp.Uwp" />
     <InternalsVisibleTo Include="ComputeSharp.WinUI" />
     <InternalsVisibleTo Include="ComputeSharp.D2D1" />
+    <InternalsVisibleTo Include="ComputeSharp.D2D1.Uwp" />
   </ItemGroup>
 
   <!-- .NET Standard 2.0 polyfill packages -->

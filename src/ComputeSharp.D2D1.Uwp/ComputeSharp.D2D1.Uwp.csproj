@@ -1,0 +1,41 @@
+<Project Sdk="MSBuild.Sdk.Extras">
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763</TargetFrameworks>
+    <TargetPlatformBaseVersion>10.0</TargetPlatformBaseVersion>
+    <TargetPlatformRevision>19041</TargetPlatformRevision>
+    <TargetPlatformMinRevision>17763</TargetPlatformMinRevision>
+    <TargetPlatformVersion>$(TargetPlatformBaseVersion).$(TargetPlatformRevision).0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>$(TargetPlatformBaseVersion).$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
+    <DebugType>Portable</DebugType>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <IsPackable>true</IsPackable>
+    <IsPublishable>true</IsPublishable>
+    <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <RootNamespace>ComputeSharp.D2D1.Uwp</RootNamespace>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win10-x64;win-arm64</RuntimeIdentifiers>
+    <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp.D2D1.Uwp</PackageId>
+    <Title>ComputeSharp.D2D1.Uwp</Title>
+    <Description>A UWP library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1</Description>
+    <PackageTags>$(PackageTags) uwp winui</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\ComputeSharp.Core.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
+    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+  </ItemGroup>
+</Project>
