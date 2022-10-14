@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
@@ -252,10 +252,10 @@ internal unsafe static class Win32ApplicationRunner
                 _ = Windows.GetCursorPos(&point);
                 _ = Windows.GetWindowRect(hwnd, &rect);
 
-                    bool isAtTop = Math.Abs(point.y - rect.top) < 12;
-                    bool isAtRight = Math.Abs(point.x - rect.right) < 12;
-                    bool isAtBottom = Math.Abs(point.y - rect.bottom) < 12;
-                    bool isAtLeft = Math.Abs(point.x - rect.left) < 12;
+                bool isAtTop = Math.Abs(point.y - rect.top) < 12;
+                bool isAtRight = Math.Abs(point.x - rect.right) < 12;
+                bool isAtBottom = Math.Abs(point.y - rect.bottom) < 12;
+                bool isAtLeft = Math.Abs(point.x - rect.left) < 12;
 
                 if (isAtTop)
                 {

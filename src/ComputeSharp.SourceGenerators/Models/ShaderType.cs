@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SourceGenerators.Models;
+namespace ComputeSharp.SourceGenerators.Models;
 
 /// <summary>
 /// Indicates a type of shader being processed.

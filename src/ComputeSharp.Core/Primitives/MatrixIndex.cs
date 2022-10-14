@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// A type indicating a base-1 index into a matrix type. This can be used to extract references to swizzled vectors within a given matrix value.

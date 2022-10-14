@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SourceGenerators.Models;
+namespace ComputeSharp.SourceGenerators.Models;
 
 /// <summary>
 /// A resource descriptor for a captured resource in a shader.

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// A simple shader to get started with based on shadertoy new shader template.

@@ -1,4 +1,4 @@
-﻿using TerraFX.Interop.DirectX;
+using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Commands.Interop;
 

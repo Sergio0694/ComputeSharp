@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;

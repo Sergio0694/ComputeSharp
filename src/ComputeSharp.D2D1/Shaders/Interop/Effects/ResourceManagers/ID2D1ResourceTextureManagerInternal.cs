@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
@@ -22,7 +22,7 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal
         get
         {
             ReadOnlySpan<byte> data = new byte[] {
-                0x24, 0x10, 0xBB, 0x5C, 
+                0x24, 0x10, 0xBB, 0x5C,
                 0xA1, 0x8E,
                 0x89, 0x46,
                 0x81, 0xBF,

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.Tests.Attributes;
@@ -26,7 +26,7 @@ public class ImageProcessingTests
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
         using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
-        
+
         original.Mutate(c => c.Resize(1920, 1080));
 
         using var cpu = original.Clone(c => c.BokehBlur(40, 2, 3));

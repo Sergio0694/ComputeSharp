@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// Utilizing a 2D simplex grid to construct the isolines of a noise function.
@@ -45,7 +45,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     private float N2D3G(float2 p)
     {
         float2 i = Hlsl.Floor(p);
-        
+
         p -= i;
 
         float4 v = default;
@@ -130,7 +130,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         if (iTh >= 4 && iTh <= 6)
         {
             float2 tmp = p0;
-            
+
             p0 = p1;
             p1 = tmp;
         }
@@ -138,7 +138,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         if (i == 0.0f)
         {
             float2 tmp = p0;
-            
+
             p0 = p1;
             p1 = tmp;
         }

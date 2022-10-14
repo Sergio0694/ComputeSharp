@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.D2D1.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

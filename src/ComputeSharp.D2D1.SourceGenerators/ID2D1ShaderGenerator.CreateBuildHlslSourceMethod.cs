@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -389,7 +389,7 @@ partial class ID2D1ShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            IReadOnlyCollection <INamedTypeSymbol> invalidTypes;
+            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
             foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))

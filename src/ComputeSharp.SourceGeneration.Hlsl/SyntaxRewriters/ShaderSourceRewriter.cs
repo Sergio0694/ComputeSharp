@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -312,7 +312,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
-        
+
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
             SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
         {

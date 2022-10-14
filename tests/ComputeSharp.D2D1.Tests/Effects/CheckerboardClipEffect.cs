@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Tests.Effects;
+namespace ComputeSharp.D2D1.Tests.Effects;
 
 [D2DInputCount(1)]
 [D2DInputSimple(0)]

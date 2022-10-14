@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.D2D1;

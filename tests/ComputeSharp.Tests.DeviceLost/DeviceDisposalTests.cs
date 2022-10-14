@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;

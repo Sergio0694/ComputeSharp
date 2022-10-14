@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Tests;
+namespace ComputeSharp.D2D1.Tests;
 
 /// <summary>
 /// A test class for the diagnostic suppressor for D2D1 resource texture fields being left uninitialized.

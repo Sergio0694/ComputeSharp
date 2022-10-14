@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 namespace ComputeSharp.Core.Intrinsics.Attributes;

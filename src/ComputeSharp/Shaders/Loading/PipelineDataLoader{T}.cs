@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Dispatching;
@@ -92,7 +92,7 @@ internal static class PipelineDataLoader<T>
         Unsafe.SkipInit(out T shader);
 
         shader.LoadDispatchMetadata(ref metadataLoader, out *(IntPtr*)&d3D12RootSignature);
-        
+
         using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.D3D12ShaderBytecode);
 
         pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());

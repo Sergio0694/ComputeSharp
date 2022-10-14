@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
@@ -140,7 +140,7 @@ internal static partial class DeviceHelper
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
         dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
-        
+
         dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
         using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;

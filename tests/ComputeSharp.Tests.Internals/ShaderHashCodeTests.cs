@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.__Internals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

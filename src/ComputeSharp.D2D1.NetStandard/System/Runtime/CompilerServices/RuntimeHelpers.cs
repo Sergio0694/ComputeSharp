@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices;

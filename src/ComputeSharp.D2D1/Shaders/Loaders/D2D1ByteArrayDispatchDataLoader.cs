@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.__Internals;
 using TerraFX.Interop.DirectX;

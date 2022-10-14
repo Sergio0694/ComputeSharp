@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1159,7 +1159,7 @@ public partial class ComputeContextTests
         for (int z = 0; z < destination.Depth; z++)
         {
             using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
-            
+
             TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
 

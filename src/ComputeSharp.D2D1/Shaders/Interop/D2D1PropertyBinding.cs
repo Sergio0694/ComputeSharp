@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Interop;
+namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// A model representing a property binding for an effect.

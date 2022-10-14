@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -301,7 +301,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the LoadInputDescriptions() info (hierarchy and input descriptions)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions) Info, bool CanUseSkipLocalsInit) > inputDescriptionsInfo =
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions) Info, bool CanUseSkipLocalsInit)> inputDescriptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions))
             .Combine(canUseSkipLocalsInit);

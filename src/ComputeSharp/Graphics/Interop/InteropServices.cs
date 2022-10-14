@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Resources;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;

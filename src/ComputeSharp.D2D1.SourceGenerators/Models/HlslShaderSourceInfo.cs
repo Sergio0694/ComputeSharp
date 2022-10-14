@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.SourceGenerators.Models;
+namespace ComputeSharp.D2D1.SourceGenerators.Models;
 
 /// <summary>
 /// A model for extracted info on a processed HLSL shader.

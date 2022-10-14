@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.InteropServices;
+namespace System.Runtime.InteropServices;
 
 /// <summary>
 /// This class contains methods that are mainly used to manage native memory.

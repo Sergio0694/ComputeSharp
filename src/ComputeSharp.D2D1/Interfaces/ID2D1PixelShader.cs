@@ -1,4 +1,4 @@
-﻿using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.__Internals;
 
 #pragma warning disable CS0618
 

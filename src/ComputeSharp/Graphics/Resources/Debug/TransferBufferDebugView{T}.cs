@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 #if NET6_0_OR_GREATER
 using GC = System.GC;
 #else

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An <see langword="enum"/> representing a supported image format.

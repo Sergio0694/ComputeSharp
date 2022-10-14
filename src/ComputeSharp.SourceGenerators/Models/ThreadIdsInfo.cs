@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SourceGenerators.Models;
+namespace ComputeSharp.SourceGenerators.Models;
 
 /// <summary>
 /// A model representing gathered info on a embedded thread ids.

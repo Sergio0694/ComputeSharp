@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// Constructing some concise contoured layers, then applying various edge and shading effects to produce some faux depth.
@@ -68,7 +68,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     private float Noise2D3G(float2 p)
     {
         float2 i = Hlsl.Floor(p);
-        
+
         p -= i;
 
         float4 v = default;
@@ -112,7 +112,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     private float3 GetColor(float2 p, float sh, float fi)
     {
         float3 tx = texture.Sample(p + Hash21(new float2(sh, fi))).XYZ;
-        
+
         tx *= tx;
 
         float3 col;

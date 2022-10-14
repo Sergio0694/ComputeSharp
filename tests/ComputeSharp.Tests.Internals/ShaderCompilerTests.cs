@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

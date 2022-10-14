@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

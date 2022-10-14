@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

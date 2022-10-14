@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;

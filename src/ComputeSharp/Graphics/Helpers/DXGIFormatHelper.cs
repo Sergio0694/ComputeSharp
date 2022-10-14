@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
@@ -85,7 +85,7 @@ internal static class DXGIFormatHelper
         {
             return true;
         }
-        
+
         return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type.");
     }
 

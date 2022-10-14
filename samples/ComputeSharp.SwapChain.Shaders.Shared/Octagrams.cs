@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// A shader creating an octagram animation, inspired by arabesque.

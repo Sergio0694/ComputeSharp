@@ -1,4 +1,4 @@
-﻿namespace System.Collections.Generic;
+namespace System.Collections.Generic;
 
 /// <summary>
 /// A helper type with extensions for the <see cref="Queue{T}"/> type.

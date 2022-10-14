@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;

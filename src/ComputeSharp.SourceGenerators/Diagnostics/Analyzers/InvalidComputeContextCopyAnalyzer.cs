@@ -53,7 +53,7 @@ public sealed class InvalidComputeContextCopyAnalyzer : DiagnosticAnalyzer
                 if (context.Operation is IArgumentOperation { Parameter.RefKind: RefKind.None } operation)
                 {
                     CheckCopyability(context, operation.Value);
-                }                
+                }
             }, OperationKind.Argument);
 
             // Returns

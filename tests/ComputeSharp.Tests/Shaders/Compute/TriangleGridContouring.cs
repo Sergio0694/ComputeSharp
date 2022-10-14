@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// Utilizing a 2D simplex grid to construct the isolines of a noise function.

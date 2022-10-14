@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;

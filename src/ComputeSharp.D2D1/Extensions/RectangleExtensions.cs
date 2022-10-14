@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.D2D1;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -340,7 +340,7 @@ partial class IShaderGenerator
 
             using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            string ? entryPoint = null;
+            string? entryPoint = null;
             bool isSamplerUsed = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
@@ -455,7 +455,7 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            IReadOnlyCollection <INamedTypeSymbol> invalidTypes;
+            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
             foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))

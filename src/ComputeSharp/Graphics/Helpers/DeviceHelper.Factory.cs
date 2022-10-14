@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;

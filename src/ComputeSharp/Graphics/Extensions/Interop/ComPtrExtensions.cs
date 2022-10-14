@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Core.Extensions;

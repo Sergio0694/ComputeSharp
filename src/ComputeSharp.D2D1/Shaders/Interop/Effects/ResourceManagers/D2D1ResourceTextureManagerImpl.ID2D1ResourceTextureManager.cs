@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

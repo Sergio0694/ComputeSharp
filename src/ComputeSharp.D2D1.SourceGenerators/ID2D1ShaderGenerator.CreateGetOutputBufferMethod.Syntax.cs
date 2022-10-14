@@ -1,4 +1,4 @@
-﻿using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

@@ -1,4 +1,4 @@
-﻿using static TerraFX.Interop.DirectX.D2D1_BUFFER_PRECISION;
+using static TerraFX.Interop.DirectX.D2D1_BUFFER_PRECISION;
 
 namespace ComputeSharp.D2D1;
 

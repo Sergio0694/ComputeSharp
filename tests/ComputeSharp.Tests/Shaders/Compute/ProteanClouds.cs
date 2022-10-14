@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// Fully procedural 3D animated volume with three evaluations per step (for shading).

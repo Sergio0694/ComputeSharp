@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.CompilerServices;
+namespace System.Runtime.CompilerServices;
 
 /// <summary>
 /// Indicates which arguments to a method involving an interpolated string handler should be passed to that handler.

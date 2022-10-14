@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using ComputeSharp.D2D1.Tests.Extensions;
 using Win32;

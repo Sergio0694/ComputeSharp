@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -24,7 +24,7 @@ internal static class SyntaxTokenHelper
         // so would otherwise case the terminating """ token to fall on the same line, which is invalid syntax. This is only
         // needed to make the code valid, as the actual literal context of the string is not affected and remains the same.
         string indentation = new(' ', 4 * indentationLevel + 4 + 4);
-        
+
         return Token(
             TriviaList(),
             SyntaxKind.MultiLineRawStringLiteralToken,

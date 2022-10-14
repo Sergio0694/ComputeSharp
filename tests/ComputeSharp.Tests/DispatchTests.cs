@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -190,7 +190,7 @@ public partial class DispatchTests
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
 
         device.Get().For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
-        
+
         int[] data = buffer.ToArray();
 
         Assert.AreEqual(4, data[0]);

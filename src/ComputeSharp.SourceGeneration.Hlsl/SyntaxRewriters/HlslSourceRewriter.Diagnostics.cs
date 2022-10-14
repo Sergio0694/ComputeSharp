@@ -1,4 +1,4 @@
-﻿using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;

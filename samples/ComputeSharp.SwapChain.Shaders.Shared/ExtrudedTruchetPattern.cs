@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// A basic extruded square grid-based blobby Truchet pattern.

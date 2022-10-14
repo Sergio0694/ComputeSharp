@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.D2D1.Interop;

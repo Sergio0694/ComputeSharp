@@ -1,4 +1,4 @@
-﻿using ComputeSharp.SourceGeneration.SyntaxRewriters;
+using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

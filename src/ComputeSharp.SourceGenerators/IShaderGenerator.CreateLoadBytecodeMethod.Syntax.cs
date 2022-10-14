@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Helpers;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace ComputeSharp.Exceptions;
@@ -31,7 +31,7 @@ public sealed class DxcCompilationException : Exception
         builder.AppendLine(error.Trim());
         builder.AppendLine();
         builder.AppendLine("Make sure to only be using supported features by checking the README file in the ComputeSharp repository: https://github.com/Sergio0694/ComputeSharp.");
-        builder.Append("If you're sure that your C# shader code is valid, please open an issue an include a working repro and this error message.");            
+        builder.Append("If you're sure that your C# shader code is valid, please open an issue an include a working repro and this error message.");
 
         return builder.ToString();
     }

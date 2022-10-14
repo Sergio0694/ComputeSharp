@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using ComputeSharp.SwapChain.Backend;
@@ -48,7 +48,7 @@ class Program
             }
 
             Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt + F4 to exit a sample once chosen)");
-            Console.WriteLine();            
+            Console.WriteLine();
 
             do
             {

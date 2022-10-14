@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Interop.Effects;

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Text;
 using ComputeSharp.Core.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;

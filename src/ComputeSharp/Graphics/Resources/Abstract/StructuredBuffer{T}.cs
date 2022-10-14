@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
@@ -239,17 +239,17 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 #else
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
 #endif
-            fixed (void* sourcePointer = &source)
-            {
-                MemoryHelper.Copy<T>(
-                    source: sourcePointer,
-                    destination: resource.Pointer,
-                    sourceElementOffset: 0,
-                    destinationElementOffset: 0,
-                    sourceElementPitchInBytes: (uint)sizeof(T),
-                    destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)length);
-            }
+                fixed (void* sourcePointer = &source)
+                {
+                    MemoryHelper.Copy<T>(
+                        source: sourcePointer,
+                        destination: resource.Pointer,
+                        sourceElementOffset: 0,
+                        destinationElementOffset: 0,
+                        sourceElementPitchInBytes: (uint)sizeof(T),
+                        destinationElementPitchInBytes: (uint)sizeof(T),
+                        count: (uint)length);
+                }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 

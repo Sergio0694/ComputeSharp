@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
@@ -95,5 +95,5 @@ public static class D2D1TransformMapperFactory<T>
     /// <typeparam name="TResult">The type of parameters that the transform mapper will use.</typeparam>
     /// <param name="shader">The input D2D1 pixel shader being executed on the current effect (this can be used to retrieve shader properties).</param>
     /// <returns>The resulting parameters to be used by the transform mapper.</returns>
-    public delegate TResult Accessor<TResult>(in T shader);    
+    public delegate TResult Accessor<TResult>(in T shader);
 }

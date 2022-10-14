@@ -1,4 +1,4 @@
-﻿using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp;

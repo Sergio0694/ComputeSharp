@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
+namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 
 /// <summary>
 /// A base type for an accessor of parameters to be used in D2D1 transform mapping implementations.

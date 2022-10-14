@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

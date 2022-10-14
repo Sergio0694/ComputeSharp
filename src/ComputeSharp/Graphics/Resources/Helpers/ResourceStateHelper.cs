@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
@@ -21,8 +21,8 @@ internal static class ResourceStateHelper
         if (resourceState == ResourceState.ReadOnly)
         {
             return D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
-        }        
-        
+        }
+
         if (resourceState == ResourceState.ReadWrite)
         {
             return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;

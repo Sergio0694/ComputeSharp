@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Graphics.Helpers;
@@ -101,7 +101,7 @@ internal static class MemoryHelper
                 uint count)
             {
                 void* sourceEnd = (byte*)source + count * sourceElementPitchInBytes;
-                
+
                 while (source < sourceEnd)
                 {
                     *(T*)destination = *(T*)source;

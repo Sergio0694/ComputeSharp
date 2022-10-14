@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.__Internals;
 using Microsoft.CodeAnalysis.CSharp;

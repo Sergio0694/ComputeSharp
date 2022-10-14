@@ -1,4 +1,4 @@
-﻿using static TerraFX.Interop.DirectX.D2D1_CHANNEL_DEPTH;
+using static TerraFX.Interop.DirectX.D2D1_CHANNEL_DEPTH;
 
 namespace ComputeSharp.D2D1;
 

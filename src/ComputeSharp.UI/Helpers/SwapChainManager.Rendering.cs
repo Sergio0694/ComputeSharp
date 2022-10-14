@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -249,7 +249,7 @@ partial class SwapChainManager<TOwner>
             }
 
             OnResize();
-            
+
             if (OnUpdate(renderStopwatch.Elapsed, parameter))
             {
                 OnWaitForPresent();

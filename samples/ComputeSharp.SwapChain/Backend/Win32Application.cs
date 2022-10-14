@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;

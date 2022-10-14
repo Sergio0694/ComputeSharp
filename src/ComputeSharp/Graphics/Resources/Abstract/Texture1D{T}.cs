@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
@@ -389,14 +389,14 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
 #endif
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-        fixed (void* sourcePointer = &source)
-        {
-            Buffer.MemoryCopy(
-                source: sourcePointer,
-                destination: resource.Pointer,
-                destinationSizeInBytes: rowSizeInBytes,
-                sourceBytesToCopy: rowSizeInBytes);
-        }
+            fixed (void* sourcePointer = &source)
+            {
+                Buffer.MemoryCopy(
+                    source: sourcePointer,
+                    destination: resource.Pointer,
+                    destinationSizeInBytes: rowSizeInBytes,
+                    sourceBytesToCopy: rowSizeInBytes);
+            }
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 

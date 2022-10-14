@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ComputeSharp.Core.Extensions;

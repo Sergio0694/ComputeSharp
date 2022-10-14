@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Core.Constants;
+namespace ComputeSharp.SwapChain.Core.Constants;
 
 /// <summary>
 /// A <see langword="class"/> with the collection of tracked errors for analytics.

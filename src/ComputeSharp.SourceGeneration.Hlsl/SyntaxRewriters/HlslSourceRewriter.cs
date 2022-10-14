@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -322,7 +322,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
     {
         var updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
-        
+
         // Process binary operations to see if the target operator method is an intrinsic
         if (SemanticModel.For(node).GetOperation(node) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
         {
@@ -339,7 +339,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                         Argument(updatedNode.Right));
             }
         }
-        
+
         return updatedNode;
     }
 

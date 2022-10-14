@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if !SOURCE_GENERATOR
 using ComputeSharp.D2D1.Interop;
 #endif

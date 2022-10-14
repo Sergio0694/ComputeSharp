@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An interface representing a pixel type and its normalized representation on the GPU side, when used within a shader.

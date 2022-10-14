@@ -1,4 +1,4 @@
-﻿using ComputeSharp.Exceptions;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp.D2D1;
 

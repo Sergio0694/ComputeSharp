@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -38,8 +38,8 @@ partial class HlslKnownTypes
     {
         return typeName switch
         {
-            "ComputeSharp.ConstantBuffer`1" or 
-            "ComputeSharp.ReadOnlyBuffer`1" or 
+            "ComputeSharp.ConstantBuffer`1" or
+            "ComputeSharp.ReadOnlyBuffer`1" or
             "ComputeSharp.ReadWriteBuffer`1" => true,
             _ => false
         };

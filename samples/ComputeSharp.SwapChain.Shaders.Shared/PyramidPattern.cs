@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// An offset grid of square-based pyramids whose tips have been offset according to an underlying directional noise field.
@@ -44,7 +44,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     private static float N2D3G(float2 p)
     {
         float2 i = Hlsl.Floor(p);
-        
+
         p -= i;
 
         float4 v = default;

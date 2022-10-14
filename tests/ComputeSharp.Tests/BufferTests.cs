@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Resources;
@@ -197,7 +197,7 @@ public partial class BufferTests
     [Data(-56, 0, 1024)]
     [Data(0, 512, 4096)]
     [Data(1024, 12, 3600)]
-    [Data(1024, 12, - 2096)]
+    [Data(1024, 12, -2096)]
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {

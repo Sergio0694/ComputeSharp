@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Win32;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;

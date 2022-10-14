@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp;

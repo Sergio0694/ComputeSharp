@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// A shader which interpolates four different colors into a rotating gradient pattern.
@@ -65,8 +65,8 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
                 u.X),
             Hlsl.Lerp(
                 Hlsl.Dot(-1.0f + 2.0f * Hash(i + new float2(0.0f, 1.0f)), f - new float2(0.0f, 1.0f)),
-                Hlsl.Dot(-1.0f + 2.0f * Hash(i + new float2(1.0f, 1.0f)), f - new float2(1.0f, 1.0f)), 
-                u.X), 
+                Hlsl.Dot(-1.0f + 2.0f * Hash(i + new float2(1.0f, 1.0f)), f - new float2(1.0f, 1.0f)),
+                u.X),
             u.Y);
 
         return 0.5f + 0.5f * n;

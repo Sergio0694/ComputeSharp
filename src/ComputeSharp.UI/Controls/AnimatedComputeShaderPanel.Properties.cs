@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
@@ -73,7 +73,7 @@ partial class AnimatedComputeShaderPanel
     private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var @this = (AnimatedComputeShaderPanel)d;
-        
+
         if (@this.IsLoaded &&
             !@this.IsPaused &&
             e.NewValue is IShaderRunner shaderRunner)

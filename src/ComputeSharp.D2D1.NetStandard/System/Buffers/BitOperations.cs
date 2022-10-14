@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.D2D1.NetStandard.System.Buffers;
 

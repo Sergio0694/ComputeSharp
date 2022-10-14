@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using ComputeSharp.SwapChain.Core.Constants;
 using ComputeSharp.SwapChain.Core.Services;

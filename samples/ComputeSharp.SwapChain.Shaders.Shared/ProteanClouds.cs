@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// Fully procedural 3D animated volume with three evaluations per step (for shading).
@@ -23,7 +23,7 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
     {
         float c = Hlsl.Cos(a);
         float s = Hlsl.Sin(a);
-        
+
         return new(c, s, -s, c);
     }
 

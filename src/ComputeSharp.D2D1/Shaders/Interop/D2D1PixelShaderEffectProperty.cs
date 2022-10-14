@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Interop;
+namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// <para>A container for indices of properties from the <see cref="D2D1PixelShaderEffect"/> type.</para>

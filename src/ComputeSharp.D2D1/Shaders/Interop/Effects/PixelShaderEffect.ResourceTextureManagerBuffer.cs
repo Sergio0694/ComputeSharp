@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 #pragma warning disable CS0649

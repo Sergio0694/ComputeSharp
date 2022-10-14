@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 #if NETCOREAPP3_1_OR_GREATER
 using System.Diagnostics.CodeAnalysis;

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Interop;
+namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// A type containing info on a description for a given D2D1 pixel shader input resource.

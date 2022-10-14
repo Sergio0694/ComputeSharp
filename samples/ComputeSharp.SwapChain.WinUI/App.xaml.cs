@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using ComputeSharp.SwapChain.WinUI.Views;
 using Microsoft.UI.Xaml;
