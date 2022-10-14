@@ -3,6 +3,8 @@ using System.Buffers;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 
+#pragma warning disable CA1063
+
 namespace ComputeSharp.Benchmark.Blas;
 
 /// <summary>
@@ -17,64 +19,64 @@ public class BlasBenchmark : IDisposable
     private const int C = 128;
 
     /// <summary>
-    /// The nummber of rows in the <see cref="X"/> matrix.
+    /// The nummber of rows in the <see cref="x"/> matrix.
     /// </summary>
     private const int N = 512;
 
     /// <summary>
-    /// The number of columns in the <see cref="X"/> matrix (same as the number of rows in the <see cref="W"/> matrix)
+    /// The number of columns in the <see cref="x"/> matrix (same as the number of rows in the <see cref="w"/> matrix)
     /// </summary>
     private const int M = 512;
 
     /// <summary>
-    /// The number of columns in the <see cref="W"/> matrix.
+    /// The number of columns in the <see cref="w"/> matrix.
     /// </summary>
     private const int P = 256;
 
     /// <summary>
     /// The input tensor.
     /// </summary>
-    private float[]? X;
+    private float[]? x;
 
     /// <summary>
     /// The weights tensor.
     /// </summary>
-    private float[]? W;
+    private float[]? w;
 
     /// <summary>
     /// The bias tensor.
     /// </summary>
-    private float[]? B;
+    private float[]? b;
 
     /// <summary>
     /// The result tensor.
     /// </summary>
-    private float[]? Y;
+    private float[]? y;
 
     /// <summary>
     /// The input tensor (GPU).
     /// </summary>
-    private ReadOnlyBuffer<float>? BufferX;
+    private ReadOnlyBuffer<float>? bufferX;
 
     /// <summary>
     /// The weights tensor (GPU).
     /// </summary>
-    private ReadOnlyBuffer<float>? BufferW;
+    private ReadOnlyBuffer<float>? bufferW;
 
     /// <summary>
     /// The bias tensor (GPU).
     /// </summary>
-    private ReadOnlyBuffer<float>? BufferB;
+    private ReadOnlyBuffer<float>? bufferB;
 
     /// <summary>
     /// The result tensor (GPU).
     /// </summary>
-    private ReadWriteBuffer<float>? BufferY;
+    private ReadWriteBuffer<float>? bufferY;
 
     /// <summary>
     /// A <see cref="System.Random"/> instance to initialize the tensors.
     /// </summary>
-    private readonly Random Random = new Random();
+    private readonly Random random = new();
 
     /// <summary>
     /// Initial setup for a benchmarking session.
@@ -89,21 +91,21 @@ public class BlasBenchmark : IDisposable
 
             foreach (ref float x in array.AsSpan())
             {
-                x = (float)Random.NextDouble();
+                x = (float)this.random.NextDouble();
             }
 
             return array;
         }
 
-        X = CreateRandomArray(C * N * M);
-        W = CreateRandomArray(M * P);
-        B = CreateRandomArray(P);
-        Y = CreateRandomArray(C * N * P);
+        this.x = CreateRandomArray(C * N * M);
+        this.w = CreateRandomArray(M * P);
+        this.b = CreateRandomArray(P);
+        this.y = CreateRandomArray(C * N * P);
 
-        BufferX = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(X);
-        BufferW = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(W);
-        BufferB = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(B);
-        BufferY = GraphicsDevice.GetDefault().AllocateReadWriteBuffer(Y);
+        this.bufferX = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.x);
+        this.bufferW = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.w);
+        this.bufferB = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.b);
+        this.bufferY = GraphicsDevice.GetDefault().AllocateReadWriteBuffer(this.y);
 
         Cpu();
         GpuWithNoTemporaryBuffers();
@@ -114,15 +116,15 @@ public class BlasBenchmark : IDisposable
     [GlobalCleanup]
     public void Dispose()
     {
-        ArrayPool<float>.Shared.Return(X!);
-        ArrayPool<float>.Shared.Return(W!);
-        ArrayPool<float>.Shared.Return(B!);
-        ArrayPool<float>.Shared.Return(Y!);
+        ArrayPool<float>.Shared.Return(this.x!);
+        ArrayPool<float>.Shared.Return(this.w!);
+        ArrayPool<float>.Shared.Return(this.b!);
+        ArrayPool<float>.Shared.Return(this.y!);
 
-        BufferX!.Dispose();
-        BufferW!.Dispose();
-        BufferB!.Dispose();
-        BufferY!.Dispose();
+        this.bufferX!.Dispose();
+        this.bufferW!.Dispose();
+        this.bufferB!.Dispose();
+        this.bufferY!.Dispose();
     }
 
     /// <summary>
@@ -131,7 +133,7 @@ public class BlasBenchmark : IDisposable
     [Benchmark(Baseline = true)]
     public void Cpu()
     {
-        BlasHelpers.FullyConnectedForwardCpu(C, N, M, P, X!, W!, B!, Y!);
+        BlasHelpers.FullyConnectedForwardCpu(C, N, M, P, this.x!, this.w!, this.b!, this.y!);
     }
 
     /// <summary>
@@ -140,7 +142,7 @@ public class BlasBenchmark : IDisposable
     [Benchmark]
     public void GpuWithNoTemporaryBuffers()
     {
-        BlasHelpers.FullyConnectedForwardGpu(GraphicsDevice.GetDefault(), C, N, M, P, BufferX!, BufferW!, BufferB!, BufferY!);
+        BlasHelpers.FullyConnectedForwardGpu(GraphicsDevice.GetDefault(), C, N, M, P, this.bufferX!, this.bufferW!, this.bufferB!, this.bufferY!);
     }
 
     /// <summary>
@@ -149,13 +151,13 @@ public class BlasBenchmark : IDisposable
     [Benchmark]
     public void GpuWithTemporaryBuffers()
     {
-        using ReadOnlyBuffer<float> x = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(X!);
-        using ReadOnlyBuffer<float> w = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(W!);
-        using ReadOnlyBuffer<float> b = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(B!);
-        using ReadWriteBuffer<float> y = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(Y!.Length);
+        using ReadOnlyBuffer<float> x = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.x!);
+        using ReadOnlyBuffer<float> w = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.w!);
+        using ReadOnlyBuffer<float> b = GraphicsDevice.GetDefault().AllocateReadOnlyBuffer(this.b!);
+        using ReadWriteBuffer<float> y = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(this.y!.Length);
 
         BlasHelpers.FullyConnectedForwardGpu(GraphicsDevice.GetDefault(), C, N, M, P, x, w, b, y);
 
-        y.CopyTo(Y);
+        y.CopyTo(this.y);
     }
 }

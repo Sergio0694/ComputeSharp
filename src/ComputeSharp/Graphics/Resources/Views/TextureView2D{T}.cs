@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 
-#pragma warning disable CS0809
+#pragma warning disable CS0809, CA1065
 
 namespace ComputeSharp;
 
@@ -16,7 +16,7 @@ namespace ComputeSharp;
 /// It is recommended to execute as much computation on the GPU side as possible.
 /// </summary>
 /// <typeparam name="T">The type of items in the current <see cref="TextureView2D{T}"/> instance.</typeparam>
-public readonly unsafe ref partial struct TextureView2D<T>
+public readonly unsafe ref struct TextureView2D<T>
     where T : unmanaged
 {
     // Let's consider a representation of a 2D texture or a generic 2D memory region.
@@ -339,7 +339,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
 
     /// <inheritdoc cref="Span{T}.Equals(object)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Equals() on Span will always throw an exception. Use == instead.")]
+    [Obsolete("Equals() on TextureView2D<T> will always throw an exception. Use == instead.")]
     public override bool Equals(object? obj)
     {
         throw new NotSupportedException("ComputeSharp.TextureView2D<T>.Equals(object) is not supported");
@@ -347,7 +347,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
 
     /// <inheritdoc cref="Span{T}.GetHashCode()"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("GetHashCode() on Span will always throw an exception.")]
+    [Obsolete("GetHashCode() on TextureView2D<T> will always throw an exception.")]
     public override int GetHashCode()
     {
         throw new NotSupportedException("ComputeSharp.TextureView2D<T>.GetHashCode() is not supported");

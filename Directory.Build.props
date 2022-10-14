@@ -3,9 +3,37 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Features>strict</Features>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!--
+      Enable the latest warning wave, which shows additional warnings for invalid language features that are disabled by default.
+      For additional info, see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves.
+    -->
+    <AnalysisLevel>7</AnalysisLevel>
+
+    <!--
+      Enable the compiler strict mode (see https://www.meziantou.net/csharp-compiler-strict-mode.htm).
+      This (poorly documented) mode enables additional warnings for incorrect usages of some features.
+      For instance, this will warn when using the == operator to compare a struct with a null literal.
+    -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!--
+      This ignores the following warning:
+      "MSB3270: There was a mismatch between the processor architecture of the project being built "MSIL" and the
+      processor architecture of the reference". It pops up because all samples are only targeting x64/Arm64.
+    -->
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
+
+    <!--
+      This ignores the following warning:
+      "CA1060: Move P/Invokes to NativeMethods class". The whole repository is full of P/Invoke-s everywhere.
+      See: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1060.
+    -->
+    <NoWarn>$(NoWarn);CA1060</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

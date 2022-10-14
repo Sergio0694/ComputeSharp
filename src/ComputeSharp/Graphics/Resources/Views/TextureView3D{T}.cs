@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 
-#pragma warning disable CS0809
+#pragma warning disable CS0809, CA1065
 
 namespace ComputeSharp;
 
@@ -13,7 +13,7 @@ namespace ComputeSharp;
 /// It is recommended to execute as much computation on the GPU side as possible.
 /// </summary>
 /// <typeparam name="T">The type of items in the current <see cref="TextureView3D{T}"/> instance.</typeparam>
-public readonly unsafe ref partial struct TextureView3D<T>
+public readonly unsafe ref struct TextureView3D<T>
     where T : unmanaged
 {
     // The internal layout of a 3D texture mapped in memory is the same as that of a
@@ -396,7 +396,7 @@ public readonly unsafe ref partial struct TextureView3D<T>
 
     /// <inheritdoc cref="Span{T}.Equals(object)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("Equals() on Span will always throw an exception. Use == instead.")]
+    [Obsolete("Equals() on TextureView3D<T> will always throw an exception. Use == instead.")]
     public override bool Equals(object? obj)
     {
         throw new NotSupportedException("ComputeSharp.TextureView3D<T>.Equals(object) is not supported");
@@ -404,7 +404,7 @@ public readonly unsafe ref partial struct TextureView3D<T>
 
     /// <inheritdoc cref="Span{T}.GetHashCode()"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("GetHashCode() on Span will always throw an exception.")]
+    [Obsolete("GetHashCode() on TextureView3D<T> will always throw an exception.")]
     public override int GetHashCode()
     {
         throw new NotSupportedException("ComputeSharp.TextureView3D<T>.GetHashCode() is not supported");

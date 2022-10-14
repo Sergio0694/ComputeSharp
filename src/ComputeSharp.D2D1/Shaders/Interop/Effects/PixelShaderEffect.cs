@@ -43,17 +43,18 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The shared vtable pointer for <see cref="PixelShaderEffect"/> instance, for <see cref="ID2D1EffectImplMethods"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1EffectImpl;
+    private static readonly void** VtblForID2D1EffectImpl = InitVtblForID2D1EffectImplAndID2D1DrawTransform();
 
     /// <summary>
     /// The shared vtable pointer for <see cref="PixelShaderEffect"/> instance, for <see cref="ID2D1DrawTransform"/>.
     /// </summary>
-    private static readonly void** VtblForID2D1DrawTransform;
+    private static readonly void** VtblForID2D1DrawTransform = &VtblForID2D1EffectImpl[6];
 
     /// <summary>
-    /// Initializes the shared state for <see cref="PixelShaderEffect"/>.
+    /// Initializes the combined vtable for <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/>.
     /// </summary>
-    static PixelShaderEffect()
+    /// <returns>The combined vtable for <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/>.</returns>
+    private static void** InitVtblForID2D1EffectImplAndID2D1DrawTransform()
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(PixelShaderEffect), sizeof(void*) * 14);
 
@@ -95,8 +96,7 @@ internal unsafe partial struct PixelShaderEffect
         lpVtbl[6 + 7] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawTransformMethods.SetDrawInfoWrapper);
 #endif
 
-        VtblForID2D1EffectImpl = lpVtbl;
-        VtblForID2D1DrawTransform = &lpVtbl[6];
+        return lpVtbl;
     }
 
     /// <summary>
@@ -363,7 +363,7 @@ internal unsafe partial struct PixelShaderEffect
             // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
             foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
             {
-                ID2D1ResourceTextureManager* resourceTextureManager = resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureDescription.Index];
 
                 if (resourceTextureManager is not null)
                 {
