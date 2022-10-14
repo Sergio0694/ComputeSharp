@@ -13,22 +13,22 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
+      uses: microsoft/setup-msbuild@v1.1
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Build
       run: msbuild -t:restore,build /p:Configuration=Debug /p:Platform=x64 /bl
       shell: cmd
     - name: Upload MSBuild binary log
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: msbuild_log
         path: msbuild.binlog
@@ -39,15 +39,15 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
+      uses: microsoft/setup-msbuild@v1.1
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Build
@@ -59,15 +59,15 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
+      uses: microsoft/setup-msbuild@v1.1
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Build
@@ -80,11 +80,11 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.3
+      uses: microsoft/setup-msbuild@v1.1
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Build ComputeSharp.Core package
@@ -112,7 +112,7 @@ jobs:
       run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
       shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
     - name: Upload package artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: nuget_preview
         path: artifacts\*.nupkg
@@ -125,13 +125,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests (.NET 6)
@@ -184,13 +184,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET 6)
@@ -230,13 +230,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Run ComputeSharp.D2D1.Tests (.NET 6)
@@ -265,13 +265,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Build ComputeSharp.Sample (.NET 6)
@@ -332,16 +332,16 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
     - name: Download package artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nuget_preview
         path: artifacts
@@ -371,16 +371,16 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
     - name: Download package artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nuget_preview
         path: artifacts
@@ -410,16 +410,16 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
     - name: Download package artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: nuget_preview
         path: artifacts
@@ -451,9 +451,9 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
@@ -467,11 +467,11 @@ jobs:
   #   runs-on: windows-2022
   #   if: ${{github.event_name == 'push'}}
   #   steps:
-  #   - uses: actions/download-artifact@v2
+  #   - uses: actions/download-artifact@v3
   #     with:
   #       name: nuget_preview
   #       path: artifacts
-  #   - uses: actions/setup-dotnet@v1
+  #   - uses: actions/setup-dotnet@v3
   #     with:
   #       dotnet-version: 6.0.x
   #   - run: dotnet nuget push "artifacts\*.nupkg" --source "https://nuget.pkg.github.com/ComputeSharp/index.json" --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
@@ -483,11 +483,11 @@ jobs:
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v3
       with:
         name: nuget_preview
         path: artifacts
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
         source-url: "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json"
