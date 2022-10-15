@@ -224,7 +224,7 @@ partial class IShaderGenerator
                 string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
                 string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
 
-                Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
+                _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
 
                 using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename);
 

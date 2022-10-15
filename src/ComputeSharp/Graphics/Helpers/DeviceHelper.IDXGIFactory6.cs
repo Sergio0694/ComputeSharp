@@ -206,7 +206,7 @@ partial class DeviceHelper
         [UnmanagedCallersOnly]
         private static uint Release(IDXGIFactory4As6Backcompat* @this)
         {
-            @this->dxgiFactory4->Release();
+            _ = @this->dxgiFactory4->Release();
 
             NativeMemory.Free(@this);
 

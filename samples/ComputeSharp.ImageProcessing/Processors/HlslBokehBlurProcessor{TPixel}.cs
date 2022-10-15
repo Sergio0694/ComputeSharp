@@ -92,7 +92,7 @@ public sealed partial class HlslBokehBlurProcessor
                 NormalizeKernels();
 
                 // Store them in the cache for future use
-                Cache.TryAdd(parameters, (kernelParameters, kernelsScale, kernels));
+                _ = Cache.TryAdd(parameters, (kernelParameters, kernelsScale, kernels));
             }
         }
 

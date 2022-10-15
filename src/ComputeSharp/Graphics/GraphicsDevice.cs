@@ -433,7 +433,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
                 this.copyCommandListPool.Rent(this.d3D12Device.Get(), null, out d3D12CommandList, out d3D12CommandAllocator);
                 break;
             default:
-                ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
+                _ = ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
                 d3D12CommandList = null;
                 d3D12CommandAllocator = null;
                 break;

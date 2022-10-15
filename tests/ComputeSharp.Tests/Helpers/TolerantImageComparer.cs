@@ -99,12 +99,12 @@ internal static class TolerantImageComparer
         if (normalizedDifference > threshold)
         {
             StringBuilder builder = new();
-            builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
-            builder.AppendLine($"First {differences.Count} pixel deltas:");
+            _ = builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
+            _ = builder.AppendLine($"First {differences.Count} pixel deltas:");
 
             foreach (var delta in differences)
             {
-                builder.AppendLine(delta.ToString());
+                _ = builder.AppendLine(delta.ToString());
             }
 
             Assert.Fail(builder.ToString());

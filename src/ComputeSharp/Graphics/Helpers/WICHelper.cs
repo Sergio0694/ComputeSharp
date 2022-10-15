@@ -372,7 +372,7 @@ internal sealed unsafe class WICHelper
 
         fixed (char* p = filename)
         {
-            wicStream.Get()->InitializeFromFilename(
+            _ = wicStream.Get()->InitializeFromFilename(
                 (ushort*)p,
                 Windows.GENERIC_WRITE);
         }
@@ -409,7 +409,7 @@ internal sealed unsafe class WICHelper
         // Create and initialize a stream
         this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
 
-        wicStream.Get()->InitializeFromStream(stream);
+        _ = wicStream.Get()->InitializeFromStream(stream);
 
         // Initialize the encoder
         wicBitmapEncoder.Get()->Initialize(
@@ -443,7 +443,7 @@ internal sealed unsafe class WICHelper
         // Create and initialize a stream
         this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
 
-        wicStream.Get()->InitializeFromBufferWriter(writer);
+        _ = wicStream.Get()->InitializeFromBufferWriter(writer);
 
         // Initialize the encoder
         wicBitmapEncoder.Get()->Initialize(
@@ -524,7 +524,7 @@ internal sealed unsafe class WICHelper
                 pbPixels: (byte*)data).Assert();
         }
 
-        wicBitmapFrameEncode.Get()->Commit();
-        wicBitmapEncoder->Commit();
+        _ = wicBitmapFrameEncode.Get()->Commit();
+        _ = wicBitmapEncoder->Commit();
     }
 }

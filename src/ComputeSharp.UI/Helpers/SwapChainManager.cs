@@ -531,7 +531,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             @this.swapChainPanelNative.Get()->SetSwapChain(null).Assert();
             @this.swapChainPanelNative.Dispose();
 
-            ThreadPool.UnsafeQueueUserWorkItem(static state =>
+            _ = ThreadPool.UnsafeQueueUserWorkItem(static state =>
             {
                 SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
 

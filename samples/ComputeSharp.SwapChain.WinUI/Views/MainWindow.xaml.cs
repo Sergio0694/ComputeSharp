@@ -49,14 +49,14 @@ public sealed partial class MainWindow : Window
     // Opens the shader selection panel
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
     {
-        Root.Resources.Remove("ShaderSelectionPanel");
+        _ = Root.Resources.Remove("ShaderSelectionPanel");
         Root.Children.Add(ShaderSelectionPanel);
     }
 
     // Hides the shader selection panel
     private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        Root.Children.Remove(ShaderSelectionPanel);
+        _ = Root.Children.Remove(ShaderSelectionPanel);
     }
 
     // Updates the size of the shaders list panel

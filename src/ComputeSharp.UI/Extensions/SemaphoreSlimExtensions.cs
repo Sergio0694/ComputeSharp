@@ -50,7 +50,7 @@ internal static class SemaphoreSlimExtensions
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.semaphore.Release();
+            _ = this.semaphore.Release();
         }
     }
 }

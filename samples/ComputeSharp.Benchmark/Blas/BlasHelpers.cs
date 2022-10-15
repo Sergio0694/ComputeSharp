@@ -47,7 +47,7 @@ internal static partial class BlasHelpers
             }
         }
 
-        Parallel.For(0, c, Kernel);
+        _ = Parallel.For(0, c, Kernel);
     }
 
     /// <summary>

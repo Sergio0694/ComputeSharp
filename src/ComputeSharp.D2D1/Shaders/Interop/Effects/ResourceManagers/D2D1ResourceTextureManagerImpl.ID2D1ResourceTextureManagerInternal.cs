@@ -165,7 +165,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 // If the texture has already been created, just return it
                 if (@this->d2D1ResourceTexture is not null)
                 {
-                    @this->d2D1ResourceTexture->AddRef();
+                    _ = @this->d2D1ResourceTexture->AddRef();
 
                     *resourceTexture = @this->d2D1ResourceTexture;
 
@@ -194,10 +194,10 @@ partial struct D2D1ResourceTextureManagerImpl
                 if (result == S.S_OK)
                 {
                     // Store the resource texture for later
-                    d2D1ResourceTexture.CopyTo(&@this->d2D1ResourceTexture);
+                    _ = d2D1ResourceTexture.CopyTo(&@this->d2D1ResourceTexture);
 
                     // Also return it to callers
-                    d2D1ResourceTexture.CopyTo(resourceTexture);
+                    _ = d2D1ResourceTexture.CopyTo(resourceTexture);
 
                     // Free the staging buffers
                     NativeMemory.Free(@this->resourceTextureProperties.extents);

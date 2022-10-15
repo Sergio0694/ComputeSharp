@@ -196,11 +196,11 @@ internal unsafe static class Win32ApplicationRunner
 
                     if (isPaused)
                     {
-                        Windows.SetCapture(hwnd);
+                        _ = Windows.SetCapture(hwnd);
                     }
                     else
                     {
-                        Windows.ReleaseCapture();
+                        _ = Windows.ReleaseCapture();
                     }
 
                     isPaused = !isPaused;

@@ -40,7 +40,7 @@ public class GetDefaultDeviceTests
             device1.Dispose();
 
             // The device is correctly marked as disposed
-            Assert.ThrowsException<ObjectDisposedException>(() => device1.IsDoublePrecisionSupportAvailable());
+            _ = Assert.ThrowsException<ObjectDisposedException>(() => device1.IsDoublePrecisionSupportAvailable());
 
             // Now there should just be this one last reference left to the native device
             Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
@@ -65,7 +65,7 @@ public class GetDefaultDeviceTests
             device4.Dispose();
 
             // The device is correctly marked as disposed
-            Assert.ThrowsException<ObjectDisposedException>(() => device4.IsDoublePrecisionSupportAvailable());
+            _ = Assert.ThrowsException<ObjectDisposedException>(() => device4.IsDoublePrecisionSupportAvailable());
 
             // Sanity check that this is in fact the only reference keeping the device alive
             Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(in d3D12Device));
@@ -79,7 +79,7 @@ public class GetDefaultDeviceTests
             }
 
             // Calling GraphicsDevice.GetDefault() will now throw, because the native device has not been disposed properly
-            Assert.ThrowsException<InvalidOperationException>(() => GraphicsDevice.GetDefault());
+            _ = Assert.ThrowsException<InvalidOperationException>(() => GraphicsDevice.GetDefault());
         }
     }
 

@@ -99,7 +99,7 @@ unsafe partial class GraphicsDevice
             device.DeviceLost?.Invoke(device, new DeviceLostEventArgs(reason));
         }
 
-        ThreadPool.QueueUserWorkItem(static state => RaiseDeviceLostEvent((GraphicsDevice)state!), this);
+        _ = ThreadPool.QueueUserWorkItem(static state => RaiseDeviceLostEvent((GraphicsDevice)state!), this);
     }
 
     /// <summary>

@@ -530,13 +530,13 @@ partial class ID2D1ShaderGenerator
 
             void AppendLF()
             {
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append('\n');
             }
 
             void AppendLineAndLF(string text)
             {
-                hlslBuilder.Append(text);
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append(text);
+                _ = hlslBuilder.Append('\n');
             }
 
             // Header

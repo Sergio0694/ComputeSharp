@@ -222,7 +222,7 @@ internal static partial class HlslKnownTypes
             // Explicitly prevent bool from being a field in a custom struct
             if (type.SpecialType == SpecialType.System_Boolean)
             {
-                invalidTypes.Add(type);
+                _ = invalidTypes.Add(type);
 
                 return;
             }
@@ -236,7 +236,7 @@ internal static partial class HlslKnownTypes
                 type.IsRefLikeType ||
                 type.GetFullyQualifiedName().StartsWith("System."))
             {
-                invalidTypes.Add(type);
+                _ = invalidTypes.Add(type);
 
                 return;
             }

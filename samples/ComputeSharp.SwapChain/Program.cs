@@ -61,7 +61,7 @@ class Program
                 Console.WriteLine();
                 Console.WriteLine($"Starting {Samples[index].ShaderName}...");
 
-                Win32ApplicationRunner.Run(Samples[index].Application);
+                _ = Win32ApplicationRunner.Run(Samples[index].Application);
             }
         }
         while (index >= 0 && index < Samples.Length);

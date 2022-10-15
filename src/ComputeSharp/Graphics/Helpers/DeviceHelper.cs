@@ -115,8 +115,8 @@ internal static partial class DeviceHelper
             if (Windows.SUCCEEDED(createDeviceResult) &&
                 d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
             {
-                d3D12DeviceCandidate.CopyTo(d3D12Device);
-                dxgiAdapter1.CopyTo(dxgiAdapter);
+                _ = d3D12DeviceCandidate.CopyTo(d3D12Device);
+                _ = dxgiAdapter1.CopyTo(dxgiAdapter);
 
                 return true;
             }
@@ -159,8 +159,8 @@ internal static partial class DeviceHelper
         // There is no need to check for SM6.0, as it's guaranteed to be supported by Windows
         if (Windows.SUCCEEDED(createDeviceResult))
         {
-            d3D12DeviceCandidate.CopyTo(d3D12Device);
-            dxgiAdapter1.CopyTo(dxgiAdapter);
+            _ = d3D12DeviceCandidate.CopyTo(d3D12Device);
+            _ = dxgiAdapter1.CopyTo(dxgiAdapter);
 
             return true;
         }

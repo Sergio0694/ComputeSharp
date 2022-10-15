@@ -26,10 +26,10 @@ public sealed class UnsupportedDoubleOperationException : NotSupportedException
     {
         StringBuilder builder = new(256);
 
-        builder.AppendLine($"The device in use does not support creating resources of type {type}, as it does not support using double precision floating point numbers.");
-        builder.AppendLine("As a possible workaround, consider replacing usage of the double type with single precision floating point numbers.");
-        builder.AppendLine("Note that double precision operations are only partially supported on GPU devices, and are far slower than single precision ones.");
-        builder.ToString();
+        _ = builder.AppendLine($"The device in use does not support creating resources of type {type}, as it does not support using double precision floating point numbers.");
+        _ = builder.AppendLine("As a possible workaround, consider replacing usage of the double type with single precision floating point numbers.");
+        _ = builder.AppendLine("Note that double precision operations are only partially supported on GPU devices, and are far slower than single precision ones.");
+        _ = builder.ToString();
 
         return new(builder.ToString());
     }

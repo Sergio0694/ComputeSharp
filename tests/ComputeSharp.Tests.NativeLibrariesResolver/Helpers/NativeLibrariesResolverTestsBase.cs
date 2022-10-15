@@ -119,7 +119,7 @@ public abstract class NativeLibrariesResolverTestsBase
         // Furthermore, only publishing in Release mode is tested.
         CleanSampleProject(Configuration.Release, RID.Win_x64);
 
-        Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -f net6.0 -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
+        _ = Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -f net6.0 -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
 
         string pathToAppHost = Path.Combine("bin", $"Release", "net6.0", "win-x64", "publish", $"{SampleProjectName}.exe");
 
@@ -135,7 +135,7 @@ public abstract class NativeLibrariesResolverTestsBase
     /// <param name="rid">The RID for which the output is cleaned.</param>
     private void CleanSampleProject(Configuration configuration, RID rid)
     {
-        Exec(SampleProjectDirectory, "dotnet", $"clean -c {configuration} {ToOption(rid)}");
+        _ = Exec(SampleProjectDirectory, "dotnet", $"clean -c {configuration} {ToOption(rid)}");
     }
 
     /// <summary>
@@ -145,7 +145,7 @@ public abstract class NativeLibrariesResolverTestsBase
     /// <param name="rid">The RID to use to build the project.</param>
     private void BuildSampleProject(Configuration configuration, RID rid)
     {
-        Exec(SampleProjectDirectory, "dotnet", $"build -c {configuration} {ToOption(rid)}");
+        _ = Exec(SampleProjectDirectory, "dotnet", $"build -c {configuration} {ToOption(rid)}");
     }
 
     /// <summary>

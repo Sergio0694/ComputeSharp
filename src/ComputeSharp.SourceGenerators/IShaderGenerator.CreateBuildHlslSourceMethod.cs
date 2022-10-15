@@ -570,31 +570,31 @@ partial class IShaderGenerator
 
             void AppendLF()
             {
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append('\n');
             }
 
             void AppendLine(string text)
             {
-                hlslBuilder.Append(text);
+                _ = hlslBuilder.Append(text);
             }
 
             void AppendLineAndLF(string text)
             {
-                hlslBuilder.Append(text);
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append(text);
+                _ = hlslBuilder.Append('\n');
             }
 
             void AppendCharacterAndLF(char c)
             {
-                hlslBuilder.Append(c);
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append(c);
+                _ = hlslBuilder.Append('\n');
             }
 
             string FlushText()
             {
                 string text = hlslBuilder.ToString();
 
-                hlslBuilder.Clear();
+                _ = hlslBuilder.Clear();
 
                 return text;
             }

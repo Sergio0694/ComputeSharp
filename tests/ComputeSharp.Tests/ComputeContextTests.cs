@@ -655,7 +655,7 @@ public partial class ComputeContextTests
 
         _ = device.Get();
 
-        Parallel.For(0, 64, _ => Test(device));
+        _ = Parallel.For(0, 64, _ => Test(device));
     }
 
     [CombinatorialTestMethod]

@@ -31,7 +31,7 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
 
-        Root.Resources.Remove("ShaderSelectionPanel");
+        _ = Root.Resources.Remove("ShaderSelectionPanel");
         Root.Children.Add(ShaderSelectionPanel);
     }
 
@@ -40,7 +40,7 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.CloseShaderSelectionPanel);
 
-        Root.Children.Remove(ShaderSelectionPanel);
+        _ = Root.Children.Remove(ShaderSelectionPanel);
     }
 
     // Updates the size of the shaders list panel

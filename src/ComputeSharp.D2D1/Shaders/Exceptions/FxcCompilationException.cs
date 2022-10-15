@@ -26,12 +26,12 @@ public sealed class FxcCompilationException : Exception
     {
         StringBuilder builder = new(512);
 
-        builder.AppendLine("The FXC compiler encountered one or more errors while trying to compile the shader:");
-        builder.AppendLine();
-        builder.AppendLine(error.Trim());
-        builder.AppendLine();
-        builder.AppendLine("Make sure to only be using supported features by checking the README file in the ComputeSharp repository: https://github.com/Sergio0694/ComputeSharp.");
-        builder.Append("If you're sure that your C# shader code is valid, please open an issue an include a working repro and this error message.");
+        _ = builder.AppendLine("The FXC compiler encountered one or more errors while trying to compile the shader:");
+        _ = builder.AppendLine();
+        _ = builder.AppendLine(error.Trim());
+        _ = builder.AppendLine();
+        _ = builder.AppendLine("Make sure to only be using supported features by checking the README file in the ComputeSharp repository: https://github.com/Sergio0694/ComputeSharp.");
+        _ = builder.Append("If you're sure that your C# shader code is valid, please open an issue an include a working repro and this error message.");
 
         return builder.ToString();
     }

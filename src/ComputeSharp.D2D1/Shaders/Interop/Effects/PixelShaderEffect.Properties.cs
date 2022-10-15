@@ -178,7 +178,7 @@ unsafe partial struct PixelShaderEffect
 
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureIndex];
 
-        resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
+        _ = resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
 
         if (actualSize is not null)
         {
@@ -261,7 +261,7 @@ unsafe partial struct PixelShaderEffect
         // If there's already an existing manager at this index, release it
         if (currentResourceTextureManager is not null)
         {
-            ((IUnknown*)currentResourceTextureManager)->Release();
+            _ = ((IUnknown*)currentResourceTextureManager)->Release();
         }
 
         // Store the resource texture manager into the buffer

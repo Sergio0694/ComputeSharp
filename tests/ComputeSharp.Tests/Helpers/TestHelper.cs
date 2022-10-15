@@ -24,7 +24,7 @@ public static class TestHelper
 
         try
         {
-            @delegate.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, arguments);
+            _ = @delegate.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, arguments);
         }
         catch (TargetInvocationException e) when (e.InnerException is not null)
         {
@@ -48,7 +48,7 @@ public static class TestHelper
 
         try
         {
-            @delegate.Method.GetGenericMethodDefinition().MakeGenericMethod(type1, type2).Invoke(null, arguments);
+            _ = @delegate.Method.GetGenericMethodDefinition().MakeGenericMethod(type1, type2).Invoke(null, arguments);
         }
         catch (TargetInvocationException e) when (e.InnerException is not null)
         {

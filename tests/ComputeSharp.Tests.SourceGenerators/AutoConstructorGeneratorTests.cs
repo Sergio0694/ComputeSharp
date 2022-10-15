@@ -97,7 +97,7 @@ public class AutoConstructorGeneratorTests
 
         CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 
-        driver.RunGeneratorsAndUpdateCompilation(compilation, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
+        _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
 
         string outputBody = outputCompilation.SyntaxTrees.Skip(index + 1).First().ToString();
 

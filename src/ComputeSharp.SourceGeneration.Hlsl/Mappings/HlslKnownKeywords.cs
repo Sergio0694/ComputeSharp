@@ -46,7 +46,7 @@ internal static partial class HlslKnownKeywords
         // HLSL primitive names
         foreach (var type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
         {
-            knownKeywords.Add(type.Name.ToLowerInvariant());
+            _ = knownKeywords.Add(type.Name.ToLowerInvariant());
         }
 
         // HLSL intrinsics method names
@@ -54,7 +54,7 @@ internal static partial class HlslKnownKeywords
         {
             string name = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()?.Name ?? method.Name;
 
-            knownKeywords.Add(name);
+            _ = knownKeywords.Add(name);
         }
 
         // Let other types inject additional keywords

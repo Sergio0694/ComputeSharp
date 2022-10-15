@@ -47,19 +47,19 @@ partial class DeviceHelper
                 {
                     nuint length;
 
-                    queue->GetMessage(i, null, &length);
+                    _ = queue->GetMessage(i, null, &length);
 
                     D3D12_MESSAGE* message = (D3D12_MESSAGE*)NativeMemory.Alloc(length);
 
                     try
                     {
-                        queue->GetMessage(i, message, &length);
+                        _ = queue->GetMessage(i, message, &length);
 
-                        builder.Clear();
-                        builder.AppendLine($"[D3D12 message #{i} for \"{device}\" (HW: {device.IsHardwareAccelerated}, UMA: {device.IsCacheCoherentUMA})]");
-                        builder.AppendLine($"[Category]: {Enum.GetName(message->Category)}");
-                        builder.AppendLine($"[Severity]: {Enum.GetName(message->Severity)}");
-                        builder.AppendLine($"[ID]: {Enum.GetName(message->ID)}");
+                        _ = builder.Clear();
+                        _ = builder.AppendLine($"[D3D12 message #{i} for \"{device}\" (HW: {device.IsHardwareAccelerated}, UMA: {device.IsCacheCoherentUMA})]");
+                        _ = builder.AppendLine($"[Category]: {Enum.GetName(message->Category)}");
+                        _ = builder.AppendLine($"[Severity]: {Enum.GetName(message->Severity)}");
+                        _ = builder.AppendLine($"[ID]: {Enum.GetName(message->ID)}");
 
                         bool isDeviceRemovedMessage = message->ID is D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_POSSIBLY_AT_FAULT or D3D12_MESSAGE_ID_DEVICE_REMOVAL_PROCESS_NOT_AT_FAULT;
 
@@ -81,14 +81,14 @@ partial class DeviceHelper
                                     _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>("Invalid GetDeviceRemovedReason HRESULT.")
                                 };
 
-                                builder.AppendLine($"[Reason]: {deviceRemovalReason}");
+                                _ = builder.AppendLine($"[Reason]: {deviceRemovalReason}");
                             }
                         }
 
                         // If DRED is enabled, also output the available auto breadcrumbs
                         if (isDeviceRemovedMessage && Configuration.IsDeviceRemovedExtendedDataEnabled)
                         {
-                            builder.AppendLine($"[Description]: \"{new string(message->pDescription)}\"");
+                            _ = builder.AppendLine($"[Description]: \"{new string(message->pDescription)}\"");
 
                             using ComPtr<ID3D12DeviceRemovedExtendedData1> d3D12DeviceRemovedExtendedData = default;
 
@@ -112,7 +112,7 @@ partial class DeviceHelper
                                 ThrowHelper.ThrowWin32Exception(hresult);
                             }
 
-                            builder.AppendLine("[DRED breadcrumbs START] ===============================");
+                            _ = builder.AppendLine("[DRED breadcrumbs START] ===============================");
 
                             int breadcrumbNodeIndex = 0;
 
@@ -126,7 +126,7 @@ partial class DeviceHelper
                                 // For each auto breadcrumb node, not all recorded breadcrumb have actually been executed. To reduce the verbosity of the
                                 // output and only show the most relevant info, indicate how many breadcrumbs were recorded and how many were actually
                                 // executed, but then only display the executed ones in the code below. This makes it easier to debug hangs for users.
-                                builder.AppendLine($"[NODE #{breadcrumbNodeIndex}]: {d3D12AutoBreadcrumbNode->BreadcrumbCount} total breadcrumb(s), {numberOfExecutedOps} executed breadcrumb(s)");
+                                _ = builder.AppendLine($"[NODE #{breadcrumbNodeIndex}]: {d3D12AutoBreadcrumbNode->BreadcrumbCount} total breadcrumb(s), {numberOfExecutedOps} executed breadcrumb(s)");
 
                                 uint contextIndex = 0;
 
@@ -145,20 +145,20 @@ partial class DeviceHelper
                                     {
                                         string context = new((char*)d3D12AutoBreadcrumbNode->pBreadcrumbContexts[contextIndex++].pContextString);
 
-                                        builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}, \"{context}\"");
+                                        _ = builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}, \"{context}\"");
                                     }
                                     else
                                     {
-                                        builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}");
+                                        _ = builder.AppendLine($">> [OP #{commandIndex}]: {d3D12AutoBreadcrumbNode->pCommandHistory[commandIndex]}");
                                     }
                                 }
                             }
 
-                            builder.AppendLine("================================= [DRED breadcrumbs END]");
+                            _ = builder.AppendLine("================================= [DRED breadcrumbs END]");
                         }
                         else
                         {
-                            builder.Append($"[Description]: \"{new string(message->pDescription)}\"");
+                            _ = builder.Append($"[Description]: \"{new string(message->pDescription)}\"");
                         }
 
                         if (message->Severity is D3D12_MESSAGE_SEVERITY_ERROR or D3D12_MESSAGE_SEVERITY_CORRUPTION or D3D12_MESSAGE_SEVERITY_WARNING)

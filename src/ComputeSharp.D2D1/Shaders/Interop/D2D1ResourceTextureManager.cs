@@ -342,7 +342,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     {
         if (this.d2D1ResourceManagerImpl is not null)
         {
-            this.d2D1ResourceManagerImpl->Release();
+            _ = this.d2D1ResourceManagerImpl->Release();
         }
     }
 

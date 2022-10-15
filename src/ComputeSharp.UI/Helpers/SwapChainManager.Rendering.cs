@@ -210,7 +210,7 @@ partial class SwapChainManager<TOwner>
         }
         finally
         {
-            this.renderSemaphore.Release();
+            _ = this.renderSemaphore.Release();
         }
     }
 

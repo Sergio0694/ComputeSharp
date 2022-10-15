@@ -90,8 +90,8 @@ internal readonly unsafe struct ID3D12CommandListPool : IDisposable
         {
             foreach (D3D12CommandListBundle d3D12CommandListBundle in this.d3D12CommandListBundleQueue)
             {
-                d3D12CommandListBundle.D3D12CommandList->Release();
-                d3D12CommandListBundle.D3D12CommandAllocator->Release();
+                _ = d3D12CommandListBundle.D3D12CommandList->Release();
+                _ = d3D12CommandListBundle.D3D12CommandAllocator->Release();
             }
 
             this.d3D12CommandListBundleQueue.Clear();
@@ -114,8 +114,8 @@ internal readonly unsafe struct ID3D12CommandListPool : IDisposable
         fixed (ID3D12GraphicsCommandList** d3D12CommandListPtr = &d3D12CommandList)
         fixed (ID3D12CommandAllocator** d3D12CommandAllocatorPtr = &d3D12CommandAllocator)
         {
-            d3D12CommandListComPtr.CopyTo(d3D12CommandListPtr);
-            d3D12CommandAllocatorComPtr.CopyTo(d3D12CommandAllocatorPtr);
+            _ = d3D12CommandListComPtr.CopyTo(d3D12CommandListPtr);
+            _ = d3D12CommandAllocatorComPtr.CopyTo(d3D12CommandAllocatorPtr);
         }
     }
 

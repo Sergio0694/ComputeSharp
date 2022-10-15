@@ -447,7 +447,7 @@ public sealed partial class BokehBlurEffect
             }
             else
             {
-                compositeEffect.Get()->SetInputCount((uint)numberOfComponents);
+                _ = compositeEffect.Get()->SetInputCount((uint)numberOfComponents);
 
                 // Aggregate all partial results with the composite effect
                 for (int i = 0; i < numberOfComponents; i++)

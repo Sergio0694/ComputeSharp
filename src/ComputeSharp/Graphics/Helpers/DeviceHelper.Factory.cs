@@ -100,11 +100,11 @@ partial class DeviceHelper
                 defaultDevice = null;
             }
 
-            DevicesCache.Remove(device.Luid);
+            _ = DevicesCache.Remove(device.Luid);
 
             if (Configuration.IsDebugOutputEnabled)
             {
-                D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
+                _ = D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
 
                 queue.Dispose();
             }

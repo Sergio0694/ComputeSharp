@@ -96,7 +96,7 @@ internal static class D2D1Helper
         using ComPtr<ID2D1Device> d2D1Device = default;
 
         // Create a D2D1 device
-        d2D1Factory2->CreateDevice(
+        _ = d2D1Factory2->CreateDevice(
             dxgiDevice: (IDXGIDevice*)dxgiDevice3.Get(),
             d2dDevice: d2D1Device.GetAddressOf());
 
@@ -227,7 +227,7 @@ internal static class D2D1Helper
         d2DRectSource.bottom = (uint)d2DSize.Height;
 
         // Copy the image from the target to the readback bitmap
-        d2D1Bitmap1Buffer.Get()->CopyFromBitmap(
+        _ = d2D1Bitmap1Buffer.Get()->CopyFromBitmap(
             destPoint: &d2DPointDestination,
             bitmap: d2D1Bitmap,
             srcRect: &d2DRectSource);
