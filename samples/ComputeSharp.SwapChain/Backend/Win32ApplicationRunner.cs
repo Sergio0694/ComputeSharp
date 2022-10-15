@@ -230,7 +230,7 @@ internal static unsafe class Win32ApplicationRunner
             // Size update
             case WM.WM_SIZE:
             {
-                if (!isResizing && wParam != (byte)Windows.SIZE_MINIMIZED)
+                if (!isResizing && wParam != Windows.SIZE_MINIMIZED)
                 {
                     application.OnResize();
                 }

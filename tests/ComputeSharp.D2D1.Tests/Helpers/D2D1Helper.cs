@@ -6,23 +6,25 @@ using Win32.Graphics.Direct2D;
 using Win32.Graphics.Direct3D11;
 using Win32.Graphics.Dxgi;
 
+#pragma warning disable IDE0065
+
 namespace ComputeSharp.D2D1.Tests.Helpers;
 
 using D2D1_ALPHA_MODE = Win32.Graphics.Direct2D.Common.AlphaMode;
-using D2D1_BITMAP_OPTIONS = Win32.Graphics.Direct2D.BitmapOptions;
-using D2D1_DEVICE_CONTEXT_OPTIONS = Win32.Graphics.Direct2D.DeviceContextOptions;
-using D2D1_FACTORY_OPTIONS = Win32.Graphics.Direct2D.FactoryOptions;
-using D2D1_FACTORY_TYPE = Win32.Graphics.Direct2D.FactoryType;
-using D2D1_INTERPOLATION_MODE = Win32.Graphics.Direct2D.InterpolationMode;
+using D2D1_BITMAP_OPTIONS = BitmapOptions;
+using D2D1_DEVICE_CONTEXT_OPTIONS = DeviceContextOptions;
+using D2D1_FACTORY_OPTIONS = FactoryOptions;
+using D2D1_FACTORY_TYPE = FactoryType;
+using D2D1_INTERPOLATION_MODE = InterpolationMode;
 using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
-using D2D1_MAP_OPTIONS = Win32.Graphics.Direct2D.MapOptions;
+using D2D1_MAP_OPTIONS = MapOptions;
 using D2D_RECT_U = Win32.Graphics.Direct2D.Common.RectU;
 using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
-using D2D1_BITMAP_PROPERTIES = Win32.Graphics.Direct2D.BitmapProperties;
-using D2D1_BITMAP_PROPERTIES1 = Win32.Graphics.Direct2D.BitmapProperties1;
+using D2D1_BITMAP_PROPERTIES = BitmapProperties;
+using D2D1_BITMAP_PROPERTIES1 = BitmapProperties1;
 using D3D_FEATURE_LEVEL = Win32.Graphics.Direct3D.FeatureLevel;
 using D3D_DRIVER_TYPE = Win32.Graphics.Direct3D.DriverType;
-using D3D11_CREATE_DEVICE_FLAG = Win32.Graphics.Direct3D11.CreateDeviceFlags;
+using D3D11_CREATE_DEVICE_FLAG = CreateDeviceFlags;
 using DXGI_FORMAT = Win32.Graphics.Dxgi.Common.Format;
 using Win32 = Win32.Apis;
 using D2D1 = Win32.Graphics.Direct2D.Apis;

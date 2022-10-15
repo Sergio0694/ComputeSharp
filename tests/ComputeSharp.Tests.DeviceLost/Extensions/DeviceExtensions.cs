@@ -33,7 +33,6 @@ public static class DeviceExtensions
                 case Device.Discrete: Assert.Inconclusive(); break;
                 case Device.Warp: Assert.Fail(); break;
             }
-
         }
 
         return device!;

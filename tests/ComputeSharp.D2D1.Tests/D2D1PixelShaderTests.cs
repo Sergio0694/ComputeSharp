@@ -5,6 +5,8 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable IDE0059, IDE0044
+
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]

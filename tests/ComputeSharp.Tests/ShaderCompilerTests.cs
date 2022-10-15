@@ -68,7 +68,7 @@ namespace ComputeSharp.Tests
                 float log = Hlsl.Log(1 + exp);
                 float temp = log + cellData.dword + cellData.int2x2;
 
-                row_major[ThreadIds.X] = (log / dword) + float2 + int2x2 + cbuffer.float2;
+                row_major[ThreadIds.X] = (log / dword) + float2 + int2x2 + cbuffer.float2 + temp;
             }
         }
 

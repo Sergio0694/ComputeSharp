@@ -211,8 +211,6 @@ internal readonly partial struct TriangleGridContouring : IComputeShader
 
         d2 = Hlsl.Min(d2, DistEdge(p - p0, p - p1));
 
-        float oldD2 = d2;
-
         if (iTh2 == 7) d2 = 0.0f;
         if (iTh == 7) d2 = 1e5f;
 

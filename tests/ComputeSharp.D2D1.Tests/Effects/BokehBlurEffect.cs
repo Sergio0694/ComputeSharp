@@ -13,17 +13,19 @@ using SixLabors.ImageSharp;
 using Win32;
 using Win32.Graphics.Direct2D;
 
+#pragma warning disable IDE0065
+
 namespace ComputeSharp.BokehBlur.Processors;
 
-using D2D1_BORDER_EDGE_MODE = Win32.Graphics.Direct2D.BorderEdgeMode;
-using D2D1_BORDER_PROP = Win32.Graphics.Direct2D.BorderProp;
-using D2D1_BUFFER_PRECISION = Win32.Graphics.Direct2D.BufferPrecision;
+using D2D1_BORDER_EDGE_MODE = BorderEdgeMode;
+using D2D1_BORDER_PROP = BorderProp;
+using D2D1_BUFFER_PRECISION = BufferPrecision;
 using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
-using D2D1_COMPOSITE_PROP = Win32.Graphics.Direct2D.CompositeProp;
-using D2D1_INTERPOLATION_MODE = Win32.Graphics.Direct2D.InterpolationMode;
-using D2D1_PROPERTY = Win32.Graphics.Direct2D.Property;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
-using D2D1_RENDERING_CONTROLS = Win32.Graphics.Direct2D.RenderingControls;
+using D2D1_COMPOSITE_PROP = CompositeProp;
+using D2D1_INTERPOLATION_MODE = InterpolationMode;
+using D2D1_PROPERTY = Property;
+using D2D1_MAPPED_RECT = MappedRect;
+using D2D1_RENDERING_CONTROLS = RenderingControls;
 using D2D1 = Win32.Graphics.Direct2D.Apis;
 
 /// <summary>

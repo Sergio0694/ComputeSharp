@@ -8,17 +8,17 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Point"/> type.
 /// </summary>
-internal struct Point64
+internal readonly struct Point64
 {
     /// <summary>
     /// The left coordinate of the current point.
     /// </summary>
-    private long x;
+    private readonly long x;
 
     /// <summary>
     /// The top coordinate of the current point.
     /// </summary>
-    private long y;
+    private readonly long y;
 
     /// <summary>
     /// Creates a new <see cref="Point64"/> instance with the specified parameters.

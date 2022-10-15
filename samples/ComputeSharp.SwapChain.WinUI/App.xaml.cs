@@ -3,7 +3,7 @@ using System.Threading;
 using ComputeSharp.SwapChain.WinUI.Views;
 using Microsoft.UI.Xaml;
 
-#pragma warning disable CA1001
+#pragma warning disable CA1001, IDE0052
 
 namespace ComputeSharp.SwapChain.WinUI;
 

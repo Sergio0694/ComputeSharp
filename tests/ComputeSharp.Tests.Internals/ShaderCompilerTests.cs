@@ -41,7 +41,7 @@ public class ShaderCompilerTests
     [ExpectedException(typeof(DxcCompilationException))]
     public void CompileTest_Fail()
     {
-        var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
+        string faultyShader = ShaderSource.Replace("ids.x", "ids.X");
 
         using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.Compile(faultyShader.AsSpan());
     }

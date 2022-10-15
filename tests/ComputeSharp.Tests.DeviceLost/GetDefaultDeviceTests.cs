@@ -79,7 +79,7 @@ public class GetDefaultDeviceTests
             }
 
             // Calling GraphicsDevice.GetDefault() will now throw, because the native device has not been disposed properly
-            _ = Assert.ThrowsException<InvalidOperationException>(() => GraphicsDevice.GetDefault());
+            _ = Assert.ThrowsException<InvalidOperationException>(GraphicsDevice.GetDefault);
         }
     }
 

@@ -314,12 +314,12 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the vertical convolution pass.
         /// </summary>
         [AutoConstructor]
-        internal partial struct VerticalConvolutionProcessor : IComputeShader
+        internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            private IReadWriteNormalizedTexture2D<float4> source;
-            private ReadWriteTexture2D<float4> reals;
-            private ReadWriteTexture2D<float4> imaginaries;
-            private ReadOnlyBuffer<Complex64> kernel;
+            private readonly IReadWriteNormalizedTexture2D<float4> source;
+            private readonly ReadWriteTexture2D<float4> reals;
+            private readonly ReadWriteTexture2D<float4> imaginaries;
+            private readonly ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()
@@ -351,15 +351,15 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the horizontal convolution pass.
         /// </summary>
         [AutoConstructor]
-        internal partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
+        internal readonly partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
         {
-            private float z;
-            private float w;
+            private readonly float z;
+            private readonly float w;
 
-            private ReadWriteTexture2D<float4> reals;
-            private ReadWriteTexture2D<float4> imaginaries;
-            private ReadWriteTexture2D<float4> target;
-            private ReadOnlyBuffer<Complex64> kernel;
+            private readonly ReadWriteTexture2D<float4> reals;
+            private readonly ReadWriteTexture2D<float4> imaginaries;
+            private readonly ReadWriteTexture2D<float4> target;
+            private readonly ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()

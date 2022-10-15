@@ -64,21 +64,20 @@ partial class Texture3DTests
         {
             using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(32, 32, 2);
 
-            using (ComputeContext context = device.Get().CreateComputeContext())
-            {
-                context.Transition(texture, ResourceState.ReadOnly);
+            using ComputeContext context = device.Get().CreateComputeContext();
 
-                IReadOnlyNormalizedTexture3D<TPixel> wrapper1 = texture.AsReadOnly();
+            context.Transition(texture, ResourceState.ReadOnly);
 
-                Assert.IsNotNull(wrapper1);
+            IReadOnlyNormalizedTexture3D<TPixel> wrapper1 = texture.AsReadOnly();
 
-                IReadOnlyNormalizedTexture3D<TPixel> wrapper2 = texture.AsReadOnly();
+            Assert.IsNotNull(wrapper1);
 
-                Assert.IsNotNull(wrapper2);
-                Assert.AreSame(wrapper1, wrapper2);
+            IReadOnlyNormalizedTexture3D<TPixel> wrapper2 = texture.AsReadOnly();
 
-                context.Transition(texture, ResourceState.ReadWrite);
-            }
+            Assert.IsNotNull(wrapper2);
+            Assert.AreSame(wrapper1, wrapper2);
+
+            context.Transition(texture, ResourceState.ReadWrite);
         }
 
         TestHelper.Run(Test<Rgba32, float4>, t, tPixel, device);

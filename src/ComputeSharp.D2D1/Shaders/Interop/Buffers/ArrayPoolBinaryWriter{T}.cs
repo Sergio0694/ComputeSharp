@@ -35,7 +35,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <summary>
     /// The starting offset within <see cref="array"/>.
     /// </summary>
-    private int index;
+    private readonly int index;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ArrayPoolBufferWriter{T}"/> class.

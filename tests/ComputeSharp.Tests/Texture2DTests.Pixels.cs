@@ -132,21 +132,20 @@ partial class Texture2DTests
         {
             using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
 
-            using (ComputeContext context = device.Get().CreateComputeContext())
-            {
-                context.Transition(texture, ResourceState.ReadOnly);
+            using ComputeContext context = device.Get().CreateComputeContext();
 
-                IReadOnlyNormalizedTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
+            context.Transition(texture, ResourceState.ReadOnly);
 
-                Assert.IsNotNull(wrapper1);
+            IReadOnlyNormalizedTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
 
-                IReadOnlyNormalizedTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
+            Assert.IsNotNull(wrapper1);
 
-                Assert.IsNotNull(wrapper2);
-                Assert.AreSame(wrapper1, wrapper2);
+            IReadOnlyNormalizedTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
 
-                context.Transition(texture, ResourceState.ReadWrite);
-            }
+            Assert.IsNotNull(wrapper2);
+            Assert.AreSame(wrapper1, wrapper2);
+
+            context.Transition(texture, ResourceState.ReadWrite);
         }
 
         TestHelper.Run(Test<Rgba32, float4>, t, tPixel, device);
