@@ -14,7 +14,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
@@ -60,7 +60,6 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
 
-
     // The isofunction. Just a Hlsl.Single noise function, but it can be more elaborate.
     private float IsoFunction(in float2 p)
     {
@@ -78,7 +77,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     }
 
     // Based on IQ's signed distance to the segment joining "a" and "b".
-    private static float distEdge(float2 a, float2 b)
+    private static float DistEdge(float2 a, float2 b)
     {
         return Hlsl.Dot((a + b) * 0.5f, Hlsl.Normalize((b - a).YX * new float2(-1, 1)));
     }
@@ -188,7 +187,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         float2 p1 = default;
         int iTh = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
-        d = Hlsl.Min(d, distEdge(p - p0, p - p1));
+        d = Hlsl.Min(d, DistEdge(p - p0, p - p1));
 
         if (iTh == 7)
         {
@@ -206,9 +205,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         int iTh2 = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
-        d2 = Hlsl.Min(d2, distEdge(p - p0, p - p1));
-
-        float oldD2 = d2;
+        d2 = Hlsl.Min(d2, DistEdge(p - p0, p - p1));
 
         if (iTh2 == 7) d2 = 0.0f;
         if (iTh == 7) d2 = 1e5f;

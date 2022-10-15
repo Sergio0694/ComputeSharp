@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-#pragma warning disable CS0809
+#pragma warning disable CS0809, IDE0009, IDE1006
 
 namespace System;
 

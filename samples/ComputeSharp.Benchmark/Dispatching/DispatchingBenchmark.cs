@@ -111,7 +111,7 @@ public partial class DispatchingBenchmark : IDisposable
     [AutoConstructor]
     internal readonly partial struct TestShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> buffer;
+        private readonly ReadWriteBuffer<float> buffer;
 
         /// <inheritdoc/>
         public void Execute()

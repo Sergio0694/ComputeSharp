@@ -15,13 +15,13 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     // Colors to blend together
-    private static readonly float3 colorOne = new(0.999f, 0.999f, 0.999f);
-    private static readonly float3 colorTwo = new(0.999f, 0f, 0f);
-    private static readonly float3 colorThree = new(0f, 0.999f, 0f);
-    private static readonly float3 colorFour = new(0f, 0f, 0.999f);
+    private static readonly float3 ColorOne = new(0.999f, 0.999f, 0.999f);
+    private static readonly float3 ColorTwo = new(0.999f, 0f, 0f);
+    private static readonly float3 ColorThree = new(0f, 0.999f, 0f);
+    private static readonly float3 ColorFour = new(0f, 0f, 0.999f);
 
     /// <summary>
     /// Standard 2D rotation formula.
@@ -99,8 +99,8 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         tuv.Y += Hlsl.Sin(tuv.X * frequency * 1.5f + speed) / (amplitude * 0.5f);
 
         // Draw the image
-        float3 layer1 = Hlsl.Lerp(colorOne, colorTwo, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
-        float3 layer2 = Hlsl.Lerp(colorThree, colorFour, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
+        float3 layer1 = Hlsl.Lerp(ColorOne, ColorTwo, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
+        float3 layer2 = Hlsl.Lerp(ColorThree, ColorFour, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
         float3 col = Hlsl.Lerp(layer1, layer2, Hlsl.SmoothStep(0.5f, -0.3f, tuv.Y));
 
         return new(col, 1.0f);

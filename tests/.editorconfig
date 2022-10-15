@@ -1,0 +1,2 @@
+# Disable naming rule violation warnings just for unit tests
+dotnet_diagnostic.IDE1006.severity = none

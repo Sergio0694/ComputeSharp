@@ -34,12 +34,12 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     /// <summary>
     /// The number of characters written to <see cref="destination"/>.
     /// </summary>
-    internal int position;
+    private int position;
 
     /// <summary>
     /// Indicates whether all formatting operations have succeeded.
     /// </summary>
-    internal bool success;
+    private bool success;
 
     /// <summary>
     /// Whether <see cref="formatProvider"/> provides an <see cref="ICustomFormatter"/>.

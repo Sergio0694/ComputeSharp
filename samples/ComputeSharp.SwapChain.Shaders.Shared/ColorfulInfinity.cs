@@ -15,7 +15,7 @@ internal readonly partial struct ColorfulInfinity : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// The total number of layers for the final animation.

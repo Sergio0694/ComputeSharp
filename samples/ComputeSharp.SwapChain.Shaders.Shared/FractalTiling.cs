@@ -15,7 +15,7 @@ internal readonly partial struct FractalTiling : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <inheritdoc/>
     public float4 Execute()

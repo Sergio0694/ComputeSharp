@@ -41,7 +41,7 @@ unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping an <see cref="IBufferWriter{T}"/> instance.
     /// </summary>
-    internal unsafe partial struct IBufferWriterWrapper
+    private unsafe partial struct IBufferWriterWrapper
 #if NET6_0_OR_GREATER
         : IUnknown.Interface
 #endif
@@ -225,17 +225,17 @@ unsafe partial class IWICStreamExtensions
         /// <summary>
         /// The vtable pointer for the current instance.
         /// </summary>
-        public void** lpVtbl;
+        private void** lpVtbl;
 
         /// <summary>
         /// The current reference count for the object (from <c>IUnknown</c>).
         /// </summary>
-        public volatile int referenceCount;
+        private volatile int referenceCount;
 
         /// <summary>
         /// The <see cref="GCHandle"/> to the captured <see cref="IBufferWriter{T}"/>.
         /// </summary>
-        public GCHandle writerHandle;
+        private GCHandle writerHandle;
 
         /// <summary>
         /// Creates and initializes a new <see cref="IBufferWriterWrapper"/> instance.

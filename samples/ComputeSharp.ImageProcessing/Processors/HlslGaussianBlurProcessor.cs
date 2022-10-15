@@ -52,7 +52,8 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     /// <param name="radius">The radius value representing the size of the area to sample (this should be at least twice the sigma value)</param>
     public HlslGaussianBlurProcessor(GraphicsDevice device, float sigma, int radius)
     {
-        GraphicsDevice = device;
+        graphicsDevice = device;
+
         Sigma = sigma;
         Radius = radius;
     }
@@ -60,7 +61,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     /// <summary>
     /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
     /// </summary>
-    private readonly GraphicsDevice GraphicsDevice;
+    private readonly GraphicsDevice graphicsDevice;
 
     /// <summary>
     /// Gets the sigma value representing the weight of the blur.

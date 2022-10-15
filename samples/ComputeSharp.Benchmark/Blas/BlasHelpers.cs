@@ -83,13 +83,13 @@ internal static partial class BlasHelpers
     [AutoConstructor]
     public readonly partial struct FullyConnectedForwardKernel : IComputeShader
     {
-        public readonly int n;
-        public readonly int m;
-        public readonly int p;
-        public readonly ReadOnlyBuffer<float> x;
-        public readonly ReadOnlyBuffer<float> w;
-        public readonly ReadOnlyBuffer<float> b;
-        public readonly ReadWriteBuffer<float> y;
+        private readonly int n;
+        private readonly int m;
+        private readonly int p;
+        private readonly ReadOnlyBuffer<float> x;
+        private readonly ReadOnlyBuffer<float> w;
+        private readonly ReadOnlyBuffer<float> b;
+        private readonly ReadWriteBuffer<float> y;
 
         /// <inheritdoc/>
         public void Execute()

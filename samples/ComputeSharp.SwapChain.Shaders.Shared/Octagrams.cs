@@ -14,7 +14,7 @@ internal readonly partial struct Octagrams : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     private static float2x2 Rotate(float a)
     {

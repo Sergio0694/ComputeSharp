@@ -23,37 +23,37 @@ public sealed partial class HlslBokehBlurProcessor
         /// <summary>
         /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
         /// </summary>
-        private readonly GraphicsDevice GraphicsDevice;
+        private readonly GraphicsDevice graphicsDevice;
 
         /// <summary>
         /// The kernel radius.
         /// </summary>
-        private readonly int Radius;
+        private readonly int radius;
 
         /// <summary>
         /// The maximum size of the kernel in either direction.
         /// </summary>
-        private readonly int KernelSize;
+        private readonly int kernelSize;
 
         /// <summary>
         /// The number of components to use when applying the bokeh blur.
         /// </summary>
-        private readonly int ComponentsCount;
+        private readonly int componentsCount;
 
         /// <summary>
         /// The kernel parameters to use for the current instance (a: X, b: Y, A: Z, B: W)
         /// </summary>
-        private readonly Vector4[] KernelParameters;
+        private readonly Vector4[] kernelParameters;
 
         /// <summary>
         /// The kernel components for the current instance.
         /// </summary>
-        private readonly Complex64[][] Kernels;
+        private readonly Complex64[][] kernels;
 
         /// <summary>
         /// The scaling factor for kernel values.
         /// </summary>
-        private readonly float KernelsScale;
+        private readonly float kernelsScale;
 
         /// <summary>
         /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor"/> instances.
@@ -70,29 +70,29 @@ public sealed partial class HlslBokehBlurProcessor
         public Implementation(HlslBokehBlurProcessor definition, Configuration configuration, Image<ImageSharpRgba32> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
-            GraphicsDevice = definition.GraphicsDevice;
-            Radius = definition.Radius;
-            KernelSize = Radius * 2 + 1;
-            ComponentsCount = definition.Components;
+            graphicsDevice = definition.GraphicsDevice;
+            radius = definition.Radius;
+            kernelSize = radius * 2 + 1;
+            componentsCount = definition.Components;
 
             // Reuse the initialized values from the cache, if possible
-            var parameters = (Radius, ComponentsCount);
+            var parameters = (radius, componentsCount);
             if (Cache.TryGetValue(parameters, out var info))
             {
-                KernelParameters = info.Parameters;
-                KernelsScale = info.Scale;
-                Kernels = info.Kernels;
+                kernelParameters = info.Parameters;
+                kernelsScale = info.Scale;
+                kernels = info.Kernels;
             }
             else
             {
                 // Initialize the complex kernels and parameters with the current arguments
-                (KernelParameters, KernelsScale) = GetParameters();
-                Kernels = CreateComplexKernels();
+                (kernelParameters, kernelsScale) = GetParameters();
+                kernels = CreateComplexKernels();
 
                 NormalizeKernels();
 
                 // Store them in the cache for future use
-                Cache.TryAdd(parameters, (KernelParameters, KernelsScale, Kernels));
+                Cache.TryAdd(parameters, (kernelParameters, kernelsScale, kernels));
             }
         }
 
@@ -161,7 +161,7 @@ public sealed partial class HlslBokehBlurProcessor
         private (Vector4[] Parameters, float Scale) GetParameters()
         {
             // Prepare the kernel components
-            int index = Math.Max(0, Math.Min(ComponentsCount - 1, KernelComponents.Count));
+            int index = Math.Max(0, Math.Min(componentsCount - 1, KernelComponents.Count));
 
             return (KernelComponents[index], KernelScales[index]);
         }
@@ -171,10 +171,10 @@ public sealed partial class HlslBokehBlurProcessor
         /// </summary>
         private Complex64[][] CreateComplexKernels()
         {
-            var kernels = new Complex64[KernelParameters.Length][];
-            ref Vector4 baseRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
+            var kernels = new Complex64[kernelParameters.Length][];
+            ref Vector4 baseRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
 
-            for (int i = 0; i < KernelParameters.Length; i++)
+            for (int i = 0; i < kernelParameters.Length; i++)
             {
                 ref Vector4 paramsRef = ref Unsafe.Add(ref baseRef, i);
 
@@ -191,15 +191,15 @@ public sealed partial class HlslBokehBlurProcessor
         /// <param name="b">The angle component for each complex component.</param>
         private Complex64[] CreateComplex1DKernel(float a, float b)
         {
-            var kernel = new Complex64[KernelSize];
+            var kernel = new Complex64[kernelSize];
             ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
-            int r = Radius;
+            int r = radius;
             int n = -r;
 
-            for (int i = 0; i < KernelSize; i++, n++)
+            for (int i = 0; i < kernelSize; i++, n++)
             {
                 // Incrementally compute the range values
-                float value = n * KernelsScale * (1f / r);
+                float value = n * kernelsScale * (1f / r);
 
                 value *= value;
 
@@ -219,11 +219,11 @@ public sealed partial class HlslBokehBlurProcessor
         {
             // Calculate the complex weighted sum
             float total = 0;
-            Span<Complex64[]> kernelsSpan = Kernels.AsSpan();
+            Span<Complex64[]> kernelsSpan = kernels.AsSpan();
             ref Complex64[] baseKernelsRef = ref MemoryMarshal.GetReference(kernelsSpan);
-            ref Vector4 baseParamsRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
+            ref Vector4 baseParamsRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
 
-            for (int i = 0; i < KernelParameters.Length; i++)
+            for (int i = 0; i < kernelParameters.Length; i++)
             {
                 ref Complex64[] kernelRef = ref Unsafe.Add(ref baseKernelsRef, i);
                 int length = kernelRef.Length;
@@ -270,23 +270,23 @@ public sealed partial class HlslBokehBlurProcessor
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelMemory.Span);
 
-            using ReadWriteTexture2D<Rgba32, float4> texture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
-            using ReadWriteTexture2D<float4> temporary = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height, AllocationMode.Clear);
-            using ReadWriteTexture2D<float4> reals = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
-            using ReadWriteTexture2D<float4> imaginaries = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
-            using ReadOnlyBuffer<Complex64> kernel = GraphicsDevice.AllocateReadOnlyBuffer<Complex64>(KernelSize);
+            using ReadWriteTexture2D<Rgba32, float4> texture = graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
+            using ReadWriteTexture2D<float4> temporary = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height, AllocationMode.Clear);
+            using ReadWriteTexture2D<float4> reals = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
+            using ReadWriteTexture2D<float4> imaginaries = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
+            using ReadOnlyBuffer<Complex64> kernel = graphicsDevice.AllocateReadOnlyBuffer<Complex64>(kernelSize);
 
             // Preliminary gamma highlight pass
-            GraphicsDevice.For<GammaHighlightProcessor>(source.Height, new(texture));
+            graphicsDevice.For<GammaHighlightProcessor>(source.Height, new(texture));
 
             // Perform two 1D convolutions for each component in the current instance
-            for (int j = 0; j < Kernels.Length; j++)
+            for (int j = 0; j < kernels.Length; j++)
             {
-                Vector4 parameters = KernelParameters[j];
+                Vector4 parameters = kernelParameters[j];
 
-                kernel.CopyFrom(Kernels[j]);
+                kernel.CopyFrom(kernels[j]);
 
-                using var context = GraphicsDevice.CreateComputeContext();
+                using var context = graphicsDevice.CreateComputeContext();
 
                 context.For<VerticalConvolutionProcessor>(
                     source.Width,
@@ -303,7 +303,7 @@ public sealed partial class HlslBokehBlurProcessor
             }
 
             // Apply the inverse gamma exposure pass
-            GraphicsDevice.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
+            graphicsDevice.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
 
             // Write the final pixel data
             texture.CopyTo(span);
@@ -315,10 +315,10 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public IReadWriteNormalizedTexture2D<float4> source;
-            public ReadWriteTexture2D<float4> reals;
-            public ReadWriteTexture2D<float4> imaginaries;
-            public ReadOnlyBuffer<Complex64> kernel;
+            private IReadWriteNormalizedTexture2D<float4> source;
+            private ReadWriteTexture2D<float4> reals;
+            private ReadWriteTexture2D<float4> imaginaries;
+            private ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()
@@ -352,13 +352,13 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
         {
-            public float z;
-            public float w;
+            private float z;
+            private float w;
 
-            public ReadWriteTexture2D<float4> reals;
-            public ReadWriteTexture2D<float4> imaginaries;
-            public ReadWriteTexture2D<float4> target;
-            public ReadOnlyBuffer<Complex64> kernel;
+            private ReadWriteTexture2D<float4> reals;
+            private ReadWriteTexture2D<float4> imaginaries;
+            private ReadWriteTexture2D<float4> target;
+            private ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()
@@ -391,7 +391,7 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal readonly partial struct GammaHighlightProcessor : IComputeShader
         {
-            public readonly IReadWriteNormalizedTexture2D<float4> source;
+            private readonly IReadWriteNormalizedTexture2D<float4> source;
 
             /// <inheritdoc/>
             public void Execute()
@@ -415,8 +415,8 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
         {
-            public readonly ReadWriteTexture2D<float4> source;
-            public readonly IReadWriteNormalizedTexture2D<float4> target;
+            private readonly ReadWriteTexture2D<float4> source;
+            private readonly IReadWriteNormalizedTexture2D<float4> target;
 
             /// <inheritdoc/>
             public void Execute()

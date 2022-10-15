@@ -15,7 +15,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)

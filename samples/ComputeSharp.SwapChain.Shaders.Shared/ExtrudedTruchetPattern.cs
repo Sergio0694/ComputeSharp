@@ -14,7 +14,7 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// Curve shape - Round: 0, Semi-round: 1, Octagonal: 2, Superellipse: 3, Straight: 4.

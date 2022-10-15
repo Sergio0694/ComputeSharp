@@ -22,7 +22,7 @@ partial class DeviceHelper
     /// <summary>
     /// The cached default <see cref="GraphicsDevice"/> instance, if any.
     /// </summary>
-    internal static GraphicsDevice? defaultDevice;
+    private static GraphicsDevice? defaultDevice;
 
     /// <summary>
     /// Gets the cached <see cref="GraphicsDevice"/> instance or creates and caches a new one.

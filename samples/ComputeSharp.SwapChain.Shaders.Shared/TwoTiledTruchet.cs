@@ -14,7 +14,7 @@ internal readonly partial struct TwoTiledTruchet : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// Calculates the Truchet distance field.

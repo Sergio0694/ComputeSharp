@@ -14,12 +14,12 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// The background texture to sample.
     /// </summary>
-    public readonly IReadOnlyNormalizedTexture2D<float4> texture;
+    private readonly IReadOnlyNormalizedTexture2D<float4> texture;
 
     // float3 to float hash.
     private static float Hash21(float2 p)

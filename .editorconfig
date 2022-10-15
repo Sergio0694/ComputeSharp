@@ -219,8 +219,8 @@ dotnet_naming_style.prefix_interface_interface_with_i.required_prefix           
 
 # Naming Rules
 
-# Async
-dotnet_naming_rule.async_methods_end_in_async.severity                            = warning
+# Async methods should have the "Async" suffix (disabled because it can't currently exclude async void methods)
+dotnet_naming_rule.async_methods_end_in_async.severity                            = none
 dotnet_naming_rule.async_methods_end_in_async.symbols                             = any_async_methods
 dotnet_naming_rule.async_methods_end_in_async.style                               = end_in_async
 
@@ -251,8 +251,8 @@ dotnet_naming_rule.non_private_fields_must_be_pascal_case.style                 
 dotnet_naming_rule.public_symbols_must_be_capitalized.severity                    = warning
 dotnet_naming_rule.public_symbols_must_be_capitalized.symbols                     = public_symbols
 dotnet_naming_rule.public_symbols_must_be_capitalized.style                       = pascal_case
-# Parameters must be camelCase
-dotnet_naming_rule.parameters_must_be_camel_case.severity                         = warning
+# Parameters must be camelCase (ignored because some use PascalCase to match Win32 parameter names)
+dotnet_naming_rule.parameters_must_be_camel_case.severity                         = none
 dotnet_naming_rule.parameters_must_be_camel_case.symbols                          = parameters
 dotnet_naming_rule.parameters_must_be_camel_case.style                            = camel_case
 # Interfaces must be PascalCase and start with an 'I'
