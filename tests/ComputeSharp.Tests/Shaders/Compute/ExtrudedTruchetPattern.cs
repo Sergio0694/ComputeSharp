@@ -11,12 +11,12 @@ internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// Curve shape - Round: 0, Semi-round: 1, Octagonal: 2, Superellipse: 3, Straight: 4.

@@ -12,12 +12,12 @@ internal readonly partial struct PyramidPattern : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)

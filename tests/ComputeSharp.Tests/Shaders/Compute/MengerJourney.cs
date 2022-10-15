@@ -11,12 +11,12 @@ internal readonly partial struct MengerJourney : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     private const int MaxSteps = 30;
     private const float MinimumDistance = 0.0009f;
@@ -102,7 +102,7 @@ internal readonly partial struct MengerJourney : IComputeShader
     /// <summary>
     /// Calculates the finite difference normal at a given position.
     /// </summary>
-    private float3 getNormal(in float3 pos)
+    private float3 GetNormal(in float3 pos)
     {
         float3 e = new(0.0f, NormalDistance, 0.0f);
 
@@ -143,7 +143,7 @@ internal readonly partial struct MengerJourney : IComputeShader
 
         float smoothStep = steps + distance / MinimumDistance;
         float ao = 1.1f - smoothStep / MaxSteps;
-        float3 normal = getNormal(pos - dir * NormalDistance * 3.0f);
+        float3 normal = GetNormal(pos - dir * NormalDistance * 3.0f);
         float3 color = 1.0f;
         float3 light = GetLight(color, normal);
 

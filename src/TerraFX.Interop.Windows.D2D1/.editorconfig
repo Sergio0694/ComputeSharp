@@ -1,2 +1,18 @@
 # Disable all rules from above directories
 root = true
+
+# All files
+[*]
+
+# Encoding
+charset = utf-8
+
+# Indentation and spacing
+tab_width = 4
+indent_size = 4
+indent_style = space
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
+trim_trailing_whitespace = true
