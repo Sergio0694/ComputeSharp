@@ -13,6 +13,8 @@ using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
+#pragma warning disable IDE0052
+
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
 /// <summary>

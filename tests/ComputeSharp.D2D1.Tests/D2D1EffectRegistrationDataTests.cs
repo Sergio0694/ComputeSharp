@@ -117,7 +117,7 @@ public partial class D2D1EffectRegistrationDataTests
 
         public float4 Execute()
         {
-            return a;
+            return this.a;
         }
     }
 }

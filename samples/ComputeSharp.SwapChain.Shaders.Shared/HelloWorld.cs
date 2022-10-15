@@ -22,7 +22,7 @@ internal readonly partial struct HelloWorld : IPixelShader<float4>
         float2 uv = ThreadIds.Normalized.XY;
 
         // Time varying pixel color
-        float3 col = 0.5f + (0.5f * Hlsl.Cos(time + new float3(uv, uv.X) + new float3(0, 2, 4)));
+        float3 col = 0.5f + (0.5f * Hlsl.Cos(this.time + new float3(uv, uv.X) + new float3(0, 2, 4)));
 
         // Output to screen
         return new(col, 1f);

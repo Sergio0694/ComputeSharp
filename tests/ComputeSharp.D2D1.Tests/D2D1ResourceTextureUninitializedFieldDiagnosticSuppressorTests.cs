@@ -16,7 +16,7 @@ internal sealed partial class D2D1ResourceTextureUninitializedFieldDiagnosticSup
 
         public float4 Execute()
         {
-            return texture[0];
+            return this.texture[0];
         }
     }
 }

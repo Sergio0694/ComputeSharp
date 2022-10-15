@@ -27,13 +27,13 @@ public readonly struct Bool
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        return obj is Bool x && value == x.value;
+        return obj is Bool x && this.value == x.value;
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return value.GetHashCode();
+        return this.value.GetHashCode();
     }
 
     /// <inheritdoc/>

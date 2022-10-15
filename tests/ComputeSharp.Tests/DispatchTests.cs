@@ -63,7 +63,7 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[ThreadIds.XYZ].XYZ = ThreadIds.XYZ;
+            this.buffer[ThreadIds.XYZ].XYZ = ThreadIds.XYZ;
         }
     }
 
@@ -117,9 +117,9 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[ThreadIds.XYZ].XYZ = ThreadIds.Normalized.XYZ;
-            buffer[ThreadIds.XYZ].XY = ThreadIds.Normalized.XY;
-            buffer[ThreadIds.XYZ].W = ThreadIds.Normalized.X;
+            this.buffer[ThreadIds.XYZ].XYZ = ThreadIds.Normalized.XYZ;
+            this.buffer[ThreadIds.XYZ].XY = ThreadIds.Normalized.XY;
+            this.buffer[ThreadIds.XYZ].W = ThreadIds.Normalized.X;
         }
     }
 
@@ -178,8 +178,8 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[ThreadIds.XYZ].XYZ = GroupIds.XYZ;
-            buffer[ThreadIds.XYZ].W = GroupIds.Index;
+            this.buffer[ThreadIds.XYZ].XYZ = GroupIds.XYZ;
+            this.buffer[ThreadIds.XYZ].W = GroupIds.Index;
         }
     }
 
@@ -208,12 +208,12 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[0] = GroupSize.X;
-            buffer[1] = GroupSize.Y;
-            buffer[2] = GroupSize.Z;
-            buffer[3] = GroupSize.Count;
-            buffer[4] = (int)Hlsl.Dot(GroupSize.XY, float2.One);
-            buffer[5] = (int)Hlsl.Dot(GroupSize.XYZ, float3.One);
+            this.buffer[0] = GroupSize.X;
+            this.buffer[1] = GroupSize.Y;
+            this.buffer[2] = GroupSize.Z;
+            this.buffer[3] = GroupSize.Count;
+            this.buffer[4] = (int)Hlsl.Dot(GroupSize.XY, float2.One);
+            this.buffer[5] = (int)Hlsl.Dot(GroupSize.XYZ, float3.One);
         }
     }
 
@@ -240,7 +240,7 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = GridIds.X;
+            this.buffer[ThreadIds.X] = GridIds.X;
         }
     }
 
@@ -271,12 +271,12 @@ public partial class DispatchTests
 
         public void Execute()
         {
-            buffer[0] = DispatchSize.Count;
-            buffer[1] = DispatchSize.X;
-            buffer[2] = DispatchSize.Y;
-            buffer[3] = DispatchSize.Z;
-            buffer[4] = (int)Hlsl.Dot(DispatchSize.XY, float2.One);
-            buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, float3.One);
+            this.buffer[0] = DispatchSize.Count;
+            this.buffer[1] = DispatchSize.X;
+            this.buffer[2] = DispatchSize.Y;
+            this.buffer[3] = DispatchSize.Z;
+            this.buffer[4] = (int)Hlsl.Dot(DispatchSize.XY, float2.One);
+            this.buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, float3.One);
         }
     }
 
@@ -354,7 +354,7 @@ public partial class DispatchTests
 
             if (!isWritingToGroupShared)
             {
-                buffer[index] = cache[index];
+                this.buffer[index] = cache[index];
             }
         }
     }
@@ -397,7 +397,7 @@ public partial class DispatchTests
 
             if (!isWritingToGroupShared)
             {
-                buffer[index] = cache[index];
+                this.buffer[index] = cache[index];
             }
         }
     }

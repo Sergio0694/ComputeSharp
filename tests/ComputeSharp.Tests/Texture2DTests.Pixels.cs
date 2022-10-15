@@ -79,7 +79,7 @@ partial class Texture2DTests
 
         public void Execute()
         {
-            destination[ThreadIds.XY] = source.Sample(ThreadIds.Normalized.XY);
+            this.destination[ThreadIds.XY] = this.source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -111,7 +111,7 @@ partial class Texture2DTests
 
         public float4 Execute()
         {
-            return texture.Sample(ThreadIds.Normalized.XY);
+            return this.texture.Sample(ThreadIds.Normalized.XY);
         }
     }
 

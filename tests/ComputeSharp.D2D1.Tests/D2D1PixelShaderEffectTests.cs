@@ -145,7 +145,7 @@ public partial class D2D1PixelShaderEffectTests
 
         public float4 Execute()
         {
-            return dummy;
+            return this.dummy;
         }
     }
 
@@ -180,7 +180,7 @@ public partial class D2D1PixelShaderEffectTests
 
         public float4 Execute()
         {
-            return a + b + c.X + d + e;
+            return this.a + this.b + this.c.X + this.d + this.e;
         }
     }
 }

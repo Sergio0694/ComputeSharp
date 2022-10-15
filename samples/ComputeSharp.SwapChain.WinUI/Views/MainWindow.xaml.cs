@@ -23,22 +23,22 @@ public sealed partial class MainWindow : Window
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;
 
-        SetTitleBar(TitleBarRectangle);
+        SetTitleBar(this.TitleBarRectangle);
 
-        Root.DataContext = new MainViewModel(new DebugAnalyticsService());
+        this.Root.DataContext = new MainViewModel(new DebugAnalyticsService());
     }
 
     /// <summary>
     /// Gets the <see cref="MainViewModel"/> instance for the current view.
     /// </summary>
-    public MainViewModel ViewModel => (MainViewModel)Root.DataContext;
+    public MainViewModel ViewModel => (MainViewModel)this.Root.DataContext;
 
     /// <summary>
     /// Stops all rendering when the application is closing.
     /// </summary>
     public void OnShutdown()
     {
-        ShaderPanel.ShaderRunner = null;
+        this.ShaderPanel.ShaderRunner = null;
 
         foreach ((AnimatedComputeShaderPanel panel, object _) in this.shaderPanels)
         {
@@ -49,20 +49,20 @@ public sealed partial class MainWindow : Window
     // Opens the shader selection panel
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
     {
-        _ = Root.Resources.Remove("ShaderSelectionPanel");
-        Root.Children.Add(ShaderSelectionPanel);
+        _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+        this.Root.Children.Add(this.ShaderSelectionPanel);
     }
 
     // Hides the shader selection panel
     private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        _ = Root.Children.Remove(ShaderSelectionPanel);
+        _ = this.Root.Children.Remove(this.ShaderSelectionPanel);
     }
 
     // Updates the size of the shaders list panel
     private void UserControl_SizeChanged(object sender, WindowSizeChangedEventArgs e)
     {
-        ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
+        this.ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
     }
 
     // Tracks the current panel

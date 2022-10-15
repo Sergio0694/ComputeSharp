@@ -50,7 +50,7 @@ public partial class DispatchTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[ThreadIds.X] *= factor;
+            this.buffer[ThreadIds.X] *= this.factor;
         }
     }
 
@@ -94,7 +94,7 @@ public partial class DispatchTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return new(ThreadIds.Normalized.X, ThreadIds.Normalized.Y, b, a);
+            return new(ThreadIds.Normalized.X, ThreadIds.Normalized.Y, this.b, this.a);
         }
     }
 }

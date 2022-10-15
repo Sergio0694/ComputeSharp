@@ -100,7 +100,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
             d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAGS.D3D12_COMMAND_QUEUE_FLAG_NONE;
             d3D12CommandQueueDesc.NodeMask = 0;
 
-            _ = d3D12Device.Get()->CreateCommandQueue(
+            _ = this.d3D12Device.Get()->CreateCommandQueue(
                 &d3D12CommandQueueDesc,
                 Windows.__uuidof<ID3D12CommandQueue>(),
                 (void**)d3D12CommandQueue);
@@ -136,7 +136,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
             dxgiSwapChainDesc1.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
             _ = dxgiFactory2.Get()->CreateSwapChainForHwnd(
-                (IUnknown*)d3D12CommandQueue.Get(),
+                (IUnknown*)this.d3D12CommandQueue.Get(),
                 hwnd,
                 &dxgiSwapChainDesc1,
                 null,
@@ -159,7 +159,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
             _ = this.d3D12Device.Get()->CreateCommandList(
                 0,
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                d3D12CommandAllocator,
+                this.d3D12CommandAllocator,
                 null,
                 Windows.__uuidof<ID3D12GraphicsCommandList>(),
                 (void**)d3D12GraphicsCommandList);
@@ -206,8 +206,8 @@ internal sealed class SwapChainApplication<T> : Win32Application
         fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
         fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
         {
-            _ = dxgiSwapChain1.Get()->GetBuffer(0, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
-            _ = dxgiSwapChain1.Get()->GetBuffer(1, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+            _ = this.dxgiSwapChain1.Get()->GetBuffer(0, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
+            _ = this.dxgiSwapChain1.Get()->GetBuffer(1, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
         }
 
         this.texture?.Dispose();
@@ -265,10 +265,10 @@ internal sealed class SwapChainApplication<T> : Win32Application
         };
 
         // Transition the resources to COPY_DEST and COPY_SOURCE respectively
-        d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+        this.d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
 
         // Copy the generated frame to the target back buffer
-        d3D12GraphicsCommandList.Get()->CopyResource(d3D12ResourceBackBuffer, d3D12Resource.Get());
+        this.d3D12GraphicsCommandList.Get()->CopyResource(d3D12ResourceBackBuffer, d3D12Resource.Get());
 
         d3D12ResourceBarriers[0] = D3D12_RESOURCE_BARRIER.InitTransition(
             d3D12Resource.Get(),
@@ -281,12 +281,12 @@ internal sealed class SwapChainApplication<T> : Win32Application
             D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON);
 
         // Transition the resources back to COMMON and UNORDERED_ACCESS respectively
-        d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+        this.d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
 
-        _ = d3D12GraphicsCommandList.Get()->Close();
+        _ = this.d3D12GraphicsCommandList.Get()->Close();
 
         // Execute the command list to perform the copy
-        this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
+        this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
         _ = this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
 
         // Present the new frame

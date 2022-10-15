@@ -370,7 +370,7 @@ public partial class Texture1DTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -400,7 +400,7 @@ public partial class Texture1DTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 }

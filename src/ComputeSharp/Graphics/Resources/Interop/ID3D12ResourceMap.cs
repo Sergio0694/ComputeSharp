@@ -30,7 +30,7 @@ internal readonly unsafe ref struct ID3D12ResourceMap
     {
         this.d3D12Resource = d3D12Resource;
 
-        Pointer = pointer;
+        this.Pointer = pointer;
     }
 
     /// <inheritdoc cref="IDisposable.Dispose"/>

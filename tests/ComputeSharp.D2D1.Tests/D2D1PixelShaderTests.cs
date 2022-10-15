@@ -232,14 +232,14 @@ public partial class D2D1PixelShaderTests
 
         public Float4 Execute()
         {
-            float4 pixel1 = myTexture1[0];
-            float4 pixel2 = myTexture1.Sample(0.4f);
-            float4 pixel3 = myTexture2[0, 1];
-            float4 pixel4 = myTexture2.Sample(0.4f, 0.3f);
-            float4 pixel5 = myTexture3[0, 1, 2];
-            float4 pixel6 = myTexture3.Sample(0.4f, 0.5f, 0.6f);
-            float number1 = myTexture4[0, 2];
-            float number2 = myTexture4.Sample(0.4f, 0.6f);
+            float4 pixel1 = this.myTexture1[0];
+            float4 pixel2 = this.myTexture1.Sample(0.4f);
+            float4 pixel3 = this.myTexture2[0, 1];
+            float4 pixel4 = this.myTexture2.Sample(0.4f, 0.3f);
+            float4 pixel5 = this.myTexture3[0, 1, 2];
+            float4 pixel6 = this.myTexture3.Sample(0.4f, 0.5f, 0.6f);
+            float number1 = this.myTexture4[0, 2];
+            float number2 = this.myTexture4.Sample(0.4f, 0.6f);
 
             return 0;
         }

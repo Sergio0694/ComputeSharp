@@ -4,7 +4,7 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable IDE0008
+#pragma warning disable IDE0007, IDE0008, IDE0009
 
 namespace ComputeSharp.Tests;
 

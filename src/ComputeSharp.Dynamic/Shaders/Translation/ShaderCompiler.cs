@@ -69,9 +69,9 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     ~ShaderCompiler()
     {
-        dxcCompiler.Dispose();
-        dxcLibrary.Dispose();
-        dxcIncludeHandler.Dispose();
+        this.dxcCompiler.Dispose();
+        this.dxcLibrary.Dispose();
+        this.dxcIncludeHandler.Dispose();
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ internal sealed unsafe partial class ShaderCompiler
         // Get the encoded blob from the source code
         fixed (char* p = source)
         {
-            dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+            this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
                 p,
                 (uint)source.Length * 2,
                 1200,
@@ -110,7 +110,7 @@ internal sealed unsafe partial class ShaderCompiler
         {
             char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
 
-            dxcCompiler.Get()->Compile(
+            this.dxcCompiler.Get()->Compile(
                 (IDxcBlob*)dxcBlobEncoding.Get(),
                 (ushort*)shaderName,
                 (ushort*)entryPoint,
@@ -119,7 +119,7 @@ internal sealed unsafe partial class ShaderCompiler
                 3,
                 null,
                 0,
-                dxcIncludeHandler.Get(),
+                this.dxcIncludeHandler.Get(),
                 dxcOperationResult.GetAddressOf()).Assert();
         }
 

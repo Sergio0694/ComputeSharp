@@ -32,7 +32,7 @@ internal readonly partial struct ColorfulInfinity : IPixelShader<float4>
     /// </summary>
     private float4 Tex(float3 p)
     {
-        float t = time + 78.0f;
+        float t = this.time + 78.0f;
         float4 o = new(p.X, p.Y, p.Z, 3.0f * Hlsl.Sin(t * 0.1f));
         float4 dec =
             new float4(1.0f, 0.9f, 0.1f, 0.15f) +
@@ -51,7 +51,7 @@ internal readonly partial struct ColorfulInfinity : IPixelShader<float4>
     {
         float2 uv = (ThreadIds.XY - ((float2)DispatchSize.XY * 0.5f)) / DispatchSize.Y;
         float3 col = 0;
-        float t = time * 0.3f;
+        float t = this.time * 0.3f;
 
         for (float i = 0.0f; i <= 1.0f; i += 1.0f / NumberOfLayers)
         {

@@ -97,12 +97,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <summary>
     /// The event for the device removed callback.
     /// </summary>
-    private HANDLE deviceRemovedEvent;
+    private readonly HANDLE deviceRemovedEvent;
 
     /// <summary>
     /// The wait handle for the device removed callback.
     /// </summary>
-    private HANDLE deviceRemovedWaitHandle;
+    private readonly HANDLE deviceRemovedWaitHandle;
 
     /// <summary>
     /// The reason the device was removed, if any.

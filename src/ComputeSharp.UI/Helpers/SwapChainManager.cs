@@ -422,7 +422,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <inheritdoc/>
     private unsafe partial void OnWaitForPresent()
     {
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, Win32.INFINITE, true);
+        _ = Win32.WaitForSingleObjectEx(this.frameLatencyWaitableObject, Win32.INFINITE, true);
     }
 
     /// <inheritdoc/>

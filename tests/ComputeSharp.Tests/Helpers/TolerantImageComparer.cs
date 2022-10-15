@@ -138,7 +138,7 @@ internal static class TolerantImageComparer
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[delta({RedDifference},{GreenDifference},{BlueDifference},{AlphaDifference}) @ ({Position.X},{Position.Y})]";
+            return $"[delta({this.RedDifference},{this.GreenDifference},{this.BlueDifference},{this.AlphaDifference}) @ ({this.Position.X},{this.Position.Y})]";
         }
     }
 }

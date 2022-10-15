@@ -170,7 +170,7 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
         float sca = 2.0f;
         float occ = 0.0f;
 
-        for (int i = (int)Hlsl.Min(time, 0f); i < 5; i++)
+        for (int i = (int)Hlsl.Min(this.time, 0f); i < 5; i++)
         {
             float hr = (i + 1f) * 0.15f / 5.0f;
             float d = M(p + (n * hr));
@@ -204,15 +204,15 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
         int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float2 u = (coords - ((float2)DispatchSize.XY * 0.5f)) / DispatchSize.Y;
         float3 r = Hlsl.Normalize(new float3(u, 1));
-        float3 o = new(0, time / 2.0f, -3);
+        float3 o = new(0, this.time / 2.0f, -3);
         float3 l = o + new float3(0.25f, 0.25f, 2.0f);
 
         r.YZ = Hlsl.Mul(Rotate2x2(0.15f), r.YZ);
-        r.XZ = Hlsl.Mul(Rotate2x2(-Hlsl.Cos(time * 3.14159f / 32.0f) / 8.0f), r.XZ);
-        r.XY = Hlsl.Mul(Rotate2x2(Hlsl.Sin(time * 3.14159f / 32.0f) / 8.0f), r.XY);
+        r.XZ = Hlsl.Mul(Rotate2x2(-Hlsl.Cos(this.time * 3.14159f / 32.0f) / 8.0f), r.XZ);
+        r.XY = Hlsl.Mul(Rotate2x2(Hlsl.Sin(this.time * 3.14159f / 32.0f) / 8.0f), r.XY);
 
         float d;
-        float t = Hash21((r.XY * 57.0f) + Hlsl.Frac(time)) * 0.5f;
+        float t = Hash21((r.XY * 57.0f) + Hlsl.Frac(this.time)) * 0.5f;
         float glow = 0;
 
         for (int i = 0; i < 96; i++)

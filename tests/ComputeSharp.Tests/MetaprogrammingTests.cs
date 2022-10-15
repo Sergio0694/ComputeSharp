@@ -19,7 +19,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = this.activation(ThreadIds.X);
         }
     }
 
@@ -135,7 +135,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = f2(f1(ThreadIds.X));
+            this.buffer[ThreadIds.X] = this.f2(this.f1(ThreadIds.X));
         }
     }
 
@@ -166,7 +166,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = MagicNumber + activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = MagicNumber + this.activation(ThreadIds.X);
         }
     }
 
@@ -200,7 +200,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = this.activation(ThreadIds.X);
         }
     }
 
@@ -229,7 +229,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + this.activation(ThreadIds.X);
         }
     }
 

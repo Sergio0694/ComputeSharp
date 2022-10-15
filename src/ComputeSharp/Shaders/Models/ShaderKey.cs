@@ -49,10 +49,10 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     public bool Equals(ShaderKey other)
     {
         return
-            id == other.id &&
-            threadsX == other.threadsX &&
-            threadsY == other.threadsY &&
-            threadsZ == other.threadsZ;
+            this.id == other.id &&
+            this.threadsX == other.threadsX &&
+            this.threadsY == other.threadsY &&
+            this.threadsZ == other.threadsZ;
     }
 
     /// <inheritdoc/>
@@ -65,6 +65,6 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
-        return HashCode.Combine(id, threadsX, threadsY, threadsZ);
+        return HashCode.Combine(this.id, this.threadsX, this.threadsY, this.threadsZ);
     }
 }

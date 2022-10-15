@@ -62,9 +62,9 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         this.format = format;
         this.formatAsString = null;
         this.formatProvider = formatProvider;
-        position = 0;
-        success = shouldAppend = destination.Length >= literalLength;
-        hasCustomFormatter = formatProvider is not null && FormatInterpolatedStringHandler.HasCustomFormatter(formatProvider);
+        this.position = 0;
+        this.success = shouldAppend = destination.Length >= literalLength;
+        this.hasCustomFormatter = formatProvider is not null && FormatInterpolatedStringHandler.HasCustomFormatter(formatProvider);
     }
 
     /// <summary>
@@ -106,13 +106,13 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         if (value.Length == 1)
         {
             Span<char> destination = this.destination;
-            int pos = position;
+            int pos = this.position;
 
             if ((uint)pos < (uint)destination.Length)
             {
                 destination[pos] = value[0];
 
-                position = pos + 1;
+                this.position = pos + 1;
 
                 return true;
             }
@@ -123,7 +123,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         if (value.Length == 2)
         {
             Span<char> destination = this.destination;
-            int pos = position;
+            int pos = this.position;
 
             if ((uint)pos < destination.Length - 1)
             {
@@ -135,7 +135,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
                     Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(value.AsSpan()))));
 #endif
 
-                position = pos + 2;
+                this.position = pos + 2;
 
                 return true;
             }
@@ -154,12 +154,12 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     private bool AppendStringDirect(string value)
     {
 #if NET6_0_OR_GREATER
-        if (value.TryCopyTo(destination.Slice(position)))
+        if (value.TryCopyTo(this.destination.Slice(this.position)))
 #else
-        if (value.AsSpan().TryCopyTo(destination.Slice(position)))
+        if (value.AsSpan().TryCopyTo(this.destination.Slice(this.position)))
 #endif
         {
-            position += value.Length;
+            this.position += value.Length;
             return true;
         }
 
@@ -177,22 +177,22 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         where T : IFormattable
 #endif
     {
-        if (hasCustomFormatter)
+        if (this.hasCustomFormatter)
         {
-            return AppendCustomFormatter(value, formatAsString ??= format.ToString());
+            return AppendCustomFormatter(value, this.formatAsString ??= this.format.ToString());
         }
 
 #if NET6_0_OR_GREATER
-        if (value.TryFormat(destination.Slice(position), out int charsWritten, format, formatProvider))
+        if (value.TryFormat(this.destination.Slice(this.position), out int charsWritten, this.format, this.formatProvider))
         {
-            position += charsWritten;
+            this.position += charsWritten;
 
             return true;
         }
 
         return Fail();
 #else
-        return AppendStringDirect(value.ToString(formatAsString ??= format.ToString(), formatProvider));
+        return AppendStringDirect(value.ToString(this.formatAsString ??= this.format.ToString(), this.formatProvider));
 #endif
     }
 
@@ -202,7 +202,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     /// <param name="value">The value to write.</param>
     public bool AppendFormatted(string? value)
     {
-        if (hasCustomFormatter)
+        if (this.hasCustomFormatter)
         {
             return AppendCustomFormatter(value, format: null);
         }
@@ -213,12 +213,12 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         }
 
 #if NET6_0_OR_GREATER
-        if (value.TryCopyTo(destination.Slice(position)))
+        if (value.TryCopyTo(this.destination.Slice(this.position)))
 #else
-        if (value.AsSpan().TryCopyTo(destination.Slice(position)))
+        if (value.AsSpan().TryCopyTo(this.destination.Slice(this.position)))
 #endif
         {
-            position += value.Length;
+            this.position += value.Length;
 
             return true;
         }
@@ -234,9 +234,9 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     [MethodImpl(MethodImplOptions.NoInlining)]
     private bool AppendCustomFormatter<T>(T value, string? format)
     {
-        ICustomFormatter? formatter = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
+        ICustomFormatter? formatter = (ICustomFormatter?)this.formatProvider?.GetFormat(typeof(ICustomFormatter));
 
-        if (formatter is not null && formatter.Format(format, value, formatProvider) is string customFormatted)
+        if (formatter is not null && formatter.Format(format, value, this.formatProvider) is string customFormatted)
         {
             return AppendStringDirect(customFormatted);
         }
@@ -249,7 +249,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     /// </summary>
     private bool Fail()
     {
-        success = false;
+        this.success = false;
 
         return false;
     }

@@ -89,7 +89,7 @@ public abstract unsafe class Buffer<T> : NativeObject, IGraphicsResource
         nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
         nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, D3D12.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
 
-        SizeInBytes = usableSizeInBytes;
+        this.SizeInBytes = usableSizeInBytes;
         GraphicsDevice = device;
         Length = length;
 
@@ -140,7 +140,7 @@ public abstract unsafe class Buffer<T> : NativeObject, IGraphicsResource
     internal bool IsPaddingPresent
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => SizeInBytes > (nint)Length * sizeof(T);
+        get => this.SizeInBytes > (nint)Length * sizeof(T);
     }
 
     /// <summary>

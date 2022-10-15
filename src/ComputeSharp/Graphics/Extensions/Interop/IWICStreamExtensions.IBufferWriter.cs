@@ -267,19 +267,19 @@ unsafe partial class IWICStreamExtensions
         /// <inheritdoc/>
         public HRESULT QueryInterface(Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         /// <inheritdoc/>
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
 
         /// <inheritdoc/>
         public uint Release()
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
 #endif
 

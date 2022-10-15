@@ -38,7 +38,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin((p * 6.2831853f) + time);
+        return Hlsl.Sin((p * 6.2831853f) + this.time);
     }
 
     // Based on IQ's gradient noise formula.
@@ -297,7 +297,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     {
         int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float2 uv = (coordinate - ((float2)DispatchSize.XY * 0.5f)) / Hlsl.Min(650.0f, DispatchSize.Y);
-        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * time / 16.0f);
+        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * this.time / 16.0f);
         float3 col = SimplexContour(p);
 
         uv = coordinate / (float2)DispatchSize.XY;

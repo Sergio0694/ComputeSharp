@@ -83,7 +83,7 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         tuv -= 0.5f;
 
         // Rotate with noise
-        float degree = Noise(new float2(time * 0.1f, tuv.X * tuv.Y));
+        float degree = Noise(new float2(this.time * 0.1f, tuv.X * tuv.Y));
 
         tuv.Y *= 1.0f / ratio;
         tuv.XY = Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(((degree - 0.5f) * 720.0f) + 180.0f)));
@@ -92,7 +92,7 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         // Wave warp with sin
         float frequency = 5.0f;
         float amplitude = 30.0f;
-        float speed = time * 2.0f;
+        float speed = this.time * 2.0f;
 
         tuv.X += Hlsl.Sin((tuv.Y * frequency) + speed) / amplitude;
         tuv.Y += Hlsl.Sin((tuv.X * frequency * 1.5f) + speed) / (amplitude * 0.5f);

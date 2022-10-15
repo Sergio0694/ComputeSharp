@@ -19,13 +19,13 @@ namespace TerraFX.Interop.DirectX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint Release()
         {
-            return ((delegate* unmanaged[Stdcall]<ID3D12Device5*, uint>)lpVtbl[2])((ID3D12Device5*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12Device5*, uint>)this.lpVtbl[2])((ID3D12Device5*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveDevice()
         {
-            ((delegate* unmanaged[Stdcall]<ID3D12Device5*, void>)lpVtbl[58])((ID3D12Device5*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12Device5*, void>)this.lpVtbl[58])((ID3D12Device5*)Unsafe.AsPointer(ref this));
         }
     }
 }

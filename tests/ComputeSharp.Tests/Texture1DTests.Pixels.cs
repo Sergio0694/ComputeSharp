@@ -96,7 +96,7 @@ partial class Texture1DTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source.Sample(ThreadIds.Normalized.X);
+            this.destination[ThreadIds.X] = this.source.Sample(ThreadIds.Normalized.X);
         }
     }
 

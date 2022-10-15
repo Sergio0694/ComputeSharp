@@ -34,7 +34,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin((p * 6.2831853f) + time);
+        return Hlsl.Sin((p * 6.2831853f) + this.time);
     }
 
     // float2 to float2 hash.
@@ -111,7 +111,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     // Layer color. Based on the shade, layer number and smoothing factor.
     private float3 GetColor(float2 p, float sh, float fi)
     {
-        float3 tx = texture.Sample(p + Hash21(new float2(sh, fi))).XYZ;
+        float3 tx = this.texture.Sample(p + Hash21(new float2(sh, fi))).XYZ;
 
         tx *= tx;
 

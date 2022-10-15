@@ -11,6 +11,6 @@ public readonly partial struct MultiplyByTwo : IComputeShader
     /// <inheritdoc/>
     public void Execute()
     {
-        buffer[ThreadIds.X] *= 2;
+        this.buffer[ThreadIds.X] *= 2;
     }
 }

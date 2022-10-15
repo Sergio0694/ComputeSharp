@@ -94,15 +94,15 @@ internal static partial class BlasHelpers
         /// <inheritdoc/>
         public void Execute()
         {
-            int x_offset = (ThreadIds.X * n * p) + (ThreadIds.Y * m);
+            int x_offset = (ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.m);
             float result = 0f;
 
-            for (int k = 0; k < m; k++)
+            for (int k = 0; k < this.m; k++)
             {
-                result += x[x_offset + k] * w[(k * p) + ThreadIds.Z];
+                result += this.x[x_offset + k] * this.w[(k * this.p) + ThreadIds.Z];
             }
 
-            y[(ThreadIds.X * n * p) + (ThreadIds.Y * p) + ThreadIds.Z] = result + b[ThreadIds.Z];
+            this.y[(ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.p) + ThreadIds.Z] = result + this.b[ThreadIds.Z];
         }
     }
 }

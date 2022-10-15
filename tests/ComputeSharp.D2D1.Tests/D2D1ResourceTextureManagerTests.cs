@@ -547,8 +547,8 @@ public partial class D2D1ResourceTextureManagerTests
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
             int x = xy.X;
-            int y = (int)((uint)xy.Y % (uint)height);
-            int z = (int)((uint)xy.Y / (uint)height);
+            int y = (int)((uint)xy.Y % (uint)this.height);
+            int z = (int)((uint)xy.Y / (uint)this.height);
 
             return this.source[x, y, z];
         }
@@ -876,7 +876,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         public float4 Execute()
         {
-            return source[0, 0];
+            return this.source[0, 0];
         }
     }
 }

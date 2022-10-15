@@ -42,7 +42,7 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
         float3 p2 = p;
 
         p2.XY -= Disp(p.Z).XY;
-        p.XY = Hlsl.Mul(p.XY, Rotate((Hlsl.Sin(p.Z + time) * (0.1f + (prm1 * 0.05f))) + (time * 0.09f)));
+        p.XY = Hlsl.Mul(p.XY, Rotate((Hlsl.Sin(p.Z + this.time) * (0.1f + (prm1 * 0.05f))) + (this.time * 0.09f)));
 
         float cl = Hlsl.Dot(p2.XY, p2.XY);
         float d = 0.0f;
@@ -55,7 +55,7 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
 
         for (int i = 0; i < 5; i++)
         {
-            p += Hlsl.Sin((p.ZXY * 0.75f * trk) + (time * trk * 0.8f)) * dspAmp;
+            p += Hlsl.Sin((p.ZXY * 0.75f * trk) + (this.time * trk * 0.8f)) * dspAmp;
             d -= Hlsl.Abs(Hlsl.Dot(Hlsl.Cos(p), Hlsl.Sin(p.YZX)) * z);
             z *= 0.57f;
             trk *= 1.4f;
@@ -138,10 +138,10 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
         float2 q = (float2)ThreadIds.XY / DispatchSize.XY;
         float2 p = (ThreadIds.XY - (0.5f * (float2)DispatchSize.XY)) / DispatchSize.Y;
         float2 bsMo = -0.5f * (float2)DispatchSize.XY / DispatchSize.Y;
-        float scaledTime = time * 3.0f;
+        float scaledTime = this.time * 3.0f;
         float3 ro = new(0, 0, scaledTime);
 
-        ro += new float3(Hlsl.Sin(time) * 0.5f, Hlsl.Sin(time * 1.0f) * 0.0f, 0);
+        ro += new float3(Hlsl.Sin(this.time) * 0.5f, Hlsl.Sin(this.time * 1.0f) * 0.0f, 0);
 
         float dspAmp = 0.85f;
 
@@ -161,7 +161,7 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
 
         rd.XY = Hlsl.Mul(rd.XY, Rotate((-Disp(scaledTime + 3.5f).X * 0.2f) + bsMo.X));
 
-        float prm1 = Hlsl.SmoothStep(-0.4f, 0.4f, Hlsl.Sin(time * 0.3f));
+        float prm1 = Hlsl.SmoothStep(-0.4f, 0.4f, Hlsl.Sin(this.time * 0.3f));
         float4 scn = Render(ro, rd, scaledTime, prm1, bsMo);
         float3 col = scn.RGB;
 

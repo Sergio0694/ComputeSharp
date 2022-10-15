@@ -31,8 +31,8 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
 
-        _ = Root.Resources.Remove("ShaderSelectionPanel");
-        Root.Children.Add(ShaderSelectionPanel);
+        _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+        this.Root.Children.Add(this.ShaderSelectionPanel);
     }
 
     // Hides the shader selection panel
@@ -40,13 +40,13 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.CloseShaderSelectionPanel);
 
-        _ = Root.Children.Remove(ShaderSelectionPanel);
+        _ = this.Root.Children.Remove(this.ShaderSelectionPanel);
     }
 
     // Updates the size of the shaders list panel
     private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        ShadersListContainerPanel.Height = Math.Round(e.NewSize.Height * 0.35);
+        this.ShadersListContainerPanel.Height = Math.Round(e.NewSize.Height * 0.35);
     }
 
     // Logs rendering failed in the main panel
@@ -54,7 +54,7 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnMainPanel));
 
-        RenderingErrorInfoBar.IsOpen = true;
+        this.RenderingErrorInfoBar.IsOpen = true;
     }
 
     // Logs rendering failed in a secondary panel
@@ -62,6 +62,6 @@ public sealed partial class MainView : UserControl
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
 
-        RenderingErrorInfoBar.IsOpen = true;
+        this.RenderingErrorInfoBar.IsOpen = true;
     }
 }

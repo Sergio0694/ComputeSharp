@@ -1302,7 +1302,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[offset + ThreadIds.X] *= 2;
+            this.buffer[this.offset + ThreadIds.X] *= 2;
         }
     }
 
@@ -1324,7 +1324,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return color;
+            return this.color;
         }
     }
 
@@ -1336,7 +1336,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source.Sample(ThreadIds.Normalized.XY);
+            return this.source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1354,7 +1354,7 @@ public partial class ComputeContextTests
             // The source has a depth of 3, but the destination has a depth of 2
             xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
 
-            destination[ThreadIds.XYZ] = source.Sample(xyz);
+            this.destination[ThreadIds.XYZ] = this.source.Sample(xyz);
         }
     }
 
@@ -1366,7 +1366,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source.Sample(ThreadIds.Normalized.XY);
+            return this.source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1378,7 +1378,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source[ThreadIds.XY];
+            return this.source[ThreadIds.XY];
         }
     }
 
@@ -1390,7 +1390,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return new(1.0f - source[ThreadIds.XY].XYZ, source[ThreadIds.XY].W);
+            return new(1.0f - this.source[ThreadIds.XY].XYZ, this.source[ThreadIds.XY].W);
         }
     }
 
@@ -1408,7 +1408,7 @@ public partial class ComputeContextTests
             // See comment in LinearSampling3DComputeShader
             xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
 
-            destination[ThreadIds.XYZ] = source.Sample(xyz);
+            this.destination[ThreadIds.XYZ] = this.source.Sample(xyz);
         }
     }
 
@@ -1430,11 +1430,11 @@ public partial class ComputeContextTests
                     (ThreadIds.Normalized.X > 0.5f &&
                      ThreadIds.Normalized.Y > 0.5))
                 {
-                    source[ThreadIds.XY] = float4.UnitW;
+                    this.source[ThreadIds.XY] = float4.UnitW;
                 }
                 else
                 {
-                    source[ThreadIds.XY] = float4.Zero;
+                    this.source[ThreadIds.XY] = float4.Zero;
                 }
             }
         }
@@ -1458,11 +1458,11 @@ public partial class ComputeContextTests
                     (ThreadIds.Normalized.X > 0.5f &&
                      ThreadIds.Normalized.Y > 0.5))
                 {
-                    source[ThreadIds.XYZ] = float4.UnitW;
+                    this.source[ThreadIds.XYZ] = float4.UnitW;
                 }
                 else
                 {
-                    source[ThreadIds.XYZ] = float4.Zero;
+                    this.source[ThreadIds.XYZ] = float4.Zero;
                 }
             }
         }
@@ -1477,7 +1477,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XY] = source[ThreadIds.XY];
+            this.destination[ThreadIds.XY] = this.source[ThreadIds.XY];
         }
     }
 }

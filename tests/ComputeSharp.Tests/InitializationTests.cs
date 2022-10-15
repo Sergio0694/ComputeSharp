@@ -79,7 +79,7 @@ public partial class InitializationTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = ThreadIds.X;
+            this.buffer[ThreadIds.X] = ThreadIds.X;
         }
     }
 }

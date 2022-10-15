@@ -70,30 +70,30 @@ public sealed partial class HlslBokehBlurProcessor
         public Implementation(HlslBokehBlurProcessor definition, Configuration configuration, Image<ImageSharpRgba32> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
-            graphicsDevice = definition.GraphicsDevice;
-            radius = definition.Radius;
-            kernelSize = (radius * 2) + 1;
-            componentsCount = definition.Components;
+            this.graphicsDevice = definition.GraphicsDevice;
+            this.radius = definition.Radius;
+            this.kernelSize = (this.radius * 2) + 1;
+            this.componentsCount = definition.Components;
 
             // Reuse the initialized values from the cache, if possible
-            (int radius, int componentsCount) parameters = (radius, componentsCount);
+            (int radius, int componentsCount) parameters = (this.radius, this.componentsCount);
 
             if (Cache.TryGetValue(parameters, out (Vector4[] Parameters, float Scale, Complex64[][] Kernels) info))
             {
-                kernelParameters = info.Parameters;
-                kernelsScale = info.Scale;
-                kernels = info.Kernels;
+                this.kernelParameters = info.Parameters;
+                this.kernelsScale = info.Scale;
+                this.kernels = info.Kernels;
             }
             else
             {
                 // Initialize the complex kernels and parameters with the current arguments
-                (kernelParameters, kernelsScale) = GetParameters();
-                kernels = CreateComplexKernels();
+                (this.kernelParameters, this.kernelsScale) = GetParameters();
+                this.kernels = CreateComplexKernels();
 
                 NormalizeKernels();
 
                 // Store them in the cache for future use
-                _ = Cache.TryAdd(parameters, (kernelParameters, kernelsScale, kernels));
+                _ = Cache.TryAdd(parameters, (this.kernelParameters, this.kernelsScale, this.kernels));
             }
         }
 
@@ -162,7 +162,7 @@ public sealed partial class HlslBokehBlurProcessor
         private (Vector4[] Parameters, float Scale) GetParameters()
         {
             // Prepare the kernel components
-            int index = Math.Max(0, Math.Min(componentsCount - 1, KernelComponents.Count));
+            int index = Math.Max(0, Math.Min(this.componentsCount - 1, KernelComponents.Count));
 
             return (KernelComponents[index], KernelScales[index]);
         }
@@ -172,10 +172,10 @@ public sealed partial class HlslBokehBlurProcessor
         /// </summary>
         private Complex64[][] CreateComplexKernels()
         {
-            Complex64[][] kernels = new Complex64[kernelParameters.Length][];
-            ref Vector4 baseRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
+            Complex64[][] kernels = new Complex64[this.kernelParameters.Length][];
+            ref Vector4 baseRef = ref MemoryMarshal.GetReference(this.kernelParameters.AsSpan());
 
-            for (int i = 0; i < kernelParameters.Length; i++)
+            for (int i = 0; i < this.kernelParameters.Length; i++)
             {
                 ref Vector4 paramsRef = ref Unsafe.Add(ref baseRef, i);
 
@@ -192,15 +192,15 @@ public sealed partial class HlslBokehBlurProcessor
         /// <param name="b">The angle component for each complex component.</param>
         private Complex64[] CreateComplex1DKernel(float a, float b)
         {
-            Complex64[] kernel = new Complex64[kernelSize];
+            Complex64[] kernel = new Complex64[this.kernelSize];
             ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
-            int r = radius;
+            int r = this.radius;
             int n = -r;
 
-            for (int i = 0; i < kernelSize; i++, n++)
+            for (int i = 0; i < this.kernelSize; i++, n++)
             {
                 // Incrementally compute the range values
-                float value = n * kernelsScale * (1f / r);
+                float value = n * this.kernelsScale * (1f / r);
 
                 value *= value;
 
@@ -220,11 +220,11 @@ public sealed partial class HlslBokehBlurProcessor
         {
             // Calculate the complex weighted sum
             float total = 0;
-            Span<Complex64[]> kernelsSpan = kernels.AsSpan();
+            Span<Complex64[]> kernelsSpan = this.kernels.AsSpan();
             ref Complex64[] baseKernelsRef = ref MemoryMarshal.GetReference(kernelsSpan);
-            ref Vector4 baseParamsRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
+            ref Vector4 baseParamsRef = ref MemoryMarshal.GetReference(this.kernelParameters.AsSpan());
 
-            for (int i = 0; i < kernelParameters.Length; i++)
+            for (int i = 0; i < this.kernelParameters.Length; i++)
             {
                 ref Complex64[] kernelRef = ref Unsafe.Add(ref baseKernelsRef, i);
                 int length = kernelRef.Length;
@@ -271,23 +271,23 @@ public sealed partial class HlslBokehBlurProcessor
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelMemory.Span);
 
-            using ReadWriteTexture2D<Rgba32, float4> texture = graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
-            using ReadWriteTexture2D<float4> temporary = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height, AllocationMode.Clear);
-            using ReadWriteTexture2D<float4> reals = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
-            using ReadWriteTexture2D<float4> imaginaries = graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
-            using ReadOnlyBuffer<Complex64> kernel = graphicsDevice.AllocateReadOnlyBuffer<Complex64>(kernelSize);
+            using ReadWriteTexture2D<Rgba32, float4> texture = this.graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
+            using ReadWriteTexture2D<float4> temporary = this.graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height, AllocationMode.Clear);
+            using ReadWriteTexture2D<float4> reals = this.graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
+            using ReadWriteTexture2D<float4> imaginaries = this.graphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
+            using ReadOnlyBuffer<Complex64> kernel = this.graphicsDevice.AllocateReadOnlyBuffer<Complex64>(this.kernelSize);
 
             // Preliminary gamma highlight pass
-            graphicsDevice.For<GammaHighlightProcessor>(source.Height, new(texture));
+            this.graphicsDevice.For<GammaHighlightProcessor>(source.Height, new(texture));
 
             // Perform two 1D convolutions for each component in the current instance
-            for (int j = 0; j < kernels.Length; j++)
+            for (int j = 0; j < this.kernels.Length; j++)
             {
-                Vector4 parameters = kernelParameters[j];
+                Vector4 parameters = this.kernelParameters[j];
 
-                kernel.CopyFrom(kernels[j]);
+                kernel.CopyFrom(this.kernels[j]);
 
-                using ComputeContext context = graphicsDevice.CreateComputeContext();
+                using ComputeContext context = this.graphicsDevice.CreateComputeContext();
 
                 context.For<VerticalConvolutionProcessor>(
                     source.Width,
@@ -304,7 +304,7 @@ public sealed partial class HlslBokehBlurProcessor
             }
 
             // Apply the inverse gamma exposure pass
-            graphicsDevice.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
+            this.graphicsDevice.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
 
             // Write the final pixel data
             texture.CopyTo(span);
@@ -326,24 +326,24 @@ public sealed partial class HlslBokehBlurProcessor
             {
                 float4 real = float4.Zero;
                 float4 imaginary = float4.Zero;
-                int maxY = source.Height;
-                int maxX = source.Width;
-                int kernelLength = kernel.Length;
+                int maxY = this.source.Height;
+                int maxX = this.source.Width;
+                int kernelLength = this.kernel.Length;
                 int radiusY = kernelLength >> 1;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    float4 color = source[offsetX, offsetY];
-                    Complex64 factors = kernel[i];
+                    float4 color = this.source[offsetX, offsetY];
+                    Complex64 factors = this.kernel[i];
 
                     real += factors.Real * color;
                     imaginary += factors.Imaginary * color;
                 }
 
-                reals[ThreadIds.XY] = real;
-                imaginaries[ThreadIds.XY] = imaginary;
+                this.reals[ThreadIds.XY] = real;
+                this.imaginaries[ThreadIds.XY] = imaginary;
             }
         }
 
@@ -364,9 +364,9 @@ public sealed partial class HlslBokehBlurProcessor
             /// <inheritdoc/>
             public void Execute()
             {
-                int maxY = target.Height;
-                int maxX = target.Width;
-                int kernelLength = kernel.Length;
+                int maxY = this.target.Height;
+                int maxX = this.target.Width;
+                int kernelLength = this.kernel.Length;
                 int radiusX = kernelLength >> 1;
                 int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
                 ComplexVector4 result = default;
@@ -374,15 +374,15 @@ public sealed partial class HlslBokehBlurProcessor
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    float4 sourceReal = reals[offsetX, offsetY];
-                    float4 sourceImaginary = imaginaries[offsetX, offsetY];
-                    Complex64 factors = kernel[i];
+                    float4 sourceReal = this.reals[offsetX, offsetY];
+                    float4 sourceImaginary = this.imaginaries[offsetX, offsetY];
+                    Complex64 factors = this.kernel[i];
 
                     result.Real += (Vector4)((factors.Real * sourceReal) - (factors.Imaginary * sourceImaginary));
                     result.Imaginary += (Vector4)((factors.Real * sourceImaginary) + (factors.Imaginary * sourceReal));
                 }
 
-                target[ThreadIds.XY] += (float4)result.WeightedSum(z, w);
+                this.target[ThreadIds.XY] += (float4)result.WeightedSum(this.z, this.w);
             }
         }
 
@@ -397,15 +397,15 @@ public sealed partial class HlslBokehBlurProcessor
             /// <inheritdoc/>
             public void Execute()
             {
-                int width = source.Width;
+                int width = this.source.Width;
 
                 for (int i = 0; i < width; i++)
                 {
-                    float4 v = source[i, ThreadIds.X];
+                    float4 v = this.source[i, ThreadIds.X];
 
                     v.XYZ = v.XYZ * v.XYZ * v.XYZ;
 
-                    source[i, ThreadIds.X] = v;
+                    this.source[i, ThreadIds.X] = v;
                 }
             }
         }
@@ -422,16 +422,16 @@ public sealed partial class HlslBokehBlurProcessor
             /// <inheritdoc/>
             public void Execute()
             {
-                int width = source.Width;
+                int width = this.source.Width;
 
                 for (int i = 0; i < width; i++)
                 {
-                    float4 v = source[i, ThreadIds.X];
+                    float4 v = this.source[i, ThreadIds.X];
 
                     v = Hlsl.Clamp(v, 0, float.MaxValue);
                     v.XYZ = Hlsl.Pow(v.XYZ, 1 / 3f);
 
-                    target[i, ThreadIds.X] = v;
+                    this.target[i, ThreadIds.X] = v;
                 }
             }
         }

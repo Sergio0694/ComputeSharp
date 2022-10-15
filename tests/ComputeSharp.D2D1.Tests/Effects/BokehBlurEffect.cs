@@ -167,7 +167,7 @@ public sealed partial class BokehBlurEffect
     private (Vector4[] Parameters, float Scale) GetParameters()
     {
         // Prepare the kernel components
-        int index = Math.Max(0, Math.Min(componentsCount - 1, KernelComponents.Count));
+        int index = Math.Max(0, Math.Min(this.componentsCount - 1, KernelComponents.Count));
 
         return (KernelComponents[index], KernelScales[index]);
     }
@@ -177,10 +177,10 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     private Complex64[][] CreateComplexKernels()
     {
-        Complex64[][] kernels = new Complex64[kernelParameters.Length][];
-        ref Vector4 baseRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
+        Complex64[][] kernels = new Complex64[this.kernelParameters.Length][];
+        ref Vector4 baseRef = ref MemoryMarshal.GetReference(this.kernelParameters.AsSpan());
 
-        for (int i = 0; i < kernelParameters.Length; i++)
+        for (int i = 0; i < this.kernelParameters.Length; i++)
         {
             ref Vector4 paramsRef = ref Unsafe.Add(ref baseRef, i);
 
@@ -197,15 +197,15 @@ public sealed partial class BokehBlurEffect
     /// <param name="b">The angle component for each complex component.</param>
     private Complex64[] CreateComplex1DKernel(float a, float b)
     {
-        Complex64[] kernel = new Complex64[kernelSize];
+        Complex64[] kernel = new Complex64[this.kernelSize];
         ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
-        int r = radius;
+        int r = this.radius;
         int n = -r;
 
-        for (int i = 0; i < kernelSize; i++, n++)
+        for (int i = 0; i < this.kernelSize; i++, n++)
         {
             // Incrementally compute the range values
-            float value = n * kernelsScale * (1f / r);
+            float value = n * this.kernelsScale * (1f / r);
 
             value *= value;
 
@@ -321,7 +321,7 @@ public sealed partial class BokehBlurEffect
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
-        int numberOfComponents = kernelParameters.Length;
+        int numberOfComponents = this.kernelParameters.Length;
 
         using ComPtr<ID2D1Effect> gammaExposureEffect = default;
         using ComPtr<ID2D1Effect> inverseGammaExposureEffect = default;
@@ -422,7 +422,7 @@ public sealed partial class BokehBlurEffect
             {
                 D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForReals[i].Get());
                 D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForImaginaries[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, kernelParameters[i].Z, kernelParameters[i].W), horizontalConvolutionEffects[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, this.kernelParameters[i].Z, this.kernelParameters[i].W), horizontalConvolutionEffects[i].Get());
             }
 
             // Build the effect graph:
@@ -579,14 +579,14 @@ public sealed partial class BokehBlurEffect
                 {
                     float4 sourceReal = D2D.SampleInputAtOffset(0, new float2(i - radiusX, 0));
                     float4 sourceImaginary = D2D.SampleInputAtOffset(1, new float2(i - radiusX, 0));
-                    float realFactor = kernelReals[i];
-                    float imaginaryFactor = kernelImaginaries[i];
+                    float realFactor = this.kernelReals[i];
+                    float imaginaryFactor = this.kernelImaginaries[i];
 
                     result.Real += (Vector4)((realFactor * sourceReal) - (imaginaryFactor * sourceImaginary));
                     result.Imaginary += (Vector4)((realFactor * sourceImaginary) + (imaginaryFactor * sourceReal));
                 }
 
-                return result.WeightedSum(z, w);
+                return result.WeightedSum(this.z, this.w);
             }
         }
     }

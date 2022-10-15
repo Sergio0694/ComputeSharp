@@ -130,7 +130,7 @@ public ref struct ArrayPoolStringBuilder
 
         Array.Copy(this.array, 0, newArray, 0, itemsToCopy);
 
-        ArrayPool<char>.Shared.Return(array);
+        ArrayPool<char>.Shared.Return(this.array);
 
         this.array = newArray;
     }

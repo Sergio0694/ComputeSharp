@@ -141,8 +141,8 @@ internal readonly unsafe struct ID3D12CommandListPool : IDisposable
         /// <param name="d3D12CommandAllocator">The <see cref="ID3D12CommandAllocator"/> value to wrap.</param>
         public D3D12CommandListBundle(ID3D12GraphicsCommandList* d3D12CommandList, ID3D12CommandAllocator* d3D12CommandAllocator)
         {
-            D3D12CommandList = d3D12CommandList;
-            D3D12CommandAllocator = d3D12CommandAllocator;
+            this.D3D12CommandList = d3D12CommandList;
+            this.D3D12CommandAllocator = d3D12CommandAllocator;
         }
     }
 }

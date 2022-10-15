@@ -20,7 +20,7 @@ internal readonly partial struct FractalTiling : IPixelShader<float4>
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float2 position = (((float2)(256 * ThreadIds.XY)) / DispatchSize.X) + time;
+        float2 position = (((float2)(256 * ThreadIds.XY)) / DispatchSize.X) + this.time;
         float4 color = 0;
 
         for (int i = 0; i < 6; i++)
@@ -28,7 +28,7 @@ internal readonly partial struct FractalTiling : IPixelShader<float4>
             float2 a = Hlsl.Floor(position);
             float2 b = Hlsl.Frac(position);
             float4 w = Hlsl.Frac(
-                (Hlsl.Sin((a.X * 7) + (31.0f * a.Y) + (0.01f * time)) +
+                (Hlsl.Sin((a.X * 7) + (31.0f * a.Y) + (0.01f * this.time)) +
                  new float4(0.035f, 0.01f, 0, 0.7f))
                  * 13.545317f);
 

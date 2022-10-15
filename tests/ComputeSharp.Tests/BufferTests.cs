@@ -286,7 +286,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -314,7 +314,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -342,7 +342,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -378,7 +378,7 @@ public partial class BufferTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[ThreadIds.X] = (buffer[ThreadIds.X] * factor) + 3.14;
+            this.buffer[ThreadIds.X] = (this.buffer[ThreadIds.X] * this.factor) + 3.14;
         }
     }
 

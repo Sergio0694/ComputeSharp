@@ -52,7 +52,7 @@ public sealed partial class HlslGaussianBlurProcessor : IImageProcessor
     /// <param name="radius">The radius value representing the size of the area to sample (this should be at least twice the sigma value)</param>
     public HlslGaussianBlurProcessor(GraphicsDevice device, float sigma, int radius)
     {
-        graphicsDevice = device;
+        this.graphicsDevice = device;
 
         Sigma = sigma;
         Radius = radius;
