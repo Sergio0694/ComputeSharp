@@ -76,7 +76,6 @@ internal readonly partial struct FourColorGradient : IComputeShader
         return 0.5f + 0.5f * n;
     }
 
-
     /// <inheritdoc/>
     public void Execute()
     {

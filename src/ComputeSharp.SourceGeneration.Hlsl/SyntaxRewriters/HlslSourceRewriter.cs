@@ -27,26 +27,6 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     private static readonly char[] FloatLiteralSpecialCharacters = { '.', 'E' };
 
     /// <summary>
-    /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
-    /// </summary>
-    protected readonly SemanticModelProvider SemanticModel;
-
-    /// <summary>
-    /// The collection of discovered custom types.
-    /// </summary>
-    protected readonly ICollection<INamedTypeSymbol> DiscoveredTypes;
-
-    /// <summary>
-    /// The collection of discovered constant definitions.
-    /// </summary>
-    protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
-
-    /// <summary>
-    /// The collection of produced <see cref="DiagnosticInfo"/> instances.
-    /// </summary>
-    protected readonly ImmutableArrayBuilder<DiagnosticInfo> Diagnostics;
-
-    /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
     /// </summary>
     /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
@@ -64,6 +44,26 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         ConstantDefinitions = constantDefinitions;
         Diagnostics = diagnostics;
     }
+
+    /// <summary>
+    /// Gets the <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
+    /// </summary>
+    protected SemanticModelProvider SemanticModel { get; }
+
+    /// <summary>
+    /// Gets the collection of discovered custom types.
+    /// </summary>
+    protected ICollection<INamedTypeSymbol> DiscoveredTypes { get; }
+
+    /// <summary>
+    /// Gets the collection of discovered constant definitions.
+    /// </summary>
+    protected IDictionary<IFieldSymbol, string> ConstantDefinitions { get; }
+
+    /// <summary>
+    /// Gets the collection of produced <see cref="DiagnosticInfo"/> instances.
+    /// </summary>
+    protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; }
 
     /// <inheritdoc/>
     public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)

@@ -151,7 +151,6 @@ internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
         return Hlsl.Max(shade, 0.0f);
     }
 
-
     // I keep a collection of occlusion routines... OK, that sounded really nerdy. :)
     // Anyway, I like this one. I'm assuHlsl.Ming it's based on IQ's original.
     private float CalculateAO(in float3 p, in float3 n)

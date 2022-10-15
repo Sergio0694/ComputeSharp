@@ -85,7 +85,9 @@ internal readonly partial struct MengerJourney : IComputeShader
             z = Hlsl.Abs(z);
 
             if (z.X < z.Y) { z.XY = z.YX; }
+
             if (z.X < z.Z) { z.XZ = z.ZX; }
+
             if (z.Y < z.Z) { z.YZ = z.ZY; }
 
             z = Scale * z - Offset * (Scale - 1.0f);

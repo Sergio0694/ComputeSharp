@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
 
+#pragma warning disable IDE0052
+
 namespace ComputeSharp.__Internals;
 
 /// <summary>

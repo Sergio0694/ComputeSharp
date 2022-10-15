@@ -64,7 +64,6 @@ internal readonly partial struct TriangleGridContouring : IComputeShader
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
 
-
     // The isofunction. Just a Hlsl.Single noise function, but it can be more elaborate.
     private float IsoFunction(in float2 p)
     {

@@ -560,8 +560,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         return updatedNode;
     }
 
-
-
     /// <summary>
     /// Rewrites a sampled texture access.
     /// </summary>

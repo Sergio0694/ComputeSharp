@@ -72,7 +72,6 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         return 0.5f + (0.5f * n);
     }
 
-
     /// <inheritdoc/>
     public float4 Execute()
     {

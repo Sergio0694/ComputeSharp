@@ -149,6 +149,7 @@ partial class ID2D1ShaderGenerator
                                     ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){matrix.Offsets[j]}))"),
                                     ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.Add(ref {rowLocalName}, {j})"))));
                         }
+
                         break;
                 }
             }

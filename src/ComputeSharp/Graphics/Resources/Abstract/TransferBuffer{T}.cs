@@ -170,6 +170,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         /// <inheritdoc/>
         public override Memory<T> Memory
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => CreateMemory(this.buffer.Length);
         }
 

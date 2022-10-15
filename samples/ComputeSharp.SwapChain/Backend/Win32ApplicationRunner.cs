@@ -185,6 +185,7 @@ internal static unsafe class Win32ApplicationRunner
                 {
                     isPaused = false;
                 }
+
                 return 0;
             }
 

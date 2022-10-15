@@ -101,7 +101,6 @@ internal readonly partial struct PyramidPattern : IComputeShader
         return 1.0f - Hlsl.Max(p.X, p.Y);
     }
 
-
     // Standard function-based bump mapping function, with an edge value  included for good measure
     private float3 DoBumpMap(in float2 p, in float3 n, float bumpfactor, ref float edge)
     {
@@ -122,7 +121,6 @@ internal readonly partial struct PyramidPattern : IComputeShader
 
         return Hlsl.Normalize(n + grad * bumpfactor);
     }
-
 
     // A hatch-like algorithm, or a stipple... or some kind of textured pattern
     private float DoHatch(float2 p, float res)

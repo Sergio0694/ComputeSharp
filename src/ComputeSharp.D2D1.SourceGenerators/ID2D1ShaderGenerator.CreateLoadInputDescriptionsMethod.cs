@@ -49,6 +49,7 @@ partial class ID2D1ShaderGenerator
 
                             inputDescriptionsBuilder.Add(new InputDescription((uint)index, filter, levelOfDetailCount));
                         }
+
                         break;
                     default:
                         break;
