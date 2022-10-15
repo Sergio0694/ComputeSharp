@@ -36,7 +36,7 @@ public sealed partial class HlslGaussianBlurProcessor
         public Implementation(HlslGaussianBlurProcessor definition, Configuration configuration, Image<ImageSharpRgba32> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
-            int kernelSize = definition.Radius * 2 + 1;
+            int kernelSize = (definition.Radius * 2) + 1;
 
             graphicsDevice = definition.graphicsDevice;
             kernel = CreateGaussianBlurKernel(kernelSize, definition.Sigma);

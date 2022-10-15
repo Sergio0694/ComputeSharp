@@ -72,7 +72,7 @@ public sealed partial class HlslBokehBlurProcessor
         {
             graphicsDevice = definition.GraphicsDevice;
             radius = definition.Radius;
-            kernelSize = radius * 2 + 1;
+            kernelSize = (radius * 2) + 1;
             componentsCount = definition.Components;
 
             // Reuse the initialized values from the cache, if possible
@@ -239,8 +239,8 @@ public sealed partial class HlslBokehBlurProcessor
                         ref Complex64 kRef = ref Unsafe.Add(ref valueRef, k);
 
                         total +=
-                            paramsRef.Z * (jRef.Real * kRef.Real - jRef.Imaginary * kRef.Imaginary)
-                            + paramsRef.W * (jRef.Real * kRef.Imaginary + jRef.Imaginary * kRef.Real);
+                            (paramsRef.Z * ((jRef.Real * kRef.Real) - (jRef.Imaginary * kRef.Imaginary)))
+                            + (paramsRef.W * ((jRef.Real * kRef.Imaginary) + (jRef.Imaginary * kRef.Real)));
                     }
                 }
             }
@@ -378,8 +378,8 @@ public sealed partial class HlslBokehBlurProcessor
                     float4 sourceImaginary = imaginaries[offsetX, offsetY];
                     Complex64 factors = kernel[i];
 
-                    result.Real += (Vector4)(factors.Real * sourceReal - factors.Imaginary * sourceImaginary);
-                    result.Imaginary += (Vector4)(factors.Real * sourceImaginary + factors.Imaginary * sourceReal);
+                    result.Real += (Vector4)((factors.Real * sourceReal) - (factors.Imaginary * sourceImaginary));
+                    result.Imaginary += (Vector4)((factors.Real * sourceImaginary) + (factors.Imaginary * sourceReal));
                 }
 
                 target[ThreadIds.XY] += (float4)result.WeightedSum(z, w);

@@ -132,7 +132,7 @@ partial class ID2D1ShaderGenerator
 
                     builder.Add(startingRawDataOffset);
 
-                    rawDataOffset = startingRawDataOffset + fieldPack * columns;
+                    rawDataOffset = startingRawDataOffset + (fieldPack * columns);
                 }
 
                 return new FieldInfo.NonLinearMatrix(

@@ -689,7 +689,7 @@ public partial class D2D1ResourceTextureManagerTests
         for (int y = 0; y < updateLengthY; y++)
         {
             ReadOnlySpan<byte> source = data.AsSpan(y * updateLengthX, updateLengthX);
-            Span<byte> destination = texture.AsSpan(startOffsetY * width + y * width + startOffsetX, updateLengthX);
+            Span<byte> destination = texture.AsSpan((startOffsetY * width) + (y * width) + startOffsetX, updateLengthX);
 
             source.CopyTo(destination);
         }
@@ -707,7 +707,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         for (int y = 0; y < height; y++)
         {
-            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + d2D1MappedRect.pitch * y, width))
+            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + (d2D1MappedRect.pitch * y), width))
             {
                 resultingBytes[i++] = pixel.B;
             }
@@ -793,8 +793,8 @@ public partial class D2D1ResourceTextureManagerTests
         {
             for (int y = 0; y < updateLengthY; y++)
             {
-                ReadOnlySpan<byte> source = data.AsSpan(z * updateLengthX * updateLengthY + y * updateLengthX, updateLengthX);
-                Span<byte> destination = texture.AsSpan((startOffsetZ + z) * (width * height) + (startOffsetY + y) * width + startOffsetX, updateLengthX);
+                ReadOnlySpan<byte> source = data.AsSpan((z * updateLengthX * updateLengthY) + (y * updateLengthX), updateLengthX);
+                Span<byte> destination = texture.AsSpan(((startOffsetZ + z) * (width * height)) + ((startOffsetY + y) * width) + startOffsetX, updateLengthX);
 
                 source.CopyTo(destination);
             }
@@ -813,7 +813,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         for (int y = 0; y < height * depth; y++)
         {
-            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + d2D1MappedRect.pitch * y, width))
+            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + (d2D1MappedRect.pitch * y), width))
             {
                 resultingBytes[i++] = pixel.B;
             }

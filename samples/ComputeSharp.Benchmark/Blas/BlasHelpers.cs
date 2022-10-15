@@ -39,7 +39,7 @@ internal static partial class BlasHelpers
 
                     for (int k = 0; k < m; k++)
                     {
-                        result += Unsafe.Add(ref rx, x_offset + k) * Unsafe.Add(ref rw, k * p + j);
+                        result += Unsafe.Add(ref rx, x_offset + k) * Unsafe.Add(ref rw, (k * p) + j);
                     }
 
                     Unsafe.Add(ref ry, y_offset + j) = result + Unsafe.Add(ref rb, j);
@@ -94,15 +94,15 @@ internal static partial class BlasHelpers
         /// <inheritdoc/>
         public void Execute()
         {
-            int x_offset = ThreadIds.X * n * p + ThreadIds.Y * m;
+            int x_offset = (ThreadIds.X * n * p) + (ThreadIds.Y * m);
             float result = 0f;
 
             for (int k = 0; k < m; k++)
             {
-                result += x[x_offset + k] * w[k * p + ThreadIds.Z];
+                result += x[x_offset + k] * w[(k * p) + ThreadIds.Z];
             }
 
-            y[ThreadIds.X * n * p + ThreadIds.Y * p + ThreadIds.Z] = result + b[ThreadIds.Z];
+            y[(ThreadIds.X * n * p) + (ThreadIds.Y * p) + ThreadIds.Z] = result + b[ThreadIds.Z];
         }
     }
 }

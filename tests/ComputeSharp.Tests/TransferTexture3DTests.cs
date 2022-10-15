@@ -87,7 +87,7 @@ public partial class TransferTexture3DTests
         {
             for (int j = 0; j < uploadTexture3D.Height; j++)
             {
-                new Random(i * 5381 + j).NextBytes(uploadTexture3D.View.GetRowSpan(j, i).AsBytes());
+                new Random((i * 5381) + j).NextBytes(uploadTexture3D.View.GetRowSpan(j, i).AsBytes());
             }
         }
 
@@ -131,7 +131,7 @@ public partial class TransferTexture3DTests
         {
             for (int j = 0; j < uploadTexture3D.Height; j++)
             {
-                new Random(i * 5381 + j).NextBytes(uploadTexture3D.View.GetRowSpan(j, i).AsBytes());
+                new Random((i * 5381) + j).NextBytes(uploadTexture3D.View.GetRowSpan(j, i).AsBytes());
             }
         }
 

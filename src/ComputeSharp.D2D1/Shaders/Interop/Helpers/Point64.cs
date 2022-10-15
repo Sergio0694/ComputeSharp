@@ -77,7 +77,7 @@ internal struct Point64
         //         [ M21, M22 ]
         // [ x, y] [ M31, M32 ] = [ x * M11 + y * M21 + M31, x * M12 + y * M22 + m32]
         return (
-            Math.Round((double)this.x * matrix.M11 + (double)this.y * matrix.M21 + matrix.M31),
-            Math.Round((double)this.x * matrix.M12 + (double)this.y * matrix.M22 + matrix.M32));
+            Math.Round(((double)this.x * matrix.M11) + ((double)this.y * matrix.M21) + matrix.M31),
+            Math.Round(((double)this.x * matrix.M12) + ((double)this.y * matrix.M22) + matrix.M32));
     }
 }

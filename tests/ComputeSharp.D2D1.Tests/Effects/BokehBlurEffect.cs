@@ -74,7 +74,7 @@ public sealed partial class BokehBlurEffect
     public BokehBlurEffect(int radius, int componentsCount)
     {
         this.radius = radius;
-        this.kernelSize = this.radius * 2 + 1;
+        this.kernelSize = (this.radius * 2) + 1;
         this.componentsCount = componentsCount;
 
         // Reuse the initialized values from the cache, if possible
@@ -246,8 +246,8 @@ public sealed partial class BokehBlurEffect
                     ref Complex64 kRef = ref Unsafe.Add(ref valueRef, k);
 
                     total +=
-                        paramsRef.Z * (jRef.Real * kRef.Real - jRef.Imaginary * kRef.Imaginary)
-                        + paramsRef.W * (jRef.Real * kRef.Imaginary + jRef.Imaginary * kRef.Real);
+                        (paramsRef.Z * ((jRef.Real * kRef.Real) - (jRef.Imaginary * kRef.Imaginary)))
+                        + (paramsRef.W * ((jRef.Real * kRef.Imaginary) + (jRef.Imaginary * kRef.Real)));
                 }
             }
         }
@@ -582,8 +582,8 @@ public sealed partial class BokehBlurEffect
                     float realFactor = kernelReals[i];
                     float imaginaryFactor = kernelImaginaries[i];
 
-                    result.Real += (Vector4)(realFactor * sourceReal - imaginaryFactor * sourceImaginary);
-                    result.Imaginary += (Vector4)(realFactor * sourceImaginary + imaginaryFactor * sourceReal);
+                    result.Real += (Vector4)((realFactor * sourceReal) - (imaginaryFactor * sourceImaginary));
+                    result.Imaginary += (Vector4)((realFactor * sourceImaginary) + (imaginaryFactor * sourceReal));
                 }
 
                 return result.WeightedSum(z, w);

@@ -365,7 +365,7 @@ public partial class BufferTests
 
         for (int i = 0; i < 128; i++)
         {
-            Assert.IsTrue(Math.Abs(result[i] - (array[i] * 2.0 + 3.14)) < 0.00001);
+            Assert.IsTrue(Math.Abs(result[i] - ((array[i] * 2.0) + 3.14)) < 0.00001);
         }
     }
 
@@ -378,7 +378,7 @@ public partial class BufferTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[ThreadIds.X] = buffer[ThreadIds.X] * factor + 3.14;
+            buffer[ThreadIds.X] = (buffer[ThreadIds.X] * factor) + 3.14;
         }
     }
 

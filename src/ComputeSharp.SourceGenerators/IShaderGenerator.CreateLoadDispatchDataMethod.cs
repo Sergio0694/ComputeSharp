@@ -157,7 +157,7 @@ partial class IShaderGenerator
 
                     builder.Add(startingRawDataOffset);
 
-                    rawDataOffset = startingRawDataOffset + fieldPack * columns;
+                    rawDataOffset = startingRawDataOffset + (fieldPack * columns);
                 }
 
                 return new FieldInfo.NonLinearMatrix(

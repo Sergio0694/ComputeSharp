@@ -435,7 +435,7 @@ public partial class Texture2DTests
 
         public void Execute()
         {
-            destination[ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XY];
+            destination[(ThreadIds.Y * 32) + ThreadIds.X] = source[ThreadIds.XY];
         }
     }
 

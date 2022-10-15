@@ -485,7 +485,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
                     (dimensions > 2 ? z * strides[1] : 0);
                 byte* destinationDataPlane =
                     @this->data +
-                    (dimensions > 2 ? minimumExtents[2] * @this->strides[1] + z * @this->strides[1] : 0) +
+                    (dimensions > 2 ? (minimumExtents[2] * @this->strides[1]) + (z * @this->strides[1]) : 0) +
                     (dimensions > 1 ? minimumExtents[1] * @this->strides[0] : 0);
 
                 for (int y = 0; y < updateExtents[1]; y++)
@@ -582,7 +582,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
 
                 try
                 {
-                    extent01SizeInBytes = checked((extents[1] - 1) * strides[0] + extent0SizeInBytes);
+                    extent01SizeInBytes = checked(((extents[1] - 1) * strides[0]) + extent0SizeInBytes);
                 }
                 catch (OverflowException)
                 {
@@ -609,7 +609,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
 
                     try
                     {
-                        extent012SizeInBytes = (extents[2] - 1) * strides[1] + extent01SizeInBytes;
+                        extent012SizeInBytes = ((extents[2] - 1) * strides[1]) + extent01SizeInBytes;
                     }
                     catch (OverflowException)
                     {

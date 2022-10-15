@@ -145,7 +145,7 @@ public partial class DispatchTests
                     Assert.AreEqual(x % 4, value[0]);
                     Assert.AreEqual(y % 4, value[1]);
                     Assert.AreEqual(z % 4, value[2]);
-                    Assert.AreEqual(value[2] * 4 * 4 + value[1] * 4 + value[0], value[3]);
+                    Assert.AreEqual((value[2] * 4 * 4) + (value[1] * 4) + value[0], value[3]);
                 }
             }
         }

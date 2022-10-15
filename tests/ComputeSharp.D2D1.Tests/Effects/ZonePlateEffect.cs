@@ -34,7 +34,7 @@ public readonly partial struct ZonePlateEffect : ID2D1PixelShader
         float yd = yo * yo;
         float xd = xo * xo;
         float d = xd + yd;
-        float v = 1.0f + (1.0f + Hlsl.Tanh((rm - Hlsl.Sqrt(d)) / w)) * Hlsl.Sin(km * d) * 0.5f;
+        float v = 1.0f + ((1.0f + Hlsl.Tanh((rm - Hlsl.Sqrt(d)) / w)) * Hlsl.Sin(km * d) * 0.5f);
 
         return new Float4(v, v, v, 1.0f);
     }

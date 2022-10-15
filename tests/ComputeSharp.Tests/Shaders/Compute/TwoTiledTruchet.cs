@@ -1,3 +1,5 @@
+#pragma warning disable IDE0048
+
 namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>

@@ -40,7 +40,7 @@ internal readonly partial struct ColorfulInfinity : IPixelShader<float4>
 
         for (int i = 0; i++ < NumberOfIterations;)
         {
-            o.XZYW = Hlsl.Abs(o / Hlsl.Dot(o, o) - dec);
+            o.XZYW = Hlsl.Abs((o / Hlsl.Dot(o, o)) - dec);
         }
 
         return o;
@@ -49,7 +49,7 @@ internal readonly partial struct ColorfulInfinity : IPixelShader<float4>
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float2 uv = (ThreadIds.XY - (float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
+        float2 uv = (ThreadIds.XY - ((float2)DispatchSize.XY * 0.5f)) / DispatchSize.Y;
         float3 col = 0;
         float t = time * 0.3f;
 

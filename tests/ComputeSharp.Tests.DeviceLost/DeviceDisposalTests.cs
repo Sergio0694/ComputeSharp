@@ -170,7 +170,7 @@ public partial class DeviceDisposalTests
         public float4 Execute()
         {
             float2 uv = ThreadIds.Normalized.XY;
-            float3 col = 0.5f + 0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4));
+            float3 col = 0.5f + (0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4)));
 
             return new(col, 1f);
         }

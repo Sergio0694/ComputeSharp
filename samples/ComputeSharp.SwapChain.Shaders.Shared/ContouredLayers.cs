@@ -34,7 +34,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin(p * 6.2831853f + time);
+        return Hlsl.Sin((p * 6.2831853f) + time);
     }
 
     // float2 to float2 hash.
@@ -42,7 +42,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     {
         float n = Hlsl.Sin(Hlsl.Dot(p, new float2(41, 289)));
 
-        return Hlsl.Frac(new float2(262144, 32768) * n) * 2.0f - 1.0f;
+        return (Hlsl.Frac(new float2(262144, 32768) * n) * 2.0f) - 1.0f;
     }
 
     // Smooth 2D noise
@@ -59,7 +59,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
         v.Z = Hlsl.Dot(Hash22B(i + float2.UnitY), p - float2.UnitY);
         v.W = Hlsl.Dot(Hash22B(i + 1.0f), p - 1.0f);
 
-        p = p * p * (3.0f - 2.0f * p);
+        p = p * p * (3.0f - (2.0f * p));
 
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
@@ -78,7 +78,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
         v.Z = Hlsl.Dot(Hash22(i + float2.UnitY), p - float2.UnitY);
         v.W = Hlsl.Dot(Hash22(i + 1.0f), p - 1.0f);
 
-        p = p * p * p * (p * (p * 6.0f - 15.0f) + 10.0f);
+        p = p * p * p * ((p * ((p * 6.0f) - 15.0f)) + 10.0f);
 
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
@@ -86,7 +86,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     // Map function with noise layers
     private float MapNoise(float3 p, float i)
     {
-        return Noise2D3G(p.XY * 3.0f) * 0.66f + Noise2D3G(p.XY * 6.0f) * 0.34f + i / 10.0f * 1.0f - 0.15f;
+        return (Noise2D3G(p.XY * 3.0f) * 0.66f) + (Noise2D3G(p.XY * 6.0f) * 0.34f) + (i / 10.0f * 1.0f) - 0.15f;
     }
 
     // 2D derivative function.
@@ -117,7 +117,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
 
         float3 col;
 
-        col = (float3)1.0 * (1.0f - 0.75f / (1.0f + sh * sh * 2.0f));
+        col = (float3)1.0 * (1.0f - (0.75f / (1.0f + (sh * sh * 2.0f))));
         col = Hlsl.Min(col * tx * 3.0f, 1.0f);
 
         return col;
@@ -128,12 +128,12 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     {
         p *= res / 16.0f;
 
-        float hatch = Hlsl.Clamp(Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f + 0.5f, 0.0f, 1.0f);
+        float hatch = Hlsl.Clamp((Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f) + 0.5f, 0.0f, 1.0f);
 
         float hRnd = Hash21(Hlsl.Floor(p * 6.0f) + 0.73f);
         if (hRnd > 0.66f) hatch = hRnd;
 
-        hatch = hatch * 0.75f + 0.5f;
+        hatch = (hatch * 0.75f) + 0.5f;
 
         return hatch;
     }
@@ -143,7 +143,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     {
         float2 fragCoord = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float res = Hlsl.Min(DispatchSize.Y, 700.0f);
-        float2 uv = (fragCoord - (float2)DispatchSize.XY * 0.5f) / res;
+        float2 uv = (fragCoord - ((float2)DispatchSize.XY * 0.5f)) / res;
         float sf = 1.0f / DispatchSize.Y;
         float3 col = GetColor(uv, 0.0f, 0.0f);
         float pL = 0.0f;
@@ -161,7 +161,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
             hatch = Hatch(uv + Hlsl.Sin(new float2(41.0f, 289.0f) * (fi + 1.0f)), res);
 
             float4 c = MapLayer(new float3(uv, 1.0f), fi);
-            float4 cSh = MapLayer(new float3(uv - new float2(0.03f, -0.03f) * ((flNum - fi) / flNum * 0.5f + 0.5f), 1.0f), fi);
+            float4 cSh = MapLayer(new float3(uv - (new float2(0.03f, -0.03f) * (((flNum - fi) / flNum * 0.5f) + 0.5f)), 1.0f), fi);
             float sh = (fi + 1.0f) / (flNum);
             float3 lCol = GetColor(uv, sh, fi + 1.0f);
             float3 ld = Hlsl.Normalize(new float3(-1, 1, -0.25f));
@@ -178,17 +178,17 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfLSh, Hlsl.Max(cSh.X, pL))) * shF);
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfL * 3.0f, c.X)) * 0.25f);
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X)) * 0.85f);
-            col = Hlsl.Lerp(col, eCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + Hlsl.Length(c.YZX) * 0.003f)));
-            col = Hlsl.Lerp(col, lCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + Hlsl.Length(c.YZX) * 0.006f)));
+            col = Hlsl.Lerp(col, eCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.003f))));
+            col = Hlsl.Lerp(col, lCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.006f))));
 
             pL = c.X;
         }
 
         col *= Hlsl.Lerp(new float3(1.8f, 1, 0.7f).ZYX, new float3(1.8f, 1, 0.7f).XZY, Noise2D(uv * 2.0f));
 
-        float3 rn3 = Noise2D(uv * DispatchSize.Y / 1.0f + 1.7f) - Noise2D(uv * DispatchSize.Y / 1.0f + 3.4f);
+        float3 rn3 = Noise2D((uv * DispatchSize.Y / 1.0f) + 1.7f) - Noise2D((uv * DispatchSize.Y / 1.0f) + 3.4f);
 
-        col *= 0.93f + 0.07f * rn3.XYZ + 0.07f * Hlsl.Dot(rn3, new float3(0.299f, 0.587f, 0.114f));
+        col *= 0.93f + (0.07f * rn3.XYZ) + (0.07f * Hlsl.Dot(rn3, new float3(0.299f, 0.587f, 0.114f)));
 
         uv = fragCoord / DispatchSize.XY;
 

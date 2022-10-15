@@ -23,7 +23,7 @@ internal static class SyntaxTokenHelper
         // An extra newline and indentation has to be added to the raw text when there is no trailing newline, as not doing
         // so would otherwise case the terminating """ token to fall on the same line, which is invalid syntax. This is only
         // needed to make the code valid, as the actual literal context of the string is not affected and remains the same.
-        string indentation = new(' ', 4 * indentationLevel + 4 + 4);
+        string indentation = new(' ', (4 * indentationLevel) + 4 + 4);
 
         return Token(
             TriviaList(),

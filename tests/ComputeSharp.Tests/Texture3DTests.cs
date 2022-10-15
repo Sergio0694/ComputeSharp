@@ -540,7 +540,7 @@ public partial class Texture3DTests
 
         public void Execute()
         {
-            destination[ThreadIds.Z * 32 * 32 + ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XYZ];
+            destination[(ThreadIds.Z * 32 * 32) + (ThreadIds.Y * 32) + ThreadIds.X] = source[ThreadIds.XYZ];
         }
     }
 

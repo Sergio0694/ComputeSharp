@@ -48,7 +48,7 @@ internal static class ImageHelper
 
         for (int i = 0; i < (int)height; i++)
         {
-            ReadOnlySpan<byte> source = new(buffer + i * (int)strideInBytes, (int)width * sizeof(Bgra32));
+            ReadOnlySpan<byte> source = new(buffer + (i * (int)strideInBytes), (int)width * sizeof(Bgra32));
 
             source.CopyTo(pixelData.AsSpan(i * (int)width * sizeof(Bgra32)));
         }

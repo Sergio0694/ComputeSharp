@@ -38,7 +38,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin(p * 6.2831853f + time);
+        return Hlsl.Sin((p * 6.2831853f) + time);
     }
 
     // Based on IQ's gradient noise formula.
@@ -55,7 +55,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         v.Z = Hlsl.Dot(Hash22(i + float2.UnitY), p - float2.UnitY);
         v.W = Hlsl.Dot(Hash22(i + 1.0f), p - 1.0f);
 
-        p = p * p * p * (p * (p * 6.0f - 15.0f) + 10.0f);
+        p = p * p * p * ((p * ((p * 6.0f) - 15.0f)) + 10.0f);
 
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
@@ -63,7 +63,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     // The isofunction. Just a Hlsl.Single noise function, but it can be more elaborate.
     private float IsoFunction(in float2 p)
     {
-        return N2D3G(p / 4.0f + 0.07f);
+        return N2D3G((p / 4.0f) + 0.07f);
     }
 
     // Unsigned distance to the segment joining "a" and "b".
@@ -73,7 +73,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         float h = Hlsl.Clamp(Hlsl.Dot(a, b) / Hlsl.Dot(b, b), 0.0f, 1.0f);
 
-        return Hlsl.Length(a - b * h);
+        return Hlsl.Length(a - (b * h));
     }
 
     // Based on IQ's signed distance to the segment joining "a" and "b".
@@ -85,7 +85,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     // Interpolating along the edge connecting vertices v1 and v2 with respect to the isovalue.
     private static float2 Interpolate(in float2 p1, in float2 p2, float v1, float v2, float isovalue)
     {
-        return Hlsl.Lerp(p1, p2, (isovalue - v1) / (v2 - v1) * 0.75f + 0.25f / 2.0f);
+        return Hlsl.Lerp(p1, p2, ((isovalue - v1) / (v2 - v1) * 0.75f) + (0.25f / 2.0f));
     }
 
     // Isoline function.
@@ -153,11 +153,11 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         float2 oP = p;
 
-        p += new float2(N2D3G(p * 3.5f), N2D3G(p * 3.5f + 7.3f)) * 0.015f;
+        p += new float2(N2D3G(p * 3.5f), N2D3G((p * 3.5f) + 7.3f)) * 0.015f;
 
-        float2 s = Hlsl.Floor(p + (p.X + p.Y) * 0.36602540378f);
+        float2 s = Hlsl.Floor(p + ((p.X + p.Y) * 0.36602540378f));
 
-        p -= s - (s.X + s.Y) * 0.211324865f;
+        p -= s - ((s.X + s.Y) * 0.211324865f);
 
         float i = p.X < p.Y ? 1.0f : 0.0f;
         float2 ioffs = new(1.0f - i, i);
@@ -231,12 +231,12 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         col = Hlsl.Lerp(col, new float3(1.5f, 0.9f, 0.6f) * 0.6f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f)));
         col = Hlsl.Lerp(col, new float3(1, 0.8f, 0.6f) * new float3(0.7f, 1.0f, 0.75f) * 0.95f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d)));
 
-        if (d2 > 0.0f) col *= (Hlsl.Abs(Hlsl.Dot(n3, float3.One)) * 1.25f + 1.25f) / 2.0f;
-        else col *= Hlsl.Max(2.0f - (Hlsl.Dot(n3, float3.One) + 1.45f) / 1.25f, 0.0f);
+        if (d2 > 0.0f) col *= ((Hlsl.Abs(Hlsl.Dot(n3, float3.One)) * 1.25f) + 1.25f) / 2.0f;
+        else col *= Hlsl.Max(2.0f - ((Hlsl.Dot(n3, float3.One) + 1.45f) / 1.25f), 0.0f);
 
-        float pat = Hlsl.Abs(Hlsl.Frac(tri * 12.5f + 0.4f) - 0.5f) * 2.0f;
+        float pat = Hlsl.Abs(Hlsl.Frac((tri * 12.5f) + 0.4f) - 0.5f) * 2.0f;
 
-        col *= pat * 0.425f + 0.75f;
+        col *= (pat * 0.425f) + 0.75f;
         col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d5)) * 0.95f);
         col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d3)));
         col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4)));
@@ -247,12 +247,12 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         col = Hlsl.Min(col, 1.0f);
 
         float gr = Hlsl.Sqrt(Hlsl.Dot(col, new float3(0.299f, 0.587f, 0.114f))) * 1.25f;
-        float ns = (N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
+        float ns = (((N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f) + (N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f)) * 0.5f) + 0.5f;
 
         ns = gr - ns;
         q = Hlsl.Mul(q, Rotate2x2(3.14159f / 3.0f));
 
-        float ns2 = (N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
+        float ns2 = (((N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f) + (N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f)) * 0.5f) + 0.5f;
 
         ns2 = gr - ns2;
         ns = Hlsl.SmoothStep(0.0f, 1.0f, Hlsl.Min(ns, ns2));
@@ -265,8 +265,8 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     public float4 Execute()
     {
         int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
-        float2 uv = (coordinate - (float2)DispatchSize.XY * 0.5f) / Hlsl.Min(650.0f, DispatchSize.Y);
-        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + new float2(0.8660254f, 0.5f) * time / 16.0f;
+        float2 uv = (coordinate - ((float2)DispatchSize.XY * 0.5f)) / Hlsl.Min(650.0f, DispatchSize.Y);
+        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * time / 16.0f);
         float3 col = SimplexContour(p);
 
         uv = coordinate / (float2)DispatchSize.XY;
