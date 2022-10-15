@@ -162,7 +162,7 @@ internal static class SyntaxNodeExtensions
     /// <returns>A node like the one in input, but just as a definition.</returns>
     public static MethodDeclarationSyntax AsDefinition(this MethodDeclarationSyntax node)
     {
-        if (node.ExpressionBody is ArrowExpressionClauseSyntax)
+        if (node.ExpressionBody is not null)
         {
             return node.WithExpressionBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
@@ -205,7 +205,7 @@ internal static class SyntaxNodeExtensions
     /// <returns>A node like the one in input, but just as a definition.</returns>
     public static LocalFunctionStatementSyntax AsDefinition(this LocalFunctionStatementSyntax node)
     {
-        if (node.ExpressionBody is ArrowExpressionClauseSyntax)
+        if (node.ExpressionBody is not null)
         {
             return node.WithExpressionBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }

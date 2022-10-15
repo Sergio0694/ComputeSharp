@@ -175,6 +175,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         /// <inheritdoc/>
         public override Memory<T> Memory
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => CreateMemory(this.buffer.Width);
         }
 

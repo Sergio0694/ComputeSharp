@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 
+#pragma warning disable IDE1006
+
 namespace TerraFX.Interop.Windows
 {
     internal static partial class Windows

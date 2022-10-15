@@ -8,6 +8,8 @@ using Path = System.IO.Path;
 using Path = ComputeSharp.NetStandard.System.IO.Path;
 #endif
 
+#pragma warning disable IDE0011
+
 namespace ComputeSharp.Graphics.Helpers;
 
 /// <summary>
@@ -26,11 +28,12 @@ internal static class WICFormatHelper
         where T : unmanaged
     {
         if (typeof(T) == typeof(Bgra32)) return GUID.GUID_WICPixelFormat32bppBGRA;
-        else if (typeof(T) == typeof(Rgba32)) return GUID.GUID_WICPixelFormat32bppRGBA;
-        else if (typeof(T) == typeof(Rgba64)) return GUID.GUID_WICPixelFormat64bppRGBA;
-        else if (typeof(T) == typeof(R8)) return GUID.GUID_WICPixelFormat8bppGray;
-        else if (typeof(T) == typeof(R16)) return GUID.GUID_WICPixelFormat16bppGray;
-        else return ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+        if (typeof(T) == typeof(Rgba32)) return GUID.GUID_WICPixelFormat32bppRGBA;
+        if (typeof(T) == typeof(Rgba64)) return GUID.GUID_WICPixelFormat64bppRGBA;
+        if (typeof(T) == typeof(R8)) return GUID.GUID_WICPixelFormat8bppGray;
+        if (typeof(T) == typeof(R16)) return GUID.GUID_WICPixelFormat16bppGray;
+
+        return ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
     }
 
     /// <summary>
