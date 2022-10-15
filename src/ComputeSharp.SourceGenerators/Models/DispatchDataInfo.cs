@@ -20,10 +20,16 @@ internal sealed record DispatchDataInfo(
     int Root32BitConstantCount)
 {
     /// <inheritdoc/>
-    public bool Equals(DispatchDataInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(DispatchDataInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.

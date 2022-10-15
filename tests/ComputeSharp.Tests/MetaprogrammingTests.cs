@@ -26,16 +26,28 @@ public partial class MetaprogrammingTests
     public static class Activations
     {
         [ShaderMethod]
-        public static int Square(int x) => x * x;
+        public static int Square(int x)
+        {
+            return x * x;
+        }
 
         [ShaderMethod]
-        public static int AddOne(int x) => x + 1;
+        public static int AddOne(int x)
+        {
+            return x + 1;
+        }
 
         // Missing attribute
-        public static int Identity(int x) => x;
+        public static int Identity(int x)
+        {
+            return x;
+        }
 
         [ShaderMethod]
-        public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
+        public static int FunctionWithConstants(int x)
+        {
+            return (int)(x + FourAndAHalf);
+        }
 
         [ShaderMethod]
         public static Position FunctionWithTypes(int x)

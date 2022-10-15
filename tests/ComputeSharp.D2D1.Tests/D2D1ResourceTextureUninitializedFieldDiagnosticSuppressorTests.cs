@@ -14,6 +14,9 @@ internal sealed partial class D2D1ResourceTextureUninitializedFieldDiagnosticSup
         [D2DResourceTextureIndex(0)]
         private readonly D2D1ResourceTexture1D<float4> texture;
 
-        public float4 Execute() => texture[0];
+        public float4 Execute()
+        {
+            return texture[0];
+        }
     }
 }

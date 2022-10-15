@@ -16,10 +16,16 @@ namespace ComputeSharp.SourceGeneration.Models;
 internal sealed record DeferredDiagnosticInfo(DiagnosticDescriptor Descriptor, ImmutableArray<string> Arguments)
 {
     /// <inheritdoc/>
-    public bool Equals(DeferredDiagnosticInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(DeferredDiagnosticInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// Creates a new <see cref="DeferredDiagnosticInfo"/> instance with the specified parameters.

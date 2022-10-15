@@ -13,10 +13,16 @@ namespace ComputeSharp.SourceGenerators.Models;
 internal sealed record DispatchIdInfo(ImmutableArray<string> Delegates)
 {
     /// <inheritdoc/>
-    public bool Equals(DispatchIdInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(DispatchIdInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchIdInfo"/>.

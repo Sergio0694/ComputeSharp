@@ -14,10 +14,16 @@ namespace ComputeSharp.Core.SourceGenerators.Models;
 internal sealed record ConstructorInfo(ImmutableArray<ParameterInfo> Parameters, ImmutableArray<string> DefaultedFields)
 {
     /// <inheritdoc/>
-    public bool Equals(ConstructorInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(ConstructorInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="ConstructorInfo"/>.

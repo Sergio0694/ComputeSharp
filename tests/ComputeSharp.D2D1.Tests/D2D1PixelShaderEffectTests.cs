@@ -8,6 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct2D;
 
+#pragma warning disable IDE0022
+
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]

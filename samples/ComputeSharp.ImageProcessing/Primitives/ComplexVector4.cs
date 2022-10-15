@@ -4,6 +4,8 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable IDE0022
+
 namespace SixLabors.ImageSharp;
 
 /// <summary>

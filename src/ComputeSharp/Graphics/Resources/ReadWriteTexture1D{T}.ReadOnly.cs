@@ -9,7 +9,7 @@ using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, IDE0022
 
 namespace ComputeSharp;
 

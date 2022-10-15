@@ -43,14 +43,11 @@ unsafe partial struct PixelShaderEffect
 #endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
 #if NET6_0_OR_GREATER
-            return &GetConstantBufferImpl;
+        get => &GetConstantBufferImpl;
 #else
-            return (void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
+        get => (void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
 #endif
-        }
     }
 
     /// <summary>
@@ -63,14 +60,11 @@ unsafe partial struct PixelShaderEffect
 #endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
 #if NET6_0_OR_GREATER
-            return &SetConstantBufferImpl;
+        get => &SetConstantBufferImpl;
 #else
-            return (void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
+        get => (void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
 #endif
-        }
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>

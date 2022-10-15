@@ -179,61 +179,76 @@ public abstract class NativeLibrariesResolverTestsBase
     /// </summary>
     /// <param name="rid">The input <see cref="RID"/> value.</param>
     /// <returns>A text representation for <paramref name="rid"/>.</returns>
-    private static string ToOption(RID rid) => rid switch
+    private static string ToOption(RID rid)
     {
-        RID.None => "",
-        RID.Win_x64 => "-r win-x64",
-        _ => throw new InvalidEnumArgumentException(nameof(rid), (int)rid, typeof(RID))
-    };
+        return rid switch
+        {
+            RID.None => "",
+            RID.Win_x64 => "-r win-x64",
+            _ => throw new InvalidEnumArgumentException(nameof(rid), (int)rid, typeof(RID))
+        };
+    }
 
     /// <summary>
     /// Gets a text representation of the command line argument for the given <see cref="PublishMode"/>.
     /// </summary>
     /// <param name="publishMode">The input <see cref="PublishMode"/> value.</param>
     /// <returns>A text representation for <paramref name="publishMode"/>.</returns>
-    private static string ToOption(PublishMode publishMode) => publishMode switch
+    private static string ToOption(PublishMode publishMode)
     {
-        PublishMode.FrameworkDependent => "--self-contained false",
-        PublishMode.SelfContained => "--self-contained true",
-        _ => throw new InvalidEnumArgumentException(nameof(publishMode), (int)publishMode, typeof(PublishMode))
-    };
+        return publishMode switch
+        {
+            PublishMode.FrameworkDependent => "--self-contained false",
+            PublishMode.SelfContained => "--self-contained true",
+            _ => throw new InvalidEnumArgumentException(nameof(publishMode), (int)publishMode, typeof(PublishMode))
+        };
+    }
 
     /// <summary>
     /// Gets a text representation of the command line argument for the given <see cref="DeploymentMode"/>.
     /// </summary>
     /// <param name="deploymentMode">The input <see cref="DeploymentMode"/> value.</param>
     /// <returns>A text representation for <paramref name="deploymentMode"/>.</returns>
-    private static string ToOption(DeploymentMode deploymentMode) => deploymentMode switch
+    private static string ToOption(DeploymentMode deploymentMode)
     {
-        DeploymentMode.Multiassembly => "/p:PublishSingleFile=false",
-        DeploymentMode.SingleFile => "/p:PublishSingleFile=true",
-        _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(DeploymentMode))
-    };
+        return deploymentMode switch
+        {
+            DeploymentMode.Multiassembly => "/p:PublishSingleFile=false",
+            DeploymentMode.SingleFile => "/p:PublishSingleFile=true",
+            _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(DeploymentMode))
+        };
+    }
 
     /// <summary>
     /// Gets a text representation of the command line argument for the given <see cref="NativeLibrariesDeploymentMode"/>.
     /// </summary>
     /// <param name="deploymentMode">The input <see cref="NativeLibrariesDeploymentMode"/> value.</param>
     /// <returns>A text representation for <paramref name="deploymentMode"/>.</returns>
-    private static string ToOption(NativeLibrariesDeploymentMode deploymentMode) => deploymentMode switch
+    private static string ToOption(NativeLibrariesDeploymentMode deploymentMode)
     {
-        NativeLibrariesDeploymentMode.NotApplicable => "",
-        NativeLibrariesDeploymentMode.CopyToApplicationDirectory => "/p:IncludeNativeLibrariesForSelfExtract=false",
-        NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory => "/p:IncludeNativeLibrariesForSelfExtract=true",
-        _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(NativeLibrariesDeploymentMode))
-    };
+        return deploymentMode switch
+        {
+            NativeLibrariesDeploymentMode.NotApplicable => "",
+            NativeLibrariesDeploymentMode.CopyToApplicationDirectory => "/p:IncludeNativeLibrariesForSelfExtract=false",
+            NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory => "/p:IncludeNativeLibrariesForSelfExtract=true",
+            _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(NativeLibrariesDeploymentMode))
+        };
+    }
 
     /// <summary>
     /// Gets a text representation of the build folder for the given <see cref="RID"/>.
     /// </summary>
     /// <param name="rid">The input <see cref="RID"/> value.</param>
     /// <returns>A text representation for <paramref name="rid"/>.</returns>
-    private static string ToDirectory(RID rid) => rid switch
+    private static string ToDirectory(RID rid)
     {
-        RID.None => "",
-        RID.Win_x64 => "win-x64",
-        _ => throw new InvalidEnumArgumentException(nameof(rid), (int)rid, typeof(RID))
-    };
+        return rid switch
+        {
+            RID.None => "",
+            RID.Win_x64 => "win-x64",
+            _ => throw new InvalidEnumArgumentException(nameof(rid), (int)rid, typeof(RID))
+        };
+    }
 }
 
 /// <summary>

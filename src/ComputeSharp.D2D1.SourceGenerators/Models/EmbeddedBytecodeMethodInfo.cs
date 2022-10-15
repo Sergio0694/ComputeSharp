@@ -24,10 +24,16 @@ internal sealed record EmbeddedBytecodeMethodInfo(
     ImmutableArray<byte> Bytecode)
 {
     /// <inheritdoc/>
-    public bool Equals(EmbeddedBytecodeMethodInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(EmbeddedBytecodeMethodInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeMethodInfo"/>.

@@ -23,10 +23,16 @@ internal sealed record DiagnosticInfo(
     ImmutableArray<string> Arguments)
 {
     /// <inheritdoc/>
-    public bool Equals(DiagnosticInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(DiagnosticInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// Creates a new <see cref="Diagnostic"/> instance with the state from this model.

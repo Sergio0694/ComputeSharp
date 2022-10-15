@@ -12,6 +12,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
+#pragma warning disable IDE0051
+
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
 /// <summary>

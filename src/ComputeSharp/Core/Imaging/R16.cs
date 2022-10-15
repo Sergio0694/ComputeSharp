@@ -72,18 +72,30 @@ public struct R16 : IEquatable<R16>, IPixel<R16, float>
     public static bool operator !=(R16 left, R16 right) => !left.Equals(right);
 
     /// <inheritdoc/>
-    public override readonly bool Equals(object? obj) => obj is R16 R16 && Equals(R16);
+    public override readonly bool Equals(object? obj)
+    {
+        return obj is R16 R16 && Equals(R16);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(R16 other) => PackedValue.Equals(other.PackedValue);
+    public readonly bool Equals(R16 other)
+    {
+        return PackedValue.Equals(other.PackedValue);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override readonly int GetHashCode() => PackedValue.GetHashCode();
+    public override readonly int GetHashCode()
+    {
+        return PackedValue.GetHashCode();
+    }
 
     /// <inheritdoc/>
-    public override readonly string ToString() => $"{nameof(R16)}({this.R})";
+    public override readonly string ToString()
+    {
+        return $"{nameof(R16)}({this.R})";
+    }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc/>
