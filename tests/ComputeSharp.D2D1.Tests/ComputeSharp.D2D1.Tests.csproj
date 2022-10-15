@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
@@ -62,9 +62,6 @@
     <None Include="..\ComputeSharp.Tests\Assets\ColorfulInfinity.png" Link="Assets\ColorfulInfinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\ComputeSharp.Tests\Assets\ContouredLayers.png" Link="Assets\ContouredLayers.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png" Link="Assets\ExtrudedTruchetPattern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -92,6 +89,10 @@
     <None Update="Assets\TwoTiledTruchet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\ContouredLayers.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\samples\ComputeSharp.SwapChain\Textures\RustyMetal.png" Link="Assets\Textures\RustyMetal.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
