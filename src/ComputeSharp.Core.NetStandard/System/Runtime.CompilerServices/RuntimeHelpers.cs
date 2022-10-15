@@ -14,5 +14,8 @@ internal static class RuntimeHelpers
     /// <param name="type">The type to associate the memory to.</param>
     /// <param name="size">The size in byte of the memory to allocate.</param>
     /// <returns>A pointer to the allocated memory.</returns>
-    public static IntPtr AllocateTypeAssociatedMemory(Type type, int size) => Marshal.AllocHGlobal(size);
+    public static IntPtr AllocateTypeAssociatedMemory(Type type, int size)
+    {
+        return Marshal.AllocHGlobal(size);
+    }
 }

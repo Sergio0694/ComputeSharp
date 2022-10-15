@@ -183,9 +183,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         }
 
 #if NET6_0_OR_GREATER
-        int charsWritten;
-
-        if (value.TryFormat(destination.Slice(position), out charsWritten, format, formatProvider))
+        if (value.TryFormat(destination.Slice(position), out int charsWritten, format, formatProvider))
         {
             position += charsWritten;
 

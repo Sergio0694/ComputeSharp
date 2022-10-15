@@ -1,5 +1,7 @@
 ﻿using ComputeSharp.Core.Intrinsics.Attributes;
 
+#pragma warning disable IDE0022
+
 namespace ComputeSharp;
 
 /// <inheritdoc cref="Hlsl"/>

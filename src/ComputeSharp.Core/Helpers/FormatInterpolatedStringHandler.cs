@@ -134,6 +134,7 @@ internal ref struct FormatInterpolatedStringHandler
             {
                 GrowThenCopyString(value);
             }
+
             return;
         }
 
@@ -158,6 +159,7 @@ internal ref struct FormatInterpolatedStringHandler
             {
                 GrowThenCopyString(value);
             }
+
             return;
         }
 
@@ -278,6 +280,7 @@ internal ref struct FormatInterpolatedStringHandler
         GrowCore((uint)position + (uint)additionalChars);
     }
 
+#if NET6_0_OR_GREATER
     /// <summary>
     /// Grows the size of <see cref="characters"/>.
     /// </summary>
@@ -286,6 +289,7 @@ internal ref struct FormatInterpolatedStringHandler
     {
         GrowCore((uint)characters.Length + 1);
     }
+#endif
 
     /// <summary>
     /// Grow the size of <see cref="characters"/> to at least the specified <paramref name="requiredMinCapacity"/>.
