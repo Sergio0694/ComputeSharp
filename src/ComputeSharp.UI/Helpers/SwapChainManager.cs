@@ -396,8 +396,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
             // Apply the necessary scale transform
             DXGI_MATRIX_3X2_F transformMatrix = default;
-            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / targetResolutionScale);
-            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / targetResolutionScale);
+            transformMatrix._11 = 1 / this.compositionScaleX * (1 / targetResolutionScale);
+            transformMatrix._22 = 1 / this.compositionScaleY * (1 / targetResolutionScale);
 
             this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
 

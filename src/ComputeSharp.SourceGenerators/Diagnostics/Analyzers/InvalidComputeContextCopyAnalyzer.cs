@@ -63,7 +63,7 @@ public sealed class InvalidComputeContextCopyAnalyzer : DiagnosticAnalyzer
                 {
                     // In the absence of data flow analysis we can treat
                     // return of a local variable or a parameter as a "move"
-                    if (operation.ReturnedValue.Kind is (OperationKind.LocalReference or OperationKind.ParameterReference) &&
+                    if (operation.ReturnedValue.Kind is OperationKind.LocalReference or OperationKind.ParameterReference &&
                         operation.Kind == OperationKind.Return)
                     {
                         ISymbol? varScope = operation.ReturnedValue.Kind switch
@@ -355,7 +355,7 @@ public sealed class InvalidComputeContextCopyAnalyzer : DiagnosticAnalyzer
         }
 
         return
-            kind is (OperationKind.ObjectCreation or OperationKind.DefaultValue or OperationKind.Literal or OperationKind.Invocation) ||
-            (kind is (OperationKind.None or OperationKind.Invalid) && operation.Syntax is InvocationExpressionSyntax); // Workaround for https://github.com/dotnet/roslyn/issues/49751
+            kind is OperationKind.ObjectCreation or OperationKind.DefaultValue or OperationKind.Literal or OperationKind.Invocation ||
+            (kind is OperationKind.None or OperationKind.Invalid && operation.Syntax is InvocationExpressionSyntax); // Workaround for https://github.com/dotnet/roslyn/issues/49751
     }
 }

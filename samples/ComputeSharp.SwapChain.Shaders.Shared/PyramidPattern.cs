@@ -84,7 +84,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
 
         p -= ip + 0.5f;
 
-        float ang = (-3.14159f * 3.0f / 5.0f) + ((FBM((ip / 8.0f) + (time / 3.0f))) * 6.2831f * 2.0f);
+        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (time / 3.0f)) * 6.2831f * 2.0f);
 
         float2 offs = new float2(Hlsl.Cos(ang), Hlsl.Sin(ang)) * 0.35f;
 
@@ -121,7 +121,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
         float fx2 = BMap(p + e.XY);
         float fy2 = BMap(p + e.YX);
 
-        float3 grad = (new float3(fx - fx2, fy - fx2, 0)) / e.X / 2.0f;
+        float3 grad = new float3(fx - fx2, fy - fx2, 0) / e.X / 2.0f;
 
         edge = Hlsl.Length(new float2(fx, fy) + new float2(fx2, fy2) - (f * 2.0f));
         edge = Hlsl.SmoothStep(0.0f, 1.0f, edge / e.X);

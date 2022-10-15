@@ -205,7 +205,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
             d = 0;
         }
 
-        d3 = Hlsl.Min(d3, DistLine((p - p0), (p - p1)));
+        d3 = Hlsl.Min(d3, DistLine(p - p0, p - p1));
         d4 = Hlsl.Min(d4, Hlsl.Min(Hlsl.Length(p - p0), Hlsl.Length(p - p1)));
 
         float tri = Hlsl.Min(Hlsl.Min(DistLine(p - ip0, p - ip1), DistLine(p - ip1, p - ip2)), DistLine(p - ip2, p - ip0));
@@ -229,7 +229,7 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         }
 
         d2 = Hlsl.Max(d2, -d);
-        d3 = Hlsl.Min(d3, DistLine((p - p0), (p - p1)));
+        d3 = Hlsl.Min(d3, DistLine(p - p0, p - p1));
         d4 = Hlsl.Min(d4, Hlsl.Min(Hlsl.Length(p - p0), Hlsl.Length(p - p1)));
         d4 -= 0.075f;
         d3 -= 0.0125f;
@@ -249,12 +249,12 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         if (d > 0.0f)
         {
-            col = Hlsl.Lerp(col, new float3(1, 1.85f, 3) * 0.3f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f)));
+            col = Hlsl.Lerp(col, new float3(1, 1.85f, 3) * 0.3f, 1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f));
         }
 
-        col = Hlsl.Lerp(col, new float3(1.1f, 0.85f, 0.6f), (1.0f - Hlsl.SmoothStep(0.0f, sf, d2)));
-        col = Hlsl.Lerp(col, new float3(1.5f, 0.9f, 0.6f) * 0.6f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f)));
-        col = Hlsl.Lerp(col, new float3(1, 0.8f, 0.6f) * new float3(0.7f, 1.0f, 0.75f) * 0.95f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d)));
+        col = Hlsl.Lerp(col, new float3(1.1f, 0.85f, 0.6f), 1.0f - Hlsl.SmoothStep(0.0f, sf, d2));
+        col = Hlsl.Lerp(col, new float3(1.5f, 0.9f, 0.6f) * 0.6f, 1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f));
+        col = Hlsl.Lerp(col, new float3(1, 0.8f, 0.6f) * new float3(0.7f, 1.0f, 0.75f) * 0.95f, 1.0f - Hlsl.SmoothStep(0.0f, sf, d));
 
         if (d2 > 0.0f)
         {
@@ -269,9 +269,9 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         col *= (pat * 0.425f) + 0.75f;
         col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d5)) * 0.95f);
-        col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d3)));
-        col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4)));
-        col = Hlsl.Lerp(col, float3.One, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4 + 0.005f)));
+        col = Hlsl.Lerp(col, float3.Zero, 1.0f - Hlsl.SmoothStep(0.0f, sf, d3));
+        col = Hlsl.Lerp(col, float3.Zero, 1.0f - Hlsl.SmoothStep(0.0f, sf, d4));
+        col = Hlsl.Lerp(col, float3.One, 1.0f - Hlsl.SmoothStep(0.0f, sf, d4 + 0.005f));
 
         float2 q = oP * 1.5f;
 

@@ -165,7 +165,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
 
             float4 c = MapLayer(new float3(uv, 1.0f), fi);
             float4 cSh = MapLayer(new float3(uv - (new float2(0.03f, -0.03f) * (((flNum - fi) / flNum * 0.5f) + 0.5f)), 1.0f), fi);
-            float sh = (fi + 1.0f) / (flNum);
+            float sh = (fi + 1.0f) / flNum;
             float3 lCol = GetColor(uv, sh, fi + 1.0f);
             float3 ld = Hlsl.Normalize(new float3(-1, 1, -0.25f));
             float3 n = Hlsl.Normalize(new float3(0.0f, 0.0f, -1.0f) + c.YZW);
@@ -181,8 +181,8 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfLSh, Hlsl.Max(cSh.X, pL))) * shF);
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfL * 3.0f, c.X)) * 0.25f);
             col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X)) * 0.85f);
-            col = Hlsl.Lerp(col, eCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.003f))));
-            col = Hlsl.Lerp(col, lCol * hatch, (1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.006f))));
+            col = Hlsl.Lerp(col, eCol * hatch, 1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.003f)));
+            col = Hlsl.Lerp(col, lCol * hatch, 1.0f - Hlsl.SmoothStep(0.0f, sfL, c.X + (Hlsl.Length(c.YZX) * 0.006f)));
 
             pL = c.X;
         }

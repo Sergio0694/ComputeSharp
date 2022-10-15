@@ -11,6 +11,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
+#pragma warning disable IDE0047
+
 namespace ComputeSharp.Tests;
 
 [TestClass]

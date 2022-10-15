@@ -84,7 +84,7 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
             float3 pos = ro + (t * rd);
             float2 mpv = Map(pos, prm1, bsMo);
             float den = Hlsl.Clamp(mpv.X - 0.3f, 0.0f, 1.0f) * 1.12f;
-            float dn = Hlsl.Clamp((mpv.X + 2.0f), 0.0f, 3.0f);
+            float dn = Hlsl.Clamp(mpv.X + 2.0f, 0.0f, 3.0f);
             float4 col = 0f;
 
             if (mpv.X > 0.6f)

@@ -794,7 +794,7 @@ public partial class D2D1ResourceTextureManagerTests
             for (int y = 0; y < updateLengthY; y++)
             {
                 ReadOnlySpan<byte> source = data.AsSpan((z * updateLengthX * updateLengthY) + (y * updateLengthX), updateLengthX);
-                Span<byte> destination = texture.AsSpan(((startOffsetZ + z) * (width * height)) + ((startOffsetY + y) * width) + startOffsetX, updateLengthX);
+                Span<byte> destination = texture.AsSpan(((startOffsetZ + z) * width * height) + ((startOffsetY + y) * width) + startOffsetX, updateLengthX);
 
                 source.CopyTo(destination);
             }

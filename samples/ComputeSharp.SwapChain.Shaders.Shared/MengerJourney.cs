@@ -55,8 +55,8 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
         float diffuse2 = Hlsl.Max(0.0f, Hlsl.Dot(-normal, lightDir2));
 
         return
-            ((diffuse * Diffuse) * (LightColor * color)) +
-            ((diffuse2 * Diffuse) * (LightColor2 * color));
+            (diffuse * Diffuse * (LightColor * color)) +
+            (diffuse2 * Diffuse * (LightColor2 * color));
     }
 
     /// <summary>

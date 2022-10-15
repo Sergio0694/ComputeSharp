@@ -214,7 +214,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
     {
-        LocalDeclarationStatementSyntax updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
+        LocalDeclarationStatementSyntax updatedNode = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
         {

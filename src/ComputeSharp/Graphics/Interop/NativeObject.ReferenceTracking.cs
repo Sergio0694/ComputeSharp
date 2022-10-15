@@ -217,10 +217,7 @@ partial class NativeObject
 
             this.nativeObject = null;
 
-            if (nativeObject is not null)
-            {
-                nativeObject.ReturnReferenceTrackingLease();
-            }
+            nativeObject?.ReturnReferenceTrackingLease();
         }
     }
 }

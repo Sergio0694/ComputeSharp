@@ -46,7 +46,7 @@ public sealed partial class App : Application
 
             // For good measure, also start a timer of one second. If the app is still alive by then (ie. if the timer callback is
             // executed at all), then just force the whole process to terminate, and exit with the E_APPLICATION_EXITING error code.
-            this.shutdownTimer = new Timer(_ => Environment.Exit(unchecked((int)(0x8000001A))), this, 1000, Timeout.Infinite);
+            this.shutdownTimer = new Timer(_ => Environment.Exit(unchecked((int)0x8000001A)), this, 1000, Timeout.Infinite);
         };
 
         this.mainWindow.Activate();
