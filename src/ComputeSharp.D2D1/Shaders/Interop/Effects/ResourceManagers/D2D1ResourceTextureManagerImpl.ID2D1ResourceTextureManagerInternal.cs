@@ -15,7 +15,7 @@ partial struct D2D1ResourceTextureManagerImpl
     /// <summary>
     /// The implementation for <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
-    private unsafe static class ID2D1ResourceTextureManagerInternalMethods
+    private static unsafe class ID2D1ResourceTextureManagerInternalMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Initialize"/>

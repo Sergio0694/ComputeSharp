@@ -11,7 +11,7 @@ namespace ComputeSharp.SwapChain.Backend;
 /// <summary>
 /// A helper class to manage the creation and execution of Win32 applications.
 /// </summary>
-internal unsafe static class Win32ApplicationRunner
+internal static unsafe class Win32ApplicationRunner
 {
     /// <summary>
     /// Whether or not a resize operation is in progress.

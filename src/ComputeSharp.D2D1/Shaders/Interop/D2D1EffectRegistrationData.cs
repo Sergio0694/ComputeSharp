@@ -26,7 +26,7 @@ public static class D2D1EffectRegistrationData
     /// <summary>
     /// The containing type for deserialized version 1 registration blobs.
     /// </summary>
-    public unsafe readonly struct V1
+    public readonly unsafe struct V1
     {
         /// <summary>
         /// The blob id for V1 registration data.

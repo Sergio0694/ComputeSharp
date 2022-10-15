@@ -17,7 +17,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 1D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
+public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER

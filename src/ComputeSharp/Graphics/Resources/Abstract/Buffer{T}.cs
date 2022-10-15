@@ -25,7 +25,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
+public abstract unsafe class Buffer<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
