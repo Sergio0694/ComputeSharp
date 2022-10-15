@@ -115,7 +115,10 @@ public sealed class ConstantBuffer<T> : Buffer<T>
                 destinationElementPitchInBytes: (uint)GetPaddedSize(),
                 count: (uint)length);
         }
-        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, length);
+        else
+        {
+            CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, length);
+        }
     }
 
     /// <inheritdoc/>

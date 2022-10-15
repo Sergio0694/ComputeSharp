@@ -139,7 +139,10 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
             copyCommandList.ExecuteAndWaitForCompletion();
         }
-        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, count);
+        else
+        {
+            CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, count);
+        }
     }
 
     /// <summary>

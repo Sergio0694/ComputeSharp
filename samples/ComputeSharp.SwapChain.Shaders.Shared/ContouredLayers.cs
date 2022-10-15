@@ -131,7 +131,10 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
         float hatch = Hlsl.Clamp((Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f) + 0.5f, 0.0f, 1.0f);
 
         float hRnd = Hash21(Hlsl.Floor(p * 6.0f) + 0.73f);
-        if (hRnd > 0.66f) hatch = hRnd;
+        if (hRnd > 0.66f)
+        {
+            hatch = hRnd;
+        }
 
         hatch = (hatch * 0.75f) + 0.5f;
 

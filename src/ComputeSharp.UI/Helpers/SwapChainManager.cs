@@ -240,6 +240,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         fixed (ISwapChainPanelNative** swapChainPanelNative = this.swapChainPanelNative)
+        {
             using (ComPtr<IUnknown> swapChainPanel = default)
             {
 #if WINDOWS_UWP
@@ -254,6 +255,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
                     (void**)swapChainPanelNative).Assert();
 #endif
             }
+        }
 
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)

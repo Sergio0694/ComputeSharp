@@ -25,9 +25,15 @@ internal static class TypeInfo<T>
     [RequiresUnreferencedCode("This method reads type info of all fields of the input type (recursively).")]
     private static bool ChecksIsDoubleOrContainsDoubles(Type type)
     {
-        if (type == typeof(double)) return true;
+        if (type == typeof(double))
+        {
+            return true;
+        }
 
-        if (type.IsPrimitive) return false;
+        if (type.IsPrimitive)
+        {
+            return false;
+        }
 
         foreach (FieldInfo fieldInfo in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {

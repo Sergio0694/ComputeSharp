@@ -472,6 +472,7 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
 #endif
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+        {
             fixed (void* sourcePointer = &source)
             {
                 MemoryHelper.Copy(
@@ -483,6 +484,7 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
                     d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch,
                     d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch * (uint)height);
             }
+        }
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 

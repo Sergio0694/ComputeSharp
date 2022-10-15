@@ -104,9 +104,20 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         int iTh = 0;
 
-        if (n3.X > isovalue) iTh += 4;
-        if (n3.Y > isovalue) iTh += 2;
-        if (n3.Z > isovalue) iTh += 1;
+        if (n3.X > isovalue)
+        {
+            iTh += 4;
+        }
+
+        if (n3.Y > isovalue)
+        {
+            iTh += 2;
+        }
+
+        if (n3.Z > isovalue)
+        {
+            iTh += 1;
+        }
 
         if (iTh == 1 || iTh == 6)
         {
@@ -207,8 +218,15 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
 
         d2 = Hlsl.Min(d2, DistEdge(p - p0, p - p1));
 
-        if (iTh2 == 7) d2 = 0.0f;
-        if (iTh == 7) d2 = 1e5f;
+        if (iTh2 == 7)
+        {
+            d2 = 0.0f;
+        }
+
+        if (iTh == 7)
+        {
+            d2 = 1e5f;
+        }
 
         d2 = Hlsl.Max(d2, -d);
         d3 = Hlsl.Min(d3, DistLine((p - p0), (p - p1)));
@@ -224,15 +242,28 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         float3 col = new(1, 0.85f, 0.6f);
         float sf = 0.004f;
 
-        if (d > 0.0f && d2 > 0.0f) col = new float3(1, 1.8f, 3) * 0.45f;
-        if (d > 0.0f) col = Hlsl.Lerp(col, new float3(1, 1.85f, 3) * 0.3f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f)));
+        if (d > 0.0f && d2 > 0.0f)
+        {
+            col = new float3(1, 1.8f, 3) * 0.45f;
+        }
+
+        if (d > 0.0f)
+        {
+            col = Hlsl.Lerp(col, new float3(1, 1.85f, 3) * 0.3f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f)));
+        }
 
         col = Hlsl.Lerp(col, new float3(1.1f, 0.85f, 0.6f), (1.0f - Hlsl.SmoothStep(0.0f, sf, d2)));
         col = Hlsl.Lerp(col, new float3(1.5f, 0.9f, 0.6f) * 0.6f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f)));
         col = Hlsl.Lerp(col, new float3(1, 0.8f, 0.6f) * new float3(0.7f, 1.0f, 0.75f) * 0.95f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d)));
 
-        if (d2 > 0.0f) col *= ((Hlsl.Abs(Hlsl.Dot(n3, float3.One)) * 1.25f) + 1.25f) / 2.0f;
-        else col *= Hlsl.Max(2.0f - ((Hlsl.Dot(n3, float3.One) + 1.45f) / 1.25f), 0.0f);
+        if (d2 > 0.0f)
+        {
+            col *= ((Hlsl.Abs(Hlsl.Dot(n3, float3.One)) * 1.25f) + 1.25f) / 2.0f;
+        }
+        else
+        {
+            col *= Hlsl.Max(2.0f - ((Hlsl.Dot(n3, float3.One) + 1.45f) / 1.25f), 0.0f);
+        }
 
         float pat = Hlsl.Abs(Hlsl.Frac((tri * 12.5f) + 0.4f) - 0.5f) * 2.0f;
 

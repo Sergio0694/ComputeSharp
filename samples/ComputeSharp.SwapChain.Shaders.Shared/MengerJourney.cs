@@ -134,7 +134,10 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
             distance = DE(pos) * FudgeFactor;
             totalDistance += distance;
 
-            if (distance < MinimumDistance) break;
+            if (distance < MinimumDistance)
+            {
+                break;
+            }
 
             steps = i;
         }

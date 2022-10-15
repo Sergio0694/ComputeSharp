@@ -48,7 +48,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
         {
             return Hlsl.Length(p);
         }
-        else p = Hlsl.Abs(p);
+        else
+        {
+            p = Hlsl.Abs(p);
+        }
 
         switch (SHAPE)
         {
@@ -77,7 +80,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
 
         float rnd = Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(ip, new float2(1, 113))) * 45758.5453f);
 
-        if (rnd < 0.5f) p.Y = -p.Y;
+        if (rnd < 0.5f)
+        {
+            p.Y = -p.Y;
+        }
 
         float d = Hlsl.Min(Distance(p - (0.5f * sc)), Distance(p + (0.5f * sc))) - (0.5f * sc);
 
@@ -86,8 +92,15 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
             d += (0.5f - (0.5f / Hlsl.Sqrt(2.0f))) * sc;
         }
 
-        if (rnd < 0.5f) d = -d;
-        if (Mod(ip.X + ip.Y, 2.0f) < 0.5f) d = -d;
+        if (rnd < 0.5f)
+        {
+            d = -d;
+        }
+
+        if (Mod(ip.X + ip.Y, 2.0f) < 0.5f)
+        {
+            d = -d;
+        }
 
         return d - 0.03f;
     }
@@ -141,7 +154,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
             shade = Hlsl.Min(shade, k * d / t);
             t += Hlsl.Clamp(d, 0.01f, 0.25f);
 
-            if (d < 0.0f || t > end) break;
+            if (d < 0.0f || t > end)
+            {
+                break;
+            }
         }
 
         return Hlsl.Max(shade, 0.0f);
@@ -163,7 +179,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
             occ += (hr - d) * sca;
             sca *= 0.7f;
 
-            if (sca > 1e5f) break;
+            if (sca > 1e5f)
+            {
+                break;
+            }
         }
 
         return Hlsl.Clamp(1.0f - occ, 0.0f, 1.0f);
@@ -201,7 +220,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
         {
             d = M(o + (r * t));
 
-            if (Hlsl.Abs(d) < 0.001f) break;
+            if (Hlsl.Abs(d) < 0.001f)
+            {
+                break;
+            }
 
             t += d * 0.7f;
             glow += 0.2f / (1.0f + (Hlsl.Abs(d) * 5.0f));
@@ -244,7 +266,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
             oCol = Hlsl.Lerp(col2, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, pat2)) * 0.35f);
             oCol = Hlsl.Lerp(oCol, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, bord)) * 0.8f);
 
-            if (Mod(iuv.X + iuv.Y, 2.0f) > 0.5f) oCol *= 0.8f;
+            if (Mod(iuv.X + iuv.Y, 2.0f) > 0.5f)
+            {
+                oCol *= 0.8f;
+            }
 
             oCol = Hlsl.Lerp(oCol, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, d - 0.015f)) * 0.8f);
         }
@@ -254,7 +279,10 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
             float4 fCol = Hlsl.Lerp(col1, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, pat)) * 0.35f);
             fCol = Hlsl.Lerp(fCol, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, bord)) * 0.8f);
 
-            if (Mod(iuv.X + iuv.Y, 2.0f) < 0.5f) fCol *= 0.8f;
+            if (Mod(iuv.X + iuv.Y, 2.0f) < 0.5f)
+            {
+                fCol *= 0.8f;
+            }
 
             oCol = Hlsl.Lerp(oCol, fCol, 1 - Hlsl.SmoothStep(0, 0.01f, d + 0.08f));
             oCol = Hlsl.Lerp(oCol, 0, (1 - Hlsl.SmoothStep(0, 0.01f, Hlsl.Length(uv2) - 0.08f)) * 0.8f);

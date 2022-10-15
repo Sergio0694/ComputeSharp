@@ -76,7 +76,10 @@ internal readonly partial struct ProteanClouds : IPixelShader<float4>
 
         for (int i = 0; i < 130; i++)
         {
-            if (rez.A > 0.99f) break;
+            if (rez.A > 0.99f)
+            {
+                break;
+            }
 
             float3 pos = ro + (t * rd);
             float2 mpv = Map(pos, prm1, bsMo);

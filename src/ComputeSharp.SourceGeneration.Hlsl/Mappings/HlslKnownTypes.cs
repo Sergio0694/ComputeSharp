@@ -227,7 +227,10 @@ internal static partial class HlslKnownTypes
                 return;
             }
 
-            if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
+            if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName()))
+            {
+                return;
+            }
 
             // Check if the type is unsupported
             if (!type.IsUnmanagedType ||
@@ -241,11 +244,17 @@ internal static partial class HlslKnownTypes
                 return;
             }
 
-            if (!customTypes.Add(type)) return;
+            if (!customTypes.Add(type))
+            {
+                return;
+            }
 
             foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
             {
-                if (field.IsStatic) continue;
+                if (field.IsStatic)
+                {
+                    continue;
+                }
 
                 ExploreTypes((INamedTypeSymbol)field.Type, customTypes, invalidTypes);
             }
@@ -298,7 +307,10 @@ internal static partial class HlslKnownTypes
             // Only add other custom types as dependencies, and ignore HLSL types
             foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
             {
-                if (field.IsStatic) continue;
+                if (field.IsStatic)
+                {
+                    continue;
+                }
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
@@ -327,7 +339,10 @@ internal static partial class HlslKnownTypes
 
                 yield return entry.Type;
             }
-            else queue.Enqueue(entry);
+            else
+            {
+                queue.Enqueue(entry);
+            }
         }
     }
 }

@@ -259,29 +259,61 @@ internal static unsafe class Win32ApplicationRunner
 
                 if (isAtTop)
                 {
-                    if (isAtRight) return Windows.HTTOPRIGHT;
-                    if (isAtLeft) return Windows.HTTOPLEFT;
+                    if (isAtRight)
+                    {
+                        return Windows.HTTOPRIGHT;
+                    }
+
+                    if (isAtLeft)
+                    {
+                        return Windows.HTTOPLEFT;
+                    }
+
                     return Windows.HTTOP;
                 }
 
                 if (isAtRight)
                 {
-                    if (isAtTop) return Windows.HTTOPRIGHT;
-                    if (isAtBottom) return Windows.HTBOTTOMRIGHT;
+                    if (isAtTop)
+                    {
+                        return Windows.HTTOPRIGHT;
+                    }
+
+                    if (isAtBottom)
+                    {
+                        return Windows.HTBOTTOMRIGHT;
+                    }
+
                     return Windows.HTRIGHT;
                 }
 
                 if (isAtBottom)
                 {
-                    if (isAtRight) return Windows.HTBOTTOMRIGHT;
-                    if (isAtLeft) return Windows.HTBOTTOMLEFT;
+                    if (isAtRight)
+                    {
+                        return Windows.HTBOTTOMRIGHT;
+                    }
+
+                    if (isAtLeft)
+                    {
+                        return Windows.HTBOTTOMLEFT;
+                    }
+
                     return Windows.HTBOTTOM;
                 }
 
                 if (isAtLeft)
                 {
-                    if (isAtTop) return Windows.HTTOPLEFT;
-                    if (isAtBottom) return Windows.HTBOTTOMLEFT;
+                    if (isAtTop)
+                    {
+                        return Windows.HTTOPLEFT;
+                    }
+
+                    if (isAtBottom)
+                    {
+                        return Windows.HTBOTTOMLEFT;
+                    }
+
                     return Windows.HTLEFT;
                 }
 

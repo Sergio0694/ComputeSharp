@@ -35,7 +35,10 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.EnumerateDevices())
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            if (i++ == 0)
+            {
+                Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            }
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
@@ -54,7 +57,10 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.QueryDevices(info => info.DedicatedMemorySize >= 1024))
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            if (i++ == 0)
+            {
+                Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            }
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 

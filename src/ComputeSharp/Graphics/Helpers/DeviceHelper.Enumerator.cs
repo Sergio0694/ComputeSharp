@@ -111,7 +111,10 @@ partial class DeviceHelper
                     }
                 }
 
-                if (this.isCompleted) return false;
+                if (this.isCompleted)
+                {
+                    return false;
+                }
 
                 while (true)
                 {

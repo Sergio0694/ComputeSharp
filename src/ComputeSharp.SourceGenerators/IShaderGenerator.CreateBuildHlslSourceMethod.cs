@@ -466,7 +466,10 @@ partial class IShaderGenerator
                 // Declare the fields of the current type
                 foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
                 {
-                    if (field.IsStatic) continue;
+                    if (field.IsStatic)
+                    {
+                        continue;
+                    }
 
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 

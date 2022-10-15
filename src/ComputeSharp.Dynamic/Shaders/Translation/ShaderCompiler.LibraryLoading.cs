@@ -22,7 +22,10 @@ unsafe partial class ShaderCompiler
         // This happens when doing eg. "dotnet bin\Debug\net5.0\MyApp.dll", which would crash at runtime.
         Windows.ResolveLibrary += static (libraryName, assembly, searchPath) =>
         {
-            if (libraryName is not "dxcompiler") return IntPtr.Zero;
+            if (libraryName is not "dxcompiler")
+            {
+                return IntPtr.Zero;
+            }
 
             string rid = RuntimeInformation.ProcessArchitecture switch
             {

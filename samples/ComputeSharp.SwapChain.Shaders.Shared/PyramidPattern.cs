@@ -88,11 +88,23 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
 
         float2 offs = new float2(Hlsl.Cos(ang), Hlsl.Sin(ang)) * 0.35f;
 
-        if (p.X < offs.X) p.X = 1.0f - ((p.X + 0.5f) / Hlsl.Abs(offs.X + 0.5f));
-        else p.X = (p.X - offs.X) / (0.5f - offs.X);
+        if (p.X < offs.X)
+        {
+            p.X = 1.0f - ((p.X + 0.5f) / Hlsl.Abs(offs.X + 0.5f));
+        }
+        else
+        {
+            p.X = (p.X - offs.X) / (0.5f - offs.X);
+        }
 
-        if (p.Y < offs.Y) p.Y = 1.0f - ((p.Y + 0.5f) / Hlsl.Abs(offs.Y + 0.5f));
-        else p.Y = (p.Y - offs.Y) / (0.5f - offs.Y);
+        if (p.Y < offs.Y)
+        {
+            p.Y = 1.0f - ((p.Y + 0.5f) / Hlsl.Abs(offs.Y + 0.5f));
+        }
+        else
+        {
+            p.Y = (p.Y - offs.Y) / (0.5f - offs.Y);
+        }
 
         return 1.0f - Hlsl.Max(p.X, p.Y);
     }
@@ -128,7 +140,10 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
         float hatch = Hlsl.Clamp((Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f) + 0.5f, 0.0f, 1.0f);
 
         float hRnd = Hash21(Hlsl.Floor(p * 6.0f) + 0.73f);
-        if (hRnd > 0.66f) hatch = hRnd;
+        if (hRnd > 0.66f)
+        {
+            hatch = hRnd;
+        }
 
         return hatch;
     }
