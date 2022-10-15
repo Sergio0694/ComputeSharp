@@ -62,10 +62,10 @@ dotnet_style_predefined_type_for_locals_parameters_members = true:warning
 dotnet_style_predefined_type_for_member_access = true:warning
 
 # Parentheses preferences
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
-dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
-dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:warning
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:warning
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:warning
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:warning
 
 # Modifier preferences (set to silent until https://github.com/dotnet/roslyn/issues/52904 is resolved)
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
@@ -102,13 +102,13 @@ csharp_style_var_for_built_in_types = false:warning
 csharp_style_var_when_type_is_apparent = false:warning
 
 # Expression-bodied members
-csharp_style_expression_bodied_accessors = false:silent
-csharp_style_expression_bodied_constructors = false:silent
-csharp_style_expression_bodied_indexers = false:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_methods = false:silent
-csharp_style_expression_bodied_operators = false:silent
-csharp_style_expression_bodied_properties = false:silent
+csharp_style_expression_bodied_accessors = when_on_single_line:warning
+csharp_style_expression_bodied_constructors = false:warning
+csharp_style_expression_bodied_indexers = when_on_single_line:warning
+csharp_style_expression_bodied_lambdas = when_on_single_line:warning
+csharp_style_expression_bodied_methods = false:warning
+csharp_style_expression_bodied_operators = when_on_single_line:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning
 
 # Pattern matching preferences
 csharp_style_prefer_pattern_matching = true:suggestion
@@ -119,7 +119,7 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 
 # Modifier preferences
-csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
+csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
 
 # Code-block preferences
 csharp_prefer_braces = true:suggestion
@@ -357,3 +357,28 @@ dotnet_diagnostic.SA1611.severity = none
 dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SA1634.severity = none
 dotnet_diagnostic.SA1652.severity = none
+
+## CodeStyle Code Analysis
+
+dotnet_diagnostic.IDE0010.severity = none
+dotnet_diagnostic.IDE0130.severity = none
+dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.IDE0023.severity = none
+dotnet_diagnostic.IDE0024.severity = none
+dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.IDE0057.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0072.severity = none
+dotnet_diagnostic.IDE0064.severity = none
+dotnet_diagnostic.IDE0160.severity = none
+dotnet_diagnostic.IDE0040.severity = none
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0032.severity = none
+dotnet_diagnostic.IDE0056.severity = none
+dotnet_diagnostic.IDE0032.severity = none
+dotnet_diagnostic.IDE0042.severity = none
+dotnet_diagnostic.IDE0180.severity = none
+dotnet_diagnostic.IDE0061.severity = none
+dotnet_diagnostic.IDE0078.severity = none
+dotnet_diagnostic.IDE0066.severity = none

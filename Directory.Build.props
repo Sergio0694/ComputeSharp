@@ -11,6 +11,9 @@
     -->
     <AnalysisLevel>7</AnalysisLevel>
 
+    <!-- Import the global configs from the CodeStyle package (enables all IDExxxx warnings)-->
+    <AnalysisLevelStyle>7-all</AnalysisLevelStyle>
+
     <!--
       Enable the compiler strict mode (see https://www.meziantou.net/csharp-compiler-strict-mode.htm).
       This (poorly documented) mode enables additional warnings for incorrect usages of some features.
