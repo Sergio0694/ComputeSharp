@@ -215,6 +215,6 @@ internal static class ISymbolExtensions
 
         return
             accessibility == Accessibility.Public ||
-            accessibility == Accessibility.Internal && symbol.ContainingAssembly.GivesAccessTo(assembly);
+            (accessibility == Accessibility.Internal && symbol.ContainingAssembly.GivesAccessTo(assembly));
     }
 }

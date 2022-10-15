@@ -77,7 +77,7 @@ public sealed partial class HlslBokehBlurProcessor : IImageProcessor
             ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format.");
         }
 
-        Implementation processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
+        Implementation processor = new(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
 
         return Unsafe.As<IImageProcessor<TPixel>>(processor);
     }

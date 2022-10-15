@@ -64,7 +64,7 @@ partial class ID2D1ShaderGenerator
                 out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields);
 
             // Explore the syntax tree and extract the processed info
-            SemanticModelProvider semanticModelProvider = new SemanticModelProvider(compilation);
+            SemanticModelProvider semanticModelProvider = new(compilation);
             (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
             ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
 

@@ -58,7 +58,7 @@ partial class IShaderGenerator
             }
 
             // Explore the syntax tree and extract the processed info
-            SemanticModelProvider semanticModelProvider = new SemanticModelProvider(compilation);
+            SemanticModelProvider semanticModelProvider = new(compilation);
             INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
             bool isComputeShader = pixelShaderSymbol is null;
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);

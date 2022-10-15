@@ -41,5 +41,5 @@ internal readonly struct Complex64
     /// <param name="scalar">The <see cref="float"/> scalar to use to multiply the <see cref="Complex64"/> value.</param>
     /// <returns>The <see cref="Complex64"/> result.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Complex64 operator *(Complex64 value, float scalar) => new Complex64(value.Real * scalar, value.Imaginary * scalar);
+    public static Complex64 operator *(Complex64 value, float scalar) => new(value.Real * scalar, value.Imaginary * scalar);
 }

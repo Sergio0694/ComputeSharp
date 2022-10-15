@@ -375,8 +375,8 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             uint dataCount)
         {
             // Either both extents are available, or none is, and the other values must not be null
-            if (minimumExtents is null && maximimumExtents is not null ||
-                minimumExtents is not null && maximimumExtents is null ||
+            if ((minimumExtents is null && maximimumExtents is not null) ||
+                (minimumExtents is not null && maximimumExtents is null) ||
                 (dimensions > 1 && strides is null) ||
                 data is null)
             {

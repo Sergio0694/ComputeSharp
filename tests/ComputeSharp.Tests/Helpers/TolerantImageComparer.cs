@@ -55,7 +55,7 @@ internal static class TolerantImageComparer
 
         float totalDifference = 0F;
 
-        List<PixelDifference> differences = new List<PixelDifference>(20);
+        List<PixelDifference> differences = new(20);
         Span<ImageSharpRgba32> aBuffer = new ImageSharpRgba32[actual.Width];
         Span<ImageSharpRgba32> bBuffer = new ImageSharpRgba32[actual.Width];
 
@@ -84,7 +84,7 @@ internal static class TolerantImageComparer
                 {
                     if (differences.Count < 20)
                     {
-                        PixelDifference diff = new PixelDifference(new Point(x, y), aBuffer[x], bBuffer[x]);
+                        PixelDifference diff = new(new Point(x, y), aBuffer[x], bBuffer[x]);
                         differences.Add(diff);
                     }
 
