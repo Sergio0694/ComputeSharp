@@ -78,9 +78,9 @@ public sealed partial class BokehBlurEffect
         this.componentsCount = componentsCount;
 
         // Reuse the initialized values from the cache, if possible
-        var parameters = (this.radius, this.componentsCount);
+        (int radius, int componentsCount) parameters = (this.radius, this.componentsCount);
 
-        if (Cache.TryGetValue(parameters, out var info))
+        if (Cache.TryGetValue(parameters, out (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels) info))
         {
             this.kernelParameters = info.Parameters;
             this.kernelsScale = info.Scale;
@@ -91,7 +91,7 @@ public sealed partial class BokehBlurEffect
             // Initialize the complex kernels and parameters with the current arguments
             (this.kernelParameters, this.kernelsScale) = GetParameters();
 
-            var kernels = CreateComplexKernels();
+            Complex64[][] kernels = CreateComplexKernels();
 
             NormalizeKernels(kernels, this.kernelParameters);
 
@@ -177,7 +177,7 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     private Complex64[][] CreateComplexKernels()
     {
-        var kernels = new Complex64[kernelParameters.Length][];
+        Complex64[][] kernels = new Complex64[kernelParameters.Length][];
         ref Vector4 baseRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
 
         for (int i = 0; i < kernelParameters.Length; i++)
@@ -197,7 +197,7 @@ public sealed partial class BokehBlurEffect
     /// <param name="b">The angle component for each complex component.</param>
     private Complex64[] CreateComplex1DKernel(float a, float b)
     {
-        var kernel = new Complex64[kernelSize];
+        Complex64[] kernel = new Complex64[kernelSize];
         ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
         int r = radius;
         int n = -r;
@@ -274,13 +274,13 @@ public sealed partial class BokehBlurEffect
     /// <param name="kernels">The input kernels to convert.</param>
     private static (float[] Real, float[] Imaginary)[] ConvertKernelsToStructureOfArrays(Complex64[][] kernels)
     {
-        var structureOfArrayKernels = new (float[] Real, float[] Imaginary)[kernels.Length];
+        (float[] Real, float[] Imaginary)[] structureOfArrayKernels = new (float[] Real, float[] Imaginary)[kernels.Length];
 
         for (int i = 0; i < kernels.Length; i++)
         {
             Complex64[] kernel = kernels[i];
-            var real = new float[kernel.Length];
-            var imaginary = new float[kernel.Length];
+            float[] real = new float[kernel.Length];
+            float[] imaginary = new float[kernel.Length];
 
             for (int j = 0; j < kernel.Length; j++)
             {

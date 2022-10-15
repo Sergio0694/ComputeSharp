@@ -20,7 +20,7 @@ public sealed class DebugAnalyticsService : IAnalyticsService
 
         if (data is not null)
         {
-            foreach (var info in data)
+            foreach ((string Property, object? Value) info in data)
             {
                 _ = builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
             }
@@ -40,7 +40,7 @@ public sealed class DebugAnalyticsService : IAnalyticsService
 
         if (data is not null)
         {
-            foreach (var info in data)
+            foreach ((string Property, object? Value) info in data)
             {
                 _ = builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
             }

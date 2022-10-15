@@ -60,8 +60,8 @@ partial class Texture1DTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var original = Image.Load<ImageSharpRgba32>(Path.Combine(imagingPath, "city.jpg"));
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(Path.Combine(imagingPath, "city.jpg"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
         if (!original.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> originalMemory))
         {
@@ -82,8 +82,8 @@ partial class Texture1DTests
             Assert.Inconclusive();
         }
 
-        using var sampledRow = Image.WrapMemory(sampledMemory.Slice(0, sampled.Width), sampled.Width, 1);
-        using var processedRow = Image.WrapMemory(processed.AsMemory().Cast<Rgba32, ImageSharpRgba32>(), sampled.Width, 1);
+        using Image<ImageSharpRgba32> sampledRow = Image.WrapMemory(sampledMemory.Slice(0, sampled.Width), sampled.Width, 1);
+        using Image<ImageSharpRgba32> processedRow = Image.WrapMemory(processed.AsMemory().Cast<Rgba32, ImageSharpRgba32>(), sampled.Width, 1);
 
         TolerantImageComparer.AssertEqual(sampledRow, processedRow, 0.0000017f);
     }
@@ -117,7 +117,7 @@ partial class Texture1DTests
         {
             using ReadWriteTexture1D<T, TPixel> texture = device.Get().AllocateReadWriteTexture1D<T, TPixel>(64);
 
-            using (var context = device.Get().CreateComputeContext())
+            using (ComputeContext context = device.Get().CreateComputeContext())
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 

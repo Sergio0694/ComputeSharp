@@ -67,7 +67,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(buffer);
 
-        using var _0 = buffer.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
 
         buffer.ThrowIfDeviceMismatch(device);
 
@@ -89,7 +89,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -111,7 +111,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -202,7 +202,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -224,7 +224,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -315,7 +315,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -337,7 +337,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 

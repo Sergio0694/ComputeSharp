@@ -23,8 +23,8 @@ internal static class TolerantImageComparer
     /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void AssertEqual(string expectedPath, string actualPath, float threshold)
     {
-        using var expected = Image.Load<ImageSharpRgba32>(expectedPath);
-        using var actual = Image.Load<ImageSharpRgba32>(actualPath);
+        using Image<ImageSharpRgba32> expected = Image.Load<ImageSharpRgba32>(expectedPath);
+        using Image<ImageSharpRgba32> actual = Image.Load<ImageSharpRgba32>(actualPath);
 
         AssertEqual(expected, actual, threshold);
     }
@@ -55,7 +55,7 @@ internal static class TolerantImageComparer
 
         float totalDifference = 0F;
 
-        var differences = new List<PixelDifference>(20);
+        List<PixelDifference> differences = new List<PixelDifference>(20);
         Span<ImageSharpRgba32> aBuffer = new ImageSharpRgba32[actual.Width];
         Span<ImageSharpRgba32> bBuffer = new ImageSharpRgba32[actual.Width];
 
@@ -84,7 +84,7 @@ internal static class TolerantImageComparer
                 {
                     if (differences.Count < 20)
                     {
-                        var diff = new PixelDifference(new Point(x, y), aBuffer[x], bBuffer[x]);
+                        PixelDifference diff = new PixelDifference(new Point(x, y), aBuffer[x], bBuffer[x]);
                         differences.Add(diff);
                     }
 
@@ -102,7 +102,7 @@ internal static class TolerantImageComparer
             _ = builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
             _ = builder.AppendLine($"First {differences.Count} pixel deltas:");
 
-            foreach (var delta in differences)
+            foreach (PixelDifference delta in differences)
             {
                 _ = builder.AppendLine(delta.ToString());
             }

@@ -140,7 +140,7 @@ internal static partial class HlslKnownProperties
         };
 
         // Programmatically load mappings for the instance members of the HLSL vector types
-        foreach (var item in
+        foreach ((Type Type, PropertyInfo Property) item in
             from type in HlslKnownTypes.KnownVectorTypes
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             select (Type: type, Property: property))
@@ -149,7 +149,7 @@ internal static partial class HlslKnownProperties
         }
 
         // Load mappings for the matrix properties as well
-        foreach (var item in
+        foreach ((Type Type, PropertyInfo Property) item in
             from type in HlslKnownTypes.KnownMatrixTypes
             from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
             where Regex.IsMatch(property.Name, "^M[1-4]{2}$")
@@ -282,7 +282,7 @@ internal static partial class HlslKnownProperties
     /// <returns>Whether or not a rank and axis could be resolved by the input indexer name.</returns>
     public static bool TryGetAccessorRankAndAxis(string name, out int rank, out int axis)
     {
-        if (KnownSizeAccessors.TryGetValue(name, out var info))
+        if (KnownSizeAccessors.TryGetValue(name, out (int Rank, int Axis) info))
         {
             (rank, axis) = info;
 

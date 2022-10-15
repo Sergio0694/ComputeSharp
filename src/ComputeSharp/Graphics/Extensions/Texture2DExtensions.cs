@@ -213,8 +213,8 @@ public static class Texture2DExtensions
     {
         Guard.IsNotNull(source);
 
-        var (offsetX, width) = x.GetOffsetAndLength(source.Width);
-        var (offsetY, height) = y.GetOffsetAndLength(source.Height);
+        (int offsetX, int width) = x.GetOffsetAndLength(source.Width);
+        (int offsetY, int height) = y.GetOffsetAndLength(source.Height);
 
         source.CopyTo(destination, offsetX, offsetY, width, height);
     }
@@ -487,8 +487,8 @@ public static class Texture2DExtensions
     {
         Guard.IsNotNull(destination);
 
-        var (offsetX, width) = x.GetOffsetAndLength(destination.Width);
-        var (offsetY, height) = y.GetOffsetAndLength(destination.Height);
+        (int offsetX, int width) = x.GetOffsetAndLength(destination.Width);
+        (int offsetY, int height) = y.GetOffsetAndLength(destination.Height);
 
         destination.CopyFrom(source, offsetX, offsetY, width, height);
     }

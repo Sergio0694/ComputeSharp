@@ -53,7 +53,7 @@ public class DeviceLostTests
 
         await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        using var _ = graphicsDevice.AllocateBuffer<float>(bufferType, 128);
+        using Resources.Buffer<float> _ = graphicsDevice.AllocateBuffer<float>(bufferType, 128);
     }
 
     [CombinatorialTestMethod]
@@ -67,7 +67,7 @@ public class DeviceLostTests
 
         await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        using var _ = graphicsDevice.AllocateTexture2D<float>(textureType, 128, 128);
+        using Resources.Texture2D<float> _ = graphicsDevice.AllocateTexture2D<float>(textureType, 128, 128);
     }
 
     [CombinatorialTestMethod]
@@ -81,7 +81,7 @@ public class DeviceLostTests
 
         await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        using var _ = graphicsDevice.AllocateTexture3D<float>(textureType, 128, 128, 3);
+        using Resources.Texture3D<float> _ = graphicsDevice.AllocateTexture3D<float>(textureType, 128, 128, 3);
     }
 
     [CombinatorialTestMethod]
@@ -153,6 +153,6 @@ public class DeviceLostTests
 
         await GraphicsDeviceHelper.RemoveDeviceAsync(graphicsDevice);
 
-        using var _ = graphicsDevice.CreateComputeContext();
+        using ComputeContext _ = graphicsDevice.CreateComputeContext();
     }
 }

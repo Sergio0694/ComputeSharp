@@ -72,7 +72,7 @@ partial class ComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnFrameRequestQueueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
+        ComputeShaderPanel @this = (ComputeShaderPanel)d;
 
         if (@this.IsLoaded &&
             e.NewValue is IFrameRequestQueue frameRequestQueue &&
@@ -107,7 +107,7 @@ partial class ComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
+        ComputeShaderPanel @this = (ComputeShaderPanel)d;
 
         if (@this.IsLoaded &&
             @this.FrameRequestQueue is IFrameRequestQueue frameRequestQueue &&
@@ -144,8 +144,8 @@ partial class ComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
-        var resolutionScale = (double)e.NewValue;
+        ComputeShaderPanel @this = (ComputeShaderPanel)d;
+        double resolutionScale = (double)e.NewValue;
 
         @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
     }
@@ -173,8 +173,8 @@ partial class ComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
-        var isDynamicResolutionEnabled = (bool)e.NewValue;
+        ComputeShaderPanel @this = (ComputeShaderPanel)d;
+        bool isDynamicResolutionEnabled = (bool)e.NewValue;
 
         @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
     }
@@ -201,8 +201,8 @@ partial class ComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
-        var isVerticalSyncEnabled = (bool)e.NewValue;
+        ComputeShaderPanel @this = (ComputeShaderPanel)d;
+        bool isVerticalSyncEnabled = (bool)e.NewValue;
 
         @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
     }

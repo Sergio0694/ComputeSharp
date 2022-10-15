@@ -64,7 +64,7 @@ partial class Texture3DTests
         {
             using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(32, 32, 2);
 
-            using (var context = device.Get().CreateComputeContext())
+            using (ComputeContext context = device.Get().CreateComputeContext())
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 

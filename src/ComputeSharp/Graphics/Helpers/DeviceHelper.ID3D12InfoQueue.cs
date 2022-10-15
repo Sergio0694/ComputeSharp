@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,7 +37,7 @@ partial class DeviceHelper
         {
             StringBuilder builder = infoQueueMessageBuilder ??= new(1024);
 
-            foreach (var pair in D3D12InfoQueueMap)
+            foreach (KeyValuePair<Luid, ComPtr<ID3D12InfoQueue>> pair in D3D12InfoQueueMap)
             {
                 GraphicsDevice device = DevicesCache[pair.Key];
                 ID3D12InfoQueue* queue = pair.Value.Get();

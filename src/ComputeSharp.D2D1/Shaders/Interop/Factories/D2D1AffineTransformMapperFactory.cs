@@ -29,10 +29,10 @@ internal sealed class D2D1AffineTransformMapperFactory
         Point64 bottomRight = new(rectangle.Right, rectangle.Bottom);
 
         // Transform them with the current matrix
-        var transformedTopLeft = topLeft.Transform(in matrix);
-        var transformedTopRight = topRight.Transform(in matrix);
-        var transformedBottomLeft = bottomLeft.Transform(in matrix);
-        var transformedBottomRight = bottomRight.Transform(in matrix);
+        (double X, double Y) transformedTopLeft = topLeft.Transform(in matrix);
+        (double X, double Y) transformedTopRight = topRight.Transform(in matrix);
+        (double X, double Y) transformedBottomLeft = bottomLeft.Transform(in matrix);
+        (double X, double Y) transformedBottomRight = bottomRight.Transform(in matrix);
 
         // Calculate the bounding box of the transformed points
         double transformedLeft = Math.Min(Math.Min(transformedTopLeft.X, transformedTopRight.X), Math.Min(transformedBottomLeft.X, transformedBottomRight.X));

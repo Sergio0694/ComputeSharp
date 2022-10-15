@@ -11,7 +11,7 @@ partial class HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
     {
-        var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
+        AnonymousObjectCreationExpressionSyntax updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
 
         Diagnostics.Add(AnonymousObjectCreationExpression, node);
 

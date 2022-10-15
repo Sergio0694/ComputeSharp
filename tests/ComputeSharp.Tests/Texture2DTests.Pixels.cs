@@ -59,14 +59,14 @@ partial class Texture2DTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
         using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
         device.Get().For(sampled.Width, sampled.Height, new SamplingComputeShader(source, destination));
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
@@ -92,14 +92,14 @@ partial class Texture2DTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
         using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
         device.Get().ForEach(destination, new SamplingPixelShader(source));
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
@@ -132,7 +132,7 @@ partial class Texture2DTests
         {
             using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
 
-            using (var context = device.Get().CreateComputeContext())
+            using (ComputeContext context = device.Get().CreateComputeContext())
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 

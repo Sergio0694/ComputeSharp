@@ -169,7 +169,7 @@ public class ShadersTests
                     texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
                 }
 
-                var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
+                Action<ReadWriteTexture2D<Rgba32, float4>> action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
 
                 _ = action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
             }
@@ -181,7 +181,7 @@ public class ShadersTests
                     texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
                 }
 
-                var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunPixelShader<ColorfulInfinity>);
+                Action<ReadWriteTexture2D<Rgba32, float4>> action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunPixelShader<ColorfulInfinity>);
 
                 _ = action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
             }

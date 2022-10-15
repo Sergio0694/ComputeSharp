@@ -40,7 +40,7 @@ public sealed partial class MainWindow : Window
     {
         ShaderPanel.ShaderRunner = null;
 
-        foreach (var (panel, _) in this.shaderPanels)
+        foreach ((AnimatedComputeShaderPanel panel, object _) in this.shaderPanels)
         {
             panel.ShaderRunner = null;
         }

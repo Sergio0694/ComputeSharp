@@ -76,8 +76,9 @@ public sealed partial class HlslBokehBlurProcessor
             componentsCount = definition.Components;
 
             // Reuse the initialized values from the cache, if possible
-            var parameters = (radius, componentsCount);
-            if (Cache.TryGetValue(parameters, out var info))
+            (int radius, int componentsCount) parameters = (radius, componentsCount);
+
+            if (Cache.TryGetValue(parameters, out (Vector4[] Parameters, float Scale, Complex64[][] Kernels) info))
             {
                 kernelParameters = info.Parameters;
                 kernelsScale = info.Scale;
@@ -171,7 +172,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// </summary>
         private Complex64[][] CreateComplexKernels()
         {
-            var kernels = new Complex64[kernelParameters.Length][];
+            Complex64[][] kernels = new Complex64[kernelParameters.Length][];
             ref Vector4 baseRef = ref MemoryMarshal.GetReference(kernelParameters.AsSpan());
 
             for (int i = 0; i < kernelParameters.Length; i++)
@@ -191,7 +192,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// <param name="b">The angle component for each complex component.</param>
         private Complex64[] CreateComplex1DKernel(float a, float b)
         {
-            var kernel = new Complex64[kernelSize];
+            Complex64[] kernel = new Complex64[kernelSize];
             ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
             int r = radius;
             int n = -r;
@@ -286,7 +287,7 @@ public sealed partial class HlslBokehBlurProcessor
 
                 kernel.CopyFrom(kernels[j]);
 
-                using var context = graphicsDevice.CreateComputeContext();
+                using ComputeContext context = graphicsDevice.CreateComputeContext();
 
                 context.For<VerticalConvolutionProcessor>(
                     source.Width,

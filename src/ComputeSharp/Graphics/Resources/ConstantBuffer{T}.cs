@@ -63,8 +63,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -93,9 +93,9 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = destination.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = destination.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -125,8 +125,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 

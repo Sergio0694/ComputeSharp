@@ -3,6 +3,8 @@ using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable IDE0008
+
 namespace ComputeSharp.Tests
 {
     [TestClass]

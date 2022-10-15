@@ -72,7 +72,7 @@ partial class HlslKnownProperties
         PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
 
         // Programmatically load mappings for the dispatch types
-        foreach (var item in
+        foreach ((Type Type, PropertyInfo Property) item in
             from type in HlslKnownTypes.HlslDispatchTypes
             from property in type.GetProperties(BindingFlags.Static | BindingFlags.Public)
             select (Type: type, Property: property))
@@ -90,7 +90,7 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the normalized thread ids
-        foreach (var property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
             string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{typeof(ThreadIds.Normalized).Name}{Type.Delimiter}{property.Name}";
 
@@ -127,7 +127,7 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the group size
-        foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
             string key = $"{typeof(GroupSize).FullName}{Type.Delimiter}{property.Name}";
 
@@ -149,7 +149,7 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the dispatch size
-        foreach (var property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
             string key = $"{typeof(DispatchSize).FullName}{Type.Delimiter}{property.Name}";
 

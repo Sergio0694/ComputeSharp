@@ -154,7 +154,7 @@ partial class IShaderGenerator
                     prologueStatements++;
 
                     // <NAME>.Add("<ITEM>");
-                    foreach (var item in items)
+                    foreach (string item in items)
                     {
                         statements.Add(
                             ExpressionStatement(

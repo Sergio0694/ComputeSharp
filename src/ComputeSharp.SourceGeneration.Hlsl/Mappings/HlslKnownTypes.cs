@@ -78,13 +78,13 @@ internal static partial class HlslKnownTypes
         };
 
         // Add all the vector types
-        foreach (var type in KnownVectorTypes)
+        foreach (Type type in KnownVectorTypes)
         {
             knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
 
         // Add all the matrix types
-        foreach (var type in KnownMatrixTypes)
+        foreach (Type type in KnownMatrixTypes)
         {
             knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
@@ -135,7 +135,7 @@ internal static partial class HlslKnownTypes
     {
         if (KnownMatrixTypes.Any(type => type.FullName == typeName))
         {
-            var match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
+            Match match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
 
             if (match.Success)
             {
@@ -243,7 +243,7 @@ internal static partial class HlslKnownTypes
 
             if (!customTypes.Add(type)) return;
 
-            foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
             {
                 if (field.IsStatic) continue;
 
@@ -291,12 +291,12 @@ internal static partial class HlslKnownTypes
         // types and their dependencies, and iteratively remove items from the map when they have no
         // dependencies left. When one type is processed and removed, it is also removed from the list
         // of dependencies of all other remaining types in the map, until there is none left.
-        foreach (var type in types)
+        foreach (INamedTypeSymbol type in types)
         {
             HashSet<INamedTypeSymbol> dependencies = new(SymbolEqualityComparer.Default);
 
             // Only add other custom types as dependencies, and ignore HLSL types
-            foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
             {
                 if (field.IsStatic) continue;
 
@@ -314,13 +314,13 @@ internal static partial class HlslKnownTypes
 
         while (queue.Count > 0)
         {
-            var entry = queue.Dequeue();
+            (INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields) entry = queue.Dequeue();
 
             // No dependencies left, we can declare this type
             if (entry.Fields.Count == 0)
             {
                 // Remove the current type from dependencies of others
-                foreach (var pair in queue)
+                foreach ((INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields) pair in queue)
                 {
                     _ = pair.Fields.Remove(entry.Type);
                 }

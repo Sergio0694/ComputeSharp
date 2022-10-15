@@ -48,7 +48,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
     {
-        using var _0 = TryGetReferenceTrackingLease(out bool leaseTaken);
+        using Lease _0 = TryGetReferenceTrackingLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {

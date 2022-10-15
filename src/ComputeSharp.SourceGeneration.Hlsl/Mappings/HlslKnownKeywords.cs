@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -44,13 +45,13 @@ internal static partial class HlslKnownKeywords
         });
 
         // HLSL primitive names
-        foreach (var type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
+        foreach (Type? type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
         {
             _ = knownKeywords.Add(type.Name.ToLowerInvariant());
         }
 
         // HLSL intrinsics method names
-        foreach (var method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static))
+        foreach (MethodInfo? method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static))
         {
             string name = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()?.Name ?? method.Name;
 

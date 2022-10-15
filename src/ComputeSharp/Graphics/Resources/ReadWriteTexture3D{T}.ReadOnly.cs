@@ -24,8 +24,8 @@ partial class ReadWriteTexture3D<T>
     /// <inheritdoc cref="ReadWriteTexture3DExtensions.AsReadOnly(ReadWriteTexture3D{float})"/>
     public IReadOnlyTexture3D<T> AsReadOnly()
     {
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -112,8 +112,8 @@ partial class ReadWriteTexture3D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using var _0 = GetReferenceTrackingLease();
-            using var _1 = this.owner.GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
+            using Lease _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -131,7 +131,7 @@ partial class ReadWriteTexture3D<T>
         {
             lease = GetReferenceTrackingLease();
 
-            using var _1 = this.owner.GetReferenceTrackingLease();
+            using Lease _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 

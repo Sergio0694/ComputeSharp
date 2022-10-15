@@ -34,7 +34,7 @@ public static unsafe class InteropServices
     /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
     public static void GetID3D12Device(GraphicsDevice device, Guid* riid, void** ppvObject)
     {
-        using var _0 = device.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = device.GetReferenceTrackingLease();
 
         device.D3D12Device->QueryInterface(riid, ppvObject).Assert();
     }
@@ -52,7 +52,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = buffer.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
 
         buffer.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -70,7 +70,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(Texture1D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -88,7 +88,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(Texture2D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -106,7 +106,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(Texture3D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -124,7 +124,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(TransferBuffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = buffer.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
 
         buffer.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -142,7 +142,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(TransferTexture2D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -160,7 +160,7 @@ public static unsafe class InteropServices
     public static void GetID3D12Resource<T>(TransferTexture3D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
     }
@@ -179,7 +179,7 @@ public static unsafe class InteropServices
     /// <exception cref="ObjectDisposedException">The <paramref name="device"/> instance has been disposed.</exception>
     public static int TryGetID3D12Device(GraphicsDevice device, Guid* riid, void** ppvObject)
     {
-        using var _0 = device.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = device.GetReferenceTrackingLease();
 
         return device.D3D12Device->QueryInterface(riid, ppvObject);
     }
@@ -200,7 +200,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = buffer.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
 
         return buffer.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -221,7 +221,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(Texture1D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -242,7 +242,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(Texture2D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -263,7 +263,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(Texture3D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -284,7 +284,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(TransferBuffer<T> buffer, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = buffer.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
 
         return buffer.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -305,7 +305,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(TransferTexture2D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }
@@ -326,7 +326,7 @@ public static unsafe class InteropServices
     public static int TryGetID3D12Resource<T>(TransferTexture3D<T> texture, Guid* riid, void** ppvObject)
         where T : unmanaged
     {
-        using var _0 = texture.GetReferenceTrackingLease();
+        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
 
         return texture.D3D12Resource->QueryInterface(riid, ppvObject);
     }

@@ -64,13 +64,13 @@ partial class ID2D1ShaderGenerator
                 out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields);
 
             // Explore the syntax tree and extract the processed info
-            var semanticModelProvider = new SemanticModelProvider(compilation);
-            var (entryPoint, processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
-            var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
+            SemanticModelProvider semanticModelProvider = new SemanticModelProvider(compilation);
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, out bool methodsNeedD2D1RequiresScenePosition);
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions, out bool fieldsNeedD2D1RequiresScenePosition);
 
             // Process the discovered types and constants
-            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
-            var definedConstants = GetDefinedConstants(constantDefinitions);
+            ImmutableArray<(string Name, string Definition)> declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
+            ImmutableArray<(string Name, string Value)> definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Check whether the scene position is required
             bool requiresScenePosition = GetD2DRequiresScenePositionInfo(structDeclarationSymbol);
@@ -111,7 +111,7 @@ partial class ID2D1ShaderGenerator
             using ImmutableArrayBuilder<(string, string)> values = ImmutableArrayBuilder<(string, string)>.Rent();
             using ImmutableArrayBuilder<(string, string, int)> resourceTextures = ImmutableArrayBuilder<(string, string, int)>.Rent();
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (fieldSymbol.IsStatic)
                 {
@@ -205,9 +205,9 @@ partial class ID2D1ShaderGenerator
 
             needsD2D1RequiresScenePosition = false;
 
-            foreach (var fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
+            foreach (FieldDeclarationSyntax fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
             {
-                foreach (var variableDeclarator in fieldDeclaration.Declaration.Variables)
+                foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
                 {
                     IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.For(variableDeclarator).GetDeclaredSymbol(variableDeclarator)!;
 
@@ -319,7 +319,7 @@ partial class ID2D1ShaderGenerator
                 needsD2D1RequiresScenePosition |= shaderSourceRewriter.NeedsD2DRequiresScenePositionAttribute;
 
                 // Emit the extracted local functions first
-                foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
+                foreach (KeyValuePair<string, LocalFunctionStatementSyntax> localFunction in shaderSourceRewriter.LocalFunctions)
                 {
                     methods.Add((
                         localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
@@ -362,10 +362,10 @@ partial class ID2D1ShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            foreach (var constant in constantDefinitions)
+            foreach (KeyValuePair<IFieldSymbol, string> constant in constantDefinitions)
             {
-                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-                var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
+                string ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+                string constantName = $"__{ownerTypeName}__{constant.Key.Name}";
 
                 builder.Add((constantName, constant.Value));
             }
@@ -392,13 +392,13 @@ partial class ID2D1ShaderGenerator
             IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
-            foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
+            foreach (INamedTypeSymbol type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
             {
-                var structType = type.GetFullMetadataName().ToHlslIdentifierName();
-                var structDeclaration = StructDeclaration(structType);
+                string structType = type.GetFullMetadataName().ToHlslIdentifierName();
+                StructDeclarationSyntax structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
-                foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+                foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
                 {
                     if (field.IsStatic) continue;
 
@@ -423,7 +423,7 @@ partial class ID2D1ShaderGenerator
                 }
 
                 // Declare the methods of the current type
-                foreach (var method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+                foreach (KeyValuePair<IMethodSymbol, MethodDeclarationSyntax> method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
                 {
                     structDeclaration = structDeclaration.AddMembers(method.Value);
                 }
@@ -453,7 +453,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Detect properties that are not explicit interface implementations
                 if (memberSymbol is IPropertySymbol { ExplicitInterfaceImplementations.IsEmpty: true })
@@ -574,7 +574,7 @@ partial class ID2D1ShaderGenerator
             {
                 AppendLF();
 
-                foreach (var (name, value) in definedConstants)
+                foreach ((string name, string value) in definedConstants)
                 {
                     AppendLineAndLF($"#define {name} {value}");
                 }
@@ -585,7 +585,7 @@ partial class ID2D1ShaderGenerator
             {
                 AppendLF();
 
-                foreach (var field in staticFields)
+                foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
                 {
                     if (field.Assignment is string assignment)
                     {
@@ -599,7 +599,7 @@ partial class ID2D1ShaderGenerator
             }
 
             // Declared types
-            foreach (var (_, typeDefinition) in declaredTypes)
+            foreach ((string _, string typeDefinition) in declaredTypes)
             {
                 AppendLF();
                 AppendLineAndLF(typeDefinition);
@@ -610,14 +610,14 @@ partial class ID2D1ShaderGenerator
             {
                 AppendLF();
 
-                foreach (var (fieldName, fieldType) in valueFields)
+                foreach ((string fieldName, string fieldType) in valueFields)
                 {
                     AppendLineAndLF($"{fieldType} {fieldName};");
                 }
             }
 
             // Resource textures
-            foreach (var (fieldName, fieldType, index) in resourceTextureFields)
+            foreach ((string fieldName, string fieldType, int index) in resourceTextureFields)
             {
                 AppendLF();
 
@@ -626,14 +626,14 @@ partial class ID2D1ShaderGenerator
             }
 
             // Forward declarations
-            foreach (var (forwardDeclaration, _) in processedMethods)
+            foreach ((string forwardDeclaration, string _) in processedMethods)
             {
                 AppendLF();
                 AppendLineAndLF(forwardDeclaration);
             }
 
             // Captured methods
-            foreach (var (_, method) in processedMethods)
+            foreach ((string _, string method) in processedMethods)
             {
                 AppendLF();
                 AppendLineAndLF(method);

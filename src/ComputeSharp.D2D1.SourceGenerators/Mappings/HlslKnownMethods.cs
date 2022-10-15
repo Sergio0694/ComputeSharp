@@ -26,7 +26,7 @@ partial class HlslKnownMethods
     static partial void AddKnownMethods(IDictionary<string, string> knownMethods)
     {
         // Programmatically load mappings from the D2D1 class as well
-        foreach (var method in
+        foreach (MethodInfo? method in
             from method in typeof(D2D).GetMethods(BindingFlags.Public | BindingFlags.Static)
             group method by method.Name
             into groups

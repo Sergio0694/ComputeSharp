@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance.Enumerables;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -183,7 +184,7 @@ public partial class Texture3DTests
 
         fixed (int* p = array)
         {
-            foreach (var item in new Span<int>(p, array.Length).Enumerate())
+            foreach (SpanEnumerable<int>.Item item in new Span<int>(p, array.Length).Enumerate())
             {
                 item.Value = item.Index;
             }

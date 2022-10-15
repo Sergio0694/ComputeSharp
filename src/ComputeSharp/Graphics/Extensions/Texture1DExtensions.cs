@@ -183,7 +183,7 @@ public static class Texture1DExtensions
     {
         Guard.IsNotNull(source);
 
-        var (offsetX, width) = x.GetOffsetAndLength(source.Width);
+        (int offsetX, int width) = x.GetOffsetAndLength(source.Width);
 
         source.CopyTo(destination, offsetX, width);
     }
@@ -420,7 +420,7 @@ public static class Texture1DExtensions
     {
         Guard.IsNotNull(destination);
 
-        var (offsetX, width) = x.GetOffsetAndLength(destination.Width);
+        (int offsetX, int width) = x.GetOffsetAndLength(destination.Width);
 
         destination.CopyFrom(source, offsetX, width);
     }

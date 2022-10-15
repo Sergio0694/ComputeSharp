@@ -53,7 +53,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
     {
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -109,7 +109,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -121,7 +121,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
 
             return new(this.mappedData, Width);
         }
@@ -190,7 +190,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using var _0 = this.buffer.GetReferenceTrackingLease();
+            using Lease _0 = this.buffer.GetReferenceTrackingLease();
 
             return new(this.buffer.mappedData);
         }

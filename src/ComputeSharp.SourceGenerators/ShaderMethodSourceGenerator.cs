@@ -87,10 +87,10 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods = new(SymbolEqualityComparer.Default); // Unused in this generator
 
             // Explore the syntax tree and extract the processed info
-            var semanticModel = new SemanticModelProvider(compilation);
-            var (entryPoint, dependentMethods) = GetProcessedMethods(builder, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
-            var definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(builder, methodSymbol, discoveredTypes, instanceMethods);
-            var definedConstants = IShaderGenerator.BuildHlslSource.GetDefinedConstants(constantDefinitions);
+            SemanticModelProvider semanticModel = new SemanticModelProvider(compilation);
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> dependentMethods) = GetProcessedMethods(builder, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
+            ImmutableArray<(string Name, string Definition)> definedTypes = IShaderGenerator.BuildHlslSource.GetDeclaredTypes(builder, methodSymbol, discoveredTypes, instanceMethods);
+            ImmutableArray<(string Name, string Value)> definedConstants = IShaderGenerator.BuildHlslSource.GetDefinedConstants(constantDefinitions);
 
             diagnostics = builder.ToImmutable();
 
@@ -140,7 +140,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
 
             // Emit the extracted local functions
-            foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
+            foreach (KeyValuePair<string, LocalFunctionStatementSyntax> localFunction in shaderSourceRewriter.LocalFunctions)
             {
                 methods.Add((
                     localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
@@ -148,7 +148,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             }
 
             // Emit the discovered static methods
-            foreach (var staticMethod in staticMethods.Values)
+            foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)
             {
                 methods.Add((
                     staticMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
