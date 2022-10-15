@@ -329,9 +329,6 @@ dotnet_diagnostic.CA2242.severity = warning
 # Closing parenthesis should be spaced correctly: "foo()!"
 dotnet_diagnostic.SA1009.severity = none
 
-# Hide warnings when using the new() expression from C# 9.
-dotnet_diagnostic.SA1000.severity = none
-
 dotnet_diagnostic.SA1011.severity = none
 dotnet_diagnostic.SA1101.severity = none
 
