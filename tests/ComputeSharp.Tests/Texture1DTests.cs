@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
@@ -370,7 +370,7 @@ public partial class Texture1DTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -378,7 +378,7 @@ public partial class Texture1DTests
     [AllDevices]
     public void Dispatch_ReadWriteTexture1D(Device device)
     {
-        int[] data = Enumerable.Range(0,256).ToArray();
+        int[] data = Enumerable.Range(0, 256).ToArray();
 
         using ReadWriteTexture1D<int> source = device.Get().AllocateReadWriteTexture1D(data);
         using ReadWriteTexture1D<int> destination = device.Get().AllocateReadWriteTexture1D<int>(256);
@@ -400,7 +400,7 @@ public partial class Texture1DTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 }

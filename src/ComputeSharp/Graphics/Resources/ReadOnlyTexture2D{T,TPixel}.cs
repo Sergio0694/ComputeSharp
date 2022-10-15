@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
+
+#pragma warning disable IDE0022
 
 namespace ComputeSharp;
 
@@ -34,7 +36,7 @@ public sealed class ReadOnlyTexture2D<T, TPixel> : Texture2D<T>, IReadOnlyNormal
     public ref readonly TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}[{typeof(int)}, {typeof(int)}]");
 
     /// <inheritdoc/>
-    public ref readonly TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T,TPixel>)}[{typeof(Int2)}]");
+    public ref readonly TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}[{typeof(Int2)}]");
 
     /// <inheritdoc/>
     public ref readonly TPixel Sample(float u, float v) => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture2D<T, TPixel>)}.{nameof(Sample)}({typeof(float)}, {typeof(float)})");

@@ -1,0 +1,37 @@
+# Disable all rules from above directories
+root = true
+
+# All files
+[*]
+
+# Encoding
+charset = utf-8
+
+# Indentation and spacing
+tab_width = 4
+indent_size = 4
+indent_style = space
+
+# New line preferences
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+# C# files
+[*.cs]
+
+dotnet_diagnostic.IDE0004.severity = none
+dotnet_diagnostic.IDE0007.severity = none
+dotnet_diagnostic.IDE0008.severity = none
+dotnet_diagnostic.IDE0022.severity = none
+dotnet_diagnostic.IDE0023.severity = none
+dotnet_diagnostic.IDE0024.severity = none
+dotnet_diagnostic.IDE0027.severity = none
+dotnet_diagnostic.IDE0032.severity = none
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0047.severity = none
+dotnet_diagnostic.IDE0060.severity = none
+dotnet_diagnostic.IDE0090.severity = none
+dotnet_diagnostic.IDE0160.severity = none
+dotnet_diagnostic.IDE0180.severity = none
+dotnet_diagnostic.IDE1006.severity = none

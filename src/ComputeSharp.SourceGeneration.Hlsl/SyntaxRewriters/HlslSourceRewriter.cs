@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -27,26 +27,6 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     private static readonly char[] FloatLiteralSpecialCharacters = { '.', 'E' };
 
     /// <summary>
-    /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
-    /// </summary>
-    protected readonly SemanticModelProvider SemanticModel;
-
-    /// <summary>
-    /// The collection of discovered custom types.
-    /// </summary>
-    protected readonly ICollection<INamedTypeSymbol> DiscoveredTypes;
-
-    /// <summary>
-    /// The collection of discovered constant definitions.
-    /// </summary>
-    protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
-
-    /// <summary>
-    /// The collection of produced <see cref="DiagnosticInfo"/> instances.
-    /// </summary>
-    protected readonly ImmutableArrayBuilder<DiagnosticInfo> Diagnostics;
-
-    /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
     /// </summary>
     /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
@@ -65,10 +45,30 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         Diagnostics = diagnostics;
     }
 
+    /// <summary>
+    /// Gets the <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
+    /// </summary>
+    protected SemanticModelProvider SemanticModel { get; }
+
+    /// <summary>
+    /// Gets the collection of discovered custom types.
+    /// </summary>
+    protected ICollection<INamedTypeSymbol> DiscoveredTypes { get; }
+
+    /// <summary>
+    /// Gets the collection of discovered constant definitions.
+    /// </summary>
+    protected IDictionary<IFieldSymbol, string> ConstantDefinitions { get; }
+
+    /// <summary>
+    /// Gets the collection of produced <see cref="DiagnosticInfo"/> instances.
+    /// </summary>
+    protected ImmutableArrayBuilder<DiagnosticInfo> Diagnostics { get; }
+
     /// <inheritdoc/>
     public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
     {
-        var updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
+        CastExpressionSyntax updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
         return updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
     }
@@ -76,7 +76,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitVariableDeclaration(VariableDeclarationSyntax node)
     {
-        var updatedNode = (VariableDeclarationSyntax)base.VisitVariableDeclaration(node)!;
+        VariableDeclarationSyntax updatedNode = (VariableDeclarationSyntax)base.VisitVariableDeclaration(node)!;
 
         if (SemanticModel.For(node).GetTypeInfo(node.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
@@ -95,7 +95,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
     {
-        var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
+        ObjectCreationExpressionSyntax updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
@@ -131,7 +131,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
     {
-        var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
+        ImplicitObjectCreationExpressionSyntax updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
 
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
@@ -167,7 +167,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
     {
-        var updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
+        DefaultExpressionSyntax updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
 
         updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
 
@@ -178,7 +178,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
     {
-        var updatedNode = (LiteralExpressionSyntax)base.VisitLiteralExpression(node)!;
+        LiteralExpressionSyntax updatedNode = (LiteralExpressionSyntax)base.VisitLiteralExpression(node)!;
 
         if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
         {
@@ -236,7 +236,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
     {
-        var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
+        ElementAccessExpressionSyntax updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
         {
@@ -246,7 +246,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // For instance: texture[ThreadIds.X, ThreadIds.Y] will be rewritten as texture[int2(ThreadIds.X, ThreadIds.Y)].
             if (HlslKnownProperties.TryGetMappedResourceIndexerTypeName(propertyName, out string? mapping))
             {
-                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+                InvocationExpressionSyntax index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
 
                 return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
             }
@@ -294,7 +294,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitAssignmentExpression(AssignmentExpressionSyntax node)
     {
-        var updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
+        AssignmentExpressionSyntax updatedNode = (AssignmentExpressionSyntax)base.VisitAssignmentExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is ICompoundAssignmentOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
         {
@@ -321,8 +321,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitBinaryExpression(BinaryExpressionSyntax node)
     {
-        var updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
-        
+        BinaryExpressionSyntax updatedNode = (BinaryExpressionSyntax)base.VisitBinaryExpression(node)!;
+
         // Process binary operations to see if the target operator method is an intrinsic
         if (SemanticModel.For(node).GetOperation(node) is IBinaryOperation { OperatorMethod: { ContainingType.ContainingNamespace.Name: "ComputeSharp" } method })
         {
@@ -339,14 +339,14 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                         Argument(updatedNode.Right));
             }
         }
-        
+
         return updatedNode;
     }
 
     /// <inheritdoc/>
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
-        var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
+        IdentifierNameSyntax updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation operation &&
             operation.Field.IsConst &&
@@ -354,8 +354,8 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         {
             ConstantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-            var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-            var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
+            string ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+            string constantName = $"__{ownerTypeName}__{operation.Field.Name}";
 
             return IdentifierName(constantName);
         }

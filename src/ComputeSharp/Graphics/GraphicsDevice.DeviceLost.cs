@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -48,7 +48,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
     {
-        using var _0 = TryGetReferenceTrackingLease(out bool leaseTaken);
+        using Lease _0 = TryGetReferenceTrackingLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {
@@ -99,7 +99,7 @@ unsafe partial class GraphicsDevice
             device.DeviceLost?.Invoke(device, new DeviceLostEventArgs(reason));
         }
 
-        ThreadPool.QueueUserWorkItem(static state => RaiseDeviceLostEvent((GraphicsDevice)state!), this);
+        _ = ThreadPool.QueueUserWorkItem(static state => RaiseDeviceLostEvent((GraphicsDevice)state!), this);
     }
 
     /// <summary>
@@ -188,9 +188,6 @@ unsafe partial class GraphicsDevice
         handle.Free();
 
         // If the device is available, then also queue the device lost event to be raised on the thread pool
-        if (device is not null)
-        {
-            device.QueueRaiseDeviceLostEventIfNeeded();
-        }
+        device?.QueueRaiseDeviceLostEventIfNeeded();
     }
 }

@@ -1,0 +1,8 @@
+# C# files
+[*.cs]
+
+# Disable fields naming rule violation warnings just for unit tests
+dotnet_naming_rule.private_fields_must_be_pascal_case.severity                    = none
+dotnet_naming_rule.constant_fields_must_be_pascal_case.severity                   = none
+dotnet_naming_rule.static_readonly_fields_must_be_pascal_case.severity            = none
+dotnet_naming_rule.non_private_fields_must_be_pascal_case.severity                = none

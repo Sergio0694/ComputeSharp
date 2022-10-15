@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
@@ -53,7 +53,7 @@ public static class D2D1ReflectionServices
         {
             bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
             bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
-        }        
+        }
 
         using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
 

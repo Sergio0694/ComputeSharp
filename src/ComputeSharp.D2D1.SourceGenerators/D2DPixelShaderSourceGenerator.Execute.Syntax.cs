@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using ComputeSharp.D2D1.SourceGenerators.Models;

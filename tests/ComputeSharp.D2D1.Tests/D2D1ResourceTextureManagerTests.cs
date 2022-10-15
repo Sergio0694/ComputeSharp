@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -13,12 +13,12 @@ using SixLabors.ImageSharp.PixelFormats;
 using Win32;
 using Win32.Graphics.Direct2D;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE0044, IDE0065
 
 namespace ComputeSharp.D2D1.Tests;
 
-using HRESULT = Win32.HResult;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
+using HRESULT = HResult;
+using D2D1_MAPPED_RECT = MappedRect;
 
 [TestClass]
 [TestCategory("D2D1ResourceTextureManager")]
@@ -547,8 +547,8 @@ public partial class D2D1ResourceTextureManagerTests
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
             int x = xy.X;
-            int y = (int)((uint)xy.Y % (uint)height);
-            int z = (int)((uint)xy.Y / (uint)height);
+            int y = (int)((uint)xy.Y % (uint)this.height);
+            int z = (int)((uint)xy.Y / (uint)this.height);
 
             return this.source[x, y, z];
         }
@@ -689,7 +689,7 @@ public partial class D2D1ResourceTextureManagerTests
         for (int y = 0; y < updateLengthY; y++)
         {
             ReadOnlySpan<byte> source = data.AsSpan(y * updateLengthX, updateLengthX);
-            Span<byte> destination = texture.AsSpan(startOffsetY * width + y * width + startOffsetX, updateLengthX);
+            Span<byte> destination = texture.AsSpan((startOffsetY * width) + (y * width) + startOffsetX, updateLengthX);
 
             source.CopyTo(destination);
         }
@@ -707,7 +707,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         for (int y = 0; y < height; y++)
         {
-            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + d2D1MappedRect.pitch * y, width))
+            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + (d2D1MappedRect.pitch * y), width))
             {
                 resultingBytes[i++] = pixel.B;
             }
@@ -793,8 +793,8 @@ public partial class D2D1ResourceTextureManagerTests
         {
             for (int y = 0; y < updateLengthY; y++)
             {
-                ReadOnlySpan<byte> source = data.AsSpan(z * updateLengthX * updateLengthY + y * updateLengthX, updateLengthX);
-                Span<byte> destination = texture.AsSpan((startOffsetZ + z) * (width * height) + (startOffsetY + y) * width + startOffsetX, updateLengthX);
+                ReadOnlySpan<byte> source = data.AsSpan((z * updateLengthX * updateLengthY) + (y * updateLengthX), updateLengthX);
+                Span<byte> destination = texture.AsSpan(((startOffsetZ + z) * width * height) + ((startOffsetY + y) * width) + startOffsetX, updateLengthX);
 
                 source.CopyTo(destination);
             }
@@ -813,7 +813,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         for (int y = 0; y < height * depth; y++)
         {
-            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + d2D1MappedRect.pitch * y, width))
+            foreach (Bgra32 pixel in new ReadOnlySpan<Bgra32>(d2D1MappedRect.bits + (d2D1MappedRect.pitch * y), width))
             {
                 resultingBytes[i++] = pixel.B;
             }
@@ -876,7 +876,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         public float4 Execute()
         {
-            return source[0, 0];
+            return this.source[0, 0];
         }
     }
 }

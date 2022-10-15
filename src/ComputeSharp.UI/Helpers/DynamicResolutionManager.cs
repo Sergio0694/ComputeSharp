@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -114,10 +114,10 @@ internal unsafe ref struct DynamicResolutionManager
             // This formula is adapted from https://software.intel.com/content/www/us/en/develop/articles/dynamic-resolution-rendering-article.html.
             long averageFrameTimeInTicks = this.slidingFrameTimeWindowSum / SlidingFrameTimeWindowLength;
 
-            if (averageFrameTimeInTicks < lowerFrameTimeThresholdInTicks ||
-                averageFrameTimeInTicks > upperFrameTimeThresholdInTicks)
+            if (averageFrameTimeInTicks < this.lowerFrameTimeThresholdInTicks ||
+                averageFrameTimeInTicks > this.upperFrameTimeThresholdInTicks)
             {
-                float frameTimeDelta = (targetFrameTimeInTicks - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks;
+                float frameTimeDelta = (this.targetFrameTimeInTicks - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks;
                 float scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK;
                 float updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10f, 1.0f);
 

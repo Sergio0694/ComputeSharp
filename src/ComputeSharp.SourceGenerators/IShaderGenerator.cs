@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -136,7 +136,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         });
 
         // Get the LoadDispatchData() info (hierarchy and dispatch data info)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo DispatchData) Info, bool CanUseSkipLocalsInit) > dispatchDataInfo =
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo DispatchData) Info, bool CanUseSkipLocalsInit)> dispatchDataInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.DispatchData))
             .Combine(canUseSkipLocalsInit);

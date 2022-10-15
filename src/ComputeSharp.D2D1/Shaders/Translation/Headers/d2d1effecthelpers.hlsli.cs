@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+
+#pragma warning disable IDE0025
 
 namespace ComputeSharp.D2D1.Shaders.Translation;
 

@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.Tests.Attributes;
@@ -25,12 +25,12 @@ public class ImageProcessingTests
 
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
-        using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
-        
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
+
         original.Mutate(c => c.Resize(1920, 1080));
 
-        using var cpu = original.Clone(c => c.BokehBlur(40, 2, 3));
-        using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 40, 2)));
+        using Image<ImageSharpRgba32> cpu = original.Clone(c => c.BokehBlur(40, 2, 3));
+        using Image<ImageSharpRgba32> gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 40, 2)));
 
         string expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg");
         string actualPath = Path.Combine(path, "city_bokeh_gpu.jpg");
@@ -49,12 +49,12 @@ public class ImageProcessingTests
 
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
-        using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
 
         original.Mutate(c => c.Resize(1920, 1080));
 
-        using var cpu = original.Clone(c => c.GaussianBlur(30f));
-        using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
+        using Image<ImageSharpRgba32> cpu = original.Clone(c => c.GaussianBlur(30f));
+        using Image<ImageSharpRgba32> gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
 
         string expectedPath = Path.Combine(path, "city_gaussian_cpu.jpg");
         string actualPath = Path.Combine(path, "city_gaussian_gpu.jpg");

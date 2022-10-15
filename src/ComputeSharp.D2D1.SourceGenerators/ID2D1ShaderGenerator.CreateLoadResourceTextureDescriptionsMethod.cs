@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -33,7 +33,7 @@ partial class ID2D1ShaderGenerator
         {
             using ImmutableArrayBuilder<(int? Index, int Rank)> resourceTextureInfos = ImmutableArrayBuilder<(int? Index, int Rank)>.Rent();
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 // Only look for fields of a named type symbol (diagnostics is emitted by the HLSL rewriter if it's not the case).
                 // We're only looking for instance fields of unmanaged types in this case (as resource textures are structs).

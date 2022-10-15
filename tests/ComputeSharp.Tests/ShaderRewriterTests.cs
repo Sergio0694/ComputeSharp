@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+#pragma warning disable IDE0007, IDE0008, IDE0009
 
 namespace ComputeSharp.Tests;
 
@@ -439,7 +441,7 @@ public partial class ShaderRewriterTests
     internal readonly partial struct ConstantsInShaderConstantFieldsShader : IComputeShader
     {
         public const float rot_angle = (float)(137.2 / 180.0 * Math.PI);
-        public const float rot_angle2 = rot_angle + (float)Math.E * 100;
+        public const float rot_angle2 = rot_angle + ((float)Math.E * 100);
         public const float sin = 42;
         public const float exponentLowercase = 1234567e-4f;
         public const float exponentUppercase = 1234567E-4f;
@@ -741,7 +743,7 @@ public partial class ShaderRewriterTests
 
         for (int i = 0; i < source.Length; i++)
         {
-            Assert.AreEqual(i * 2 + 1, results1[i].value);
+            Assert.AreEqual((i * 2) + 1, results1[i].value);
             Assert.AreEqual(results1[i].value, results2[i]);
         }
     }

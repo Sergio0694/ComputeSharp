@@ -17,7 +17,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     /// <summary>
     /// The shared <see cref="ObjectPool{T}"/> instance to share <see cref="Writer"/> objects.
     /// </summary>
-    private static readonly ObjectPool<Writer> sharedObjectPool = new(static () => new Writer());
+    private static readonly ObjectPool<Writer> SharedObjectPool = new(static () => new Writer());
 
     /// <summary>
     /// The owner <see cref="ObjectPool{T}"/> instance.
@@ -35,7 +35,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     /// <returns>A <see cref="ImmutableArrayBuilder{T}"/> instance to write data to.</returns>
     public static ImmutableArrayBuilder<T> Rent()
     {
-        return new(sharedObjectPool, sharedObjectPool.Allocate());
+        return new(SharedObjectPool, SharedObjectPool.Allocate());
     }
 
     /// <summary>

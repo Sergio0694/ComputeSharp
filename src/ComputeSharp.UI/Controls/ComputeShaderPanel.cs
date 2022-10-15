@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp.Helpers;
 using Windows.UI.Xaml;

@@ -128,7 +128,7 @@ internal static partial class HlslKnownMethods
         };
 
         // Programmatically load mappings from the Hlsl class as well (the ones with no parameter matching)
-        foreach (var method in
+        foreach (MethodInfo? method in
             from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
             group method by method.Name
             into groups
@@ -171,7 +171,7 @@ internal static partial class HlslKnownMethods
         Dictionary<string, string> knownMethods = new();
 
         // Go through the previously discovered methods to find the ones requiring parameters mapping
-        foreach (var pair in KnownMethods)
+        foreach (KeyValuePair<string, string> pair in KnownMethods)
         {
             // Only process methods marked as requiring parameters mapping
             if (pair.Value != nameof(HlslIntrinsicNameAttribute.RequiresParametersMatching))

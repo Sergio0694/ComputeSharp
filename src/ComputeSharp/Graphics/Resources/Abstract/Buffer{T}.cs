@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
@@ -25,7 +25,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
+public abstract unsafe class Buffer<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -76,7 +76,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
             Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -89,7 +89,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
         nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
         nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, D3D12.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
 
-        SizeInBytes = usableSizeInBytes;
+        this.SizeInBytes = usableSizeInBytes;
         GraphicsDevice = device;
         Length = length;
 
@@ -140,7 +140,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     internal bool IsPaddingPresent
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => SizeInBytes > (nint)Length * sizeof(T);
+        get => this.SizeInBytes > (nint)Length * sizeof(T);
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -32,17 +32,18 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     /// <summary>
     /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <c>ID2D1ResourceTextureManager</c>.
     /// </summary>
-    private static readonly void** VtblForID2D1ResourceTextureManager;
+    private static readonly void** VtblForID2D1ResourceTextureManager = InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal();
 
     /// <summary>
     /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
-    private static readonly void** VtblForID2D1ResourceTextureManagerInternal;
+    private static readonly void** VtblForID2D1ResourceTextureManagerInternal = &VtblForID2D1ResourceTextureManager[5];
 
     /// <summary>
-    /// Initializes the shared state for <see cref="D2D1ResourceTextureManagerImpl"/>.
+    /// Initializes the combined vtable for <c>ID2D1ResourceTextureManager</c> and <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
-    static D2D1ResourceTextureManagerImpl()
+    /// <returns>The combined vtable for <c>ID2D1ResourceTextureManager</c> and <c>ID2D1ResourceTextureManagerInternal</c>.</returns>
+    private static void** InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal()
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1ResourceTextureManagerImpl), sizeof(void*) * 10);
 
@@ -76,8 +77,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         lpVtbl[5 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.GetResourceTextureWrapper);
 #endif
 
-        VtblForID2D1ResourceTextureManager = lpVtbl;
-        VtblForID2D1ResourceTextureManagerInternal = &lpVtbl[5];
+        return lpVtbl;
     }
 
     /// <summary>
@@ -249,17 +249,18 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     // Release the resource too if it has been created
                     if (this.d2D1ResourceTexture is not null)
                     {
-                        this.d2D1ResourceTexture->Release();
+                        _ = this.d2D1ResourceTexture->Release();
                     }
 
                     // Now that the resource, if any, has been released, the effect context can also
                     // be released. This must be done only after any associated resource textures have
                     // been released. Releasing an effect context first, in case it was the last reference
                     // to it, will otherwise cause the Release() call on the resource texture to explode.
-                    this.d2D1EffectContext->Release();
+                    _ = this.d2D1EffectContext->Release();
 
                     this.d2D1Multithread->Leave();
-                    this.d2D1Multithread->Release();
+
+                    _ = this.d2D1Multithread->Release();
                 }
 
                 if (this.resourceId is not null)

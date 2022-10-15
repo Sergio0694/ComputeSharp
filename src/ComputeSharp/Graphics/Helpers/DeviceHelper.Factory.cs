@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;
@@ -22,7 +22,7 @@ partial class DeviceHelper
     /// <summary>
     /// The cached default <see cref="GraphicsDevice"/> instance, if any.
     /// </summary>
-    internal static GraphicsDevice? defaultDevice;
+    private static GraphicsDevice? defaultDevice;
 
     /// <summary>
     /// Gets the cached <see cref="GraphicsDevice"/> instance or creates and caches a new one.
@@ -100,11 +100,11 @@ partial class DeviceHelper
                 defaultDevice = null;
             }
 
-            DevicesCache.Remove(device.Luid);
+            _ = DevicesCache.Remove(device.Luid);
 
             if (Configuration.IsDebugOutputEnabled)
             {
-                D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
+                _ = D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
 
                 queue.Dispose();
             }

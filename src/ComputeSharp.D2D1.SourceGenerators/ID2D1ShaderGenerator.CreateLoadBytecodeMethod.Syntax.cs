@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -189,7 +189,7 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// A mapping of precomputed literals for all <see cref="byte"/> values.
         /// </summary>
-        private static readonly string[] formattedBytes =
+        private static readonly string[] FormattedBytes =
         {
             "0x00", "0x01", "0x02", "0x03", "0x04", "0x05", "0x06", "0x07", "0x08", "0x09", "0x0A", "0x0B", "0x0C", "0x0D", "0x0E", "0x0F",
             "0x10", "0x11", "0x12", "0x13", "0x14", "0x15", "0x16", "0x17", "0x18", "0x19", "0x1A", "0x1B", "0x1C", "0x1D", "0x1E", "0x1F",
@@ -218,12 +218,12 @@ partial class ID2D1ShaderGenerator
         {
             using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
 
-            builder.AddRange(formattedBytes[bytecode[0]].AsSpan());
+            builder.AddRange(FormattedBytes[bytecode[0]].AsSpan());
 
             foreach (byte b in bytecode.Slice(1))
             {
                 builder.AddRange(", ".AsSpan());
-                builder.AddRange(formattedBytes[b].AsSpan());
+                builder.AddRange(FormattedBytes[b].AsSpan());
             }
 
             return builder.ToString();

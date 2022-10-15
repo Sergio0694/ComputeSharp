@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -41,7 +41,7 @@ unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping an <see cref="IBufferWriter{T}"/> instance.
     /// </summary>
-    internal unsafe partial struct IBufferWriterWrapper
+    private unsafe partial struct IBufferWriterWrapper
 #if NET6_0_OR_GREATER
         : IUnknown.Interface
 #endif
@@ -225,17 +225,17 @@ unsafe partial class IWICStreamExtensions
         /// <summary>
         /// The vtable pointer for the current instance.
         /// </summary>
-        public void** lpVtbl;
+        private void** lpVtbl;
 
         /// <summary>
         /// The current reference count for the object (from <c>IUnknown</c>).
         /// </summary>
-        public volatile int referenceCount;
+        private volatile int referenceCount;
 
         /// <summary>
         /// The <see cref="GCHandle"/> to the captured <see cref="IBufferWriter{T}"/>.
         /// </summary>
-        public GCHandle writerHandle;
+        private GCHandle writerHandle;
 
         /// <summary>
         /// Creates and initializes a new <see cref="IBufferWriterWrapper"/> instance.
@@ -267,19 +267,19 @@ unsafe partial class IWICStreamExtensions
         /// <inheritdoc/>
         public HRESULT QueryInterface(Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         /// <inheritdoc/>
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
 
         /// <inheritdoc/>
         public uint Release()
         {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
 #endif
 

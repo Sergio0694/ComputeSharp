@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
@@ -11,7 +11,7 @@ namespace ComputeSharp.SwapChain.Backend;
 /// <summary>
 /// A helper class to manage the creation and execution of Win32 applications.
 /// </summary>
-internal unsafe static class Win32ApplicationRunner
+internal static unsafe class Win32ApplicationRunner
 {
     /// <summary>
     /// Whether or not a resize operation is in progress.
@@ -185,6 +185,7 @@ internal unsafe static class Win32ApplicationRunner
                 {
                     isPaused = false;
                 }
+
                 return 0;
             }
 
@@ -196,11 +197,11 @@ internal unsafe static class Win32ApplicationRunner
 
                     if (isPaused)
                     {
-                        Windows.SetCapture(hwnd);
+                        _ = Windows.SetCapture(hwnd);
                     }
                     else
                     {
-                        Windows.ReleaseCapture();
+                        _ = Windows.ReleaseCapture();
                     }
 
                     isPaused = !isPaused;
@@ -229,7 +230,7 @@ internal unsafe static class Win32ApplicationRunner
             // Size update
             case WM.WM_SIZE:
             {
-                if (!isResizing && wParam != (byte)Windows.SIZE_MINIMIZED)
+                if (!isResizing && wParam != Windows.SIZE_MINIMIZED)
                 {
                     application.OnResize();
                 }
@@ -252,36 +253,68 @@ internal unsafe static class Win32ApplicationRunner
                 _ = Windows.GetCursorPos(&point);
                 _ = Windows.GetWindowRect(hwnd, &rect);
 
-                    bool isAtTop = Math.Abs(point.y - rect.top) < 12;
-                    bool isAtRight = Math.Abs(point.x - rect.right) < 12;
-                    bool isAtBottom = Math.Abs(point.y - rect.bottom) < 12;
-                    bool isAtLeft = Math.Abs(point.x - rect.left) < 12;
+                bool isAtTop = Math.Abs(point.y - rect.top) < 12;
+                bool isAtRight = Math.Abs(point.x - rect.right) < 12;
+                bool isAtBottom = Math.Abs(point.y - rect.bottom) < 12;
+                bool isAtLeft = Math.Abs(point.x - rect.left) < 12;
 
                 if (isAtTop)
                 {
-                    if (isAtRight) return Windows.HTTOPRIGHT;
-                    if (isAtLeft) return Windows.HTTOPLEFT;
+                    if (isAtRight)
+                    {
+                        return Windows.HTTOPRIGHT;
+                    }
+
+                    if (isAtLeft)
+                    {
+                        return Windows.HTTOPLEFT;
+                    }
+
                     return Windows.HTTOP;
                 }
 
                 if (isAtRight)
                 {
-                    if (isAtTop) return Windows.HTTOPRIGHT;
-                    if (isAtBottom) return Windows.HTBOTTOMRIGHT;
+                    if (isAtTop)
+                    {
+                        return Windows.HTTOPRIGHT;
+                    }
+
+                    if (isAtBottom)
+                    {
+                        return Windows.HTBOTTOMRIGHT;
+                    }
+
                     return Windows.HTRIGHT;
                 }
 
                 if (isAtBottom)
                 {
-                    if (isAtRight) return Windows.HTBOTTOMRIGHT;
-                    if (isAtLeft) return Windows.HTBOTTOMLEFT;
+                    if (isAtRight)
+                    {
+                        return Windows.HTBOTTOMRIGHT;
+                    }
+
+                    if (isAtLeft)
+                    {
+                        return Windows.HTBOTTOMLEFT;
+                    }
+
                     return Windows.HTBOTTOM;
                 }
 
                 if (isAtLeft)
                 {
-                    if (isAtTop) return Windows.HTTOPLEFT;
-                    if (isAtBottom) return Windows.HTBOTTOMLEFT;
+                    if (isAtTop)
+                    {
+                        return Windows.HTTOPLEFT;
+                    }
+
+                    if (isAtBottom)
+                    {
+                        return Windows.HTBOTTOMLEFT;
+                    }
+
                     return Windows.HTLEFT;
                 }
 

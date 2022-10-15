@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
@@ -115,8 +115,8 @@ internal static partial class DeviceHelper
             if (Windows.SUCCEEDED(createDeviceResult) &&
                 d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
             {
-                d3D12DeviceCandidate.CopyTo(d3D12Device);
-                dxgiAdapter1.CopyTo(dxgiAdapter);
+                _ = d3D12DeviceCandidate.CopyTo(d3D12Device);
+                _ = dxgiAdapter1.CopyTo(dxgiAdapter);
 
                 return true;
             }
@@ -140,7 +140,7 @@ internal static partial class DeviceHelper
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
         dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
-        
+
         dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
         using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
@@ -159,8 +159,8 @@ internal static partial class DeviceHelper
         // There is no need to check for SM6.0, as it's guaranteed to be supported by Windows
         if (Windows.SUCCEEDED(createDeviceResult))
         {
-            d3D12DeviceCandidate.CopyTo(d3D12Device);
-            dxgiAdapter1.CopyTo(dxgiAdapter);
+            _ = d3D12DeviceCandidate.CopyTo(d3D12Device);
+            _ = dxgiAdapter1.CopyTo(dxgiAdapter);
 
             return true;
         }

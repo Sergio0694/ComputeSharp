@@ -1,4 +1,4 @@
-﻿using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators;

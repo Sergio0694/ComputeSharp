@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommunityToolkit.Diagnostics;
 
 #if WINDOWS_UWP

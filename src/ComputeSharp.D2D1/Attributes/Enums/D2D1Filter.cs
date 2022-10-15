@@ -1,4 +1,4 @@
-﻿using static TerraFX.Interop.DirectX.D2D1_FILTER;
+using static TerraFX.Interop.DirectX.D2D1_FILTER;
 
 namespace ComputeSharp.D2D1;
 

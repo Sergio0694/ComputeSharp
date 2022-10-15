@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -342,7 +342,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     {
         if (this.d2D1ResourceManagerImpl is not null)
         {
-            this.d2D1ResourceManagerImpl->Release();
+            _ = this.d2D1ResourceManagerImpl->Release();
         }
     }
 

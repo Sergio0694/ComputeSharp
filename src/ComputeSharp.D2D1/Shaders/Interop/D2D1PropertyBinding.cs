@@ -1,9 +1,9 @@
-﻿namespace ComputeSharp.D2D1.Interop;
+namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// A model representing a property binding for an effect.
 /// </summary>
-public unsafe readonly struct D2D1PropertyBinding
+public readonly unsafe struct D2D1PropertyBinding
 {
     /// <summary>
     /// Creates a new <see cref="D2D1PropertyBinding"/> instance with the specified parameters.

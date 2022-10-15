@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
@@ -173,9 +173,9 @@ public static class Texture3DExtensions
     {
         Guard.IsNotNull(source);
 
-        var (offsetX, width) = x.GetOffsetAndLength(source.Width);
-        var (offsetY, height) = y.GetOffsetAndLength(source.Height);
-        var (offsetZ, depth) = z.GetOffsetAndLength(source.Depth);
+        (int offsetX, int width) = x.GetOffsetAndLength(source.Width);
+        (int offsetY, int height) = y.GetOffsetAndLength(source.Height);
+        (int offsetZ, int depth) = z.GetOffsetAndLength(source.Depth);
 
         source.CopyTo(destination, offsetX, offsetY, offsetZ, width, height, depth);
     }
@@ -472,9 +472,9 @@ public static class Texture3DExtensions
     {
         Guard.IsNotNull(destination);
 
-        var (offsetX, width) = x.GetOffsetAndLength(destination.Width);
-        var (offsetY, height) = y.GetOffsetAndLength(destination.Height);
-        var (offsetZ, depth) = z.GetOffsetAndLength(destination.Depth);
+        (int offsetX, int width) = x.GetOffsetAndLength(destination.Width);
+        (int offsetY, int height) = y.GetOffsetAndLength(destination.Height);
+        (int offsetZ, int depth) = z.GetOffsetAndLength(destination.Depth);
 
         destination.CopyFrom(source, offsetX, offsetY, offsetZ, width, height, depth);
     }

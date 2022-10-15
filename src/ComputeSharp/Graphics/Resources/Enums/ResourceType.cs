@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.Graphics.Resources.Enums;
+namespace ComputeSharp.Graphics.Resources.Enums;
 
 /// <summary>
 /// An <see langword="enum"/> that indicates the type of a given HLSL resource.

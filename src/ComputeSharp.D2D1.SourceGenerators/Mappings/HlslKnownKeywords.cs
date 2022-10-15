@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.D2D1;
@@ -12,7 +12,7 @@ partial class HlslKnownKeywords
     static partial void AddKnownKeywords(ICollection<string> knownKeywords)
     {
         // D2D1 intrinsics method names
-        foreach (var method in typeof(D2D).GetMethods(BindingFlags.Public | BindingFlags.Static))
+        foreach (MethodInfo? method in typeof(D2D).GetMethods(BindingFlags.Public | BindingFlags.Static))
         {
             string name = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()?.Name ?? method.Name;
 

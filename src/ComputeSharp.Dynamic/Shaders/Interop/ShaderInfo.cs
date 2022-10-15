@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.Interop;
+namespace ComputeSharp.Interop;
 
 /// <summary>
 /// A model representing reflection info for a given compute shader.

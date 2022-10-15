@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.D2D1.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -111,13 +111,13 @@ public partial class D2D1EffectRegistrationDataTests
     [D2DInputCount(2)]
     [D2DRequiresScenePosition]
     [AutoConstructor]
-    private partial struct TestRegistrationBlobShader : ID2D1PixelShader
+    private readonly partial struct TestRegistrationBlobShader : ID2D1PixelShader
     {
-        private float a;
+        private readonly float a;
 
         public float4 Execute()
         {
-            return a;
+            return this.a;
         }
     }
 }

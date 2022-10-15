@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 #if WINDOWS_UWP
@@ -110,7 +110,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <summary>
     /// The awaitable object for <see cref="IDXGISwapChain3.Present"/> calls.
     /// </summary>
-    private HANDLE frameLatencyWaitableObject;
+    private readonly HANDLE frameLatencyWaitableObject;
 
     /// <summary>
     /// The first buffer within <see cref="dxgiSwapChain3"/>.
@@ -240,8 +240,9 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         fixed (ISwapChainPanelNative** swapChainPanelNative = this.swapChainPanelNative)
-        using (ComPtr<IUnknown> swapChainPanel = default)
         {
+            using ComPtr<IUnknown> swapChainPanel = default;
+
 #if WINDOWS_UWP
             swapChainPanel.Attach((IUnknown*)Marshal.GetIUnknownForObject(owner));
 
@@ -394,8 +395,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
             // Apply the necessary scale transform
             DXGI_MATRIX_3X2_F transformMatrix = default;
-            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / targetResolutionScale);
-            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / targetResolutionScale);
+            transformMatrix._11 = 1 / this.compositionScaleX * (1 / targetResolutionScale);
+            transformMatrix._22 = 1 / this.compositionScaleY * (1 / targetResolutionScale);
 
             this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
 
@@ -420,7 +421,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// <inheritdoc/>
     private unsafe partial void OnWaitForPresent()
     {
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, Win32.INFINITE, true);
+        _ = Win32.WaitForSingleObjectEx(this.frameLatencyWaitableObject, Win32.INFINITE, true);
     }
 
     /// <inheritdoc/>
@@ -531,7 +532,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             @this.swapChainPanelNative.Get()->SetSwapChain(null).Assert();
             @this.swapChainPanelNative.Dispose();
 
-            ThreadPool.UnsafeQueueUserWorkItem(static state =>
+            _ = ThreadPool.UnsafeQueueUserWorkItem(static state =>
             {
                 SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
 

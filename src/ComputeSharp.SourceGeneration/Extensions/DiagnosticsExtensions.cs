@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
@@ -49,10 +49,7 @@ internal static class DiagnosticsExtensions
     /// <param name="diagnostics">The input <see cref="IncrementalValuesProvider{TValues}"/> sequence of diagnostics.</param>
     public static void ReportDiagnostics(this IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<DiagnosticInfo> diagnostics)
     {
-        context.RegisterSourceOutput(diagnostics, static (context, diagnostic) =>
-        {
-            context.ReportDiagnostic(diagnostic.ToDiagnostic());
-        });
+        context.RegisterSourceOutput(diagnostics, static (context, diagnostic) => context.ReportDiagnostic(diagnostic.ToDiagnostic()));
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
@@ -19,12 +19,12 @@ public sealed partial class HlslGaussianBlurProcessor
         /// <summary>
         /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
         /// </summary>
-        private readonly GraphicsDevice GraphicsDevice;
+        private readonly GraphicsDevice graphicsDevice;
 
         /// <summary>
         /// The 1D kernel to apply.
         /// </summary>
-        private readonly float[] Kernel;
+        private readonly float[] kernel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Implementation"/> class.
@@ -36,10 +36,10 @@ public sealed partial class HlslGaussianBlurProcessor
         public Implementation(HlslGaussianBlurProcessor definition, Configuration configuration, Image<ImageSharpRgba32> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
-            int kernelSize = definition.Radius * 2 + 1;
+            int kernelSize = (definition.Radius * 2) + 1;
 
-            GraphicsDevice = definition.GraphicsDevice;
-            Kernel = CreateGaussianBlurKernel(kernelSize, definition.Sigma);
+            this.graphicsDevice = definition.graphicsDevice;
+            this.kernel = CreateGaussianBlurKernel(kernelSize, definition.Sigma);
         }
 
         /// <summary>
@@ -100,11 +100,11 @@ public sealed partial class HlslGaussianBlurProcessor
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelMemory.Span);
 
-            using ReadWriteTexture2D<Rgba32, float4> sourceTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
-            using ReadWriteTexture2D<Rgba32, float4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(source.Width, source.Height);
-            using ReadOnlyBuffer<float> kernelBuffer = GraphicsDevice.AllocateReadOnlyBuffer(Kernel);
+            using ReadWriteTexture2D<Rgba32, float4> sourceTexture = this.graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
+            using ReadWriteTexture2D<Rgba32, float4> firstPassTexture = this.graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(source.Width, source.Height);
+            using ReadOnlyBuffer<float> kernelBuffer = this.graphicsDevice.AllocateReadOnlyBuffer(this.kernel);
 
-            using (var context = GraphicsDevice.CreateComputeContext())
+            using (ComputeContext context = this.graphicsDevice.CreateComputeContext())
             {
                 context.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
                 context.Barrier(firstPassTexture);
@@ -120,29 +120,29 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteNormalizedTexture2D<float4> source;
-            public readonly IReadWriteNormalizedTexture2D<float4> target;
-            public readonly ReadOnlyBuffer<float> kernel;
+            private readonly IReadWriteNormalizedTexture2D<float4> source;
+            private readonly IReadWriteNormalizedTexture2D<float4> target;
+            private readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
                 float4 result = float4.Zero;
-                int maxY = source.Height - 1;
-                int maxX = source.Width - 1;
-                int kernelLength = kernel.Length;
+                int maxY = this.source.Height - 1;
+                int maxX = this.source.Width - 1;
+                int kernelLength = this.kernel.Length;
                 int radiusY = kernelLength >> 1;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    float4 color = source[offsetX, offsetY];
+                    float4 color = this.source[offsetX, offsetY];
 
-                    result += kernel[i] * color;
+                    result += this.kernel[i] * color;
                 }
 
-                target[ThreadIds.XY] = result;
+                this.target[ThreadIds.XY] = result;
             }
         }
 
@@ -152,29 +152,29 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteNormalizedTexture2D<float4> source;
-            public readonly IReadWriteNormalizedTexture2D<float4> target;
-            public readonly ReadOnlyBuffer<float> kernel;
+            private readonly IReadWriteNormalizedTexture2D<float4> source;
+            private readonly IReadWriteNormalizedTexture2D<float4> target;
+            private readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
                 float4 result = float4.Zero;
-                int maxY = source.Height - 1;
-                int maxX = source.Width - 1;
-                int kernelLength = kernel.Length;
+                int maxY = this.source.Height - 1;
+                int maxX = this.source.Width - 1;
+                int kernelLength = this.kernel.Length;
                 int radiusX = kernelLength >> 1;
                 int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    float4 color = source[offsetX, offsetY];
+                    float4 color = this.source[offsetX, offsetY];
 
-                    result += kernel[i] * color;
+                    result += this.kernel[i] * color;
                 }
 
-                target[ThreadIds.XY] = result;
+                this.target[ThreadIds.XY] = result;
             }
         }
     }

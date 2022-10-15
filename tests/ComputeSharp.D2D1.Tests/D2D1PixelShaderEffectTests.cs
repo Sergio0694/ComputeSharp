@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using ComputeSharp.D2D1.Interop;
@@ -7,6 +7,8 @@ using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct2D;
+
+#pragma warning disable IDE0022, IDE0044
 
 namespace ComputeSharp.D2D1.Tests;
 
@@ -143,7 +145,7 @@ public partial class D2D1PixelShaderEffectTests
 
         public float4 Execute()
         {
-            return dummy;
+            return this.dummy;
         }
     }
 
@@ -178,7 +180,7 @@ public partial class D2D1PixelShaderEffectTests
 
         public float4 Execute()
         {
-            return a + b + c.X + d + e;
+            return this.a + this.b + this.c.X + this.d + this.e;
         }
     }
 }

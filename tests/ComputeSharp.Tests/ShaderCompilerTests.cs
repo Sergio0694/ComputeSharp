@@ -1,7 +1,9 @@
-﻿using ComputeSharp;
+using ComputeSharp;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+#pragma warning disable IDE0008, IDE0022, IDE0009
 
 namespace ComputeSharp.Tests
 {
@@ -28,7 +30,7 @@ namespace ComputeSharp.Tests
                 float exp = Hlsl.Exp(dword * row_major[ThreadIds.X]);
                 float log = Hlsl.Log(1 + exp);
 
-                row_major[ThreadIds.X] = log / dword + float2 + int2x2;
+                row_major[ThreadIds.X] = (log / dword) + float2 + int2x2;
             }
         }
 
@@ -66,7 +68,7 @@ namespace ComputeSharp.Tests
                 float log = Hlsl.Log(1 + exp);
                 float temp = log + cellData.dword + cellData.int2x2;
 
-                row_major[ThreadIds.X] = log / dword + float2 + int2x2 + cbuffer.float2;
+                row_major[ThreadIds.X] = (log / dword) + float2 + int2x2 + cbuffer.float2 + temp;
             }
         }
 
@@ -142,10 +144,10 @@ namespace ComputeSharp.Tests
                 float s2 = s1 + this.intensity + Hlsl.Tan(s1 * this.scale);
                 float t2 = t1 + this.intensity + Hlsl.Tan(t1 * this.scale);
 
-                float u2 = this.cos * s2 - this.sin * t2;
-                float v2 = this.sin * s2 - this.cos * t2;
+                float u2 = (this.cos * s2) - (this.sin * t2);
+                float v2 = (this.sin * s2) - (this.cos * t2);
 
-                row_major[ThreadIds.X] = log / dword + float2 + int2x2 + u2 + v2;
+                row_major[ThreadIds.X] = (log / dword) + float2 + int2x2 + u2 + v2;
             }
         }
 
@@ -302,7 +304,7 @@ namespace ComputeSharp.Tests
             {
                 for (var i = 0; i < 10; i++)
                 {
-                    buffer[ThreadIds.X * 10 + i] = i;
+                    buffer[(ThreadIds.X * 10) + i] = i;
                 }
             }
         }
@@ -484,7 +486,7 @@ namespace ExternalNamespace
             {
                 for (var i = 0; i < 10; i++)
                 {
-                    buffer[ThreadIds.X * 10 + i] = i;
+                    buffer[(ThreadIds.X * 10) + i] = i;
                 }
             }
         }

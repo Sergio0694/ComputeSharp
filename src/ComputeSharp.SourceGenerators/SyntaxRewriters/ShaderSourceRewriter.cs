@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -55,9 +55,18 @@ partial class ShaderSourceRewriter
         {
             string typeName = operation.Member.ContainingType.GetFullMetadataName();
 
-            if (mappedName == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
-            else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
-            else if (typeName == typeof(GridIds).FullName) IsGridIdsUsed = true;
+            if (mappedName == $"__{nameof(GroupIds)}__get_Index")
+            {
+                IsGroupIdsIndexUsed = true;
+            }
+            else if (typeName == typeof(GroupIds).FullName)
+            {
+                IsGroupIdsUsed = true;
+            }
+            else if (typeName == typeof(GridIds).FullName)
+            {
+                IsGridIdsUsed = true;
+            }
 
             // Check that the dispatch info types are only used from the main shader body
             if (!this.isEntryPoint || this.localFunctionDepth > 0)

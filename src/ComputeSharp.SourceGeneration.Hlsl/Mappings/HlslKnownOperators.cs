@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,7 +24,7 @@ internal static partial class HlslKnownOperators
         Dictionary<string, string> knownOperators = new();
 
         // Programmatically load mappings for the intrinsic operators on each HLSL primitive type
-        foreach (var item in
+        foreach ((Type Type, MethodInfo Operator, string IntrinsicName, bool RequiresParametersMatching) item in
             from type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes)
             from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
             where method.IsSpecialName && method.Name.StartsWith("op_")

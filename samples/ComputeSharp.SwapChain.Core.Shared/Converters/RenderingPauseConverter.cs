@@ -1,4 +1,4 @@
-﻿#if WINDOWS_UWP
+#if WINDOWS_UWP
 using Windows.UI.Xaml.Controls;
 #else
 using Microsoft.UI.Xaml.Controls;

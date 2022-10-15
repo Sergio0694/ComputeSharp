@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -78,13 +78,13 @@ internal static partial class HlslKnownTypes
         };
 
         // Add all the vector types
-        foreach (var type in KnownVectorTypes)
+        foreach (Type type in KnownVectorTypes)
         {
             knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
 
         // Add all the matrix types
-        foreach (var type in KnownMatrixTypes)
+        foreach (Type type in KnownMatrixTypes)
         {
             knownTypes.Add(type.FullName, type.Name.ToLowerInvariant());
         }
@@ -135,7 +135,7 @@ internal static partial class HlslKnownTypes
     {
         if (KnownMatrixTypes.Any(type => type.FullName == typeName))
         {
-            var match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
+            Match match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
 
             if (match.Success)
             {
@@ -222,12 +222,15 @@ internal static partial class HlslKnownTypes
             // Explicitly prevent bool from being a field in a custom struct
             if (type.SpecialType == SpecialType.System_Boolean)
             {
-                invalidTypes.Add(type);
+                _ = invalidTypes.Add(type);
 
                 return;
             }
 
-            if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
+            if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName()))
+            {
+                return;
+            }
 
             // Check if the type is unsupported
             if (!type.IsUnmanagedType ||
@@ -236,16 +239,22 @@ internal static partial class HlslKnownTypes
                 type.IsRefLikeType ||
                 type.GetFullyQualifiedName().StartsWith("System."))
             {
-                invalidTypes.Add(type);
+                _ = invalidTypes.Add(type);
 
                 return;
             }
 
-            if (!customTypes.Add(type)) return;
-
-            foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+            if (!customTypes.Add(type))
             {
-                if (field.IsStatic) continue;
+                return;
+            }
+
+            foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
+            {
+                if (field.IsStatic)
+                {
+                    continue;
+                }
 
                 ExploreTypes((INamedTypeSymbol)field.Type, customTypes, invalidTypes);
             }
@@ -291,14 +300,17 @@ internal static partial class HlslKnownTypes
         // types and their dependencies, and iteratively remove items from the map when they have no
         // dependencies left. When one type is processed and removed, it is also removed from the list
         // of dependencies of all other remaining types in the map, until there is none left.
-        foreach (var type in types)
+        foreach (INamedTypeSymbol type in types)
         {
             HashSet<INamedTypeSymbol> dependencies = new(SymbolEqualityComparer.Default);
 
             // Only add other custom types as dependencies, and ignore HLSL types
-            foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
             {
-                if (field.IsStatic) continue;
+                if (field.IsStatic)
+                {
+                    continue;
+                }
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
@@ -314,20 +326,23 @@ internal static partial class HlslKnownTypes
 
         while (queue.Count > 0)
         {
-            var entry = queue.Dequeue();
+            (INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields) entry = queue.Dequeue();
 
             // No dependencies left, we can declare this type
             if (entry.Fields.Count == 0)
             {
                 // Remove the current type from dependencies of others
-                foreach (var pair in queue)
+                foreach ((INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields) pair in queue)
                 {
                     _ = pair.Fields.Remove(entry.Type);
                 }
 
                 yield return entry.Type;
             }
-            else queue.Enqueue(entry);
+            else
+            {
+                queue.Enqueue(entry);
+            }
         }
     }
 }

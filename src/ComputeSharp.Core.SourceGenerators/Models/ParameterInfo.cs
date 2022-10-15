@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.Core.SourceGenerators.Models;
+namespace ComputeSharp.Core.SourceGenerators.Models;
 
 /// <summary>
 /// A model describing info on a constructor parameter.

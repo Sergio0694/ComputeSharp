@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -35,7 +35,10 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.EnumerateDevices())
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            if (i++ == 0)
+            {
+                Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            }
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
@@ -54,7 +57,10 @@ public partial class InitializationTests
 
         foreach (GraphicsDevice device in GraphicsDevice.QueryDevices(info => info.DedicatedMemorySize >= 1024))
         {
-            if (i++ == 0) Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            if (i++ == 0)
+            {
+                Assert.AreSame(GraphicsDevice.GetDefault(), device);
+            }
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
@@ -73,7 +79,7 @@ public partial class InitializationTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = ThreadIds.X;
+            this.buffer[ThreadIds.X] = ThreadIds.X;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 #if NET6_0_OR_GREATER
@@ -35,7 +35,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <summary>
     /// The starting offset within <see cref="array"/>.
     /// </summary>
-    private int index;
+    private readonly int index;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ArrayPoolBufferWriter{T}"/> class.
@@ -154,7 +154,7 @@ internal ref struct ArrayPoolBufferWriter<T>
         // the nearest power of two, to ensure that repeated consecutive writes when the array in
         // use is bigger than that threshold don't end up causing a resize every single time.
         if (minimumSize > 1024 * 1024)
-        {            
+        {
             minimumSize = BitOperations.RoundUpToPowerOf2(minimumSize);
         }
 

@@ -1,7 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+#pragma warning disable IDE0009
 
 namespace ComputeSharp.Tests;
 

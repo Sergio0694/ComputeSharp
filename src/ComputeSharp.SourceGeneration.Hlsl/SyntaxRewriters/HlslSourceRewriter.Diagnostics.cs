@@ -1,4 +1,4 @@
-﻿using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -11,7 +11,7 @@ partial class HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
     {
-        var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
+        AnonymousObjectCreationExpressionSyntax updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
 
         Diagnostics.Add(AnonymousObjectCreationExpression, node);
 

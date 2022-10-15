@@ -1,4 +1,4 @@
-﻿using ComputeSharp.__Internals;
+using ComputeSharp.__Internals;
 
 #pragma warning disable CS0618
 

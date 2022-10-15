@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
@@ -15,7 +15,7 @@ string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly()
 using Image<ImageSharpRgba32> image = Image.Load<ImageSharpRgba32>(path);
 
 // Apply a series of processors and save the results
-foreach (var effect in new (string Name, IImageProcessor Processor)[]
+foreach ((string Name, IImageProcessor Processor) effect in new (string Name, IImageProcessor Processor)[]
 {
     ("bokeh", new HlslBokehBlurProcessor(80, 2)),
     ("gaussian", new HlslGaussianBlurProcessor(80))

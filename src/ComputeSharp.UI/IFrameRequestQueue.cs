@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp;

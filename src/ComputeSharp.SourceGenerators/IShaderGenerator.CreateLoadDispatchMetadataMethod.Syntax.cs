@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Globalization;
 using ComputeSharp.__Internals;
@@ -44,7 +44,7 @@ partial class IShaderGenerator
                         .WithType(IdentifierName("TLoader")),
                     Parameter(Identifier("result"))
                         .AddModifiers(Token(SyntaxKind.OutKeyword))
-                        .WithType(IdentifierName($"global::System.{typeof(IntPtr).Name}")))
+                        .WithType(IdentifierName($"global::System.{nameof(IntPtr)}")))
                 .WithBody(Block(GetDispatchMetadataLoadingStatements(metadataInfo)));
         }
 
@@ -121,7 +121,6 @@ partial class IShaderGenerator
             // Serialized shader metadata
             statements.Add(ParseStatement($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {metadataInfo.Root32BitConstantCount});"));
             statements.Add(ParseStatement($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {metadataInfo.IsSamplerUsed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()});"));
-
 
             // Populate the sequence of resource descriptors
             foreach (ResourceDescriptor descriptor in metadataInfo.ResourceDescriptors)

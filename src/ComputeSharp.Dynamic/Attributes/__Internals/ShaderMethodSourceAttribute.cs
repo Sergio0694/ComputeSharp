@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
+
+#pragma warning disable IDE0052
 
 namespace ComputeSharp.__Internals;
 

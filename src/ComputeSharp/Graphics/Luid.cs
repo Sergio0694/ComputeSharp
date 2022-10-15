@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
@@ -60,20 +60,20 @@ public readonly struct Luid : IEquatable<Luid>
     /// <inheritdoc/>
     public override string ToString()
     {
-        return (((long)this.highPart) << 32 | this.lowPart).ToString();
+        return ((((long)this.highPart) << 32) | this.lowPart).ToString();
     }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return (((long)this.highPart) << 32 | this.lowPart).ToString(format, formatProvider);
+        return ((((long)this.highPart) << 32) | this.lowPart).ToString(format, formatProvider);
     }
 
     /// <inheritdoc/>
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
-        return (((long)this.highPart) << 32 | this.lowPart).TryFormat(destination, out charsWritten, format, provider);
+        return ((((long)this.highPart) << 32) | this.lowPart).TryFormat(destination, out charsWritten, format, provider);
     }
 #endif
 

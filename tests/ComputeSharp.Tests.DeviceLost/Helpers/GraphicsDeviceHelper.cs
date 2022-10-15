@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using ComputeSharp.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -68,7 +68,7 @@ internal static class GraphicsDeviceHelper
         {
             if (d3D12Device is not null)
             {
-                d3D12Device->Release();
+                _ = d3D12Device->Release();
             }
         }
     }
@@ -92,6 +92,6 @@ internal static class GraphicsDeviceHelper
 
         RemoveDevice(graphicsDevice);
 
-        await tcs.Task;
+        _ = await tcs.Task;
     }
 }

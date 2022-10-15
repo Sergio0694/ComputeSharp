@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Threading;
 using ComputeSharp.SwapChain.WinUI.Views;
 using Microsoft.UI.Xaml;
+
+#pragma warning disable CA1001, IDE0052
 
 namespace ComputeSharp.SwapChain.WinUI;
 
@@ -27,25 +29,26 @@ public sealed partial class App : Application
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     /// <inheritdoc/>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        mainWindow = new MainWindow();
-        mainWindow.Closed += (_, _) =>
+        this.mainWindow = new MainWindow();
+        this.mainWindow.Closed += (_, _) =>
         {
             // Due to an issue (https://discord.com/channels/372137812037730304/663434534087426129/979543152853663744), the WinUI 3 app
             // will keep running after the window is closed if any render thread is still going. To work around this, each loaded shader
             // panel is tracked in a conditional weak table, and then when the window is closed they're all manually stopped by setting
             // their shader runners to null. After this, the app should just be able to close automatically when the panels are done.
-            mainWindow.OnShutdown();
+            this.mainWindow.OnShutdown();
 
             // For good measure, also start a timer of one second. If the app is still alive by then (ie. if the timer callback is
             // executed at all), then just force the whole process to terminate, and exit with the E_APPLICATION_EXITING error code.
-            shutdownTimer = new Timer(_ => Environment.Exit(unchecked((int)(0x8000001A))), this, 1000, Timeout.Infinite);
+            this.shutdownTimer = new Timer(_ => Environment.Exit(unchecked((int)0x8000001A)), this, 1000, Timeout.Infinite);
         };
-        mainWindow.Activate();
+
+        this.mainWindow.Activate();
     }
 }

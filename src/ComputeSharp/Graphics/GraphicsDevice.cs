@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -97,12 +97,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <summary>
     /// The event for the device removed callback.
     /// </summary>
-    private HANDLE deviceRemovedEvent;
+    private readonly HANDLE deviceRemovedEvent;
 
     /// <summary>
     /// The wait handle for the device removed callback.
     /// </summary>
-    private HANDLE deviceRemovedWaitHandle;
+    private readonly HANDLE deviceRemovedWaitHandle;
 
     /// <summary>
     /// The reason the device was removed, if any.
@@ -164,12 +164,12 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         SharedMemorySize = dxgiDescription1->SharedSystemMemory;
         IsHardwareAccelerated = (dxgiDescription1->Flags & (uint)DXGI_ADAPTER_FLAG_SOFTWARE) == 0;
 
-        var d3D12Options1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
+        D3D12_FEATURE_DATA_D3D12_OPTIONS1 d3D12Options1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
 
         ComputeUnits = d3D12Options1Data.TotalLaneCount;
         WavefrontSize = d3D12Options1Data.WaveLaneCountMin;
 
-        var d3D12Architecture1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
+        D3D12_FEATURE_DATA_ARCHITECTURE1 d3D12Architecture1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
 
         IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
 
@@ -252,11 +252,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
-        var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
+        D3D12_FEATURE_DATA_D3D12_OPTIONS d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
 
         return d3D12OptionsData.DoublePrecisionFloatShaderOps;
     }
@@ -270,7 +270,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -286,7 +286,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -304,7 +304,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -320,7 +320,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -338,7 +338,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -354,7 +354,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceLost();
 
@@ -433,7 +433,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
                 this.copyCommandListPool.Rent(this.d3D12Device.Get(), null, out d3D12CommandList, out d3D12CommandAllocator);
                 break;
             default:
-                ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
+                _ = ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
                 d3D12CommandList = null;
                 d3D12CommandAllocator = null;
                 break;

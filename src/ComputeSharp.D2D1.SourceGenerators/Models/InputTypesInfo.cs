@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -13,10 +13,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 internal sealed record InputTypesInfo(ImmutableArray<uint> InputTypes)
 {
     /// <inheritdoc/>
-    public bool Equals(InputTypesInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(InputTypesInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="InputTypesInfo"/>.

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.Tests.Misc;
+namespace ComputeSharp.Tests.Misc;
 
 /// <summary>
 /// An internal custom struct used to test semantic model information coming from different files (different syntax trees).

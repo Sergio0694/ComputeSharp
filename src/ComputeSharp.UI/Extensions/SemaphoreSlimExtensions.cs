@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +50,7 @@ internal static class SemaphoreSlimExtensions
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.semaphore.Release();
+            _ = this.semaphore.Release();
         }
     }
 }

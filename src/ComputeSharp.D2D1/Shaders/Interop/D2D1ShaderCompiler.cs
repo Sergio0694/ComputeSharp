@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Text;
 using ComputeSharp.D2D1.Exceptions;

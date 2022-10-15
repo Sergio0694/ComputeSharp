@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.D2D1.NetStandard.System;
 
@@ -21,7 +21,7 @@ internal static class Math
         {
             return min;
         }
-        
+
         if (value > max)
         {
             return max;

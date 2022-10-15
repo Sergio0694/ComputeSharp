@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Tests.Effects;
+namespace ComputeSharp.D2D1.Tests.Effects;
 
 [D2DInputCount(1)]
 [D2DInputSimple(0)]
@@ -18,8 +18,8 @@ public partial struct CheckerboardClipEffect : ID2D1PixelShader
         uint x = (uint)Hlsl.Floor(position.X);
         uint y = (uint)Hlsl.Floor(position.Y);
 
-        uint cellX = (uint)(int)Hlsl.Floor(x / cellSize);
-        uint cellY = (uint)(int)Hlsl.Floor(y / cellSize);
+        uint cellX = (uint)(int)Hlsl.Floor(x / this.cellSize);
+        uint cellY = (uint)(int)Hlsl.Floor(y / this.cellSize);
 
         if ((cellX % 2 == 0 && cellY % 2 == 0) ||
             (cellX % 2 == 1 && cellY % 2 == 1))

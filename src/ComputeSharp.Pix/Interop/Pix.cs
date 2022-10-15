@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Interop;

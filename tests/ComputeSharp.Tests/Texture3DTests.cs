@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance.Enumerables;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -183,7 +184,7 @@ public partial class Texture3DTests
 
         fixed (int* p = array)
         {
-            foreach (var item in new Span<int>(p, array.Length).Enumerate())
+            foreach (SpanEnumerable<int>.Item item in new Span<int>(p, array.Length).Enumerate())
             {
                 item.Value = item.Index;
             }
@@ -539,7 +540,7 @@ public partial class Texture3DTests
 
         public void Execute()
         {
-            destination[ThreadIds.Z * 32 * 32 + ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XYZ];
+            this.destination[(ThreadIds.Z * 32 * 32) + (ThreadIds.Y * 32) + ThreadIds.X] = this.source[ThreadIds.XYZ];
         }
     }
 
@@ -569,7 +570,7 @@ public partial class Texture3DTests
 
         public void Execute()
         {
-            destination[ThreadIds.XYZ] = source[ThreadIds.XYZ];
+            this.destination[ThreadIds.XYZ] = this.source[ThreadIds.XYZ];
         }
     }
 }

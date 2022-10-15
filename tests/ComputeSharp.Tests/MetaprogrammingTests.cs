@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,23 +19,35 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = this.activation(ThreadIds.X);
         }
     }
 
     public static class Activations
     {
         [ShaderMethod]
-        public static int Square(int x) => x * x;
+        public static int Square(int x)
+        {
+            return x * x;
+        }
 
         [ShaderMethod]
-        public static int AddOne(int x) => x + 1;
+        public static int AddOne(int x)
+        {
+            return x + 1;
+        }
 
         // Missing attribute
-        public static int Identity(int x) => x;
+        public static int Identity(int x)
+        {
+            return x;
+        }
 
         [ShaderMethod]
-        public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
+        public static int FunctionWithConstants(int x)
+        {
+            return (int)(x + FourAndAHalf);
+        }
 
         [ShaderMethod]
         public static Position FunctionWithTypes(int x)
@@ -123,7 +135,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = f2(f1(ThreadIds.X));
+            this.buffer[ThreadIds.X] = this.f2(this.f1(ThreadIds.X));
         }
     }
 
@@ -154,7 +166,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = MagicNumber + activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = MagicNumber + this.activation(ThreadIds.X);
         }
     }
 
@@ -188,7 +200,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = this.activation(ThreadIds.X);
         }
     }
 
@@ -217,7 +229,7 @@ public partial class MetaprogrammingTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + activation(ThreadIds.X);
+            this.buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + this.activation(ThreadIds.X);
         }
     }
 

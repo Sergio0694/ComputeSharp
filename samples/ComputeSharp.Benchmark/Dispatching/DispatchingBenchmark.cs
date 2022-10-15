@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
+
+#pragma warning disable CA1063
 
 namespace ComputeSharp.Benchmark.Blas;
 
@@ -15,7 +17,7 @@ public partial class DispatchingBenchmark : IDisposable
     /// <summary>
     /// The test buffer.
     /// </summary>
-    private ReadWriteBuffer<float>? Buffer;
+    private ReadWriteBuffer<float>? buffer;
 
     /// <summary>
     /// Initial setup for a benchmarking session.
@@ -23,14 +25,14 @@ public partial class DispatchingBenchmark : IDisposable
     [GlobalSetup]
     public void Setup()
     {
-        Buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(128);
+        this.buffer = GraphicsDevice.GetDefault().AllocateReadWriteBuffer<float>(128);
     }
 
     /// <inheritdoc/>
     [GlobalCleanup]
     public void Dispose()
     {
-        Buffer!.Dispose();
+        this.buffer!.Dispose();
     }
 
     /// <summary>
@@ -40,7 +42,7 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public void Compute_Single()
     {
-        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(this.buffer!));
     }
 
     /// <summary>
@@ -50,9 +52,9 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public void Compute_Single_WithContext()
     {
-        using var context = GraphicsDevice.GetDefault().CreateComputeContext();
+        using ComputeContext context = GraphicsDevice.GetDefault().CreateComputeContext();
 
-        context.For(64, new TestShader(Buffer!));
+        context.For(64, new TestShader(this.buffer!));
     }
 
     /// <summary>
@@ -62,9 +64,9 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("SINGLE")]
     public async Task Compute_Single_WithContext_Async()
     {
-        await using var context = GraphicsDevice.GetDefault().CreateComputeContext();
+        await using ComputeContext context = GraphicsDevice.GetDefault().CreateComputeContext();
 
-        context.For(64, new TestShader(Buffer!));
+        context.For(64, new TestShader(this.buffer!));
     }
 
     /// <summary>
@@ -74,8 +76,8 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public void Compute_Multiple()
     {
-        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
-        GraphicsDevice.GetDefault().For(64, new TestShader(Buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(this.buffer!));
+        GraphicsDevice.GetDefault().For(64, new TestShader(this.buffer!));
     }
 
     /// <summary>
@@ -85,11 +87,11 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public void Compute_Multiple_WithContext()
     {
-        using var context = GraphicsDevice.GetDefault().CreateComputeContext();
+        using ComputeContext context = GraphicsDevice.GetDefault().CreateComputeContext();
 
-        context.For(64, new TestShader(Buffer!));
-        context.Barrier(Buffer!);
-        context.For(64, new TestShader(Buffer!));
+        context.For(64, new TestShader(this.buffer!));
+        context.Barrier(this.buffer!);
+        context.For(64, new TestShader(this.buffer!));
     }
 
     /// <summary>
@@ -99,17 +101,17 @@ public partial class DispatchingBenchmark : IDisposable
     [BenchmarkCategory("MULTIPLE")]
     public async Task Compute_Multiple_WithContext_Async()
     {
-        await using var context = GraphicsDevice.GetDefault().CreateComputeContext();
+        await using ComputeContext context = GraphicsDevice.GetDefault().CreateComputeContext();
 
-        context.For(64, new TestShader(Buffer!));
-        context.Barrier(Buffer!);
-        context.For(64, new TestShader(Buffer!));
+        context.For(64, new TestShader(this.buffer!));
+        context.Barrier(this.buffer!);
+        context.For(64, new TestShader(this.buffer!));
     }
 
     [AutoConstructor]
     internal readonly partial struct TestShader : IComputeShader
     {
-        public readonly ReadWriteBuffer<float> buffer;
+        private readonly ReadWriteBuffer<float> buffer;
 
         /// <inheritdoc/>
         public void Execute()

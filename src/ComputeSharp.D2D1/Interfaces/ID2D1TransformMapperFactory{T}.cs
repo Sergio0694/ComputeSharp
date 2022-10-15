@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1;
+namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// An <see langword="interface"/> acting as a factory for <see cref="ID2D1TransformMapper{T}"/> instances.

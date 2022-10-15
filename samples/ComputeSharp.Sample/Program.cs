@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp;
 using ComputeSharp.Sample;
@@ -26,11 +26,11 @@ Formatting.PrintMatrix(array, 10, 10, "AFTER");
 [AutoConstructor]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {
-    public readonly ReadWriteBuffer<float> buffer;
+    private readonly ReadWriteBuffer<float> buffer;
 
     /// <inheritdoc/>
     public void Execute()
     {
-        buffer[ThreadIds.X] *= 2;
+        this.buffer[ThreadIds.X] *= 2;
     }
 }

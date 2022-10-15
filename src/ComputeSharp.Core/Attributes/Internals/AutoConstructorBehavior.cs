@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// Indicates the behavior of fields annotated with <see cref="AutoConstructorBehaviorAttribute"/>.

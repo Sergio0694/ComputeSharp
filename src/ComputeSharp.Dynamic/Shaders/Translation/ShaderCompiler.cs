@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ComputeSharp.Core.Extensions;
@@ -26,17 +26,17 @@ internal sealed unsafe partial class ShaderCompiler
     /// <summary>
     /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
     /// </summary>
-    private readonly ComPtr<IDxcCompiler> DxcCompiler;
+    private readonly ComPtr<IDxcCompiler> dxcCompiler;
 
     /// <summary>
-    /// The <see cref="IDxcLibrary"/> instance to use to work with <see cref="DxcCompiler"/>.
+    /// The <see cref="IDxcLibrary"/> instance to use to work with <see cref="dxcCompiler"/>.
     /// </summary>
-    private readonly ComPtr<IDxcLibrary> DxcLibrary;
+    private readonly ComPtr<IDxcLibrary> dxcLibrary;
 
     /// <summary>
-    /// The <see cref="IDxcIncludeHandler"/> instance used to compile shaders with <see cref="DxcCompiler"/>.
+    /// The <see cref="IDxcIncludeHandler"/> instance used to compile shaders with <see cref="dxcCompiler"/>.
     /// </summary>
-    private readonly ComPtr<IDxcIncludeHandler> DxcIncludeHandler;
+    private readonly ComPtr<IDxcIncludeHandler> dxcIncludeHandler;
 
     /// <summary>
     /// Creates a new <see cref="ShaderCompiler"/> instance.
@@ -59,9 +59,9 @@ internal sealed unsafe partial class ShaderCompiler
 
         dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 
-        DxcCompiler = dxcCompiler.Move();
-        DxcLibrary = dxcLibrary.Move();
-        DxcIncludeHandler = dxcIncludeHandler.Move();
+        this.dxcCompiler = dxcCompiler.Move();
+        this.dxcLibrary = dxcLibrary.Move();
+        this.dxcIncludeHandler = dxcIncludeHandler.Move();
     }
 
     /// <summary>
@@ -69,9 +69,9 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     ~ShaderCompiler()
     {
-        DxcCompiler.Dispose();
-        DxcLibrary.Dispose();
-        DxcIncludeHandler.Dispose();
+        this.dxcCompiler.Dispose();
+        this.dxcLibrary.Dispose();
+        this.dxcIncludeHandler.Dispose();
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ internal sealed unsafe partial class ShaderCompiler
         // Get the encoded blob from the source code
         fixed (char* p = source)
         {
-            DxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+            this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
                 p,
                 (uint)source.Length * 2,
                 1200,
@@ -110,7 +110,7 @@ internal sealed unsafe partial class ShaderCompiler
         {
             char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
 
-            DxcCompiler.Get()->Compile(
+            this.dxcCompiler.Get()->Compile(
                 (IDxcBlob*)dxcBlobEncoding.Get(),
                 (ushort*)shaderName,
                 (ushort*)entryPoint,
@@ -119,7 +119,7 @@ internal sealed unsafe partial class ShaderCompiler
                 3,
                 null,
                 0,
-                DxcIncludeHandler.Get(),
+                this.dxcIncludeHandler.Get(),
                 dxcOperationResult.GetAddressOf()).Assert();
         }
 

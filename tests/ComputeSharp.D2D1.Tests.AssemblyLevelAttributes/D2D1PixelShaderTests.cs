@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
@@ -19,7 +19,7 @@ public partial class D2D1PixelShaderTests
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
         Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
 
-        D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(
             shaderProfile: D2D1ShaderProfile.PixelShader41,
             options: D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PartialPrecision);
 
@@ -53,7 +53,7 @@ public partial class D2D1PixelShaderTests
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
         Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
 
-        D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>(
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>(
             shaderProfile: D2D1ShaderProfile.PixelShader50,
             options: D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PartialPrecision);
 
@@ -87,7 +87,7 @@ public partial class D2D1PixelShaderTests
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
         Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
 
-        D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>(
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>(
             shaderProfile: D2D1ShaderProfile.PixelShader41,
             options: D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision);
 
@@ -121,7 +121,7 @@ public partial class D2D1PixelShaderTests
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
         Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
 
-        D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfileAndOptions>(
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfileAndOptions>(
             shaderProfile: D2D1ShaderProfile.PixelShader50,
             options: D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision);
 

@@ -1,4 +1,4 @@
-﻿using ComputeSharp.__Internals;
+using ComputeSharp.__Internals;
 using ComputeSharp.Tests.Internals.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -340,7 +340,7 @@ public partial class ShaderDataLoaderTests
                     b: new(44.4f, 55.5f),
                     c: new CustomType3(
                         a: 7654321,
-                        b: new (111.1f, 222.2f))),
+                        b: new(111.1f, 222.2f))),
                 e: new CustomType3(
                     a: 888888,
                     b: new(333.3f, 444.4f))));

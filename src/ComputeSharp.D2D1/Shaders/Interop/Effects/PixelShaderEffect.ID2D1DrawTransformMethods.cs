@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
@@ -16,7 +16,7 @@ partial struct PixelShaderEffect
     /// <summary>
     /// The implementation for <see cref="ID2D1DrawTransform"/>.
     /// </summary>
-    private unsafe static class ID2D1DrawTransformMethods
+    private static unsafe class ID2D1DrawTransformMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="GetInputCount"/>

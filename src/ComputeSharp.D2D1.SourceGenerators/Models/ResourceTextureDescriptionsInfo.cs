@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -12,10 +12,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 internal sealed record ResourceTextureDescriptionsInfo(ImmutableArray<ResourceTextureDescription> ResourceTextureDescriptions)
 {
     /// <inheritdoc/>
-    public bool Equals(ResourceTextureDescriptionsInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(ResourceTextureDescriptionsInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="ResourceTextureDescriptionsInfo"/>.

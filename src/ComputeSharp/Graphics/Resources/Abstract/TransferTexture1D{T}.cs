@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
@@ -17,7 +17,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 1D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
+public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -53,7 +53,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
     {
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -109,7 +109,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -121,7 +121,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
 
             return new(this.mappedData, Width);
         }
@@ -175,6 +175,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         /// <inheritdoc/>
         public override Memory<T> Memory
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => CreateMemory(this.buffer.Width);
         }
 
@@ -189,7 +190,7 @@ public unsafe abstract class TransferTexture1D<T> : NativeObject, IGraphicsResou
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using var _0 = this.buffer.GetReferenceTrackingLease();
+            using Lease _0 = this.buffer.GetReferenceTrackingLease();
 
             return new(this.buffer.mappedData);
         }

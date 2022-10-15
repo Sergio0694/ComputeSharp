@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,6 +12,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+#pragma warning disable IDE0052
 
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
@@ -129,7 +131,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         this.currentMethodIdentifier = node.Identifier;
 
-        var updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
+        MethodDeclarationSyntax? updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
 
         updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
 
@@ -145,7 +147,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         if (updatedNode is not null)
         {
-            var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
+            BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
             // Add the tracked implicit declarations (at the start of the body)
             updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
@@ -164,7 +166,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         this.currentMethodIdentifier = node.Identifier;
 
-        var updatedNode = (LocalFunctionStatementSyntax?)base.Visit(node)!;
+        LocalFunctionStatementSyntax? updatedNode = (LocalFunctionStatementSyntax?)base.Visit(node)!;
 
         updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
 
@@ -180,7 +182,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         if (updatedNode is not null)
         {
-            var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
+            BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
             updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
         }
@@ -191,7 +193,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitParameter(ParameterSyntax node)
     {
-        var updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
+        ParameterSyntax updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
 
         // Convert the C# parameter modifiers to the HLSL equivalent
         SyntaxToken modifier =
@@ -214,7 +216,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
     {
-        var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
+        LocalDeclarationStatementSyntax updatedNode = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
         {
@@ -227,7 +229,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitDeclarationExpression(DeclarationExpressionSyntax node)
     {
-        var updatedNode = (DeclarationExpressionSyntax)base.VisitDeclarationExpression(node)!;
+        DeclarationExpressionSyntax updatedNode = (DeclarationExpressionSyntax)base.VisitDeclarationExpression(node)!;
 
         updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
 
@@ -255,7 +257,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         // being parsed. That is, this was a blobal method that was annotated in source.
         if (node.Identifier == this.currentMethodIdentifier)
         {
-            var updatedNode =
+            LocalFunctionStatementSyntax updatedNode =
                 ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>());
@@ -278,7 +280,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         {
             this.localFunctionDepth++;
 
-            var updatedNode =
+            LocalFunctionStatementSyntax updatedNode =
                 ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>())
@@ -311,8 +313,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
-        var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
-        
+        MemberAccessExpressionSyntax updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
+
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
             SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
         {
@@ -329,8 +331,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
                     ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-                    var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+                    string ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+                    string constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
 
                     return IdentifierName(constantName);
                 }
@@ -419,7 +421,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
+        InvocationExpressionSyntax updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation { TargetMethod: IMethodSymbol method } operation)
         {
@@ -447,7 +449,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 // updated name is detailed in the override handling the local function statement.
                 if (method.MethodKind == MethodKind.LocalFunction)
                 {
-                    var functionIdentifier = $"__{this.currentMethodIdentifier.Text}__{method.Name}";
+                    string functionIdentifier = $"__{this.currentMethodIdentifier.Text}__{method.Name}";
 
                     return updatedNode.WithExpression(IdentifierName(functionIdentifier));
                 }
@@ -458,7 +460,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 // type as well, as they will be processed by the generator in a different path.
                 if (!SymbolEqualityComparer.Default.Equals(this.shaderType, method.ContainingType))
                 {
-                    var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
+                    string methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
@@ -503,7 +505,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                 {
                     DiscoveredTypes.Add(structTypeSymbol);
 
-                    var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
+                    string methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
 
                     // Same as for static methods, ensure the method is available in source, and process it if so
                     if (!this.instanceMethods.ContainsKey(method))
@@ -540,7 +542,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitArgument(ArgumentSyntax node)
     {
-        var updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
+        ArgumentSyntax updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
 
         // Strip the ref keywords from arguments
         updatedNode = updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
@@ -559,8 +561,6 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
 
         return updatedNode;
     }
-
-
 
     /// <summary>
     /// Rewrites a sampled texture access.

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An interface representing a typed writeable 2D texture containing normalized pixel data stored on GPU memory.

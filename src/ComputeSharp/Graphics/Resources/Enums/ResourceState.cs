@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An <see langword="enum"/> that indicates the state of a resource after a given transition.

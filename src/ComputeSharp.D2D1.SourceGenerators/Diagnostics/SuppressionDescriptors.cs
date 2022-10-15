@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators.Diagnostics;
 

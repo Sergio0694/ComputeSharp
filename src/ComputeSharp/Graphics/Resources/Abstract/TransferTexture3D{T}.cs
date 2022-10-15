@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -15,7 +15,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResource
+public abstract unsafe class TransferTexture3D<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -55,7 +55,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -123,7 +123,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using var _0 = this.GetReferenceTrackingLease();
+            using Lease _0 = this.GetReferenceTrackingLease();
 
             return new(this.mappedData, Width, Height, Depth, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }

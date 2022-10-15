@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.__Internals;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,7 +17,7 @@ public partial class ShaderHashCodeTests
 
         public void Execute()
         {
-            B[0] = A;
+            this.B[0] = this.A;
         }
     }
 
@@ -49,7 +49,7 @@ public partial class ShaderHashCodeTests
 
         public void Execute()
         {
-            B[0] = F(A);
+            this.B[0] = this.F(this.A);
         }
     }
 

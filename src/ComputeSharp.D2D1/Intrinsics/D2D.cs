@@ -1,5 +1,7 @@
-﻿using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.Exceptions;
+
+#pragma warning disable IDE0022
 
 namespace ComputeSharp.D2D1;
 
@@ -26,7 +28,7 @@ public static class D2D
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DGetInputCoordinate")]
     public static Float4 GetInputCoordinate(int index) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetInputCoordinate)}({typeof(int)})");
-    
+
     /// <summary>
     /// Returns the value of the current scene position.
     /// </summary>

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// An offset grid of square-based pyramids whose tips have been offset according to an underlying directional noise field.
@@ -15,7 +15,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
@@ -37,14 +37,14 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     {
         float n = Hlsl.Sin(Hlsl.Dot(p, new float2(41, 289)));
 
-        return Hlsl.Frac(new float2(262144, 32768) * n) * 2.0f - 1.0f;
+        return (Hlsl.Frac(new float2(262144, 32768) * n) * 2.0f) - 1.0f;
     }
 
     // Based on IQ's gradient noise formula.
     private static float N2D3G(float2 p)
     {
         float2 i = Hlsl.Floor(p);
-        
+
         p -= i;
 
         float4 v = default;
@@ -54,7 +54,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
         v.Z = Hlsl.Dot(Hash22B(i + float2.UnitY), p - float2.UnitY);
         v.W = Hlsl.Dot(Hash22B(i + 1.0f), p - 1.0f);
 
-        p = p * p * (3.0f - 2.0f * p);
+        p = p * p * (3.0f - (2.0f * p));
 
         return Hlsl.Lerp(Hlsl.Lerp(v.X, v.Y, p.X), Hlsl.Lerp(v.Z, v.W, p.X), p.Y);
     }
@@ -62,13 +62,13 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     // Two layers of noise.
     private static float FBM(float2 p)
     {
-        return N2D3G(p) * 0.66f + N2D3G(p * 2.0f) * 0.34f;
+        return (N2D3G(p) * 0.66f) + (N2D3G(p * 2.0f) * 0.34f);
     }
 
     // HLSL mod from GLSL
     private static float Mod(float x, float y)
     {
-        return x - y * Hlsl.Floor(x / y);
+        return x - (y * Hlsl.Floor(x / y));
     }
 
     private float BMap(float2 p)
@@ -84,19 +84,30 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
 
         p -= ip + 0.5f;
 
-        float ang = -3.14159f * 3.0f / 5.0f + (FBM(ip / 8.0f + time / 3.0f)) * 6.2831f * 2.0f;
+        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (this.time / 3.0f)) * 6.2831f * 2.0f);
 
         float2 offs = new float2(Hlsl.Cos(ang), Hlsl.Sin(ang)) * 0.35f;
 
-        if (p.X < offs.X) p.X = 1.0f - (p.X + 0.5f) / Hlsl.Abs(offs.X + 0.5f);
-        else p.X = (p.X - offs.X) / (0.5f - offs.X);
+        if (p.X < offs.X)
+        {
+            p.X = 1.0f - ((p.X + 0.5f) / Hlsl.Abs(offs.X + 0.5f));
+        }
+        else
+        {
+            p.X = (p.X - offs.X) / (0.5f - offs.X);
+        }
 
-        if (p.Y < offs.Y) p.Y = 1.0f - (p.Y + 0.5f) / Hlsl.Abs(offs.Y + 0.5f);
-        else p.Y = (p.Y - offs.Y) / (0.5f - offs.Y);
+        if (p.Y < offs.Y)
+        {
+            p.Y = 1.0f - ((p.Y + 0.5f) / Hlsl.Abs(offs.Y + 0.5f));
+        }
+        else
+        {
+            p.Y = (p.Y - offs.Y) / (0.5f - offs.Y);
+        }
 
         return 1.0f - Hlsl.Max(p.X, p.Y);
     }
-
 
     // Standard function-based bump mapping function, with an edge value  included for good measure
     private float3 DoBumpMap(in float2 p, in float3 n, float bumpfactor, ref float edge)
@@ -109,26 +120,28 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
         float fx2 = BMap(p + e.XY);
         float fy2 = BMap(p + e.YX);
 
-        float3 grad = (new float3(fx - fx2, fy - fx2, 0)) / e.X / 2.0f;
+        float3 grad = new float3(fx - fx2, fy - fx2, 0) / e.X / 2.0f;
 
-        edge = Hlsl.Length(new float2(fx, fy) + new float2(fx2, fy2) - f * 2.0f);
+        edge = Hlsl.Length(new float2(fx, fy) + new float2(fx2, fy2) - (f * 2.0f));
         edge = Hlsl.SmoothStep(0.0f, 1.0f, edge / e.X);
 
         grad -= n * Hlsl.Dot(n, grad);
 
-        return Hlsl.Normalize(n + grad * bumpfactor);
+        return Hlsl.Normalize(n + (grad * bumpfactor));
     }
-
 
     // A hatch-like algorithm, or a stipple... or some kind of textured pattern
     private float DoHatch(float2 p, float res)
     {
         p *= res / 16.0f;
 
-        float hatch = Hlsl.Clamp(Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f + 0.5f, 0.0f, 1.0f);
+        float hatch = Hlsl.Clamp((Hlsl.Sin((p.X - p.Y) * 3.14159f * 200.0f) * 2.0f) + 0.5f, 0.0f, 1.0f);
 
         float hRnd = Hash21(Hlsl.Floor(p * 6.0f) + 0.73f);
-        if (hRnd > 0.66f) hatch = hRnd;
+        if (hRnd > 0.66f)
+        {
+            hatch = hRnd;
+        }
 
         return hatch;
     }
@@ -138,10 +151,10 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
     {
         int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float iRes = Hlsl.Min(DispatchSize.Y, 800.0f);
-        float2 uv = (coordinate - (float2)DispatchSize.XY * 0.5f) / iRes;
+        float2 uv = (coordinate - ((float2)DispatchSize.XY * 0.5f)) / iRes;
         float3 rd = Hlsl.Normalize(new float3(uv, 0.5f));
         const float gSc = 10.0f;
-        float2 p = uv * gSc + new float2(0, time / 2.0f);
+        float2 p = (uv * gSc) + new float2(0, this.time / 2.0f);
         float2 oP = p;
         float m = BMap(p);
         float3 n = new(0, 0, -1);
@@ -150,7 +163,7 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
 
         n = DoBumpMap(p, n, bumpFactor, ref edge);
 
-        float3 lp = new float3(-0.0f + Hlsl.Sin(time) * 0.3f, 0.0f + Hlsl.Cos(time * 1.3f) * 0.3f, -1) - new float3(uv, 0);
+        float3 lp = new float3(-0.0f + (Hlsl.Sin(this.time) * 0.3f), 0.0f + (Hlsl.Cos(this.time * 1.3f) * 0.3f), -1) - new float3(uv, 0);
         float lDist = Hlsl.Max(Hlsl.Length(lp), 0.001f);
         float3 ld = lp / lDist;
         float diff = Hlsl.Max(Hlsl.Dot(n, ld), 0.0f);
@@ -159,19 +172,19 @@ internal readonly partial struct PyramidPattern : IPixelShader<float4>
 
         float spec = Hlsl.Pow(Hlsl.Max(Hlsl.Dot(Hlsl.Reflect(-ld, n), -rd), 0.0f), 16.0f);
         float fre = Hlsl.Min(Hlsl.Pow(Hlsl.Max(1.0f + Hlsl.Dot(n, rd), 0.0f), 4.0f), 3.0f);
-        float3 col = 0.15f * (diff + 0.251f + spec * new float3(1, 0.7f, 0.3f) * 9.0f + fre * new float3(0.1f, 0.3f, 1) * 12.0f);
-        float rf = Hlsl.SmoothStep(0.0f, 0.35f, BMap(Hlsl.Reflect(rd, n).XY * 2.0f) * FBM(Hlsl.Reflect(rd, n).XY * 3.0f) + 0.1f);
+        float3 col = 0.15f * (diff + 0.251f + (spec * new float3(1, 0.7f, 0.3f) * 9.0f) + (fre * new float3(0.1f, 0.3f, 1) * 12.0f));
+        float rf = Hlsl.SmoothStep(0.0f, 0.35f, (BMap(Hlsl.Reflect(rd, n).XY * 2.0f) * FBM(Hlsl.Reflect(rd, n).XY * 3.0f)) + 0.1f);
 
         col += col * col * rf * rf * new float3(1, 0.1f, 0.1f) * 15.0f;
 
-        float shade = m * 0.83f + 0.17f;
+        float shade = (m * 0.83f) + 0.17f;
 
         col *= shade;
-        col *= 1.0f - edge * 0.8f;
+        col *= 1.0f - (edge * 0.8f);
 
         float hatch = DoHatch(oP / gSc, iRes);
 
-        col *= hatch * 0.5f + 0.7f;
+        col *= (hatch * 0.5f) + 0.7f;
 
         return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
@@ -34,11 +34,11 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     {
         StringBuilder builder = new(512);
 
-        builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
-        builder.AppendLine($"The target device to run the compute shader is \"{destinationDevice}\".");
-        builder.AppendLine($"The buffer of type {resource.GetType()} was allocated on device \"{sourceDevice}\".");
-        builder.Append("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
-        builder.ToString();
+        _ = builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
+        _ = builder.AppendLine($"The target device to run the compute shader is \"{destinationDevice}\".");
+        _ = builder.AppendLine($"The buffer of type {resource.GetType()} was allocated on device \"{sourceDevice}\".");
+        _ = builder.Append("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
+        _ = builder.ToString();
 
         return new(builder.ToString());
     }

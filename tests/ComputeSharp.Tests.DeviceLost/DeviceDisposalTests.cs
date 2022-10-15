@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
@@ -62,15 +62,15 @@ public partial class DeviceDisposalTests
 
         using (GraphicsDevice graphicsDevice = device.Get())
         {
-            using var r1 = graphicsDevice.AllocateConstantBuffer<float>(128);
-            using var r2 = graphicsDevice.AllocateReadOnlyBuffer<float>(128);
-            using var r3 = graphicsDevice.AllocateReadWriteBuffer<float>(128);
-            using var r4 = graphicsDevice.AllocateReadOnlyTexture2D<float>(128, 128);
-            using var r5 = graphicsDevice.AllocateReadWriteTexture2D<float>(128, 128);
-            using var r6 = graphicsDevice.AllocateUploadBuffer<float>(128);
-            using var r7 = graphicsDevice.AllocateReadBackBuffer<float>(128);
-            using var r8 = graphicsDevice.AllocateUploadTexture2D<float>(128, 128);
-            using var r9 = graphicsDevice.AllocateReadBackTexture2D<float>(128, 128);
+            using ConstantBuffer<float> r1 = graphicsDevice.AllocateConstantBuffer<float>(128);
+            using ReadOnlyBuffer<float> r2 = graphicsDevice.AllocateReadOnlyBuffer<float>(128);
+            using ReadWriteBuffer<float> r3 = graphicsDevice.AllocateReadWriteBuffer<float>(128);
+            using ReadOnlyTexture2D<float> r4 = graphicsDevice.AllocateReadOnlyTexture2D<float>(128, 128);
+            using ReadWriteTexture2D<float> r5 = graphicsDevice.AllocateReadWriteTexture2D<float>(128, 128);
+            using UploadBuffer<float> r6 = graphicsDevice.AllocateUploadBuffer<float>(128);
+            using ReadBackBuffer<float> r7 = graphicsDevice.AllocateReadBackBuffer<float>(128);
+            using UploadTexture2D<float> r8 = graphicsDevice.AllocateUploadTexture2D<float>(128, 128);
+            using ReadBackTexture2D<float> r9 = graphicsDevice.AllocateReadBackTexture2D<float>(128, 128);
 
             GraphicsDeviceHelper.GetD3D12Device(graphicsDevice, in d3D12Device);
         }
@@ -118,7 +118,7 @@ public partial class DeviceDisposalTests
 
         using (GraphicsDevice graphicsDevice = device.Get())
         {
-            using var buffer = graphicsDevice.AllocateReadWriteBuffer<float>(128);
+            using ReadWriteBuffer<float> buffer = graphicsDevice.AllocateReadWriteBuffer<float>(128);
 
             using (ComputeContext context = graphicsDevice.CreateComputeContext())
             {
@@ -139,7 +139,7 @@ public partial class DeviceDisposalTests
 
         public void Execute()
         {
-            buffer[ThreadIds.X] = ThreadIds.X;
+            this.buffer[ThreadIds.X] = ThreadIds.X;
         }
     }
 
@@ -151,7 +151,7 @@ public partial class DeviceDisposalTests
 
         using (GraphicsDevice graphicsDevice = device.Get())
         {
-            using var texture = graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
+            using ReadWriteTexture2D<Rgba32, float4> texture = graphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
 
             using (ComputeContext context = graphicsDevice.CreateComputeContext())
             {
@@ -170,7 +170,7 @@ public partial class DeviceDisposalTests
         public float4 Execute()
         {
             float2 uv = ThreadIds.Normalized.XY;
-            float3 col = 0.5f + 0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4));
+            float3 col = 0.5f + (0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4)));
 
             return new(col, 1f);
         }

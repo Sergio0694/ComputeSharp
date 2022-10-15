@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using ComputeSharp.SwapChain.Backend;
@@ -48,7 +48,7 @@ class Program
             }
 
             Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt + F4 to exit a sample once chosen)");
-            Console.WriteLine();            
+            Console.WriteLine();
 
             do
             {
@@ -61,7 +61,7 @@ class Program
                 Console.WriteLine();
                 Console.WriteLine($"Starting {Samples[index].ShaderName}...");
 
-                Win32ApplicationRunner.Run(Samples[index].Application);
+                _ = Win32ApplicationRunner.Run(Samples[index].Application);
             }
         }
         while (index >= 0 && index < Samples.Length);

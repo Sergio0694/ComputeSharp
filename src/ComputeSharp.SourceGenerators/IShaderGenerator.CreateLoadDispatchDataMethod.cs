@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -81,7 +81,7 @@ partial class IShaderGenerator
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        foreach (var fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), resourceOffset, rawDataOffset))
+                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), resourceOffset, rawDataOffset))
                         {
                             yield return fieldInfo;
                         }
@@ -142,7 +142,7 @@ partial class IShaderGenerator
         {
             // For scalar, vector and linear matrix types, serialize the value normally.
             // Only the initial alignment needs to be considered, while data is packed.
-            var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
+            (int fieldSize, int fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
             // Check if the current type is a matrix type with more than one row. In this
             // case, each row is aligned as if it was a separate array, so the start of
@@ -157,7 +157,7 @@ partial class IShaderGenerator
 
                     builder.Add(startingRawDataOffset);
 
-                    rawDataOffset = startingRawDataOffset + fieldPack * columns;
+                    rawDataOffset = startingRawDataOffset + (fieldPack * columns);
                 }
 
                 return new FieldInfo.NonLinearMatrix(

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -19,10 +19,16 @@ internal sealed record D2D1PixelShaderSourceInfo(
     ImmutableArray<DiagnosticInfo> Diagnostcs)
 {
     /// <inheritdoc/>
-    public bool Equals(D2D1PixelShaderSourceInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(D2D1PixelShaderSourceInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="D2D1PixelShaderSourceInfo"/>.

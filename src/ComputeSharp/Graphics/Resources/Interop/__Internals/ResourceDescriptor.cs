@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_RANGE_FLAGS;
 
-#pragma warning disable IDE0052, CS0414
+#pragma warning disable IDE0052, IDE1006, CS0414
 
 namespace ComputeSharp.__Internals;
 

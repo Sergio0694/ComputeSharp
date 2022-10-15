@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using TerraFX.Interop.DirectX;
@@ -15,7 +15,7 @@ partial struct D2D1ResourceTextureManagerImpl
     /// <summary>
     /// The implementation for <c>ID2D1ResourceTextureManagerInternal</c>.
     /// </summary>
-    private unsafe static class ID2D1ResourceTextureManagerInternalMethods
+    private static unsafe class ID2D1ResourceTextureManagerInternalMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Initialize"/>
@@ -165,7 +165,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 // If the texture has already been created, just return it
                 if (@this->d2D1ResourceTexture is not null)
                 {
-                    @this->d2D1ResourceTexture->AddRef();
+                    _ = @this->d2D1ResourceTexture->AddRef();
 
                     *resourceTexture = @this->d2D1ResourceTexture;
 
@@ -194,10 +194,10 @@ partial struct D2D1ResourceTextureManagerImpl
                 if (result == S.S_OK)
                 {
                     // Store the resource texture for later
-                    d2D1ResourceTexture.CopyTo(&@this->d2D1ResourceTexture);
+                    _ = d2D1ResourceTexture.CopyTo(&@this->d2D1ResourceTexture);
 
                     // Also return it to callers
-                    d2D1ResourceTexture.CopyTo(resourceTexture);
+                    _ = d2D1ResourceTexture.CopyTo(resourceTexture);
 
                     // Free the staging buffers
                     NativeMemory.Free(@this->resourceTextureProperties.extents);

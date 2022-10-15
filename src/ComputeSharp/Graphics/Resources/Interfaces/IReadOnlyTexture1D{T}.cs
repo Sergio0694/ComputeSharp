@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An interface representing a typed readonly 1D texture containing raw data stored on GPU memory.

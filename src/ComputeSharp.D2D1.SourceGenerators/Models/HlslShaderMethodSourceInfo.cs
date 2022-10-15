@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Runtime.InteropServices;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -27,10 +27,16 @@ internal sealed record HlslShaderMethodSourceInfo(
     bool HasErrors)
 {
     /// <inheritdoc/>
-    public bool Equals(HlslShaderMethodSourceInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(HlslShaderMethodSourceInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderMethodSourceInfo"/>.

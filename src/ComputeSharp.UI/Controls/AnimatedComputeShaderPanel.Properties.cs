@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
 #else
@@ -72,8 +72,8 @@ partial class AnimatedComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (AnimatedComputeShaderPanel)d;
-        
+        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
+
         if (@this.IsLoaded &&
             !@this.IsPaused &&
             e.NewValue is IShaderRunner shaderRunner)
@@ -109,8 +109,8 @@ partial class AnimatedComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (AnimatedComputeShaderPanel)d;
-        var resolutionScale = (double)e.NewValue;
+        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
+        double resolutionScale = (double)e.NewValue;
 
         @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
     }
@@ -138,8 +138,8 @@ partial class AnimatedComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (AnimatedComputeShaderPanel)d;
-        var isDynamicResolutionEnabled = (bool)e.NewValue;
+        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
+        bool isDynamicResolutionEnabled = (bool)e.NewValue;
 
         @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
     }
@@ -166,8 +166,8 @@ partial class AnimatedComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (AnimatedComputeShaderPanel)d;
-        var isVerticalSyncEnabled = (bool)e.NewValue;
+        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
+        bool isVerticalSyncEnabled = (bool)e.NewValue;
 
         @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
     }
@@ -193,7 +193,7 @@ partial class AnimatedComputeShaderPanel
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (AnimatedComputeShaderPanel)d;
+        AnimatedComputeShaderPanel @this = (AnimatedComputeShaderPanel)d;
 
         if (@this.IsLoaded &&
             (bool)e.NewValue is false &&

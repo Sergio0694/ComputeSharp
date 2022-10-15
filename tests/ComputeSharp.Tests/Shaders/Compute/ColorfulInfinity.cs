@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+#pragma warning disable IDE0048, IDE0009
+
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// A shader creating an abstract and colorful animation.
@@ -12,12 +14,12 @@ internal readonly partial struct ColorfulInfinity : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// The total number of layers for the final animation.

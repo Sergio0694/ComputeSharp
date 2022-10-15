@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,6 +11,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+#pragma warning disable IDE0051
 
 namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 
@@ -49,7 +51,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
-        var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
+        MemberAccessExpressionSyntax updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
 
         if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
             SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
@@ -66,8 +68,8 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
 
                 ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-                var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-                var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+                string ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+                string constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
 
                 return IdentifierName(constantName);
             }
@@ -92,7 +94,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
+        InvocationExpressionSyntax updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
         if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation operation &&
             operation.TargetMethod is IMethodSymbol method &&
@@ -116,7 +118,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitArgument(ArgumentSyntax node)
     {
-        var updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
+        ArgumentSyntax updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
 
         updatedNode = updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;

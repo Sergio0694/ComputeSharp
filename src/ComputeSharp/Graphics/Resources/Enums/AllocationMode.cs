@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An <see langword="enum"/> that indicates a mode to use when allocating resources.

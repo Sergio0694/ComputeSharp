@@ -1,4 +1,4 @@
-﻿using TerraFX.Interop.DirectX;
+using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Commands.Interop;
 
@@ -33,8 +33,8 @@ internal readonly struct ID3D12ResourceDescriptorHandles
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
         D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible)
     {
-        D3D12CpuDescriptorHandle = d3D12CpuDescriptorHandle;
-        D3D12GpuDescriptorHandle = d3D12GpuDescriptorHandle;
-        D3D12CpuDescriptorHandleNonShaderVisible = d3D12CpuDescriptorHandleNonShaderVisible;
+        this.D3D12CpuDescriptorHandle = d3D12CpuDescriptorHandle;
+        this.D3D12GpuDescriptorHandle = d3D12GpuDescriptorHandle;
+        this.D3D12CpuDescriptorHandleNonShaderVisible = d3D12CpuDescriptorHandleNonShaderVisible;
     }
 }

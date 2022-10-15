@@ -1,4 +1,4 @@
-﻿using static TerraFX.Interop.DirectX.D2D1_EXTEND_MODE;
+using static TerraFX.Interop.DirectX.D2D1_EXTEND_MODE;
 
 namespace ComputeSharp.D2D1;
 

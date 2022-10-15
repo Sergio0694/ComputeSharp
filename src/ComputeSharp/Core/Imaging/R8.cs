@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -72,18 +72,30 @@ public struct R8 : IEquatable<R8>, IPixel<R8, float>
     public static bool operator !=(R8 left, R8 right) => !left.Equals(right);
 
     /// <inheritdoc/>
-    public override readonly bool Equals(object? obj) => obj is R8 R8 && Equals(R8);
+    public override readonly bool Equals(object? obj)
+    {
+        return obj is R8 R8 && Equals(R8);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(R8 other) => PackedValue.Equals(other.PackedValue);
+    public readonly bool Equals(R8 other)
+    {
+        return PackedValue.Equals(other.PackedValue);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override readonly int GetHashCode() => PackedValue.GetHashCode();
+    public override readonly int GetHashCode()
+    {
+        return PackedValue.GetHashCode();
+    }
 
     /// <inheritdoc/>
-    public override readonly string ToString() => $"{nameof(R8)}({this.R})";
+    public override readonly string ToString()
+    {
+        return $"{nameof(R8)}({this.R})";
+    }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc/>

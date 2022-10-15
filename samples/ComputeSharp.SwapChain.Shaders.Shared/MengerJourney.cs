@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.SwapChain.Shaders;
 
 /// <summary>
 /// A shader creating a flythrough in a Menger system.
@@ -14,7 +14,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     private const int MaxSteps = 30;
     private const float MinimumDistance = 0.0009f;
@@ -39,7 +39,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
     /// </summary>
     private static float2 Rotate(float2 v, float a)
     {
-        return new(Hlsl.Cos(a) * v.X + Hlsl.Sin(a) * v.Y, -Hlsl.Sin(a) * v.X + Hlsl.Cos(a) * v.Y);
+        return new((Hlsl.Cos(a) * v.X) + (Hlsl.Sin(a) * v.Y), (-Hlsl.Sin(a) * v.X) + (Hlsl.Cos(a) * v.Y));
     }
 
     /// <summary>
@@ -55,8 +55,8 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
         float diffuse2 = Hlsl.Max(0.0f, Hlsl.Dot(-normal, lightDir2));
 
         return
-            (diffuse * Diffuse) * (LightColor * color) +
-            (diffuse2 * Diffuse) * (LightColor2 * color);
+            (diffuse * Diffuse * (LightColor * color)) +
+            (diffuse2 * Diffuse * (LightColor2 * color));
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
         // Performs the GLSL mod function.
         static float3 Mod(float3 x, float y)
         {
-            return x - y * Hlsl.Floor(x / y);
+            return x - (y * Hlsl.Floor(x / y));
         }
 
         z = Hlsl.Abs(1.0f - Mod(z, 2.0f));
@@ -77,14 +77,16 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
 
         for (int n = 0; n < Iterations; n++)
         {
-            z.XY = Rotate(z.XY, 4.0f + 2.0f * Hlsl.Cos(time / 8.0f));
+            z.XY = Rotate(z.XY, 4.0f + (2.0f * Hlsl.Cos(this.time / 8.0f)));
             z = Hlsl.Abs(z);
 
             if (z.X < z.Y) { z.XY = z.YX; }
+
             if (z.X < z.Z) { z.XZ = z.ZX; }
+
             if (z.Y < z.Z) { z.YZ = z.ZY; }
 
-            z = Scale * z - Offset * (Scale - 1.0f);
+            z = (Scale * z) - (Offset * (Scale - 1.0f));
 
             if (z.Z < -0.5f * Offset.Z * (Scale - 1.0))
             {
@@ -100,7 +102,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
     /// <summary>
     /// Calculates the finite difference normal at a given position.
     /// </summary>
-    private float3 getNormal(in float3 pos)
+    private float3 GetNormal(in float3 pos)
     {
         float3 e = new(0.0f, NormalDistance, 0.0f);
 
@@ -121,7 +123,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
             return Hlsl.Frac(Hlsl.Cos(Hlsl.Dot(co, new float2(4.898f, 7.23f))) * 23421.631f);
         }
 
-        float totalDistance = Jitter * Rand(fragCoord.XY + time);
+        float totalDistance = Jitter * Rand(fragCoord.XY + this.time);
         float3 dir2 = dir;
         float distance = 0;
         int steps = 0;
@@ -129,23 +131,26 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
 
         for (int i = 0; i < MaxSteps; i++)
         {
-            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(time / 4.0f) * NonLinearPerspective);
-            pos = from + totalDistance * dir;
+            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(this.time / 4.0f) * NonLinearPerspective);
+            pos = from + (totalDistance * dir);
             distance = DE(pos) * FudgeFactor;
             totalDistance += distance;
 
-            if (distance < MinimumDistance) break;
+            if (distance < MinimumDistance)
+            {
+                break;
+            }
 
             steps = i;
         }
 
-        float smoothStep = steps + distance / MinimumDistance;
-        float ao = 1.1f - smoothStep / MaxSteps;
-        float3 normal = getNormal(pos - dir * NormalDistance * 3.0f);
+        float smoothStep = steps + (distance / MinimumDistance);
+        float ao = 1.1f - (smoothStep / MaxSteps);
+        float3 normal = GetNormal(pos - (dir * NormalDistance * 3.0f));
         float3 color = 1.0f;
         float3 light = GetLight(color, normal);
 
-        color = (color * Ambient + light) * ao;
+        color = ((color * Ambient) + light) * ao;
 
         return new(color.X, color.Y, color.Z, 1.0f);
     }
@@ -153,19 +158,19 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float3 camPos = 0.5f * time * new float3(1.0f, 0.0f, 0.0f);
-        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
+        float3 camPos = 0.5f * this.time * new float3(1.0f, 0.0f, 0.0f);
+        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(this.time), 0.0f * Hlsl.Sin(0.4f * this.time));
         float3 camDir = Hlsl.Normalize(target - camPos);
         float3 camUp = new(0.0f, 1.0f, 0.0f);
 
-        camUp = Hlsl.Normalize(camUp - Hlsl.Dot(camDir, camUp) * camDir);
+        camUp = Hlsl.Normalize(camUp - (Hlsl.Dot(camDir, camUp) * camDir));
 
         float3 camRight = Hlsl.Normalize(Hlsl.Cross(camDir, camUp));
-        float2 coord = -1.0f + 2.0f * (float2)ThreadIds.XY / DispatchSize.XY;
+        float2 coord = -1.0f + (2.0f * (float2)ThreadIds.XY / DispatchSize.XY);
 
         coord.X *= (float)DispatchSize.X / DispatchSize.Y;
 
-        float3 rayDir = Hlsl.Normalize(camDir + (coord.X * camRight + coord.Y * camUp) * FieldOfView);
+        float3 rayDir = Hlsl.Normalize(camDir + (((coord.X * camRight) + (coord.Y * camUp)) * FieldOfView));
 
         return RayMarch(camPos, rayDir, ThreadIds.XY);
     }

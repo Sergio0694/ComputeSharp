@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
@@ -78,7 +78,7 @@ public static class UploadTexture2DExtensions
         Guard.IsNotNull(texture);
         Guard.IsNotNull(filename);
 
-        texture. Load(filename.AsSpan());
+        texture.Load(filename.AsSpan());
     }
 
     /// <summary>

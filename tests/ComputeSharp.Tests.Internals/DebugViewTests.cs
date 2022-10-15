@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;

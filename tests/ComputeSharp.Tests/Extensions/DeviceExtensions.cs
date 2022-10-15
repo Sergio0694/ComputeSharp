@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using CommunityToolkit.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -52,7 +52,6 @@ public static class DeviceExtensions
                 case Device.Discrete: Assert.Inconclusive(); break;
                 case Device.Warp: Assert.Fail(); break;
             }
-            
         }
 
         return device!;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Extensions;

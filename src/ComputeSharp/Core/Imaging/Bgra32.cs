@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -136,18 +136,30 @@ public struct Bgra32 : IEquatable<Bgra32>, IPixel<Bgra32, Float4>
     public static bool operator !=(Bgra32 left, Bgra32 right) => !left.Equals(right);
 
     /// <inheritdoc/>
-    public override readonly bool Equals(object? obj) => obj is Bgra32 other && Equals(other);
+    public override readonly bool Equals(object? obj)
+    {
+        return obj is Bgra32 other && Equals(other);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Bgra32 other) => PackedValue.Equals(other.PackedValue);
+    public readonly bool Equals(Bgra32 other)
+    {
+        return PackedValue.Equals(other.PackedValue);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override readonly int GetHashCode() => PackedValue.GetHashCode();
+    public override readonly int GetHashCode()
+    {
+        return PackedValue.GetHashCode();
+    }
 
     /// <inheritdoc />
-    public override readonly string ToString() => $"{nameof(Bgra32)}({this.B}, {this.G}, {this.R}, {this.A})";
+    public override readonly string ToString()
+    {
+        return $"{nameof(Bgra32)}({this.B}, {this.G}, {this.R}, {this.A})";
+    }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc />

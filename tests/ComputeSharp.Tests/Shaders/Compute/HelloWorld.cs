@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+#pragma warning disable IDE0048, IDE0009
+
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// A simple shader to get started with based on shadertoy new shader template.
@@ -10,7 +12,7 @@ internal readonly partial struct HelloWorld : IPixelShader<float4>
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <inheritdoc/>
     public float4 Execute()

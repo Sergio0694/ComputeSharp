@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -44,7 +44,7 @@ internal static unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping a <see cref="Stream"/> instance.
     /// </summary>
-    internal unsafe partial struct IStreamWrapper
+    private unsafe partial struct IStreamWrapper
 #if NET6_0_OR_GREATER
         : IUnknown.Interface
 #endif
@@ -228,17 +228,17 @@ internal static unsafe partial class IWICStreamExtensions
         /// <summary>
         /// The vtable pointer for the current instance.
         /// </summary>
-        public void** lpVtbl;
+        private void** lpVtbl;
 
         /// <summary>
         /// The current reference count for the object (from <c>IUnknown</c>).
         /// </summary>
-        public volatile int referenceCount;
+        private volatile int referenceCount;
 
         /// <summary>
         /// The <see cref="GCHandle"/> to the captured <see cref="Stream"/>.
         /// </summary>
-        public GCHandle streamHandle;
+        private GCHandle streamHandle;
 
         /// <summary>
         /// Creates and initializes a new <see cref="IStreamWrapper"/> instance.
@@ -270,19 +270,19 @@ internal static unsafe partial class IWICStreamExtensions
         /// <inheritdoc/>
         public HRESULT QueryInterface(Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IStreamWrapper*, Guid*, void**, HRESULT>)lpVtbl[0])((IStreamWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged<IStreamWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IStreamWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         /// <inheritdoc/>
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IStreamWrapper*, uint>)lpVtbl[1])((IStreamWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IStreamWrapper*, uint>)this.lpVtbl[1])((IStreamWrapper*)Unsafe.AsPointer(ref this));
         }
 
         /// <inheritdoc/>
         public uint Release()
         {
-            return ((delegate* unmanaged<IStreamWrapper*, uint>)lpVtbl[2])((IStreamWrapper*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged<IStreamWrapper*, uint>)this.lpVtbl[2])((IStreamWrapper*)Unsafe.AsPointer(ref this));
         }
 #endif
 

@@ -3,13 +3,45 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>11.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Features>strict</Features>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!--
+      Enable the latest warning wave, which shows additional warnings for invalid language features that are disabled by default.
+      For additional info, see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves.
+    -->
+    <AnalysisLevel>7</AnalysisLevel>
+
+    <!-- Import the global configs from the CodeStyle package (enables all IDExxxx warnings)-->
+    <AnalysisLevelStyle>7-all</AnalysisLevelStyle>
+
+    <!--
+      Enable the compiler strict mode (see https://www.meziantou.net/csharp-compiler-strict-mode.htm).
+      This (poorly documented) mode enables additional warnings for incorrect usages of some features.
+      For instance, this will warn when using the == operator to compare a struct with a null literal.
+    -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!--
+      This ignores the following warning:
+      "MSB3270: There was a mismatch between the processor architecture of the project being built "MSIL" and the
+      processor architecture of the reference". It pops up because all samples are only targeting x64/Arm64.
+    -->
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
+
+    <!--
+      This ignores the following warning:
+      "CA1060: Move P/Invokes to NativeMethods class". The whole repository is full of P/Invoke-s everywhere.
+      See: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1060.
+    -->
+    <NoWarn>$(NoWarn);CA1060</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.4.0-2.final" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.4.0-2.final" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Centralized location for all generated artifacts -->
@@ -37,7 +69,7 @@
   </PropertyGroup>
 
   <!-- If the current branch and action match a release for NuGet, override the relative build properties -->
-  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">    
+  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">
     <IsCommitOnReleaseBranch>true</IsCommitOnReleaseBranch>
     <ComputeSharpPackageVersionFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[1].Value)</ComputeSharpPackageVersionFromReleaseBranch>
     <ComputeSharpPackageVersionSuffixFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[2].Value)</ComputeSharpPackageVersionSuffixFromReleaseBranch>
@@ -58,7 +90,7 @@
     <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>    
+    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
@@ -71,7 +103,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>    
+  <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 

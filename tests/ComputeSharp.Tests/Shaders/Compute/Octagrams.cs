@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+#pragma warning disable IDE0048, IDE0009
+
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// A shader creating an octagram animation, inspired by arabesque.
@@ -11,12 +13,12 @@ internal readonly partial struct Octagrams : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     private static float2x2 Rotate(float a)
     {

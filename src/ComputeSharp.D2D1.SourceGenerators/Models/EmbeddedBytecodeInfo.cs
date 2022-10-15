@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -16,10 +16,16 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 internal sealed record EmbeddedBytecodeInfo(string HlslSource, D2D1ShaderProfile? ShaderProfile, D2D1CompileOptions? CompileOptions, ImmutableArray<byte> Bytecode)
 {
     /// <inheritdoc/>
-    public bool Equals(EmbeddedBytecodeInfo? obj) => Comparer.Default.Equals(this, obj);
+    public bool Equals(EmbeddedBytecodeInfo? obj)
+    {
+        return Comparer.Default.Equals(this, obj);
+    }
 
     /// <inheritdoc/>
-    public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+    public override int GetHashCode()
+    {
+        return Comparer.Default.GetHashCode(this);
+    }
 
     /// <summary>
     /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="EmbeddedBytecodeInfo"/>.

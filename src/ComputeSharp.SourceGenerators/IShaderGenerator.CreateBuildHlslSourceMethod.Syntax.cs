@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 using ComputeSharp.__Internals;
@@ -96,12 +96,12 @@ partial class IShaderGenerator
 
             void AppendLF()
             {
-                textBuilder.Append('\n');
+                _ = textBuilder.Append('\n');
             }
 
             void AppendLine(string text)
             {
-                textBuilder.Append(text);
+                _ = textBuilder.Append(text);
             }
 
             void AppendParsedStatement(string text)
@@ -117,7 +117,7 @@ partial class IShaderGenerator
                 {
                     string hlslSource = textBuilder.ToString();
 
-                    textBuilder.Append(hlslSource);
+                    _ = textBuilder.Append(hlslSource);
 
                     sizeHint += textBuilder.Length;
 
@@ -133,7 +133,7 @@ partial class IShaderGenerator
                                 MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
                                 .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralExpression)))));
 
-                    textBuilder.Clear();
+                    _ = textBuilder.Clear();
                 }
             }
 
@@ -154,7 +154,7 @@ partial class IShaderGenerator
                     prologueStatements++;
 
                     // <NAME>.Add("<ITEM>");
-                    foreach (var item in items)
+                    foreach (string item in items)
                     {
                         statements.Add(
                             ExpressionStatement(

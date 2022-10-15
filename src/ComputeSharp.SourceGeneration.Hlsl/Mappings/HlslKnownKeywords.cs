@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
@@ -44,17 +45,17 @@ internal static partial class HlslKnownKeywords
         });
 
         // HLSL primitive names
-        foreach (var type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
+        foreach (Type? type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes))
         {
-            knownKeywords.Add(type.Name.ToLowerInvariant());
+            _ = knownKeywords.Add(type.Name.ToLowerInvariant());
         }
 
         // HLSL intrinsics method names
-        foreach (var method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static))
+        foreach (MethodInfo? method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static))
         {
             string name = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()?.Name ?? method.Name;
 
-            knownKeywords.Add(name);
+            _ = knownKeywords.Add(name);
         }
 
         // Let other types inject additional keywords

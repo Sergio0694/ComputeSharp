@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
@@ -26,7 +26,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 2D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public abstract unsafe class Texture2D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -75,7 +75,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -178,8 +178,8 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -273,9 +273,9 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = destination.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = destination.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -342,9 +342,9 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = destination.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = destination.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -401,8 +401,8 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -430,14 +430,16 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
 #endif
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-        fixed (void* sourcePointer = &source)
         {
-            MemoryHelper.Copy(
-                sourcePointer,
-                resource.Pointer,
-                (uint)height,
-                rowSizeInBytes,
-                d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch);
+            fixed (void* sourcePointer = &source)
+            {
+                MemoryHelper.Copy(
+                    sourcePointer,
+                    resource.Pointer,
+                    (uint)height,
+                    rowSizeInBytes,
+                    d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch);
+            }
         }
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
@@ -494,9 +496,9 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = source.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = source.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -583,7 +585,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -622,7 +624,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 

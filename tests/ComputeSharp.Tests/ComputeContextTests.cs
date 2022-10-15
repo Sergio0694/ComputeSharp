@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +10,8 @@ using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+
+#pragma warning disable IDE0047
 
 namespace ComputeSharp.Tests;
 
@@ -655,7 +657,7 @@ public partial class ComputeContextTests
 
         _ = device.Get();
 
-        Parallel.For(0, 64, _ => Test(device));
+        _ = Parallel.For(0, 64, _ => Test(device));
     }
 
     [CombinatorialTestMethod]
@@ -896,13 +898,13 @@ public partial class ComputeContextTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
         using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<float4> sourceAsFloat4 = device.Get().AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
         using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.For(source.Width, source.Height, new ConvertToNonNormalized2DShader(source, sourceAsFloat4));
             context.Transition(sourceAsFloat4, ResourceState.ReadOnly);
@@ -910,7 +912,7 @@ public partial class ComputeContextTests
             context.Transition(sourceAsFloat4, ResourceState.ReadWrite);
         }
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled, processed, 0.00000174f);
     }
@@ -924,19 +926,19 @@ public partial class ComputeContextTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
         using ReadWriteTexture2D<Rgba32, float4> source = device.Get().LoadReadWriteTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.Transition(source, ResourceState.ReadOnly);
             context.ForEach(destination, new LinearSamplingFromNormalized2DPixelShader(source.AsReadOnly()));
             context.Transition(source, ResourceState.ReadWrite);
         }
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
     }
@@ -950,15 +952,15 @@ public partial class ComputeContextTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled1 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
-        using var sampled2 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingInverted.png"));
+        using Image<ImageSharpRgba32> sampled1 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+        using Image<ImageSharpRgba32> sampled2 = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingInverted.png"));
 
         using ReadOnlyTexture2D<Rgba32, float4> image = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(image.Width, image.Height);
         using ReadWriteTexture2D<Rgba32, float4> destination1 = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled1.Width, sampled1.Height);
         using ReadWriteTexture2D<Rgba32, float4> destination2 = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled1.Width, sampled1.Height);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             // Dispatch before any transitions, and UAV barrier test
             context.ForEach<ClearPixelShader, float4>(source);
@@ -980,8 +982,8 @@ public partial class ComputeContextTests
             context.ForEach(destination2, new LinearSamplingFromNormalized2DPixelShader(source.AsReadOnly()));
         }
 
-        using var processed1 = destination1.ToImage<Rgba32, ImageSharpRgba32>();
-        using var processed2 = destination2.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed1 = destination1.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed2 = destination2.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled1, processed1, 0.0000017f);
         TolerantImageComparer.AssertEqual(sampled2, processed2, 0.0000028f);
@@ -997,9 +999,9 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
-        var imageInfo = Image.Identify(originalPath);
+        IImageInfo imageInfo = Image.Identify(originalPath);
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 
         using ReadWriteTexture3D<float4> sourceAsFloat4 = device.Get().AllocateReadWriteTexture3D<float4>(imageInfo.Width, imageInfo.Height, 3);
 
@@ -1024,7 +1026,7 @@ public partial class ComputeContextTests
 
         using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.Transition(sourceAsFloat4, ResourceState.ReadOnly);
             context.For(destination.Width, destination.Height, destination.Depth, new LinearSampling3DComputeShader(sourceAsFloat4.AsReadOnly(), destination));
@@ -1033,7 +1035,7 @@ public partial class ComputeContextTests
 
         for (int z = 0; z < destination.Depth; z++)
         {
-            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+            using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
 
             TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
@@ -1049,9 +1051,9 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
-        var imageInfo = Image.Identify(originalPath);
+        IImageInfo imageInfo = Image.Identify(originalPath);
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 
         using ReadWriteTexture3D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(imageInfo.Width, imageInfo.Height, 3);
 
@@ -1068,7 +1070,7 @@ public partial class ComputeContextTests
 
         using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.Transition(source, ResourceState.ReadOnly);
             context.For(destination.Width, destination.Height, destination.Depth, new LinearSamplingFromNormalized3DComputeShader(source.AsReadOnly(), destination));
@@ -1077,7 +1079,7 @@ public partial class ComputeContextTests
 
         for (int z = 0; z < destination.Depth; z++)
         {
-            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+            using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
 
             TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
@@ -1092,12 +1094,12 @@ public partial class ComputeContextTests
         string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingAndDashing.png"));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingAndDashing.png"));
 
         using ReadWriteTexture2D<Rgba32, float4> source = device.Get().LoadReadWriteTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
         using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.For(source.Width, source.Height, new Dotted2DPixelShader(source));
             context.Transition(source, ResourceState.ReadOnly);
@@ -1106,7 +1108,7 @@ public partial class ComputeContextTests
             context.Fill(source, new Rgba32(0xFF, 0x6A, 0x00, 0x00));
         }
 
-        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
 
@@ -1128,9 +1130,9 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080AndDashing.png");
 
-        var imageInfo = Image.Identify(originalPath);
+        IImageInfo imageInfo = Image.Identify(originalPath);
 
-        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+        using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 
         using ReadWriteTexture3D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(imageInfo.Width, imageInfo.Height, 3);
 
@@ -1147,7 +1149,7 @@ public partial class ComputeContextTests
 
         using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
 
-        using (var context = device.Get().CreateComputeContext())
+        using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.For(source.Width, source.Height, source.Depth, new Dotted3DPixelShader(source));
             context.Transition(source, ResourceState.ReadOnly);
@@ -1158,8 +1160,8 @@ public partial class ComputeContextTests
 
         for (int z = 0; z < destination.Depth; z++)
         {
-            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
-            
+            using Image<ImageSharpRgba32> processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+
             TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
         }
 
@@ -1300,7 +1302,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[offset + ThreadIds.X] *= 2;
+            this.buffer[this.offset + ThreadIds.X] *= 2;
         }
     }
 
@@ -1322,7 +1324,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return color;
+            return this.color;
         }
     }
 
@@ -1334,7 +1336,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source.Sample(ThreadIds.Normalized.XY);
+            return this.source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1352,7 +1354,7 @@ public partial class ComputeContextTests
             // The source has a depth of 3, but the destination has a depth of 2
             xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
 
-            destination[ThreadIds.XYZ] = source.Sample(xyz);
+            this.destination[ThreadIds.XYZ] = this.source.Sample(xyz);
         }
     }
 
@@ -1364,7 +1366,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source.Sample(ThreadIds.Normalized.XY);
+            return this.source.Sample(ThreadIds.Normalized.XY);
         }
     }
 
@@ -1376,7 +1378,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return source[ThreadIds.XY];
+            return this.source[ThreadIds.XY];
         }
     }
 
@@ -1388,7 +1390,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public float4 Execute()
         {
-            return new(1.0f - source[ThreadIds.XY].XYZ, source[ThreadIds.XY].W);
+            return new(1.0f - this.source[ThreadIds.XY].XYZ, this.source[ThreadIds.XY].W);
         }
     }
 
@@ -1406,7 +1408,7 @@ public partial class ComputeContextTests
             // See comment in LinearSampling3DComputeShader
             xyz.Z = Hlsl.Lerp(0, 0.5f, xyz.Z);
 
-            destination[ThreadIds.XYZ] = source.Sample(xyz);
+            this.destination[ThreadIds.XYZ] = this.source.Sample(xyz);
         }
     }
 
@@ -1428,11 +1430,11 @@ public partial class ComputeContextTests
                     (ThreadIds.Normalized.X > 0.5f &&
                      ThreadIds.Normalized.Y > 0.5))
                 {
-                    source[ThreadIds.XY] = float4.UnitW;
+                    this.source[ThreadIds.XY] = float4.UnitW;
                 }
                 else
                 {
-                    source[ThreadIds.XY] = float4.Zero;
+                    this.source[ThreadIds.XY] = float4.Zero;
                 }
             }
         }
@@ -1456,11 +1458,11 @@ public partial class ComputeContextTests
                     (ThreadIds.Normalized.X > 0.5f &&
                      ThreadIds.Normalized.Y > 0.5))
                 {
-                    source[ThreadIds.XYZ] = float4.UnitW;
+                    this.source[ThreadIds.XYZ] = float4.UnitW;
                 }
                 else
                 {
-                    source[ThreadIds.XYZ] = float4.Zero;
+                    this.source[ThreadIds.XYZ] = float4.Zero;
                 }
             }
         }
@@ -1475,7 +1477,7 @@ public partial class ComputeContextTests
         /// <inheritdoc/>
         public void Execute()
         {
-            destination[ThreadIds.XY] = source[ThreadIds.XY];
+            this.destination[ThreadIds.XY] = this.source[ThreadIds.XY];
         }
     }
 }

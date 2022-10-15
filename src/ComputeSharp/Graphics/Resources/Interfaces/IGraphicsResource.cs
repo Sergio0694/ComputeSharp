@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp;
+namespace ComputeSharp;
 
 /// <summary>
 /// An interface representing a graphics resource associated to a given <see cref="GraphicsDevice"/> instance.

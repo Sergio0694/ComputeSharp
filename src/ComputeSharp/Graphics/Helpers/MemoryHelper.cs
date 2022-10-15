@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Graphics.Helpers;
@@ -31,8 +31,8 @@ internal static class MemoryHelper
         where T : unmanaged
     {
         // Offset adjustment
-        source = (byte*)source + sourceElementOffset * sourceElementPitchInBytes;
-        destination = (byte*)destination + destinationElementOffset * destinationElementPitchInBytes;
+        source = (byte*)source + (sourceElementOffset * sourceElementPitchInBytes);
+        destination = (byte*)destination + (destinationElementOffset * destinationElementPitchInBytes);
 
         if (sourceElementPitchInBytes == (uint)sizeof(T))
         {
@@ -54,7 +54,7 @@ internal static class MemoryHelper
                     uint destinationElementPitchInBytes,
                     uint count)
                 {
-                    void* sourceEnd = (byte*)source + count * sizeof(T);
+                    void* sourceEnd = (byte*)source + (count * sizeof(T));
 
                     while (source < sourceEnd)
                     {
@@ -77,7 +77,7 @@ internal static class MemoryHelper
                 uint sourceElementPitchInBytes,
                 uint count)
             {
-                void* sourceEnd = (byte*)source + count * sourceElementPitchInBytes;
+                void* sourceEnd = (byte*)source + (count * sourceElementPitchInBytes);
 
                 while (source < sourceEnd)
                 {
@@ -100,8 +100,8 @@ internal static class MemoryHelper
                 uint destinationElementPitchInBytes,
                 uint count)
             {
-                void* sourceEnd = (byte*)source + count * sourceElementPitchInBytes;
-                
+                void* sourceEnd = (byte*)source + (count * sourceElementPitchInBytes);
+
                 while (source < sourceEnd)
                 {
                     *(T*)destination = *(T*)source;
@@ -140,8 +140,8 @@ internal static class MemoryHelper
             for (int i = 0; i < height; i++)
             {
                 Buffer.MemoryCopy(
-                    (byte*)source + (uint)i * widthInBytes,
-                    (byte*)destination + (uint)i * pitchInBytes,
+                    (byte*)source + ((uint)i * widthInBytes),
+                    (byte*)destination + ((uint)i * pitchInBytes),
                     ulong.MaxValue,
                     widthInBytes);
             }
@@ -173,8 +173,8 @@ internal static class MemoryHelper
             for (int i = 0; i < height; i++)
             {
                 Buffer.MemoryCopy(
-                    (byte*)source + (uint)i * pitchInBytes,
-                    (byte*)destination + (uint)i * widthInBytes,
+                    (byte*)source + ((uint)i * pitchInBytes),
+                    (byte*)destination + ((uint)i * widthInBytes),
                     ulong.MaxValue,
                     widthInBytes);
             }
@@ -215,8 +215,8 @@ internal static class MemoryHelper
                 for (int i = 0; i < height; i++)
                 {
                     Buffer.MemoryCopy(
-                        (byte*)source + sourceZOffset + (uint)i * widthInBytes,
-                        (byte*)destination + destinationZOffset + (uint)i * pitchInBytes,
+                        (byte*)source + sourceZOffset + ((uint)i * widthInBytes),
+                        (byte*)destination + destinationZOffset + ((uint)i * pitchInBytes),
                         ulong.MaxValue,
                         widthInBytes);
                 }
@@ -258,8 +258,8 @@ internal static class MemoryHelper
                 for (int i = 0; i < height; i++)
                 {
                     Buffer.MemoryCopy(
-                        (byte*)source + sourceZOffset + (uint)i * pitchInBytes,
-                        (byte*)destination + destinationZOffset + (uint)i * widthInBytes,
+                        (byte*)source + sourceZOffset + ((uint)i * pitchInBytes),
+                        (byte*)destination + destinationZOffset + ((uint)i * widthInBytes),
                         ulong.MaxValue,
                         widthInBytes);
                 }

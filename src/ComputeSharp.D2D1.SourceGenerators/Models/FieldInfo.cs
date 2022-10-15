@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -20,10 +20,16 @@ internal abstract record FieldInfo
     public sealed record Primitive(ImmutableArray<string> FieldPath, string TypeName, int Offset) : FieldInfo
     {
         /// <inheritdoc/>
-        public bool Equals(Primitive? obj) => Comparer.Default.Equals(this, obj);
+        public bool Equals(Primitive? obj)
+        {
+            return Comparer.Default.Equals(this, obj);
+        }
 
         /// <inheritdoc/>
-        public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+        public override int GetHashCode()
+        {
+            return Comparer.Default.GetHashCode(this);
+        }
 
         /// <summary>
         /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="Primitive"/>.
@@ -67,10 +73,16 @@ internal abstract record FieldInfo
         ImmutableArray<int> Offsets) : FieldInfo
     {
         /// <inheritdoc/>
-        public bool Equals(NonLinearMatrix? obj) => Comparer.Default.Equals(this, obj);
+        public bool Equals(NonLinearMatrix? obj)
+        {
+            return Comparer.Default.Equals(this, obj);
+        }
 
         /// <inheritdoc/>
-        public override int GetHashCode() => Comparer.Default.GetHashCode(this);
+        public override int GetHashCode()
+        {
+            return Comparer.Default.GetHashCode(this);
+        }
 
         /// <summary>
         /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="NonLinearMatrix"/>.

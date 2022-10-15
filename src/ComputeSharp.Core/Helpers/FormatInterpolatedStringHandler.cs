@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Buffers;
@@ -61,10 +61,10 @@ internal ref struct FormatInterpolatedStringHandler
     {
         this.format = format;
         this.formatProvider = formatProvider;
-        characters = initialBuffer;
-        arrayToReturnToPool = null;
-        position = 0;
-        hasCustomFormatter = formatProvider is not null && HasCustomFormatter(formatProvider);
+        this.characters = initialBuffer;
+        this.arrayToReturnToPool = null;
+        this.position = 0;
+        this.hasCustomFormatter = formatProvider is not null && HasCustomFormatter(formatProvider);
     }
 
     /// <summary>
@@ -96,11 +96,11 @@ internal ref struct FormatInterpolatedStringHandler
     public string ToStringAndClear()
     {
 #if NET6_0_OR_GREATER
-        string result = new(characters.Slice(0, position));
+        string result = new(this.characters.Slice(0, this.position));
 #else
-        string result = characters.Slice(0, position).ToString();
+        string result = this.characters.Slice(0, this.position).ToString();
 #endif
-        char[]? toReturn = arrayToReturnToPool;
+        char[]? toReturn = this.arrayToReturnToPool;
 
         this = default;
 
@@ -121,26 +121,27 @@ internal ref struct FormatInterpolatedStringHandler
     {
         if (value.Length == 1)
         {
-            Span<char> chars = characters;
-            int pos = position;
+            Span<char> chars = this.characters;
+            int pos = this.position;
 
             if ((uint)pos < (uint)chars.Length)
             {
                 chars[pos] = value[0];
 
-                position = pos + 1;
+                this.position = pos + 1;
             }
             else
             {
                 GrowThenCopyString(value);
             }
+
             return;
         }
 
         if (value.Length == 2)
         {
-            Span<char> chars = characters;
-            int pos = position;
+            Span<char> chars = this.characters;
+            int pos = this.position;
 
             if ((uint)pos < chars.Length - 1)
             {
@@ -152,12 +153,13 @@ internal ref struct FormatInterpolatedStringHandler
                     Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(value.AsSpan()))));
 #endif
 
-                position = pos + 2;
+                this.position = pos + 2;
             }
             else
             {
                 GrowThenCopyString(value);
             }
+
             return;
         }
 
@@ -171,12 +173,12 @@ internal ref struct FormatInterpolatedStringHandler
     private void AppendStringDirect(string value)
     {
 #if NET6_0_OR_GREATER
-        if (value.TryCopyTo(characters.Slice(position)))
+        if (value.TryCopyTo(this.characters.Slice(this.position)))
 #else
-        if (value.AsSpan().TryCopyTo(characters.Slice(position)))
+        if (value.AsSpan().TryCopyTo(this.characters.Slice(this.position)))
 #endif
         {
-            position += value.Length;
+            this.position += value.Length;
         }
         else
         {
@@ -204,23 +206,23 @@ internal ref struct FormatInterpolatedStringHandler
         where T : IFormattable
 #endif
     {
-        if (hasCustomFormatter)
+        if (this.hasCustomFormatter)
         {
-            AppendCustomFormatter(value, format);
+            AppendCustomFormatter(value, this.format);
             return;
         }
 
 #if NET6_0_OR_GREATER
         int charsWritten;
 
-        while (!value.TryFormat(characters.Slice(position), out charsWritten, format, formatProvider))
+        while (!value.TryFormat(this.characters.Slice(this.position), out charsWritten, this.format, this.formatProvider))
         {
             Grow();
         }
 
-        position += charsWritten;
+        this.position += charsWritten;
 #else
-        AppendStringDirect(value.ToString(format, formatProvider));
+        AppendStringDirect(value.ToString(this.format, this.formatProvider));
 #endif
     }
 
@@ -243,9 +245,9 @@ internal ref struct FormatInterpolatedStringHandler
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void AppendCustomFormatter<T>(T value, string? format)
     {
-        ICustomFormatter? formatter = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
+        ICustomFormatter? formatter = (ICustomFormatter?)this.formatProvider?.GetFormat(typeof(ICustomFormatter));
 
-        if (formatter is not null && formatter.Format(format, value, formatProvider) is string customFormatted)
+        if (formatter is not null && formatter.Format(format, value, this.formatProvider) is string customFormatted)
         {
             AppendStringDirect(customFormatted);
         }
@@ -261,12 +263,12 @@ internal ref struct FormatInterpolatedStringHandler
         Grow(value.Length);
 
 #if NET6_0_OR_GREATER
-        value.CopyTo(characters.Slice(position));
+        value.CopyTo(this.characters.Slice(this.position));
 #else
-        value.AsSpan().CopyTo(characters.Slice(position));
+        value.AsSpan().CopyTo(this.characters.Slice(this.position));
 #endif
 
-        position += value.Length;
+        this.position += value.Length;
     }
 
     /// <summary>
@@ -275,17 +277,19 @@ internal ref struct FormatInterpolatedStringHandler
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void Grow(int additionalChars)
     {
-        GrowCore((uint)position + (uint)additionalChars);
+        GrowCore((uint)this.position + (uint)additionalChars);
     }
 
+#if NET6_0_OR_GREATER
     /// <summary>
     /// Grows the size of <see cref="characters"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void Grow()
     {
-        GrowCore((uint)characters.Length + 1);
+        GrowCore((uint)this.characters.Length + 1);
     }
+#endif
 
     /// <summary>
     /// Grow the size of <see cref="characters"/> to at least the specified <paramref name="requiredMinCapacity"/>.
@@ -293,7 +297,7 @@ internal ref struct FormatInterpolatedStringHandler
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void GrowCore(uint requiredMinCapacity)
     {
-        uint newCapacity = Math.Max(requiredMinCapacity, Math.Min((uint)characters.Length * 2, 0x3FFFFFDF));
+        uint newCapacity = Math.Max(requiredMinCapacity, Math.Min((uint)this.characters.Length * 2, 0x3FFFFFDF));
 #if NET6_0_OR_GREATER
         int arraySize = (int)Math.Clamp(newCapacity, MinimumArrayPoolLength, int.MaxValue);
 #else
@@ -301,11 +305,11 @@ internal ref struct FormatInterpolatedStringHandler
 #endif
         char[] newArray = ArrayPool<char>.Shared.Rent(arraySize);
 
-        characters.Slice(0, position).CopyTo(newArray);
+        this.characters.Slice(0, this.position).CopyTo(newArray);
 
-        char[]? toReturn = arrayToReturnToPool;
+        char[]? toReturn = this.arrayToReturnToPool;
 
-        characters = arrayToReturnToPool = newArray;
+        this.characters = this.arrayToReturnToPool = newArray;
 
         if (toReturn is not null)
         {

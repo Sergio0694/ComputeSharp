@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -134,18 +134,30 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
     public static bool operator !=(Rgba32 left, Rgba32 right) => !left.Equals(right);
 
     /// <inheritdoc/>
-    public override readonly bool Equals(object? obj) => obj is Rgba32 rgba32 && Equals(rgba32);
+    public override readonly bool Equals(object? obj)
+    {
+        return obj is Rgba32 rgba32 && Equals(rgba32);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Equals(Rgba32 other) => PackedValue.Equals(other.PackedValue);
+    public readonly bool Equals(Rgba32 other)
+    {
+        return PackedValue.Equals(other.PackedValue);
+    }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override readonly int GetHashCode() => PackedValue.GetHashCode();
+    public override readonly int GetHashCode()
+    {
+        return PackedValue.GetHashCode();
+    }
 
     /// <inheritdoc/>
-    public override readonly string ToString() => $"{nameof(Rgba32)}({this.R}, {this.G}, {this.B}, {this.A})";
+    public override readonly string ToString()
+    {
+        return $"{nameof(Rgba32)}({this.R}, {this.G}, {this.B}, {this.A})";
+    }
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc/>

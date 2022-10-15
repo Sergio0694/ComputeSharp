@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using CommunityToolkit.Diagnostics;
 
@@ -28,10 +28,10 @@ public sealed class UnsupportedTextureTypeException : NotSupportedException
     {
         StringBuilder builder = new(256);
 
-        builder.AppendLine($"The device in use does not support creating {rank}D textures of type {type}.");
-        builder.Append($"Make sure to check the support at runtime by using {nameof(GraphicsDevice)}.");
+        _ = builder.AppendLine($"The device in use does not support creating {rank}D textures of type {type}.");
+        _ = builder.Append($"Make sure to check the support at runtime by using {nameof(GraphicsDevice)}.");
 
-        builder.AppendLine(rank switch
+        _ = builder.AppendLine(rank switch
         {
             1 => $"{nameof(GraphicsDevice.IsReadOnlyTexture1DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture1DSupportedForType)}<T>().",
             2 => $"{nameof(GraphicsDevice.IsReadOnlyTexture2DSupportedForType)}<T>() or {nameof(GraphicsDevice)}.{nameof(GraphicsDevice.IsReadWriteTexture2DSupportedForType)}<T>().",
@@ -39,7 +39,7 @@ public sealed class UnsupportedTextureTypeException : NotSupportedException
             _ => ThrowHelper.ThrowArgumentException<string>("Invalid texture rank.")
         });
 
-        builder.Append("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
+        _ = builder.Append("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
 
         return new(builder.ToString());
     }

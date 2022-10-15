@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 #if NETCOREAPP3_1_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System.Runtime.CompilerServices;
+
+#pragma warning disable IDE0065
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
 

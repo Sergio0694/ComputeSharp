@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1;
+namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// A <see langword="enum"/> to be used with <see cref="D2DShaderProfileAttribute"/> to indicate the shader profile to use to precompile a shader.

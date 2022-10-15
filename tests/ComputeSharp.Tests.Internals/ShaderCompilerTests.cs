@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -41,7 +41,7 @@ public class ShaderCompilerTests
     [ExpectedException(typeof(DxcCompilationException))]
     public void CompileTest_Fail()
     {
-        var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
+        string faultyShader = ShaderSource.Replace("ids.x", "ids.X");
 
         using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.Compile(faultyShader.AsSpan());
     }

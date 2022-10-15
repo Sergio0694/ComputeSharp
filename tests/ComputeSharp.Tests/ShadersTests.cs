@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -169,9 +169,9 @@ public class ShadersTests
                     texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
                 }
 
-                var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
+                Action<ReadWriteTexture2D<Rgba32, float4>> action = new(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
 
-                action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
+                _ = action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
             }
             else
             {
@@ -181,9 +181,9 @@ public class ShadersTests
                     texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
                 }
 
-                var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunPixelShader<ColorfulInfinity>);
+                Action<ReadWriteTexture2D<Rgba32, float4>> action = new(RunPixelShader<ColorfulInfinity>);
 
-                action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
+                _ = action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
             }
 
             _ = image.DangerousTryGetSinglePixelMemory(out Memory<ImageSharpRgba32> memory);

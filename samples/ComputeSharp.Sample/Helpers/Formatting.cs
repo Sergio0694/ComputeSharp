@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
@@ -34,8 +34,8 @@ internal static class Formatting
 
         for (int i = 0; i < height; i++)
         {
-            var row = array.AsSpan(i * width, width).ToArray();
-            var text = string.Join(",", row.Select(x => x.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth)));
+            float[] row = array.AsSpan(i * width, width).ToArray();
+            string text = string.Join(",", row.Select(x => x.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth)));
 
             Console.WriteLine(text);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -72,7 +72,7 @@ partial class HlslKnownProperties
         PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
 
         // Programmatically load mappings for the dispatch types
-        foreach (var item in
+        foreach ((Type Type, PropertyInfo Property) item in
             from type in HlslKnownTypes.HlslDispatchTypes
             from property in type.GetProperties(BindingFlags.Static | BindingFlags.Public)
             select (Type: type, Property: property))
@@ -90,9 +90,9 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the normalized thread ids
-        foreach (var property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
-            string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{typeof(ThreadIds.Normalized).Name}{Type.Delimiter}{property.Name}";
+            string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{nameof(ThreadIds.Normalized)}{Type.Delimiter}{property.Name}";
 
             // The normalized value must be in the [0, 1] range, inclusive. As such, the expression is rewritten to be:
             //   1D: (float)ThreadIds.<XYZ> / (float)(max(1, __<xyz> - 1));
@@ -105,11 +105,11 @@ partial class HlslKnownProperties
             switch (property.Name)
             {
                 case string name when name.Length == 1:
-                    knownProperties.Add(key, $"(float){typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])} / (float)(max(1, __{char.ToLowerInvariant(name[0])} - 1))");
+                    knownProperties.Add(key, $"(float){nameof(ThreadIds)}.{char.ToLowerInvariant(name[0])} / (float)(max(1, __{char.ToLowerInvariant(name[0])} - 1))");
                     break;
                 case string name when name.Length == 2:
                 {
-                    string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])})";
+                    string numerator = $"float2({nameof(ThreadIds)}.{char.ToLowerInvariant(name[0])}, {nameof(ThreadIds)}.{char.ToLowerInvariant(name[1])})";
                     string denominator = $"float2(max(1, int2(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}) - 1))";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
@@ -117,7 +117,7 @@ partial class HlslKnownProperties
                 }
                 case string name when name.Length == 3:
                 {
-                    string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[0])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[1])}, {typeof(ThreadIds).Name}.{char.ToLowerInvariant(name[2])})";
+                    string numerator = $"float3({nameof(ThreadIds)}.{char.ToLowerInvariant(name[0])}, {nameof(ThreadIds)}.{char.ToLowerInvariant(name[1])}, {nameof(ThreadIds)}.{char.ToLowerInvariant(name[2])})";
                     string denominator = $"float3(max(1, int3(__{char.ToLowerInvariant(name[0])}, __{char.ToLowerInvariant(name[1])}, __{char.ToLowerInvariant(name[2])}) - 1))";
 
                     knownProperties.Add(key, $"{numerator} / {denominator}");
@@ -127,7 +127,7 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the group size
-        foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
             string key = $"{typeof(GroupSize).FullName}{Type.Delimiter}{property.Name}";
 
@@ -149,7 +149,7 @@ partial class HlslKnownProperties
         }
 
         // Programmatically load mappings for the dispatch size
-        foreach (var property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+        foreach (PropertyInfo? property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
         {
             string key = $"{typeof(DispatchSize).FullName}{Type.Delimiter}{property.Name}";
 

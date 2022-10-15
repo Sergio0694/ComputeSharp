@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;
@@ -30,7 +30,7 @@ internal readonly unsafe ref struct ID3D12ResourceMap
     {
         this.d3D12Resource = d3D12Resource;
 
-        Pointer = pointer;
+        this.Pointer = pointer;
     }
 
     /// <inheritdoc cref="IDisposable.Dispose"/>

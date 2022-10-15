@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-#pragma warning disable CS0809
+#pragma warning disable CS0809, IDE0009, IDE1006, IDE0048
 
 namespace System;
 
@@ -470,12 +470,18 @@ internal struct HashCode
     /// <inheritdoc/>
     [Obsolete("HashCode is a mutable struct and should not be compared with other HashCodes. Use ToHashCode to retrieve the computed hash code.", error: true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override int GetHashCode() => throw new NotSupportedException();
+    public override int GetHashCode()
+    {
+        throw new NotSupportedException();
+    }
 
     /// <inheritdoc/>
     [Obsolete("HashCode is a mutable struct and should not be compared with other HashCodes.", error: true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public override bool Equals(object? obj) => throw new NotSupportedException();
+    public override bool Equals(object? obj)
+    {
+        throw new NotSupportedException();
+    }
 
     /// <summary>
     /// Rotates the specified value left by the specified number of bits.

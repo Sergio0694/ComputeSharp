@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 
 #pragma warning disable CS0660, CS0661
 

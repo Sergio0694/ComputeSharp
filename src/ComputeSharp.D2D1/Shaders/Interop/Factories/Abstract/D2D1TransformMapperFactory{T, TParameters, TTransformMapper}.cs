@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
+namespace ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 
 /// <summary>
 /// A base type for a transform mapper factory to be used in a D2D1 pixel shader effect.

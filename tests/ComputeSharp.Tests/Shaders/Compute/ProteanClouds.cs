@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.SwapChain.Shaders.Compute;
+#pragma warning disable IDE0048, IDE0011, IDE0047, IDE0009
+
+namespace ComputeSharp.SwapChain.Shaders.Compute;
 
 /// <summary>
 /// Fully procedural 3D animated volume with three evaluations per step (for shading).
@@ -12,14 +14,14 @@ internal readonly partial struct ProteanClouds : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteNormalizedTexture2D<float4> texture;
+    private readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
-    private static readonly float3x3 m3 = new float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
+    private static readonly float3x3 M3 = new float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
 
     private static float2x2 Rotate(in float a)
     {
@@ -62,7 +64,7 @@ internal readonly partial struct ProteanClouds : IComputeShader
             z *= 0.57f;
             trk *= 1.4f;
 
-            p = Hlsl.Mul(p, m3);
+            p = Hlsl.Mul(p, M3);
         }
 
         d = Hlsl.Abs(d + prm1 * 3.0f) + prm1 * 0.3f - 2.5f + bsMo.Y;

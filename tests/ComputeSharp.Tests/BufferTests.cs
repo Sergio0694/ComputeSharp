@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Resources;
@@ -197,7 +197,7 @@ public partial class BufferTests
     [Data(-56, 0, 1024)]
     [Data(0, 512, 4096)]
     [Data(1024, 12, 3600)]
-    [Data(1024, 12, - 2096)]
+    [Data(1024, 12, -2096)]
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {
@@ -286,7 +286,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -314,7 +314,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -342,7 +342,7 @@ public partial class BufferTests
 
         public void Execute()
         {
-            destination[ThreadIds.X] = source[ThreadIds.X];
+            this.destination[ThreadIds.X] = this.source[ThreadIds.X];
         }
     }
 
@@ -365,7 +365,7 @@ public partial class BufferTests
 
         for (int i = 0; i < 128; i++)
         {
-            Assert.IsTrue(Math.Abs(result[i] - (array[i] * 2.0 + 3.14)) < 0.00001);
+            Assert.IsTrue(Math.Abs(result[i] - ((array[i] * 2.0) + 3.14)) < 0.00001);
         }
     }
 
@@ -378,7 +378,7 @@ public partial class BufferTests
         /// <inheritdoc/>
         public void Execute()
         {
-            buffer[ThreadIds.X] = buffer[ThreadIds.X] * factor + 3.14;
+            this.buffer[ThreadIds.X] = (this.buffer[ThreadIds.X] * this.factor) + 3.14;
         }
     }
 

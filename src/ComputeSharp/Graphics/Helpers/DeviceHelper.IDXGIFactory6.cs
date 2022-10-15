@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
@@ -204,9 +204,9 @@ partial class DeviceHelper
 
         /// <inheritdoc cref="IUnknown.Release"/>
         [UnmanagedCallersOnly]
-        public static uint Release(IDXGIFactory4As6Backcompat* @this)
+        private static uint Release(IDXGIFactory4As6Backcompat* @this)
         {
-            @this->dxgiFactory4->Release();
+            _ = @this->dxgiFactory4->Release();
 
             NativeMemory.Free(@this);
 
@@ -215,21 +215,21 @@ partial class DeviceHelper
 
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapters(uint, IDXGIAdapter**)"/>
         [UnmanagedCallersOnly]
-        public static int EnumAdapters(IDXGIFactory4As6Backcompat* @this, uint Adapter, IDXGIAdapter** ppAdapter)
+        private static int EnumAdapters(IDXGIFactory4As6Backcompat* @this, uint Adapter, IDXGIAdapter** ppAdapter)
         {
             return @this->dxgiFactory4->EnumAdapters(Adapter, ppAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
         [UnmanagedCallersOnly]
-        public static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
+        private static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4->EnumWarpAdapter(riid, ppvAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
         [UnmanagedCallersOnly]
-        public static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
+        private static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);
         }

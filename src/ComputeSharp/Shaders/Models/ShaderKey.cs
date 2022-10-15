@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Shaders.Models;
@@ -11,22 +11,22 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     /// <summary>
     /// The hashcode of the current shader type.
     /// </summary>
-    private readonly int Id;
+    private readonly int id;
 
     /// <summary>
     /// The number of iterations to run on the X axis.
     /// </summary>
-    private readonly int ThreadsX;
+    private readonly int threadsX;
 
     /// <summary>
     /// The number of iterations to run on the Y axis.
     /// </summary>
-    private readonly int ThreadsY;
+    private readonly int threadsY;
 
     /// <summary>
     /// The number of iterations to run on the Z axis.
     /// </summary>
-    private readonly int ThreadsZ;
+    private readonly int threadsZ;
 
     /// <summary>
     /// Creates a new <see cref="ShaderKey"/> instance with the specified parameters.
@@ -38,10 +38,10 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ShaderKey(int id, int threadsX, int threadsY, int threadsZ)
     {
-        Id = id;
-        ThreadsX = threadsX;
-        ThreadsY = threadsY;
-        ThreadsZ = threadsZ;
+        this.id = id;
+        this.threadsX = threadsX;
+        this.threadsY = threadsY;
+        this.threadsZ = threadsZ;
     }
 
     /// <inheritdoc/>
@@ -49,10 +49,10 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     public bool Equals(ShaderKey other)
     {
         return
-            Id == other.Id &&
-            ThreadsX == other.ThreadsX &&
-            ThreadsY == other.ThreadsY &&
-            ThreadsZ == other.ThreadsZ;
+            this.id == other.id &&
+            this.threadsX == other.threadsX &&
+            this.threadsY == other.threadsY &&
+            this.threadsZ == other.threadsZ;
     }
 
     /// <inheritdoc/>
@@ -65,6 +65,6 @@ internal readonly struct ShaderKey : IEquatable<ShaderKey>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, ThreadsX, ThreadsY, ThreadsZ);
+        return HashCode.Combine(this.id, this.threadsX, this.threadsY, this.threadsZ);
     }
 }

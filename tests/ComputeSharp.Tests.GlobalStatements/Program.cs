@@ -1,4 +1,4 @@
-﻿using ComputeSharp;
+using ComputeSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 float[] numbers = Enumerable.Range(0, 128).Select(i => (float)i).ToArray();

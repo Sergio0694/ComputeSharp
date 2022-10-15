@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -8,17 +8,17 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Point"/> type.
 /// </summary>
-internal struct Point64
+internal readonly struct Point64
 {
     /// <summary>
     /// The left coordinate of the current point.
     /// </summary>
-    private long x;
+    private readonly long x;
 
     /// <summary>
     /// The top coordinate of the current point.
     /// </summary>
-    private long y;
+    private readonly long y;
 
     /// <summary>
     /// Creates a new <see cref="Point64"/> instance with the specified parameters.
@@ -77,7 +77,7 @@ internal struct Point64
         //         [ M21, M22 ]
         // [ x, y] [ M31, M32 ] = [ x * M11 + y * M21 + M31, x * M12 + y * M22 + m32]
         return (
-            Math.Round((double)this.x * matrix.M11 + (double)this.y * matrix.M21 + matrix.M31),
-            Math.Round((double)this.x * matrix.M12 + (double)this.y * matrix.M22 + matrix.M32));
+            Math.Round(((double)this.x * matrix.M11) + ((double)this.y * matrix.M21) + matrix.M31),
+            Math.Round(((double)this.x * matrix.M12) + ((double)this.y * matrix.M22) + matrix.M32));
     }
 }

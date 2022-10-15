@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using static TerraFX.Interop.DirectX.D2D1_PIXEL_OPTIONS;
 
 namespace ComputeSharp.D2D1;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace ComputeSharp;
@@ -13,7 +13,7 @@ public readonly struct Bool
     /// The wrapped <see cref="int"/> value for the current instance.
     /// </summary>
     [FieldOffset(0)]
-    private readonly int Value;
+    private readonly int value;
 
     /// <summary>
     /// Creates a new <see cref="Bool"/> instance for a given <see cref="bool"/> value.
@@ -21,19 +21,19 @@ public readonly struct Bool
     /// <param name="value">.</param>
     private Bool(bool value)
     {
-        Value = value ? 1 : 0;
+        this.value = value ? 1 : 0;
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        return obj is Bool x && Value == x.Value;
+        return obj is Bool x && this.value == x.value;
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Value.GetHashCode();
+        return this.value.GetHashCode();
     }
 
     /// <inheritdoc/>
@@ -94,20 +94,20 @@ public readonly struct Bool
     /// </summary>
     /// <param name="left">The left <see cref="Bool"/> instance.</param>
     /// <param name="right">The right <see cref="Bool"/> instance.</param>
-    public static bool operator ==(Bool left, Bool right) => left.Value == right.Value;
+    public static bool operator ==(Bool left, Bool right) => left.value == right.value;
 
     /// <summary>
     /// Checks whether or not two <see cref="Bool"/> instances represent a different <see cref="bool"/> value.
     /// </summary>
     /// <param name="left">The left <see cref="Bool"/> instance.</param>
     /// <param name="right">The right <see cref="Bool"/> instance.</param>
-    public static bool operator !=(Bool left, Bool right) => left.Value != right.Value;
+    public static bool operator !=(Bool left, Bool right) => left.value != right.value;
 
     /// <summary>
     /// Converts a given <see cref="Bool"/> instance to its corresponding <see cref="bool"/> value.
     /// </summary>
     /// <param name="x">The input <see cref="Bool"/> instance.</param>
-    public static implicit operator bool(Bool x) => x.Value != 0;
+    public static implicit operator bool(Bool x) => x.value != 0;
 
     /// <summary>
     /// Converts a <see cref="bool"/> value to a corresponding <see cref="Bool"/> instance.

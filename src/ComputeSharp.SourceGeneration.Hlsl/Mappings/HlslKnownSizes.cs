@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -35,7 +36,7 @@ internal static class HlslKnownSizes
         };
 
         foreach (
-            var type in
+            Type? type in
             from type in Assembly.GetExecutingAssembly().ExportedTypes
             where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
             select type)

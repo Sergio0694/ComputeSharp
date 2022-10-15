@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -217,10 +217,7 @@ partial class NativeObject
 
             this.nativeObject = null;
 
-            if (nativeObject is not null)
-            {
-                nativeObject.ReturnReferenceTrackingLease();
-            }
+            nativeObject?.ReturnReferenceTrackingLease();
         }
     }
 }

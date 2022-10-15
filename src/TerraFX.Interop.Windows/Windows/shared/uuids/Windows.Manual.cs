@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 
+#pragma warning disable IDE1006
+
 namespace TerraFX.Interop.Windows
 {
     internal static partial class Windows
@@ -22,7 +24,7 @@ namespace TerraFX.Interop.Windows
         {
             return new UuidOfType(UUID<T>.RIID);
         }
-        
+
         /// <summary>Retrieves the GUID of of a specified type.</summary>
         /// <param name="value">A pointer to a value of type <typeparamref name="T"/>.</param>
         /// <typeparam name="T">The type to retrieve the GUID for.</typeparam>

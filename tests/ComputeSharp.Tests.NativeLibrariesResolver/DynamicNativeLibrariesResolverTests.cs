@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using ComputeSharp.Tests.NativeLibrariesResolver.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

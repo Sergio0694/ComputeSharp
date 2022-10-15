@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -49,6 +49,7 @@ partial class ID2D1ShaderGenerator
 
                             inputDescriptionsBuilder.Add(new InputDescription((uint)index, filter, levelOfDetailCount));
                         }
+
                         break;
                     default:
                         break;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.CompilerServices;
@@ -23,8 +23,8 @@ internal static class TolerantImageComparer
     /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void AssertEqual(string expectedPath, string actualPath, float threshold)
     {
-        using var expected = Image.Load<ImageSharpRgba32>(expectedPath);
-        using var actual = Image.Load<ImageSharpRgba32>(actualPath);
+        using Image<ImageSharpRgba32> expected = Image.Load<ImageSharpRgba32>(expectedPath);
+        using Image<ImageSharpRgba32> actual = Image.Load<ImageSharpRgba32>(actualPath);
 
         AssertEqual(expected, actual, threshold);
     }
@@ -55,7 +55,7 @@ internal static class TolerantImageComparer
 
         float totalDifference = 0F;
 
-        var differences = new List<PixelDifference>(20);
+        List<PixelDifference> differences = new(20);
         Span<ImageSharpRgba32> aBuffer = new ImageSharpRgba32[actual.Width];
         Span<ImageSharpRgba32> bBuffer = new ImageSharpRgba32[actual.Width];
 
@@ -84,7 +84,7 @@ internal static class TolerantImageComparer
                 {
                     if (differences.Count < 20)
                     {
-                        var diff = new PixelDifference(new Point(x, y), aBuffer[x], bBuffer[x]);
+                        PixelDifference diff = new(new Point(x, y), aBuffer[x], bBuffer[x]);
                         differences.Add(diff);
                     }
 
@@ -99,12 +99,12 @@ internal static class TolerantImageComparer
         if (normalizedDifference > threshold)
         {
             StringBuilder builder = new();
-            builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
-            builder.AppendLine($"First {differences.Count} pixel deltas:");
+            _ = builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
+            _ = builder.AppendLine($"First {differences.Count} pixel deltas:");
 
-            foreach (var delta in differences)
+            foreach (PixelDifference delta in differences)
             {
-                builder.AppendLine(delta.ToString());
+                _ = builder.AppendLine(delta.ToString());
             }
 
             Assert.Fail(builder.ToString());
@@ -138,7 +138,7 @@ internal static class TolerantImageComparer
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[delta({RedDifference},{GreenDifference},{BlueDifference},{AlphaDifference}) @ ({Position.X},{Position.Y})]";
+            return $"[delta({this.RedDifference},{this.GreenDifference},{this.BlueDifference},{this.AlphaDifference}) @ ({this.Position.X},{this.Position.Y})]";
         }
     }
 }

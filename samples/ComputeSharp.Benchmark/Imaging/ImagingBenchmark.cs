@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
@@ -9,6 +9,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Convolution;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+
+#pragma warning disable CA1063
 
 namespace ComputeSharp.Benchmark.Imaging;
 

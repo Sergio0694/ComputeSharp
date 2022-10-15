@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Linq;
 #if NET6_0_OR_GREATER
 using System.Runtime.Versioning;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
@@ -26,7 +26,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 1D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public abstract unsafe class Texture1D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -73,7 +73,7 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
     {
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using var _0 = device.GetReferenceTrackingLease();
+        using Lease _0 = device.GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -163,8 +163,8 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsGreaterThanOrEqualTo(size, width);
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -247,9 +247,9 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = destination.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = destination.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -307,9 +307,9 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = destination.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = destination.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -361,8 +361,8 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsGreaterThanOrEqualTo(size, width);
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -389,13 +389,15 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
 #endif
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-        fixed (void* sourcePointer = &source)
         {
-            Buffer.MemoryCopy(
-                source: sourcePointer,
-                destination: resource.Pointer,
-                destinationSizeInBytes: rowSizeInBytes,
-                sourceBytesToCopy: rowSizeInBytes);
+            fixed (void* sourcePointer = &source)
+            {
+                Buffer.MemoryCopy(
+                    source: sourcePointer,
+                    destination: resource.Pointer,
+                    destinationSizeInBytes: rowSizeInBytes,
+                    sourceBytesToCopy: rowSizeInBytes);
+            }
         }
 
         using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
@@ -443,9 +445,9 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
 
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
-        using var _2 = source.GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
+        using Lease _2 = source.GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -532,7 +534,7 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -571,7 +573,7 @@ public unsafe abstract class Texture1D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
-        using var _0 = GetReferenceTrackingLease();
+        using Lease _0 = GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 

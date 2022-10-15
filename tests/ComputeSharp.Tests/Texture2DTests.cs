@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using CommunityToolkit.HighPerformance;
 using ComputeSharp.Resources;
@@ -435,7 +435,7 @@ public partial class Texture2DTests
 
         public void Execute()
         {
-            destination[ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XY];
+            this.destination[(ThreadIds.Y * 32) + ThreadIds.X] = this.source[ThreadIds.XY];
         }
     }
 
@@ -465,7 +465,7 @@ public partial class Texture2DTests
 
         public void Execute()
         {
-            destination[ThreadIds.XY] = source[ThreadIds.XY];
+            this.destination[ThreadIds.XY] = this.source[ThreadIds.XY];
         }
     }
 }

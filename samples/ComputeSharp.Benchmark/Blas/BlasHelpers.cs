@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ComputeSharp.Benchmark.Blas;
@@ -39,7 +39,7 @@ internal static partial class BlasHelpers
 
                     for (int k = 0; k < m; k++)
                     {
-                        result += Unsafe.Add(ref rx, x_offset + k) * Unsafe.Add(ref rw, k * p + j);
+                        result += Unsafe.Add(ref rx, x_offset + k) * Unsafe.Add(ref rw, (k * p) + j);
                     }
 
                     Unsafe.Add(ref ry, y_offset + j) = result + Unsafe.Add(ref rb, j);
@@ -47,7 +47,7 @@ internal static partial class BlasHelpers
             }
         }
 
-        Parallel.For(0, c, Kernel);
+        _ = Parallel.For(0, c, Kernel);
     }
 
     /// <summary>
@@ -83,26 +83,26 @@ internal static partial class BlasHelpers
     [AutoConstructor]
     public readonly partial struct FullyConnectedForwardKernel : IComputeShader
     {
-        public readonly int n;
-        public readonly int m;
-        public readonly int p;
-        public readonly ReadOnlyBuffer<float> x;
-        public readonly ReadOnlyBuffer<float> w;
-        public readonly ReadOnlyBuffer<float> b;
-        public readonly ReadWriteBuffer<float> y;
+        private readonly int n;
+        private readonly int m;
+        private readonly int p;
+        private readonly ReadOnlyBuffer<float> x;
+        private readonly ReadOnlyBuffer<float> w;
+        private readonly ReadOnlyBuffer<float> b;
+        private readonly ReadWriteBuffer<float> y;
 
         /// <inheritdoc/>
         public void Execute()
         {
-            int x_offset = ThreadIds.X * n * p + ThreadIds.Y * m;
+            int x_offset = (ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.m);
             float result = 0f;
 
-            for (int k = 0; k < m; k++)
+            for (int k = 0; k < this.m; k++)
             {
-                result += x[x_offset + k] * w[k * p + ThreadIds.Z];
+                result += this.x[x_offset + k] * this.w[(k * this.p) + ThreadIds.Z];
             }
 
-            y[ThreadIds.X * n * p + ThreadIds.Y * p + ThreadIds.Z] = result + b[ThreadIds.Z];
+            this.y[(ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.p) + ThreadIds.Z] = result + this.b[ThreadIds.Z];
         }
     }
 }

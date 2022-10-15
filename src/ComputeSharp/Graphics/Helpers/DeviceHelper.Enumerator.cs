@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
@@ -111,7 +111,10 @@ partial class DeviceHelper
                     }
                 }
 
-                if (this.isCompleted) return false;
+                if (this.isCompleted)
+                {
+                    return false;
+                }
 
                 while (true)
                 {

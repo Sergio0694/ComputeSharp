@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
@@ -9,7 +9,7 @@ using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, IDE0022
 
 namespace ComputeSharp;
 
@@ -24,8 +24,8 @@ partial class ReadWriteTexture1D<T>
     /// <inheritdoc cref="ReadWriteTexture1DExtensions.AsReadOnly(ReadWriteTexture1D{float})"/>
     public IReadOnlyTexture1D<T> AsReadOnly()
     {
-        using var _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using var _1 = GetReferenceTrackingLease();
+        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
+        using Lease _1 = GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -100,8 +100,8 @@ partial class ReadWriteTexture1D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using var _0 = GetReferenceTrackingLease();
-            using var _1 = this.owner.GetReferenceTrackingLease();
+            using Lease _0 = GetReferenceTrackingLease();
+            using Lease _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -119,7 +119,7 @@ partial class ReadWriteTexture1D<T>
         {
             lease = GetReferenceTrackingLease();
 
-            using var _1 = this.owner.GetReferenceTrackingLease();
+            using Lease _1 = this.owner.GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if DEBUG
 using System.Diagnostics;
 #endif

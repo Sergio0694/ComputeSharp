@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Text;
 
@@ -16,13 +16,13 @@ public sealed class DebugAnalyticsService : IAnalyticsService
     {
         StringBuilder builder = new();
 
-        builder.AppendLine($"[EVENT]: \"{title}\"");
+        _ = builder.AppendLine($"[EVENT]: \"{title}\"");
 
         if (data is not null)
         {
-            foreach (var info in data)
+            foreach ((string Property, object? Value) info in data)
             {
-                builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
+                _ = builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
             }
         }
 
@@ -34,15 +34,15 @@ public sealed class DebugAnalyticsService : IAnalyticsService
     {
         StringBuilder builder = new();
 
-        builder.AppendLine($"[EXCEPTION]: \"{exception.GetType()}\"");
-        builder.AppendLine(">> Stack trace");
-        builder.AppendLine(exception.StackTrace);
+        _ = builder.AppendLine($"[EXCEPTION]: \"{exception.GetType()}\"");
+        _ = builder.AppendLine(">> Stack trace");
+        _ = builder.AppendLine(exception.StackTrace);
 
         if (data is not null)
         {
-            foreach (var info in data)
+            foreach ((string Property, object? Value) info in data)
             {
-                builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
+                _ = builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
             }
         }
 

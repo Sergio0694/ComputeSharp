@@ -1,4 +1,4 @@
-﻿using ComputeSharp.SourceGeneration.SyntaxRewriters;
+using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -35,7 +35,7 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitParameterList(ParameterListSyntax node)
     {
-        var updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
+        ParameterListSyntax updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
 
         updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")));
 
@@ -74,7 +74,7 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
         /// <inheritdoc/>
         public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            var updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
+            MethodDeclarationSyntax updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
 
             // When we're rewriting the main compute shader method, we need to insert a range
             // check to ensure that invocation outside of the requested range are discarded.
@@ -129,7 +129,7 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
         /// <inheritdoc/>
         public override SyntaxNode? VisitReturnStatement(ReturnStatementSyntax node)
         {
-            var updatedNode = (ReturnStatementSyntax)base.VisitReturnStatement(node)!;
+            ReturnStatementSyntax updatedNode = (ReturnStatementSyntax)base.VisitReturnStatement(node)!;
 
             // {
             //     __outputTexture[ThreadIds.xy] = <RETURN_EXPRESSION>;
@@ -154,7 +154,7 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
         /// <inheritdoc/>
         public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            var updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
+            MethodDeclarationSyntax updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
 
             // Change the return type to void
             updatedNode = updatedNode.WithReturnType(PredefinedType(Token(SyntaxKind.VoidKeyword)));

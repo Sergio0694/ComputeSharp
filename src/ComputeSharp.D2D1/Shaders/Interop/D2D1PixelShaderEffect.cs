@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
@@ -350,7 +350,7 @@ public static unsafe class D2D1PixelShaderEffect
         // Effect id and number of inputs
         writer.WriteRaw(PixelShaderEffect.For<T>.Id);
         writer.WriteRaw(PixelShaderEffect.For<T>.InputCount);
-        
+
         // Build the XML text
         writer.WriteRaw("""
             <?xml version='1.0'?>

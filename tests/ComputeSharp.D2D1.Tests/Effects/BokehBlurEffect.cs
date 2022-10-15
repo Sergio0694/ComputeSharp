@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -13,17 +13,19 @@ using SixLabors.ImageSharp;
 using Win32;
 using Win32.Graphics.Direct2D;
 
+#pragma warning disable IDE0065
+
 namespace ComputeSharp.BokehBlur.Processors;
 
-using D2D1_BORDER_EDGE_MODE = Win32.Graphics.Direct2D.BorderEdgeMode;
-using D2D1_BORDER_PROP = Win32.Graphics.Direct2D.BorderProp;
-using D2D1_BUFFER_PRECISION = Win32.Graphics.Direct2D.BufferPrecision;
+using D2D1_BORDER_EDGE_MODE = BorderEdgeMode;
+using D2D1_BORDER_PROP = BorderProp;
+using D2D1_BUFFER_PRECISION = BufferPrecision;
 using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
-using D2D1_COMPOSITE_PROP = Win32.Graphics.Direct2D.CompositeProp;
-using D2D1_INTERPOLATION_MODE = Win32.Graphics.Direct2D.InterpolationMode;
-using D2D1_PROPERTY = Win32.Graphics.Direct2D.Property;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
-using D2D1_RENDERING_CONTROLS = Win32.Graphics.Direct2D.RenderingControls;
+using D2D1_COMPOSITE_PROP = CompositeProp;
+using D2D1_INTERPOLATION_MODE = InterpolationMode;
+using D2D1_PROPERTY = Property;
+using D2D1_MAPPED_RECT = MappedRect;
+using D2D1_RENDERING_CONTROLS = RenderingControls;
 using D2D1 = Win32.Graphics.Direct2D.Apis;
 
 /// <summary>
@@ -32,39 +34,39 @@ using D2D1 = Win32.Graphics.Direct2D.Apis;
 public sealed partial class BokehBlurEffect
 {
     /// <summary>
+    /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="BokehBlurEffect"/> instances.
+    /// </summary>
+    private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels)> Cache = new();
+
+    /// <summary>
     /// The kernel radius.
     /// </summary>
-    private readonly int Radius;
+    private readonly int radius;
 
     /// <summary>
     /// The maximum size of the kernel in either direction.
     /// </summary>
-    private readonly int KernelSize;
+    private readonly int kernelSize;
 
     /// <summary>
     /// The number of components to use when applying the bokeh blur.
     /// </summary>
-    private readonly int ComponentsCount;
+    private readonly int componentsCount;
 
     /// <summary>
     /// The kernel parameters to use for the current instance (a: X, b: Y, A: Z, B: W)
     /// </summary>
-    private readonly Vector4[] KernelParameters;
+    private readonly Vector4[] kernelParameters;
 
     /// <summary>
     /// The kernel components for the current instance.
     /// </summary>
-    private readonly (float[] Real, float[] Imaginary)[] Kernels;
+    private readonly (float[] Real, float[] Imaginary)[] kernels;
 
     /// <summary>
     /// The scaling factor for kernel values.
     /// </summary>
-    private readonly float KernelsScale;
-
-    /// <summary>
-    /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="BokehBlurEffect"/> instances.
-    /// </summary>
-    private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels)> Cache = new();
+    private readonly float kernelsScale;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BokehBlurEffect"/> class.
@@ -73,30 +75,32 @@ public sealed partial class BokehBlurEffect
     /// <param name="componentsCount">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
     public BokehBlurEffect(int radius, int componentsCount)
     {
-        Radius = radius;
-        KernelSize = Radius * 2 + 1;
-        ComponentsCount = componentsCount;
+        this.radius = radius;
+        this.kernelSize = (this.radius * 2) + 1;
+        this.componentsCount = componentsCount;
 
         // Reuse the initialized values from the cache, if possible
-        var parameters = (Radius, ComponentsCount);
-        if (Cache.TryGetValue(parameters, out var info))
+        (int radius, int componentsCount) parameters = (this.radius, this.componentsCount);
+
+        if (Cache.TryGetValue(parameters, out (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels) info))
         {
-            KernelParameters = info.Parameters;
-            KernelsScale = info.Scale;
-            Kernels = info.Kernels;
+            this.kernelParameters = info.Parameters;
+            this.kernelsScale = info.Scale;
+            this.kernels = info.Kernels;
         }
         else
         {
             // Initialize the complex kernels and parameters with the current arguments
-            (KernelParameters, KernelsScale) = GetParameters();
-            var kernels = CreateComplexKernels();
+            (this.kernelParameters, this.kernelsScale) = GetParameters();
 
-            NormalizeKernels(kernels, KernelParameters);
+            Complex64[][] kernels = CreateComplexKernels();
 
-            Kernels = ConvertKernelsToStructureOfArrays(kernels);
+            NormalizeKernels(kernels, this.kernelParameters);
+
+            this.kernels = ConvertKernelsToStructureOfArrays(kernels);
 
             // Store them in the cache for future use
-            Cache.TryAdd(parameters, (KernelParameters, KernelsScale, Kernels));
+            _ = Cache.TryAdd(parameters, (this.kernelParameters, this.kernelsScale, this.kernels));
         }
     }
 
@@ -165,7 +169,7 @@ public sealed partial class BokehBlurEffect
     private (Vector4[] Parameters, float Scale) GetParameters()
     {
         // Prepare the kernel components
-        int index = Math.Max(0, Math.Min(ComponentsCount - 1, KernelComponents.Count));
+        int index = Math.Max(0, Math.Min(this.componentsCount - 1, KernelComponents.Count));
 
         return (KernelComponents[index], KernelScales[index]);
     }
@@ -175,10 +179,10 @@ public sealed partial class BokehBlurEffect
     /// </summary>
     private Complex64[][] CreateComplexKernels()
     {
-        var kernels = new Complex64[KernelParameters.Length][];
-        ref Vector4 baseRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
+        Complex64[][] kernels = new Complex64[this.kernelParameters.Length][];
+        ref Vector4 baseRef = ref MemoryMarshal.GetReference(this.kernelParameters.AsSpan());
 
-        for (int i = 0; i < KernelParameters.Length; i++)
+        for (int i = 0; i < this.kernelParameters.Length; i++)
         {
             ref Vector4 paramsRef = ref Unsafe.Add(ref baseRef, i);
 
@@ -195,15 +199,15 @@ public sealed partial class BokehBlurEffect
     /// <param name="b">The angle component for each complex component.</param>
     private Complex64[] CreateComplex1DKernel(float a, float b)
     {
-        var kernel = new Complex64[KernelSize];
+        Complex64[] kernel = new Complex64[this.kernelSize];
         ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
-        int r = Radius;
+        int r = this.radius;
         int n = -r;
 
-        for (int i = 0; i < KernelSize; i++, n++)
+        for (int i = 0; i < this.kernelSize; i++, n++)
         {
             // Incrementally compute the range values
-            float value = n * KernelsScale * (1f / r);
+            float value = n * this.kernelsScale * (1f / r);
 
             value *= value;
 
@@ -244,8 +248,8 @@ public sealed partial class BokehBlurEffect
                     ref Complex64 kRef = ref Unsafe.Add(ref valueRef, k);
 
                     total +=
-                        paramsRef.Z * (jRef.Real * kRef.Real - jRef.Imaginary * kRef.Imaginary)
-                        + paramsRef.W * (jRef.Real * kRef.Imaginary + jRef.Imaginary * kRef.Real);
+                        (paramsRef.Z * ((jRef.Real * kRef.Real) - (jRef.Imaginary * kRef.Imaginary)))
+                        + (paramsRef.W * ((jRef.Real * kRef.Imaginary) + (jRef.Imaginary * kRef.Real)));
                 }
             }
         }
@@ -272,13 +276,13 @@ public sealed partial class BokehBlurEffect
     /// <param name="kernels">The input kernels to convert.</param>
     private static (float[] Real, float[] Imaginary)[] ConvertKernelsToStructureOfArrays(Complex64[][] kernels)
     {
-        var structureOfArrayKernels = new (float[] Real, float[] Imaginary)[kernels.Length];
+        (float[] Real, float[] Imaginary)[] structureOfArrayKernels = new (float[] Real, float[] Imaginary)[kernels.Length];
 
         for (int i = 0; i < kernels.Length; i++)
         {
             Complex64[] kernel = kernels[i];
-            var real = new float[kernel.Length];
-            var imaginary = new float[kernel.Length];
+            float[] real = new float[kernel.Length];
+            float[] imaginary = new float[kernel.Length];
 
             for (int j = 0; j < kernel.Length; j++)
             {
@@ -319,7 +323,7 @@ public sealed partial class BokehBlurEffect
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
-        int numberOfComponents = KernelParameters.Length;
+        int numberOfComponents = this.kernelParameters.Length;
 
         using ComPtr<ID2D1Effect> gammaExposureEffect = default;
         using ComPtr<ID2D1Effect> inverseGammaExposureEffect = default;
@@ -379,7 +383,7 @@ public sealed partial class BokehBlurEffect
             using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), width, height);
 
             (D2D1ResourceTextureManager Reals, D2D1ResourceTextureManager Imaginaries)[] kernels = new (D2D1ResourceTextureManager, D2D1ResourceTextureManager)[numberOfComponents];
-            uint kernelSize = (uint)KernelSize;
+            uint kernelSize = (uint)this.kernelSize;
 
             for (int i = 0; i < numberOfComponents; i++)
             {
@@ -390,7 +394,7 @@ public sealed partial class BokehBlurEffect
                     channelDepth: D2D1ChannelDepth.One,
                     filter: D2D1Filter.MinMagMipPoint,
                     extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
-                    data: MemoryMarshal.AsBytes(Kernels[i].Real.AsSpan()),
+                    data: MemoryMarshal.AsBytes(this.kernels[i].Real.AsSpan()),
                     strides: ReadOnlySpan<uint>.Empty);
 
                 // Also create the one for the imaginary kernel
@@ -400,7 +404,7 @@ public sealed partial class BokehBlurEffect
                     channelDepth: D2D1ChannelDepth.One,
                     filter: D2D1Filter.MinMagMipPoint,
                     extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
-                    data: MemoryMarshal.AsBytes(Kernels[i].Imaginary.AsSpan()),
+                    data: MemoryMarshal.AsBytes(this.kernels[i].Imaginary.AsSpan()),
                     strides: ReadOnlySpan<uint>.Empty);
 
                 kernels[i] = (kernelReals, kernelImaginary);
@@ -420,7 +424,7 @@ public sealed partial class BokehBlurEffect
             {
                 D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForReals[i].Get());
                 D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForImaginaries[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, KernelParameters[i].Z, KernelParameters[i].W), horizontalConvolutionEffects[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, this.kernelParameters[i].Z, this.kernelParameters[i].W), horizontalConvolutionEffects[i].Get());
             }
 
             // Build the effect graph:
@@ -445,7 +449,7 @@ public sealed partial class BokehBlurEffect
             }
             else
             {
-                compositeEffect.Get()->SetInputCount((uint)numberOfComponents);
+                _ = compositeEffect.Get()->SetInputCount((uint)numberOfComponents);
 
                 // Aggregate all partial results with the composite effect
                 for (int i = 0; i < numberOfComponents; i++)
@@ -577,14 +581,14 @@ public sealed partial class BokehBlurEffect
                 {
                     float4 sourceReal = D2D.SampleInputAtOffset(0, new float2(i - radiusX, 0));
                     float4 sourceImaginary = D2D.SampleInputAtOffset(1, new float2(i - radiusX, 0));
-                    float realFactor = kernelReals[i];
-                    float imaginaryFactor = kernelImaginaries[i];
+                    float realFactor = this.kernelReals[i];
+                    float imaginaryFactor = this.kernelImaginaries[i];
 
-                    result.Real += (Vector4)(realFactor * sourceReal - imaginaryFactor * sourceImaginary);
-                    result.Imaginary += (Vector4)(realFactor * sourceImaginary + imaginaryFactor * sourceReal);
+                    result.Real += (Vector4)((realFactor * sourceReal) - (imaginaryFactor * sourceImaginary));
+                    result.Imaginary += (Vector4)((realFactor * sourceImaginary) + (imaginaryFactor * sourceReal));
                 }
 
-                return result.WeightedSum(z, w);
+                return result.WeightedSum(this.z, this.w);
             }
         }
     }

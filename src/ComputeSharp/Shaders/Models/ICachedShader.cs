@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Interop;
@@ -83,7 +83,7 @@ internal interface ICachedShader
         public ConditionalWeakTable<GraphicsDevice, PipelineData> CachedPipelines { get; } = new();
 
         /// <inheritdoc/>
-        public D3D12_SHADER_BYTECODE D3D12ShaderBytecode => new ((ID3DBlob*)this.dxcBlobBytecode.Get());
+        public D3D12_SHADER_BYTECODE D3D12ShaderBytecode => new((ID3DBlob*)this.dxcBlobBytecode.Get());
 
         /// <inheritdoc/>
         private protected override void OnDispose()

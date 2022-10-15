@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -58,20 +58,20 @@ partial class IShaderGenerator
             }
 
             // Explore the syntax tree and extract the processed info
-            var semanticModelProvider = new SemanticModelProvider(compilation);
-            var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
-            var isComputeShader = pixelShaderSymbol is null;
-            var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
-            var (resourceFields, valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
-            var delegateInstanceFields = GetDispatchId.GetInfo(structDeclarationSymbol);
-            var sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
-            var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
-            var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
-            var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+            SemanticModelProvider semanticModelProvider = new(compilation);
+            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
+            bool isComputeShader = pixelShaderSymbol is null;
+            string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
+            (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
+            ImmutableArray<string> delegateInstanceFields = GetDispatchId.GetInfo(structDeclarationSymbol);
+            ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
+            (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, bool isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
+            (string, string)? implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
+            ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Process the discovered types and constants
-            var declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
-            var definedConstants = GetDefinedConstants(constantDefinitions);
+            ImmutableArray<(string Name, string Definition)> declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
+            ImmutableArray<(string Name, string Value)> definedConstants = GetDefinedConstants(constantDefinitions);
 
             // Get the HLSL source data with the intermediate info
             return GetHlslSourceInfo(
@@ -111,7 +111,7 @@ partial class IShaderGenerator
 
             bool hlslResourceFound = false;
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (fieldSymbol.IsStatic)
                 {
@@ -202,9 +202,9 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string, string?)> builder = ImmutableArrayBuilder<(string, string, string?)>.Rent();
 
-            foreach (var fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
+            foreach (FieldDeclarationSyntax fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
             {
-                foreach (var variableDeclarator in fieldDeclaration.Declaration.Variables)
+                foreach (VariableDeclaratorSyntax variableDeclarator in fieldDeclaration.Declaration.Variables)
                 {
                     IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.For(variableDeclarator).GetDeclaredSymbol(variableDeclarator)!;
 
@@ -266,7 +266,7 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string, int?)> builder = ImmutableArrayBuilder<(string, string, int?)>.Rent();
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (!fieldSymbol.IsStatic)
                 {
@@ -340,7 +340,7 @@ partial class IShaderGenerator
 
             using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            string ? entryPoint = null;
+            string? entryPoint = null;
             bool isSamplerUsed = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
@@ -382,7 +382,7 @@ partial class IShaderGenerator
                 isSamplerUsed = isSamplerUsed || shaderSourceRewriter.IsSamplerUsed;
 
                 // Emit the extracted local functions first
-                foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
+                foreach (KeyValuePair<string, LocalFunctionStatementSyntax> localFunction in shaderSourceRewriter.LocalFunctions)
                 {
                     methods.Add((
                         localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
@@ -428,10 +428,10 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            foreach (var constant in constantDefinitions)
+            foreach (KeyValuePair<IFieldSymbol, string> constant in constantDefinitions)
             {
-                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
-                var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
+                string ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
+                string constantName = $"__{ownerTypeName}__{constant.Key.Name}";
 
                 builder.Add((constantName, constant.Value));
             }
@@ -455,18 +455,21 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
 
-            IReadOnlyCollection <INamedTypeSymbol> invalidTypes;
+            IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
             // Process the discovered types
-            foreach (var type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
+            foreach (INamedTypeSymbol type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
             {
-                var structType = type.GetFullMetadataName().ToHlslIdentifierName();
-                var structDeclaration = StructDeclaration(structType);
+                string structType = type.GetFullMetadataName().ToHlslIdentifierName();
+                StructDeclarationSyntax structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
-                foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+                foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
                 {
-                    if (field.IsStatic) continue;
+                    if (field.IsStatic)
+                    {
+                        continue;
+                    }
 
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
@@ -489,7 +492,7 @@ partial class IShaderGenerator
                 }
 
                 // Declare the methods of the current type
-                foreach (var method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
+                foreach (KeyValuePair<IMethodSymbol, MethodDeclarationSyntax> method in instanceMethods.Where(pair => SymbolEqualityComparer.Default.Equals(pair.Key.ContainingType, type)))
                 {
                     structDeclaration = structDeclaration.AddMembers(method.Value);
                 }
@@ -519,7 +522,7 @@ partial class IShaderGenerator
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         private static void DetectAndReportInvalidPropertyDeclarations(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (var memberSymbol in structDeclarationSymbol.GetMembers())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Detect properties that are not explicit interface implementations
                 if (memberSymbol is IPropertySymbol { ExplicitInterfaceImplementations.IsEmpty: true })
@@ -570,31 +573,31 @@ partial class IShaderGenerator
 
             void AppendLF()
             {
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append('\n');
             }
 
             void AppendLine(string text)
             {
-                hlslBuilder.Append(text);
+                _ = hlslBuilder.Append(text);
             }
 
             void AppendLineAndLF(string text)
             {
-                hlslBuilder.Append(text);
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append(text);
+                _ = hlslBuilder.Append('\n');
             }
 
             void AppendCharacterAndLF(char c)
             {
-                hlslBuilder.Append(c);
-                hlslBuilder.Append('\n');
+                _ = hlslBuilder.Append(c);
+                _ = hlslBuilder.Append('\n');
             }
 
             string FlushText()
             {
                 string text = hlslBuilder.ToString();
 
-                hlslBuilder.Clear();
+                _ = hlslBuilder.Clear();
 
                 return text;
             }
@@ -625,7 +628,7 @@ partial class IShaderGenerator
             AppendLF();
 
             // Define declarations
-            foreach (var (name, value) in definedConstants)
+            foreach ((string name, string value) in definedConstants)
             {
                 AppendLineAndLF($"#define {name} {value}");
             }
@@ -637,7 +640,7 @@ partial class IShaderGenerator
             {
                 AppendLF();
 
-                foreach (var field in staticFields)
+                foreach ((string Name, string TypeDeclaration, string? Assignment) field in staticFields)
                 {
                     if (field.Assignment is string assignment)
                     {
@@ -651,7 +654,7 @@ partial class IShaderGenerator
             }
 
             // Declared types
-            foreach (var (_, typeDefinition) in declaredTypes)
+            foreach ((string _, string typeDefinition) in declaredTypes)
             {
                 AppendLF();
                 AppendLineAndLF(typeDefinition);
@@ -672,7 +675,7 @@ partial class IShaderGenerator
             }
 
             // User-defined values
-            foreach (var (fieldName, fieldType) in valueFields)
+            foreach ((string fieldName, string fieldType) in valueFields)
             {
                 AppendLineAndLF($"    {fieldType} {fieldName};");
             }
@@ -698,7 +701,7 @@ partial class IShaderGenerator
             }
 
             // Resources
-            foreach (var (metadataName, fieldName, fieldType) in resourceFields)
+            foreach ((string metadataName, string fieldName, string fieldType) in resourceFields)
             {
                 if (HlslKnownTypes.IsConstantBufferType(metadataName))
                 {
@@ -721,7 +724,7 @@ partial class IShaderGenerator
             }
 
             // Shared buffers
-            foreach (var (bufferName, bufferType, bufferCount) in sharedBuffers)
+            foreach ((string bufferName, string bufferType, int? bufferCount) in sharedBuffers)
             {
                 object count = (object?)bufferCount ?? "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z";
 
@@ -730,7 +733,7 @@ partial class IShaderGenerator
             }
 
             // Forward declarations
-            foreach (var (forwardDeclaration, _) in processedMethods)
+            foreach ((string forwardDeclaration, string _) in processedMethods)
             {
                 AppendLF();
                 AppendLineAndLF(forwardDeclaration);
@@ -739,7 +742,7 @@ partial class IShaderGenerator
             string capturedFieldsAndResourcesAndForwardDeclarations = FlushText();
 
             // Captured methods
-            foreach (var (_, method) in processedMethods)
+            foreach ((string _, string method) in processedMethods)
             {
                 AppendLF();
                 AppendLineAndLF(method);

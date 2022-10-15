@@ -1,4 +1,4 @@
-﻿namespace System.Runtime.CompilerServices;
+namespace System.Runtime.CompilerServices;
 
 /// <summary>
 /// Indicates the attributed type is to be used as an interpolated string handler.
