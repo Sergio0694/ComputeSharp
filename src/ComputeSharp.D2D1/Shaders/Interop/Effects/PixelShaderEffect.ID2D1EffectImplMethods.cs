@@ -98,6 +98,46 @@ internal unsafe partial struct PixelShaderEffect
             // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
             if (hresult == E.E_INVALIDARG)
             {
+                using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
+
+                // Create the reflection instance, and in case of error just return the previous error like above
+                if (!Windows.SUCCEEDED(DirectX.D3DReflect(
+                    pSrcData: @this->bytecode,
+                    SrcDataSize: (uint)@this->bytecodeSize,
+                    pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
+                    ppReflector: d3D11ShaderReflection.GetVoidAddressOf())))
+                {
+                    return E.E_INVALIDARG;
+                }
+
+                D3D_FEATURE_LEVEL d3DMinFeatureLevel;
+
+                // Get the minimum feature level for the shader (in case of errors, just return the previous result again)
+                if (!Windows.SUCCEEDED(d3D11ShaderReflection.Get()->GetMinFeatureLevel(&d3DMinFeatureLevel)))
+                {
+                    return E.E_INVALIDARG;
+                }
+
+                D3D_FEATURE_LEVEL d3DMaxFeatureLevel;
+
+                // Check whether the current context supports the minimum feature level
+                HRESULT hresultMaximumSupportedFeatureLevel = effectContext->GetMaximumSupportedFeatureLevel(
+                    featureLevels: &d3DMinFeatureLevel,
+                    featureLevelsCount: 1,
+                    maximumSupportedFeatureLevel: &d3DMaxFeatureLevel);
+
+                // If the context doesn't match the required feature level, return that as an error
+                if (hresultMaximumSupportedFeatureLevel == D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES)
+                {
+                    return D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+                }
+
+                // If the call failed for another reason, also just stop here and return the previous result
+                if (!Windows.SUCCEEDED(hresultMaximumSupportedFeatureLevel))
+                {
+                    return E.E_INVALIDARG;
+                }
+
                 D2D1_FEATURE_DATA_DOUBLES d2D1FeatureDataDoubles = default;
 
                 // If the call failed, just do nothing and return the previous result
@@ -109,18 +149,6 @@ internal unsafe partial struct PixelShaderEffect
                 // If the context does not support double precision values, check whether the shader requested them
                 if (d2D1FeatureDataDoubles.doublePrecisionFloatShaderOps == 0)
                 {
-                    using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
-
-                    // Create the reflection instance, and in case of error just return the previous error like above
-                    if (!Windows.SUCCEEDED(DirectX.D3DReflect(
-                        pSrcData: @this->bytecode,
-                        SrcDataSize: (uint)@this->bytecodeSize,
-                        pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-                        ppReflector: d3D11ShaderReflection.GetVoidAddressOf())))
-                    {
-                        return E.E_INVALIDARG;
-                    }
-
                     // If the shader requires double precision support, return a more descriptive error
                     if ((d3D11ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0)
                     {
