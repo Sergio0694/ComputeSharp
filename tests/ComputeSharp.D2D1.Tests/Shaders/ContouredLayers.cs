@@ -1,15 +1,15 @@
-namespace ComputeSharp.SwapChain.Shaders;
+namespace ComputeSharp.D2D1.Tests.Shaders;
 
 /// <summary>
 /// Constructing some concise contoured layers, then applying various edge and shading effects to produce some faux depth.
 /// Ported from <see href="https://www.shadertoy.com/view/3lj3zt"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
+[D2DInputCount(0)]
+[D2DRequiresScenePosition]
+[D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [AutoConstructor]
-#if SAMPLE_APP
-[EmbeddedBytecode(DispatchAxis.XY)]
-#endif
-internal readonly partial struct ContouredLayers : IPixelShader<float4>
+internal readonly partial struct ContouredLayers : ID2D1PixelShader
 {
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
@@ -17,9 +17,15 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     private readonly float time;
 
     /// <summary>
+    /// The dispatch size for the current output.
+    /// </summary>
+    public readonly int2 dispatchSize;
+
+    /// <summary>
     /// The background texture to sample.
     /// </summary>
-    private readonly IReadOnlyNormalizedTexture2D<float4> texture;
+    [D2DResourceTextureIndex(0)]
+    private readonly D2D1ResourceTexture2D<float4> texture;
 
     // float3 to float hash.
     private static float Hash21(float2 p)
@@ -144,10 +150,11 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float2 fragCoord = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
-        float res = Hlsl.Min(DispatchSize.Y, 700.0f);
-        float2 uv = (fragCoord - ((float2)DispatchSize.XY * 0.5f)) / res;
-        float sf = 1.0f / DispatchSize.Y;
+        int2 xy = (int2)D2D.GetScenePosition().XY;
+        float2 fragCoord = new(xy.X, this.dispatchSize.Y - xy.Y);
+        float res = Hlsl.Min(this.dispatchSize.Y, 700.0f);
+        float2 uv = (fragCoord - ((float2)this.dispatchSize * 0.5f)) / res;
+        float sf = 1.0f / this.dispatchSize.Y;
         float3 col = GetColor(uv, 0.0f, 0.0f);
         float pL = 0.0f;
         float hatch = Hatch(uv, res);
@@ -189,13 +196,13 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
 
         col *= Hlsl.Lerp(new float3(1.8f, 1, 0.7f).ZYX, new float3(1.8f, 1, 0.7f).XZY, Noise2D(uv * 2.0f));
 
-        float3 rn3 = Noise2D((uv * DispatchSize.Y / 1.0f) + 1.7f) - Noise2D((uv * DispatchSize.Y / 1.0f) + 3.4f);
+        float3 rn3 = Noise2D((uv * this.dispatchSize.Y / 1.0f) + 1.7f) - Noise2D((uv * this.dispatchSize.Y / 1.0f) + 3.4f);
 
         col *= 0.93f + (0.07f * rn3.XYZ) + (0.07f * Hlsl.Dot(rn3, new float3(0.299f, 0.587f, 0.114f)));
 
-        uv = fragCoord / DispatchSize.XY;
+        uv = fragCoord / this.dispatchSize.XY;
 
-        col *= Hlsl.Pow(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y), 0.0625f);
+        col *= Hlsl.Pow(Hlsl.Abs(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y)), 0.0625f);
 
         return new float4(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
     }

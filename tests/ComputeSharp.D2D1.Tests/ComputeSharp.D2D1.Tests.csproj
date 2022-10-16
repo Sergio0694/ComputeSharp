@@ -59,6 +59,40 @@
     <None Include="..\ComputeSharp.Tests\Assets\CityWith1920x1280Resizing.png" Link="Assets\City.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ColorfulInfinity.png" Link="Assets\ColorfulInfinity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png" Link="Assets\ExtrudedTruchetPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\FractalTiling.png" Link="Assets\FractalTiling.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\HelloWorld.png" Link="Assets\HelloWorld.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\MengerJourney.png" Link="Assets\MengerJourney.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\Octagrams.png" Link="Assets\Octagrams.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ComputeSharp.Tests\Assets\ProteanClouds.png" Link="Assets\ProteanClouds.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\PyramidPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\TriangleGridContouring.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\TwoTiledTruchet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ContouredLayers.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\samples\ComputeSharp.SwapChain\Textures\RustyMetal.png" Link="Assets\Textures\RustyMetal.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

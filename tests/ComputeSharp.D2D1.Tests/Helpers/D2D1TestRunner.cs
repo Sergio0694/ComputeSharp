@@ -27,12 +27,14 @@ internal static class D2D1TestRunner
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
     /// <param name="shader">The shader to run.</param>
+    /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
         ID2D1TransformMapperFactory<T>? transformMapperFactory,
         string originalFileName,
         string expectedFileName,
-        [CallerMemberName] string destinationFileName = "")
+        [CallerMemberName] string destinationFileName = "",
+        float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
@@ -52,7 +54,7 @@ internal static class D2D1TestRunner
             destinationPath);
 
         // Compare the results
-        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, threshold);
     }
 
     /// <summary>
@@ -64,12 +66,16 @@ internal static class D2D1TestRunner
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
     /// <param name="shader">The shader to run.</param>
+    /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
+    /// <param name="resourceTextures">The additional resource textures to use to run the shader.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
         int width,
         int height,
         string expectedFileName,
-        [CallerMemberName] string destinationFileName = "")
+        [CallerMemberName] string destinationFileName = "",
+        float threshold = 0.00001f,
+        params (int Index, D2D1ResourceTextureManager ResourceTextureManager)[] resourceTextures)
         where T : unmanaged, ID2D1PixelShader
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
@@ -86,10 +92,11 @@ internal static class D2D1TestRunner
             null,
             width,
             height,
-            destinationPath);
+            destinationPath,
+            resourceTextures);
 
         // Compare the results
-        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, 0.00001f);
+        TolerantImageComparer.AssertEqual(destinationPath, expectedPath, threshold);
     }
 
     /// <summary>
@@ -141,12 +148,14 @@ internal static class D2D1TestRunner
     /// <param name="height">The resulting height.</param>
     /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
+    /// <param name="resourceTextures">The additional resource textures to use to run the shader.</param>
     private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
         ID2D1TransformMapperFactory<T>? transformMapperFactory,
         int width,
         int height,
-        string destinationPath)
+        string destinationPath,
+        params (int Index, D2D1ResourceTextureManager ResourceTextureManager)[] resourceTextures)
         where T : unmanaged, ID2D1PixelShader
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
@@ -160,6 +169,11 @@ internal static class D2D1TestRunner
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+
+        foreach ((int index, D2D1ResourceTextureManager resourceTextureManager) in resourceTextures)
+        {
+            D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, index);
+        }
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)width, (uint)height);
 

@@ -119,7 +119,7 @@ internal readonly partial struct Octagrams : IPixelShader<float4>
         }
 
         float3 col = (ac * 0.02f) + new float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(this.time)), 0.5f + (Hlsl.Sin(this.time) * 0.2f));
-        float4 color = new(col, 1.0f - (t * (0.02f + (0.02f * Hlsl.Sin(this.time)))));
+        float4 color = new(col, 1);
 
         return color;
     }

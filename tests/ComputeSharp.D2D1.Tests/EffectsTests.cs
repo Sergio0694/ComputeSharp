@@ -1,6 +1,5 @@
 using System.IO;
 using System.Reflection;
-using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
@@ -13,8 +12,8 @@ using SixLabors.ImageSharp.Processing;
 namespace ComputeSharp.D2D1.Tests;
 
 [TestClass]
-[TestCategory("EndToEnd")]
-public class EndToEndTests
+[TestCategory("Effects")]
+public class EffectsTests
 {
     [AssemblyInitialize]
     public static void ConfigureImageSharp(TestContext _)
@@ -23,19 +22,19 @@ public class EndToEndTests
     }
 
     [TestMethod]
-    public unsafe void Invert()
+    public void Invert()
     {
         D2D1TestRunner.RunAndCompareShader(new InvertEffect(), null, "Landscape.png", "Landscape_Inverted.png");
     }
 
     [TestMethod]
-    public unsafe void InvertWithThreshold()
+    public void InvertWithThreshold()
     {
         D2D1TestRunner.RunAndCompareShader(new InvertWithThresholdEffect(1), null, "Landscape.png", "Landscape_Inverted.png");
     }
 
     [TestMethod]
-    public unsafe void Pixelate()
+    public void Pixelate()
     {
         D2D1TestRunner.RunAndCompareShader(
             new PixelateEffect(new PixelateEffect.Constants(1280, 840, 16)),
@@ -45,13 +44,13 @@ public class EndToEndTests
     }
 
     [TestMethod]
-    public unsafe void ZonePlate()
+    public void ZonePlate()
     {
         D2D1TestRunner.RunAndCompareShader(new ZonePlateEffect(1280, 720, 800), 1280, 720, "ZonePlate.png");
     }
 
     [TestMethod]
-    public unsafe void CheckerboardClip()
+    public void CheckerboardClip()
     {
         D2D1TestRunner.RunAndCompareShader(new CheckerboardClipEffect(1280, 840, 32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
     }

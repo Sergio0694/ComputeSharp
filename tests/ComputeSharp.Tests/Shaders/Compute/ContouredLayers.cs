@@ -121,7 +121,7 @@ internal readonly partial struct ContouredLayers : IComputeShader
 
         float3 col;
 
-        col = (float3)1.0 * (1.0f - 0.75f / (1.0f + sh * sh * 2.0f));
+        col = (float3)1.0f * (1.0f - 0.75f / (1.0f + sh * sh * 2.0f));
         col = Hlsl.Min(col * tx * 3.0f, 1.0f);
 
         return col;
