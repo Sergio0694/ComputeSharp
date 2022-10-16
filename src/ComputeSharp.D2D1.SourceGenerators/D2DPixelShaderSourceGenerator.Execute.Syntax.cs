@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -71,7 +72,7 @@ partial class D2DPixelShaderSourceGenerator
                                     SyntaxKind.ArrayInitializerExpression,
                                     SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_SHADER_BYTECODE"))))));
 
-                string bytecodeLiterals = ID2D1ShaderGenerator.LoadBytecode.BuildShaderBytecodeExpressionString(bytecodeInfo.Bytecode.AsSpan());
+                string bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
 
                 // Prepare the fixup function
                 fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals), Encoding.UTF8);

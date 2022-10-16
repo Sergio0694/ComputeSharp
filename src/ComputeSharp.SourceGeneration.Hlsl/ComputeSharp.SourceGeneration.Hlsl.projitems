@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SyntaxNodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SyntaxFormattingHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SyntaxTokenHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownFields.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
