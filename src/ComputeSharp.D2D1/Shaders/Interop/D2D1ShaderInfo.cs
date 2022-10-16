@@ -28,6 +28,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <param name="MovInstructionCount">The number of <c>mov</c> instructions used.</param>
 /// <param name="InterfaceSlotCount">The number of interface slots used.</param>
 /// <param name="RequiresDoublePrecisionSupport">Indicates whether support for double precision floating point numbers is required.</param>
+/// <param name="FeatureLevel">The feature level for the shader.</param>
 public sealed record D2D1ShaderInfo(
     string CompilerVersion,
     string HlslSource,
@@ -53,4 +54,5 @@ public sealed record D2D1ShaderInfo(
     uint MovcInstructionCount,
     uint MovInstructionCount,
     uint InterfaceSlotCount,
-    bool RequiresDoublePrecisionSupport);
+    bool RequiresDoublePrecisionSupport,
+    D3DFeatureLevel FeatureLevel);

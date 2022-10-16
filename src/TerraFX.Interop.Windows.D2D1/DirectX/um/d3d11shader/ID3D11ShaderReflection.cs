@@ -95,6 +95,13 @@ namespace TerraFX.Interop.DirectX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [VtblIndex(19)]
+        public HRESULT GetMinFeatureLevel([NativeTypeName("enum D3D_FEATURE_LEVEL *")] D3D_FEATURE_LEVEL* pLevel)
+        {
+            return ((delegate* unmanaged[Stdcall]<ID3D11ShaderReflection*, D3D_FEATURE_LEVEL*, int>)(lpVtbl[19]))((ID3D11ShaderReflection*)Unsafe.AsPointer(ref this), pLevel);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(20)]
         public uint GetThreadGroupSize(uint* pSizeX, uint* pSizeY, uint* pSizeZ)
         {
