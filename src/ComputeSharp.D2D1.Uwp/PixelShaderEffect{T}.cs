@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.Uwp;
 /// A custom <see cref="ICanvasImage"/> implementation powered by a supplied shader type.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
-public sealed class PixelShaderEffect<T> : ICanvasImage, ICanvasImageInternal
+public sealed class PixelShaderEffect<T> : ICanvasImage, ICanvasImageInterop
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
@@ -42,52 +42,61 @@ public sealed class PixelShaderEffect<T> : ICanvasImage, ICanvasImageInternal
     }
 
     /// <inheritdoc/>
-    unsafe ID2D1Image** ICanvasImageInternal.GetD2DImage(
-        ID2D1Image** retBuf,
+    unsafe int ICanvasImageInterop.GetDevice(IUnknown** device)
+    {
+        return S.S_OK;
+    }
+
+    /// <inheritdoc/>
+    unsafe int ICanvasImageInterop.GetD2DImage(
         IUnknown* device,
         ID2D1DeviceContext* deviceContext,
-        GetImageFlags flags,
+        CanvasImageGetD2DImageFlags flags,
         float targetDpi,
-        float* realizeDpi)
+        float* realizeDpi,
+        ID2D1Image** ppImage)
     {
         if (realizeDpi is not null)
         {
-            *realizeDpi = targetDpi;
+            *realizeDpi = 0;
         }
 
-        using ComPtr<ID2D1Image> d2D1Image = default;
-
-        if (this.effect.Get() is null)
+        try
         {
-            using ComPtr<ID2D1Factory> d2D1Factory = default;
+            if (this.effect.Get() is null)
+            {
+                using ComPtr<ID2D1Factory> d2D1Factory = default;
 
-            deviceContext->GetFactory(d2D1Factory.GetAddressOf());
+                deviceContext->GetFactory(d2D1Factory.GetAddressOf());
 
-            using ComPtr<ID2D1Factory1> d2D1Factory1 = default;
+                using ComPtr<ID2D1Factory1> d2D1Factory1 = default;
 
-            d2D1Factory.CopyTo(d2D1Factory1.GetAddressOf()).Assert();
+                d2D1Factory.CopyTo(d2D1Factory1.GetAddressOf()).Assert();
 
-            D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
+                D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
 
-            using ComPtr<ID2D1Effect> d2D1Effect = default;
+                using ComPtr<ID2D1Effect> d2D1Effect = default;
 
-            D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(deviceContext, (void**)d2D1Effect.GetAddressOf());
+                D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(deviceContext, (void**)d2D1Effect.GetAddressOf());
 
-            D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, d2D1Effect.Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, d2D1Effect.Get());
 
-            this.effect = new(d2D1Effect.Get());
+                this.effect = new(d2D1Effect.Get());
 
-            d2D1Effect.CopyTo(d2D1Image.GetAddressOf()).Assert();
+                d2D1Effect.CopyTo(ppImage).Assert();
+            }
+            else
+            {
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, this.effect.Get());
+
+                this.effect.CopyTo(ppImage).Assert();
+            }
+
+            return S.S_OK;
         }
-        else
+        catch (Exception e)
         {
-            D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, this.effect.Get());
-
-            this.effect.CopyTo(d2D1Image.GetAddressOf()).Assert();
+            return e.HResult;
         }
-
-        *retBuf = d2D1Image.Detach();
-
-        return retBuf;
     }
 }
