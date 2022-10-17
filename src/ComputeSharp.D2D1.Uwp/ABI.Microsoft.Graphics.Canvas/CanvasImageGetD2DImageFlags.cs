@@ -3,10 +3,10 @@ using System;
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
-/// Options for fine-tuning the behavior of ICanvasImageInternal::GetD2DImage.
+/// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.GetD2DImage"/>.
 /// </summary>
 [Flags]
-internal enum GetImageFlags
+internal enum CanvasImageGetD2DImageFlags
 {
     /// <summary>
     /// No options specified.
@@ -36,10 +36,5 @@ internal enum GetImageFlags
     /// <summary>
     /// Allow partially configured effect graphs where some inputs are <see langword="null"/>.
     /// </summary>
-    AllowNullEffectInputs = 16,
-
-    /// <summary>
-    /// If an input is invalid, unrealize the effect and return <see langword="null"/> rather than throwing.
-    /// </summary>
-    UnrealizeOnFailure = 32
+    AllowNullEffectInputs = 16
 }
