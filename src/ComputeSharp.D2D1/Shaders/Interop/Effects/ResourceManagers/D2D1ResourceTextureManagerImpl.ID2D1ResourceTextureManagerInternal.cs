@@ -113,7 +113,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 {
                     using ComPtr<ID2D1Multithread> d2D1Multithread = default;
 
-                    int hresult = effectContext->GetD2D1Multithread(d2D1Multithread.GetAddressOf());
+                    HRESULT hresult = effectContext->GetD2D1Multithread(d2D1Multithread.GetAddressOf());
 
                     // If an ID2D1Multithread object is available, we can safely store the context. That
                     // is, under the condition that the required multithread support is also available.

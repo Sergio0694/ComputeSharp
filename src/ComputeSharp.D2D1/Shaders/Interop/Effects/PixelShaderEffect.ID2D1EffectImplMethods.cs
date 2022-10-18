@@ -96,7 +96,8 @@ internal unsafe partial struct PixelShaderEffect
 
             // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
             // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
-            if (hresult == E.E_INVALIDARG && !effectContext->IsShaderNotSupported(@this->bytecode, @this->bytecodeSize))
+            // If any error is detected while trying to check for shader support, ignore the value and propagate the current HRESULT.
+            if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(@this->bytecode, @this->bytecodeSize) == S.S_FALSE)
             {
                 hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
             }
