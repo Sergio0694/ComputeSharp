@@ -16,7 +16,7 @@ public partial class D2D1ReflectionServicesTests
         Assert.AreEqual(10u, shaderInfo.BoundResourceCount);
         Assert.AreEqual(5u, shaderInfo.DeclarationCount);
         Assert.IsFalse(shaderInfo.RequiresDoublePrecisionSupport);
-        Assert.AreEqual(D3DFeatureLevel.FeatureLevel10_1, shaderInfo.FeatureLevel);
+        Assert.AreEqual(D3DFeatureLevel.FeatureLevel10_1, shaderInfo.MinimumFeatureLevel);
         Assert.IsNotNull(shaderInfo.CompilerVersion);
         Assert.AreEqual("""
             // ================================================
@@ -95,7 +95,7 @@ public partial class D2D1ReflectionServicesTests
         Assert.AreEqual(1u, shaderInfo.ConstantBufferCount);
         Assert.AreEqual(2u, shaderInfo.DeclarationCount);
         Assert.IsTrue(shaderInfo.RequiresDoublePrecisionSupport);
-        Assert.AreEqual(D3DFeatureLevel.FeatureLevel11_0, shaderInfo.FeatureLevel);
+        Assert.AreEqual(D3DFeatureLevel.FeatureLevel11_0, shaderInfo.MinimumFeatureLevel);
         Assert.IsNotNull(shaderInfo.CompilerVersion);
         Assert.AreEqual("""
             // ================================================

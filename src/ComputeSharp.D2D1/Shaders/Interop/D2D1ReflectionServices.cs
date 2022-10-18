@@ -97,6 +97,6 @@ public static class D2D1ReflectionServices
             MovInstructionCount: d3D11ShaderReflection.Get()->GetMovInstructionCount(),
             InterfaceSlotCount: d3D11ShaderReflection.Get()->GetNumInterfaceSlots(),
             RequiresDoublePrecisionSupport: (d3D11ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0,
-            FeatureLevel: (D3DFeatureLevel)d3DFeatureLevel);
+            MinimumFeatureLevel: (D3DFeatureLevel)d3DFeatureLevel);
     }
 }
