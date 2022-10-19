@@ -259,7 +259,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -277,7 +277,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadOnlyTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -293,7 +293,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadWriteTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -311,7 +311,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -327,7 +327,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -345,7 +345,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -361,7 +361,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 

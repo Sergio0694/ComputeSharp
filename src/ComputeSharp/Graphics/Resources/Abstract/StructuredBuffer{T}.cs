@@ -39,8 +39,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -114,9 +114,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -162,9 +162,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -203,8 +203,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -282,9 +282,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _2 = source.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = source.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 

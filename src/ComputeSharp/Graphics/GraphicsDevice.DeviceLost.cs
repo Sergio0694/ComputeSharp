@@ -49,7 +49,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetReferenceTrackingLease(out bool leaseTaken);
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {

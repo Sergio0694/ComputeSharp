@@ -62,7 +62,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
 
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -118,7 +118,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -130,7 +130,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Width);
         }
@@ -199,7 +199,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 
             return new(this.buffer.mappedData);
         }

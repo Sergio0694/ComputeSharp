@@ -60,7 +60,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -113,7 +113,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -125,7 +125,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Length);
         }
@@ -194,7 +194,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 
             return new(this.buffer.mappedData);
         }

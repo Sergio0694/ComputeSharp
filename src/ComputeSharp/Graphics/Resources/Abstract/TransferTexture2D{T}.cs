@@ -62,7 +62,7 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -124,7 +124,7 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = this.GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }

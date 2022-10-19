@@ -64,8 +64,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -94,9 +94,9 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -129,8 +129,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
-        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 

@@ -151,7 +151,7 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 

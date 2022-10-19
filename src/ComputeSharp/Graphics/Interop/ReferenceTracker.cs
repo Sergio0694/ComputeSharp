@@ -44,7 +44,7 @@ internal struct ReferenceTracker : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void DangerousAddRef()
     {
-        _ = GetReferenceTrackingLease();
+        _ = GetLease();
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ internal struct ReferenceTracker : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void DangerousRelease()
     {
-        ReturnReferenceTrackingLease();
+        ReturnLease();
     }
 
     /// <summary>
@@ -62,9 +62,9 @@ internal struct ReferenceTracker : IDisposable
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
     /// <exception cref="ObjectDisposedException">Thrown if the tracked object has been disposed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Lease GetReferenceTrackingLease()
+    internal Lease GetLease()
     {
-        Lease lease = TryGetReferenceTrackingLease(out bool leaseTaken);
+        Lease lease = TryGetLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {
@@ -85,7 +85,7 @@ internal struct ReferenceTracker : IDisposable
     /// <param name="leaseTaken">Whether or not the returned <see cref="Lease"/> value is enabled.</param>
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Lease TryGetReferenceTrackingLease(out bool leaseTaken)
+    internal Lease TryGetLease(out bool leaseTaken)
     {
         bool success = true;
 
@@ -196,7 +196,7 @@ internal struct ReferenceTracker : IDisposable
     /// <summary>
     /// Returns a given lease (ie. decrements the ref count for the tracked object).
     /// </summary>
-    private void ReturnReferenceTrackingLease()
+    private void ReturnLease()
     {
         // To return a lease, we can simply do an interlocked decrement on the reference tracking
         // mask. Each lease is guaranteed to only be disposed once (the contract states to only
@@ -245,7 +245,7 @@ internal struct ReferenceTracker : IDisposable
 
             this.trackedObject = null;
 
-            trackedObject?.GetReferenceTracker().ReturnReferenceTrackingLease();
+            trackedObject?.GetReferenceTracker().ReturnLease();
         }
     }
 }

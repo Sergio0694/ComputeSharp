@@ -35,7 +35,7 @@ partial class SwapChainManager<TOwner>
             // Here and in the calls below, only get a reference tracking lease when starting a render thread.
             // This avoids crashes when the panel has been disposed but some code (eg. event handlers) still
             // ends up calling into any of the APIs in this file, which is not intended but should not crash.
-            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             this.renderCancellationTokenSource?.Cancel();
 
@@ -80,7 +80,7 @@ partial class SwapChainManager<TOwner>
             // If there is a render thread currently running, stop it and restart it
             if (this.renderCancellationTokenSource?.IsCancellationRequested == false)
             {
-                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
                 this.renderCancellationTokenSource?.Cancel();
 
@@ -115,7 +115,7 @@ partial class SwapChainManager<TOwner>
             if (this.renderCancellationTokenSource?.IsCancellationRequested == false &&
                 this.isDynamicResolutionEnabled)
             {
-                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
                 this.renderCancellationTokenSource?.Cancel();
 
@@ -188,13 +188,13 @@ partial class SwapChainManager<TOwner>
                 this.dynamicResolutionScale = this.resolutionScale;
 
                 // These two leases are needed to ensure the manager isn't disposed while rendering is running
-                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
                 RenderLoopWithDynamicResolution();
             }
             else
             {
-                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
                 RenderLoop();
             }

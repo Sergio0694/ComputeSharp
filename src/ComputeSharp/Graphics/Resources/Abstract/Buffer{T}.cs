@@ -83,7 +83,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
             Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -241,7 +241,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -253,7 +253,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
     internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
-        lease = GetReferenceTracker().GetReferenceTrackingLease();
+        lease = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceMismatch(device);
 
