@@ -40,7 +40,7 @@ namespace ComputeSharp.WinUI.Helpers;
 /// A type managing rendering on a target swap chain object.
 /// </summary>
 /// <typeparam name="TOwner">The type of the owner <see cref="SwapChainPanel"/> instance.</typeparam>
-internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
+internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTrackedObject
     where TOwner : SwapChainPanel
 {
     /// <summary>
@@ -517,7 +517,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     }
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    protected override void DangerousRelease()
     {
         static void OnDisposeOnDispatcherQueueThread(SwapChainManager<TOwner> @this)
         {

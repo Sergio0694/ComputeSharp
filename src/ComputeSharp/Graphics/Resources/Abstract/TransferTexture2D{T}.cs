@@ -9,15 +9,22 @@ using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
+#pragma warning disable CA1063
+
 namespace ComputeSharp.Resources;
 
 /// <summary>
 /// A <see langword="class"/> representing a typed 2D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public abstract unsafe class TransferTexture2D<T> : NativeObject, IGraphicsResource
+public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObject, IGraphicsResource
     where T : unmanaged
 {
+    /// <summary>
+    /// The <see cref="ReferenceTracker"/> value for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -50,10 +57,12 @@ public abstract unsafe class TransferTexture2D<T> : NativeObject, IGraphicsResou
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-        using Lease _0 = device.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -115,14 +124,14 @@ public abstract unsafe class TransferTexture2D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using Lease _0 = this.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.GetReferenceTracker().GetReferenceTrackingLease();
 
             return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }
     }
 
     /// <inheritdoc/>
-    private protected sealed override void OnDispose()
+    void IReferenceTrackedObject.DangerousRelease()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

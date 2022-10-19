@@ -1,0 +1,82 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+using System;
+using System.Runtime.CompilerServices;
+using ComputeSharp.Interop;
+<#
+var InternalReferenceTrackedTypes = new[]
+{
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Buffer<T>", IsDangerousReleaseVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture1D<T>", IsDangerousReleaseVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture2D<T>", IsDangerousReleaseVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture3D<T>", IsDangerousReleaseVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferBuffer<T>", IsDangerousReleaseVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture1D<T>", IsDangerousReleaseVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture2D<T>", IsDangerousReleaseVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture3D<T>", IsDangerousReleaseVirtual = false },
+    new { Namespace = "ComputeSharp", TypeName = "GraphicsDevice", IsDangerousReleaseVirtual = false }
+};
+
+foreach (var internalType in InternalReferenceTrackedTypes)
+{
+    WriteLine("");
+
+    var nonGenericTypeName = internalType.TypeName.Split('<')[0];
+#>
+namespace <#=internalType.Namespace#>
+{
+    /// <inheritdoc/>
+    partial class <#=internalType.TypeName#>
+    {
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations.
+        /// </summary>
+        ~<#=nonGenericTypeName#>()
+        {
+            this.referenceTracker.Dispose();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            this.referenceTracker.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc cref="IReferenceTrackedObject.GetReferenceTracker"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal ref ReferenceTracker GetReferenceTracker()
+        {
+            return ref this.referenceTracker;
+        }
+
+        /// <inheritdoc/>
+        ref ReferenceTracker IReferenceTrackedObject.GetReferenceTracker()
+        {
+            return ref this.referenceTracker;
+        }
+<#
+    if (internalType.IsDangerousReleaseVirtual)
+    {
+#>
+        /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
+        protected virtual partial void DangerousRelease();
+
+        /// <inheritdoc/>
+        void IReferenceTrackedObject.DangerousRelease()
+        {
+            DangerousRelease();
+        }
+<#
+    }
+#>
+    }
+}
+<#
+}
+#>

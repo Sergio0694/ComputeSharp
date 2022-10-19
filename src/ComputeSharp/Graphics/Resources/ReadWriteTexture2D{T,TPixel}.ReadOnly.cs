@@ -24,8 +24,8 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture2D{T, TPixel})"/>
     internal IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
     {
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -48,9 +48,9 @@ partial class ReadWriteTexture2D<T, TPixel>
     }
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    protected override void DangerousRelease()
     {
-        base.OnDispose();
+        base.DangerousRelease();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -58,7 +58,7 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance being wrapped.
@@ -79,7 +79,7 @@ partial class ReadWriteTexture2D<T, TPixel>
             // This call is required to ensure the underlying resource is kept alive as long as this resource
             // is not disposed, given that the underlying native resource is the same. Additional checks are
             // still performed below so that exceptions are thrown early, but this is needed to ensure safety.
-            owner.DangerousAddRef();
+            owner.GetReferenceTracker().DangerousAddRef();
 
             this.owner = owner;
 
@@ -112,8 +112,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using Lease _0 = GetReferenceTrackingLease();
-            using Lease _1 = this.owner.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -127,11 +127,11 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
+        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
         {
-            lease = GetReferenceTrackingLease();
+            lease = GetReferenceTracker().GetReferenceTrackingLease();
 
-            using Lease _1 = this.owner.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetReferenceTrackingLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -139,15 +139,15 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
 
         /// <inheritdoc/>
-        private protected override void OnDispose()
+        protected override void DangerousRelease()
         {
-            this.owner.DangerousRelease();
+            this.owner.GetReferenceTracker().DangerousRelease();
 
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {

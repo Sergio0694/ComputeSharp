@@ -18,7 +18,7 @@ using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, CA1063
 
 namespace ComputeSharp.Resources;
 
@@ -26,9 +26,14 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
+    /// <summary>
+    /// The <see cref="ReferenceTracker"/> value for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -73,11 +78,13 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
         Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
-        using Lease _0 = device.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetReferenceTrackingLease();
 
         device.ThrowIfDeviceLost();
 
@@ -193,8 +200,8 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -300,9 +307,9 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = destination.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -378,9 +385,9 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = destination.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -442,8 +449,8 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -549,9 +556,9 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = source.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _2 = source.GetReferenceTracker().GetReferenceTrackingLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -590,7 +597,7 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    protected virtual partial void DangerousRelease()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -638,7 +645,7 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -647,20 +654,20 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         return (this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out Lease)"/>
-    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
+    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
-        lease = GetReferenceTrackingLease();
+        lease = GetReferenceTracker().GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
         return D3D12Resource;
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*, out Lease)"/>
-    internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*, out ReferenceTracker.Lease)"/>
+    internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
     {
-        lease = GetReferenceTrackingLease();
+        lease = GetReferenceTracker().GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -677,7 +684,7 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetReferenceTrackingLease();
 
         ThrowIfDeviceMismatch(device);
 
@@ -691,13 +698,13 @@ public abstract unsafe class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     }
 
     /// <inheritdoc/>
-    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
+    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
         return ValidateAndGetID3D12Resource(device, out lease);
     }
 
     /// <inheritdoc/>
-    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
+    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
     {
         return ValidateAndGetID3D12ResourceAndTransitionStates(device, resourceState, out d3D12Resource, out lease);
     }

@@ -39,9 +39,9 @@ public static class GraphicsResourceHelper
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
-        /// <param name="lease">The <see cref="NativeObject.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
+        /// <param name="lease">The <see cref="ReferenceTracker.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
         /// <returns>The the underlying <see cref="ID3D12Resource"/> object.</returns> 
-        ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out NativeObject.Lease lease);
+        ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease);
 
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object, along with the transition states.
@@ -49,9 +49,9 @@ public static class GraphicsResourceHelper
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <param name="resourceState">The target state to transition the resource to.</param>
         /// <param name="d3D12Resource">The the underlying <see cref="ID3D12Resource"/> object.</param>
-        /// <param name="lease">The <see cref="NativeObject.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
+        /// <param name="lease">The <see cref="ReferenceTracker.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
         /// <returns>The resource states for <paramref name="d3D12Resource"/>, before and after the transition.</returns>
-        (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out NativeObject.Lease lease);
+        (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(buffer);
 
-        using NativeObject.Lease _0 = buffer.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = buffer.GetReferenceTracker().GetReferenceTrackingLease();
 
         buffer.ThrowIfDeviceMismatch(device);
 
@@ -89,7 +89,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -111,7 +111,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -202,7 +202,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -224,7 +224,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -315,7 +315,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 
@@ -337,7 +337,7 @@ public static class GraphicsResourceHelper
     {
         Guard.IsNotNull(texture);
 
-        using NativeObject.Lease _0 = texture.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = texture.GetReferenceTracker().GetReferenceTrackingLease();
 
         texture.ThrowIfDeviceMismatch(device);
 

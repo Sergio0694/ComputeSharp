@@ -7,7 +7,7 @@ namespace ComputeSharp.Shaders.Models;
 /// <summary>
 /// A <see langword="class"/> representing a custom pipeline state for a compute operation.
 /// </summary>
-internal sealed unsafe class PipelineData : NativeObject
+internal sealed unsafe class PipelineData : ReferenceTrackedObject
 {
     /// <summary>
     /// The <see cref="ID3D12RootSignature"/> instance for the current <see cref="PipelineData"/> object.
@@ -41,7 +41,7 @@ internal sealed unsafe class PipelineData : NativeObject
     public ID3D12PipelineState* D3D12PipelineState => this.d3D12PipelineState;
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    protected override void DangerousRelease()
     {
         this.d3D12RootSignature.Dispose();
         this.d3D12PipelineState.Dispose();
