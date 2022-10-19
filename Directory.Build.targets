@@ -30,4 +30,17 @@
     <PackageVersion Condition="'$(EXCLUDE_RUN_ID_FROM_PACKAGE)' != 'true' AND '$(IsCommitOnReleaseBranch)' != true">$(Version).$(GITHUB_RUN_ID)</PackageVersion>
     <PackageVersion Condition="'$(GITHUB_SHA)' != ''">$(PackageVersion)+$(GITHUB_SHA)</PackageVersion>
   </PropertyGroup>
+
+  <!-- Import all .tt files with their generated .g.cs files (the T4 service is imported in the .props file) -->
+  <ItemGroup>
+    <None Update="**\*.tt">
+      <LastGenOutput>%(Filename).g.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <Compile Update="**\*.g.cs">
+      <DependentUpon>$([System.IO.Path]::GetFileNameWithoutExtension('%(Filename)')).tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
 </Project>

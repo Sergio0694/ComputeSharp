@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
@@ -12,14 +12,6 @@
     <InternalsVisibleTo Include="ComputeSharp.Uwp" />
     <InternalsVisibleTo Include="ComputeSharp.WinUI" />
     <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Graphics\Interop\ReferenceTrackedTypes.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ReferenceTrackedTypes.tt</DependentUpon>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,21 +33,10 @@
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="Graphics\Interop\ReferenceTrackedTypes.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ReferenceTrackedTypes.g.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+
+  <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Graphics\Interop\ReferenceTrackedTypes.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ReferenceTrackedTypes.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
