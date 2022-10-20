@@ -135,7 +135,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Output the diagnostics, if any
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
+            .Select(static (item, _) => item.Diagnostcs.AsImmutableArray())
             .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Get the GetInputCount() info (hierarchy and input count)

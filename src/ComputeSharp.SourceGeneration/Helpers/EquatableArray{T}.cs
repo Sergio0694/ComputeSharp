@@ -71,6 +71,15 @@ internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnu
     }
 
     /// <summary>
+    /// Gets a value indicating whether the current array is default or empty.
+    /// </summary>
+    public bool IsDefaultOrEmpty
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => AsImmutableArray().IsDefaultOrEmpty;
+    }
+
+    /// <summary>
     /// Gets the length of the current array.
     /// </summary>
     public int Length

@@ -41,7 +41,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     token.ThrowIfCancellationRequested();
 
                     // Get the remaining info for the current shader
-                    ImmutableArray<SyntaxKind> modifiers = methodDeclaration.Modifiers.Select(token => token.Kind()).ToImmutableArray();
+                    ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
                     D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
@@ -63,7 +63,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Output the diagnostics
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
+            .Select(static (item, _) => item.Diagnostcs.AsImmutableArray())
             .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Compile the requested shader bytecodes
