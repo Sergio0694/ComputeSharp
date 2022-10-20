@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -63,8 +62,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Output the diagnostics
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs.AsImmutableArray())
-            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+            .Select(static (item, _) => item.Diagnostcs));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =

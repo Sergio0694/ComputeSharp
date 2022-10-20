@@ -48,8 +48,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         // Output the diagnostics, if any
         context.ReportDiagnostics(
             methodInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs.AsImmutableArray())
-            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+            .Select(static (item, _) => item.Diagnostcs));
 
         // Generate the [ShaderMethodSource] attributes
         context.RegisterSourceOutput(methodInfoWithErrors, static (context, item) =>
