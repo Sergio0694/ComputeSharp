@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ComputeSharp.SourceGeneration.Helpers;
 
@@ -101,7 +102,7 @@ internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnu
     }
 
     /// <sinheritdoc/>
-    public override int GetHashCode()
+    public override unsafe int GetHashCode()
     {
         if (this.array is not T[] array)
         {
@@ -110,9 +111,25 @@ internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnu
 
         HashCode hashCode = default;
 
-        foreach (T item in array)
+        if (typeof(T) == typeof(byte))
         {
-            hashCode.Add(item);
+            ReadOnlySpan<T> span = array;
+            ref T r0 = ref MemoryMarshal.GetReference(span);
+            ref byte r1 = ref Unsafe.As<T, byte>(ref r0);
+
+            fixed (byte* p = &r1)
+            {
+                ReadOnlySpan<byte> bytes = new(p, span.Length);
+
+                hashCode.AddBytes(bytes);
+            }
+        }
+        else
+        {
+            foreach (T item in array)
+            {
+                hashCode.Add(item);
+            }
         }
 
         return hashCode.ToHashCode();
