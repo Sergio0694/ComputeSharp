@@ -118,7 +118,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Output the diagnostics, if any
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
+            .Select(static (item, _) => item.Diagnostcs.AsImmutableArray())
             .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
 
         // Get the GetDispatchId() info (hierarchy and dispatch id info)
