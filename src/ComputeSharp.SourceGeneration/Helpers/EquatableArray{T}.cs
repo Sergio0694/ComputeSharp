@@ -70,6 +70,15 @@ internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnu
         get => AsImmutableArray().IsEmpty;
     }
 
+    /// <summary>
+    /// Gets the length of the current array.
+    /// </summary>
+    public int Length
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => AsImmutableArray().Length;
+    }
+
     /// <sinheritdoc/>
     public bool Equals(EquatableArray<T> array)
     {
