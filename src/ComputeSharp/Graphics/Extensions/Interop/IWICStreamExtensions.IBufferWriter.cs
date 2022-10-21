@@ -3,6 +3,10 @@ using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+#if NET6_0_OR_GREATER
+using CommunityToolkit.Diagnostics;
+using TerraFX.Interop;
+#endif
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.Windows.E;
 using static TerraFX.Interop.Windows.IID;
@@ -46,7 +50,10 @@ unsafe partial class IWICStreamExtensions
         : IUnknown.Interface
 #endif
     {
-#if !NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
+        /// <inheritdoc/>
+        static Guid* INativeGuid.NativeGuid => (Guid*)ThrowHelper.ThrowNotSupportedException<nint>();
+#else
         /// <inheritdoc cref="QueryInterface"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int QueryInterfaceDelegate(IBufferWriterWrapper* @this, Guid* riid, void** ppvObject);
