@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGenerators.Models;
@@ -17,46 +13,6 @@ namespace ComputeSharp.SourceGenerators.Models;
 internal sealed record HlslMethodSourceInfo(
     string MetadataName,
     string EntryPoint,
-    ImmutableArray<(string Name, string Definition)> DefinedTypes,
-    ImmutableArray<(string Name, string Value)> DefinedConstants,
-    ImmutableArray<(string Signature, string Definition)> DependentMethods)
-{
-    /// <inheritdoc/>
-    public bool Equals(HlslMethodSourceInfo? obj)
-    {
-        return Comparer.Default.Equals(this, obj);
-    }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        return Comparer.Default.GetHashCode(this);
-    }
-
-    /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslMethodSourceInfo"/>.
-    /// </summary>
-    private sealed class Comparer : Comparer<HlslMethodSourceInfo, Comparer>
-    {
-        /// <inheritdoc/>
-        protected override void AddToHashCode(ref HashCode hashCode, HlslMethodSourceInfo obj)
-        {
-            hashCode.Add(obj.MetadataName);
-            hashCode.Add(obj.EntryPoint);
-            hashCode.AddRange(obj.DefinedTypes);
-            hashCode.AddRange(obj.DefinedConstants);
-            hashCode.AddRange(obj.DependentMethods);
-        }
-
-        /// <inheritdoc/>
-        protected override bool AreEqual(HlslMethodSourceInfo x, HlslMethodSourceInfo y)
-        {
-            return
-                x.MetadataName == y.MetadataName &&
-                x.EntryPoint == y.EntryPoint &&
-                x.DefinedTypes.SequenceEqual(y.DefinedTypes) &&
-                x.DefinedConstants.SequenceEqual(y.DefinedConstants) &&
-                x.DependentMethods.SequenceEqual(y.DependentMethods);
-        }
-    }
-}
+    EquatableArray<(string Name, string Definition)> DefinedTypes,
+    EquatableArray<(string Name, string Value)> DefinedConstants,
+    EquatableArray<(string Signature, string Definition)> DependentMethods);

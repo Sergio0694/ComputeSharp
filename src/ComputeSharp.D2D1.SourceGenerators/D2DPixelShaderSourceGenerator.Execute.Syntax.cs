@@ -87,7 +87,7 @@ partial class D2DPixelShaderSourceGenerator
             // <METHOD_BODY>
             return
                 MethodDeclaration(returnType, Identifier(bytecodeInfo.MethodName))
-                .AddModifiers(bytecodeInfo.Modifiers.Select(Token).ToArray())
+                .AddModifiers(bytecodeInfo.Modifiers.Select(static m => Token((SyntaxKind)m)).ToArray())
                 .AddAttributeLists(
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode"))

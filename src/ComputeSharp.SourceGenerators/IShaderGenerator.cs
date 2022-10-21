@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -118,8 +117,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Output the diagnostics, if any
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
-            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+            .Select(static (item, _) => item.Diagnostcs));
 
         // Get the GetDispatchId() info (hierarchy and dispatch id info)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo DispatchId)> dispatchIdInfo =

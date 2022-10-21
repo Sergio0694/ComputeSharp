@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -41,7 +40,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     token.ThrowIfCancellationRequested();
 
                     // Get the remaining info for the current shader
-                    ImmutableArray<SyntaxKind> modifiers = methodDeclaration.Modifiers.Select(token => token.Kind()).ToImmutableArray();
+                    ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
                     D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
@@ -63,8 +62,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Output the diagnostics
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
-            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+            .Select(static (item, _) => item.Diagnostcs));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =

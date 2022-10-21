@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -135,8 +134,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Output the diagnostics, if any
         context.ReportDiagnostics(
             shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs)
-            .WithComparer(EqualityComparer<DiagnosticInfo>.Default.ForImmutableArray()));
+            .Select(static (item, _) => item.Diagnostcs));
 
         // Get the GetInputCount() info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =

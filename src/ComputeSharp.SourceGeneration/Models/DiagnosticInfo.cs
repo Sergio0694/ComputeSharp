@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -16,24 +13,8 @@ namespace ComputeSharp.SourceGeneration.Models;
 /// <param name="SyntaxTree">The tree to use as location for the diagnostic, if available.</param>
 /// <param name="TextSpan">The span to use as location for the diagnostic.</param>
 /// <param name="Arguments">The diagnostic arguments.</param>
-internal sealed record DiagnosticInfo(
-    DiagnosticDescriptor Descriptor,
-    SyntaxTree? SyntaxTree,
-    TextSpan TextSpan,
-    ImmutableArray<string> Arguments)
+internal sealed record DiagnosticInfo(DiagnosticDescriptor Descriptor, SyntaxTree? SyntaxTree, TextSpan TextSpan, EquatableArray<string> Arguments)
 {
-    /// <inheritdoc/>
-    public bool Equals(DiagnosticInfo? obj)
-    {
-        return Comparer.Default.Equals(this, obj);
-    }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        return Comparer.Default.GetHashCode(this);
-    }
-
     /// <summary>
     /// Creates a new <see cref="Diagnostic"/> instance with the state from this model.
     /// </summary>
@@ -74,30 +55,5 @@ internal sealed record DiagnosticInfo(
         Location location = node.GetLocation();
 
         return new(descriptor, location.SourceTree, location.SourceSpan, args.Select(static arg => arg.ToString()).ToImmutableArray());
-    }
-
-    /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DiagnosticInfo"/>.
-    /// </summary>
-    private sealed class Comparer : Comparer<DiagnosticInfo, Comparer>
-    {
-        /// <inheritdoc/>
-        protected override void AddToHashCode(ref HashCode hashCode, DiagnosticInfo obj)
-        {
-            hashCode.Add(obj.Descriptor);
-            hashCode.Add(obj.SyntaxTree);
-            hashCode.Add(obj.TextSpan);
-            hashCode.AddRange(obj.Arguments);
-        }
-
-        /// <inheritdoc/>
-        protected override bool AreEqual(DiagnosticInfo x, DiagnosticInfo y)
-        {
-            return
-                x.Descriptor.Equals(y.Descriptor) &&
-                x.SyntaxTree == y.SyntaxTree &&
-                x.TextSpan.Equals(y.TextSpan) &&
-                x.Arguments.SequenceEqual(y.Arguments);
-        }
     }
 }
