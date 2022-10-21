@@ -12,15 +12,22 @@ using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
+#pragma warning disable CA1063
+
 namespace ComputeSharp.Resources;
 
 /// <summary>
 /// A <see langword="class"/> representing a typed buffer stored on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
+public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
+    /// <summary>
+    /// The <see cref="ReferenceTracker"/> value for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -48,10 +55,12 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
     [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
-        using Lease _0 = device.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -104,7 +113,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using Lease _0 = GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -116,14 +125,14 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using Lease _0 = GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Length);
         }
     }
 
     /// <inheritdoc/>
-    private protected sealed override void OnDispose()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -185,7 +194,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using Lease _0 = this.buffer.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 
             return new(this.buffer.mappedData);
         }

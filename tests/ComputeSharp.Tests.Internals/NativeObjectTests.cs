@@ -18,11 +18,11 @@ public class NativeObjectTests
 
         Assert.IsTrue(obj.IsDisposed);
 
-        using NativeObject.Lease lease0 = obj.TryGetReferenceTrackingLease(out bool leaseTaken);
+        using ReferenceTracker.Lease lease0 = obj.GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         Assert.IsFalse(leaseTaken);
 
-        _ = Assert.ThrowsException<ObjectDisposedException>(() => obj.GetReferenceTrackingLease());
+        _ = Assert.ThrowsException<ObjectDisposedException>(() => obj.GetReferenceTracker().GetLease());
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ public class NativeObjectTests
     {
         DisposableObject obj = new();
 
-        NativeObject.Lease lease0 = obj.GetReferenceTrackingLease();
+        ReferenceTracker.Lease lease0 = obj.GetReferenceTracker().GetLease();
 
         obj.Dispose();
 
@@ -49,7 +49,7 @@ public class NativeObjectTests
     {
         DisposableObject obj = new();
 
-        NativeObject.Lease lease0 = obj.TryGetReferenceTrackingLease(out bool leaseTaken);
+        ReferenceTracker.Lease lease0 = obj.GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         Assert.IsTrue(leaseTaken);
 
@@ -69,13 +69,13 @@ public class NativeObjectTests
     {
         DisposableObject obj = new();
 
-        obj.DangerousAddRef();
+        obj.GetReferenceTracker().DangerousAddRef();
 
         obj.Dispose();
 
         Assert.IsFalse(obj.IsDisposed);
 
-        obj.DangerousRelease();
+        obj.GetReferenceTracker().DangerousRelease();
 
         Assert.IsTrue(obj.IsDisposed);
     }
@@ -89,7 +89,7 @@ public class NativeObjectTests
         {
             for (int j = 0; j < 4; j++)
             {
-                using NativeObject.Lease lease = obj.GetReferenceTrackingLease();
+                using ReferenceTracker.Lease lease = obj.GetReferenceTracker().GetLease();
             }
         });
 
@@ -118,7 +118,7 @@ public class NativeObjectTests
 
             for (int j = 0; j < 4; j++)
             {
-                using NativeObject.Lease lease = obj.TryGetReferenceTrackingLease(out bool leaseTaken);
+                using ReferenceTracker.Lease lease = obj.GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
                 if (isDisposed)
                 {
@@ -135,7 +135,7 @@ public class NativeObjectTests
     {
         DisposableObject obj = new();
 
-        NativeObject.Lease outstandingLease = obj.GetReferenceTrackingLease();
+        ReferenceTracker.Lease outstandingLease = obj.GetReferenceTracker().GetLease();
 
         _ = Parallel.For(0, 2048, i =>
         {
@@ -150,7 +150,7 @@ public class NativeObjectTests
 
             for (int j = 0; j < 4; j++)
             {
-                using NativeObject.Lease lease = obj.TryGetReferenceTrackingLease(out bool leaseTaken);
+                using ReferenceTracker.Lease lease = obj.GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
                 if (isDisposed)
                 {
@@ -166,11 +166,11 @@ public class NativeObjectTests
         Assert.IsTrue(obj.IsDisposed);
     }
 
-    private sealed class DisposableObject : NativeObject
+    private sealed class DisposableObject : ReferenceTrackedObject
     {
         public bool IsDisposed { get; private set; }
 
-        private protected override void OnDispose()
+        protected override void DangerousOnDispose()
         {
             Assert.IsFalse(IsDisposed);
 

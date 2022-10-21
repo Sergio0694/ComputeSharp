@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
@@ -16,22 +16,9 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
-  <!-- T4 template generation service -->
+  <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>PixelShaderEffect.Properties.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Shaders\Interop\Effects\PixelShaderEffect.Properties.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PixelShaderEffect.Properties.g.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->

@@ -63,7 +63,7 @@ internal interface ICachedShader
     /// <summary>
     /// An <see cref="ICachedShader"/> implementation for a dynamically compiled shader.
     /// </summary>
-    public sealed unsafe class Dynamic : NativeObject, ICachedShader
+    public sealed unsafe class Dynamic : ReferenceTrackedObject, ICachedShader
     {
         /// <summary>
         /// The <see cref="IDxcBlob"/> instance currently in use.
@@ -86,7 +86,7 @@ internal interface ICachedShader
         public D3D12_SHADER_BYTECODE D3D12ShaderBytecode => new((ID3DBlob*)this.dxcBlobBytecode.Get());
 
         /// <inheritdoc/>
-        private protected override void OnDispose()
+        protected override void DangerousOnDispose()
         {
             this.dxcBlobBytecode.Dispose();
         }

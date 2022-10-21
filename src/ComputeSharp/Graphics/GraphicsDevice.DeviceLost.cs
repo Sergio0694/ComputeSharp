@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -48,7 +49,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     private void QueueRaiseDeviceLostEventIfNeeded()
     {
-        using Lease _0 = TryGetReferenceTrackingLease(out bool leaseTaken);
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {

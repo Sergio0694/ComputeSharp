@@ -51,7 +51,7 @@ partial class DeviceHelper
         /// <summary>
         /// The enumerator type for a <see cref="DeviceQuery"/> instance.
         /// </summary>
-        private sealed unsafe class Enumerator : NativeObject, IEnumerator<GraphicsDevice>
+        private sealed unsafe class Enumerator : ReferenceTrackedObject, IEnumerator<GraphicsDevice>
         {
             /// <summary>
             /// The <see cref="Predicate{T}"/> instance to use to select devices to create, if present.
@@ -210,7 +210,7 @@ partial class DeviceHelper
             }
 
             /// <inheritdoc/>
-            private protected override void OnDispose()
+            protected override void DangerousOnDispose()
             {
                 this.dxgiFactory6.Dispose();
             }

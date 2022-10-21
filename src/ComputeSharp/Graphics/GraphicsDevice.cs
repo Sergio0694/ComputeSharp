@@ -25,8 +25,13 @@ namespace ComputeSharp;
 /// A <see langword="class"/> that represents an <see cref="ID3D12Device"/> instance that can be used to run compute shaders.
 /// </summary>
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed unsafe partial class GraphicsDevice : NativeObject
+public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
 {
+    /// <summary>
+    /// The <see cref="ReferenceTracker"/> value for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
     /// <summary>
     /// The underlying <see cref="ID3D12Device"/> wrapped by the current instance.
     /// </summary>
@@ -147,6 +152,8 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
     internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
 
         this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -252,7 +259,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
     public bool IsDoublePrecisionSupportAvailable()
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -270,7 +277,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -286,7 +293,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture1DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -304,7 +311,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -320,7 +327,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -338,7 +345,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -354,7 +361,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {
-        using Lease _0 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         ThrowIfDeviceLost();
 
@@ -466,7 +473,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     }
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         DeviceHelper.NotifyDisposedDevice(this);
 

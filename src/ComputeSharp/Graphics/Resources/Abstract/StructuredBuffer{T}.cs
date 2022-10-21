@@ -4,6 +4,7 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
+using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -38,8 +39,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -113,9 +114,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = destination.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -161,9 +162,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = destination.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = destination.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -202,8 +203,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -281,9 +282,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         Guard.IsInRange(destinationOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
-        using Lease _2 = source.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _2 = source.GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 

@@ -6,9 +6,37 @@ namespace ComputeSharp.Interop;
 
 #pragma warning disable CS0618
 
-/// <inheritdoc/>
-partial class NativeObject
+/// <summary>
+/// An object acting as reference tracked for a given managed object.
+/// </summary>
+internal struct ReferenceTracker : IDisposable
 {
+    /// <summary>
+    /// The target object to track.
+    /// </summary>
+    private readonly IReferenceTrackedObject trackedObject;
+
+    /// <summary>
+    /// A mask that indicates the state of the current object.
+    /// The mask uses the following schema:
+    /// <list type="bullet">
+    ///     <item>[0, 30]: the number of existing reference tracking leases.</item>
+    ///     <item>[31]: whether or not <see cref="IDisposable.Dispose"/> has been called.</item>
+    /// </list>
+    /// </summary>
+    private volatile int referenceTrackingMask;
+
+    /// <summary>
+    /// Creates a new <see cref="ReferenceTracker"/> instance with the specified paramters.
+    /// </summary>
+    /// <param name="trackedObject">The input tracked object to wrap.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ReferenceTracker(IReferenceTrackedObject trackedObject)
+    {
+        this.trackedObject = trackedObject;
+        this.referenceTrackingMask = 0;
+    }
+
     /// <summary>
     /// Adds an untracked reference to the underlying object. This needs to be released with <see cref="DangerousRelease"/>.
     /// </summary>
@@ -16,7 +44,7 @@ partial class NativeObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void DangerousAddRef()
     {
-        _ = GetReferenceTrackingLease();
+        _ = GetLease();
     }
 
     /// <summary>
@@ -25,7 +53,7 @@ partial class NativeObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void DangerousRelease()
     {
-        ReturnReferenceTrackingLease();
+        ReturnLease();
     }
 
     /// <summary>
@@ -34,9 +62,9 @@ partial class NativeObject
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
     /// <exception cref="ObjectDisposedException">Thrown if the tracked object has been disposed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Lease GetReferenceTrackingLease()
+    internal Lease GetLease()
     {
-        Lease lease = TryGetReferenceTrackingLease(out bool leaseTaken);
+        Lease lease = TryGetLease(out bool leaseTaken);
 
         if (!leaseTaken)
         {
@@ -57,7 +85,7 @@ partial class NativeObject
     /// <param name="leaseTaken">Whether or not the returned <see cref="Lease"/> value is enabled.</param>
     /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Lease TryGetReferenceTrackingLease(out bool leaseTaken)
+    internal Lease TryGetLease(out bool leaseTaken)
     {
         bool success = true;
 
@@ -98,26 +126,26 @@ partial class NativeObject
         }
         while (currentValue != originalValue);
 
-        NativeObject? nativeObject;
+        IReferenceTrackedObject? trackedObject;
 
         // If the reference count was incremented, return a valid lease. Otherwise,
         // return one just wrapping a null instance, which will no-op when disposed.
         if (success)
         {
             leaseTaken = true;
-            nativeObject = this;
+            trackedObject = this.trackedObject;
         }
         else
         {
             leaseTaken = false;
-            nativeObject = null;
+            trackedObject = null;
         }
 
-        return new(nativeObject);
+        return new(trackedObject);
     }
 
     /// <inheritdoc/>
-    private void RequestDispose()
+    public void Dispose()
     {
         bool isDisposed = false;
 
@@ -161,14 +189,14 @@ partial class NativeObject
         // tracked object will just be released once the last active lease is returned.
         if (!isDisposed && currentValue == 0)
         {
-            OnDispose();
+            this.trackedObject.DangerousOnDispose();
         }
     }
 
     /// <summary>
     /// Returns a given lease (ie. decrements the ref count for the tracked object).
     /// </summary>
-    private void ReturnReferenceTrackingLease()
+    private void ReturnLease()
     {
         // To return a lease, we can simply do an interlocked decrement on the reference tracking
         // mask. Each lease is guaranteed to only be disposed once (the contract states to only
@@ -182,42 +210,42 @@ partial class NativeObject
         // This is the case if the dispose bit is set (the 32nd one), and no other bit is set.
         if (currentValue == 1 << 31)
         {
-            OnDispose();
+            this.trackedObject.DangerousOnDispose();
         }
     }
 
     /// <summary>
-    /// A reference tracking lease to extend the lifetime of a given <see cref="NativeObject"/> instance while in a given scope.
+    /// A reference tracking lease to extend the lifetime of a given <see cref="ReferenceTrackedObject"/> instance while in a given scope.
     /// </summary>
     /// <remarks>
     /// This type must always be used in a <see langword="using"/> statement and disposed properly. Not doing
     /// so is undefined behavior and may result in memory leaks and inability to correctly restore lost devices.
     /// </remarks>
-    internal struct Lease : IDisposable
+    public struct Lease : IDisposable
     {
         /// <summary>
-        /// The <see cref="NativeObject"/> instance being wrapped, if any.
+        /// The <see cref="ReferenceTrackedObject"/> instance being wrapped, if any.
         /// </summary>
-        private NativeObject? nativeObject;
+        private IReferenceTrackedObject? trackedObject;
 
         /// <summary>
         /// Creates a new <see cref="Lease"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="nativeObject">The <see cref="NativeObject"/> instance being wrapped, if any.</param>
-        [Obsolete("This constructor is only meant to be called from within NativeObject.")]
-        public Lease(NativeObject? nativeObject)
+        /// <param name="trackedObject">The <see cref="IReferenceTrackedObject"/> instance being wrapped, if any.</param>
+        [Obsolete("This constructor is only meant to be called from within ReferenceTracker.")]
+        public Lease(IReferenceTrackedObject? trackedObject)
         {
-            this.nativeObject = nativeObject;
+            this.trackedObject = trackedObject;
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            NativeObject? nativeObject = this.nativeObject;
+            IReferenceTrackedObject? trackedObject = this.trackedObject;
 
-            this.nativeObject = null;
+            this.trackedObject = null;
 
-            nativeObject?.ReturnReferenceTrackingLease();
+            trackedObject?.GetReferenceTracker().ReturnLease();
         }
     }
 }

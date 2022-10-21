@@ -11,15 +11,22 @@ using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
+#pragma warning disable CA1063
+
 namespace ComputeSharp.Resources;
 
 /// <summary>
 /// A <see langword="class"/> representing a typed 1D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
+public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
+    /// <summary>
+    /// The <see cref="ReferenceTracker"/> value for the current instance.
+    /// </summary>
+    private ReferenceTracker referenceTracker;
+
 #if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
@@ -51,9 +58,11 @@ public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResou
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture1D(GraphicsDevice device, int width, ResourceType resourceType, AllocationMode allocationMode)
     {
+        this.referenceTracker = new ReferenceTracker(this);
+
         Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using Lease _0 = device.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
@@ -109,7 +118,7 @@ public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using Lease _0 = GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new MemoryManager(this).Memory;
         }
@@ -121,14 +130,14 @@ public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResou
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using Lease _0 = GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Width);
         }
     }
 
     /// <inheritdoc/>
-    private protected sealed override void OnDispose()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER
@@ -190,7 +199,7 @@ public abstract unsafe class TransferTexture1D<T> : NativeObject, IGraphicsResou
         {
             Guard.IsEqualTo(elementIndex, 0);
 
-            using Lease _0 = this.buffer.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 
             return new(this.buffer.mappedData);
         }

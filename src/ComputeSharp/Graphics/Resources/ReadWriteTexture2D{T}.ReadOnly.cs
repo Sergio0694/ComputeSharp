@@ -24,8 +24,8 @@ partial class ReadWriteTexture2D<T>
     /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly(ReadWriteTexture2D{float})"/>
     public IReadOnlyTexture2D<T> AsReadOnly()
     {
-        using Lease _0 = GraphicsDevice.GetReferenceTrackingLease();
-        using Lease _1 = GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
 
         GraphicsDevice.ThrowIfDeviceLost();
 
@@ -51,9 +51,9 @@ partial class ReadWriteTexture2D<T>
     }
 
     /// <inheritdoc/>
-    private protected override void OnDispose()
+    protected override void DangerousOnDispose()
     {
-        base.OnDispose();
+        base.DangerousOnDispose();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -61,7 +61,7 @@ partial class ReadWriteTexture2D<T>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture2D<T>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyTexture2D<T>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture2D{T}"/> instance being wrapped.
@@ -79,7 +79,7 @@ partial class ReadWriteTexture2D<T>
         /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture2D<T> owner)
         {
-            owner.DangerousAddRef();
+            owner.GetReferenceTracker().DangerousAddRef();
 
             this.owner = owner;
 
@@ -112,8 +112,8 @@ partial class ReadWriteTexture2D<T>
         /// <inheritdoc/>
         D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
-            using Lease _0 = GetReferenceTrackingLease();
-            using Lease _1 = this.owner.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+            using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -127,11 +127,11 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out Lease lease)
+        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
         {
-            lease = GetReferenceTrackingLease();
+            lease = GetReferenceTracker().GetLease();
 
-            using Lease _1 = this.owner.GetReferenceTrackingLease();
+            using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetLease();
 
             this.owner.ThrowIfDeviceMismatch(device);
 
@@ -139,15 +139,15 @@ partial class ReadWriteTexture2D<T>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out Lease lease)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
 
         /// <inheritdoc/>
-        private protected override void OnDispose()
+        protected override void DangerousOnDispose()
         {
-            this.owner.DangerousRelease();
+            this.owner.GetReferenceTracker().DangerousRelease();
 
             if (this.owner.GraphicsDevice is GraphicsDevice device)
             {

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Diagnostics;
+using ComputeSharp.Interop;
 
 namespace ComputeSharp;
 
@@ -150,7 +151,7 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device);
 
-        using Interop.NativeObject.Lease _0 = device.GetReferenceTrackingLease();
+        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
