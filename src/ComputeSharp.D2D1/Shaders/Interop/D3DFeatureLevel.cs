@@ -12,7 +12,7 @@ public enum D3DFeatureLevel
     /// traditional GPUs) that support a superset of the functionality. MCDM is the overall driver model for
     /// compute-only; it's a scaled-down peer of the larger scoped Windows Device Driver Model (WDDM).
     /// </summary>
-    FeatureLevel1_0Core = D3D_FEATURE_LEVEL_1_0_CORE,
+    FeatureLevel1_0_Core = D3D_FEATURE_LEVEL_1_0_CORE,
 
     /// <summary>
     /// Targets features supported by <see href="https://learn.microsoft.com/windows/win32/direct3d11/overviews-direct3d-11-devices-downlevel-intro">feature level</see> 9.1, including shader model 2.
@@ -32,7 +32,7 @@ public enum D3DFeatureLevel
     /// <summary>
     /// Targets features supported by Direct3D 10.0, including shader model 4.
     /// </summary>
-    FeatureLevel10 = D3D_FEATURE_LEVEL_10_0,
+    FeatureLevel10_0 = D3D_FEATURE_LEVEL_10_0,
 
     /// <summary>
     /// Targets features supported by Direct3D 10.1, including shader model 4.
@@ -53,7 +53,7 @@ public enum D3DFeatureLevel
     /// <summary>
     /// Targets features supported by Direct3D 12.0, including shader model 5.
     /// </summary>
-    FeatureLevel12 = D3D_FEATURE_LEVEL_12_0,
+    FeatureLevel12_0 = D3D_FEATURE_LEVEL_12_0,
 
     /// <summary>
     /// Targets features supported by Direct3D 12.1, including shader model 5.
