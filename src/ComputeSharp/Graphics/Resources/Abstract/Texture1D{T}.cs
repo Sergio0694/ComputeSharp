@@ -492,8 +492,8 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
         copyCommandList.ExecuteAndWaitForCompletion();
     }
 
-    /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-    protected virtual partial void DangerousRelease()
+    /// <inheritdoc/>
+    protected virtual partial void DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

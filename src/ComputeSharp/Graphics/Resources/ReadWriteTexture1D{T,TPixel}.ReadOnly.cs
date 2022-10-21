@@ -48,9 +48,9 @@ partial class ReadWriteTexture1D<T, TPixel>
     }
 
     /// <inheritdoc/>
-    protected override void DangerousRelease()
+    protected override void DangerousOnDispose()
     {
-        base.DangerousRelease();
+        base.DangerousOnDispose();
 
         this.readOnlyWrapper?.Dispose();
     }
@@ -133,7 +133,7 @@ partial class ReadWriteTexture1D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        protected override void DangerousRelease()
+        protected override void DangerousOnDispose()
         {
             this.owner.GetReferenceTracker().DangerousRelease();
 

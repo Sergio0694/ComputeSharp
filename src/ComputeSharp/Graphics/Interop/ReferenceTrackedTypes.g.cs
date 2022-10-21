@@ -71,13 +71,14 @@ namespace ComputeSharp.Resources
         {
             return ref this.referenceTracker;
         }
-        /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-        protected virtual partial void DangerousRelease();
+
+        /// <inheritdoc cref="IReferenceTrackedObject.DangerousOnDispose"/>
+        protected virtual partial void DangerousOnDispose();
 
         /// <inheritdoc/>
-        void IReferenceTrackedObject.DangerousRelease()
+        void IReferenceTrackedObject.DangerousOnDispose()
         {
-            DangerousRelease();
+            DangerousOnDispose();
         }
     }
 }
@@ -115,13 +116,14 @@ namespace ComputeSharp.Resources
         {
             return ref this.referenceTracker;
         }
-        /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-        protected virtual partial void DangerousRelease();
+
+        /// <inheritdoc cref="IReferenceTrackedObject.DangerousOnDispose"/>
+        protected virtual partial void DangerousOnDispose();
 
         /// <inheritdoc/>
-        void IReferenceTrackedObject.DangerousRelease()
+        void IReferenceTrackedObject.DangerousOnDispose()
         {
-            DangerousRelease();
+            DangerousOnDispose();
         }
     }
 }
@@ -159,13 +161,14 @@ namespace ComputeSharp.Resources
         {
             return ref this.referenceTracker;
         }
-        /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-        protected virtual partial void DangerousRelease();
+
+        /// <inheritdoc cref="IReferenceTrackedObject.DangerousOnDispose"/>
+        protected virtual partial void DangerousOnDispose();
 
         /// <inheritdoc/>
-        void IReferenceTrackedObject.DangerousRelease()
+        void IReferenceTrackedObject.DangerousOnDispose()
         {
-            DangerousRelease();
+            DangerousOnDispose();
         }
     }
 }

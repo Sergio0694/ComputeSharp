@@ -131,7 +131,7 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
     }
 
     /// <inheritdoc/>
-    void IReferenceTrackedObject.DangerousRelease()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

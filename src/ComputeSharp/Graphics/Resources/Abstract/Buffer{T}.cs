@@ -211,7 +211,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     internal abstract void CopyFrom(ref T source, int destinationOffset, int count);
 
     /// <inheritdoc/>
-    void IReferenceTrackedObject.DangerousRelease()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

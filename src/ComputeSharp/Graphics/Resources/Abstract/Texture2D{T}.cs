@@ -544,7 +544,7 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     }
 
     /// <inheritdoc/>
-    protected virtual partial void DangerousRelease()
+    protected virtual partial void DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
 #if NET6_0_OR_GREATER

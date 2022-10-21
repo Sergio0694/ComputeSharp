@@ -473,7 +473,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     }
 
     /// <inheritdoc/>
-    void IReferenceTrackedObject.DangerousRelease()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
         DeviceHelper.NotifyDisposedDevice(this);
 

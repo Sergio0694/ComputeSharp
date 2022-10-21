@@ -44,12 +44,12 @@ internal abstract partial class ReferenceTrackedObject : IReferenceTrackedObject
         return ref this.referenceTracker;
     }
 
-    /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-    protected abstract void DangerousRelease();
+    /// <inheritdoc cref="IReferenceTrackedObject.DangerousOnDispose"/>
+    protected abstract void DangerousOnDispose();
 
     /// <inheritdoc/>
-    void IReferenceTrackedObject.DangerousRelease()
+    void IReferenceTrackedObject.DangerousOnDispose()
     {
-        DangerousRelease();
+        DangerousOnDispose();
     }
 }

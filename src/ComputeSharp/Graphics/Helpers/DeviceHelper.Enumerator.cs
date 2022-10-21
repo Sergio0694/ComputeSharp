@@ -210,7 +210,7 @@ partial class DeviceHelper
             }
 
             /// <inheritdoc/>
-            protected override void DangerousRelease()
+            protected override void DangerousOnDispose()
             {
                 this.dxgiFactory6.Dispose();
             }

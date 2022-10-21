@@ -189,7 +189,7 @@ internal struct ReferenceTracker : IDisposable
         // tracked object will just be released once the last active lease is returned.
         if (!isDisposed && currentValue == 0)
         {
-            this.trackedObject.DangerousRelease();
+            this.trackedObject.DangerousOnDispose();
         }
     }
 
@@ -210,7 +210,7 @@ internal struct ReferenceTracker : IDisposable
         // This is the case if the dispose bit is set (the 32nd one), and no other bit is set.
         if (currentValue == 1 << 31)
         {
-            this.trackedObject.DangerousRelease();
+            this.trackedObject.DangerousOnDispose();
         }
     }
 

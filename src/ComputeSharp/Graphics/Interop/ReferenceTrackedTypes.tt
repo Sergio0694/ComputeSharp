@@ -10,15 +10,15 @@ using ComputeSharp.Interop;
 <#
 var InternalReferenceTrackedTypes = new[]
 {
-    new { Namespace = "ComputeSharp.Resources", TypeName = "Buffer<T>", IsDangerousReleaseVirtual = false },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture1D<T>", IsDangerousReleaseVirtual = true },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture2D<T>", IsDangerousReleaseVirtual = true },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture3D<T>", IsDangerousReleaseVirtual = true },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferBuffer<T>", IsDangerousReleaseVirtual = false },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture1D<T>", IsDangerousReleaseVirtual = false },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture2D<T>", IsDangerousReleaseVirtual = false },
-    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture3D<T>", IsDangerousReleaseVirtual = false },
-    new { Namespace = "ComputeSharp", TypeName = "GraphicsDevice", IsDangerousReleaseVirtual = false }
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Buffer<T>", IsDangerousOnDisposeVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture1D<T>", IsDangerousOnDisposeVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture2D<T>", IsDangerousOnDisposeVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "Texture3D<T>", IsDangerousOnDisposeVirtual = true },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferBuffer<T>", IsDangerousOnDisposeVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture1D<T>", IsDangerousOnDisposeVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture2D<T>", IsDangerousOnDisposeVirtual = false },
+    new { Namespace = "ComputeSharp.Resources", TypeName = "TransferTexture3D<T>", IsDangerousOnDisposeVirtual = false },
+    new { Namespace = "ComputeSharp", TypeName = "GraphicsDevice", IsDangerousOnDisposeVirtual = false }
 };
 
 foreach (var internalType in InternalReferenceTrackedTypes)
@@ -61,16 +61,18 @@ namespace <#=internalType.Namespace#>
             return ref this.referenceTracker;
         }
 <#
-    if (internalType.IsDangerousReleaseVirtual)
+    if (internalType.IsDangerousOnDisposeVirtual)
     {
+        WriteLine("");
+
 #>
-        /// <inheritdoc cref="IReferenceTrackedObject.DangerousRelease"/>
-        protected virtual partial void DangerousRelease();
+        /// <inheritdoc cref="IReferenceTrackedObject.DangerousOnDispose"/>
+        protected virtual partial void DangerousOnDispose();
 
         /// <inheritdoc/>
-        void IReferenceTrackedObject.DangerousRelease()
+        void IReferenceTrackedObject.DangerousOnDispose()
         {
-            DangerousRelease();
+            DangerousOnDispose();
         }
 <#
     }

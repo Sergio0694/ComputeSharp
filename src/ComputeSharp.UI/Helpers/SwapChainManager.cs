@@ -517,7 +517,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
     }
 
     /// <inheritdoc/>
-    protected override void DangerousRelease()
+    protected override void DangerousOnDispose()
     {
         static void OnDisposeOnDispatcherQueueThread(SwapChainManager<TOwner> @this)
         {

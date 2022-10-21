@@ -170,7 +170,7 @@ public class NativeObjectTests
     {
         public bool IsDisposed { get; private set; }
 
-        protected override void DangerousRelease()
+        protected override void DangerousOnDispose()
         {
             Assert.IsFalse(IsDisposed);
 
