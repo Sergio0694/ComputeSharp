@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.__Internals;
 
@@ -98,10 +99,11 @@ public interface ID2D1Shader
     /// <typeparam name="TLoader">The type of bytecode loader being used.</typeparam>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the bytecode.</param>
     /// <param name="shaderProfile">The shader profile to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
-    /// <param name="options">The compile options to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
+    /// <param name="compileOptions">The compile options to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
     /// <exception cref="InvalidOperationException">Thrown if a precompiled bytecode was requested (<paramref name="shaderProfile"/> is <see langword="null"/>), but it wasn't availablle.</exception>
+    /// <remarks>When this method returns, <paramref name="shaderProfile"/> and <paramref name="compileOptions"/> will be set to the effective laues used to create the shader bytecode that was loaded.</remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadBytecode<TLoader>(ref TLoader loader, D2D1ShaderProfile? shaderProfile, D2D1CompileOptions? options)
+    void LoadBytecode<TLoader>(ref TLoader loader, [NotNull] ref D2D1ShaderProfile? shaderProfile, [NotNull] ref D2D1CompileOptions? compileOptions)
         where TLoader : struct, ID2D1BytecodeLoader;
 }
