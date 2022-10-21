@@ -42,7 +42,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, global::ComputeSharp.D2D1.D2D1ShaderProfile? shaderProfile, global::ComputeSharp.D2D1.D2D1CompileOptions? options)
+            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, ref global::ComputeSharp.D2D1.D2D1ShaderProfile? shaderProfile, ref global::ComputeSharp.D2D1.D2D1CompileOptions? compileOptions)
             // {
             //     <BODY>
             // }
@@ -53,8 +53,8 @@ partial class ID2D1ShaderGenerator
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")),
-                    Parameter(Identifier("shaderProfile")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))),
-                    Parameter(Identifier("options")).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))))
+                    Parameter(Identifier("shaderProfile")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))),
+                    Parameter(Identifier("compileOptions")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))))
                 .WithBody(block);
         }
 
@@ -80,59 +80,85 @@ partial class ID2D1ShaderGenerator
             //      and the options will be set to D2D1CompileOptions.Default (and optionally, D2D1CompileOptions.EnableLinking too).
 
             // Get a formatted representation of the compile options being used
-            ExpressionSyntax optionsExpression =
+            ExpressionSyntax compileOptionsExpression =
                 ParseExpression(
                     bytecodeInfo.CompileOptions
-                    .GetValueOrDefault()
                     .ToString(CultureInfo.InvariantCulture)
                     .Split(',')
                     .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
                     .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right));
 
             // Add parantheses if needed
-            if (optionsExpression is BinaryExpressionSyntax)
+            if (compileOptionsExpression is BinaryExpressionSyntax)
             {
-                optionsExpression = ParenthesizedExpression(optionsExpression);
+                compileOptionsExpression = ParenthesizedExpression(compileOptionsExpression);
             }
 
-            // This code produces a method declaration as follows:
+            // This code produces a block declaration as follows:
             //
-            // global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, shaderProfile ?? <DEFAULT_PROFILE>, options ?? <REQUESTED_OPTIONS>);
-            ExpressionStatementSyntax dynamicLoadingStatement =
-                ExpressionStatement(
-                    InvocationExpression(
-                        MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
-                            IdentifierName("LoadDynamicBytecode")))
-                    .AddArgumentListArguments(
-                        Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
-                        Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
-                        Argument(BinaryExpression(
-                            SyntaxKind.CoalesceExpression,
-                            IdentifierName("shaderProfile"),
-                            IdentifierName($"global::ComputeSharp.D2D1.D2D1ShaderProfile.{D2D1ShaderProfile.PixelShader50}"))),
-                        Argument(BinaryExpression(
-                            SyntaxKind.CoalesceExpression,
-                            IdentifierName("options"),
-                            optionsExpression))));
+            // global::ComputeSharp.D2D1.D2D1ShaderProfile effectiveShaderProfile = shaderProfile ??= <DEFAULT_PROFILE>;
+            // global::ComputeSharp.D2D1.D2D1CompileOptions effectiveCompileOptions = compileOptions ??= <REQUESTED_OPTIONS>;
+            //
+            // global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, effectiveShaderProfile, effectiveCompileOptions);
+            BlockSyntax dynamicLoadingBlock =
+                Block(
+                    LocalDeclarationStatement(
+                        VariableDeclaration(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("effectiveShaderProfile"))
+                            .WithInitializer(EqualsValueClause(
+                                AssignmentExpression(
+                                    SyntaxKind.CoalesceAssignmentExpression,
+                                    IdentifierName("shaderProfile"),
+                                    IdentifierName($"global::ComputeSharp.D2D1.D2D1ShaderProfile.{D2D1ShaderProfile.PixelShader50}")))))),
+                    LocalDeclarationStatement(
+                        VariableDeclaration(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("effectiveCompileOptions"))
+                            .WithInitializer(EqualsValueClause(
+                                AssignmentExpression(
+                                    SyntaxKind.CoalesceAssignmentExpression,
+                                    IdentifierName("compileOptions"),
+                                    compileOptionsExpression))))),
+                    ExpressionStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
+                                IdentifierName("LoadDynamicBytecode")))
+                        .AddArgumentListArguments(
+                            Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
+                            Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
+                            Argument(IdentifierName("effectiveShaderProfile")),
+                            Argument(IdentifierName("effectiveCompileOptions")))));
 
             // If there is no precompiled bytecode, just return the dynamic path
             if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)
             {
                 bytecodeLiterals = null;
 
-                return Block(dynamicLoadingStatement);
+                return dynamicLoadingBlock;
             }
 
             bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
 
+            // Prepare the expression for the default shader profile to use
+            ExpressionSyntax shaderProfileExpression =
+                MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
+                    IdentifierName(bytecodeInfo.ShaderProfile.ToString(CultureInfo.InvariantCulture)));
+
             // This code produces a branch as follows:
             //
-            // if (shaderProfile is null or <SHADER_PROFILE> && options is null or <OPTIONS>)
+            // if (shaderProfile is null or <SHADER_PROFILE> && compileOptions is null or <COMPILE_OPTIONS>)
             // {
             //     global::System.ReadOnlySpan<byte> bytecode = new byte[] { __EMBEDDED_SHADER_BYTECODE };
+            //
             //     loader.LoadEmbeddedBytecode(bytecode);
+            //
+            //     shaderProfile = <SHADER_PROFILE>;
+            //     compileOptions =  <COMPILE_OPTIONS>;
             // }
             //
             // Note that the __EMBEDDED_SHADER_BYTECODE identifier will be replaced after the string
@@ -147,17 +173,13 @@ partial class ID2D1ShaderGenerator
                             BinaryPattern(
                                 SyntaxKind.OrPattern,
                                 ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                ConstantPattern(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                                        IdentifierName(bytecodeInfo.ShaderProfile.GetValueOrDefault().ToString(CultureInfo.InvariantCulture)))))),
+                                ConstantPattern(shaderProfileExpression))),
                         IsPatternExpression(
-                            IdentifierName("options"),
+                            IdentifierName("compileOptions"),
                             BinaryPattern(
                                 SyntaxKind.OrPattern,
                                 ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                ConstantPattern(optionsExpression)))),
+                                ConstantPattern(compileOptionsExpression)))),
                     Block(
                         LocalDeclarationStatement(
                             VariableDeclaration(
@@ -180,10 +202,20 @@ partial class ID2D1ShaderGenerator
                                     SyntaxKind.SimpleMemberAccessExpression,
                                     IdentifierName("loader"),
                                     IdentifierName("LoadEmbeddedBytecode")))
-                            .AddArgumentListArguments(Argument(IdentifierName("bytecode"))))));
+                            .AddArgumentListArguments(Argument(IdentifierName("bytecode")))),
+                        ExpressionStatement(
+                            AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                IdentifierName("shaderProfile"),
+                                shaderProfileExpression)),
+                        ExpressionStatement(
+                            AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                IdentifierName("compileOptions"),
+                                compileOptionsExpression))));
 
             // Return the combined block
-            return Block(embeddedBranch.WithElse(ElseClause(Block(dynamicLoadingStatement))));
+            return Block(embeddedBranch.WithElse(ElseClause(dynamicLoadingBlock)));
         }
     }
 }

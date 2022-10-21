@@ -117,15 +117,24 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="sourceInfo">The source info for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <param name="options">The effective compile options used to create the shader bytecode.</param>
+        /// <param name="shaderProfile">The effective shader profile used to create the shader bytecode, or the default profile to use.</param>
+        /// <param name="compileOptions">The effective compile options used to create the shader bytecode, or the default options to use.</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
         public static unsafe ImmutableArray<byte> GetBytecode(
             HlslShaderSourceInfo sourceInfo,
             CancellationToken token,
-            out D2D1CompileOptions options,
+            out D2D1ShaderProfile shaderProfile,
+            out D2D1CompileOptions compileOptions,
             out DeferredDiagnosticInfo? diagnostic)
         {
+            // Set the shader profile to either be the requested one, or the default value (which maps to PS5.0)
+            shaderProfile = sourceInfo.ShaderProfile ?? D2D1ShaderProfile.PixelShader50;
+
+            // If an explicit set of compile options is provided, use that directly. Otherwise, use the default
+            // options plus the option to enable linking only if the shader can potentially support it.
+            compileOptions = sourceInfo.CompileOptions ?? (D2D1CompileOptions.Default | (sourceInfo.IsLinkingSupported ? D2D1CompileOptions.EnableLinking : 0));
+
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
 
             // No embedded shader was requested, or there were some errors earlier in the pipeline.
@@ -133,7 +142,6 @@ partial class ID2D1ShaderGenerator
             // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
             if (sourceInfo is { HasErrors: true } or { ShaderProfile: null })
             {
-                options = default;
                 diagnostic = null;
 
                 goto End;
@@ -143,15 +151,11 @@ partial class ID2D1ShaderGenerator
             {
                 token.ThrowIfCancellationRequested();
 
-                // If an explicit set of compile options is provided, use that directly. Otherwise, use the default
-                // options plus the option to enable linking only if the shader can potentially support it.
-                options = sourceInfo.CompileOptions ?? (D2D1CompileOptions.Default | (sourceInfo.IsLinkingSupported ? D2D1CompileOptions.EnableLinking : 0));
-
                 // Compile the shader bytecode using the requested parameters
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                     sourceInfo.HlslSource.AsSpan(),
                     sourceInfo.ShaderProfile.Value,
-                    options);
+                    compileOptions);
 
                 token.ThrowIfCancellationRequested();
 
@@ -165,12 +169,12 @@ partial class ID2D1ShaderGenerator
             }
             catch (Win32Exception e)
             {
-                options = default;
+                compileOptions = default;
                 diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
-                options = default;
+                compileOptions = default;
                 diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
             }
 
