@@ -239,15 +239,16 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(
                     item.Source,
                     token,
-                    out D2D1CompileOptions options,
+                    out D2D1ShaderProfile shaderProfile,
+                    out D2D1CompileOptions compileOptions,
                     out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
                 EmbeddedBytecodeInfo bytecodeInfo = new(
                     item.Source.HlslSource,
-                    item.Source.ShaderProfile,
-                    options,
+                    shaderProfile,
+                    compileOptions,
                     bytecode);
 
                 return (item.Hierarchy, bytecodeInfo, diagnostic);

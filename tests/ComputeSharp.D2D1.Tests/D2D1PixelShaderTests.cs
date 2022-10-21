@@ -316,11 +316,13 @@ public partial class D2D1PixelShaderTests
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
         Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
 
-        // Matching shader profile
-        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(D2D1ShaderProfile.PixelShader40Level91);
+        // Bytecode with all output parameters
+        ReadOnlyMemory<byte> bytecode2 = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(out D2D1ShaderProfile shaderProfile, out D2D1CompileOptions compileOptions);
 
-        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        // The bytecode is the same
+        Assert.IsTrue(bytecode.Span == bytecode2.Span);
+        Assert.AreEqual(shaderProfile, D2D1ShaderProfile.PixelShader40Level91);
+        Assert.AreEqual(compileOptions, D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PackMatrixRowMajor);
 
         // Matching compile options
         bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>(D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2);
@@ -351,6 +353,68 @@ public partial class D2D1PixelShaderTests
             float4 result = ((1 - srcMask) * dst) + (srcMask * src);
 
             return result;
+        }
+    }
+
+    [TestMethod]
+    public void LoadBytecode_VerifyEffectiveValues_ExplicitShaderProfile()
+    {
+        _ = D2D1PixelShader.LoadBytecode<SimpleShaderWithExplicitShaderProfileAndNoCompileOptions>(out D2D1ShaderProfile shaderProfile, out D2D1CompileOptions compileOptions);
+
+        Assert.AreEqual(shaderProfile, D2D1ShaderProfile.PixelShader40Level91);
+        Assert.AreEqual(compileOptions, D2D1CompileOptions.Default | D2D1CompileOptions.EnableLinking);
+
+        _ = D2D1PixelShader.LoadBytecode<ComplexShaderWithExplicitShaderProfileAndNoCompileOptions>(out shaderProfile, out compileOptions);
+
+        // This shader has a complex input, so it can't support shader linking
+        Assert.AreEqual(shaderProfile, D2D1ShaderProfile.PixelShader40Level91);
+        Assert.AreEqual(compileOptions, D2D1CompileOptions.Default);
+    }
+
+    [D2DInputCount(1)]
+    [D2DInputSimple(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
+    private readonly partial struct SimpleShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return D2D.GetInput(0);
+        }
+    }
+
+    [D2DInputCount(1)]
+    [D2DInputComplex(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
+    private readonly partial struct ComplexShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return D2D.GetInput(0);
+        }
+    }
+
+    [TestMethod]
+    public void LoadBytecode_VerifyEffectiveValues_ExplicitCompileOptions()
+    {
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithExplicitCompileOptionsAndNoShaderProfile>(out D2D1ShaderProfile shaderProfile, out D2D1CompileOptions compileOptions);
+
+        // PS5.0 is the default, when no value is specified
+        Assert.AreEqual(shaderProfile, D2D1ShaderProfile.PixelShader50);
+        Assert.AreEqual(compileOptions, D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.PackMatrixRowMajor);
+
+        _ = D2D1PixelShader.LoadBytecode<ShaderWithExplicitCompileOptionsAndNoShaderProfile>(D2D1ShaderProfile.PixelShader40, out compileOptions);
+
+        Assert.AreEqual(compileOptions, D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.PackMatrixRowMajor);
+    }
+
+    [D2DInputCount(1)]
+    [D2DInputSimple(0)]
+    [D2DCompileOptions(D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.IeeeStrictness)]
+    private readonly partial struct ShaderWithExplicitCompileOptionsAndNoShaderProfile : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return D2D.GetInput(0);
         }
     }
 
