@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    internal unsafe partial struct HRESULT : IComparable, IComparable<HRESULT>, IEquatable<HRESULT>, IFormattable
+    internal readonly unsafe partial struct HRESULT : IComparable, IComparable<HRESULT>, IEquatable<HRESULT>, IFormattable
     {
         public readonly int Value;
 

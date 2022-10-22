@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    internal unsafe partial struct WPARAM : IComparable, IComparable<WPARAM>, IEquatable<WPARAM>, IFormattable
+    internal readonly unsafe partial struct WPARAM : IComparable, IComparable<WPARAM>, IEquatable<WPARAM>, IFormattable
     {
         public readonly nuint Value;
 

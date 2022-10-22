@@ -5,10 +5,10 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader40)]
 [AutoConstructor]
-public partial struct PixelateEffect : ID2D1PixelShader
+public readonly partial struct PixelateEffect : ID2D1PixelShader
 {
     [AutoConstructor]
-    public partial struct Constants
+    public readonly partial struct Constants
     {
         public readonly int inputWidth;
         public readonly int inputHeight;

@@ -340,8 +340,6 @@ public static unsafe class D2D1PixelShaderEffect
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(ID2D1TransformMapperFactory<T>? mapperFactory, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
-        effectId = default;
-
         PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
         ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
@@ -514,11 +512,12 @@ public static unsafe class D2D1PixelShaderEffect
         // Effect factory
         writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);
 
-        effectId = PixelShaderEffect.For<T>.Id;
-
         byte[] registrationBlob = writer.WrittenSpan.ToArray();
 
         writer.Dispose();
+
+        // Extract the effect id (the same that was encoded in the registration blob)
+        effectId = PixelShaderEffect.For<T>.Id;
 
         return registrationBlob;
     }
