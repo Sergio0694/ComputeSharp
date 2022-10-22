@@ -508,7 +508,7 @@ public sealed partial class BokehBlurEffect
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [AutoConstructor]
-        public partial struct Shader : ID2D1PixelShader
+        public readonly partial struct Shader : ID2D1PixelShader
         {
             public readonly int kernelLength;
 
@@ -557,7 +557,7 @@ public sealed partial class BokehBlurEffect
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
         [AutoConstructor]
-        public partial struct Shader : ID2D1PixelShader
+        public readonly partial struct Shader : ID2D1PixelShader
         {
             public readonly int kernelLength;
             private readonly float z;

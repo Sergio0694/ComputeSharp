@@ -133,7 +133,7 @@ public partial class DeviceDisposalTests
 
     [EmbeddedBytecode(DispatchAxis.X)]
     [AutoConstructor]
-    private partial struct InitializeShader : IComputeShader
+    private readonly partial struct InitializeShader : IComputeShader
     {
         private readonly ReadWriteBuffer<float> buffer;
 

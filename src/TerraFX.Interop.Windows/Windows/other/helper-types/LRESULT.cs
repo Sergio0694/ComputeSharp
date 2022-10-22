@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    internal partial struct LRESULT : IComparable, IComparable<LRESULT>, IEquatable<LRESULT>, IFormattable
+    internal readonly partial struct LRESULT : IComparable, IComparable<LRESULT>, IEquatable<LRESULT>, IFormattable
     {
         public readonly nint Value;
 
