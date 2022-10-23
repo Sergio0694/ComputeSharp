@@ -7,6 +7,8 @@ namespace TerraFX.Interop.DirectX;
 
 internal enum D2D1_PROPERTY_TYPE : uint
 {
+    D2D1_PROPERTY_TYPE_UNKNOWN = 0,
+    D2D1_PROPERTY_TYPE_BOOL = 2,
     D2D1_PROPERTY_TYPE_BLOB = 9,
     D2D1_PROPERTY_TYPE_IUNKNOWN = 10
 }
