@@ -52,9 +52,140 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     private ComPtr<ID2D1Effect> d2D1Effect;
 
     /// <summary>
+    /// The backing field for <see cref="CacheOutput"/>.
+    /// </summary>
+    private int cacheOutput;
+
+    /// <summary>
+    /// The backing field for <see cref="BufferPrecision"/>.
+    /// </summary>
+    private D2D1_BUFFER_PRECISION d2D1BufferPrecision;
+
+    /// <summary>
     /// The current <typeparamref name="T"/> value in use.
     /// </summary>
     public T Value;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to enable caching the output from drawing this effect.
+    /// </summary>
+    public unsafe bool CacheOutput
+    {
+        get
+        {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+            lock (this.lockObject)
+            {
+                // If the effect is realized, get the latest value from it
+                if (this.d2D1Effect.Get() is not null)
+                {
+                    int cacheOutput;
+
+                    this.d2D1Effect.Get()->GetValue(
+                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+                        data: (byte*)&cacheOutput,
+                        dataSize: sizeof(int)).Assert();
+
+                    this.cacheOutput = cacheOutput;
+                }
+
+                return this.cacheOutput != 0;
+            }
+        }
+        set
+        {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+            lock (this.lockObject)
+            {
+                this.cacheOutput = value ? 1 : 0;
+
+                // If the effect is realized, set the property on the underlying ID2D1Effect object too
+                if (this.d2D1Effect.Get() is not null)
+                {
+                    int cacheOutput = this.cacheOutput;
+
+                    this.d2D1Effect.Get()->SetValue(
+                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+                        data: (byte*)&cacheOutput,
+                        dataSize: sizeof(int)).Assert();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the precision to use for intermediate buffers when drawing this effect.
+    /// </summary>
+    /// <remarks>If <see langword="null"/>, the default precision for effects will be used.</remarks>
+    public unsafe CanvasBufferPrecision? BufferPrecision
+    {
+        get
+        {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+            lock (this.lockObject)
+            {
+                // If the effect is realized, get the latest value from it
+                if (this.d2D1Effect.Get() is not null)
+                {
+                    D2D1_BUFFER_PRECISION d2D1BufferPrecision;
+
+                    this.d2D1Effect.Get()->GetValue(
+                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+                        data: (byte*)&d2D1BufferPrecision,
+                        dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
+
+                    this.d2D1BufferPrecision = d2D1BufferPrecision;
+                }
+
+                // Map from D2D1_BUFFER_PRECISION to CanvasBufferPrecision, and return null for D2D1_BUFFER_PRECISION_UNKNOWN
+                return this.d2D1BufferPrecision switch
+                {
+                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM => CanvasBufferPrecision.Precision8UIntNormalized,
+                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM_SRGB => CanvasBufferPrecision.Precision8UIntNormalizedSrgb,
+                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_UNORM => CanvasBufferPrecision.Precision16UIntNormalized,
+                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_FLOAT => CanvasBufferPrecision.Precision16Float,
+                    D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT => CanvasBufferPrecision.Precision32Float,
+                    _ => null
+                };
+            }
+        }
+        set
+        {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+            lock (this.lockObject)
+            {
+                // Map back from CanvasBufferPrecision? to D2D1_BUFFER_PRECISION (null results in D2D1_BUFFER_PRECISION_UNKNOWN)
+                this.d2D1BufferPrecision = value switch
+                {
+                    CanvasBufferPrecision.Precision8UIntNormalized => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM,
+                    CanvasBufferPrecision.Precision8UIntNormalizedSrgb => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM_SRGB,
+                    CanvasBufferPrecision.Precision16UIntNormalized => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_UNORM,
+                    CanvasBufferPrecision.Precision16Float => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_16BPC_FLOAT,
+                    CanvasBufferPrecision.Precision32Float => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT,
+                    _ => D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_UNKNOWN
+                };
+
+                // If the effect is realized, set the property on the underlying ID2D1Effect object too
+                if (this.d2D1Effect.Get() is not null)
+                {
+                    D2D1_BUFFER_PRECISION d2D1BufferPrecision = this.d2D1BufferPrecision;
+
+                    this.d2D1Effect.Get()->SetValue(
+                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+                        data: (byte*)&d2D1BufferPrecision,
+                        dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
+                }
+            }
+        }
+    }
 
     /// <inheritdoc/>
     Rect ICanvasImage.GetBounds(ICanvasResourceCreator resourceCreator)
@@ -219,7 +350,32 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
             return;
         }
 
-        // TODO
+        // Cache the last update value of the cache property
+        int cacheOutput;
+
+        this.d2D1Effect.Get()->GetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+            data: (byte*)&cacheOutput,
+            dataSize: sizeof(int)).Assert();
+
+        this.cacheOutput = cacheOutput;
+
+        // Do the same for the buffer precision
+        D2D1_BUFFER_PRECISION d2D1BufferPrecision;
+
+        this.d2D1Effect.Get()->GetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+            data: (byte*)&d2D1BufferPrecision,
+            dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
+
+        this.d2D1BufferPrecision = d2D1BufferPrecision;
+
+        // TODO: read back D2D sources from the effect
+
+        // Finally release the effect as well
+        this.d2D1Effect.Dispose();
     }
 
     /// <summary>
@@ -247,6 +403,30 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
         {
             // Create an instance of the effect in use and store it in the current object
             D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(deviceContext, (void**)d2D1Effect);
+        }
+
+        // If cache input has been set, forward that to the new effect
+        if (this.cacheOutput != 0)
+        {
+            int cacheOutput = this.cacheOutput;
+
+            this.d2D1Effect.Get()->GetValue(
+                index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+                type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+                data: (byte*)&cacheOutput,
+                dataSize: sizeof(int)).Assert();
+        }
+
+        // If the buffer precision isn't unknown, forward that as well
+        if (this.d2D1BufferPrecision != D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_UNKNOWN)
+        {
+            D2D1_BUFFER_PRECISION d2D1BufferPrecision = this.d2D1BufferPrecision;
+
+            this.d2D1Effect.Get()->SetValue(
+                index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+                type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+                data: (byte*)&d2D1BufferPrecision,
+                dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
         }
 
         // TODO: port base CanvasEffect::Realize logic
