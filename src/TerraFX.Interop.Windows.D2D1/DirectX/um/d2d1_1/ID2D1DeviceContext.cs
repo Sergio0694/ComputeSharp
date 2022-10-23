@@ -27,9 +27,23 @@ internal unsafe partial struct ID2D1DeviceContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(52)]
+    public void GetDpi(float* dpiX, float* dpiY)
+    {
+        ((delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, float*, float*, void>)(lpVtbl[52]))((ID2D1DeviceContext*)Unsafe.AsPointer(ref this), dpiX, dpiY);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(63)]
     public HRESULT CreateEffect([NativeTypeName("const IID &")] Guid* effectId, ID2D1Effect** effect)
     {
         return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, Guid*, ID2D1Effect**, int>)(lpVtbl[63]))((ID2D1DeviceContext*)Unsafe.AsPointer(ref this), effectId, effect);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(75)]
+    public void GetTarget(ID2D1Image** image)
+    {
+        ((delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, ID2D1Image**, void>)(lpVtbl[75]))((ID2D1DeviceContext*)Unsafe.AsPointer(ref this), image);
     }
 }

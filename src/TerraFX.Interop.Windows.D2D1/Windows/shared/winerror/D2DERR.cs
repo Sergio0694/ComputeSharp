@@ -9,4 +9,7 @@ internal static partial class D2DERR
 {
     [NativeTypeName("#define D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES _HRESULT_TYPEDEF_(0x88990026L)")]
     public const int D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES = unchecked((int)(0x88990026));
+
+    [NativeTypeName("#define D2DERR_CYCLIC_GRAPH _HRESULT_TYPEDEF_(0x88990020L)")]
+    public const int D2DERR_CYCLIC_GRAPH = unchecked((int)(0x88990020));
 }
