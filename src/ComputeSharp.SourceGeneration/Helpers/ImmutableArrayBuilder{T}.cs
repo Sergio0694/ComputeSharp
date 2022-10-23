@@ -20,11 +20,6 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     private static readonly ObjectPool<Writer> SharedObjectPool = new(static () => new Writer());
 
     /// <summary>
-    /// The owner <see cref="ObjectPool{T}"/> instance.
-    /// </summary>
-    private readonly ObjectPool<Writer> objectPool;
-
-    /// <summary>
     /// The rented <see cref="Writer"/> instance to use.
     /// </summary>
     private Writer? writer;
@@ -35,17 +30,15 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     /// <returns>A <see cref="ImmutableArrayBuilder{T}"/> instance to write data to.</returns>
     public static ImmutableArrayBuilder<T> Rent()
     {
-        return new(SharedObjectPool, SharedObjectPool.Allocate());
+        return new(SharedObjectPool.Allocate());
     }
 
     /// <summary>
     /// Creates a new <see cref="ImmutableArrayBuilder{T}"/> object with the specified parameters.
     /// </summary>
-    /// <param name="objectPool">The target <see cref="ObjectPool{T}"/> to return <paramref name="writer"/> to.</param>
     /// <param name="writer">The target data writer to use.</param>
-    private ImmutableArrayBuilder(ObjectPool<Writer> objectPool, Writer writer)
+    private ImmutableArrayBuilder(Writer writer)
     {
-        this.objectPool = objectPool;
         this.writer = writer;
     }
 
@@ -86,7 +79,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     /// Inserts an item to the builder at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-    /// <param name="item">The object to insert into the <see cref="IList{T}"/>.</param>
+    /// <param name="item">The object to insert into the current instance.</param>
     public readonly void Insert(int index, T item)
     {
         this.writer!.Insert(index, item);
@@ -123,7 +116,7 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         {
             writer.Clear();
 
-            this.objectPool.Free(writer);
+            SharedObjectPool.Free(writer);
         }
     }
 
