@@ -54,7 +54,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// <summary>
     /// The backing field for <see cref="CacheOutput"/>.
     /// </summary>
-    private int cacheOutput;
+    private bool cacheOutput;
 
     /// <summary>
     /// The backing field for <see cref="BufferPrecision"/>.
@@ -80,18 +80,10 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
                 // If the effect is realized, get the latest value from it
                 if (this.d2D1Effect.Get() is not null)
                 {
-                    int cacheOutput;
-
-                    this.d2D1Effect.Get()->GetValue(
-                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
-                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
-                        data: (byte*)&cacheOutput,
-                        dataSize: sizeof(int)).Assert();
-
-                    this.cacheOutput = cacheOutput;
+                    this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
                 }
 
-                return this.cacheOutput != 0;
+                return this.cacheOutput;
             }
         }
         set
@@ -100,18 +92,12 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
 
             lock (this.lockObject)
             {
-                this.cacheOutput = value ? 1 : 0;
+                this.cacheOutput = value;
 
                 // If the effect is realized, set the property on the underlying ID2D1Effect object too
                 if (this.d2D1Effect.Get() is not null)
                 {
-                    int cacheOutput = this.cacheOutput;
-
-                    this.d2D1Effect.Get()->SetValue(
-                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
-                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
-                        data: (byte*)&cacheOutput,
-                        dataSize: sizeof(int)).Assert();
+                    this.d2D1Effect.Get()->SetCachedProperty(value);
                 }
             }
         }
@@ -132,15 +118,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
                 // If the effect is realized, get the latest value from it
                 if (this.d2D1Effect.Get() is not null)
                 {
-                    D2D1_BUFFER_PRECISION d2D1BufferPrecision;
-
-                    this.d2D1Effect.Get()->GetValue(
-                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
-                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
-                        data: (byte*)&d2D1BufferPrecision,
-                        dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
-
-                    this.d2D1BufferPrecision = d2D1BufferPrecision;
+                    this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
                 }
 
                 // Map from D2D1_BUFFER_PRECISION to CanvasBufferPrecision, and return null for D2D1_BUFFER_PRECISION_UNKNOWN
@@ -175,13 +153,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
                 // If the effect is realized, set the property on the underlying ID2D1Effect object too
                 if (this.d2D1Effect.Get() is not null)
                 {
-                    D2D1_BUFFER_PRECISION d2D1BufferPrecision = this.d2D1BufferPrecision;
-
-                    this.d2D1Effect.Get()->SetValue(
-                        index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
-                        type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
-                        data: (byte*)&d2D1BufferPrecision,
-                        dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
+                    this.d2D1Effect.Get()->SetPrecisionProperty(this.d2D1BufferPrecision);
                 }
             }
         }
@@ -350,27 +322,9 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
             return;
         }
 
-        // Cache the last update value of the cache property
-        int cacheOutput;
-
-        this.d2D1Effect.Get()->GetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
-            data: (byte*)&cacheOutput,
-            dataSize: sizeof(int)).Assert();
-
-        this.cacheOutput = cacheOutput;
-
-        // Do the same for the buffer precision
-        D2D1_BUFFER_PRECISION d2D1BufferPrecision;
-
-        this.d2D1Effect.Get()->GetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
-            data: (byte*)&d2D1BufferPrecision,
-            dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
-
-        this.d2D1BufferPrecision = d2D1BufferPrecision;
+        // Cache the last update value of the cache and precision properties
+        this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
+        this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
         // TODO: read back D2D sources from the effect
 
@@ -406,27 +360,15 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
         }
 
         // If cache input has been set, forward that to the new effect
-        if (this.cacheOutput != 0)
+        if (this.cacheOutput)
         {
-            int cacheOutput = this.cacheOutput;
-
-            this.d2D1Effect.Get()->GetValue(
-                index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
-                type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
-                data: (byte*)&cacheOutput,
-                dataSize: sizeof(int)).Assert();
+            this.d2D1Effect.Get()->SetCachedProperty(true);
         }
 
         // If the buffer precision isn't unknown, forward that as well
         if (this.d2D1BufferPrecision != D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_UNKNOWN)
         {
-            D2D1_BUFFER_PRECISION d2D1BufferPrecision = this.d2D1BufferPrecision;
-
-            this.d2D1Effect.Get()->SetValue(
-                index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
-                type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
-                data: (byte*)&d2D1BufferPrecision,
-                dataSize: sizeof(D2D1_BUFFER_PRECISION)).Assert();
+            this.d2D1Effect.Get()->SetPrecisionProperty(this.d2D1BufferPrecision);
         }
 
         // TODO: port base CanvasEffect::Realize logic
