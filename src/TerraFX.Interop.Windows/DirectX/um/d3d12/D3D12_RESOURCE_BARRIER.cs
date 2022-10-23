@@ -5,28 +5,27 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_RESOURCE_BARRIER
 {
-    internal partial struct D3D12_RESOURCE_BARRIER
+    public D3D12_RESOURCE_BARRIER_TYPE Type;
+
+    public D3D12_RESOURCE_BARRIER_FLAGS Flags;
+
+    [NativeTypeName("D3D12_RESOURCE_BARRIER::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:2883:5)")]
+    public _Anonymous_e__Union Anonymous;
+
+    [StructLayout(LayoutKind.Explicit)]
+    internal partial struct _Anonymous_e__Union
     {
-        public D3D12_RESOURCE_BARRIER_TYPE Type;
+        [FieldOffset(0)]
+        public D3D12_RESOURCE_TRANSITION_BARRIER Transition;
 
-        public D3D12_RESOURCE_BARRIER_FLAGS Flags;
+        [FieldOffset(0)]
+        public D3D12_RESOURCE_ALIASING_BARRIER Aliasing;
 
-        [NativeTypeName("D3D12_RESOURCE_BARRIER::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:2883:5)")]
-        public _Anonymous_e__Union Anonymous;
-
-        [StructLayout(LayoutKind.Explicit)]
-        internal partial struct _Anonymous_e__Union
-        {
-            [FieldOffset(0)]
-            public D3D12_RESOURCE_TRANSITION_BARRIER Transition;
-
-            [FieldOffset(0)]
-            public D3D12_RESOURCE_ALIASING_BARRIER Aliasing;
-
-            [FieldOffset(0)]
-            public D3D12_RESOURCE_UAV_BARRIER UAV;
-        }
+        [FieldOffset(0)]
+        public D3D12_RESOURCE_UAV_BARRIER UAV;
     }
 }

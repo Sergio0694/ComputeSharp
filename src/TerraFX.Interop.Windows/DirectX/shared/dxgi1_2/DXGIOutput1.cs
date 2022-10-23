@@ -8,20 +8,19 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
-{
-    [Guid("00CDDEA8-939B-4B83-A340-A685226666CC")]
-    [NativeTypeName("struct IDXGIOutput1 : IDXGIOutput")]
-    [NativeInheritance("IDXGIOutput")]
-    internal unsafe partial struct IDXGIOutput1
-    {
-        public void** lpVtbl;
+namespace TerraFX.Interop.DirectX;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(20)]
-        public HRESULT FindClosestMatchingMode1([NativeTypeName("const DXGI_MODE_DESC1 *")] DXGI_MODE_DESC1* pModeToMatch, DXGI_MODE_DESC1* pClosestMatch, IUnknown* pConcernedDevice)
-        {
-            return ((delegate* unmanaged[Stdcall]<IDXGIOutput1*, DXGI_MODE_DESC1*, DXGI_MODE_DESC1*, IUnknown*, int>)(lpVtbl[20]))((IDXGIOutput1*)Unsafe.AsPointer(ref this), pModeToMatch, pClosestMatch, pConcernedDevice);
-        }
+[Guid("00CDDEA8-939B-4B83-A340-A685226666CC")]
+[NativeTypeName("struct IDXGIOutput1 : IDXGIOutput")]
+[NativeInheritance("IDXGIOutput")]
+internal unsafe partial struct IDXGIOutput1
+{
+    public void** lpVtbl;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(20)]
+    public HRESULT FindClosestMatchingMode1([NativeTypeName("const DXGI_MODE_DESC1 *")] DXGI_MODE_DESC1* pModeToMatch, DXGI_MODE_DESC1* pClosestMatch, IUnknown* pConcernedDevice)
+    {
+        return ((delegate* unmanaged[Stdcall]<IDXGIOutput1*, DXGI_MODE_DESC1*, DXGI_MODE_DESC1*, IUnknown*, int>)(lpVtbl[20]))((IDXGIOutput1*)Unsafe.AsPointer(ref this), pModeToMatch, pClosestMatch, pConcernedDevice);
     }
 }

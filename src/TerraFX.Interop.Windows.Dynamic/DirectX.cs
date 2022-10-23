@@ -7,12 +7,11 @@ using System;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+// This type is named DirectX2 to avoid naming conflicts in ComputeSharp.Dynamic
+internal static unsafe partial class DirectX2
 {
-    // This type is named DirectX2 to avoid naming conflicts in ComputeSharp.Dynamic
-    internal static unsafe partial class DirectX2
-    {
-        [DllImport("dxcompiler", ExactSpelling = true)]
-        public static extern HRESULT DxcCreateInstance([NativeTypeName("const IID &")] Guid* rclsid, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPVOID *")] void** ppv);
-    }
+    [DllImport("dxcompiler", ExactSpelling = true)]
+    public static extern HRESULT DxcCreateInstance([NativeTypeName("const IID &")] Guid* rclsid, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPVOID *")] void** ppv);
 }

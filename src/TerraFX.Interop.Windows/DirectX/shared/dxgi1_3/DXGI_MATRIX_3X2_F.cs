@@ -5,21 +5,20 @@
 
 using System.Runtime.Versioning;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+[SupportedOSPlatform("windows8.1")]
+internal partial struct DXGI_MATRIX_3X2_F
 {
-    [SupportedOSPlatform("windows8.1")]
-    internal partial struct DXGI_MATRIX_3X2_F
-    {
-        public float _11;
+    public float _11;
 
-        public float _12;
+    public float _12;
 
-        public float _21;
+    public float _21;
 
-        public float _22;
+    public float _22;
 
-        public float _31;
+    public float _31;
 
-        public float _32;
-    }
+    public float _32;
 }

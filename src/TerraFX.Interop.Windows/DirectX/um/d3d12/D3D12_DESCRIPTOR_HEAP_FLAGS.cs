@@ -5,12 +5,11 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+[Flags]
+internal enum D3D12_DESCRIPTOR_HEAP_FLAGS
 {
-    [Flags]
-    internal enum D3D12_DESCRIPTOR_HEAP_FLAGS
-    {
-        D3D12_DESCRIPTOR_HEAP_FLAG_NONE = 0,
-        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE = 0x1,
-    }
+    D3D12_DESCRIPTOR_HEAP_FLAG_NONE = 0,
+    D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE = 0x1,
 }

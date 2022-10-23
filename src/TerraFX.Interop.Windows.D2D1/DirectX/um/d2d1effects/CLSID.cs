@@ -7,32 +7,31 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows
-{
-    internal static partial class CLSID
-    {
-        [NativeTypeName("const GUID")]
-        public static ref readonly Guid CLSID_D2D1Flood
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                ReadOnlySpan<byte> data = new byte[] {
-                    0x20, 0x3C, 0xC2, 0x61,
-                    0x69, 0xAE,
-                    0x8E, 0x4D,
-                    0x94,
-                    0xCF,
-                    0x50,
-                    0x07,
-                    0x8D,
-                    0xF6,
-                    0x38,
-                    0xF2
-                };
+namespace TerraFX.Interop.Windows;
 
-                return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
-            }
+internal static partial class CLSID
+{
+    [NativeTypeName("const GUID")]
+    public static ref readonly Guid CLSID_D2D1Flood
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data = new byte[] {
+                0x20, 0x3C, 0xC2, 0x61,
+                0x69, 0xAE,
+                0x8E, 0x4D,
+                0x94,
+                0xCF,
+                0x50,
+                0x07,
+                0x8D,
+                0xF6,
+                0x38,
+                0xF2
+            };
+
+            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
         }
     }
 }

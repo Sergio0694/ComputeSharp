@@ -3,18 +3,17 @@
 // Ported from shared/winerror.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.Windows
-{
-    internal static partial class Windows
-    {
-        public static bool SUCCEEDED(HRESULT hr)
-        {
-            return hr >= 0;
-        }
+namespace TerraFX.Interop.Windows;
 
-        public static bool FAILED(HRESULT hr)
-        {
-            return hr < 0;
-        }
+internal static partial class Windows
+{
+    public static bool SUCCEEDED(HRESULT hr)
+    {
+        return hr >= 0;
+    }
+
+    public static bool FAILED(HRESULT hr)
+    {
+        return hr < 0;
     }
 }

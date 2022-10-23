@@ -3,14 +3,13 @@
 // Ported from um/dxcapi.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the University of Illinois Open Source License.
 
-namespace TerraFX.Interop.DirectX
-{
-    internal unsafe partial struct DxcDefine
-    {
-        [NativeTypeName("LPCWSTR")]
-        public ushort* Name;
+namespace TerraFX.Interop.DirectX;
 
-        [NativeTypeName("LPCWSTR")]
-        public ushort* Value;
-    }
+internal unsafe partial struct DxcDefine
+{
+    [NativeTypeName("LPCWSTR")]
+    public ushort* Name;
+
+    [NativeTypeName("LPCWSTR")]
+    public ushort* Value;
 }

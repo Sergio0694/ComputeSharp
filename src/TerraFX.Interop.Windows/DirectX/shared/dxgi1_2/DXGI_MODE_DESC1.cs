@@ -5,22 +5,21 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct DXGI_MODE_DESC1
 {
-    internal partial struct DXGI_MODE_DESC1
-    {
-        public uint Width;
+    public uint Width;
 
-        public uint Height;
+    public uint Height;
 
-        public DXGI_RATIONAL RefreshRate;
+    public DXGI_RATIONAL RefreshRate;
 
-        public DXGI_FORMAT Format;
+    public DXGI_FORMAT Format;
 
-        public DXGI_MODE_SCANLINE_ORDER ScanlineOrdering;
+    public DXGI_MODE_SCANLINE_ORDER ScanlineOrdering;
 
-        public DXGI_MODE_SCALING Scaling;
+    public DXGI_MODE_SCALING Scaling;
 
-        public BOOL Stereo;
-    }
+    public BOOL Stereo;
 }

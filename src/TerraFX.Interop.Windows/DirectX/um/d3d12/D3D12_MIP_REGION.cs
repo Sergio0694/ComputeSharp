@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_MIP_REGION
 {
-    internal partial struct D3D12_MIP_REGION
-    {
-        public uint Width;
+    public uint Width;
 
-        public uint Height;
+    public uint Height;
 
-        public uint Depth;
-    }
+    public uint Depth;
 }

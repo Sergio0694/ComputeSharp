@@ -5,23 +5,22 @@
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal unsafe partial struct D2D1_RESOURCE_TEXTURE_PROPERTIES
 {
-    internal unsafe partial struct D2D1_RESOURCE_TEXTURE_PROPERTIES
-    {
-        [NativeTypeName("const UINT32 *")]
-        public uint* extents;
+    [NativeTypeName("const UINT32 *")]
+    public uint* extents;
 
-        [NativeTypeName("UINT32")]
-        public uint dimensions;
+    [NativeTypeName("UINT32")]
+    public uint dimensions;
 
-        public D2D1_BUFFER_PRECISION bufferPrecision;
+    public D2D1_BUFFER_PRECISION bufferPrecision;
 
-        public D2D1_CHANNEL_DEPTH channelDepth;
+    public D2D1_CHANNEL_DEPTH channelDepth;
 
-        public D2D1_FILTER filter;
+    public D2D1_FILTER filter;
 
-        [NativeTypeName("const D2D1_EXTEND_MODE *")]
-        public D2D1_EXTEND_MODE* extendModes;
-    }
+    [NativeTypeName("const D2D1_EXTEND_MODE *")]
+    public D2D1_EXTEND_MODE* extendModes;
 }

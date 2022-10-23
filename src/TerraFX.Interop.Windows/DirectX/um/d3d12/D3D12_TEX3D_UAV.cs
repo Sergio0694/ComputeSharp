@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_TEX3D_UAV
 {
-    internal partial struct D3D12_TEX3D_UAV
-    {
-        public uint MipSlice;
+    public uint MipSlice;
 
-        public uint FirstWSlice;
+    public uint FirstWSlice;
 
-        public uint WSize;
-    }
+    public uint WSize;
 }

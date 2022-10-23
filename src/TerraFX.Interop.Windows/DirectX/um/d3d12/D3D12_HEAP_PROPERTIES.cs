@@ -3,18 +3,17 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_HEAP_PROPERTIES
 {
-    internal partial struct D3D12_HEAP_PROPERTIES
-    {
-        public D3D12_HEAP_TYPE Type;
+    public D3D12_HEAP_TYPE Type;
 
-        public D3D12_CPU_PAGE_PROPERTY CPUPageProperty;
+    public D3D12_CPU_PAGE_PROPERTY CPUPageProperty;
 
-        public D3D12_MEMORY_POOL MemoryPoolPreference;
+    public D3D12_MEMORY_POOL MemoryPoolPreference;
 
-        public uint CreationNodeMask;
+    public uint CreationNodeMask;
 
-        public uint VisibleNodeMask;
-    }
+    public uint VisibleNodeMask;
 }

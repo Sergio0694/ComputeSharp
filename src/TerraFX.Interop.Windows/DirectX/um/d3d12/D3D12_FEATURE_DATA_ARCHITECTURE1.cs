@@ -5,18 +5,17 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_FEATURE_DATA_ARCHITECTURE1
 {
-    internal partial struct D3D12_FEATURE_DATA_ARCHITECTURE1
-    {
-        public uint NodeIndex;
+    public uint NodeIndex;
 
-        public BOOL TileBasedRenderer;
+    public BOOL TileBasedRenderer;
 
-        public BOOL UMA;
+    public BOOL UMA;
 
-        public BOOL CacheCoherentUMA;
+    public BOOL CacheCoherentUMA;
 
-        public BOOL IsolatedMMU;
-    }
+    public BOOL IsolatedMMU;
 }

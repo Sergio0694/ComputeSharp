@@ -3,13 +3,12 @@
 // Ported from um/d2d1effectauthor.h in the Windows SDK for Windows 10.0.22000.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
-{
-    internal partial struct D2D1_INPUT_DESCRIPTION
-    {
-        public D2D1_FILTER filter;
+namespace TerraFX.Interop.DirectX;
 
-        [NativeTypeName("UINT32")]
-        public uint levelOfDetailCount;
-    }
+internal partial struct D2D1_INPUT_DESCRIPTION
+{
+    public D2D1_FILTER filter;
+
+    [NativeTypeName("UINT32")]
+    public uint levelOfDetailCount;
 }

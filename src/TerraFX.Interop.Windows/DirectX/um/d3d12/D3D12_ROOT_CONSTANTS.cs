@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_ROOT_CONSTANTS
 {
-    internal partial struct D3D12_ROOT_CONSTANTS
-    {
-        public uint ShaderRegister;
+    public uint ShaderRegister;
 
-        public uint RegisterSpace;
+    public uint RegisterSpace;
 
-        public uint Num32BitValues;
-    }
+    public uint Num32BitValues;
 }

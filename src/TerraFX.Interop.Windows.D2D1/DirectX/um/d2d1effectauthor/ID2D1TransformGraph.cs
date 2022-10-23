@@ -10,20 +10,19 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX
-{
-    [Guid("13D29038-C3E6-4034-9081-13B53A417992")]
-    [NativeTypeName("struct ID2D1TransformGraph : IUnknown")]
-    [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1TransformGraph
-    {
-        public void** lpVtbl;
+namespace TerraFX.Interop.DirectX;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(4)]
-        public HRESULT SetSingleTransformNode(ID2D1TransformNode* node)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID2D1TransformGraph*, ID2D1TransformNode*, int>)(lpVtbl[4]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), node);
-        }
+[Guid("13D29038-C3E6-4034-9081-13B53A417992")]
+[NativeTypeName("struct ID2D1TransformGraph : IUnknown")]
+[NativeInheritance("IUnknown")]
+internal unsafe partial struct ID2D1TransformGraph
+{
+    public void** lpVtbl;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(4)]
+    public HRESULT SetSingleTransformNode(ID2D1TransformNode* node)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformGraph*, ID2D1TransformNode*, int>)(lpVtbl[4]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), node);
     }
 }

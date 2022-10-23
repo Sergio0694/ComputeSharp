@@ -3,14 +3,13 @@
 // Ported from shared/dxgicommon.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct DXGI_SAMPLE_DESC
 {
-    internal partial struct DXGI_SAMPLE_DESC
+    public DXGI_SAMPLE_DESC(uint count, uint quality)
     {
-        public DXGI_SAMPLE_DESC(uint count, uint quality)
-        {
-            Count = count;
-            Quality = quality;
-        }
+        Count = count;
+        Quality = quality;
     }
 }

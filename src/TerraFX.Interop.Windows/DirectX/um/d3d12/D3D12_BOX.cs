@@ -3,20 +3,19 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_BOX
 {
-    internal partial struct D3D12_BOX
-    {
-        public uint left;
+    public uint left;
 
-        public uint top;
+    public uint top;
 
-        public uint front;
+    public uint front;
 
-        public uint right;
+    public uint right;
 
-        public uint bottom;
+    public uint bottom;
 
-        public uint back;
-    }
+    public uint back;
 }

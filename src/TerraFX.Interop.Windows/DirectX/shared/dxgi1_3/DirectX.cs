@@ -8,12 +8,11 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal static unsafe partial class DirectX
 {
-    internal static unsafe partial class DirectX
-    {
-        [SupportedOSPlatform("windows8.1")]
-        [DllImport("dxgi", ExactSpelling = true)]
-        public static extern HRESULT CreateDXGIFactory2(uint Flags, [NativeTypeName("const IID &")] Guid* riid, void** ppFactory);
-    }
+    [SupportedOSPlatform("windows8.1")]
+    [DllImport("dxgi", ExactSpelling = true)]
+    public static extern HRESULT CreateDXGIFactory2(uint Flags, [NativeTypeName("const IID &")] Guid* riid, void** ppFactory);
 }

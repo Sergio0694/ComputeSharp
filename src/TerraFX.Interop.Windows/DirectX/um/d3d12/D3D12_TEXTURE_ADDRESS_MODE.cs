@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal enum D3D12_TEXTURE_ADDRESS_MODE
 {
-    internal enum D3D12_TEXTURE_ADDRESS_MODE
-    {
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP = 1,
-        D3D12_TEXTURE_ADDRESS_MODE_MIRROR = 2,
-        D3D12_TEXTURE_ADDRESS_MODE_CLAMP = 3,
-        D3D12_TEXTURE_ADDRESS_MODE_BORDER = 4,
-        D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE = 5,
-    }
+    D3D12_TEXTURE_ADDRESS_MODE_WRAP = 1,
+    D3D12_TEXTURE_ADDRESS_MODE_MIRROR = 2,
+    D3D12_TEXTURE_ADDRESS_MODE_CLAMP = 3,
+    D3D12_TEXTURE_ADDRESS_MODE_BORDER = 4,
+    D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE = 5,
 }

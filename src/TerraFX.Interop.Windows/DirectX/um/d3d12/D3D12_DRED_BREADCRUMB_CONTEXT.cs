@@ -3,13 +3,12 @@
 // Ported from d3d12.h in Microsoft.Direct3D.D3D12 v1.600.10
 // Original source is Copyright © Microsoft. Licensed under the MIT license
 
-namespace TerraFX.Interop.DirectX
-{
-    internal unsafe partial struct D3D12_DRED_BREADCRUMB_CONTEXT
-    {
-        public uint BreadcrumbIndex;
+namespace TerraFX.Interop.DirectX;
 
-        [NativeTypeName("const wchar_t *")]
-        public ushort* pContextString;
-    }
+internal unsafe partial struct D3D12_DRED_BREADCRUMB_CONTEXT
+{
+    public uint BreadcrumbIndex;
+
+    [NativeTypeName("const wchar_t *")]
+    public ushort* pContextString;
 }

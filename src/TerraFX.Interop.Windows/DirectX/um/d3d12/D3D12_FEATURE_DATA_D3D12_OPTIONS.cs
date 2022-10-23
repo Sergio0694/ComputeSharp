@@ -5,38 +5,37 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS
 {
-    internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS
-    {
-        public BOOL DoublePrecisionFloatShaderOps;
+    public BOOL DoublePrecisionFloatShaderOps;
 
-        public BOOL OutputMergerLogicOp;
+    public BOOL OutputMergerLogicOp;
 
-        public D3D12_SHADER_MIN_PRECISION_SUPPORT MinPrecisionSupport;
+    public D3D12_SHADER_MIN_PRECISION_SUPPORT MinPrecisionSupport;
 
-        public D3D12_TILED_RESOURCES_TIER TiledResourcesTier;
+    public D3D12_TILED_RESOURCES_TIER TiledResourcesTier;
 
-        public D3D12_RESOURCE_BINDING_TIER ResourceBindingTier;
+    public D3D12_RESOURCE_BINDING_TIER ResourceBindingTier;
 
-        public BOOL PSSpecifiedStencilRefSupported;
+    public BOOL PSSpecifiedStencilRefSupported;
 
-        public BOOL TypedUAVLoadAdditionalFormats;
+    public BOOL TypedUAVLoadAdditionalFormats;
 
-        public BOOL ROVsSupported;
+    public BOOL ROVsSupported;
 
-        public D3D12_CONSERVATIVE_RASTERIZATION_TIER ConservativeRasterizationTier;
+    public D3D12_CONSERVATIVE_RASTERIZATION_TIER ConservativeRasterizationTier;
 
-        public uint MaxGPUVirtualAddressBitsPerResource;
+    public uint MaxGPUVirtualAddressBitsPerResource;
 
-        public BOOL StandardSwizzle64KBSupported;
+    public BOOL StandardSwizzle64KBSupported;
 
-        public D3D12_CROSS_NODE_SHARING_TIER CrossNodeSharingTier;
+    public D3D12_CROSS_NODE_SHARING_TIER CrossNodeSharingTier;
 
-        public BOOL CrossAdapterRowMajorTextureSupported;
+    public BOOL CrossAdapterRowMajorTextureSupported;
 
-        public BOOL VPAndRTArrayIndexFromAnyShaderFeedingRasterizerSupportedWithoutGSEmulation;
+    public BOOL VPAndRTArrayIndexFromAnyShaderFeedingRasterizerSupportedWithoutGSEmulation;
 
-        public D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
-    }
+    public D3D12_RESOURCE_HEAP_TIER ResourceHeapTier;
 }

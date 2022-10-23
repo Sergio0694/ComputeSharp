@@ -3,18 +3,17 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_DESCRIPTOR_RANGE
 {
-    internal partial struct D3D12_DESCRIPTOR_RANGE
-    {
-        public D3D12_DESCRIPTOR_RANGE_TYPE RangeType;
+    public D3D12_DESCRIPTOR_RANGE_TYPE RangeType;
 
-        public uint NumDescriptors;
+    public uint NumDescriptors;
 
-        public uint BaseShaderRegister;
+    public uint BaseShaderRegister;
 
-        public uint RegisterSpace;
+    public uint RegisterSpace;
 
-        public uint OffsetInDescriptorsFromTableStart;
-    }
+    public uint OffsetInDescriptorsFromTableStart;
 }

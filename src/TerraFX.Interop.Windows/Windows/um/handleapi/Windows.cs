@@ -5,11 +5,10 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+internal static unsafe partial class Windows
 {
-    internal static unsafe partial class Windows
-    {
-        [DllImport("kernel32", ExactSpelling = true)]
-        public static extern BOOL CloseHandle(HANDLE hObject);
-    }
+    [DllImport("kernel32", ExactSpelling = true)]
+    public static extern BOOL CloseHandle(HANDLE hObject);
 }

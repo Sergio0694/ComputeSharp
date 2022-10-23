@@ -5,28 +5,27 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_ROOT_PARAMETER
 {
-    internal partial struct D3D12_ROOT_PARAMETER
+    public D3D12_ROOT_PARAMETER_TYPE ParameterType;
+
+    [NativeTypeName("D3D12_ROOT_PARAMETER::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:3580:5)")]
+    public _Anonymous_e__Union Anonymous;
+
+    public D3D12_SHADER_VISIBILITY ShaderVisibility;
+
+    [StructLayout(LayoutKind.Explicit)]
+    internal partial struct _Anonymous_e__Union
     {
-        public D3D12_ROOT_PARAMETER_TYPE ParameterType;
+        [FieldOffset(0)]
+        public D3D12_ROOT_DESCRIPTOR_TABLE DescriptorTable;
 
-        [NativeTypeName("D3D12_ROOT_PARAMETER::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:3580:5)")]
-        public _Anonymous_e__Union Anonymous;
+        [FieldOffset(0)]
+        public D3D12_ROOT_CONSTANTS Constants;
 
-        public D3D12_SHADER_VISIBILITY ShaderVisibility;
-
-        [StructLayout(LayoutKind.Explicit)]
-        internal partial struct _Anonymous_e__Union
-        {
-            [FieldOffset(0)]
-            public D3D12_ROOT_DESCRIPTOR_TABLE DescriptorTable;
-
-            [FieldOffset(0)]
-            public D3D12_ROOT_CONSTANTS Constants;
-
-            [FieldOffset(0)]
-            public D3D12_ROOT_DESCRIPTOR Descriptor;
-        }
+        [FieldOffset(0)]
+        public D3D12_ROOT_DESCRIPTOR Descriptor;
     }
 }
