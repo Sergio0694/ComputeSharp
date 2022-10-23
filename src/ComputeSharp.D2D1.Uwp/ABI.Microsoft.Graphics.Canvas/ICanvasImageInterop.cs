@@ -21,7 +21,7 @@ internal unsafe interface ICanvasImageInterop
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     [PreserveSig]
     [return: NativeTypeName("HRESULT")]
-    int GetDevice([NativeTypeName("ICanvasDevice**")] IUnknown** device);
+    int GetDevice(ICanvasDevice** device);
 
     /// <summary>
     /// Gets an <see cref="ID2D1Image"/> from an <see cref="ICanvasImageInterop"/> instance.
@@ -51,7 +51,7 @@ internal unsafe interface ICanvasImageInterop
     [PreserveSig]
     [return: NativeTypeName("HRESULT")]
     int GetD2DImage(
-        [NativeTypeName("ICanvasDevice*")] IUnknown* device,
+        ICanvasDevice* device,
         ID2D1DeviceContext* deviceContext,
         CanvasImageGetD2DImageFlags flags,
         float targetDpi,

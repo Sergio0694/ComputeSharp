@@ -47,6 +47,8 @@ partial class PixelShaderEffect<T>
     /// <inheritdoc/>
     void IReferenceTrackedObject.DangerousOnDispose()
     {
-        // TODO
+        this.canvasDevice.Dispose();
+        this.d2D1RealizationDevice.Dispose();
+        this.d2D1Effect.Dispose();
     }
 }
