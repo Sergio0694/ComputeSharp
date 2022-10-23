@@ -12,4 +12,7 @@ internal static partial class D2DERR
 
     [NativeTypeName("#define D2DERR_CYCLIC_GRAPH _HRESULT_TYPEDEF_(0x88990020L)")]
     public const int D2DERR_CYCLIC_GRAPH = unchecked((int)(0x88990020));
+
+    [NativeTypeName("#define D2DERR_EFFECT_IS_NOT_REGISTERED _HRESULT_TYPEDEF_(0x88990028L)")]
+    public const int D2DERR_EFFECT_IS_NOT_REGISTERED = unchecked((int)(0x88990028));
 }

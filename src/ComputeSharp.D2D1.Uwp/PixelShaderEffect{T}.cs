@@ -4,6 +4,7 @@ using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
@@ -65,6 +66,20 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// The current <typeparamref name="T"/> value in use.
     /// </summary>
     public T Value;
+
+    /// <summary>
+    /// Configures the <see cref="ID2D1TransformMapperFactory{T}"/> to use for effects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="d2D1DrawTransformMapperFactory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
+    /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
+    /// <remarks>
+    /// <para>Initialization can only be done once, and is shared across all effects of type <typeparamref name="T"/>.</para>
+    /// <para>Initializing an effect is not necessary before using it: if no transform has been set, the default one will be used.</para>
+    /// </remarks>
+    public static void ConfigureD2D1TransformMapperFactory(ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory)
+    {
+        PixelShaderEffect.For<T>.Initialize(d2D1DrawTransformMapperFactory);
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether to enable caching the output from drawing this effect.
@@ -350,13 +365,41 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
         // D2D1PixelShaderEffect APIs specifically need an ID2D1Factory1 (as ID2D1Factory1::RegisterEffectFromString is used)
         d2D1Factory.CopyTo(d2D1Factory1.GetAddressOf()).Assert();
 
-        // Register the effect with the factory (TODO: only do this if needed)
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
+        bool isPossiblyRegistered = true;
+
+        // If the effect hasn't been initialized explicitly, initialize it now
+        if (!PixelShaderEffect.For<T>.TryGetId(out Guid effectId))
+        {
+            PixelShaderEffect.For<T>.Initialize(null);
+
+            effectId = PixelShaderEffect.For<T>.Id;
+            isPossiblyRegistered = false;
+        }
 
         fixed (ID2D1Effect** d2D1Effect = this.d2D1Effect)
         {
-            // Create an instance of the effect in use and store it in the current object
-            D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(deviceContext, (void**)d2D1Effect);
+            HRESULT hresult = D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED;
+
+            // Try to create an instance of the effect in use and store it in the current object
+            if (isPossiblyRegistered)
+            {
+                hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
+            }
+
+            // Check if creation failed due to the effect not being registered. In that case, register
+            // it and then try again. This is much faster than check whether the effect is registered
+            // manually every time, by enumerating all registered effects for the target device context.
+            if (hresult == D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED)
+            {
+                // Register the effect with the factory (pass the same D2D1 draw transform mapper factory that was used before)
+                D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory1.Get(), PixelShaderEffect.For<T>.D2D1DrawTransformMapperFactory, out _);
+
+                // Try to create the effect again
+                hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
+            }
+
+            // Rethrow any other errors
+            hresult.Assert();
         }
 
         // If cache input has been set, forward that to the new effect
