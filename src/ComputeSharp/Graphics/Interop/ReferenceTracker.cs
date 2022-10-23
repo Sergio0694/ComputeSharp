@@ -215,7 +215,7 @@ internal struct ReferenceTracker : IDisposable
     }
 
     /// <summary>
-    /// A reference tracking lease to extend the lifetime of a given <see cref="ReferenceTrackedObject"/> instance while in a given scope.
+    /// A reference tracking lease to extend the lifetime of a given <see cref="IReferenceTrackedObject"/> instance while in a given scope.
     /// </summary>
     /// <remarks>
     /// This type must always be used in a <see langword="using"/> statement and disposed properly. Not doing
@@ -224,7 +224,7 @@ internal struct ReferenceTracker : IDisposable
     public struct Lease : IDisposable
     {
         /// <summary>
-        /// The <see cref="ReferenceTrackedObject"/> instance being wrapped, if any.
+        /// The <see cref="IReferenceTrackedObject"/> instance being wrapped, if any.
         /// </summary>
         private IReferenceTrackedObject? trackedObject;
 
