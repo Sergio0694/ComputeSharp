@@ -10,20 +10,19 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX
-{
-    [Guid("28211A43-7D89-476F-8181-2D6159B220AD")]
-    [NativeTypeName("struct ID2D1Effect : ID2D1Properties")]
-    [NativeInheritance("ID2D1Properties")]
-    internal unsafe partial struct ID2D1Effect
-    {
-        public void** lpVtbl;
+namespace TerraFX.Interop.DirectX;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(9)]
-        public HRESULT SetValue([NativeTypeName("UINT32")] uint index, D2D1_PROPERTY_TYPE type, [NativeTypeName("const BYTE *")] byte* data, [NativeTypeName("UINT32")] uint dataSize)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID2D1Effect*, uint, D2D1_PROPERTY_TYPE, byte*, uint, int>)(lpVtbl[9]))((ID2D1Effect*)Unsafe.AsPointer(ref this), index, type, data, dataSize);
-        }
+[Guid("28211A43-7D89-476F-8181-2D6159B220AD")]
+[NativeTypeName("struct ID2D1Effect : ID2D1Properties")]
+[NativeInheritance("ID2D1Properties")]
+internal unsafe partial struct ID2D1Effect
+{
+    public void** lpVtbl;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(9)]
+    public HRESULT SetValue([NativeTypeName("UINT32")] uint index, D2D1_PROPERTY_TYPE type, [NativeTypeName("const BYTE *")] byte* data, [NativeTypeName("UINT32")] uint dataSize)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID2D1Effect*, uint, D2D1_PROPERTY_TYPE, byte*, uint, int>)(lpVtbl[9]))((ID2D1Effect*)Unsafe.AsPointer(ref this), index, type, data, dataSize);
     }
 }

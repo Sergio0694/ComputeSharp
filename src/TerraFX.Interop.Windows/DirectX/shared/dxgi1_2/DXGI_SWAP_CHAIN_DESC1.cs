@@ -5,31 +5,30 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct DXGI_SWAP_CHAIN_DESC1
 {
-    internal partial struct DXGI_SWAP_CHAIN_DESC1
-    {
-        public uint Width;
+    public uint Width;
 
-        public uint Height;
+    public uint Height;
 
-        public DXGI_FORMAT Format;
+    public DXGI_FORMAT Format;
 
-        public BOOL Stereo;
+    public BOOL Stereo;
 
-        public DXGI_SAMPLE_DESC SampleDesc;
+    public DXGI_SAMPLE_DESC SampleDesc;
 
-        [NativeTypeName("DXGI_USAGE")]
-        public uint BufferUsage;
+    [NativeTypeName("DXGI_USAGE")]
+    public uint BufferUsage;
 
-        public uint BufferCount;
+    public uint BufferCount;
 
-        public DXGI_SCALING Scaling;
+    public DXGI_SCALING Scaling;
 
-        public DXGI_SWAP_EFFECT SwapEffect;
+    public DXGI_SWAP_EFFECT SwapEffect;
 
-        public DXGI_ALPHA_MODE AlphaMode;
+    public DXGI_ALPHA_MODE AlphaMode;
 
-        public uint Flags;
-    }
+    public uint Flags;
 }

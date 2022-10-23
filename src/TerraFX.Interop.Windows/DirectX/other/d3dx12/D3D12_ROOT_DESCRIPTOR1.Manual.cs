@@ -5,25 +5,24 @@
 
 using static TerraFX.Interop.DirectX.D3D12_ROOT_DESCRIPTOR_FLAGS;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal unsafe partial struct D3D12_ROOT_DESCRIPTOR1
 {
-    internal unsafe partial struct D3D12_ROOT_DESCRIPTOR1
+    public D3D12_ROOT_DESCRIPTOR1(uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
     {
-        public D3D12_ROOT_DESCRIPTOR1(uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
-        {
-            Init(out this, shaderRegister, registerSpace, flags);
-        }
+        Init(out this, shaderRegister, registerSpace, flags);
+    }
 
-        public void Init(uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
-        {
-            Init(out this, shaderRegister, registerSpace, flags);
-        }
+    public void Init(uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
+    {
+        Init(out this, shaderRegister, registerSpace, flags);
+    }
 
-        public static void Init([NativeTypeName("D3D12_ROOT_DESCRIPTOR1 &")] out D3D12_ROOT_DESCRIPTOR1 table, uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
-        {
-            table.ShaderRegister = shaderRegister;
-            table.RegisterSpace = registerSpace;
-            table.Flags = flags;
-        }
+    public static void Init([NativeTypeName("D3D12_ROOT_DESCRIPTOR1 &")] out D3D12_ROOT_DESCRIPTOR1 table, uint shaderRegister, uint registerSpace = 0, D3D12_ROOT_DESCRIPTOR_FLAGS flags = D3D12_ROOT_DESCRIPTOR_FLAG_NONE)
+    {
+        table.ShaderRegister = shaderRegister;
+        table.RegisterSpace = registerSpace;
+        table.Flags = flags;
     }
 }

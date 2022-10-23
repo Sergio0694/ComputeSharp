@@ -3,12 +3,11 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal enum D3D_ROOT_SIGNATURE_VERSION
 {
-    internal enum D3D_ROOT_SIGNATURE_VERSION
-    {
-        D3D_ROOT_SIGNATURE_VERSION_1 = 0x1,
-        D3D_ROOT_SIGNATURE_VERSION_1_0 = 0x1,
-        D3D_ROOT_SIGNATURE_VERSION_1_1 = 0x2,
-    }
+    D3D_ROOT_SIGNATURE_VERSION_1 = 0x1,
+    D3D_ROOT_SIGNATURE_VERSION_1_0 = 0x1,
+    D3D_ROOT_SIGNATURE_VERSION_1_1 = 0x2,
 }

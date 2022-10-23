@@ -3,11 +3,10 @@
 // Ported from shared/dxgi1_3.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal static partial class DXGI
 {
-    internal static partial class DXGI
-    {
-        [NativeTypeName("#define DXGI_CREATE_FACTORY_DEBUG 0x1")]
-        public const int DXGI_CREATE_FACTORY_DEBUG = 0x1;
-    }
+    [NativeTypeName("#define DXGI_CREATE_FACTORY_DEBUG 0x1")]
+    public const int DXGI_CREATE_FACTORY_DEBUG = 0x1;
 }

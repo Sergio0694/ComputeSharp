@@ -5,13 +5,12 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+[Flags]
+internal enum D3D12_RESOURCE_BARRIER_FLAGS
 {
-    [Flags]
-    internal enum D3D12_RESOURCE_BARRIER_FLAGS
-    {
-        D3D12_RESOURCE_BARRIER_FLAG_NONE = 0,
-        D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY = 0x1,
-        D3D12_RESOURCE_BARRIER_FLAG_END_ONLY = 0x2,
-    }
+    D3D12_RESOURCE_BARRIER_FLAG_NONE = 0,
+    D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY = 0x1,
+    D3D12_RESOURCE_BARRIER_FLAG_END_ONLY = 0x2,
 }

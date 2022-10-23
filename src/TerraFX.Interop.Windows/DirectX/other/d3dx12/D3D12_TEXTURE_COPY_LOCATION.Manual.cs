@@ -6,35 +6,34 @@
 using System.Runtime.CompilerServices;
 using static TerraFX.Interop.DirectX.D3D12_TEXTURE_COPY_TYPE;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
 {
-    internal unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
+    public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes)
     {
-        public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes)
-        {
-            Unsafe.SkipInit(out this);
+        Unsafe.SkipInit(out this);
 
-            pResource = pRes;
-            Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-            Anonymous.PlacedFootprint = new D3D12_PLACED_SUBRESOURCE_FOOTPRINT();
-        }
+        pResource = pRes;
+        Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        Anonymous.PlacedFootprint = new D3D12_PLACED_SUBRESOURCE_FOOTPRINT();
+    }
 
-        public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, [NativeTypeName("D3D12_PLACED_SUBRESOURCE_FOOTPRINT const &")] in D3D12_PLACED_SUBRESOURCE_FOOTPRINT Footprint)
-        {
-            Unsafe.SkipInit(out this);
+    public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, [NativeTypeName("D3D12_PLACED_SUBRESOURCE_FOOTPRINT const &")] in D3D12_PLACED_SUBRESOURCE_FOOTPRINT Footprint)
+    {
+        Unsafe.SkipInit(out this);
 
-            pResource = pRes;
-            Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-            Anonymous.PlacedFootprint = Footprint;
-        }
-        public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, uint Sub)
-        {
-            Unsafe.SkipInit(out this);
+        pResource = pRes;
+        Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+        Anonymous.PlacedFootprint = Footprint;
+    }
+    public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes, uint Sub)
+    {
+        Unsafe.SkipInit(out this);
 
-            pResource = pRes;
-            Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-            Anonymous.PlacedFootprint = new D3D12_PLACED_SUBRESOURCE_FOOTPRINT();
-            Anonymous.SubresourceIndex = Sub;
-        }
+        pResource = pRes;
+        Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+        Anonymous.PlacedFootprint = new D3D12_PLACED_SUBRESOURCE_FOOTPRINT();
+        Anonymous.SubresourceIndex = Sub;
     }
 }

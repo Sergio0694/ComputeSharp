@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
-{
-    internal partial struct D3D12_RESOURCE_ALLOCATION_INFO
-    {
-        [NativeTypeName("UINT64")]
-        public ulong SizeInBytes;
+namespace TerraFX.Interop.DirectX;
 
-        [NativeTypeName("UINT64")]
-        public ulong Alignment;
-    }
+internal partial struct D3D12_RESOURCE_ALLOCATION_INFO
+{
+    [NativeTypeName("UINT64")]
+    public ulong SizeInBytes;
+
+    [NativeTypeName("UINT64")]
+    public ulong Alignment;
 }

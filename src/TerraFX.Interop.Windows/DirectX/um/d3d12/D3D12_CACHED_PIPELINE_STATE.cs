@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
-{
-    internal unsafe partial struct D3D12_CACHED_PIPELINE_STATE
-    {
-        [NativeTypeName("const void *")]
-        public void* pCachedBlob;
+namespace TerraFX.Interop.DirectX;
 
-        [NativeTypeName("SIZE_T")]
-        public nuint CachedBlobSizeInBytes;
-    }
+internal unsafe partial struct D3D12_CACHED_PIPELINE_STATE
+{
+    [NativeTypeName("const void *")]
+    public void* pCachedBlob;
+
+    [NativeTypeName("SIZE_T")]
+    public nuint CachedBlobSizeInBytes;
 }

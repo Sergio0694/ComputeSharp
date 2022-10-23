@@ -3,12 +3,11 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal enum D3D12_COMMAND_QUEUE_PRIORITY
 {
-    internal enum D3D12_COMMAND_QUEUE_PRIORITY
-    {
-        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL = 0,
-        D3D12_COMMAND_QUEUE_PRIORITY_HIGH = 100,
-        D3D12_COMMAND_QUEUE_PRIORITY_GLOBAL_REALTIME = 10000,
-    }
+    D3D12_COMMAND_QUEUE_PRIORITY_NORMAL = 0,
+    D3D12_COMMAND_QUEUE_PRIORITY_HIGH = 100,
+    D3D12_COMMAND_QUEUE_PRIORITY_GLOBAL_REALTIME = 10000,
 }

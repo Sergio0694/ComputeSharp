@@ -8,13 +8,12 @@ using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+[Guid("B2EFE1E7-729F-4102-949F-505FA21BF666")]
+[NativeTypeName("struct ID2D1TransformNode : IUnknown")]
+[NativeInheritance("IUnknown")]
+internal unsafe partial struct ID2D1TransformNode
 {
-    [Guid("B2EFE1E7-729F-4102-949F-505FA21BF666")]
-    [NativeTypeName("struct ID2D1TransformNode : IUnknown")]
-    [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1TransformNode
-    {
-        public void** lpVtbl;
-    }
+    public void** lpVtbl;
 }

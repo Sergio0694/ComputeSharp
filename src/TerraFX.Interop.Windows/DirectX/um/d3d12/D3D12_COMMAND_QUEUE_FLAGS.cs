@@ -5,12 +5,11 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+[Flags]
+internal enum D3D12_COMMAND_QUEUE_FLAGS
 {
-    [Flags]
-    internal enum D3D12_COMMAND_QUEUE_FLAGS
-    {
-        D3D12_COMMAND_QUEUE_FLAG_NONE = 0,
-        D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT = 0x1,
-    }
+    D3D12_COMMAND_QUEUE_FLAG_NONE = 0,
+    D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT = 0x1,
 }

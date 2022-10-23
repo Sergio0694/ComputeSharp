@@ -5,13 +5,12 @@
 
 using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal enum D2D1_FEATURE_LEVEL : uint
 {
-    internal enum D2D1_FEATURE_LEVEL : uint
-    {
-        D2D1_FEATURE_LEVEL_DEFAULT = 0,
-        D2D1_FEATURE_LEVEL_9 = D3D_FEATURE_LEVEL_9_1,
-        D2D1_FEATURE_LEVEL_10 = D3D_FEATURE_LEVEL_10_0,
-        D2D1_FEATURE_LEVEL_FORCE_DWORD = 0xffffffff,
-    }
+    D2D1_FEATURE_LEVEL_DEFAULT = 0,
+    D2D1_FEATURE_LEVEL_9 = D3D_FEATURE_LEVEL_9_1,
+    D2D1_FEATURE_LEVEL_10 = D3D_FEATURE_LEVEL_10_0,
+    D2D1_FEATURE_LEVEL_FORCE_DWORD = 0xffffffff,
 }

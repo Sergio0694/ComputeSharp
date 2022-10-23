@@ -10,20 +10,19 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX
-{
-    [Guid("E8F7FE7A-191C-466D-AD95-975678BDA998")]
-    [NativeTypeName("struct ID2D1DeviceContext : ID2D1RenderTarget")]
-    [NativeInheritance("ID2D1RenderTarget")]
-    internal unsafe partial struct ID2D1DeviceContext
-    {
-        public void** lpVtbl;
+namespace TerraFX.Interop.DirectX;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(63)]
-        public HRESULT CreateEffect([NativeTypeName("const IID &")] Guid* effectId, ID2D1Effect** effect)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, Guid*, ID2D1Effect**, int>)(lpVtbl[63]))((ID2D1DeviceContext*)Unsafe.AsPointer(ref this), effectId, effect);
-        }
+[Guid("E8F7FE7A-191C-466D-AD95-975678BDA998")]
+[NativeTypeName("struct ID2D1DeviceContext : ID2D1RenderTarget")]
+[NativeInheritance("ID2D1RenderTarget")]
+internal unsafe partial struct ID2D1DeviceContext
+{
+    public void** lpVtbl;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(63)]
+    public HRESULT CreateEffect([NativeTypeName("const IID &")] Guid* effectId, ID2D1Effect** effect)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, Guid*, ID2D1Effect**, int>)(lpVtbl[63]))((ID2D1DeviceContext*)Unsafe.AsPointer(ref this), effectId, effect);
     }
 }

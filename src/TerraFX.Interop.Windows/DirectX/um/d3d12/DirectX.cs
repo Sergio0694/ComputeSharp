@@ -7,17 +7,16 @@ using System;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal static unsafe partial class DirectX
 {
-    internal static unsafe partial class DirectX
-    {
-        [DllImport("d3d12", ExactSpelling = true)]
-        public static extern HRESULT D3D12SerializeVersionedRootSignature([NativeTypeName("const D3D12_VERSIONED_ROOT_SIGNATURE_DESC *")] D3D12_VERSIONED_ROOT_SIGNATURE_DESC* pRootSignature, ID3DBlob** ppBlob, ID3DBlob** ppErrorBlob);
+    [DllImport("d3d12", ExactSpelling = true)]
+    public static extern HRESULT D3D12SerializeVersionedRootSignature([NativeTypeName("const D3D12_VERSIONED_ROOT_SIGNATURE_DESC *")] D3D12_VERSIONED_ROOT_SIGNATURE_DESC* pRootSignature, ID3DBlob** ppBlob, ID3DBlob** ppErrorBlob);
 
-        [DllImport("d3d12", ExactSpelling = true)]
-        public static extern HRESULT D3D12CreateDevice(IUnknown* pAdapter, D3D_FEATURE_LEVEL MinimumFeatureLevel, [NativeTypeName("const IID &")] Guid* riid, void** ppDevice);
+    [DllImport("d3d12", ExactSpelling = true)]
+    public static extern HRESULT D3D12CreateDevice(IUnknown* pAdapter, D3D_FEATURE_LEVEL MinimumFeatureLevel, [NativeTypeName("const IID &")] Guid* riid, void** ppDevice);
 
-        [DllImport("d3d12", ExactSpelling = true)]
-        public static extern HRESULT D3D12GetDebugInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvDebug);
-    }
+    [DllImport("d3d12", ExactSpelling = true)]
+    public static extern HRESULT D3D12GetDebugInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvDebug);
 }

@@ -3,14 +3,13 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_ROOT_DESCRIPTOR1
 {
-    internal partial struct D3D12_ROOT_DESCRIPTOR1
-    {
-        public uint ShaderRegister;
+    public uint ShaderRegister;
 
-        public uint RegisterSpace;
+    public uint RegisterSpace;
 
-        public D3D12_ROOT_DESCRIPTOR_FLAGS Flags;
-    }
+    public D3D12_ROOT_DESCRIPTOR_FLAGS Flags;
 }

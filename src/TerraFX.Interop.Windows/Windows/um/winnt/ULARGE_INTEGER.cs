@@ -5,39 +5,38 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+[StructLayout(LayoutKind.Explicit)]
+internal partial struct ULARGE_INTEGER
 {
-    [StructLayout(LayoutKind.Explicit)]
-    internal partial struct ULARGE_INTEGER
+    [FieldOffset(0)]
+    [NativeTypeName("_ULARGE_INTEGER::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:877:5)")]
+    public _Anonymous_e__Struct Anonymous;
+
+    [FieldOffset(0)]
+    [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:881:5)")]
+    public _u_e__Struct u;
+
+    [FieldOffset(0)]
+    [NativeTypeName("ULONGLONG")]
+    public ulong QuadPart;
+
+    internal partial struct _Anonymous_e__Struct
     {
-        [FieldOffset(0)]
-        [NativeTypeName("_ULARGE_INTEGER::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:877:5)")]
-        public _Anonymous_e__Struct Anonymous;
+        [NativeTypeName("DWORD")]
+        public uint LowPart;
 
-        [FieldOffset(0)]
-        [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:881:5)")]
-        public _u_e__Struct u;
+        [NativeTypeName("DWORD")]
+        public uint HighPart;
+    }
 
-        [FieldOffset(0)]
-        [NativeTypeName("ULONGLONG")]
-        public ulong QuadPart;
+    internal partial struct _u_e__Struct
+    {
+        [NativeTypeName("DWORD")]
+        public uint LowPart;
 
-        internal partial struct _Anonymous_e__Struct
-        {
-            [NativeTypeName("DWORD")]
-            public uint LowPart;
-
-            [NativeTypeName("DWORD")]
-            public uint HighPart;
-        }
-
-        internal partial struct _u_e__Struct
-        {
-            [NativeTypeName("DWORD")]
-            public uint LowPart;
-
-            [NativeTypeName("DWORD")]
-            public uint HighPart;
-        }
+        [NativeTypeName("DWORD")]
+        public uint HighPart;
     }
 }

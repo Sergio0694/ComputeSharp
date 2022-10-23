@@ -5,17 +5,16 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+internal static unsafe partial class Windows
 {
-    internal static unsafe partial class Windows
-    {
-        [DllImport("kernel32", ExactSpelling = true)]
-        public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] void* Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
+    [DllImport("kernel32", ExactSpelling = true)]
+    public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] void* Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
 
-        [DllImport("kernel32", ExactSpelling = true)]
-        public static extern BOOL UnregisterWait(HANDLE WaitHandle);
+    [DllImport("kernel32", ExactSpelling = true)]
+    public static extern BOOL UnregisterWait(HANDLE WaitHandle);
 
-        [NativeTypeName("#define INFINITE 0xFFFFFFFF")]
-        public const uint INFINITE = 0xFFFFFFFF;
-    }
+    [NativeTypeName("#define INFINITE 0xFFFFFFFF")]
+    public const uint INFINITE = 0xFFFFFFFF;
 }

@@ -5,39 +5,38 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+[StructLayout(LayoutKind.Explicit)]
+internal partial struct LARGE_INTEGER
 {
-    [StructLayout(LayoutKind.Explicit)]
-    internal partial struct LARGE_INTEGER
+    [FieldOffset(0)]
+    [NativeTypeName("_LARGE_INTEGER::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:857:5)")]
+    public _Anonymous_e__Struct Anonymous;
+
+    [FieldOffset(0)]
+    [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:861:5)")]
+    public _u_e__Struct u;
+
+    [FieldOffset(0)]
+    [NativeTypeName("LONGLONG")]
+    public long QuadPart;
+
+    internal partial struct _Anonymous_e__Struct
     {
-        [FieldOffset(0)]
-        [NativeTypeName("_LARGE_INTEGER::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:857:5)")]
-        public _Anonymous_e__Struct Anonymous;
+        [NativeTypeName("DWORD")]
+        public uint LowPart;
 
-        [FieldOffset(0)]
-        [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/winnt.h:861:5)")]
-        public _u_e__Struct u;
+        [NativeTypeName("LONG")]
+        public int HighPart;
+    }
 
-        [FieldOffset(0)]
-        [NativeTypeName("LONGLONG")]
-        public long QuadPart;
+    internal partial struct _u_e__Struct
+    {
+        [NativeTypeName("DWORD")]
+        public uint LowPart;
 
-        internal partial struct _Anonymous_e__Struct
-        {
-            [NativeTypeName("DWORD")]
-            public uint LowPart;
-
-            [NativeTypeName("LONG")]
-            public int HighPart;
-        }
-
-        internal partial struct _u_e__Struct
-        {
-            [NativeTypeName("DWORD")]
-            public uint LowPart;
-
-            [NativeTypeName("LONG")]
-            public int HighPart;
-        }
+        [NativeTypeName("LONG")]
+        public int HighPart;
     }
 }

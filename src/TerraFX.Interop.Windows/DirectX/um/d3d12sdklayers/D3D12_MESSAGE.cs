@@ -3,20 +3,19 @@
 // Ported from um/d3d12sdklayers.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal unsafe partial struct D3D12_MESSAGE
 {
-    internal unsafe partial struct D3D12_MESSAGE
-    {
-        public D3D12_MESSAGE_CATEGORY Category;
+    public D3D12_MESSAGE_CATEGORY Category;
 
-        public D3D12_MESSAGE_SEVERITY Severity;
+    public D3D12_MESSAGE_SEVERITY Severity;
 
-        public D3D12_MESSAGE_ID ID;
+    public D3D12_MESSAGE_ID ID;
 
-        [NativeTypeName("const char *")]
-        public sbyte* pDescription;
+    [NativeTypeName("const char *")]
+    public sbyte* pDescription;
 
-        [NativeTypeName("SIZE_T")]
-        public nuint DescriptionByteLength;
-    }
+    [NativeTypeName("SIZE_T")]
+    public nuint DescriptionByteLength;
 }

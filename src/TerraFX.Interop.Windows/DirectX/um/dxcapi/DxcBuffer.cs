@@ -3,16 +3,15 @@
 // Ported from um/dxcapi.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the University of Illinois Open Source License.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal unsafe partial struct DxcBuffer
 {
-    internal unsafe partial struct DxcBuffer
-    {
-        [NativeTypeName("LPCVOID")]
-        public void* Ptr;
+    [NativeTypeName("LPCVOID")]
+    public void* Ptr;
 
-        [NativeTypeName("SIZE_T")]
-        public nuint Size;
+    [NativeTypeName("SIZE_T")]
+    public nuint Size;
 
-        public uint Encoding;
-    }
+    public uint Encoding;
 }

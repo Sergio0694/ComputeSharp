@@ -3,10 +3,9 @@
 // Ported from shared/dxgi1_5.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal enum DXGI_FEATURE
 {
-    internal enum DXGI_FEATURE
-    {
-        DXGI_FEATURE_PRESENT_ALLOW_TEARING = 0,
-    }
+    DXGI_FEATURE_PRESENT_ALLOW_TEARING = 0,
 }

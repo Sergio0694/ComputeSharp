@@ -3,18 +3,17 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_SUBRESOURCE_FOOTPRINT
 {
-    internal partial struct D3D12_SUBRESOURCE_FOOTPRINT
-    {
-        public DXGI_FORMAT Format;
+    public DXGI_FORMAT Format;
 
-        public uint Width;
+    public uint Width;
 
-        public uint Height;
+    public uint Height;
 
-        public uint Depth;
+    public uint Depth;
 
-        public uint RowPitch;
-    }
+    public uint RowPitch;
 }

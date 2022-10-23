@@ -3,13 +3,12 @@
 // Ported from um/wincodec.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+internal enum WICBitmapEncoderCacheOption
 {
-    internal enum WICBitmapEncoderCacheOption
-    {
-        WICBitmapEncoderCacheInMemory = 0,
-        WICBitmapEncoderCacheTempFile = 0x1,
-        WICBitmapEncoderNoCache = 0x2,
-        WICBITMAPENCODERCACHEOPTION_FORCE_DWORD = 0x7fffffff,
-    }
+    WICBitmapEncoderCacheInMemory = 0,
+    WICBitmapEncoderCacheTempFile = 0x1,
+    WICBitmapEncoderNoCache = 0x2,
+    WICBITMAPENCODERCACHEOPTION_FORCE_DWORD = 0x7fffffff,
 }

@@ -5,20 +5,19 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX
+namespace TerraFX.Interop.DirectX;
+
+internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS1
 {
-    internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS1
-    {
-        public BOOL WaveOps;
+    public BOOL WaveOps;
 
-        public uint WaveLaneCountMin;
+    public uint WaveLaneCountMin;
 
-        public uint WaveLaneCountMax;
+    public uint WaveLaneCountMax;
 
-        public uint TotalLaneCount;
+    public uint TotalLaneCount;
 
-        public BOOL ExpandedComputeResourceStates;
+    public BOOL ExpandedComputeResourceStates;
 
-        public BOOL Int64ShaderOps;
-    }
+    public BOOL Int64ShaderOps;
 }

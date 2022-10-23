@@ -5,20 +5,19 @@
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.Windows
+namespace TerraFX.Interop.Windows;
+
+internal struct RECT
 {
-    internal struct RECT
-    {
-        [NativeTypeName("LONG")]
-        public int left;
+    [NativeTypeName("LONG")]
+    public int left;
 
-        [NativeTypeName("LONG")]
-        public int top;
+    [NativeTypeName("LONG")]
+    public int top;
 
-        [NativeTypeName("LONG")]
-        public int right;
+    [NativeTypeName("LONG")]
+    public int right;
 
-        [NativeTypeName("LONG")]
-        public int bottom;
-    }
+    [NativeTypeName("LONG")]
+    public int bottom;
 }
