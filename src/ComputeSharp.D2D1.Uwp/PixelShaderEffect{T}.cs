@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Uwp;
 /// A custom <see cref="ICanvasImage"/> implementation powered by a supplied shader type.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
-public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasImage, ICanvasImageInterop
+public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasImage, ICanvasImageInterop.Interface
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
@@ -24,7 +24,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     private readonly object lockObject = new();
 
     /// <summary>
-    /// Flag to track whether a given call is recursively invoked by <see cref="ICanvasImageInterop.GetD2DImage"/>, to avoid graph cycles.
+    /// Flag to track whether a given call is recursively invoked by <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>, to avoid graph cycles.
     /// </summary>
     private volatile int isInsideGetD2DImage;
 
