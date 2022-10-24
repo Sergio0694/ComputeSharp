@@ -16,7 +16,7 @@ namespace ComputeSharp.D2D1.Uwp;
 unsafe partial class PixelShaderEffect<T>
 {
     /// <inheritdoc/>
-    int ICanvasImageInterop.GetDevice(ICanvasDevice** device)
+    int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
@@ -49,7 +49,7 @@ unsafe partial class PixelShaderEffect<T>
     }
 
     /// <inheritdoc/>
-    int ICanvasImageInterop.GetD2DImage(
+    int ICanvasImageInterop.Interface.GetD2DImage(
         ICanvasDevice* device,
         ID2D1DeviceContext* deviceContext,
         CanvasImageGetD2DImageFlags flags,
