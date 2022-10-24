@@ -248,7 +248,7 @@ unsafe partial class PixelShaderEffect<T>
         // TODO: port base CanvasEffect::Realize logic
 
         // Also set the current constants for the effect
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, this.d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(Value, this.d2D1Effect.Get());
     }
 
     /// <summary>
@@ -259,7 +259,7 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
     private void RefreshInputs(CanvasImageGetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in this.Value, this.d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(Value, this.d2D1Effect.Get());
 
         // TODO
     }
