@@ -1,5 +1,11 @@
+using System.Buffers;
+using System.Runtime.CompilerServices;
+using System;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
+using ComputeSharp.D2D1.Interop;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Uwp.Extensions;
 
@@ -8,6 +14,34 @@ namespace ComputeSharp.D2D1.Uwp.Extensions;
 /// </summary>
 internal static unsafe class ID2D1EffectExtensions
 {
+    /// <summary>
+    /// Gets the constant buffer of type <typeparamref name="T"/> from a given <see cref="ID2D1Effect"/> object.
+    /// </summary>
+    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
+    /// <returns>The constant buffer of type <typeparamref name="T"/> for <paramref name="d2D1Effect"/>.</returns>
+    public static T GetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(constantBufferSize);
+
+        fixed (byte* p = buffer)
+        {
+            // Get the raw constant buffer from the effect
+            d2D1Effect.GetValue(
+                index: D2D1PixelShaderEffectProperty.ConstantBuffer,
+                type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
+                data: p,
+                dataSize: (uint)constantBufferSize).Assert();
+        }
+
+        Unsafe.SkipInit(out T shader);
+
+        shader.InitializeFromDispatchData(buffer.AsSpan(0, constantBufferSize));
+
+        return shader;
+    }
+
     /// <summary>
     /// Gets the <see cref="D2D1_PROPERTY.D2D1_PROPERTY_CACHED"/> property for a given <see cref="ID2D1Effect"/> object.
     /// </summary>

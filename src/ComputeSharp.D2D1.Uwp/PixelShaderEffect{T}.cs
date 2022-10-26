@@ -44,6 +44,11 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     private ComPtr<ID2D1Effect> d2D1Effect;
 
     /// <summary>
+    /// The backing field for <see cref="Value"/>.
+    /// </summary>
+    private T value;
+
+    /// <summary>
     /// The backing field for <see cref="CacheOutput"/>.
     /// </summary>
     private bool cacheOutput;
