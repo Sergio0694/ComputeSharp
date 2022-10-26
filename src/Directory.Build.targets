@@ -2,20 +2,18 @@
 <Project>
   <Import Project="..\Directory.Build.targets" />
 
+  <!-- Enable trimming support on .NET 6 -->
   <Target Name="ConfigureAssemblyTrimmingIfNeeded"
           BeforeTargets="PrepareForBuild">
-
-    <!-- Enable trimming support on .NET 6 -->
     <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
       <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
       <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
   </Target>
 
+  <!-- Emit the [SupportedOSVersion] attribute if needed -->
   <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
           BeforeTargets="PrepareForBuild">
-
-    <!-- Emit the [SupportedOSVersion] attribute if needed -->
     <ItemGroup Condition="'$(SupportedOSVersion)' != ''">
       <AssemblyAttribute Include="System.Runtime.Versioning.SupportedOSPlatformAttribute">
         <_Parameter1>$(SupportedOSVersion)</_Parameter1>
@@ -23,9 +21,20 @@
     </ItemGroup>
   </Target>
 
+  <!-- Emit the [ComVisible(false)] attribute for UWP targets -->
+  <Target Name="EmitComVisibleAttributeForUwpProjects"
+          BeforeTargets="PrepareForBuild">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+      <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
+        <_Parameter1>false</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
   <!--
     The following target has been ported from TerraFX.Interop.Windows.
     See: https://github.com/terrafx/terrafx.interop.windows.
+    This generates the [module: SkipLocalsInit] attribute for all projects.
   -->
   <PropertyGroup>
     <GeneratedSkipLocalsInitFile Condition="'$(GeneratedSkipLocalsInitFile)' == ''">$(IntermediateOutputPath)$(MSBuildProjectName).SkipLocalsInit.g.cs</GeneratedSkipLocalsInitFile>
