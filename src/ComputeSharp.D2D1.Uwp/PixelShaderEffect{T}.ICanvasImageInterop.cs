@@ -166,7 +166,8 @@ unsafe partial class PixelShaderEffect<T>
             return;
         }
 
-        // Cache the last update value of the cache and precision properties
+        // Cache the last update values for the constant buffer, cache output and buffer precision properties
+        this.value = this.d2D1Effect.Get()->GetConstantBuffer<T>();
         this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
@@ -231,7 +232,8 @@ unsafe partial class PixelShaderEffect<T>
             hresult.Assert();
         }
 
-        // TODO: transfer properties (eg. D2D1ResourceTextureManager-s)
+        // Set the constant buffer for the effect
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.value, this.d2D1Effect.Get());
 
         // If cache input has been set, forward that to the new effect
         if (this.cacheOutput)
@@ -247,8 +249,7 @@ unsafe partial class PixelShaderEffect<T>
 
         // TODO: port base CanvasEffect::Realize logic
 
-        // Also set the current constants for the effect
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(Value, this.d2D1Effect.Get());
+        // TODO: transfer properties (eg. D2D1ResourceTextureManager-s)
     }
 
     /// <summary>
@@ -259,8 +260,6 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
     private void RefreshInputs(CanvasImageGetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(Value, this.d2D1Effect.Get());
-
         // TODO
     }
 }

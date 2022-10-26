@@ -1,3 +1,4 @@
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
@@ -12,19 +13,58 @@ unsafe partial class PixelShaderEffect<T>
     /// Gets the marshalled value for <see cref="CacheOutput"/>.
     /// </summary>
     /// <returns>The marshalled value for <see cref="CacheOutput"/>.</returns>
+    private T GetConstantBuffer()
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            return this.d2D1Effect.Get() switch
+            {
+                not null => this.d2D1Effect.Get()->GetConstantBuffer<T>(),
+                _ => this.value
+            };
+        }
+    }
+
+    /// <summary>
+    /// Sets the marshalled value for <see cref="Value"/>.
+    /// </summary>
+    /// <param name="value">The value to set for <see cref="Value"/>.</param>
+    private void SetConstantBuffer(in T value)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            // If the effect is realized, set the property on the underlying ID2D1Effect object
+            if (this.d2D1Effect.Get() is not null)
+            {
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in value, this.d2D1Effect.Get());
+            }
+            else
+            {
+                // Otherwise, just store the value locally
+                this.value = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the marshalled value for <see cref="CacheOutput"/>.
+    /// </summary>
+    /// <returns>The marshalled value for <see cref="CacheOutput"/>.</returns>
     private bool GetCacheOutput()
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
         lock (this.lockObject)
         {
-            // If the effect is realized, get the latest value from it
-            if (this.d2D1Effect.Get() is not null)
+            return this.d2D1Effect.Get() switch
             {
-                this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
-            }
-
-            return this.cacheOutput;
+                not null => this.d2D1Effect.Get()->GetCachedProperty(),
+                _ => this.cacheOutput
+            };
         }
     }
 
@@ -38,12 +78,14 @@ unsafe partial class PixelShaderEffect<T>
 
         lock (this.lockObject)
         {
-            this.cacheOutput = value;
-
-            // If the effect is realized, set the property on the underlying ID2D1Effect object too
+            // If the effect is realized, set the property on the underlying ID2D1Effect object
             if (this.d2D1Effect.Get() is not null)
             {
                 this.d2D1Effect.Get()->SetCachedProperty(value);
+            }
+            else
+            {
+                this.cacheOutput = value;
             }
         }
     }
@@ -58,11 +100,11 @@ unsafe partial class PixelShaderEffect<T>
 
         lock (this.lockObject)
         {
-            // If the effect is realized, get the latest value from it
-            if (this.d2D1Effect.Get() is not null)
+            D2D1_BUFFER_PRECISION d2D1BufferPrecision = this.d2D1Effect.Get() switch
             {
-                this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
-            }
+                not null => this.d2D1Effect.Get()->GetPrecisionProperty(),
+                _ => this.d2D1BufferPrecision
+            };
 
             // Map from D2D1_BUFFER_PRECISION to CanvasBufferPrecision, and return null for D2D1_BUFFER_PRECISION_UNKNOWN
             return this.d2D1BufferPrecision switch
