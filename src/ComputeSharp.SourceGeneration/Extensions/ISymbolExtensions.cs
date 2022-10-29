@@ -1,5 +1,6 @@
+using System;
 using System.Linq;
-using System.Text;
+using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
@@ -46,23 +47,50 @@ internal static class ISymbolExtensions
     /// <returns>The full metadata name for <paramref name="symbol"/> that is also a valid filename.</returns>
     public static string GetFullMetadataName(this ITypeSymbol symbol)
     {
-        static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
+        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+
+        static void BuildFrom(ISymbol? symbol, in ImmutableArrayBuilder<char> builder)
         {
-            return symbol switch
+            switch (symbol)
             {
-                INamespaceSymbol ns when ns.IsGlobalNamespace => builder,
-                INamespaceSymbol ns when ns.ContainingNamespace is { IsGlobalNamespace: false }
-                    => BuildFrom(ns.ContainingNamespace, builder.Insert(0, $".{ns.MetadataName}")),
-                ITypeSymbol ts when ts.ContainingType is ISymbol containingType
-                    => BuildFrom(containingType, builder.Insert(0, $"+{ts.MetadataName}")),
-                ITypeSymbol ts when ts.ContainingNamespace is ISymbol containingNamespace and not INamespaceSymbol { IsGlobalNamespace: true }
-                    => BuildFrom(containingNamespace, builder.Insert(0, $".{ts.MetadataName}")),
-                ISymbol => BuildFrom(symbol.ContainingSymbol, builder.Insert(0, symbol.MetadataName)),
-                _ => builder
-            };
+                // Namespaces that are nested also append a leading '.'
+                case INamespaceSymbol { ContainingNamespace.IsGlobalNamespace: false }:
+                    BuildFrom(symbol.ContainingNamespace, in builder);
+                    builder.Add('.');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Other namespaces (ie. the one right before global) skip the leading '.'
+                case INamespaceSymbol { IsGlobalNamespace: false }:
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Types with no namespace just have their metadata name directly written
+                case ITypeSymbol { ContainingSymbol: INamespaceSymbol { IsGlobalNamespace: true } }:
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Types with a containing non-global namespace also append a leading '.'
+                case ITypeSymbol { ContainingSymbol: INamespaceSymbol namespaceSymbol }:
+                    BuildFrom(namespaceSymbol, in builder);
+                    builder.Add('.');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Nested types append a leading '+'
+                case ITypeSymbol { ContainingSymbol: ITypeSymbol typeSymbol }:
+                    BuildFrom(typeSymbol, in builder);
+                    builder.Add('+');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+                default:
+                    break;
+            }
         }
 
-        return BuildFrom(symbol, new StringBuilder(256)).ToString();
+        BuildFrom(symbol, in builder);
+
+        return builder.ToString();
     }
 
     /// <summary>
