@@ -62,14 +62,39 @@ internal static class ISymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
     {
+        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+
+        AppendFullyQualifiedMetadataName(symbol.ContainingType!, in builder);
+
+        // Always add the method name after the containing type
+        builder.Add('.');
+        builder.AddRange(symbol.Name.AsSpan());
+
         if (includeParameters)
         {
-            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullyQualifiedMetadataName()));
+            builder.Add('(');
 
-            return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}({parameters})";
+            bool isFirstParameter = true;
+
+            foreach (IParameterSymbol parameter in symbol.Parameters)
+            {
+                // Append the leading ', ' if needed
+                if (isFirstParameter)
+                {
+                    isFirstParameter = false;
+                }
+                else
+                {
+                    builder.AddRange(", ".AsSpan());
+                }
+
+                AppendFullyQualifiedMetadataName(parameter.Type, in builder);
+            }
+
+            builder.Add(')');
         }
 
-        return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}";
+        return builder.ToString();
     }
 
     /// <summary>
@@ -79,16 +104,44 @@ internal static class ISymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this IPropertySymbol symbol)
     {
-        string declaringTypeName = symbol.ContainingType.GetFullyQualifiedMetadataName();
+        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+
+        AppendFullyQualifiedMetadataName(symbol.ContainingType!, in builder);
 
         if (symbol.IsIndexer)
         {
-            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullyQualifiedMetadataName()));
+            // Add the ".this[...]" suffix (parameters will be added below)
+            builder.AddRange(".this[".AsSpan());
 
-            return $"{declaringTypeName}.this[{parameters}]";
+            bool isFirstParameter = true;
+
+            // If the property is an indexer, also includes the parameters
+            foreach (IParameterSymbol parameter in symbol.Parameters)
+            {
+                // Append the leading ', ' if needed
+                if (isFirstParameter)
+                {
+                    isFirstParameter = false;
+                }
+                else
+                {
+                    builder.AddRange(", ".AsSpan());
+                }
+
+                AppendFullyQualifiedMetadataName(parameter.Type, in builder);
+            }
+
+            // Add the closing bracket for ".this[...]"
+            builder.Add(']');
+        }
+        else
+        {
+            // For normal properties, just append the name after the containing type
+            builder.Add('.');
+            builder.AddRange(symbol.Name.AsSpan());
         }
 
-        return $"{declaringTypeName}.{symbol.Name}";
+        return builder.ToString();
     }
 
     /// <summary>
@@ -98,7 +151,14 @@ internal static class ISymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this IFieldSymbol symbol)
     {
-        return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}";
+        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+
+        AppendFullyQualifiedMetadataName(symbol.ContainingType!, in builder);
+
+        builder.Add('.');
+        builder.AddRange(symbol.Name.AsSpan());
+
+        return builder.ToString();
     }
 
     /// <summary>
@@ -112,11 +172,18 @@ internal static class ISymbolExtensions
     {
         foreach (AttributeData attribute in symbol.GetAttributes())
         {
-            if (attribute.AttributeClass?.GetFullyQualifiedMetadataName() == name)
+            if (attribute.AttributeClass is INamedTypeSymbol attributeSymbol)
             {
-                attributeData = attribute;
+                using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
 
-                return true;
+                AppendFullyQualifiedMetadataName(attributeSymbol, in builder);
+
+                if (builder.WrittenSpan.SequenceEqual(name.AsSpan()))
+                {
+                    attributeData = attribute;
+
+                    return true;
+                }
             }
         }
 
