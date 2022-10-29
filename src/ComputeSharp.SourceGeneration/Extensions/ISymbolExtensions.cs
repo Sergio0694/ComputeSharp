@@ -30,14 +30,18 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Checks whether or not a given type symbol has a specified full name.
+    /// Checks whether or not a given type symbol has a specified fully qualified metadata name.
     /// </summary>
-    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance to check.</param>
     /// <param name="name">The full name to check.</param>
     /// <returns>Whether <paramref name="symbol"/> has a full name equals to <paramref name="name"/>.</returns>
-    public static bool HasFullyQualifiedName(this ISymbol symbol, string name)
+    public static bool HasFullyQualifiedMetadataName(this ITypeSymbol symbol, string name)
     {
-        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat) == name;
+        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+
+        AppendFullyQualifiedMetadataName(symbol, in builder);
+
+        return builder.WrittenSpan.SequenceEqual(name.AsSpan());
     }
 
     /// <summary>
@@ -172,18 +176,12 @@ internal static class ISymbolExtensions
     {
         foreach (AttributeData attribute in symbol.GetAttributes())
         {
-            if (attribute.AttributeClass is INamedTypeSymbol attributeSymbol)
+            if (attribute.AttributeClass is INamedTypeSymbol attributeSymbol &&
+                attributeSymbol.HasFullyQualifiedMetadataName(name))
             {
-                using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+                attributeData = attribute;
 
-                AppendFullyQualifiedMetadataName(attributeSymbol, in builder);
-
-                if (builder.WrittenSpan.SequenceEqual(name.AsSpan()))
-                {
-                    attributeData = attribute;
-
-                    return true;
-                }
+                return true;
             }
         }
 

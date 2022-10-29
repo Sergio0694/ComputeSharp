@@ -137,8 +137,8 @@ partial class ID2D1ShaderGenerator
                     ITypeSymbol resourceTextureTypeArgumentSymbol = typeSymbol.TypeArguments[0];
 
                     // Validate that the type argument is only either float or float4
-                    if (!resourceTextureTypeArgumentSymbol.HasFullyQualifiedName("System.Single") &&
-                        !resourceTextureTypeArgumentSymbol.HasFullyQualifiedName("ComputeSharp.Float4"))
+                    if (!resourceTextureTypeArgumentSymbol.HasFullyQualifiedMetadataName("System.Single") &&
+                        !resourceTextureTypeArgumentSymbol.HasFullyQualifiedMetadataName("ComputeSharp.Float4"))
                     {
                         diagnostics.Add(
                             InvalidResourceTextureElementType,
@@ -291,7 +291,7 @@ partial class ID2D1ShaderGenerator
                 IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
                 bool isShaderEntryPoint =
                     methodDeclarationSymbol.Name == nameof(ID2D1PixelShader.Execute) &&
-                    methodDeclarationSymbol.ReturnType.HasFullyQualifiedName("ComputeSharp.Float4") &&
+                    methodDeclarationSymbol.ReturnType.HasFullyQualifiedMetadataName("ComputeSharp.Float4") &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
                     methodDeclarationSymbol.Parameters.Length == 0;
 

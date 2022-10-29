@@ -35,7 +35,7 @@ partial class ID2D1ShaderGenerator
             if (attributeData!.ConstructorArguments.Length == 1)
             {
                 if (attributeData.AttributeConstructor is IMethodSymbol { Parameters.Length: 1 } constructorSymbol &&
-                    constructorSymbol.Parameters[0].Type.HasFullyQualifiedName("ComputeSharp.D2D1.D2D1BufferPrecision"))
+                    constructorSymbol.Parameters[0].Type.HasFullyQualifiedMetadataName("ComputeSharp.D2D1.D2D1BufferPrecision"))
                 {
                     bufferPrecision = (D2D1BufferPrecision)attributeData.ConstructorArguments[0].Value!;
                     channelDepth = D2D1ChannelDepth.Default;
