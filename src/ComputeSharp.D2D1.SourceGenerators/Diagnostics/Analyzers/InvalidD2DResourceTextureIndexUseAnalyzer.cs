@@ -27,7 +27,7 @@ public sealed class InvalidD2DResourceTextureIndexUseAnalyzer : DiagnosticAnalyz
         {
             IFieldSymbol fieldSymbol = (IFieldSymbol)context.Symbol;
 
-            if (fieldSymbol.HasAttributeWithFullyQualifiedName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute"))
+            if (fieldSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out _))
             {
                 string metadataName = fieldSymbol.Type.GetFullMetadataName();
 
