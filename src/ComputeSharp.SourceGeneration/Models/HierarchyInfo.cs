@@ -11,11 +11,10 @@ namespace ComputeSharp.SourceGeneration.Models;
 /// <summary>
 /// A model describing the hierarchy info for a specific type.
 /// </summary>
-/// <param name="FilenameHint">The filename hint for the current type.</param>
 /// <param name="FullyQualifiedMetadataName">The fully qualified metadata name for the current type.</param>
 /// <param name="Namespace">Gets the namespace for the current type.</param>
 /// <param name="Hierarchy">Gets the sequence of type definitions containing the current type.</param>
-internal sealed partial record HierarchyInfo(string FilenameHint, string FullyQualifiedMetadataName, string Namespace, EquatableArray<TypeInfo> Hierarchy)
+internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, string Namespace, EquatableArray<TypeInfo> Hierarchy)
 {
     /// <summary>
     /// Creates a new <see cref="HierarchyInfo"/> instance from a given <see cref="INamedTypeSymbol"/>.
@@ -37,8 +36,7 @@ internal sealed partial record HierarchyInfo(string FilenameHint, string FullyQu
         }
 
         return new(
-            typeSymbol.GetGeneratedFileName(),
-            typeSymbol.GetFullMetadataName(),
+            typeSymbol.GetFullyQualifiedMetadataName(),
             typeSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces)),
             hierarchy.ToImmutable());
     }

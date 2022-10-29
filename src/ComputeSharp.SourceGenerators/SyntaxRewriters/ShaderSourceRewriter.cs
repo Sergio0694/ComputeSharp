@@ -53,7 +53,7 @@ partial class ShaderSourceRewriter
         // Mark which dispatch properties have been used, to optimize the declaration afterwards
         if (operation.Member.IsStatic)
         {
-            string typeName = operation.Member.ContainingType.GetFullMetadataName();
+            string typeName = operation.Member.ContainingType.GetFullyQualifiedMetadataName();
 
             if (mappedName == $"__{nameof(GroupIds)}__get_Index")
             {

@@ -33,12 +33,12 @@ partial class ID2D1ShaderGenerator
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
         public static D2D1ShaderProfile? GetShaderProfile(INamedTypeSymbol structDeclarationSymbol)
         {
-            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
+            if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
+            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
@@ -54,7 +54,7 @@ partial class ID2D1ShaderGenerator
         /// <returns>The compile options to use to compile the shader, if present.</returns>
         public static D2D1CompileOptions? GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
-            if (structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
+            if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
                 D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
 
@@ -70,7 +70,7 @@ partial class ID2D1ShaderGenerator
                 return options | D2D1CompileOptions.PackMatrixRowMajor;
             }
 
-            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
+            if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
             {
                 // No need to validate against PackMatrixColumnMajor as that's checked separately
                 return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value! | D2D1CompileOptions.PackMatrixRowMajor;
@@ -98,7 +98,7 @@ partial class ID2D1ShaderGenerator
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
-                switch (attributeData.AttributeClass?.GetFullMetadataName())
+                switch (attributeData.AttributeClass?.GetFullyQualifiedMetadataName())
                 {
                     // Only retrieve indices of simple inputs that are in range. If an input is out of
                     // range, the diagnostic for it will already be emitted by a previous generator step.

@@ -61,7 +61,7 @@ partial class D2DPixelShaderSourceGenerator
         /// <returns>The HLSL source to compile, if present.</returns>
         public static string GetHlslSource(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
-            _ = methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
+            _ = methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DPixelShaderSourceAttribute", out AttributeData? attributeData);
 
             if (!attributeData!.TryGetConstructorArgument(0, out string? hlslSource))
             {
@@ -83,12 +83,12 @@ partial class D2DPixelShaderSourceGenerator
         /// <returns>The shader profile to use to compile the shader, if present.</returns>
         public static D2D1ShaderProfile GetShaderProfile(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
-            if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
+            if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
+            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
                 return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
             }
@@ -110,12 +110,12 @@ partial class D2DPixelShaderSourceGenerator
         /// <returns>The compile options to use to compile the shader, if present.</returns>
         public static D2D1CompileOptions GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
-            if (methodSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
+            if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
                 return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
             }
 
-            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
+            if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
             {
                 return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
             }

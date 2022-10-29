@@ -49,7 +49,7 @@ partial class ID2D1ShaderGenerator
                    select fieldSymbol)
                 {
                     string fieldName = fieldSymbol.Name;
-                    string typeName = fieldSymbol.Type.GetFullMetadataName();
+                    string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
 
                     // Disambiguates the name of target fields against the current input parameters
                     if (fieldName is "loader")

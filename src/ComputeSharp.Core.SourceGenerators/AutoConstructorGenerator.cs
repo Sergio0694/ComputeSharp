@@ -50,7 +50,7 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         {
             CompilationUnitSyntax compilationUnit = Ctor.GetSyntax(item.Left, item.Right);
 
-            context.AddSource($"{item.Left.FilenameHint}.Ctor.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Left.FullyQualifiedMetadataName}.Ctor.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 
@@ -78,7 +78,7 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
                 }
 
                 // Check whether the field is annotated to have a special behavior
-                if (fieldSymbol.Type.TryGetAttributeWithFullMetadataName("ComputeSharp.AutoConstructorBehaviorAttribute", out AttributeData? usageData) &&
+                if (fieldSymbol.Type.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.AutoConstructorBehaviorAttribute", out AttributeData? usageData) &&
                     usageData!.ConstructorArguments is { Length: 1 } arguments &&
                     arguments[0].Value is (int)AutoConstructorBehavior.IgnoreAndSetToDefault)
                 {

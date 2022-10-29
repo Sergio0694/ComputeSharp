@@ -45,7 +45,7 @@ partial class IShaderGenerator
             bool supportsDynamicShaders)
         {
             // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
-            if (!structDeclarationSymbol.TryGetAttributeWithFullMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
             {
                 // Emit the diagnostics if dynamic shaders are not supported
                 if (!supportsDynamicShaders)

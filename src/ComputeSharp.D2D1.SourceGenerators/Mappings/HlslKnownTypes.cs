@@ -26,12 +26,12 @@ partial class HlslKnownTypes
     /// <inheritdoc/>
     public static partial string GetMappedName(INamedTypeSymbol typeSymbol)
     {
-        string typeName = typeSymbol.GetFullMetadataName();
+        string typeName = typeSymbol.GetFullyQualifiedMetadataName();
 
         // Special case for resource texture types
         if (IsResourceTextureType(typeName))
         {
-            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullMetadataName();
+            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullyQualifiedMetadataName();
 
             // Get the HLSL name for the type argument (it can only be either float or float4)
             _ = KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType);

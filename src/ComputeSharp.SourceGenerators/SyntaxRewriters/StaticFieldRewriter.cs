@@ -15,7 +15,7 @@ partial class StaticFieldRewriter
     {
         if (operation.Member.IsStatic)
         {
-            string typeName = operation.Member.ContainingType.GetFullMetadataName();
+            string typeName = operation.Member.ContainingType.GetFullyQualifiedMetadataName();
 
             // Special dispatch types are not supported from static constants
             DiagnosticDescriptor? descriptor = typeName switch
