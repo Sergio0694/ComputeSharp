@@ -141,16 +141,6 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Gets a valid filename for a target symbol and generator type.
-    /// </summary>
-    /// <param name="symbol">The symbol being processed.</param>
-    /// <returns>A filename in the form "&lt;SYMBOL_FULLNAME&gt;"</returns>
-    public static string GetGeneratedFileName(this INamedTypeSymbol symbol)
-    {
-        return symbol.GetFullMetadataName().Replace('`', '-').Replace('+', '.');
-    }
-
-    /// <summary>
     /// Checks whether or not a given symbol has an attribute with the specified full name.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>

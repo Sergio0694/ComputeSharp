@@ -50,7 +50,7 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         {
             CompilationUnitSyntax compilationUnit = Ctor.GetSyntax(item.Left, item.Right);
 
-            context.AddSource($"{item.Left.FilenameHint}.Ctor.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Left.FullyQualifiedMetadataName}.Ctor.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 
