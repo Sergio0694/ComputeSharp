@@ -23,7 +23,7 @@ partial class ID2D1ShaderGenerator
             out D2D1ChannelDepth channelDepth)
         {
             // Try to get the [D2DOutputBuffer] attribute
-            if (!structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DOutputBufferAttribute", out AttributeData? attributeData))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DOutputBufferAttribute", out AttributeData? attributeData))
             {
                 bufferPrecision = D2D1BufferPrecision.Unknown;
                 channelDepth = D2D1ChannelDepth.Default;

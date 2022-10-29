@@ -167,7 +167,7 @@ internal static partial class HlslKnownTypes
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
     public static string GetMappedElementName(IArrayTypeSymbol typeSymbol)
     {
-        string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullMetadataName();
+        string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullyQualifiedMetadataName();
 
         if (KnownHlslTypes.TryGetValue(elementTypeName, out string? mapped))
         {
@@ -227,7 +227,7 @@ internal static partial class HlslKnownTypes
                 return;
             }
 
-            if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName()))
+            if (KnownHlslTypes.ContainsKey(type.GetFullyQualifiedMetadataName()))
             {
                 return;
             }
@@ -314,7 +314,7 @@ internal static partial class HlslKnownTypes
 
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
-                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullMetadataName()) &&
+                if (!KnownHlslTypes.ContainsKey(fieldType.GetFullyQualifiedMetadataName()) &&
                     !invalidTypes.Contains(fieldType))
                 {
                     _ = dependencies.Add(fieldType);

@@ -41,88 +41,49 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Gets a valid filename for a given <see cref="ITypeSymbol"/> instance.
+    /// Gets the fully qualified metadata name for a given <see cref="ITypeSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/> that is also a valid filename.</returns>
-    public static string GetFullMetadataName(this ITypeSymbol symbol)
+    /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedMetadataName(this ITypeSymbol symbol)
     {
         using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
 
-        static void BuildFrom(ISymbol? symbol, in ImmutableArrayBuilder<char> builder)
-        {
-            switch (symbol)
-            {
-                // Namespaces that are nested also append a leading '.'
-                case INamespaceSymbol { ContainingNamespace.IsGlobalNamespace: false }:
-                    BuildFrom(symbol.ContainingNamespace, in builder);
-                    builder.Add('.');
-                    builder.AddRange(symbol.MetadataName.AsSpan());
-                    break;
-
-                // Other namespaces (ie. the one right before global) skip the leading '.'
-                case INamespaceSymbol { IsGlobalNamespace: false }:
-                    builder.AddRange(symbol.MetadataName.AsSpan());
-                    break;
-
-                // Types with no namespace just have their metadata name directly written
-                case ITypeSymbol { ContainingSymbol: INamespaceSymbol { IsGlobalNamespace: true } }:
-                    builder.AddRange(symbol.MetadataName.AsSpan());
-                    break;
-
-                // Types with a containing non-global namespace also append a leading '.'
-                case ITypeSymbol { ContainingSymbol: INamespaceSymbol namespaceSymbol }:
-                    BuildFrom(namespaceSymbol, in builder);
-                    builder.Add('.');
-                    builder.AddRange(symbol.MetadataName.AsSpan());
-                    break;
-
-                // Nested types append a leading '+'
-                case ITypeSymbol { ContainingSymbol: ITypeSymbol typeSymbol }:
-                    BuildFrom(typeSymbol, in builder);
-                    builder.Add('+');
-                    builder.AddRange(symbol.MetadataName.AsSpan());
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        BuildFrom(symbol, in builder);
+        AppendFullyQualifiedMetadataName(symbol, in builder);
 
         return builder.ToString();
     }
 
     /// <summary>
-    /// Gets the full metadata name for a given <see cref="IMethodSymbol"/> instance.
+    /// Gets the fully qualified metadata name for a given <see cref="IMethodSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="IMethodSymbol"/> instance.</param>
     /// <param name="includeParameters">Whether or not to also include parameter types.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    public static string GetFullMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
+    /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
     {
         if (includeParameters)
         {
-            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
+            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullyQualifiedMetadataName()));
 
-            return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}({parameters})";
+            return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}({parameters})";
         }
 
-        return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}";
+        return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}";
     }
 
     /// <summary>
-    /// Gets the full metadata name for a given <see cref="IPropertySymbol"/> instance.
+    /// Gets the fully qualified metadata name for a given <see cref="IPropertySymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="IPropertySymbol"/> instance.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    public static string GetFullMetadataName(this IPropertySymbol symbol)
+    /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedMetadataName(this IPropertySymbol symbol)
     {
-        string declaringTypeName = symbol.ContainingType.GetFullMetadataName();
+        string declaringTypeName = symbol.ContainingType.GetFullyQualifiedMetadataName();
 
         if (symbol.IsIndexer)
         {
-            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
+            string parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullyQualifiedMetadataName()));
 
             return $"{declaringTypeName}.this[{parameters}]";
         }
@@ -131,27 +92,27 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Gets the full metadata name for a given <see cref="IFieldSymbol"/> instance.
+    /// Gets the fully qualified metadata name for a given <see cref="IFieldSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="IFieldSymbol"/> instance.</param>
-    /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    public static string GetFullMetadataName(this IFieldSymbol symbol)
+    /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
+    public static string GetFullyQualifiedMetadataName(this IFieldSymbol symbol)
     {
-        return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}";
+        return $"{symbol.ContainingType.GetFullyQualifiedMetadataName()}.{symbol.Name}";
     }
 
     /// <summary>
-    /// Tries to get an attribute with the specified full metadata name.
+    /// Tries to get an attribute with the specified fully qualified metadata name.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
     /// <param name="name">The attribute name to look for.</param>
     /// <param name="attributeData">The resulting attribute data, if found.</param>
     /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
-    public static bool TryGetAttributeWithFullMetadataName(this ISymbol symbol, string name, out AttributeData? attributeData)
+    public static bool TryGetAttributeWithFullyQualifiedMetadataName(this ISymbol symbol, string name, out AttributeData? attributeData)
     {
         foreach (AttributeData attribute in symbol.GetAttributes())
         {
-            if (attribute.AttributeClass?.GetFullMetadataName() == name)
+            if (attribute.AttributeClass?.GetFullyQualifiedMetadataName() == name)
             {
                 attributeData = attribute;
 
@@ -215,5 +176,54 @@ internal static class ISymbolExtensions
         return
             accessibility == Accessibility.Public ||
             (accessibility == Accessibility.Internal && symbol.ContainingAssembly.GivesAccessTo(assembly));
+    }
+
+    /// <summary>
+    /// Appends the fully qualified metadata name for a given symbol to a target builder.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
+    /// <param name="builder">The target <see cref="ImmutableArrayBuilder{T}"/> instance.</param>
+    private static void AppendFullyQualifiedMetadataName(this ITypeSymbol symbol, in ImmutableArrayBuilder<char> builder)
+    {
+        static void BuildFrom(ISymbol? symbol, in ImmutableArrayBuilder<char> builder)
+        {
+            switch (symbol)
+            {
+                // Namespaces that are nested also append a leading '.'
+                case INamespaceSymbol { ContainingNamespace.IsGlobalNamespace: false }:
+                    BuildFrom(symbol.ContainingNamespace, in builder);
+                    builder.Add('.');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Other namespaces (ie. the one right before global) skip the leading '.'
+                case INamespaceSymbol { IsGlobalNamespace: false }:
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Types with no namespace just have their metadata name directly written
+                case ITypeSymbol { ContainingSymbol: INamespaceSymbol { IsGlobalNamespace: true } }:
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Types with a containing non-global namespace also append a leading '.'
+                case ITypeSymbol { ContainingSymbol: INamespaceSymbol namespaceSymbol }:
+                    BuildFrom(namespaceSymbol, in builder);
+                    builder.Add('.');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+
+                // Nested types append a leading '+'
+                case ITypeSymbol { ContainingSymbol: ITypeSymbol typeSymbol }:
+                    BuildFrom(typeSymbol, in builder);
+                    builder.Add('+');
+                    builder.AddRange(symbol.MetadataName.AsSpan());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        BuildFrom(symbol, in builder);
     }
 }

@@ -36,7 +36,7 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
         }
 
         return new(
-            typeSymbol.GetFullMetadataName(),
+            typeSymbol.GetFullyQualifiedMetadataName(),
             typeSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces)),
             hierarchy.ToImmutable());
     }

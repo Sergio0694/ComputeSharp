@@ -134,7 +134,7 @@ partial class IShaderGenerator
                     continue;
                 }
 
-                string metadataName = typeSymbol.GetFullMetadataName();
+                string metadataName = typeSymbol.GetFullyQualifiedMetadataName();
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
@@ -222,7 +222,7 @@ partial class IShaderGenerator
 
                     // Constant properties must be of a primitive, vector or matrix type
                     if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
-                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullMetadataName()))
+                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
                     {
                         diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
 
@@ -460,7 +460,7 @@ partial class IShaderGenerator
             // Process the discovered types
             foreach (INamedTypeSymbol type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
             {
-                string structType = type.GetFullMetadataName().ToHlslIdentifierName();
+                string structType = type.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
                 StructDeclarationSyntax structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
@@ -474,9 +474,9 @@ partial class IShaderGenerator
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     // Convert the name to the fully qualified HLSL version
-                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mappedType))
+                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullyQualifiedMetadataName(), out string? mappedType))
                     {
-                        mappedType = fieldType.GetFullMetadataName().ToHlslIdentifierName();
+                        mappedType = fieldType.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
                     }
 
                     // Get the field name as a valid HLSL identifier

@@ -126,7 +126,7 @@ partial class ID2D1ShaderGenerator
                     continue;
                 }
 
-                string metadataName = typeSymbol.GetFullMetadataName();
+                string metadataName = typeSymbol.GetFullyQualifiedMetadataName();
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
@@ -153,7 +153,7 @@ partial class ID2D1ShaderGenerator
                     // If [D2DResourceTextureIndex] is present, get the resource texture index.
                     // This generator doesn't need to emit diagnostics, as that's handled separately
                     // by the logic handling the info gathering for LoadResourceTextureDescriptions.
-                    if (fieldSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
+                    if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
                     {
                         _ = attributeData!.TryGetConstructorArgument(0, out index);
                     }
@@ -218,7 +218,7 @@ partial class ID2D1ShaderGenerator
 
                     // Constant properties must be of a primitive, vector or matrix type
                     if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
-                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullMetadataName()))
+                        !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullyQualifiedMetadataName()))
                     {
                         diagnostics.Add(InvalidShaderStaticFieldType, variableDeclarator, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
 
@@ -394,7 +394,7 @@ partial class ID2D1ShaderGenerator
             // Process the discovered types
             foreach (INamedTypeSymbol type in HlslKnownTypes.GetCustomTypes(types, out invalidTypes))
             {
-                string structType = type.GetFullMetadataName().ToHlslIdentifierName();
+                string structType = type.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
                 StructDeclarationSyntax structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
@@ -408,9 +408,9 @@ partial class ID2D1ShaderGenerator
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     // Convert the name to the fully qualified HLSL version
-                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mappedType))
+                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullyQualifiedMetadataName(), out string? mappedType))
                     {
-                        mappedType = fieldType.GetFullMetadataName().ToHlslIdentifierName();
+                        mappedType = fieldType.GetFullyQualifiedMetadataName().ToHlslIdentifierName();
                     }
 
                     // Get the field name as a valid HLSL identifier
@@ -498,7 +498,7 @@ partial class ID2D1ShaderGenerator
         /// <remarks>Whether <paramref name="structDeclarationSymbol"/> requires the scene position.</remarks>
         private static bool GetD2DRequiresScenePositionInfo(INamedTypeSymbol structDeclarationSymbol)
         {
-            return structDeclarationSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DRequiresScenePositionAttribute", out _);
+            return structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DRequiresScenePositionAttribute", out _);
         }
 
         /// <summary>

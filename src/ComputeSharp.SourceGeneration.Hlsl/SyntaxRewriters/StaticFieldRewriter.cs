@@ -101,7 +101,7 @@ internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
             method.IsStatic)
         {
             // Rewrite HLSL intrinsic methods
-            if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping, out bool requiresParametersMapping))
+            if (HlslKnownMethods.TryGetMappedName(method.GetFullyQualifiedMetadataName(), out string? mapping, out bool requiresParametersMapping))
             {
                 if (requiresParametersMapping)
                 {

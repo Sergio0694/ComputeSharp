@@ -42,7 +42,7 @@ partial class ID2D1ShaderGenerator
                     continue;
                 }
 
-                string metadataName = typeSymbol.GetFullMetadataName();
+                string metadataName = typeSymbol.GetFullyQualifiedMetadataName();
 
                 // Check that the field is a resource texture type (if not, it will be processed by the HLSL rewriter too)
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
@@ -52,7 +52,7 @@ partial class ID2D1ShaderGenerator
                     int? index = null;
 
                     // Get the index from the [D2DResourceTextureIndex] attribute over the field
-                    if (fieldSymbol.TryGetAttributeWithFullMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
+                    if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
                     {
                         // If the constructor argument isn't available, it means the code is invalid. Just do nothing then, as the
                         // user will have to fix that to get the code to compile anyway. This way the generator won't crash too.

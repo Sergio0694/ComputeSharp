@@ -141,12 +141,12 @@ partial class HlslKnownTypes
             return "";
         }
 
-        string typeName = typeSymbol.GetFullMetadataName();
+        string typeName = typeSymbol.GetFullyQualifiedMetadataName();
 
         // Special case for the resource types
         if (IsTypedResourceType(typeName))
         {
-            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullMetadataName();
+            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullyQualifiedMetadataName();
 
             // If the current type is a custom type, format it as needed
             if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
@@ -202,7 +202,7 @@ partial class HlslKnownTypes
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
     public static string GetMappedNameForPixelShaderType(INamedTypeSymbol typeSymbol)
     {
-        string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullMetadataName();
+        string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullyQualifiedMetadataName();
 
         // If the current type is a custom type, format it as needed
         if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))

@@ -94,7 +94,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             diagnostics = builder.ToImmutable();
 
             return new(
-                methodSymbol.GetFullMetadataName(includeParameters: true),
+                methodSymbol.GetFullyQualifiedMetadataName(includeParameters: true),
                 entryPoint,
                 definedTypes,
                 definedConstants,

@@ -112,7 +112,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         // Add explicit casts for matrix constructors to help the overload resolution
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol matrixType &&
-            HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            HlslKnownTypes.IsMatrixType(matrixType.GetFullyQualifiedMetadataName()))
         {
             for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
             {
@@ -148,7 +148,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         // Add explicit casts like with the explicit object creation expressions above
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol matrixType &&
-            HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            HlslKnownTypes.IsMatrixType(matrixType.GetFullyQualifiedMetadataName()))
         {
             for (int i = 0; i < node.ArgumentList.Arguments.Count; i++)
             {
@@ -240,7 +240,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
         {
-            string propertyName = operation.Property.GetFullMetadataName();
+            string propertyName = operation.Property.GetFullyQualifiedMetadataName();
 
             // Rewrite texture resource indices taking individual indices a vector argument, as per HLSL spec.
             // For instance: texture[ThreadIds.X, ThreadIds.Y] will be rewritten as texture[int2(ThreadIds.X, ThreadIds.Y)].
@@ -261,7 +261,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                 foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                 {
                     if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
-                        !HlslKnownProperties.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
+                        !HlslKnownProperties.IsKnownMatrixIndex(fieldReference.Field.GetFullyQualifiedMetadataName()))
                     {
                         Diagnostics.Add(NonConstantMatrixSwizzledIndex, argument);
 
@@ -302,7 +302,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // That is, do the following transformation:
             //
             // x *= y => x = <INTRINSIC>(x, y)
-            if (HlslKnownOperators.TryGetMappedName(method.GetFullMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
+            if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
             {
                 return
                     AssignmentExpression(
@@ -330,7 +330,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
             // That is, do the following transformation:
             //
             // x * y => <INTRINSIC>(x, y)
-            if (HlslKnownOperators.TryGetMappedName(method.GetFullMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
+            if (HlslKnownOperators.TryGetMappedName(method.GetFullyQualifiedMetadataName(), method.Parameters.Select(static p => p.Type.Name), out string? mapped))
             {
                 return
                     InvocationExpression(IdentifierName(mapped!))

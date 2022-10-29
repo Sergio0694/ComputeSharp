@@ -46,7 +46,7 @@ partial class ID2D1ShaderGenerator
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
-                switch (attributeData.AttributeClass?.GetFullMetadataName())
+                switch (attributeData.AttributeClass?.GetFullyQualifiedMetadataName())
                 {
                     case "ComputeSharp.D2D1.D2DInputCountAttribute":
                         rawInputCount = (int)attributeData.ConstructorArguments[0].Value!;
