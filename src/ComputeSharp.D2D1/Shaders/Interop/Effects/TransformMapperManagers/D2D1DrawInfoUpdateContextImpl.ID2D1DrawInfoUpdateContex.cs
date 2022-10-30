@@ -84,7 +84,17 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int GetConstantBufferSize(D2D1DrawInfoUpdateContextImpl* @this, uint* size)
         {
-            // TODO
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
+            }
+
+            if (size is null)
+            {
+                return E.E_POINTER;
+            }
+
+            *size = (uint)@this->constantBufferSize;
 
             return S.S_OK;
         }
@@ -93,7 +103,30 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int GetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
-            // TODO
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
+            }
+
+            if (buffer is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (bufferCount < @this->constantBufferSize)
+            {
+                return E.E_NOT_SUFFICIENT_BUFFER;
+            }
+
+            if (@this->constantBuffer is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            if (@this->constantBufferSize > 0)
+            {
+                Buffer.MemoryCopy(@this->constantBuffer, buffer, bufferCount, @this->constantBufferSize);
+            }
 
             return S.S_OK;
         }
@@ -102,7 +135,34 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int SetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
-            // TODO
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
+            }
+
+            if (buffer is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (bufferCount != (uint)@this->constantBufferSize)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            // Reuse the existing buffer if there is one, otherwise allocate a new one
+            if (@this->constantBuffer is not null)
+            {
+                Buffer.MemoryCopy(buffer, @this->constantBuffer, bufferCount, bufferCount);
+            }
+            else
+            {
+                void* constantBuffer = NativeMemory.Alloc(bufferCount);
+
+                Buffer.MemoryCopy(buffer, constantBuffer, bufferCount, bufferCount);
+
+                @this->constantBuffer = (byte*)constantBuffer;
+            }
 
             return S.S_OK;
         }

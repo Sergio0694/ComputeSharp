@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
@@ -97,10 +98,32 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     private volatile int referenceCount;
 
     /// <summary>
+    /// The constant buffer data, if set.
+    /// </summary>
+    private byte* constantBuffer;
+
+    /// <summary>
+    /// The size of <see cref="constantBuffer"/>.
+    /// </summary>
+    private int constantBufferSize;
+
+    /// <summary>
+    /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
+    /// </summary>
+    private ID2D1DrawInfo* d2D1DrawInfo;
+
+    /// <summary>
     /// The factory method for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances.
     /// </summary>
     /// <param name="drawInfoUpdateContext">The resulting draw info update context instance.</param>
-    public static void Factory(D2D1DrawInfoUpdateContextImpl** drawInfoUpdateContext)
+    /// <param name="constantBuffer">The constant buffer data, if set.</param>
+    /// <param name="constantBufferSize">The size of <paramref name="constantBuffer"/>.</param>
+    /// <param name="d2D1DrawInfo">The <see cref="ID2D1DrawInfo"/> instance currently in use.</param>
+    public static void Factory(
+        D2D1DrawInfoUpdateContextImpl** drawInfoUpdateContext,
+        byte* constantBuffer,
+        int constantBufferSize,
+        ID2D1DrawInfo* d2D1DrawInfo)
     {
         D2D1DrawInfoUpdateContextImpl* @this = (D2D1DrawInfoUpdateContextImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1DrawInfoUpdateContextImpl));
 
@@ -109,6 +132,9 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         @this->lpVtblForID2D1DrawInfoUpdateContex = VtblForID2D1DrawInfoUpdateContex;
         @this->lpVtblForID2D1DrawInfoUpdateContexInternal = VtblForID2D1DrawInfoUpdateContexInternal;
         @this->referenceCount = 1;
+        @this->constantBuffer = constantBuffer;
+        @this->constantBufferSize = constantBufferSize;
+        @this->d2D1DrawInfo = d2D1DrawInfo;
 
         *drawInfoUpdateContext = @this;
     }
@@ -160,8 +186,6 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 
         if (referenceCount == 0)
         {
-            // TODO
-
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }
 

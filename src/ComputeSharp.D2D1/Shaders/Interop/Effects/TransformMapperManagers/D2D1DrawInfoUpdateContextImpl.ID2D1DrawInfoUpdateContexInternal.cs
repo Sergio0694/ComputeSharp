@@ -74,7 +74,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
 
-            // TODO
+            @this->d2D1DrawInfo = null;
 
             return S.S_OK;
         }

@@ -131,16 +131,19 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
+        // Reuse the existing buffer if there is one, otherwise allocate a new one
         if (@this->constantBuffer is not null)
         {
-            NativeMemory.Free(@this->constantBuffer);
+            Buffer.MemoryCopy(data, @this->constantBuffer, dataSize, dataSize);
         }
+        else
+        {
+            void* buffer = NativeMemory.Alloc(dataSize);
 
-        void* buffer = NativeMemory.Alloc(dataSize);
+            Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
 
-        Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
-
-        @this->constantBuffer = (byte*)buffer;
+            @this->constantBuffer = (byte*)buffer;
+        }
 
         return S.S_OK;
     }
