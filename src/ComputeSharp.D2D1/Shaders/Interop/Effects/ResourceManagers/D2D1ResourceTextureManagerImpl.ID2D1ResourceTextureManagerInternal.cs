@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 partial struct D2D1ResourceTextureManagerImpl
 {
     /// <summary>
-    /// The implementation for <c>ID2D1ResourceTextureManagerInternal</c>.
+    /// The implementation for <see cref="ID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
     private static unsafe class ID2D1ResourceTextureManagerInternalMethods
     {

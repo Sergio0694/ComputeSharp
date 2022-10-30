@@ -118,7 +118,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
     }
 
     /// <summary>
-    /// The implementation for <c>ID2D1ResourceTextureManager</c>.
+    /// The implementation for <see cref="ID2D1ResourceTextureManager"/>.
     /// </summary>
     private static class ID2D1ResourceTextureManagerMethods
     {

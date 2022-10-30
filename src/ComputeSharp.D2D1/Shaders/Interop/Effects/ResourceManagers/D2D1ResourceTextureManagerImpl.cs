@@ -13,10 +13,11 @@ using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServ
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
 /// <summary>
-/// An implementation of the <c>ID2D1ResourceTextureManager</c> and <c>ID2D1ResourceTextureManagerInternal</c> interfaces.
+/// An implementation of the <see cref="ID2D1ResourceTextureManager"/> and <see cref="ID2D1ResourceTextureManagerInternal"/> interfaces.
 /// </summary>
 internal unsafe partial struct D2D1ResourceTextureManagerImpl
 {
+#if !NET6_0_OR_GREATER
     /// <inheritdoc cref="QueryInterface"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int QueryInterfaceDelegate(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject);
@@ -28,21 +29,22 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     /// <inheritdoc cref="Release"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate uint ReleaseDelegate(D2D1ResourceTextureManagerImpl* @this);
+#endif
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <c>ID2D1ResourceTextureManager</c>.
+    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <see cref="ID2D1ResourceTextureManager"/>.
     /// </summary>
     private static readonly void** VtblForID2D1ResourceTextureManager = InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal();
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <c>ID2D1ResourceTextureManagerInternal</c>.
+    /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <see cref="ID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
     private static readonly void** VtblForID2D1ResourceTextureManagerInternal = &VtblForID2D1ResourceTextureManager[5];
 
     /// <summary>
-    /// Initializes the combined vtable for <c>ID2D1ResourceTextureManager</c> and <c>ID2D1ResourceTextureManagerInternal</c>.
+    /// Initializes the combined vtable for <see cref="ID2D1ResourceTextureManager"/> and <see cref="ID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
-    /// <returns>The combined vtable for <c>ID2D1ResourceTextureManager</c> and <c>ID2D1ResourceTextureManagerInternal</c>.</returns>
+    /// <returns>The combined vtable for <see cref="ID2D1ResourceTextureManager"/> and <see cref="ID2D1ResourceTextureManagerInternal"/>.</returns>
     private static void** InitVtblForID2D1ResourceTextureManagerAndID2D1ResourceTextureManagerInternal()
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1ResourceTextureManagerImpl), sizeof(void*) * 10);
@@ -81,17 +83,17 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     }
 
     /// <summary>
-    /// The vtable pointer for the current instance, for <c>ID2D1ResourceTextureManager</c>.
+    /// The vtable pointer for the current instance, for <see cref="ID2D1ResourceTextureManager"/>.
     /// </summary>
     private void** lpVtblForID2D1ResourceTextureManager;
 
     /// <summary>
-    /// The vtable pointer for the current instance, for <c>ID2D1ResourceTextureManagerInternal</c>.
+    /// The vtable pointer for the current instance, for <see cref="ID2D1ResourceTextureManagerInternal"/>.
     /// </summary>
     private void** lpVtblForID2D1ResourceTextureManagerInternal;
 
     /// <summary>
-    /// The current reference count for the object (from <c>IUnknown</c>).
+    /// The current reference count for the object (from <see cref="IUnknown"/>).
     /// </summary>
     private volatile int referenceCount;
 
