@@ -8,12 +8,20 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
 
 /// <inheritdoc/>
-partial struct D2D1DrawInfoUpdateContextImpl
+unsafe partial struct D2D1DrawInfoUpdateContextImpl
 {
+    /// <inheritdoc cref="ID2D1DrawInfoUpdateContexInternal.Close"/>
+    public int Close()
+    {
+        this.d2D1DrawInfo = null;
+
+        return S.S_OK;
+    }
+
     /// <summary>
     /// The implementation for <see cref="ID2D1DrawInfoUpdateContexInternal"/>.
     /// </summary>
-    private static unsafe class ID2D1DrawInfoUpdateContexInternalMethods
+    private static class ID2D1DrawInfoUpdateContexInternalMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Close"/>
@@ -74,9 +82,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
 
-            @this->d2D1DrawInfo = null;
-
-            return S.S_OK;
+            return @this->Close();
         }
     }
 }

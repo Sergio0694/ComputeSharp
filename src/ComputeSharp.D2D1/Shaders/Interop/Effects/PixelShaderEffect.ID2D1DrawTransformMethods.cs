@@ -225,6 +225,9 @@ partial struct PixelShaderEffect
                     outputRect: outputRect,
                     outputOpaqueSubRect: outputOpaqueSubRect);
 
+                // Regardless of the operation result, always invalidate the context
+                _ = d2D1DrawInfoUpdateContext.Get()->Close();
+
                 if (!Windows.SUCCEEDED(hresult))
                 {
                     return hresult;

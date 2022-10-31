@@ -77,8 +77,8 @@ namespace ComputeSharp.D2D1.Interop;
 /// interface ID2D1ResourceTextureManagerInternal : IUnknown
 /// {
 ///     HRESULT Initialize(
-///         [in]           ID2D1EffectContext *effectContext,
-///         [in, optional] const UINT32       *dimensions);
+///         [in]           const ID2D1EffectContext *effectContext,
+///         [in, optional] const UINT32             *dimensions);
 /// 
 ///     HRESULT GetResourceTexture([out] ID2D1ResourceTexture **resourceTexture);
 /// };
