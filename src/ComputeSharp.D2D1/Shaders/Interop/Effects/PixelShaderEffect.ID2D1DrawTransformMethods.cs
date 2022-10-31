@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -127,7 +128,17 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
+            if (@this->d2D1TransformMapperManager is not null)
+            {
+                // Forward to the current ID2D1TransformMapperManager instance
+                HRESULT hresult = @this->d2D1TransformMapperManager->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Rectangle output = outputRect->ToRectangle();
                 Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectsCount);
@@ -189,7 +200,37 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
+            if (@this->d2D1TransformMapperManager is not null)
+            {
+                using ComPtr<D2D1DrawInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
+
+                // Create an ID2D1DrawInfoUpdateContext instance
+                HRESULT hresult = D2D1DrawInfoUpdateContextImpl.Factory(
+                    drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
+                    constantBuffer: @this->constantBuffer,
+                    constantBufferSize: @this->constantBufferSize,
+                    d2D1DrawInfo: @this->d2D1DrawInfo);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+
+                // Forward the call to the input ID2D1TransformMapperManager instance
+                hresult = @this->d2D1TransformMapperManager->MapInputRectsToOutputRect(
+                    updateContext: (ID2D1DrawInfoUpdateContex*)d2D1DrawInfoUpdateContext.Get(),
+                    inputRects: inputRects,
+                    inputOpaqueSubRects: inputOpaqueSubRects,
+                    inputRectCount: inputRectCount,
+                    outputRect: outputRect,
+                    outputOpaqueSubRect: outputOpaqueSubRect);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
                 Span<Rectangle> opaqueInputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
@@ -278,7 +319,17 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
+            if (@this->d2D1TransformMapperManager is not null)
+            {
+                // Forward to the current ID2D1TransformMapperManager instance
+                HRESULT hresult = @this->d2D1TransformMapperManager->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
             {
                 Rectangle invalidInput = invalidInputRect.ToRectangle();
                 Rectangle invalidOutput;

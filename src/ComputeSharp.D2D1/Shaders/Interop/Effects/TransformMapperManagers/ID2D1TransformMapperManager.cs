@@ -99,7 +99,7 @@ internal unsafe struct ID2D1TransformMapperManager
     /// <param name="invalidOutputRect">The output rectangle to which the input rectangle must be mapped.</param>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HRESULT MapInputRectsToOutputRect(
+    public HRESULT MapInvalidRect(
         uint inputIndex,
         RECT invalidInputRect,
         RECT* invalidOutputRect)

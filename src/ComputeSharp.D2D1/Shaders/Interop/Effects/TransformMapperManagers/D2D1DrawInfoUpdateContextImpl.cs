@@ -119,15 +119,25 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// <param name="constantBuffer">The constant buffer data, if set.</param>
     /// <param name="constantBufferSize">The size of <paramref name="constantBuffer"/>.</param>
     /// <param name="d2D1DrawInfo">The <see cref="ID2D1DrawInfo"/> instance currently in use.</param>
-    public static void Factory(
+    /// <returns>This always returns <c>0</c>.</returns>
+    public static HRESULT Factory(
         D2D1DrawInfoUpdateContextImpl** drawInfoUpdateContext,
         byte* constantBuffer,
         int constantBufferSize,
         ID2D1DrawInfo* d2D1DrawInfo)
     {
-        D2D1DrawInfoUpdateContextImpl* @this = (D2D1DrawInfoUpdateContextImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1DrawInfoUpdateContextImpl));
+        D2D1DrawInfoUpdateContextImpl* @this;
 
-        *@this = default;
+        try
+        {
+            @this = (D2D1DrawInfoUpdateContextImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1DrawInfoUpdateContextImpl));
+        }
+        catch (OutOfMemoryException)
+        {
+            *drawInfoUpdateContext = null;
+
+            return E.E_OUTOFMEMORY;
+        }
 
         @this->lpVtblForID2D1DrawInfoUpdateContex = VtblForID2D1DrawInfoUpdateContex;
         @this->lpVtblForID2D1DrawInfoUpdateContexInternal = VtblForID2D1DrawInfoUpdateContexInternal;
@@ -137,6 +147,8 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         @this->d2D1DrawInfo = d2D1DrawInfo;
 
         *drawInfoUpdateContext = @this;
+
+        return S.S_OK;
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
