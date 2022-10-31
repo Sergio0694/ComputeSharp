@@ -650,4 +650,30 @@ public static unsafe class D2D1PixelShaderEffect
             data: (byte*)resourceTextureManager2.GetAddressOf(),
             dataSize: (uint)sizeof(void*)).Assert();
     }
+
+    /// <summary>
+    /// Sets the transform mapper manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="transformMapperManager">The input <c>ID2D1TransformMapperManager</c> object.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapperManager"/> are <see langword="null"/>.</exception>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetTransformMapperManagerForD2D1Effect(void* d2D1Effect, void* transformMapperManager)
+    {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (transformMapperManager is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(transformMapperManager), "The input ID2D1TransformMapperManager object cannot be null.");
+        }
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.TransformMapperManager,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)&transformMapperManager,
+            dataSize: (uint)sizeof(void*)).Assert();
+    }
 }
