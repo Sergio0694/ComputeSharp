@@ -165,6 +165,9 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
+                <Property name='TransformMapperManager' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapperManager'/>
+                </Property>
             </Effect>
             """);
 
@@ -189,9 +192,10 @@ public static unsafe class D2D1PixelShaderEffect
         fixed (char* pResourceTextureManager13PropertyName = "ResourceTextureManager13")
         fixed (char* pResourceTextureManager14PropertyName = "ResourceTextureManager14")
         fixed (char* pResourceTextureManager15PropertyName = "ResourceTextureManager15")
+        fixed (char* pTransformMapperManagerPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapperManager))
         {
             // Prepare the effect binding functions
-            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[17];
+            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[18];
 
             // Property names
             d2D1PropertyBinding[0].propertyName = (ushort*)pBufferPropertyName;
@@ -211,6 +215,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].propertyName = (ushort*)pResourceTextureManager13PropertyName;
             d2D1PropertyBinding[15].propertyName = (ushort*)pResourceTextureManager14PropertyName;
             d2D1PropertyBinding[16].propertyName = (ushort*)pResourceTextureManager15PropertyName;
+            d2D1PropertyBinding[17].propertyName = (ushort*)pTransformMapperManagerPropertyName;
 
             // Property getters
             d2D1PropertyBinding[0].getFunction = PixelShaderEffect.GetConstantBuffer;
@@ -230,6 +235,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].getFunction = PixelShaderEffect.GetResourceTextureManager13;
             d2D1PropertyBinding[15].getFunction = PixelShaderEffect.GetResourceTextureManager14;
             d2D1PropertyBinding[16].getFunction = PixelShaderEffect.GetResourceTextureManager15;
+            d2D1PropertyBinding[17].getFunction = PixelShaderEffect.GetTransformMapperManager;
 
             // Property setters
             d2D1PropertyBinding[0].setFunction = PixelShaderEffect.SetConstantBuffer;
@@ -249,6 +255,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].setFunction = PixelShaderEffect.SetResourceTextureManager13;
             d2D1PropertyBinding[15].setFunction = PixelShaderEffect.SetResourceTextureManager14;
             d2D1PropertyBinding[16].setFunction = PixelShaderEffect.SetResourceTextureManager15;
+            d2D1PropertyBinding[17].setFunction = PixelShaderEffect.SetTransformMapperManager;
 
             fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Id)
             {
@@ -257,7 +264,7 @@ public static unsafe class D2D1PixelShaderEffect
                     classId: pGuid,
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
-                    bindingsCount: 17,
+                    bindingsCount: 18,
                     effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
             }
 
@@ -432,6 +439,9 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
+                <Property name='TransformMapperManager' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapperManager'/>
+                </Property>
             </Effect>
             """u8);
 
@@ -439,7 +449,7 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
 
         // Bindings
-        writer.WriteRaw(17);
+        writer.WriteRaw(18);
         writer.WriteRaw("ConstantBuffer"u8);
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetConstantBuffer);
@@ -508,6 +518,10 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager15);
         writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager15);
+        writer.WriteRaw("TransformMapperManager"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetTransformMapperManager);
+        writer.WriteRaw((nint)PixelShaderEffect.SetTransformMapperManager);
 
         // Effect factory
         writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);

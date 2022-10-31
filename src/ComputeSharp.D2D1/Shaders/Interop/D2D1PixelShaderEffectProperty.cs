@@ -112,4 +112,14 @@ public static class D2D1PixelShaderEffectProperty
     /// </summary>
     /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
     public const uint ResourceTextureManager15 = 16;
+
+    /// <summary>
+    /// The index for the <c>ID2D1TransformMapperManager</c> property of a <see cref="D2D1PixelShaderEffect"/> object.
+    /// </summary>
+    /// <remarks>
+    /// <para>The value of this property is of type <c>D2D1_PROPERTY_TYPE_BLOB</c>.</para>
+    /// <para>This value can be passed when calling <c>ID2D1Effect::SetValue</c>.</para>
+    /// <para>For more info, see <see href="https://learn.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</para>
+    /// </remarks>
+    public const uint TransformMapperManager = 17;
 }
