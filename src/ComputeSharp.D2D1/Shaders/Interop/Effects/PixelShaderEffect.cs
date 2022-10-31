@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
@@ -201,6 +202,12 @@ internal unsafe partial struct PixelShaderEffect
     private GCHandle d2D1TransformMapperHandle;
 
     /// <summary>
+    /// The <see cref="ID2D1TransformMapperManager"/> instance to use, if any.
+    /// </summary>
+    /// <remarks>If present, this takes precedence over <see cref="d2D1TransformMapperHandle"/>.</remarks>
+    private ID2D1TransformMapperManager* d2D1TransformMapperManager;
+
+    /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
     /// </summary>
     private ID2D1DrawInfo* d2D1DrawInfo;
@@ -284,6 +291,7 @@ internal unsafe partial struct PixelShaderEffect
         @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
         @this->resourceTextureDescriptions = resourceTextureDescriptions;
         @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
+        @this->d2D1TransformMapperManager = null;
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
         @this->resourceTextureManagerBuffer = default;
@@ -348,6 +356,11 @@ internal unsafe partial struct PixelShaderEffect
             }
 
             this.d2D1TransformMapperHandle.Free();
+
+            if (this.d2D1TransformMapperManager is not null)
+            {
+                _ = ((IUnknown*)this.d2D1TransformMapperManager)->Release();
+            }
 
             if (this.d2D1DrawInfo is not null)
             {
