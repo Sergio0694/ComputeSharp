@@ -52,7 +52,7 @@ unsafe partial class PixelShaderEffect<T>
     int ICanvasImageInterop.Interface.GetD2DImage(
         ICanvasDevice* device,
         ID2D1DeviceContext* deviceContext,
-        CanvasImageGetD2DImageFlags flags,
+        GetD2DImageFlags flags,
         float targetDpi,
         float* realizeDpi,
         ID2D1Image** ppImage)
@@ -77,7 +77,7 @@ unsafe partial class PixelShaderEffect<T>
             lock (this.lockObject)
             {
                 // Process the ReadDpiFromDeviceContext flag (same logic as CanvasEffect::GetD2DImage)
-                if ((flags & CanvasImageGetD2DImageFlags.ReadDpiFromDeviceContext) != CanvasImageGetD2DImageFlags.None)
+                if ((flags & GetD2DImageFlags.ReadDpiFromDeviceContext) != GetD2DImageFlags.None)
                 {
                     // If ReadDpiFromDeviceContext is used, the context cannot be null
                     if (deviceContext is null)
@@ -88,7 +88,7 @@ unsafe partial class PixelShaderEffect<T>
                     if (deviceContext->HasCommandListTarget())
                     {
                         // Command lists are DPI dependent, so DPI compensation effects are always needed
-                        flags |= CanvasImageGetD2DImageFlags.AlwaysInsertDpiCompensation;
+                        flags |= GetD2DImageFlags.AlwaysInsertDpiCompensation;
                     }
                     else
                     {
@@ -97,7 +97,7 @@ unsafe partial class PixelShaderEffect<T>
                     }
 
                     // ReadDpiFromDeviceContext has been processed, so it can be removed now
-                    flags &= ~CanvasImageGetD2DImageFlags.ReadDpiFromDeviceContext;
+                    flags &= ~GetD2DImageFlags.ReadDpiFromDeviceContext;
                 }
 
                 using ComPtr<ID2D1Device1> d2D1Device1 = default;
@@ -125,7 +125,7 @@ unsafe partial class PixelShaderEffect<T>
                 {
                     Realize(flags, targetDpi, deviceContext);
                 }
-                else if (!flags.HasFlag(CanvasImageGetD2DImageFlags.MinimalRealization))
+                else if (!flags.HasFlag(GetD2DImageFlags.MinimalRealization))
                 {
                     // Recurse through the effect graph and ensure all nodes are initialized
                     RefreshInputs(flags, targetDpi, deviceContext);
@@ -183,7 +183,7 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="flags">The current flags in use.</param>
     /// <param name="targetDpi">The target DPI in use.</param>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
-    private void Realize(CanvasImageGetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
+    private void Realize(GetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
         using ComPtr<ID2D1Factory> d2D1Factory = default;
 
@@ -258,7 +258,7 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="flags">The current flags in use.</param>
     /// <param name="targetDpi">The target DPI in use.</param>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
-    private void RefreshInputs(CanvasImageGetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
+    private void RefreshInputs(GetD2DImageFlags flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
         // TODO
     }
