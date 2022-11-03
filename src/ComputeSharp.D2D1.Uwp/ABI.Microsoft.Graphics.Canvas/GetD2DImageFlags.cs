@@ -6,7 +6,7 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// Options for fine-tuning the behavior of <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>.
 /// </summary>
 [Flags]
-internal enum CanvasImageGetD2DImageFlags
+internal enum GetD2DImageFlags
 {
     /// <summary>
     /// No options specified.
@@ -36,5 +36,10 @@ internal enum CanvasImageGetD2DImageFlags
     /// <summary>
     /// Allow partially configured effect graphs where some inputs are <see langword="null"/>.
     /// </summary>
-    AllowNullEffectInputs = 16
+    AllowNullEffectInputs = 16,
+
+    /// <summary>
+    /// If an input is invalid, unrealize the effect and set the output image to <see langword="null"/>.
+    /// </summary>
+    UnrealizeOnFailure = 32
 }

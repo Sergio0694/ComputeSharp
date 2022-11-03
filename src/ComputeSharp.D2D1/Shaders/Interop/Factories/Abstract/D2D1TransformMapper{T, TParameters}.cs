@@ -35,6 +35,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
             Unsafe.SkipInit(out output);
 
             output.ToD2D1Infinite();
+
             opaqueOutput = Rectangle.Empty;
         }
         else
