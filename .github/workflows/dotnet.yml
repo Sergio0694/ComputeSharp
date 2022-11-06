@@ -70,125 +70,62 @@ jobs:
         path: artifacts\*.nupkg
         if-no-files-found: error
 
-  # Run all the DX12 unit tests referencing the ComputeSharp project directly
-  run-dx12-tests:
-    if: success()
+  # Run all unit tests referencing the ComputeSharp project directly
+  run-tests:
     needs: [build-solution]
+    strategy:
+      matrix:
+        framework: [net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Run ComputeSharp.Tests (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.GlobalStatements (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.Internals (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.GlobalStatements (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.Internals (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DisableDynamicCompilation (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.GlobalStatements (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.Internals (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
 
-    - name: Run ComputeSharp.Tests.SourceGenerators
+      # DirectX 12 unit tests
+    - name: Run ComputeSharp.Tests
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.DisableDynamicCompilation
+      run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.GlobalStatements
+      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - if: matrix.framework == 'net6.0'
+      name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
-
-  # Run all the DX12 device lost unit tests (run the separately to minimize issues).
-  # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
-  # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
-  run-dx12-device-lost-tests:
-    if: success()
-    needs: [build-solution]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET 6)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net472 -v n -l "console;verbosity=detailed"
+    
+    # DirectX 12 device lost unit tests.
+    # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
+    # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
       shell: cmd
 
-    # These tests are failing randomly in the CI, disabling them just for now
-    # - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost" (.NET Framework 4.7.2)
-    #   run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f net472 -v n -l "console;verbosity=detailed"
-    #   shell: cmd
-    # - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice" (.NET Framework 4.7.2)
-    #   run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f net472 -v n -l "console;verbosity=detailed"
-    #   shell: cmd
+    # These tests are failing randomly in the CI on .NET Framework, disabling them just for now
+    - if: matrix.framework != 'net472'
+      name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - if: matrix.framework != 'net472'
+      name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
+      shell: cmd
 
-  # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
-  run-d2d1-tests:
-    if: success()
-    needs: [build-solution]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Run ComputeSharp.D2D1.Tests (.NET 6)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+    # D2D1 unit tests
+    - name: Run ComputeSharp.D2D1.Tests
+      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET 6)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET Core 3.1)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f netcoreapp3.1 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
-      shell: cmd
-    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes (.NET Framework 4.7.2)
-      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f net472 -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors
   run-dx12-samples:
-    if: success()
     needs: [build-solution]
     runs-on: windows-2022
     steps:
@@ -247,7 +184,6 @@ jobs:
   # to build and run the sample project referencing them. This is used as
   # a test to ensure the NuGet packages work in a consuming project.
   verify-packages:
-    if: success()
     needs: [build-packages]
     runs-on: windows-2022
     steps:
@@ -282,7 +218,6 @@ jobs:
 
   # Download the NuGet packages and test the ComputeSharp.Dynamic dependency
   verify-packages-dynamic:
-    if: success()
     needs: [build-packages]
     runs-on: windows-2022
     steps:
@@ -317,7 +252,6 @@ jobs:
 
   # Download the NuGet packages and test the ComputeSharp.Pix dependency
   verify-packages-pix:
-    if: success()
     needs: [build-packages]
     runs-on: windows-2022
     steps:
@@ -354,7 +288,6 @@ jobs:
   # This is used to ensure the native dependencies can always be loaded correctly
   # regardless of whether the app is shipping with R2R, self-contained, etc.
   verify-package-native-libs:
-    if: success()
     needs: [build-packages]
     runs-on: windows-2022
     steps:
@@ -366,7 +299,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -379,7 +312,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-dx12-tests, run-dx12-device-lost-tests, run-d2d1-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
+    needs: [run-tests, run-dx12-samples, verify-packages, verify-packages-dynamic, verify-packages-pix, verify-package-native-libs]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
