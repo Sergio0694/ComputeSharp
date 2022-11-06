@@ -16,10 +16,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v3
       with:
@@ -42,10 +38,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v3
       with:
@@ -62,10 +54,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
     - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v3
       with:
