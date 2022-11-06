@@ -217,5 +217,10 @@ jobs:
       with:
         name: nuget_packages
         path: artifacts
-    - run: dotnet nuget push "artifacts\*.nupkg" --source "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json" --api-key ${{secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN}} --skip-duplicate
+    - uses: actions/setup-dotnet@v3
+      with:
+        source-url: "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json"
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN }}
+    - run: dotnet nuget push "artifacts\*.nupkg" --api-key AzureDevOps --skip-duplicate
       shell: cmd
