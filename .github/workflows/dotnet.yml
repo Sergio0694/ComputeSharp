@@ -8,8 +8,12 @@ env:
 
 jobs:
 
-  # Build the whole ComputeSharp solution, in Debug
-  build-solution-debug-x64:
+  # Build the whole ComputeSharp solution
+  build-solution:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        platform: [x64, arm64]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -21,46 +25,14 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: msbuild -t:restore,build /p:Configuration=Debug /p:Platform=x64 /bl
+      run: msbuild -t:restore,build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
       shell: cmd
     - name: Upload MSBuild binary log
       uses: actions/upload-artifact@v3
       with:
-        name: msbuild_log
+        name: msbuild_log_${{matrix.configuration}}_${{matrix.platform}}
         path: msbuild.binlog
         if-no-files-found: error
-
-  # Build the whole ComputeSharp solution, in Release
-  build-solution-release-x64:
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Build
-      run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=x64
-      shell: cmd
-
-  # Build the solution in Release Arm64 too to double-check that target
-  build-solution-release-arm64:
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Build
-      run: msbuild -t:restore,build /p:Configuration=Release /p:Platform=arm64
-      shell: cmd
 
   # Build the .msbuildproj projects and the UWP/WinUI projects to generate all the NuGet packages.
   # This workflow also uploads the resulting packages as artifacts.
@@ -102,14 +74,14 @@ jobs:
     - name: Upload package artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts\*.nupkg
         if-no-files-found: error
 
   # Run all the DX12 unit tests referencing the ComputeSharp project directly
   run-dx12-tests:
     if: success()
-    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
+    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -168,7 +140,7 @@ jobs:
   # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
   run-dx12-device-lost-tests:
     if: success()
-    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
+    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -214,7 +186,7 @@ jobs:
   # Run all the D2D1 unit tests (referencing ComputeSharp.D2D1)
   run-d2d1-tests:
     if: success()
-    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
+    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -249,7 +221,7 @@ jobs:
   # Run all the local samples to ensure they build and run with no errors
   run-dx12-samples:
     if: success()
-    needs: [build-solution-debug-x64, build-solution-release-x64, build-solution-release-arm64]
+    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -331,7 +303,7 @@ jobs:
     - name: Download package artifacts
       uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - name: Build ComputeSharp.NuGet (.NET 6)
       run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f net6.0
@@ -370,7 +342,7 @@ jobs:
     - name: Download package artifacts
       uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - name: Build ComputeSharp.Dynamic.NuGet (.NET 6)
       run: dotnet build tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f net6.0
@@ -409,7 +381,7 @@ jobs:
     - name: Download package artifacts
       uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - name: Build ComputeSharp.Pix.NuGet (.NET 6)
       run: dotnet build tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f net6.0
@@ -456,7 +428,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - uses: actions/setup-dotnet@v3
       with:
@@ -472,7 +444,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - uses: actions/setup-dotnet@v3
       with:
