@@ -135,14 +135,17 @@ jobs:
         include:
           - framework: net6.0
             options: ''
+            command: dotnet
             path: Release\net6.0
             extension: dll
           - framework: netcoreapp3.1
-            options: -r win-x64
+            options: /p:Platform=x64 -r win-x64
+            command: ''
             path: Release\netcoreapp3.1\win-x64
             extension: exe
           - framework: net472
             options: /p:Platform=x64
+            command: ''
             path: x64\Release\net472
             extension: exe
     runs-on: windows-2022
@@ -153,19 +156,19 @@ jobs:
       run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.Sample
-      run: dotnet samples\ComputeSharp.Sample\bin\${{matrix.path}}\ComputeSharp.Sample.${{matrix.extension}}
+      run: ${{matrix.command}} samples\ComputeSharp.Sample\bin\${{matrix.path}}\ComputeSharp.Sample.${{matrix.extension}}
       shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
-      run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release ${{matrix.framework}} ${{matrix.options}}
+      run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.Sample.FSharp
-      run: dotnet samples\ComputeSharp.Sample.FSharp\bin\${{matrix.path}}\ComputeSharp.Sample.FSharp.${{matrix.extension}}
+      run: ${{matrix.command}} samples\ComputeSharp.Sample.FSharp\bin\${{matrix.path}}\ComputeSharp.Sample.FSharp.${{matrix.extension}}
       shell: cmd
     - name: Build ComputeSharp.ImageProcessing.csproj
       run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.ImageProcessing.csproj
-      run: dotnet samples\ComputeSharp.ImageProcessing\bin\${{matrix.path}}\ComputeSharp.ImageProcessing.${{matrix.extension}}
+      run: ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\${{matrix.path}}\ComputeSharp.ImageProcessing.${{matrix.extension}}
       shell: cmd
 
   # Download the NuGet packages generated in the previous job and use them
@@ -179,13 +182,16 @@ jobs:
         include:
           - framework: net6.0
             options: ''
+            command: dotnet
             path: Release\net6.0
             extension: dll
           - framework: netcoreapp3.1
             options: -r win-x64
+            command: ''
             path: Release\netcoreapp3.1\win-x64
             extension: exe
           - framework: net472
+            command: ''
             options: /p:Platform=x64
             path: x64\Release\net472
             extension: exe
@@ -205,19 +211,19 @@ jobs:
       run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.NuGet
-      run: dotnet tests\ComputeSharp.NuGet\bin\${{matrix.path}}\ComputeSharp.NuGet.${{matrix.extension}}
+      run: ${{matrix.command}} tests\ComputeSharp.NuGet\bin\${{matrix.path}}\ComputeSharp.NuGet.${{matrix.extension}}
       shell: cmd
     - name: Build ComputeSharp.Dynamic.NuGet
       run: dotnet build tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.Dynamic.NuGet
-      run: dotnet tests\ComputeSharp.Dynamic.NuGet\bin\${{matrix.path}}\ComputeSharp.Dynamic.NuGet.${{matrix.extension}}
+      run: ${{matrix.command}} tests\ComputeSharp.Dynamic.NuGet\bin\${{matrix.path}}\ComputeSharp.Dynamic.NuGet.${{matrix.extension}}
       shell: cmd
     - name: Build ComputeSharp.Pix.NuGet
       run: dotnet build tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
       shell: cmd
     - name: Run ComputeSharp.Pix.NuGet
-      run: dotnet tests\ComputeSharp.Pix.NuGet\bin\${{matrix.path}}\ComputeSharp.Pix.NuGet.${{matrix.extension}}
+      run: ${{matrix.command}} tests\ComputeSharp.Pix.NuGet\bin\${{matrix.path}}\ComputeSharp.Pix.NuGet.${{matrix.extension}}
       shell: cmd
 
   # Run the extra tests to validate a number of build and publishing configurations.
