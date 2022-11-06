@@ -132,43 +132,27 @@ jobs:
     strategy:
       matrix:
         framework: [net6.0, netcoreapp3.1, net472]
-        include:
-          - framework: net6.0
-            options: ''
-            command: dotnet
-            path: Release\net6.0
-            extension: dll
-          - framework: netcoreapp3.1
-            options: /p:Platform=x64 -r win-x64
-            command: ''
-            path: Release\netcoreapp3.1\win-x64
-            extension: exe
-          - framework: net472
-            options: /p:Platform=x64
-            command: ''
-            path: x64\Release\net472
-            extension: exe
     runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Build ComputeSharp.Sample
-      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n
       shell: cmd
     - name: Run ComputeSharp.Sample
-      run: ${{matrix.command}} samples\ComputeSharp.Sample\bin\${{matrix.path}}\ComputeSharp.Sample.${{matrix.extension}}
+      run: samples\ComputeSharp.Sample\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.exe
       shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
-      run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
+      run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n
       shell: cmd
     - name: Run ComputeSharp.Sample.FSharp
-      run: ${{matrix.command}} samples\ComputeSharp.Sample.FSharp\bin\${{matrix.path}}\ComputeSharp.Sample.FSharp.${{matrix.extension}}
+      run: ${{matrix.command}} samples\ComputeSharp.Sample.FSharp\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.FSharp.exe
       shell: cmd
     - name: Build ComputeSharp.ImageProcessing.csproj
-      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n
       shell: cmd
     - name: Run ComputeSharp.ImageProcessing.csproj
-      run: ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\${{matrix.path}}\ComputeSharp.ImageProcessing.${{matrix.extension}}
+      run: ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
       shell: cmd
 
   # Download the NuGet packages generated in the previous job and use them
