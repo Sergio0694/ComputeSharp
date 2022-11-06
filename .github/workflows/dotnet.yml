@@ -175,12 +175,6 @@ jobs:
     - name: Run ComputeSharp.ImageProcessing.csproj (.NET Framework 4.7.2)
       run: samples\ComputeSharp.ImageProcessing\bin\x64\Release\net472\ComputeSharp.ImageProcessing.exe
       shell: cmd
-    - name: Build ComputeSharp.Benchmark.csproj
-      run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
-      shell: cmd
-    - name: Build ComputeSharp.SwapChain.csproj
-      run: dotnet build samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj -c Release
-      shell: cmd
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
