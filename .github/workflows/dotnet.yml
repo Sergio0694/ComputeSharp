@@ -20,10 +20,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build
       run: msbuild -t:restore,build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
       shell: cmd
@@ -43,10 +39,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build ComputeSharp.Core package
       run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release
       shell: cmd
@@ -86,14 +78,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests (.NET 6)
       run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -145,14 +129,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal" (.NET 6)
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -191,14 +167,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Run ComputeSharp.D2D1.Tests (.NET 6)
       run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -226,14 +194,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET Core 3.1 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build ComputeSharp.Sample (.NET 6)
       run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f net6.0
       shell: cmd
@@ -293,10 +253,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
@@ -332,10 +288,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
@@ -371,10 +323,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
@@ -412,10 +360,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -430,9 +374,6 @@ jobs:
       with:
         name: nuget_packages
         path: artifacts
-    - uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - run: dotnet nuget push "artifacts\*.nupkg" --source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
       shell: cmd
 
@@ -446,11 +387,5 @@ jobs:
       with:
         name: nuget_packages
         path: artifacts
-    - uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-        source-url: "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json"
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN }}
-    - run: dotnet nuget push "artifacts\*.nupkg" --api-key AzureDevOps --skip-duplicate
+    - run: dotnet nuget push "artifacts\*.nupkg" --source "https://sergio0694.pkgs.visualstudio.com/ComputeSharp/_packaging/ComputeSharp/nuget/v3/index.json" --api-key ${{secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN}} --skip-duplicate
       shell: cmd
