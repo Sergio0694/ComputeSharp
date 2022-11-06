@@ -200,23 +200,19 @@ jobs:
     - name: Build and run ComputeSharp.Pix.NuGet
       run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
       shell: cmd
-
-  # Run the extra tests to validate a number of build and publishing configurations.
-  # This is used to ensure the native dependencies can always be loaded correctly
-  # regardless of whether the app is shipping with R2R, self-contained, etc.
-  verify-package-native-libs:
-    needs: [build-packages]
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Run ComputeSharp.Tests.NativeLibrariesResolver
+    
+      # Run the extra tests to validate a number of build and publishing configurations.
+      # This is used to ensure the native dependencies can always be loaded correctly
+      # regardless of whether the app is shipping with R2R, self-contained, etc.
+      # Like with the source generator tests, only run these once on the .NET 6 target.
+    - if: matrix.framework == 'net6.0'
+      name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-tests, run-samples, verify-packages, verify-package-native-libs]
+    needs: [run-tests, run-samples, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -229,7 +225,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-tests, run-samples, verify-packages, verify-package-native-libs]
+    needs: [run-tests, run-samples, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
