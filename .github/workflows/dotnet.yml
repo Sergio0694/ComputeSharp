@@ -179,22 +179,6 @@ jobs:
     strategy:
       matrix:
         framework: [net6.0, netcoreapp3.1, net472]
-        include:
-          - framework: net6.0
-            options: ''
-            command: dotnet
-            path: Release\net6.0
-            extension: dll
-          - framework: netcoreapp3.1
-            options: -r win-x64
-            command: ''
-            path: Release\netcoreapp3.1\win-x64
-            extension: exe
-          - framework: net472
-            command: ''
-            options: /p:Platform=x64
-            path: x64\Release\net472
-            extension: exe
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -207,23 +191,14 @@ jobs:
       with:
         name: nuget_packages
         path: artifacts
-    - name: Build ComputeSharp.NuGet
-      run: dotnet build tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
+    - name: Build and run ComputeSharp.NuGet
+      run: dotnet run --project tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
       shell: cmd
-    - name: Run ComputeSharp.NuGet
-      run: ${{matrix.command}} tests\ComputeSharp.NuGet\bin\${{matrix.path}}\ComputeSharp.NuGet.${{matrix.extension}}
+    - name: Build and run ComputeSharp.Dynamic.NuGet
+      run: dotnet run --project tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
       shell: cmd
-    - name: Build ComputeSharp.Dynamic.NuGet
-      run: dotnet build tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
-      shell: cmd
-    - name: Run ComputeSharp.Dynamic.NuGet
-      run: ${{matrix.command}} tests\ComputeSharp.Dynamic.NuGet\bin\${{matrix.path}}\ComputeSharp.Dynamic.NuGet.${{matrix.extension}}
-      shell: cmd
-    - name: Build ComputeSharp.Pix.NuGet
-      run: dotnet build tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f ${{matrix.framework}} ${{matrix.options}}
-      shell: cmd
-    - name: Run ComputeSharp.Pix.NuGet
-      run: ${{matrix.command}} tests\ComputeSharp.Pix.NuGet\bin\${{matrix.path}}\ComputeSharp.Pix.NuGet.${{matrix.extension}}
+    - name: Build and run ComputeSharp.Pix.NuGet
+      run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
       shell: cmd
 
   # Run the extra tests to validate a number of build and publishing configurations.
