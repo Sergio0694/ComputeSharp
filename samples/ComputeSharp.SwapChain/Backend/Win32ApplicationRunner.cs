@@ -46,11 +46,23 @@ internal static unsafe class Win32ApplicationRunner
     /// <returns>The exit code for the application.</returns>
     public static int Run(Win32Application application)
     {
+        return Run(application, Assembly.GetExecutingAssembly().FullName ?? "ComputeSharp");
+    }
+
+    /// <summary>
+    /// Runs a specified application and starts the main loop to update its state. This is the entry point for a given application,
+    /// and it should be called as soon as the process is launched, excluding any other additional initialization needed.
+    /// </summary>
+    /// <param name="application">The input application instance to run.</param>
+    /// <param name="applicatioName">Name of the input application instance to run.</param>
+    /// <returns>The exit code for the application.</returns>
+    public static int Run(Win32Application application, string applicatioName)
+    {
         Win32ApplicationRunner.application = application;
 
         HMODULE hInstance = Windows.GetModuleHandleW(null);
 
-        fixed (char* name = Assembly.GetExecutingAssembly().FullName)
+        fixed (char* name = applicatioName)
         fixed (char* windowTitle = application.GetType().ToString())
         {
             // Initialize the window class
@@ -162,7 +174,7 @@ internal static unsafe class Win32ApplicationRunner
     }
 
     /// <summary>
-    /// Processes incoming messages for a window. 
+    /// Processes incoming messages for a window.
     /// </summary>
     /// <param name="hwnd">A handle to the window.</param>
     /// <param name="uMsg">The message.</param>

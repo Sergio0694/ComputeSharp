@@ -41,7 +41,7 @@
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
-    
+
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
 
