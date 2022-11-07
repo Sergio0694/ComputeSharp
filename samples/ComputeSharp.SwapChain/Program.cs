@@ -61,7 +61,7 @@ class Program
                 Console.WriteLine();
                 Console.WriteLine($"Starting {Samples[index].ShaderName}...");
 
-                _ = Win32ApplicationRunner.Run(Samples[index].Application, "ComputeSharp.SwapChain");
+                _ = Win32ApplicationRunner.Run(Samples[index].Application, "ComputeSharp.SwapChain", Samples[index].ShaderName);
             }
         }
         while (index >= 0 && index < Samples.Length);

@@ -42,16 +42,17 @@ internal static unsafe class Win32ApplicationRunner
     /// and it should be called as soon as the process is launched, excluding any other additional initialization needed.
     /// </summary>
     /// <param name="application">The input application instance to run.</param>
-    /// <param name="applicatioName">Name of the input application instance to run.</param>
+    /// <param name="applicationName">Name of the input application instance to run.</param>
+    /// <param name="windowTitle">The title to use for the window being opened.</param>
     /// <returns>The exit code for the application.</returns>
-    public static int Run(Win32Application application, string applicatioName)
+    public static int Run(Win32Application application, string applicationName, string windowTitle)
     {
         Win32ApplicationRunner.application = application;
 
         HMODULE hInstance = Windows.GetModuleHandleW(null);
 
-        fixed (char* name = applicatioName)
-        fixed (char* windowTitle = application.GetType().ToString())
+        fixed (char* name = applicationName)
+        fixed (char* title = windowTitle)
         {
             // Initialize the window class
             WNDCLASSEXW windowClassEx = new()
@@ -79,7 +80,7 @@ internal static unsafe class Win32ApplicationRunner
             hwnd = Windows.CreateWindowExW(
                 0,
                 windowClassEx.lpszClassName,
-                (ushort*)windowTitle,
+                (ushort*)title,
                 WS.WS_OVERLAPPEDWINDOW,
                 Windows.CW_USEDEFAULT,
                 Windows.CW_USEDEFAULT,
