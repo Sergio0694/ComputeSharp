@@ -139,7 +139,7 @@ jobs:
     needs: [build-packages]
     strategy:
       matrix:
-        framework: [net6.0, netcoreapp3.1, net472]
+        framework: [net7.0, net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -165,6 +165,23 @@ jobs:
     - if: matrix.framework == 'net6.0'
       name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
+    
+      # If on .NET 7, also run the NativeAOT publishing tests
+    - if: matrix.framework == 'net7.0'
+      name: Publish and run ComputeSharp.NuGet with NativeAOT
+      run: >
+        dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f net7.0 -r win-x64 -v n;
+        tests\ComputeSharp.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.NuGet.exe
+    - if: matrix.framework == 'net7.0'
+      name: Publish and run ComputeSharp.Dynamic.NuGet with NativeAOT
+      run: >
+        dotnet publish tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f net7.0 -r win-x64 -v n;
+        tests\ComputeSharp.Dynamic.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.Dynamic.NuGet.exe
+    - if: matrix.framework == 'net7.0'
+      name: Publish and run ComputeSharp.Pix.NuGet with NativeAOT
+      run: >
+        dotnet publish tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f net7.0 -r win-x64 -v n;
+        tests\ComputeSharp.Pix.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.Pix.NuGet.exe
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
