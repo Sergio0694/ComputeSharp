@@ -22,7 +22,6 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
     - name: Build
       run: msbuild -t:restore,build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
-      shell: cmd
     - name: Upload MSBuild binary log
       uses: actions/upload-artifact@v3
       with:
@@ -41,22 +40,16 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
     - name: Build ComputeSharp.Core package
       run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release
-      shell: cmd
     - name: Build ComputeSharp package
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
-      shell: cmd
     - name: Build ComputeSharp.Dynamic package
       run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release
-      shell: cmd
     - name: Build ComputeSharp.D2D1 package
       run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release
-      shell: cmd
     - name: Build ComputeSharp.Pix package
       run: dotnet build src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj -c Release
-      shell: cmd
     - name: Build ComputeSharp.Uwp package
       run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
-      shell: cmd
     
       # Packing needs to be done separately and with no previous build target for this to work correctly
     - name: Build ComputeSharp.WinUI project
@@ -84,47 +77,37 @@ jobs:
       # DirectX 12 unit tests
     - name: Run ComputeSharp.Tests
       run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation
       run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
     - name: Run ComputeSharp.Tests.GlobalStatements
       run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
     - name: Run ComputeSharp.Tests.Internals
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
-      shell: cmd
 
       # Only run the source generators tests once, as they're not runtime specific
     - if: matrix.framework == 'net6.0'
       name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
-      shell: cmd
     
     # DirectX 12 device lost unit tests.
     # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
     # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
-      shell: cmd
 
     # These tests are failing randomly in the CI on .NET Framework, disabling them just for now
     - if: matrix.framework != 'net472'
       name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
-      shell: cmd
     - if: matrix.framework != 'net472'
       name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
-      shell: cmd
 
     # D2D1 unit tests
     - name: Run ComputeSharp.D2D1.Tests
       run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
-      shell: cmd
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
-      shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
@@ -163,7 +146,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Create local NuGet feed
       run: mkdir artifacts
-      shell: cmd
     - name: Download package artifacts
       uses: actions/download-artifact@v3
       with:
@@ -171,13 +153,10 @@ jobs:
         path: artifacts
     - name: Build and run ComputeSharp.NuGet
       run: dotnet run --project tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
-      shell: cmd
     - name: Build and run ComputeSharp.Dynamic.NuGet
       run: dotnet run --project tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
-      shell: cmd
     - name: Build and run ComputeSharp.Pix.NuGet
       run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -v n
-      shell: cmd
     
       # Run the extra tests to validate a number of build and publishing configurations.
       # This is used to ensure the native dependencies can always be loaded correctly
@@ -186,7 +165,6 @@ jobs:
     - if: matrix.framework == 'net6.0'
       name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
-      shell: cmd
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
@@ -199,7 +177,6 @@ jobs:
         name: nuget_packages
         path: artifacts
     - run: dotnet nuget push "artifacts\*.nupkg" --source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
-      shell: cmd
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
@@ -217,4 +194,3 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN }}
     - run: dotnet nuget push "artifacts\*.nupkg" --api-key AzureDevOps --skip-duplicate
-      shell: cmd
