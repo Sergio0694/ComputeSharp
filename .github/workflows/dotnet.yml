@@ -140,17 +140,14 @@ jobs:
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         samples\ComputeSharp.Sample\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.exe
-      shell: cmd
     - name: Build and run ComputeSharp.Sample.FSharp
       run: >
         dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         ${{matrix.command}} samples\ComputeSharp.Sample.FSharp\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.FSharp.exe
-      shell: cmd
     - name: Build and run ComputeSharp.ImageProcessing.csproj
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
-      shell: cmd
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
