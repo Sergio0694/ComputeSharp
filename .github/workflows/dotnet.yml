@@ -57,12 +57,12 @@ jobs:
     - name: Build ComputeSharp.Uwp package
       run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
       shell: cmd
-    - name: Restore ComputeSharp.WinUI project
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release
-      shell: cmd
-    - name: Build ComputeSharp.WinUI package
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
-      shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
+    
+      # Packing needs to be done separately and with no previous build target for this to work correctly
+    - name: Build ComputeSharp.WinUI project
+      run: >
+        msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release;
+        msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
     - name: Upload package artifacts
       uses: actions/upload-artifact@v3
       with:
