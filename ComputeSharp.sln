@@ -48,6 +48,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.NativeLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain", "samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj", "{E7C9247D-016B-4819-AF9F-0E9B3591E04B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.Cli", "samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj", "{C12D7ACE-98ED-4813-8118-6667C34F484F}"
+EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ComputeSharp.Sample.FSharp", "samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj", "{7C625EC4-F599-4350-A915-F046DF2406D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample.FSharp.Shaders", "samples\ComputeSharp.Sample.FSharp.Shaders\ComputeSharp.Sample.FSharp.Shaders.csproj", "{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}"
@@ -362,6 +364,14 @@ Global
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|ARM64.Build.0 = Release|Any CPU
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|x64.ActiveCfg = Release|Any CPU
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|x64.Build.0 = Release|Any CPU
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.Build.0 = Debug|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.ActiveCfg = Debug|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.Build.0 = Debug|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.ActiveCfg = Release|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.Build.0 = Release|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.ActiveCfg = Release|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -396,6 +406,7 @@ Global
 		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{669A414F-3B46-4B55-B587-061AF63C3067} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{B86A48A7-18BD-4946-B995-3CE26B092DDF} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
+		{C12D7ACE-98ED-4813-8118-6667C34F484F} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
@@ -423,6 +434,7 @@ Global
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{c12d7ace-98ed-4813-8118-6667c34f484f}*SharedItemsImports = 5
 		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
