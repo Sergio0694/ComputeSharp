@@ -136,6 +136,18 @@ jobs:
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
+      
+      # Also publish the NativeAOT test when .NET 7 is used
+    - if: matrix.framework == 'net7.0'
+      name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
+      run: dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-x64 -v n
+    - if: matrix.framework == 'net7.0'
+      name: Upload NativeAOT CLI sample
+      uses: actions/upload-artifact@v3
+      with:
+        name: computesharp.cli.exe
+        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
+        if-no-files-found: error
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
