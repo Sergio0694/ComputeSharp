@@ -6,6 +6,8 @@
     <Platforms>x64;ARM64</Platforms>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <AssemblyName>computesharp.cli</AssemblyName>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!-- NativeAOT settings -->
@@ -17,6 +19,11 @@
     <IlcDisableReflection>true</IlcDisableReflection>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
+
+  <!-- Application icon -->
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
