@@ -6,20 +6,16 @@
     <Platforms>x64;ARM64</Platforms>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
-    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
 
   <!-- NativeAOT settings -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <PublishAot>true</PublishAot>
-    <EventSourceSupport>false</EventSourceSupport>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
-    <DebuggerSupport>false</DebuggerSupport>
-    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
-    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+    <IlcDisableReflection>true</IlcDisableReflection>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +23,12 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\SwapChainApplication{T}.cs" Link="Backend\SwapChainApplication{T}.cs" />
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32Application.cs" Link="Backend\Win32Application.cs" />
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32ApplicationRunner.cs" Link="Backend\Win32ApplicationRunner.cs" />
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
