@@ -1,7 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+
+    <!--
+      When running in the CI, set the executable type to be 'Exe', so that a console will
+      be available and the PowerShell test script will be able to await the published app.
+      When not in the CI, use 'WinExe' instead so that the render window will open directly.
+    -->
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <Platforms>x64;ARM64</Platforms>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>

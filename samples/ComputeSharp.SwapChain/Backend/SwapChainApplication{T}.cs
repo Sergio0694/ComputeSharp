@@ -287,6 +287,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
 
         // Execute the command list to perform the copy
         this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
+
         _ = this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
 
         // Present the new frame
