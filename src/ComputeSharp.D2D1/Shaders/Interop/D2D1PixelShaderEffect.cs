@@ -165,8 +165,8 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
-                <Property name='TransformMapperManager' type='iunknown'>
-                    <Property name='DisplayName' type='string' value='TransformMapperManager'/>
+                <Property name='TransformMapper' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapper'/>
                 </Property>
             </Effect>
             """);
@@ -192,7 +192,7 @@ public static unsafe class D2D1PixelShaderEffect
         fixed (char* pResourceTextureManager13PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager13))
         fixed (char* pResourceTextureManager14PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager14))
         fixed (char* pResourceTextureManager15PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager15))
-        fixed (char* pTransformMapperManagerPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapperManager))
+        fixed (char* pTransformMapperPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapper))
         {
             // Prepare the effect binding functions
             D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[18];
@@ -215,7 +215,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].propertyName = (ushort*)pResourceTextureManager13PropertyName;
             d2D1PropertyBinding[15].propertyName = (ushort*)pResourceTextureManager14PropertyName;
             d2D1PropertyBinding[16].propertyName = (ushort*)pResourceTextureManager15PropertyName;
-            d2D1PropertyBinding[17].propertyName = (ushort*)pTransformMapperManagerPropertyName;
+            d2D1PropertyBinding[17].propertyName = (ushort*)pTransformMapperPropertyName;
 
             // Property getters
             d2D1PropertyBinding[0].getFunction = PixelShaderEffect.GetConstantBuffer;
@@ -235,7 +235,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].getFunction = PixelShaderEffect.GetResourceTextureManager13;
             d2D1PropertyBinding[15].getFunction = PixelShaderEffect.GetResourceTextureManager14;
             d2D1PropertyBinding[16].getFunction = PixelShaderEffect.GetResourceTextureManager15;
-            d2D1PropertyBinding[17].getFunction = PixelShaderEffect.GetTransformMapperManager;
+            d2D1PropertyBinding[17].getFunction = PixelShaderEffect.GetTransformMapper;
 
             // Property setters
             d2D1PropertyBinding[0].setFunction = PixelShaderEffect.SetConstantBuffer;
@@ -255,7 +255,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].setFunction = PixelShaderEffect.SetResourceTextureManager13;
             d2D1PropertyBinding[15].setFunction = PixelShaderEffect.SetResourceTextureManager14;
             d2D1PropertyBinding[16].setFunction = PixelShaderEffect.SetResourceTextureManager15;
-            d2D1PropertyBinding[17].setFunction = PixelShaderEffect.SetTransformMapperManager;
+            d2D1PropertyBinding[17].setFunction = PixelShaderEffect.SetTransformMapper;
 
             fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Id)
             {
@@ -439,8 +439,8 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
-                <Property name='TransformMapperManager' type='iunknown'>
-                    <Property name='DisplayName' type='string' value='TransformMapperManager'/>
+                <Property name='TransformMapper' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapper'/>
                 </Property>
             </Effect>
             """u8);
@@ -518,10 +518,10 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager15);
         writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager15);
-        writer.WriteRaw("TransformMapperManager"u8);
+        writer.WriteRaw("TransformMapper"u8);
         writer.WriteRaw((byte)'\0');
-        writer.WriteRaw((nint)PixelShaderEffect.GetTransformMapperManager);
-        writer.WriteRaw((nint)PixelShaderEffect.SetTransformMapperManager);
+        writer.WriteRaw((nint)PixelShaderEffect.GetTransformMapper);
+        writer.WriteRaw((nint)PixelShaderEffect.SetTransformMapper);
 
         // Effect factory
         writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);
@@ -652,28 +652,28 @@ public static unsafe class D2D1PixelShaderEffect
     }
 
     /// <summary>
-    /// Sets the transform mapper manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// Sets the transform mapper from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
-    /// <param name="transformMapperManager">The input <c>ID2D1TransformMapperManager</c> object.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapperManager"/> are <see langword="null"/>.</exception>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetTransformMapperManagerForD2D1Effect(void* d2D1Effect, void* transformMapperManager)
+    public static void SetTransformMapperForD2D1Effect(void* d2D1Effect, void* transformMapper)
     {
         if (d2D1Effect is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
         }
 
-        if (transformMapperManager is null)
+        if (transformMapper is null)
         {
-            ThrowHelper.ThrowArgumentNullException(nameof(transformMapperManager), "The input ID2D1TransformMapperManager object cannot be null.");
+            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input ID2D1TransformMapper object cannot be null.");
         }
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.TransformMapperManager,
+            index: D2D1PixelShaderEffectProperty.TransformMapper,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
-            data: (byte*)&transformMapperManager,
+            data: (byte*)&transformMapper,
             dataSize: (uint)sizeof(void*)).Assert();
     }
 }

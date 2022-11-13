@@ -5,7 +5,7 @@ using TerraFX.Interop.Windows;
 using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
-namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <inheritdoc/>
 unsafe partial struct D2D1DrawInfoUpdateContextImpl

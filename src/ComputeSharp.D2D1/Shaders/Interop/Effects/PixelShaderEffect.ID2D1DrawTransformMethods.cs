@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -128,10 +128,10 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperManager is not null)
+            if (@this->d2D1TransformMapper is not null)
             {
-                // Forward to the current ID2D1TransformMapperManager instance
-                HRESULT hresult = @this->d2D1TransformMapperManager->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount);
+                // Forward to the current ID2D1TransformMapper instance
+                HRESULT hresult = @this->d2D1TransformMapper->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount);
 
                 if (!Windows.SUCCEEDED(hresult))
                 {
@@ -200,7 +200,7 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperManager is not null)
+            if (@this->d2D1TransformMapper is not null)
             {
                 using ComPtr<D2D1DrawInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
 
@@ -216,8 +216,8 @@ partial struct PixelShaderEffect
                     return hresult;
                 }
 
-                // Forward the call to the input ID2D1TransformMapperManager instance
-                hresult = @this->d2D1TransformMapperManager->MapInputRectsToOutputRect(
+                // Forward the call to the input ID2D1TransformMapper instance
+                hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
                     updateContext: (ID2D1DrawInfoUpdateContex*)d2D1DrawInfoUpdateContext.Get(),
                     inputRects: inputRects,
                     inputOpaqueSubRects: inputOpaqueSubRects,
@@ -322,10 +322,10 @@ partial struct PixelShaderEffect
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1TransformMapperManager is not null)
+            if (@this->d2D1TransformMapper is not null)
             {
-                // Forward to the current ID2D1TransformMapperManager instance
-                HRESULT hresult = @this->d2D1TransformMapperManager->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect);
+                // Forward to the current ID2D1TransformMapper instance
+                HRESULT hresult = @this->d2D1TransformMapper->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect);
 
                 if (!Windows.SUCCEEDED(hresult))
                 {

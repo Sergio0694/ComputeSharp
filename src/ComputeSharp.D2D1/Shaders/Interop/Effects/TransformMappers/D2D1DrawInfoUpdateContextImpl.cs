@@ -10,7 +10,7 @@ using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 #endif
 
-namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// An implementation of the <see cref="ID2D1DrawInfoUpdateContex"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/> interfaces.

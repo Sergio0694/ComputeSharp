@@ -5,7 +5,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// An internal version of <see cref="ID2D1DrawInfoUpdateContex"/> that supports being closed, to manage lifetime scopes.
@@ -47,7 +47,7 @@ internal unsafe struct ID2D1DrawInfoUpdateContexInternal
     /// </summary>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public HRESULT Close(uint* size)
+    public HRESULT Close()
     {
         return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContex*, int>)this.lpVtbl[3])((ID2D1DrawInfoUpdateContex*)Unsafe.AsPointer(ref this));
     }

@@ -5,16 +5,16 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// The transform mapper manager type to use with built-in effects.
 /// </summary>
 [Guid("02E6D48D-B892-4FBC-AA54-119203BAB802")]
-internal unsafe struct ID2D1TransformMapperManager
+internal unsafe struct ID2D1TransformMapper
 {
     /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1TransformMapperManager"/> (<c>02E6D48D-B892-4FBC-AA54-119203BAB802</c>).
+    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1TransformMapper"/> (<c>02E6D48D-B892-4FBC-AA54-119203BAB802</c>).
     /// </summary>
     public static ref readonly Guid Guid
     {
@@ -61,8 +61,8 @@ internal unsafe struct ID2D1TransformMapperManager
         RECT* outputRect,
         RECT* outputOpaqueSubRect)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapperManager*, ID2D1DrawInfoUpdateContex*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
-            (ID2D1TransformMapperManager*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContex*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
+            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             updateContext,
             inputRects,
             inputOpaqueSubRects,
@@ -84,8 +84,8 @@ internal unsafe struct ID2D1TransformMapperManager
         RECT* inputRects,
         uint inputRectsCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapperManager*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
-            (ID2D1TransformMapperManager*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
+            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             outputRect,
             inputRects,
             inputRectsCount);
@@ -104,8 +104,8 @@ internal unsafe struct ID2D1TransformMapperManager
         RECT invalidInputRect,
         RECT* invalidOutputRect)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapperManager*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
-            (ID2D1TransformMapperManager*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
+            (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             inputIndex,
             invalidInputRect,
             invalidOutputRect);

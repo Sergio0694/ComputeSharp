@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -34,14 +34,14 @@ unsafe partial struct PixelShaderEffect
     private static readonly PropertySetFunctionDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetTransformMapperManagerImpl"/>.
+    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetTransformMapperImpl"/>.
     /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetTransformMapperManagerWrapper = GetTransformMapperManagerImpl;
+    private static readonly PropertyGetFunctionDelegate GetTransformMapperWrapper = GetTransformMapperImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetTransformMapperManagerImpl"/>.
+    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetTransformMapperImpl"/>.
     /// </summary>
-    private static readonly PropertySetFunctionDelegate SetTransformMapperManagerWrapper = SetTransformMapperManagerImpl;
+    private static readonly PropertySetFunctionDelegate SetTransformMapperWrapper = SetTransformMapperImpl;
 #endif
 
     /// <summary>
@@ -79,36 +79,36 @@ unsafe partial struct PixelShaderEffect
     }
 
     /// <summary>
-    /// Gets the get accessor for the transform mapper manager.
+    /// Gets the get accessor for the transform mapper.
     /// </summary>
 #if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetTransformMapperManager
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetTransformMapper
 #else
-    public static void* GetTransformMapperManager
+    public static void* GetTransformMapper
 #endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET6_0_OR_GREATER
-        get => &GetTransformMapperManagerImpl;
+        get => &GetTransformMapperImpl;
 #else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(GetTransformMapperManagerWrapper);
+        get => (void*)Marshal.GetFunctionPointerForDelegate(GetTransformMapperWrapper);
 #endif
     }
 
     /// <summary>
-    /// Gets the set accessor for the transform mapper manager.
+    /// Gets the set accessor for the transform mapper.
     /// </summary>
 #if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetTransformMapperManager
+    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetTransformMapper
 #else
-    public static void* SetTransformMapperManager
+    public static void* SetTransformMapper
 #endif
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET6_0_OR_GREATER
-        get => &SetTransformMapperManagerImpl;
+        get => &SetTransformMapperImpl;
 #else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(SetTransformMapperManagerWrapper);
+        get => (void*)Marshal.GetFunctionPointerForDelegate(SetTransformMapperWrapper);
 #endif
     }
 
@@ -195,7 +195,7 @@ unsafe partial struct PixelShaderEffect
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int GetTransformMapperManagerImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    private static int GetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -209,13 +209,13 @@ unsafe partial struct PixelShaderEffect
             return E.E_INVALIDARG;
         }
 
-        if (@this->d2D1TransformMapperManager is null)
+        if (@this->d2D1TransformMapper is null)
         {
             *(void**)data = null;
         }
         else
         {
-            _ = ((IUnknown*)@this->d2D1TransformMapperManager)->QueryInterface(Windows.__uuidof<ID2D1TransformMapperManager>(), (void**)data);
+            _ = ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data);
         }
 
         if (actualSize is not null)
@@ -228,7 +228,7 @@ unsafe partial struct PixelShaderEffect
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int SetTransformMapperManagerImpl(IUnknown* effect, byte* data, uint dataSize)
+    private static int SetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -250,10 +250,10 @@ unsafe partial struct PixelShaderEffect
         }
 
         using ComPtr<IUnknown> unknown = (IUnknown*)value;
-        using ComPtr<ID2D1TransformMapperManager> transformMapperManager = default;
+        using ComPtr<ID2D1TransformMapper> transformMapper = default;
 
-        // Check that the input object implements ID2D1TransformMapperManager
-        int result = unknown.CopyTo(transformMapperManager.GetAddressOf());
+        // Check that the input object implements ID2D1TransformMapper
+        int result = unknown.CopyTo(transformMapper.GetAddressOf());
 
         if (result != S.S_OK)
         {
@@ -261,13 +261,13 @@ unsafe partial struct PixelShaderEffect
         }
 
         // If there's already an existing manager, release it
-        if (@this->d2D1TransformMapperManager is not null)
+        if (@this->d2D1TransformMapper is not null)
         {
-            _ = ((IUnknown*)@this->d2D1TransformMapperManager)->Release();
+            _ = ((IUnknown*)@this->d2D1TransformMapper)->Release();
         }
 
         // Store the transform mapper manager into the effect
-        @this->d2D1TransformMapperManager = transformMapperManager.Detach();
+        @this->d2D1TransformMapper = transformMapper.Detach();
 
         return S.S_OK;
     }

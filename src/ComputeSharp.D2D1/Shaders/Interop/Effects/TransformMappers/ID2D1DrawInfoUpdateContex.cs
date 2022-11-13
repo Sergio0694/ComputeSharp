@@ -5,7 +5,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMapperManagers;
+namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// The updater for <see cref="TerraFX.Interop.DirectX.ID2D1DrawInfo"/> type to use with built-in effects.
