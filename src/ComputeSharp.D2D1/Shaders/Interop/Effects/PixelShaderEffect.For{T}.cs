@@ -20,6 +20,14 @@ namespace ComputeSharp.D2D1.Interop.Effects;
 internal unsafe partial struct PixelShaderEffect
 {
     /// <summary>
+    /// A wrapper for an effect factory.
+    /// </summary>
+    /// <param name="effectImpl">The resulting effect factory.</param>
+    /// <returns>The <c>HRESULT</c> for the operation.</returns>
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+    private delegate int FactoryDelegate(IUnknown** effectImpl);
+
+    /// <summary>
     /// A generic pixel shader implementation.
     /// </summary>
     /// <typeparam name="T">The type of shader.</typeparam>

@@ -19,14 +19,6 @@ namespace ComputeSharp.D2D1.Interop.Effects;
 /// </summary>
 internal unsafe partial struct PixelShaderEffect
 {
-    /// <summary>
-    /// A wrapper for an effect factory.
-    /// </summary>
-    /// <param name="effectImpl">The resulting effect factory.</param>
-    /// <returns>The <c>HRESULT</c> for the operation.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int FactoryDelegate(IUnknown** effectImpl);
-
 #if !NET6_0_OR_GREATER
     /// <inheritdoc cref="QueryInterface"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
