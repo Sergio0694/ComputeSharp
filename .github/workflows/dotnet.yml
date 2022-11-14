@@ -1,6 +1,9 @@
 name: .NET
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
 
 env:
   EXCLUDE_RUN_ID_FROM_PACKAGE: false
