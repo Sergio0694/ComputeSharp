@@ -1,7 +1,7 @@
 # All file types:
 #   - Treat as text
 #   - Normalize to LF line endings
-* text eol=lf
+*              text=auto eol=lf
 
 # Explicit settings for well known types
 *.appxmanifest text      eol=lf
@@ -31,14 +31,17 @@
 # Solution files
 #  - Treat as text
 #  - Force to CRLF line endings (Windows-style)
-*.sln  text eol=crlf
+*.sln          text      eol=crlf
 
 # Images
-*.png  binary
-*.jpg  binary
-*.gif  binary
+*.png          binary
+*.jpg          binary
+*.gif          binary
 
 # Keys
-*.snk  binary
-*.pfx  binary
-*.cer  binary
+*.snk          binary
+*.pfx          binary
+*.cer          binary
+
+# Other binary files
+*.dll          binary
