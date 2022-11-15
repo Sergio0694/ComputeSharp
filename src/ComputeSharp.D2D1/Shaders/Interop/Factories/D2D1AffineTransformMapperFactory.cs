@@ -89,7 +89,7 @@ internal sealed class D2D1AffineTransformMapperFactory
             /// <summary>
             /// Gets the fixed affine transform matrix.
             /// </summary>
-            public Matrix3x2 Amount { get; init; }
+            public required Matrix3x2 Amount { get; init; }
 
             /// <inheritdoc/>
             public override Matrix3x2 Get(in T shader)

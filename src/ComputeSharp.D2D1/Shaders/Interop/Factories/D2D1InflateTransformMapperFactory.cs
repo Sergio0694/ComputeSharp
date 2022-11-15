@@ -19,7 +19,7 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
         /// <summary>
         /// Gets the fixed inflate amount.
         /// </summary>
-        public int Amount { get; init; }
+        public required int Amount { get; init; }
 
         /// <inheritdoc/>
         public override (int, int, int, int) Get(in T shader)
@@ -36,22 +36,22 @@ internal sealed class D2D1InflateTransformMapperFactory<T> : D2D1TransformMapper
         /// <summary>
         /// The constant left inflate amount.
         /// </summary>
-        public int Left { get; init; }
+        public required int Left { get; init; }
 
         /// <summary>
         /// The constant top inflate amount.
         /// </summary>
-        public int Top { get; init; }
+        public required int Top { get; init; }
 
         /// <summary>
         /// The constant right inflate amount.
         /// </summary>
-        public int Right { get; init; }
+        public required int Right { get; init; }
 
         /// <summary>
         /// The constant bottom inflate amount.
         /// </summary>
-        public int Bottom { get; init; }
+        public required int Bottom { get; init; }
 
         /// <inheritdoc/>
         public override (int, int, int, int) Get(in T shader)
