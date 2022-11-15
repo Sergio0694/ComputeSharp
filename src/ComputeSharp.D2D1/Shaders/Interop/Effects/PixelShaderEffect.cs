@@ -189,14 +189,8 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
     /// <summary>
-    /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
-    /// </summary>
-    private GCHandle d2D1TransformMapperHandle;
-
-    /// <summary>
     /// The <see cref="ID2D1TransformMapper"/> instance to use, if any.
     /// </summary>
-    /// <remarks>If present, this takes precedence over <see cref="d2D1TransformMapperHandle"/>.</remarks>
     private ID2D1TransformMapper* d2D1TransformMapper;
 
     /// <summary>
@@ -230,7 +224,6 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
     /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
     /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
-    /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
@@ -247,7 +240,6 @@ internal unsafe partial struct PixelShaderEffect
         D2D1ChannelDepth channelDepth,
         int resourceTextureDescriptionCount,
         D2D1ResourceTextureDescription* resourceTextureDescriptions,
-        D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
         PixelShaderEffect* @this;
@@ -282,7 +274,6 @@ internal unsafe partial struct PixelShaderEffect
         @this->channelDepth = channelDepth;
         @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
         @this->resourceTextureDescriptions = resourceTextureDescriptions;
-        @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
         @this->d2D1TransformMapper = null;
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
@@ -346,8 +337,6 @@ internal unsafe partial struct PixelShaderEffect
             {
                 NativeMemory.Free(this.constantBuffer);
             }
-
-            this.d2D1TransformMapperHandle.Free();
 
             if (this.d2D1TransformMapper is not null)
             {

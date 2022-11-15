@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
@@ -9,8 +8,6 @@ using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
 #endif
-
-#pragma warning disable CA2002
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 
@@ -31,18 +28,13 @@ internal unsafe partial struct PixelShaderEffect
     /// A generic pixel shader implementation.
     /// </summary>
     /// <typeparam name="T">The type of shader.</typeparam>
-    public static class For<T>
+    public sealed class For<T>
         where T : unmanaged, ID2D1PixelShader
     {
         /// <summary>
         /// The <see cref="FactoryDelegate"/> wrapper for the shader factory.
         /// </summary>
-        private static readonly FactoryDelegate EffectFactory = CreateEffect;
-
-        /// <summary>
-        /// Indicates whether or not initialization has completed.
-        /// </summary>
-        private static bool isInitialized;
+        private readonly FactoryDelegate effectFactory;
 
         /// <summary>
         /// The <see cref="Guid"/> for the shader.
@@ -52,229 +44,168 @@ internal unsafe partial struct PixelShaderEffect
         /// being used to pass its address to a native API, but the attribute is incompatible with collectible assemblies.
         /// Because of that, it can't be used, as this project is explicitly meant to support plugin-like scenarios.
         /// </remarks>
-        private static Guid shaderId;
+        private readonly Guid shaderId;
 
         /// <summary>
         /// The size of the constant buffer for the shader.
         /// </summary>
-        private static int constantBufferSize;
+        private readonly int constantBufferSize;
 
         /// <summary>
         /// The number of inputs for the shader.
         /// </summary>
-        private static int inputCount;
+        private readonly int inputCount;
 
         /// <summary>
         /// The buffer with the types of inputs for the shader.
         /// </summary>
-        private static D2D1PixelShaderInputType* inputTypes;
+        private readonly D2D1PixelShaderInputType* inputTypes;
 
         /// <summary>
         /// The number of available input descriptions.
         /// </summary>
-        private static int inputDescriptionCount;
+        private readonly int inputDescriptionCount;
 
         /// <summary>
         /// The buffer with the available input descriptions for the shader.
         /// </summary>
-        private static D2D1InputDescription* inputDescriptions;
+        private readonly D2D1InputDescription* inputDescriptions;
 
         /// <summary>
         /// The pixel options for the shader.
         /// </summary>
-        private static D2D1PixelOptions pixelOptions;
+        private readonly D2D1PixelOptions pixelOptions;
 
         /// <summary>
         /// The shader bytecode.
         /// </summary>
-        private static byte* bytecode;
+        private readonly byte* bytecode;
 
         /// <summary>
         /// The size of <see cref="bytecode"/>.
         /// </summary>
-        private static int bytecodeSize;
+        private readonly int bytecodeSize;
 
         /// <summary>
         /// The buffer precision for the resulting output buffer.
         /// </summary>
-        private static D2D1BufferPrecision bufferPrecision;
+        private readonly D2D1BufferPrecision bufferPrecision;
 
         /// <summary>
         /// The channel depth for the resulting output buffer.
         /// </summary>
-        private static D2D1ChannelDepth channelDepth;
+        private readonly D2D1ChannelDepth channelDepth;
 
         /// <summary>
         /// The number of available resource texture descriptions.
         /// </summary>
-        private static int resourceTextureDescriptionCount;
+        private readonly int resourceTextureDescriptionCount;
 
         /// <summary>
         /// The buffer with the available resource texture descriptions for the shader.
         /// </summary>
-        private static D2D1ResourceTextureDescription* resourceTextureDescriptions;
+        private readonly D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
         /// <summary>
-        /// The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.
+        /// Creates a new <see cref="For{T}"/> instance with the specified parameters.
         /// </summary>
-        private static ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory;
-
-        /// <summary>
-        /// Initializes the <see cref="For{T}"/> shared state.
-        /// </summary>
-        /// <param name="d2D1DrawTransformMapperFactory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
-        /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
-        public static void Initialize(ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory)
+        /// <param name="effectFactory">The <see cref="FactoryDelegate"/> wrapper for the shader factory.</param>
+        /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+        /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
+        /// <param name="inputCount">The number of inputs for the shader.</param>
+        /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
+        /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
+        /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
+        /// <param name="pixelOptions">The pixel options for the shader.</param>
+        /// <param name="bytecode">The shader bytecode.</param>
+        /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
+        /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
+        /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
+        /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
+        /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
+        private For(
+            FactoryDelegate effectFactory,
+            Guid shaderId,
+            int constantBufferSize,
+            int inputCount,
+            D2D1PixelShaderInputType* inputTypes,
+            int inputDescriptionCount,
+            D2D1InputDescription* inputDescriptions,
+            D2D1PixelOptions pixelOptions,
+            byte* bytecode,
+            int bytecodeSize,
+            D2D1BufferPrecision bufferPrecision,
+            D2D1ChannelDepth channelDepth,
+            int resourceTextureDescriptionCount,
+            D2D1ResourceTextureDescription* resourceTextureDescriptions)
         {
-            // This conceptually acts as a static constructor, and this type is
-            // internal, so in this very specific case locking on the type is fine.
-            lock (typeof(For<T>))
-            {
-                if (isInitialized)
-                {
-                    // If the factory is already initialized, ensure the draw transform mapper is the same
-                    if (For<T>.d2D1DrawTransformMapperFactory != d2D1DrawTransformMapperFactory)
-                    {
-                        ThrowHelper.ThrowInvalidOperationException(
-                            "Cannot initialize an ID2D1Effect factory for the same shader type with two different transform mapper factories. " +
-                            "Make sure to only ever register a pixel shader effect with either no transform, or the same transform mapper factory instance.");
-                    }
-                }
-                else
-                {
-                    // Load all shader properties
-                    Guid shaderId = typeof(T).GUID;
-                    int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
-                    D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
-                    D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
-                    D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
-
-                    // Prepare the inputs info
-                    int inputCount = D2D1PixelShader.GetInputCount<T>();
-                    D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1PixelShaderInputType) * inputCount);
-
-                    for (int i = 0; i < inputCount; i++)
-                    {
-                        inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
-                    }
-
-                    // Prepare the input descriptions
-                    ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
-                    int inputDescriptionCount = inputDescriptionsInfo.Length;
-                    D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1InputDescription) * inputDescriptionCount);
-
-                    inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
-
-                    // Prepare the resource texture descriptions
-                    ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1PixelShader.GetResourceTextureDescriptions<T>();
-                    int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
-                    D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
-
-                    resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
-
-                    // Copy the bytecode to the target buffer
-                    ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
-                    int bytecodeSize = bytecodeInfo.Length;
-                    byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
-
-                    bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
-
-                    // Set the shared state and mark the type as initialized
-                    For<T>.shaderId = shaderId;
-                    For<T>.constantBufferSize = constantBufferSize;
-                    For<T>.inputCount = inputCount;
-                    For<T>.inputTypes = inputTypes;
-                    For<T>.inputDescriptionCount = inputDescriptionCount;
-                    For<T>.inputDescriptions = inputDescriptions;
-                    For<T>.pixelOptions = pixelOptions;
-                    For<T>.bytecode = bytecode;
-                    For<T>.bytecodeSize = bytecodeSize;
-                    For<T>.bufferPrecision = bufferPrecision;
-                    For<T>.channelDepth = channelDepth;
-                    For<T>.resourceTextureDescriptionCount = resourceTextureDescriptionCount;
-                    For<T>.resourceTextureDescriptions = resourceTextureDescriptions;
-                    For<T>.d2D1DrawTransformMapperFactory = d2D1DrawTransformMapperFactory;
-
-                    isInitialized = true;
-                }
-            }
+            this.effectFactory = effectFactory;
+            this.shaderId = shaderId;
+            this.constantBufferSize = constantBufferSize;
+            this.inputCount = inputCount;
+            this.inputTypes = inputTypes;
+            this.inputDescriptionCount = inputDescriptionCount;
+            this.inputDescriptions = inputDescriptions;
+            this.pixelOptions = pixelOptions;
+            this.bytecode = bytecode;
+            this.bytecodeSize = bytecodeSize;
+            this.bufferPrecision = bufferPrecision;
+            this.channelDepth = channelDepth;
+            this.resourceTextureDescriptionCount = resourceTextureDescriptionCount;
+            this.resourceTextureDescriptions = resourceTextureDescriptions;
         }
 
         /// <summary>
-        /// Gets a reference to the id of the effect.
+        /// Gets the shader <see cref="For{T}"/> instance.
         /// </summary>
-        public static ref Guid Id
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref shaderId;
-        }
+        public static For<T> Instance { get; } = CreateInstance();
 
         /// <summary>
-        /// Gets the factory for the current effect.
+        /// Creates a new <see cref="For{T}"/> instance.
         /// </summary>
-#if NET6_0_OR_GREATER
-        public static delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
-#else
-        public static void* Factory
-#endif
+        /// <returns>The initialized <see cref="For{T}"/> instance.</returns>
+        private static For<T> CreateInstance()
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET6_0_OR_GREATER
-            get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(EffectFactory);
-#else
-            get => (void*)Marshal.GetFunctionPointerForDelegate(EffectFactory);
-#endif
-        }
+            // Load all shader properties
+            Guid shaderId = typeof(T).GUID;
+            int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
+            D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
+            D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
+            D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
 
-        /// <summary>
-        /// Gets the number of inputs for the effect.
-        /// </summary>
-        public static int InputCount => inputCount;
+            // Prepare the inputs info
+            int inputCount = D2D1PixelShader.GetInputCount<T>();
+            D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1PixelShaderInputType) * inputCount);
 
-        /// <summary>
-        /// Tries to get the effect id, if it has been initialized.
-        /// </summary>
-        /// <param name="id">The resulting effect id.</param>
-        /// <returns>Whether or not the effect had been initialized.</returns>
-        public static bool TryGetId(out Guid id)
-        {
-            lock (typeof(For<T>))
+            for (int i = 0; i < inputCount; i++)
             {
-                if (isInitialized)
-                {
-                    id = Id;
-
-                    return true;
-                }
+                inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
             }
 
-            id = default;
+            // Prepare the input descriptions
+            ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
+            int inputDescriptionCount = inputDescriptionsInfo.Length;
+            D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1InputDescription) * inputDescriptionCount);
 
-            return false;
-        }
+            inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
 
-        /// <inheritdoc cref="FactoryDelegate"/>
-        private static int CreateEffect(IUnknown** effectImpl)
-        {
-            D2D1TransformMapper? d2D1TransformMapper;
+            // Prepare the resource texture descriptions
+            ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1PixelShader.GetResourceTextureDescriptions<T>();
+            int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
+            D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
 
-            // If there is a custom draw transform factory, run it in a try block and handle exceptions. This
-            // is needed because the factory will be running user code from a method that's invoked by COM,
-            // and managed exceptions should never cross the ABI boundary. If it throws, just return the HRESULT.
-            try
-            {
-                ID2D1TransformMapper<T>? d2D1DrawTransformMapper = d2D1DrawTransformMapperFactory?.Create();
+            resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
 
-                d2D1TransformMapper = D2D1TransformMapper.For<T>.Get(d2D1DrawTransformMapper);
-            }
-            catch (Exception e)
-            {
-                *effectImpl = null;
+            // Copy the bytecode to the target buffer
+            ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
+            int bytecodeSize = bytecodeInfo.Length;
+            byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
 
-                return e.HResult;
-            }
+            bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
 
-            return PixelShaderEffect.Factory(
+            // Initialize the shared instance with the computed state
+            return new(
+                CreateEffect,
                 shaderId,
                 constantBufferSize,
                 inputCount,
@@ -287,8 +218,59 @@ internal unsafe partial struct PixelShaderEffect
                 bufferPrecision,
                 channelDepth,
                 resourceTextureDescriptionCount,
-                resourceTextureDescriptions,
-                d2D1TransformMapper,
+                resourceTextureDescriptions);
+        }
+
+        /// <summary>
+        /// Gets a reference to the id of the effect.
+        /// </summary>
+        public ref readonly Guid Id
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => ref this.shaderId;
+        }
+
+        /// <summary>
+        /// Gets the factory for the current effect.
+        /// </summary>
+#if NET6_0_OR_GREATER
+        public delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
+#else
+        public void* Factory
+#endif
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET6_0_OR_GREATER
+            get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)Marshal.GetFunctionPointerForDelegate(this.effectFactory);
+#else
+            get => (void*)Marshal.GetFunctionPointerForDelegate(this.effectFactory);
+#endif
+        }
+
+        /// <summary>
+        /// Gets the number of inputs for the effect.
+        /// </summary>
+        public int InputCount => this.inputCount;
+
+        /// <inheritdoc cref="FactoryDelegate"/>
+        private static int CreateEffect(IUnknown** effectImpl)
+        {
+            For<T> instance = Instance;
+
+            return PixelShaderEffect.Factory(
+                instance.shaderId,
+                instance.constantBufferSize,
+                instance.inputCount,
+                instance.inputTypes,
+                instance.inputDescriptionCount,
+                instance.inputDescriptions,
+                instance.pixelOptions,
+                instance.bytecode,
+                instance.bytecodeSize,
+                instance.bufferPrecision,
+                instance.channelDepth,
+                instance.resourceTextureDescriptionCount,
+                instance.resourceTextureDescriptions,
                 effectImpl);
         }
     }

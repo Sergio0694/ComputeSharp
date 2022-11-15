@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
@@ -138,31 +137,6 @@ partial struct PixelShaderEffect
                     return hresult;
                 }
             }
-            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
-            {
-                Rectangle output = outputRect->ToRectangle();
-                Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectsCount);
-
-                for (int i = 0; i < (int)inputRectsCount; i++)
-                {
-                    inputs[i] = inputRects[i].ToRectangle();
-                }
-
-                // Invoke MapOutputToInputs and handle exceptions so they don't cross the ABI boundary
-                try
-                {
-                    d2D1TransformMapper.MapOutputToInputs(in output, inputs);
-                }
-                catch (Exception e)
-                {
-                    return e.HResult;
-                }
-
-                for (int i = 0; i < (int)inputRectsCount; i++)
-                {
-                    inputRects[i] = inputs[i].ToRECT();
-                }
-            }
             else
             {
                 // If no custom transform is used, apply the default mapping. In this case, the loop will
@@ -233,35 +207,6 @@ partial struct PixelShaderEffect
                     return hresult;
                 }
             }
-            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
-            {
-                Span<Rectangle> inputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
-                Span<Rectangle> opaqueInputs = stackalloc Rectangle[8].Slice(0, (int)inputRectCount);
-
-                for (int i = 0; i < (int)inputRectCount; i++)
-                {
-                    inputs[i] = inputRects[i].ToRectangle();
-                    opaqueInputs[i] = inputOpaqueSubRects[i].ToRectangle();
-                }
-
-                ReadOnlySpan<byte> buffer = new(@this->constantBuffer, @this->constantBufferSize);
-
-                Rectangle output;
-                Rectangle opaqueOutput;
-
-                // Handle exceptions, as mentioned above
-                try
-                {
-                    d2D1TransformMapper.MapInputsToOutput(buffer, inputs, opaqueInputs, out output, out opaqueOutput);
-                }
-                catch (Exception e)
-                {
-                    return e.HResult;
-                }
-
-                *outputRect = output.ToRECT();
-                *outputOpaqueSubRect = opaqueOutput.ToRECT();
-            }
             else if (inputRectCount == 0)
             {
                 // If there are no inputs, make the output rectangle infinite. This is useful
@@ -331,23 +276,6 @@ partial struct PixelShaderEffect
                 {
                     return hresult;
                 }
-            }
-            else if (@this->d2D1TransformMapperHandle.Target is D2D1TransformMapper d2D1TransformMapper)
-            {
-                Rectangle invalidInput = invalidInputRect.ToRectangle();
-                Rectangle invalidOutput;
-
-                // Handle exceptions once again
-                try
-                {
-                    d2D1TransformMapper.MapInvalidOutput((int)inputIndex, invalidInput, out invalidOutput);
-                }
-                catch (Exception e)
-                {
-                    return e.HResult;
-                }
-
-                *invalidOutputRect = invalidOutput.ToRECT();
             }
             else
             {
