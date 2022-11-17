@@ -1,0 +1,159 @@
+using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+
+namespace ComputeSharp.D2D1.Interop;
+
+/// <summary>
+/// Provides an <c>ID2D1TransformMapper</c> implementation, which can be used to customize the draw transform logic in
+/// an effect created with <see cref="D2D1PixelShaderEffect"/> and also shared across multiple instances of a given effect.
+/// </summary>
+/// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
+/// <remarks>
+/// <para>
+/// The built-in <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nn-d2d1effectauthor-id2d1effectimpl"><c>ID2D1EffectImpl</c></see>
+/// implementation provided by <see cref="D2D1PixelShaderEffect"/> (which makes it possible to register and create
+/// <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nn-d2d1_1-id2d1effect"><c>ID2D1Effect</c></see>
+/// instances that can be used to run D2D1 pixel shaders) uses draw transform objects to allow customizing the transform logic externally.
+/// </para>
+/// <para>
+/// These managers are COM objects implementing the following interface:
+/// <code>
+/// [uuid(02E6D48D-B892-4FBC-AA54-119203BAB802)]
+/// interface ID2D1TransformMapper : IUnknown
+/// {
+///     HRESULT MapInputRectsToOutputRect(
+///         [in]  const ID2D1DrawInfoUpdateContex* updateContext,
+///         [in]  const RECT*                      inputRects,
+///         [in]  const RECT*                      inputOpaqueSubRects,
+///               UINT32                           inputRectCount,
+///         [out] RECT*                            outputRect,
+///         [out] RECT*                            outputOpaqueSubRect);
+/// 
+///     HRESULT MapOutputRectToInputRects(
+///         [in]  const RECT* outputRect,
+///         [out] RECT*       inputRects,
+///               UINT32      inputRectsCount);
+/// 
+///     HRESULT MapInvalidRect(
+///               UINT32 inputIndex,
+///               RECT   invalidInputRect,
+///         [out] RECT*  invalidOutputRect);
+/// };
+/// </code>
+/// </para>
+/// <para>
+/// These can be used to implement custom draw transform logic, assign it to an effect and also share these transforms over multiple effects.
+/// </para>
+/// <para>
+/// For details of how these work, <c>MapInputRectsToOutputRect</c> maps to
+/// <see href="https://learn.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinputrectstooutputrect"><c>ID2D1Transform::MapInputRectsToOutputRect</c></see>,
+/// <c>MapOutputRectToInputRects</c> maps to <see href="https://learn.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapoutputrecttoinputrects"><c>ID2D1Transform::MapOutputRectToInputRects</c></see>.
+/// and <c>MapInvalidRect</c> maps to <see href="https://learn.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinvalidrect"><c>ID2D1Transform::MapInvalidRect</c></see>.
+/// </para>
+/// <para>
+/// The main difference between these APIs and the ones in <c>ID2D1Transform</c> is the fact that this interface is standalone (ie. it doesn't inherit from <c>ID2D1TransformNode</c>),
+/// and that it allows transform mappers to also read and update additional data tied to an effect instance (such as the shader constant buffer). This is done through the
+/// <c>ID2D1DrawInfoUpdateContex</c> interface, that is passed to <c>MapInputRectsToOutputRect</c>. This interface is defined as follows:
+/// <code>
+/// [uuid(430C5B40-AE16-485F-90E6-4FA4915144B6)]
+/// interface ID2D1DrawInfoUpdateContex : IUnknown
+/// {
+///     HRESULT GetConstantBufferSize([out] UINT32 *size);
+/// 
+///     HRESULT GetConstantBuffer(
+///         [out] BYTE   *buffer,
+///               UINT32 bufferCount);
+/// 
+///     HRESULT SetConstantBuffer(
+///         [in] const BYTE *buffer,
+///              UINT32     bufferCount);
+/// }
+/// </code>
+/// </para>
+/// <para>
+/// That is, <c>ID2D1DrawInfoUpdateContex</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
+/// that is owned by the effect being used, in a safe way. For instance, it allows a transform to read and update the constant buffer, which can be used to allow a transform to
+/// pass the exact dispatch area size to an input shader, without the consumer having to manually query that information beforehand (which might not be available either).
+/// </para>
+/// <para>
+/// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1TransformMapper{T}"/>, in several ways.
+/// That is, consumers can either implement a type inheriting from <see cref="D2D1TransformMapper{T}"/> to implement their own fully customized transform
+/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1TransformMapperFactory{T}"/> to easily retrieve ready to use transforms.
+/// </para>
+/// <para>
+/// A CCW (COM callable wrapper, see <see href="https://learn.microsoft.com/dotnet/standard/native-interop/com-callable-wrapper"/>) is also available for all
+/// of these APIs, implemented via the same <see cref="D2D1TransformMapper{T}"/> type. That is, a given instance can expose its underlying CCW through the
+/// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
+/// </para>
+/// </remarks>
+public abstract class D2D1TransformMapper<T>
+    where T : unmanaged, ID2D1PixelShader
+{
+    /// <summary>
+    /// <para>
+    /// Allows a transform to state how it would map a a set of sample rectangles on its input to an output rectangle.
+    /// </para>
+    /// <para>
+    /// This is effectively the inverse mapping of <see cref="MapOutputToInputs"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="drawInfoUpdateContext">The input <see cref="D2D1DrawInfoUpdateContext{T}"/> value, which can be used to access and modify shader data.</param>
+    /// <param name="inputs">The input rectangles to be mapped to the output rectangle. This parameter is always equal to the input bounds.</param>
+    /// <param name="opaqueInputs">The input rectangles to be mapped to the opaque output rectangle.</param>
+    /// <param name="output">The output rectangle that maps to the corresponding input rectangle.</param>
+    /// <param name="opaqueOutput">The output rectangle that maps to the corresponding opaque input rectangle.</param>
+    /// <remarks>
+    /// <para>
+    /// Unlike <see cref="MapOutputToInputs"/> and <see cref="MapInvalidOutput"/>, this method is explicitly called by the renderer at
+    /// a determined place in its rendering algorithm. The transform implementation may change its state based on the input rectangles
+    /// and use this information to control its rendering information. This method is always called before the
+    /// <see cref="MapInvalidOutput"/> and <see cref="MapOutputToInputs"/> methods.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinputrectstooutputrect"/>.
+    /// </para>
+    /// </remarks>
+    public abstract void MapInputsToOutput(
+        D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext,
+        ReadOnlySpan<Rectangle> inputs,
+        ReadOnlySpan<Rectangle> opaqueInputs,
+        out Rectangle output,
+        out Rectangle opaqueOutput);
+
+    /// <summary>
+    /// Allows a transform to state how it would map a rectangle requested on its output to a set of sample rectangles on its input.
+    /// </summary>
+    /// <param name="output">The output rectangle from which the inputs must be mapped.</param>
+    /// <param name="inputs">The corresponding set of inputs. The inputs will directly correspond to the transform inputs.</param>
+    /// <remarks>
+    /// <para>
+    /// The transform implementation must regard this method as purely functional. It can base the mapped input and output rectangles on its
+    /// current state as specified by the encapsulating effect properties. However, it must not change its own state in response to this method
+    /// being invoked. The Direct2D renderer implementation reserves the right to call this method at any time and in any sequence.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapoutputrecttoinputrects"/>.
+    /// </para>
+    /// </remarks>
+    public abstract void MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs);
+
+    /// <summary>
+    /// Sets the input rectangles for this rendering pass into the transform.
+    /// </summary>
+    /// <param name="inputIndex">The index of the input rectangle.</param>
+    /// <param name="invalidInput">The invalid input rectangle.</param>
+    /// <param name="invalidOutput">The output rectangle to which the input rectangle must be mapped.</param>
+    /// <remarks>
+    /// <para>
+    /// The transform implementation must regard this method as purely functional. The transform implementation can base the mapped input rectangle on
+    /// the transform implementation's current state as specified by the encapsulating effect properties. But the transform implementation can't change
+    /// its own state in response to a call to <see cref="MapInvalidOutput"/>. Direct2D can call this method at any time
+    /// and in any sequence following a call to <see cref="MapInputsToOutput"/>.
+    /// </para>
+    /// <para>
+    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinvalidrect"/>.
+    /// </para>
+    /// </remarks>
+    public abstract void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
+}
