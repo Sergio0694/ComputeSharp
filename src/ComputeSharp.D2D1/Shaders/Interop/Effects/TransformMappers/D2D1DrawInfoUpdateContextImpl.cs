@@ -13,7 +13,7 @@ using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServ
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
-/// An implementation of the <see cref="ID2D1DrawInfoUpdateContex"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/> interfaces.
+/// An implementation of the <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/> interfaces.
 /// </summary>
 internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 {
@@ -32,7 +32,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 #endif
 
     /// <summary>
-    /// The shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instance, for <see cref="ID2D1DrawInfoUpdateContex"/>.
+    /// The shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instance, for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
     private static readonly void** VtblForID2D1DrawInfoUpdateContex = InitVtblForID2D1DrawInfoUpdateContexAndID2D1DrawInfoUpdateContexInternal();
 
@@ -42,9 +42,9 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     private static readonly void** VtblForID2D1DrawInfoUpdateContexInternal = &VtblForID2D1DrawInfoUpdateContex[5];
 
     /// <summary>
-    /// Initializes the combined vtable for <see cref="ID2D1DrawInfoUpdateContex"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/>.
+    /// Initializes the combined vtable for <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/>.
     /// </summary>
-    /// <returns>The combined vtable for <see cref="ID2D1DrawInfoUpdateContex"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/>.</returns>
+    /// <returns>The combined vtable for <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContexInternal"/>.</returns>
     private static void** InitVtblForID2D1DrawInfoUpdateContexAndID2D1DrawInfoUpdateContexInternal()
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1DrawInfoUpdateContextImpl), sizeof(void*) * 10);
@@ -83,7 +83,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     }
 
     /// <summary>
-    /// The vtable pointer for the current instance, for <see cref="ID2D1DrawInfoUpdateContex"/>.
+    /// The vtable pointer for the current instance, for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
     private void** lpVtblForID2D1DrawInfoUpdateContex;
 
@@ -161,7 +161,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 
         // ID2D1DrawInfoUpdateContex
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID2D1DrawInfoUpdateContex.Guid))
+            riid->Equals(ID2D1DrawInfoUpdateContext.Guid))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 

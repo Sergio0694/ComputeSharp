@@ -8,7 +8,7 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
-/// An internal version of <see cref="ID2D1DrawInfoUpdateContex"/> that supports being closed, to manage lifetime scopes.
+/// An internal version of <see cref="ID2D1DrawInfoUpdateContext"/> that supports being closed, to manage lifetime scopes.
 /// </summary>
 [Guid("CF2F5BB0-3F5E-4D6E-8FF1-D9A7EB6C0250")]
 internal unsafe struct ID2D1DrawInfoUpdateContexInternal
@@ -49,6 +49,6 @@ internal unsafe struct ID2D1DrawInfoUpdateContexInternal
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT Close()
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContex*, int>)this.lpVtbl[3])((ID2D1DrawInfoUpdateContex*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, int>)this.lpVtbl[3])((ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this));
     }
 }

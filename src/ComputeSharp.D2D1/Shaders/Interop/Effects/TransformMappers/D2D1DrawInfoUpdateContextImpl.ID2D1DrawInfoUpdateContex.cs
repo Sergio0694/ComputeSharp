@@ -11,7 +11,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 partial struct D2D1DrawInfoUpdateContextImpl
 {
     /// <summary>
-    /// The implementation for <see cref="ID2D1DrawInfoUpdateContex"/>.
+    /// The implementation for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
     private static unsafe class ID2D1DrawInfoUpdateContexMethods
     {
@@ -80,7 +80,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContex.GetConstantBufferSize"/>
+        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBufferSize"/>
         [UnmanagedCallersOnly]
         public static int GetConstantBufferSize(D2D1DrawInfoUpdateContextImpl* @this, uint* size)
         {
@@ -99,7 +99,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContex.GetConstantBuffer"/>
+        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBuffer"/>
         [UnmanagedCallersOnly]
         public static int GetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
@@ -131,7 +131,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContex.SetConstantBuffer"/>
+        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.SetConstantBuffer"/>
         [UnmanagedCallersOnly]
         public static int SetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {

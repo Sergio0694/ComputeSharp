@@ -192,7 +192,7 @@ partial struct PixelShaderEffect
 
                 // Forward the call to the input ID2D1TransformMapper instance
                 hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
-                    updateContext: (ID2D1DrawInfoUpdateContex*)d2D1DrawInfoUpdateContext.Get(),
+                    updateContext: (ID2D1DrawInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
                     inputRects: inputRects,
                     inputOpaqueSubRects: inputOpaqueSubRects,
                     inputRectCount: inputRectCount,

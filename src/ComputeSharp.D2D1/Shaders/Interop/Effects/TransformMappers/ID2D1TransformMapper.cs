@@ -45,7 +45,7 @@ internal unsafe struct ID2D1TransformMapper
     /// <summary>
     /// Performs the inverse mapping to <see cref="MapOutputRectToInputRects(RECT*, RECT*, uint)"/>.
     /// </summary>
-    /// <param name="updateContext">The input <see cref="ID2D1DrawInfoUpdateContex"/> instance.</param>
+    /// <param name="updateContext">The input <see cref="ID2D1DrawInfoUpdateContext"/> instance.</param>
     /// <param name="inputRects">An array of input rectangles to be mapped to the output rectangle.</param>
     /// <param name="inputOpaqueSubRects">An array of input rectangles to be mapped to the opaque output rectangle.</param>
     /// <param name="inputRectCount">The number of inputs specified.</param>
@@ -54,14 +54,14 @@ internal unsafe struct ID2D1TransformMapper
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT MapInputRectsToOutputRect(
-        ID2D1DrawInfoUpdateContex* updateContext,
+        ID2D1DrawInfoUpdateContext* updateContext,
         RECT* inputRects,
         RECT* inputOpaqueSubRects,
         uint inputRectCount,
         RECT* outputRect,
         RECT* outputOpaqueSubRect)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContex*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
             (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             updateContext,
             inputRects,

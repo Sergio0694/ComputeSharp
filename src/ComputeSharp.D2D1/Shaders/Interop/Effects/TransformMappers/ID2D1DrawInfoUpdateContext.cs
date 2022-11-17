@@ -11,10 +11,10 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// The updater for <see cref="TerraFX.Interop.DirectX.ID2D1DrawInfo"/> type to use with built-in effects.
 /// </summary>
 [Guid("430C5B40-AE16-485F-90E6-4FA4915144B6")]
-internal unsafe struct ID2D1DrawInfoUpdateContex
+internal unsafe struct ID2D1DrawInfoUpdateContext
 {
     /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1DrawInfoUpdateContex"/> (<c>430C5B40-AE16-485F-90E6-4FA4915144B6</c>).
+    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1DrawInfoUpdateContext"/> (<c>430C5B40-AE16-485F-90E6-4FA4915144B6</c>).
     /// </summary>
     public static ref readonly Guid Guid
     {
@@ -50,8 +50,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContex
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBufferSize(uint* size)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContex*, uint*, int>)this.lpVtbl[3])(
-            (ID2D1DrawInfoUpdateContex*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, uint*, int>)this.lpVtbl[3])(
+            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             size);
     }
 
@@ -64,8 +64,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContex
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContex*, byte*, uint, int>)this.lpVtbl[4])(
-            (ID2D1DrawInfoUpdateContex*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[4])(
+            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);
     }
@@ -79,8 +79,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContex
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT SetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContex*, byte*, uint, int>)this.lpVtbl[5])(
-            (ID2D1DrawInfoUpdateContex*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[5])(
+            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);
     }
