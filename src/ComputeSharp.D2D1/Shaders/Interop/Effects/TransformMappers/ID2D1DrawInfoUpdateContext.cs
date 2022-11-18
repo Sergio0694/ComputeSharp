@@ -21,9 +21,9 @@ internal unsafe struct ID2D1DrawInfoUpdateContext
         get
         {
             ReadOnlySpan<byte> data = new byte[] {
-                0x43, 0x0C, 0x5B, 0x40,
-                0xAE, 0x16,
-                0x48, 0x5F,
+                0x40, 0x5B, 0x0C, 0x43,
+                0x16, 0xAE,
+                0x5F, 0x48,
                 0x90, 0xE6,
                 0x4F,
                 0xA4,

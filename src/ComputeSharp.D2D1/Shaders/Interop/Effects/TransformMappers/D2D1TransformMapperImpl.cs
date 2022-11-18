@@ -105,33 +105,54 @@ internal unsafe partial struct D2D1TransformMapperImpl
         this.transformMapperHandle.Target = target;
     }
 
+    /// <summary>
+    /// Copies the current object onto a target pointer.
+    /// </summary>
+    /// <param name="transformMapper">The target <see cref="ID2D1TransformMapper"/> pointer.</param>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void CopyToWithNoLock(ID2D1TransformMapper** transformMapper)
+    {
+        this.referenceCount++;
+
+        *transformMapper = (ID2D1TransformMapper*)Unsafe.AsPointer(ref this);
+    }
+
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    private int QueryInterface(Guid* riid, void** ppvObject)
+    ///<remarks>This method is the same as <see cref="QueryInterface(Guid*, void**)"/> but skips locks.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int QueryInterfaceWithNoLock(Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
         {
             return E.E_POINTER;
         }
 
+        if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
+            riid->Equals(ID2D1TransformMapper.Guid))
+        {
+            this.referenceCount++;
+
+            *ppvObject = Unsafe.AsPointer(ref this);
+
+            return S.S_OK;
+        }
+
+        *ppvObject = null;
+
+        return E.E_NOINTERFACE;
+    }
+
+    /// <inheritdoc cref="IUnknown.QueryInterface"/>
+    private int QueryInterface(Guid* riid, void** ppvObject)
+    {
         bool lockTaken = false;
 
         this.spinLock.Enter(ref lockTaken);
 
         try
         {
-            if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-                riid->Equals(ID2D1TransformMapper.Guid))
-            {
-                this.referenceCount++;
-
-                *ppvObject = Unsafe.AsPointer(ref this);
-
-                return S.S_OK;
-            }
-
-            *ppvObject = null;
-
-            return E.E_NOINTERFACE;
+            return QueryInterfaceWithNoLock(riid, ppvObject);
         }
         finally
         {

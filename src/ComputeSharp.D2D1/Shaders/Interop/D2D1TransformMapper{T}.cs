@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.Windows;
@@ -206,7 +205,7 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
         try
         {
             this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
-            this.d2D1TransformMapperImpl.CopyTo(transformMapper).Assert();
+            this.d2D1TransformMapperImpl.Get()->CopyToWithNoLock(transformMapper);
         }
         finally
         {
@@ -222,6 +221,7 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
         fixed (Guid* pIid = &iid)
         fixed (IntPtr* pPpv = &ppv)
         {
+            int hresult;
             bool lockTaken = false;
 
             this.d2D1TransformMapperImpl.Get()->SpinLock.Enter(ref lockTaken);
@@ -230,11 +230,7 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
             {
                 this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
 
-                return (int)this.d2D1TransformMapperImpl.CopyTo(pIid, (void**)pPpv) switch
-                {
-                    S.S_OK => CustomQueryInterfaceResult.Handled,
-                    _ => CustomQueryInterfaceResult.Failed
-                };
+                hresult = this.d2D1TransformMapperImpl.Get()->QueryInterfaceWithNoLock(pIid, (void**)pPpv);
             }
             finally
             {
@@ -242,6 +238,12 @@ public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2
 
                 GC.KeepAlive(this);
             }
+
+            return hresult switch
+            {
+                S.S_OK => CustomQueryInterfaceResult.Handled,
+                _ => CustomQueryInterfaceResult.Failed
+            };
         }
     }
 

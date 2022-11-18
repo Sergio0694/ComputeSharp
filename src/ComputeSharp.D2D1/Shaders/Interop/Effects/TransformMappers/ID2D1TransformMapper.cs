@@ -21,9 +21,9 @@ internal unsafe struct ID2D1TransformMapper
         get
         {
             ReadOnlySpan<byte> data = new byte[] {
-                0x02, 0xE6, 0xD4, 0x8D,
-                0xB8, 0x92,
-                0x4F, 0xBC,
+                0x8D, 0xD4, 0xE6, 0x02,
+                0x92, 0xB8,
+                0xBC, 0x4F,
                 0xAA, 0x54,
                 0x11,
                 0x92,
