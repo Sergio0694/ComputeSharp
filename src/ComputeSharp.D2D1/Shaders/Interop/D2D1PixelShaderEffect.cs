@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -544,7 +545,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// Sets the resource texture manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
-    /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance..</param>
+    /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance.</param>
     /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
@@ -572,10 +573,10 @@ public static unsafe class D2D1PixelShaderEffect
     }
 
     /// <summary>
-    /// Sets the transform mapper from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// Sets the transform mapper for an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
-    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object.</param>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object (see <see cref="D2D1TransformMapper{T}"/>).</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetTransformMapperForD2D1Effect(void* d2D1Effect, void* transformMapper)
@@ -594,6 +595,37 @@ public static unsafe class D2D1PixelShaderEffect
             index: D2D1PixelShaderEffectProperty.TransformMapper,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)&transformMapper,
+            dataSize: (uint)sizeof(void*)).Assert();
+    }
+
+    /// <summary>
+    /// Sets the transform mapper for an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1TransformMapper<T> transformMapper)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (transformMapper is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input D2D1TransformMapper<T> object cannot be null.");
+        }
+
+        using ComPtr<ID2D1TransformMapper> transformMapper2 = default;
+
+        transformMapper.GetD2D1TransformMapper(transformMapper2.GetAddressOf());
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.TransformMapper,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)transformMapper2.GetAddressOf(),
             dataSize: (uint)sizeof(void*)).Assert();
     }
 }
