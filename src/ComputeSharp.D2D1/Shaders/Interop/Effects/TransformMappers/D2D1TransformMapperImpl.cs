@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// An implementation of the <see cref="ID2D1TransformMapper"/> interface wrapping <see cref="ID2D1TransformMapperInterop"/>.
 /// </summary>
-internal unsafe partial struct ID2D1TransformMapperProxy
+internal unsafe partial struct D2D1TransformMapperImpl
 {
     /// <summary>
     /// The shared method table pointer for all <see cref="ID2D1TransformMapper"/> instances.
@@ -28,15 +28,15 @@ internal unsafe partial struct ID2D1TransformMapperProxy
     /// <returns>The method table pointer for <see cref="ID2D1TransformMapper"/>.</returns>
     private static void** InitVtbl()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID2D1TransformMapperProxy), sizeof(void*) * 6);
+        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1TransformMapperImpl), sizeof(void*) * 6);
 
 #if NET6_0_OR_GREATER
-        lpVtbl[0] = (delegate* unmanaged<ID2D1TransformMapperProxy*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged<ID2D1TransformMapperProxy*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged<ID2D1TransformMapperProxy*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged<ID2D1TransformMapperProxy*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&MapInputRectsToOutputRect;
-        lpVtbl[4] = (delegate* unmanaged<ID2D1TransformMapperProxy*, RECT*, RECT*, uint, int>)&MapOutputRectToInputRects;
-        lpVtbl[5] = (delegate* unmanaged<ID2D1TransformMapperProxy*, uint, RECT, RECT*, int>)&MapInvalidRect;
+        lpVtbl[0] = (delegate* unmanaged<D2D1TransformMapperImpl*, Guid*, void**, int>)&QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint>)&AddRef;
+        lpVtbl[2] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint>)&Release;
+        lpVtbl[3] = (delegate* unmanaged<D2D1TransformMapperImpl*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&MapInputRectsToOutputRect;
+        lpVtbl[4] = (delegate* unmanaged<D2D1TransformMapperImpl*, RECT*, RECT*, uint, int>)&MapOutputRectToInputRects;
+        lpVtbl[5] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint, RECT, RECT*, int>)&MapInvalidRect;
 #else
         lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(QueryInterfaceWrapper);
         lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(AddRefWrapper);
@@ -65,15 +65,15 @@ internal unsafe partial struct ID2D1TransformMapperProxy
     private GCHandle transformMapperHandle;
 
     /// <summary>
-    /// The factory method for <see cref="ID2D1TransformMapperProxy"/> instances.
+    /// The factory method for <see cref="D2D1TransformMapperImpl"/> instances.
     /// </summary>
     /// <param name="transformMapper">The input <see cref="ID2D1TransformMapperInterop"/> instance to wrap.</param>
-    /// <param name="d2D1TransformMapperProxy">The resulting <see cref="ID2D1TransformMapperProxy"/> instance.</param>
+    /// <param name="d2D1TransformMapperProxy">The resulting <see cref="D2D1TransformMapperImpl"/> instance.</param>
     public static void Factory(
         ID2D1TransformMapperInterop transformMapper,
-        ID2D1TransformMapperProxy** d2D1TransformMapperProxy)
+        D2D1TransformMapperImpl** d2D1TransformMapperProxy)
     {
-        ID2D1TransformMapperProxy* @this = (ID2D1TransformMapperProxy*)NativeMemory.Alloc((nuint)sizeof(ID2D1TransformMapperProxy));
+        D2D1TransformMapperImpl* @this = (D2D1TransformMapperImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1TransformMapperImpl));
 
         @this->lpVtbl = Vtbl;
         @this->referenceCount = 1;

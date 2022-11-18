@@ -12,25 +12,25 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <inheritdoc/>
-unsafe partial struct ID2D1TransformMapperProxy
+unsafe partial struct D2D1TransformMapperImpl
 {
 #if !NET6_0_OR_GREATER
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int QueryInterfaceDelegate(ID2D1TransformMapperProxy* @this, Guid* riid, void** ppvObject);
+    private delegate int QueryInterfaceDelegate(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject);
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint AddRefDelegate(ID2D1TransformMapperProxy* @this);
+    private delegate uint AddRefDelegate(D2D1TransformMapperImpl* @this);
 
     /// <inheritdoc cref="IUnknown.Release"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint ReleaseDelegate(ID2D1TransformMapperProxy* @this);
+    private delegate uint ReleaseDelegate(D2D1TransformMapperImpl* @this);
 
     /// <inheritdoc cref="ID2D1TransformMapper.MapInputRectsToOutputRect"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int MapInputRectsToOutputRectDelegate(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
         RECT* inputRects,
         RECT* inputOpaqueSubRects,
@@ -41,7 +41,7 @@ unsafe partial struct ID2D1TransformMapperProxy
     /// <inheritdoc cref="ID2D1TransformMapper.MapOutputRectToInputRects"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int MapOutputRectToInputRectsDelegate(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         RECT* outputRect,
         RECT* inputRects,
         uint inputRectsCount);
@@ -49,7 +49,7 @@ unsafe partial struct ID2D1TransformMapperProxy
     /// <inheritdoc cref="ID2D1TransformMapper.MapInvalidRect"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate int MapInvalidRectDelegate(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         uint inputIndex,
         RECT invalidInputRect,
         RECT* invalidOutputRect);
@@ -87,21 +87,21 @@ unsafe partial struct ID2D1TransformMapperProxy
 
     /// <inheritdoc cref="QueryInterface(Guid*, void**)"/>
     [UnmanagedCallersOnly]
-    private static int QueryInterface(ID2D1TransformMapperProxy* @this, Guid* riid, void** ppvObject)
+    private static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)
     {
         return @this->QueryInterface(riid, ppvObject);
     }
 
     /// <inheritdoc cref="AddRef()"/>
     [UnmanagedCallersOnly]
-    private static uint AddRef(ID2D1TransformMapperProxy* @this)
+    private static uint AddRef(D2D1TransformMapperImpl* @this)
     {
         return @this->AddRef();
     }
 
     /// <inheritdoc cref="Release()"/>
     [UnmanagedCallersOnly]
-    private static uint Release(ID2D1TransformMapperProxy* @this)
+    private static uint Release(D2D1TransformMapperImpl* @this)
     {
         return @this->Release();
     }
@@ -109,7 +109,7 @@ unsafe partial struct ID2D1TransformMapperProxy
     /// <inheritdoc cref="ID2D1TransformMapper.MapInputRectsToOutputRect"/>
     [UnmanagedCallersOnly]
     private static int MapInputRectsToOutputRect(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
         RECT* inputRects,
         RECT* inputOpaqueSubRects,
@@ -153,7 +153,7 @@ unsafe partial struct ID2D1TransformMapperProxy
     /// <inheritdoc cref="ID2D1TransformMapper.MapOutputRectToInputRects"/>
     [UnmanagedCallersOnly]
     private static int MapOutputRectToInputRects(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         RECT* outputRect,
         RECT* inputRects,
         uint inputRectsCount)
@@ -187,7 +187,7 @@ unsafe partial struct ID2D1TransformMapperProxy
     /// <inheritdoc cref="ID2D1TransformMapper.MapInvalidRect"/>
     [UnmanagedCallersOnly]
     private static int MapInvalidRect(
-        ID2D1TransformMapperProxy* @this,
+        D2D1TransformMapperImpl* @this,
         uint inputIndex,
         RECT invalidInputRect,
         RECT* invalidOutputRect)
