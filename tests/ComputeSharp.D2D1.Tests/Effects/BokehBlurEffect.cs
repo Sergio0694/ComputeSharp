@@ -317,8 +317,8 @@ public sealed partial class BokehBlurEffect
         d2D1DeviceContext.Get()->SetRenderingControls(&d2D1RenderingControls);
 
         // Register all necessary effects
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), VerticalConvolution.Transform, out _);
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), HorizontalConvolutionAndAccumulatePartials.Transform, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<VerticalConvolution.Shader>(d2D1Factory2.Get(), out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<GammaHighlight>(d2D1Factory2.Get(), out _);
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<InverseGammaHighlight>(d2D1Factory2.Get(), out _);
 
@@ -344,6 +344,10 @@ public sealed partial class BokehBlurEffect
                 D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectsForReals[i].GetAddressOf());
                 D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<VerticalConvolution.Shader>(d2D1DeviceContext.Get(), (void**)verticalConvolutionEffectsForImaginaries[i].GetAddressOf());
                 D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<HorizontalConvolutionAndAccumulatePartials.Shader>(d2D1DeviceContext.Get(), (void**)horizontalConvolutionEffects[i].GetAddressOf());
+
+                D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(verticalConvolutionEffectsForReals[i].Get(), VerticalConvolution.Transform);
+                D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(verticalConvolutionEffectsForImaginaries[i].Get(), VerticalConvolution.Transform);
+                D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(horizontalConvolutionEffects[i].Get(), HorizontalConvolutionAndAccumulatePartials.Transform);
             }
 
             // Create the border effect to clamp the input image
@@ -494,9 +498,9 @@ public sealed partial class BokehBlurEffect
     private sealed partial class VerticalConvolution
     {
         /// <summary>
-        /// The <see cref="ID2D1TransformMapperFactory{T}"/> for the shader.
+        /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
         /// </summary>
-        public static ID2D1TransformMapperFactory<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (0, shader.kernelLength, 0, shader.kernelLength));
+        public static D2D1TransformMapper<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (0, shader.kernelLength, 0, shader.kernelLength));
 
         /// <summary>
         /// Kernel for the vertical convolution pass for real or imaginary components.
@@ -541,9 +545,9 @@ public sealed partial class BokehBlurEffect
     private sealed partial class HorizontalConvolutionAndAccumulatePartials
     {
         /// <summary>
-        /// The <see cref="ID2D1TransformMapperFactory{T}"/> for the shader.
+        /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
         /// </summary>
-        public static ID2D1TransformMapperFactory<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (shader.kernelLength, 0, shader.kernelLength, 0));
+        public static D2D1TransformMapper<Shader> Transform { get; } = D2D1TransformMapperFactory<Shader>.Inflate(static (in Shader shader) => (shader.kernelLength, 0, shader.kernelLength, 0));
 
         /// <summary>
         /// Kernel for the horizontal convolution pass.

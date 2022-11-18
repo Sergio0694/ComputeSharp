@@ -22,7 +22,7 @@ internal static class D2D1TestRunner
     /// Executes a pixel shader and compares the expected results.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
     /// <param name="originalFileName">The name of the source image.</param>
     /// <param name="expectedFileName">The name of the expected result image.</param>
     /// <param name="destinationFileName">The name of the destination image to save results to.</param>
@@ -30,7 +30,7 @@ internal static class D2D1TestRunner
     /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
     public static void RunAndCompareShader<T>(
         in T shader,
-        ID2D1TransformMapperFactory<T>? transformMapperFactory,
+        D2D1TransformMapper<T>? transformMapper,
         string originalFileName,
         string expectedFileName,
         [CallerMemberName] string destinationFileName = "",
@@ -49,7 +49,7 @@ internal static class D2D1TestRunner
         // Run the shader
         ExecutePixelShaderAndSaveToFile(
             in shader,
-            transformMapperFactory,
+            transformMapper,
             originalPath,
             destinationPath);
 
@@ -104,12 +104,12 @@ internal static class D2D1TestRunner
     /// </summary>
     /// <typeparam name="T">The shader type to execute.</typeparam>
     /// <param name="shader">The shader to run.</param>
-    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
     /// <param name="sourcePath">The source path for the image to run the shader on.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
     private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        ID2D1TransformMapperFactory<T>? transformMapperFactory,
+        D2D1TransformMapper<T>? transformMapper,
         string sourcePath,
         string destinationPath)
         where T : unmanaged, ID2D1PixelShader
@@ -118,13 +118,18 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+
+        if (transformMapper is not null)
+        {
+            D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(d2D1Effect.Get(), transformMapper);
+        }
 
         ReadOnlyMemory<byte> pixels = ImageHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
 
@@ -146,12 +151,12 @@ internal static class D2D1TestRunner
     /// <param name="shader">The shader to run.</param>
     /// <param name="width">The resulting width.</param>
     /// <param name="height">The resulting height.</param>
-    /// <param name="transformMapperFactory">A custom <see cref="ID2D1TransformMapper{T}"/> factory for the effect.</param>
+    /// <param name="transformMapper">A custom <see cref="D2D1TransformMapper{T}"/> instance for the effect.</param>
     /// <param name="destinationPath">The destination path for the result.</param>
     /// <param name="resourceTextures">The additional resource textures to use to run the shader.</param>
     private static unsafe void ExecutePixelShaderAndSaveToFile<T>(
         in T shader,
-        ID2D1TransformMapperFactory<T>? transformMapperFactory,
+        D2D1TransformMapper<T>? transformMapper,
         int width,
         int height,
         string destinationPath,
@@ -162,13 +167,18 @@ internal static class D2D1TestRunner
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory2.Get(), transformMapperFactory, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<T>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+
+        if (transformMapper is not null)
+        {
+            D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(d2D1Effect.Get(), transformMapper);
+        }
 
         foreach ((int index, D2D1ResourceTextureManager resourceTextureManager) in resourceTextures)
         {
