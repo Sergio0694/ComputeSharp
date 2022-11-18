@@ -406,7 +406,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         fixed (Guid* pIid = &iid)
         fixed (IntPtr* pPpv = &ppv)
         {
-            int hresult = this.d2D1ResourceManagerImpl.Get()->QueryInterface(pIid, (void**)pPpv);
+            int hresult = this.d2D1ResourceManagerImpl.CopyTo(pIid, (void**)pPpv);
 
             GC.KeepAlive(this);
 
