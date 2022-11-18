@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -65,6 +66,11 @@ internal unsafe partial struct D2D1TransformMapperImpl
     private GCHandle transformMapperHandle;
 
     /// <summary>
+    /// The <see cref="System.Threading.SpinLock"/> instance to synchronize accesses to this instance.
+    /// </summary>
+    private SpinLock spinLock;
+
+    /// <summary>
     /// The factory method for <see cref="D2D1TransformMapperImpl"/> instances.
     /// </summary>
     /// <param name="transformMapper">The input <see cref="ID2D1TransformMapperInterop"/> instance to wrap.</param>
@@ -78,51 +84,111 @@ internal unsafe partial struct D2D1TransformMapperImpl
         @this->lpVtbl = Vtbl;
         @this->referenceCount = 1;
         @this->transformMapperHandle = GCHandle.Alloc(transformMapper);
+        @this->spinLock = new SpinLock(enableThreadOwnerTracking: false);
 
         *d2D1TransformMapperProxy = @this;
     }
 
+    /// <summary>
+    /// Gets a reference to the <see cref="System.Threading.SpinLock"/> instance used to synchronize reference counts.
+    /// </summary>
+    [UnscopedRef]
+    public ref SpinLock SpinLock => ref this.spinLock;
+
+    /// <summary>
+    /// Ensures the target of the current CCW is tracked and is keeping it alive.
+    /// </summary>
+    /// <param name="target">The associated <see cref="ID2D1TransformMapperInterop"/> object to track.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void EnsureTargetIsTracked(ID2D1TransformMapperInterop target)
+    {
+        this.transformMapperHandle.Target = target;
+    }
+
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    public int QueryInterface(Guid* riid, void** ppvObject)
+    private int QueryInterface(Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
         {
             return E.E_POINTER;
         }
 
-        if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID2D1TransformMapper.Guid))
+        bool lockTaken = false;
+
+        this.spinLock.Enter(ref lockTaken);
+
+        try
         {
-            _ = Interlocked.Increment(ref this.referenceCount);
+            if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
+                riid->Equals(ID2D1TransformMapper.Guid))
+            {
+                this.referenceCount++;
 
-            *ppvObject = Unsafe.AsPointer(ref this);
+                *ppvObject = Unsafe.AsPointer(ref this);
 
-            return S.S_OK;
+                return S.S_OK;
+            }
+
+            *ppvObject = null;
+
+            return E.E_NOINTERFACE;
         }
-
-        *ppvObject = null;
-
-        return E.E_NOINTERFACE;
+        finally
+        {
+            this.spinLock.Exit();
+        }
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
-    public uint AddRef()
+    private uint AddRef()
     {
-        return (uint)Interlocked.Increment(ref this.referenceCount);
+        bool lockTaken = false;
+
+        this.spinLock.Enter(ref lockTaken);
+
+        try
+        {
+            return (uint)++this.referenceCount;
+        }
+        finally
+        {
+            this.spinLock.Exit();
+        }
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
-    public uint Release()
+    private uint Release()
     {
-        uint referenceCount = (uint)Interlocked.Decrement(ref this.referenceCount);
+        bool lockTaken = false;
 
-        if (referenceCount == 0)
+        this.spinLock.Enter(ref lockTaken);
+
+        try
         {
-            this.transformMapperHandle.Free();
+            uint referenceCount = (uint)--this.referenceCount;
 
-            NativeMemory.Free(Unsafe.AsPointer(ref this));
+            // There are two special cases to consider here:
+            //   - If the reference count is 1, it means that the D2D1TransformMapper<T> object is the only
+            //     thing keeping this CCW alive. In that case, we can reset the GC handle pointing back to it,
+            //     so that it can be collected if nobody else is referencing it. This breaks the reference cycle
+            //     between the two object, which would have otherwise caused them to remain alive forever.
+            //   - If the reference count is 0, the object is simply being destroyed.
+            if (referenceCount == 1)
+            {
+                this.transformMapperHandle.Target = null;
+            }
+            else if (referenceCount == 0)
+            {
+                this.transformMapperHandle.Free();
+
+                NativeMemory.Free(Unsafe.AsPointer(ref this));
+            }
+
+            return referenceCount;
         }
-
-        return referenceCount;
+        finally
+        {
+            this.spinLock.Exit();
+        }
     }
 }

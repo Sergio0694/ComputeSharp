@@ -1,8 +1,13 @@
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using TerraFX.Interop.Windows;
+
+#pragma warning disable CA1033
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -89,9 +94,33 @@ namespace ComputeSharp.D2D1.Interop;
 /// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
 /// </para>
 /// </remarks>
-public abstract unsafe class D2D1TransformMapper<T> : ID2D1TransformMapperInterop
+public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
     where T : unmanaged, ID2D1PixelShader
 {
+    /// <summary>
+    /// The <see cref="D2D1TransformMapperImpl"/> object wrapped by the current instance.
+    /// </summary>
+    private ComPtr<D2D1TransformMapperImpl> d2D1TransformMapperImpl;
+
+    /// <summary>
+    /// Creates a new <see cref="D2D1TransformMapper{T}"/> instance.
+    /// </summary>
+    public D2D1TransformMapper()
+    {
+        fixed (D2D1TransformMapperImpl** d2D1TransformMapperImpl = this.d2D1TransformMapperImpl)
+        {
+            D2D1TransformMapperImpl.Factory(this, d2D1TransformMapperImpl);
+        }
+    }
+
+    /// <summary>
+    /// Releases the underlying <c>ID2D1TransformMapper</c> object.
+    /// </summary>
+    ~D2D1TransformMapper()
+    {
+        this.d2D1TransformMapperImpl.Dispose();
+    }
+
     /// <summary>
     /// <para>
     /// Allows a transform to state how it would map a a set of sample rectangles on its input to an output rectangle.
@@ -158,6 +187,63 @@ public abstract unsafe class D2D1TransformMapper<T> : ID2D1TransformMapperIntero
     /// </para>
     /// </remarks>
     public abstract void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput);
+
+    /// <summary>
+    /// Gets the underlying <see cref="ID2D1TransformMapper"/> object.
+    /// </summary>
+    /// <param name="transformMapper">The underlying <see cref="ID2D1TransformMapper"/> object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void GetD2D1TransformMapper(ID2D1TransformMapper** transformMapper)
+    {
+        bool lockTaken = false;
+
+        this.d2D1TransformMapperImpl.Get()->SpinLock.Enter(ref lockTaken);
+
+        // Whenever the CCW is requested from this object, we also make sure that the current instance is tracked
+        // in the GC handle stored in the CCW. This could've been reset in case there were no other references to
+        // the CCW (see comments in D2D1TransformMapperImpl about this), so here we're assigning a reference to the
+        // current object again to ensure the returned CCW object will keep the instance alive if needed.
+        try
+        {
+            this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
+            this.d2D1TransformMapperImpl.CopyTo(transformMapper).Assert();
+        }
+        finally
+        {
+            this.d2D1TransformMapperImpl.Get()->SpinLock.Exit();
+
+            GC.KeepAlive(this);
+        }
+    }
+
+    /// <inheritdoc/>
+    CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
+    {
+        fixed (Guid* pIid = &iid)
+        fixed (IntPtr* pPpv = &ppv)
+        {
+            bool lockTaken = false;
+
+            this.d2D1TransformMapperImpl.Get()->SpinLock.Enter(ref lockTaken);
+
+            try
+            {
+                this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
+
+                return (int)this.d2D1TransformMapperImpl.CopyTo(pIid, (void**)pPpv) switch
+                {
+                    S.S_OK => CustomQueryInterfaceResult.Handled,
+                    _ => CustomQueryInterfaceResult.Failed
+                };
+            }
+            finally
+            {
+                this.d2D1TransformMapperImpl.Get()->SpinLock.Exit();
+
+                GC.KeepAlive(this);
+            }
+        }
+    }
 
     /// <inheritdoc/>
     void ID2D1TransformMapperInterop.MapInputsToOutput(
