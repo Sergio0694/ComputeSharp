@@ -8,19 +8,19 @@ using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 /// <summary>
-/// A container for shader-specific affine transform mapper factory.
+/// Shared helpers for <see cref="D2D1AffineTransformMapper{T}"/>.
 /// </summary>
 /// <remarks>
 /// This non-generic type is used so that <see cref="Transform"/> and <see cref="SubtractAndClampToMaxIfOverflow"/> are not recompiled for each generic type instantiation.
 /// </remarks>
-internal sealed class D2D1AffineTransformMapperFactory
+file static class D2D1AffineTransformMapper
 {
     /// <summary>
     /// Transforms a target rectangle using a given transform matrix.
     /// </summary>
     /// <param name="matrix">The transform matrix to use.</param>
     /// <param name="rectangle">The rectangle to transform.</param>
-    private static void Transform(in Matrix3x2 matrix, ref Rectangle64 rectangle)
+    public static void Transform(in Matrix3x2 matrix, ref Rectangle64 rectangle)
     {
         // Get the rectangle corners
         Point64 topLeft = new(rectangle.Left, rectangle.Top);
@@ -60,7 +60,7 @@ internal sealed class D2D1AffineTransformMapperFactory
     /// <param name="y">The value to subtract.</param>
     /// <returns>The result of the subtraction, clamped to <see cref="long.MaxValue"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static long SubtractAndClampToMaxIfOverflow(long x, long y)
+    public static long SubtractAndClampToMaxIfOverflow(long x, long y)
     {
         long z = unchecked(x - y);
 
@@ -73,74 +73,68 @@ internal sealed class D2D1AffineTransformMapperFactory
 
         return z;
     }
+}
+
+/// <summary>
+/// A custom <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for an affine transform.
+/// </summary>
+/// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
+internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Matrix3x2>
+    where T : unmanaged, ID2D1PixelShader
+{
+    /// <inheritdoc/>
+    protected sealed override void TransformInputToOutput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
+    {
+        D2D1AffineTransformMapper.Transform(in parameters, ref rectangle);
+    }
+
+    /// <inheritdoc/>
+    protected sealed override void TransformOutputToInput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
+    {
+        if (!Matrix3x2.Invert(parameters, out Matrix3x2 matrix))
+        {
+            static void Throw()
+            {
+                throw new ArgumentException("The input transform matrix can't be inverted, so it can't be used for a transform mapper.");
+            }
+
+            Throw();
+        }
+
+        D2D1AffineTransformMapper.Transform(in matrix, ref rectangle);
+    }
 
     /// <summary>
-    /// A custom <see cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}"/> implementation for an affine transform.
+    /// A <see cref="D2D1AffineTransformMapper{T}"/> implementation for a constant affine transform matrix.
     /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-    public sealed class For<T> : D2D1TransformMapperFactory<T, Matrix3x2, For<T>.TransformMapper>
-        where T : unmanaged, ID2D1PixelShader
+    public sealed class ConstantMatrix : D2D1AffineTransformMapper<T>
     {
         /// <summary>
-        /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant affine transform matrix.
+        /// Gets the fixed affine transform matrix.
         /// </summary>
-        public sealed class ConstantMatrix : D2D1TransformMapperParametersAccessor<T, Matrix3x2>
-        {
-            /// <summary>
-            /// Gets the fixed affine transform matrix.
-            /// </summary>
-            public required Matrix3x2 Amount { get; init; }
+        public required Matrix3x2 Amount { get; init; }
 
-            /// <inheritdoc/>
-            public override Matrix3x2 Get(in T shader)
-            {
-                return Amount;
-            }
+        /// <inheritdoc/>
+        protected override Matrix3x2 GetParameters(D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext)
+        {
+            return Amount;
         }
+    }
 
+    /// <summary>
+    /// A <see cref="D2D1AffineTransformMapper{T}"/> implementation for a dynamic affine transform matrix.
+    /// </summary>
+    public sealed class DynamicMatrix : D2D1AffineTransformMapper<T>
+    {
         /// <summary>
-        /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a dynamic affine transform matrix.
+        /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
         /// </summary>
-        public sealed class DynamicMatrix : D2D1TransformMapperParametersAccessor<T, Matrix3x2>
+        public required D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> Accessor { get; init; }
+
+        /// <inheritdoc/>
+        protected override Matrix3x2 GetParameters(D2D1DrawInfoUpdateContext<T> drawInfoUpdateContext)
         {
-            /// <summary>
-            /// Gets the <see cref="D2D1TransformMapperFactory{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
-            /// </summary>
-            public required D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> Accessor { get; init; }
-
-            /// <inheritdoc/>
-            public override Matrix3x2 Get(in T shader)
-            {
-                return Accessor(in shader);
-            }
-        }
-
-        /// <summary>
-        /// A custom <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for an affine transform.
-        /// </summary>
-        public sealed class TransformMapper : D2D1TransformMapper<T, Matrix3x2>
-        {
-            /// <inheritdoc/>
-            protected override void TransformInputToOutput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
-            {
-                Transform(in parameters, ref rectangle);
-            }
-
-            /// <inheritdoc/>
-            protected override void TransformOutputToInput(in Matrix3x2 parameters, ref Rectangle64 rectangle)
-            {
-                if (!Matrix3x2.Invert(parameters, out Matrix3x2 matrix))
-                {
-                    static void Throw()
-                    {
-                        throw new ArgumentException("The input transform matrix can't be inverted, so it can't be used for a transform mapper.");
-                    }
-
-                    Throw();
-                }
-
-                Transform(in matrix, ref rectangle);
-            }
+            return Accessor(drawInfoUpdateContext.GetConstantBuffer());
         }
     }
 }

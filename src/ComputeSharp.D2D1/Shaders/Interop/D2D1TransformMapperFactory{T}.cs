@@ -65,28 +65,28 @@ public static class D2D1TransformMapperFactory<T>
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.
     /// </summary>
     /// <param name="matrix">The fixed transformation matrix to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Transform(Matrix3x2 matrix)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
+    public static D2D1TransformMapper<T> Transform(Matrix3x2 matrix)
     {
-        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.ConstantMatrix { Amount = matrix } };
+        return new D2D1AffineTransformMapper<T>.ConstantMatrix { Amount = matrix };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the transformation matrix to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
+    public static D2D1TransformMapper<T> Transform(Accessor<Matrix3x2> accessor)
     {
         if (accessor is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> object cannot be null.");
         }
 
-        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.DynamicMatrix { Accessor = accessor } };
+        return new D2D1AffineTransformMapper<T>.DynamicMatrix { Accessor = accessor };
     }
 
     /// <summary>

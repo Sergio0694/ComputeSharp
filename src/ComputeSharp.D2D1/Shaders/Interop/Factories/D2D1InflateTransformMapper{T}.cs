@@ -5,7 +5,7 @@ using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 /// <summary>
-/// A custom <see cref="D2D1TransformMapperFactory{T, TParameters, TTransformMapper}"/> implementation for an inflate transform.
+/// A custom <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for an inflate transform.
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
 internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (int Left, int Top, int Right, int Bottom)>
@@ -24,7 +24,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     }
 
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant inflate amount.
+    /// A <see cref="D2D1InflateTransformMapper{T}"/> implementation for a constant inflate amount.
     /// </summary>
     public sealed class ConstantAmount : D2D1InflateTransformMapper<T>
     {
@@ -41,7 +41,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     }
 
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a constant inflate LTRB amount.
+    /// A <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for a constant inflate LTRB amount.
     /// </summary>
     public sealed class ConstantLeftTopRightBottomAmount : D2D1InflateTransformMapper<T>
     {
@@ -73,7 +73,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     }
 
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a dynamic inflate amount.
+    /// A <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for a dynamic inflate amount.
     /// </summary>
     public sealed class DynamicAmount : D2D1InflateTransformMapper<T>
     {
@@ -92,7 +92,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     }
 
     /// <summary>
-    /// A <see cref="D2D1TransformMapperParametersAccessor{T, TParameters}"/> implementation for a dynamic inflate LTRB amount.
+    /// A <see cref="D2D1TransformMapper{T, TParameters}"/> implementation for a dynamic inflate LTRB amount.
     /// </summary>
     public sealed class DynamicLeftTopRightBottomAmount : D2D1InflateTransformMapper<T>
     {
