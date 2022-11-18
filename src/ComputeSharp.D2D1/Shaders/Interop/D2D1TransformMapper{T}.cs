@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Interop.Effects;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -18,7 +20,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// </para>
 /// <para>
 /// These managers are COM objects implementing the following interface:
-/// <code>
+/// <code language="cpp">
 /// [uuid(02E6D48D-B892-4FBC-AA54-119203BAB802)]
 /// interface ID2D1TransformMapper : IUnknown
 /// {
@@ -87,7 +89,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
 /// </para>
 /// </remarks>
-public abstract class D2D1TransformMapper<T>
+public abstract unsafe class D2D1TransformMapper<T> : ID2D1TransformMapperInterop
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
@@ -155,5 +157,33 @@ public abstract class D2D1TransformMapper<T>
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1transform-mapinvalidrect"/>.
     /// </para>
     /// </remarks>
-    public abstract void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput);
+    public abstract void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput);
+
+    /// <inheritdoc/>
+    void ID2D1TransformMapperInterop.MapInputsToOutput(
+        ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
+        ReadOnlySpan<Rectangle> inputs,
+        ReadOnlySpan<Rectangle> opaqueInputs,
+        out Rectangle output,
+        out Rectangle opaqueOutput)
+    {
+        MapInputsToOutput(
+            new D2D1DrawInfoUpdateContext<T>(d2D1DrawInfoUpdateContext),
+            inputs,
+            opaqueInputs,
+            out output,
+            out opaqueOutput);
+    }
+
+    /// <inheritdoc/>
+    void ID2D1TransformMapperInterop.MapOutputToInputs(in Rectangle output, Span<Rectangle> inputs)
+    {
+        MapOutputToInputs(in output, inputs);
+    }
+
+    /// <inheritdoc/>
+    void ID2D1TransformMapperInterop.MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
+    {
+        MapInvalidOutput(inputIndex, in invalidInput, out invalidOutput);
+    }
 }

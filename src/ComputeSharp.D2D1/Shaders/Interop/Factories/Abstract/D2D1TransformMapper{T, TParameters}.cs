@@ -64,7 +64,7 @@ internal abstract class D2D1TransformMapper<T, TParameters> : D2D1TransformMappe
     }
 
     /// <inheritdoc/>
-    public override void MapInvalidOutput(int inputIndex, Rectangle invalidInput, out Rectangle invalidOutput)
+    public override void MapInvalidOutput(int inputIndex, in Rectangle invalidInput, out Rectangle invalidOutput)
     {
         Rectangle64 output64 = Rectangle64.FromRectangle(invalidInput);
 
