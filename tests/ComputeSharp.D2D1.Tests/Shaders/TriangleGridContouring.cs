@@ -82,7 +82,7 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
     }
 
     // Based on IQ's signed distance to the segment joining "a" and "b".
-    private static float distEdge(float2 a, float2 b)
+    private static float DistEdge(float2 a, float2 b)
     {
         return Hlsl.Dot((a + b) * 0.5f, Hlsl.Normalize((b - a).YX * new float2(-1, 1)));
     }
@@ -203,7 +203,7 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
         float2 p1 = default;
         int iTh = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
-        d = Hlsl.Min(d, distEdge(p - p0, p - p1));
+        d = Hlsl.Min(d, DistEdge(p - p0, p - p1));
 
         if (iTh == 7)
         {
@@ -221,7 +221,7 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
 
         int iTh2 = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
-        d2 = Hlsl.Min(d2, distEdge(p - p0, p - p1));
+        d2 = Hlsl.Min(d2, DistEdge(p - p0, p - p1));
 
         if (iTh2 == 7)
         {
