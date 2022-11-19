@@ -92,6 +92,9 @@
     <None Update="Assets\MengerJourney.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\TerracedHills.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Octagrams.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

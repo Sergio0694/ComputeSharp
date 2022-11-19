@@ -106,6 +106,12 @@ public class ShadersTests
         D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{nameof(Shaders.ContouredLayers)}.png", nameof(Shaders.ContouredLayers), resourceTextures: (0, resourceTextureManager));
     }
 
+    [TestMethod]
+    public void TerracedHills()
+    {
+        RunTest<Shaders.TerracedHills>(0.000026f);
+    }
+
     private static void RunTest<T>(float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {

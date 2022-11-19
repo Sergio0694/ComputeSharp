@@ -139,6 +139,15 @@ public class ShadersTests
             0.000703f);
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(TerracedHills))]
+    [Data(typeof(SwapChain.Shaders.Compute.TerracedHills))]
+    public void TerracedHills(Device device, Type shaderType)
+    {
+        RunAndCompareShader(device, shaderType, 0.000026f);
+    }
+
     /// <summary>
     /// Executes a given test for a specified shader.
     /// </summary>
