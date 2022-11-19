@@ -92,6 +92,9 @@
     <None Update="Assets\ContouredLayers.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\ComputeSharp.Tests\Assets\TerracedHills.png" Link="Assets\TerracedHills.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\..\samples\ComputeSharp.SwapChain\Textures\RustyMetal.png" Link="Assets\Textures\RustyMetal.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
