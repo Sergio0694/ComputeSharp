@@ -29,7 +29,8 @@ class Program
         (nameof(ExtrudedTruchetPattern), new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
         (nameof(PyramidPattern), new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds))),
         (nameof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
-        (nameof(ContouredLayers), new SwapChainApplication<ContouredLayers>(static time => new((float)time.TotalSeconds, RustyMetal.Value)))
+        (nameof(ContouredLayers), new SwapChainApplication<ContouredLayers>(static time => new((float)time.TotalSeconds, RustyMetal.Value))),
+        (nameof(Mandelbrot), new SwapChainApplication<Mandelbrot>(static time => new((float)time.TotalSeconds, new(0.12344f, 0.346532f, 0.22344f, 0.15563f), new(0.92344f, 0.646532f, 0.82344f, 0.85563f)))),
     };
 
     static void Main()

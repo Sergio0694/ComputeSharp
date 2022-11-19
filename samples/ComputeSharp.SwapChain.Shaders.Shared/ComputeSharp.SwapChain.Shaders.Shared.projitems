@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ExtrudedTruchetPattern.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FourColorGradient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FractalTiling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mandelbrot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HelloWorld.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MengerJourney.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Octagrams.cs" />
