@@ -111,7 +111,8 @@ public sealed partial class MainViewModel : ObservableObject
         new(typeof(TwoTiledTruchet),new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
         new(typeof(PyramidPattern),new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
         new(typeof(TriangleGridContouring),new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ContouredLayers),new ContouredLayersRunner())
+        new(typeof(ContouredLayers),new ContouredLayersRunner()),
+        new(typeof(TerracedHills),new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds))),
     };
 
     private ShaderRunnerViewModel selectedComputeShader;
