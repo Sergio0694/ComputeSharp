@@ -150,21 +150,17 @@ partial struct D2D1DrawInfoUpdateContextImpl
                 return E.E_INVALIDARG;
             }
 
-            // Reuse the existing buffer if there is one, otherwise allocate a new one
-            if (@this->constantBuffer is not null)
+            // If the buffer is empty, just do nothing
+            if (bufferCount == 0)
             {
-                Buffer.MemoryCopy(buffer, @this->constantBuffer, bufferCount, bufferCount);
-            }
-            else
-            {
-                void* constantBuffer = NativeMemory.Alloc(bufferCount);
-
-                Buffer.MemoryCopy(buffer, constantBuffer, bufferCount, bufferCount);
-
-                @this->constantBuffer = (byte*)constantBuffer;
+                return S.S_OK;
             }
 
-            return S.S_OK;
+            // Copy the buffer to the backing store, so the effect can also access it later
+            Buffer.MemoryCopy(buffer, @this->constantBuffer, bufferCount, bufferCount);
+
+            // Propagate it to the ID2D1DrawInfo object in use as well
+            return @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(buffer, bufferCount);
         }
     }
 }
