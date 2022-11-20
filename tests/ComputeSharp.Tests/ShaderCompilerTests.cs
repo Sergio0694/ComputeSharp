@@ -467,6 +467,49 @@ namespace ComputeSharp.Tests
                 results[ThreadIds.X] = result1 + result2 + bufferA[ThreadIds.X].Sum() + bufferB[0].Combine();
             }
         }
+
+        [TestMethod]
+        public void PixelShaderWithScopedParameterInMethods()
+        {
+            _ = ReflectionServices.GetShaderInfo<PixelShaderWithScopedParameterInMethodsShader>();
+        }
+
+        internal static class HelpersForPixelShaderWithScopedParameterInMethods
+        {
+            public static void Baz(scoped in float a, scoped ref float b)
+            {
+                b = a;
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct PixelShaderWithScopedParameterInMethodsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly float number;
+
+            private static void Foo(scoped ref float a, ref float b)
+            {
+                b = a;
+            }
+
+            private void Bar(scoped ref float a, scoped ref float b)
+            {
+                b = a;
+            }
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                float number = this.number;
+
+                Foo(ref this.buffer[ThreadIds.X], ref number);
+                Bar(ref this.buffer[ThreadIds.X], ref number);
+                HelpersForPixelShaderWithScopedParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref number);
+
+                this.buffer[ThreadIds.X] *= number;
+            }
+        }
     }
 }
 
