@@ -128,8 +128,8 @@ internal unsafe partial struct PixelShaderEffect
                     if (For<T>.d2D1DrawTransformMapperFactory != d2D1DrawTransformMapperFactory)
                     {
                         ThrowHelper.ThrowInvalidOperationException(
-                            "Cannot initialize an ID2D1Effect factory for the same shader type with two different transform mappings. " +
-                            "Make sure to only ever register a pixel shader effect with either no transform, or the same transform type.");
+                            "Cannot initialize an ID2D1Effect factory for the same shader type with two different transform mapper factories. " +
+                            "Make sure to only ever register a pixel shader effect with either no transform, or the same transform mapper factory instance.");
                     }
                 }
                 else
