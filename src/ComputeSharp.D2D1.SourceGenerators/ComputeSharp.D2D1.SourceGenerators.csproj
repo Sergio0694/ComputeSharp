@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -80,7 +80,7 @@
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DRequiresScenePositionAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DRequiresScenePositionAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DPixelShaderSourceAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DPixelShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" Link="ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Extensions\HResultExtensions.cs" Link="ComputeSharp.D2D1\Extensions\HResultExtensions.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" Link="ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" Link="ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" />
@@ -95,7 +95,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0-4.final" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" PrivateAssets="all" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
