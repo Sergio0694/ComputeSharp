@@ -142,7 +142,9 @@ jobs:
       # Also publish the NativeAOT test when .NET 7 is used
     - if: matrix.framework == 'net7.0'
       name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
-      run: dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-x64 -v n
+      run: >
+        $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
+        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-x64 -v n
     - if: matrix.framework == 'net7.0'
       name: Run ComputeSharp.SwapChain.Cli
       run: >

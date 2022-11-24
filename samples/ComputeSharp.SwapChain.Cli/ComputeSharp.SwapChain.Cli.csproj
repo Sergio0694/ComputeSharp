@@ -17,8 +17,14 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
-  <!-- NativeAOT settings -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <!--
+    NativeAOT settings (NativeAOT publishing + reflection-free mode).
+    Note: the COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT environment variable is used to trigger
+    publishing with NativeAOT so that this project won't cause build errors in the CI. This is
+    because NativeAOT doesn't support cross-compiling, but the CI will also build the solution
+    targeting Arm64, from a VM running on x64, which would then fail due to mismatched RIDs.
+  -->
+  <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT)' == 'true'">
     <PublishAot>true</PublishAot>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
