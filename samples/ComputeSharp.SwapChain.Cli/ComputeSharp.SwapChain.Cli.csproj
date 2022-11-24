@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <!--
+      When running in the CI, set the executable type to be 'Exe', so that a console will
+      be available and the PowerShell test script will be able to await the published app.
+      When not in the CI, use 'WinExe' instead so that the render window will open directly.
+    -->
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Platforms>x64;ARM64</Platforms>
+    <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <AssemblyName>computesharp.cli</AssemblyName>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!--
+    NativeAOT settings (NativeAOT publishing + reflection-free mode).
+    Note: the COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT environment variable is used to trigger
+    publishing with NativeAOT so that this project won't cause build errors in the CI. This is
+    because NativeAOT doesn't support cross-compiling, but the CI will also build the solution
+    targeting Arm64, from a VM running on x64, which would then fail due to mismatched RIDs.
+  -->
+  <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT)' == 'true'">
+    <PublishAot>true</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <IlcDisableReflection>true</IlcDisableReflection>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+  </PropertyGroup>
+
+  <!-- Application icon -->
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\SwapChainApplication{T}.cs" Link="Backend\SwapChainApplication{T}.cs" />
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32Application.cs" Link="Backend\Win32Application.cs" />
+    <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32ApplicationRunner.cs" Link="Backend\Win32ApplicationRunner.cs" />
+  </ItemGroup>
+
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
+
+</Project>

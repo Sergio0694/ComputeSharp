@@ -119,8 +119,10 @@ jobs:
     needs: [build-solution]
     strategy:
       matrix:
-        framework: [net6.0, netcoreapp3.1, net472]
+        framework: [net7.0, net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
+    env:
+      CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
@@ -136,6 +138,28 @@ jobs:
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
+      
+      # Also publish the NativeAOT test when .NET 7 is used
+    - if: matrix.framework == 'net7.0'
+      name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
+      run: >
+        $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
+        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-x64 -v n
+    - if: matrix.framework == 'net7.0'
+      name: Run ComputeSharp.SwapChain.Cli
+      run: >
+        $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe -PassThru);
+        sleep -Seconds 2;
+        $process.CloseMainWindow() | Out-Null;
+        $process.WaitForExit();
+        $process.ExitCode
+    - if: matrix.framework == 'net7.0'
+      name: Upload NativeAOT CLI sample
+      uses: actions/upload-artifact@v3
+      with:
+        name: computesharp.cli.exe
+        path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
+        if-no-files-found: error
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
