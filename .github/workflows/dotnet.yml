@@ -70,6 +70,11 @@ jobs:
       matrix:
         framework: [net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
+
+    # Set the environment variable which is then looked up in ComputeSharp.Dynamic.
+    # This is a workaround for https://github.com/actions/runner-images/issues/6531.
+    env:
+      CI_RUNNER_DOTNET_TEST_PLATFORM: x64
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
