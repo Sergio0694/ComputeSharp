@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.Windows;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
