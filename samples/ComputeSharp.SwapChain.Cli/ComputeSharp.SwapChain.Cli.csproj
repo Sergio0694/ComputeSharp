@@ -33,6 +33,11 @@
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
+  <!-- If requested, also reference the UPX compression package -->
+  <ItemGroup Condition="'$(PUBLISH_AOT_COMPRESSED)' == 'true'">
+    <PackageReference Include="PublishAotCompressed" Version="1.0.0" />
+  </ItemGroup>
+
   <!-- Application icon -->
   <ItemGroup>
     <Content Include="icon.ico" />
