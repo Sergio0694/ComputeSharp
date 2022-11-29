@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
@@ -18,14 +19,6 @@ namespace ComputeSharp.D2D1.Interop.Effects;
 /// </summary>
 internal unsafe partial struct PixelShaderEffect
 {
-    /// <summary>
-    /// A wrapper for an effect factory.
-    /// </summary>
-    /// <param name="effectImpl">The resulting effect factory.</param>
-    /// <returns>The <c>HRESULT</c> for the operation.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int FactoryDelegate(IUnknown** effectImpl);
-
 #if !NET6_0_OR_GREATER
     /// <inheritdoc cref="QueryInterface"/>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -196,9 +189,9 @@ internal unsafe partial struct PixelShaderEffect
     private D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
     /// <summary>
-    /// The handle for the <see cref="D2D1TransformMapper"/> instance in use, if any.
+    /// The <see cref="ID2D1TransformMapper"/> instance to use, if any.
     /// </summary>
-    private GCHandle d2D1TransformMapperHandle;
+    private ID2D1TransformMapper* d2D1TransformMapper;
 
     /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
@@ -231,7 +224,6 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
     /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
     /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
-    /// <param name="d2D1TransformMapper">The <see cref="D2D1TransformMapper"/> instance to use for the effect.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
     private static int Factory(
@@ -248,7 +240,6 @@ internal unsafe partial struct PixelShaderEffect
         D2D1ChannelDepth channelDepth,
         int resourceTextureDescriptionCount,
         D2D1ResourceTextureDescription* resourceTextureDescriptions,
-        D2D1TransformMapper? d2D1TransformMapper,
         IUnknown** effectImpl)
     {
         PixelShaderEffect* @this;
@@ -283,7 +274,7 @@ internal unsafe partial struct PixelShaderEffect
         @this->channelDepth = channelDepth;
         @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
         @this->resourceTextureDescriptions = resourceTextureDescriptions;
-        @this->d2D1TransformMapperHandle = GCHandle.Alloc(d2D1TransformMapper);
+        @this->d2D1TransformMapper = null;
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
         @this->resourceTextureManagerBuffer = default;
@@ -347,7 +338,10 @@ internal unsafe partial struct PixelShaderEffect
                 NativeMemory.Free(this.constantBuffer);
             }
 
-            this.d2D1TransformMapperHandle.Free();
+            if (this.d2D1TransformMapper is not null)
+            {
+                _ = ((IUnknown*)this.d2D1TransformMapper)->Release();
+            }
 
             if (this.d2D1DrawInfo is not null)
             {

@@ -108,7 +108,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), out _);
 
         using ComPtr<IUnknown> resourceTextureManager = default;
 
@@ -152,7 +152,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), out _);
 
         D2D1ResourceTextureManager resourceTextureManager = new(
             extents: stackalloc uint[] { 128, 128 },
@@ -192,7 +192,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -251,7 +251,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -315,7 +315,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -373,7 +373,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom2DResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string wallpaper0Path = Path.Combine(assemblyPath, "Assets", "Wallpaper0.png");
@@ -480,7 +480,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom3DResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<IndexFrom3DResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -567,7 +567,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture1DShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture1DShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -655,7 +655,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture2DShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture2DShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -758,7 +758,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture3DShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture3DShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -854,7 +854,7 @@ public partial class D2D1ResourceTextureManagerTests
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
-        D2D1PixelShaderEffect.RegisterForD2D1Factory1<NullResourceTextureShader>(d2D1Factory2.Get(), null, out _);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<NullResourceTextureShader>(d2D1Factory2.Get(), out _);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -77,8 +78,8 @@ namespace ComputeSharp.D2D1.Interop;
 /// interface ID2D1ResourceTextureManagerInternal : IUnknown
 /// {
 ///     HRESULT Initialize(
-///         [in]           ID2D1EffectContext *effectContext,
-///         [in, optional] const UINT32       *dimensions);
+///         [in]           const ID2D1EffectContext *effectContext,
+///         [in, optional] const UINT32             *dimensions);
 /// 
 ///     HRESULT GetResourceTexture([out] ID2D1ResourceTexture **resourceTexture);
 /// };
@@ -105,7 +106,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// <summary>
     /// The <see cref="D2D1ResourceTextureManagerImpl"/> object wrapped by the current instance.
     /// </summary>
-    private readonly D2D1ResourceTextureManagerImpl* d2D1ResourceManagerImpl;
+    private ComPtr<D2D1ResourceTextureManagerImpl> d2D1ResourceManagerImpl;
 
     /// <summary>
     /// Creates a new <see cref="D2D1ResourceTextureManager"/> instance with the specified parameters.
@@ -305,7 +306,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
             Marshal.ThrowExceptionForHR(E.E_INVALIDARG);
         }
 
-        fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = &this.d2D1ResourceManagerImpl)
+        fixed (D2D1ResourceTextureManagerImpl** d2D1ResourceManagerImpl = this.d2D1ResourceManagerImpl)
         {
             D2D1ResourceTextureManagerImpl.Factory(d2D1ResourceManagerImpl, requiresMultithread: true);
         }
@@ -324,7 +325,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
             d2D1ResourceTextureProperties.extendModes = (D2D1_EXTEND_MODE*)pExtendModes;
 
             int hresult = D2D1ResourceTextureManagerImpl.Initialize(
-                @this: this.d2D1ResourceManagerImpl,
+                @this: this.d2D1ResourceManagerImpl.Get(),
                 resourceId: resourceId,
                 resourceTextureProperties: &d2D1ResourceTextureProperties,
                 data: pData,
@@ -340,10 +341,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     /// </summary>
     ~D2D1ResourceTextureManager()
     {
-        if (this.d2D1ResourceManagerImpl is not null)
-        {
-            _ = this.d2D1ResourceManagerImpl->Release();
-        }
+        this.d2D1ResourceManagerImpl.Dispose();
     }
 
     /// <summary>
@@ -376,7 +374,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
             }
 
             int hresult = D2D1ResourceTextureManagerImpl.Update(
-                @this: this.d2D1ResourceManagerImpl,
+                @this: this.d2D1ResourceManagerImpl.Get(),
                 minimumExtents: pMinimumExtents,
                 maximimumExtents: pMaximumExtents,
                 strides: pStrides,
@@ -397,9 +395,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void GetD2D1ResourceTextureManager(ID2D1ResourceTextureManager** resourceTextureManager)
     {
-        _ = this.d2D1ResourceManagerImpl->AddRef();
-
-        *resourceTextureManager = (ID2D1ResourceTextureManager*)this.d2D1ResourceManagerImpl;
+        this.d2D1ResourceManagerImpl.CopyTo(resourceTextureManager).Assert();
 
         GC.KeepAlive(this);
     }
@@ -410,7 +406,7 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
         fixed (Guid* pIid = &iid)
         fixed (IntPtr* pPpv = &ppv)
         {
-            int hresult = this.d2D1ResourceManagerImpl->QueryInterface(pIid, (void**)pPpv);
+            int hresult = this.d2D1ResourceManagerImpl.CopyTo(pIid, (void**)pPpv);
 
             GC.KeepAlive(this);
 

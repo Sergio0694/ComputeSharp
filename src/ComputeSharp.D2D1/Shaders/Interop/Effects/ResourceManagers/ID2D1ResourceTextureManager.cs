@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 internal unsafe struct ID2D1ResourceTextureManager
 {
     /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <c>ID2D1ResourceTextureManager</c> (<c>3C4FC7E4-A419-46CA-B5F6-66EB4FF18D64</c>).
+    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1ResourceTextureManager"/> (<c>3C4FC7E4-A419-46CA-B5F6-66EB4FF18D64</c>).
     /// </summary>
     public static ref readonly Guid Guid
     {
@@ -54,7 +54,7 @@ internal unsafe struct ID2D1ResourceTextureManager
     /// <param name="dataSize">The size, in bytes, of the data.</param>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int Initialize(
+    public HRESULT Initialize(
         Guid* resourceId,
         D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
         byte* data,
@@ -81,7 +81,7 @@ internal unsafe struct ID2D1ResourceTextureManager
     /// <param name="dataCount">The size of the data buffer to be used to update the resource texture.</param>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int Update(
+    public HRESULT Update(
         uint* minimumExtents,
         uint* maximimumExtents,
         uint* strides,

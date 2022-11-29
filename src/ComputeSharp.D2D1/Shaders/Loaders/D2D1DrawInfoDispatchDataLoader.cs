@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
@@ -31,8 +32,8 @@ internal readonly unsafe struct D2D1DrawInfoDispatchDataLoader : ID2D1DispatchDa
     /// <inheritdoc/>
     void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
-        _ = this.d2D1DrawInfo->SetPixelShaderConstantBuffer(
+        this.d2D1DrawInfo->SetPixelShaderConstantBuffer(
             buffer: (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data)),
-            bufferCount: (uint)data.Length);
+            bufferCount: (uint)data.Length).Assert();
     }
 }

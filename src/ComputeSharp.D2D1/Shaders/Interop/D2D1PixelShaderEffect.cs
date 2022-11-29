@@ -5,6 +5,7 @@ using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -35,52 +36,7 @@ public static unsafe class D2D1PixelShaderEffect
             ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
         }
 
-        RegisterForD2D1Factory1<T>(d2D1Factory1, null, out effectId);
-    }
-
-    /// <summary>
-    /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
-    /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
-    /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
-    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static void RegisterForD2D1Factory1<T, TMapper>(void* d2D1Factory1, out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
-        where TMapper : class, ID2D1TransformMapper<T>, new()
-    {
-        if (d2D1Factory1 is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
-        }
-
-        RegisterForD2D1Factory1(d2D1Factory1, D2D1TransformMapper.FactoryOf<T, TMapper>.Instance, out effectId);
-    }
-
-    /// <summary>
-    /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
-    /// <param name="d2D1Factory1">A pointer to the <c>ID2D1Factory1</c> instance to use.</param>
-    /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
-    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
-    public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, ID2D1TransformMapperFactory<T>? mapperFactory, out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
-    {
-        if (d2D1Factory1 is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
-        }
-
         effectId = default;
-
-        PixelShaderEffect.For<T>.Initialize(mapperFactory);
 
         ArrayPoolBufferWriter<char> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
@@ -101,7 +57,7 @@ public static unsafe class D2D1PixelShaderEffect
             """);
 
         // Add the input nodes
-        for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
+        for (int i = 0; i < PixelShaderEffect.For<T>.Instance.InputCount; i++)
         {
             writer.WriteRaw("        <Input name='Source");
             writer.WriteAsUnicode(i);
@@ -165,6 +121,9 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
+                <Property name='TransformMapper' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapper'/>
+                </Property>
             </Effect>
             """);
 
@@ -172,26 +131,27 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw('\0');
 
         fixed (char* pXml = writer.WrittenSpan)
-        fixed (char* pBufferPropertyName = "ConstantBuffer")
-        fixed (char* pResourceTextureManager0PropertyName = "ResourceTextureManager0")
-        fixed (char* pResourceTextureManager1PropertyName = "ResourceTextureManager1")
-        fixed (char* pResourceTextureManager2PropertyName = "ResourceTextureManager2")
-        fixed (char* pResourceTextureManager3PropertyName = "ResourceTextureManager3")
-        fixed (char* pResourceTextureManager4PropertyName = "ResourceTextureManager4")
-        fixed (char* pResourceTextureManager5PropertyName = "ResourceTextureManager5")
-        fixed (char* pResourceTextureManager6PropertyName = "ResourceTextureManager6")
-        fixed (char* pResourceTextureManager7PropertyName = "ResourceTextureManager7")
-        fixed (char* pResourceTextureManager8PropertyName = "ResourceTextureManager8")
-        fixed (char* pResourceTextureManager9PropertyName = "ResourceTextureManager9")
-        fixed (char* pResourceTextureManager10PropertyName = "ResourceTextureManager10")
-        fixed (char* pResourceTextureManager11PropertyName = "ResourceTextureManager11")
-        fixed (char* pResourceTextureManager12PropertyName = "ResourceTextureManager12")
-        fixed (char* pResourceTextureManager13PropertyName = "ResourceTextureManager13")
-        fixed (char* pResourceTextureManager14PropertyName = "ResourceTextureManager14")
-        fixed (char* pResourceTextureManager15PropertyName = "ResourceTextureManager15")
+        fixed (char* pBufferPropertyName = nameof(D2D1PixelShaderEffectProperty.ConstantBuffer))
+        fixed (char* pResourceTextureManager0PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager0))
+        fixed (char* pResourceTextureManager1PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager1))
+        fixed (char* pResourceTextureManager2PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager2))
+        fixed (char* pResourceTextureManager3PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager3))
+        fixed (char* pResourceTextureManager4PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager4))
+        fixed (char* pResourceTextureManager5PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager5))
+        fixed (char* pResourceTextureManager6PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager6))
+        fixed (char* pResourceTextureManager7PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager7))
+        fixed (char* pResourceTextureManager8PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager8))
+        fixed (char* pResourceTextureManager9PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager9))
+        fixed (char* pResourceTextureManager10PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager10))
+        fixed (char* pResourceTextureManager11PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager11))
+        fixed (char* pResourceTextureManager12PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager12))
+        fixed (char* pResourceTextureManager13PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager13))
+        fixed (char* pResourceTextureManager14PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager14))
+        fixed (char* pResourceTextureManager15PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager15))
+        fixed (char* pTransformMapperPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapper))
         {
             // Prepare the effect binding functions
-            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[17];
+            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[(int)D2D1PixelShaderEffectProperty.NumberOfProperties];
 
             // Property names
             d2D1PropertyBinding[0].propertyName = (ushort*)pBufferPropertyName;
@@ -211,6 +171,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].propertyName = (ushort*)pResourceTextureManager13PropertyName;
             d2D1PropertyBinding[15].propertyName = (ushort*)pResourceTextureManager14PropertyName;
             d2D1PropertyBinding[16].propertyName = (ushort*)pResourceTextureManager15PropertyName;
+            d2D1PropertyBinding[17].propertyName = (ushort*)pTransformMapperPropertyName;
 
             // Property getters
             d2D1PropertyBinding[0].getFunction = PixelShaderEffect.GetConstantBuffer;
@@ -230,6 +191,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].getFunction = PixelShaderEffect.GetResourceTextureManager13;
             d2D1PropertyBinding[15].getFunction = PixelShaderEffect.GetResourceTextureManager14;
             d2D1PropertyBinding[16].getFunction = PixelShaderEffect.GetResourceTextureManager15;
+            d2D1PropertyBinding[17].getFunction = PixelShaderEffect.GetTransformMapper;
 
             // Property setters
             d2D1PropertyBinding[0].setFunction = PixelShaderEffect.SetConstantBuffer;
@@ -249,19 +211,20 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[14].setFunction = PixelShaderEffect.SetResourceTextureManager13;
             d2D1PropertyBinding[15].setFunction = PixelShaderEffect.SetResourceTextureManager14;
             d2D1PropertyBinding[16].setFunction = PixelShaderEffect.SetResourceTextureManager15;
+            d2D1PropertyBinding[17].setFunction = PixelShaderEffect.SetTransformMapper;
 
-            fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Id)
+            fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
             {
                 // Register the effect
                 ((ID2D1Factory1*)d2D1Factory1)->RegisterEffectFromString(
                     classId: pGuid,
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
-                    bindingsCount: 17,
-                    effectFactory: PixelShaderEffect.For<T>.Factory).Assert();
+                    bindingsCount: D2D1PixelShaderEffectProperty.NumberOfProperties,
+                    effectFactory: PixelShaderEffect.For<T>.Instance.Factory).Assert();
             }
 
-            effectId = PixelShaderEffect.For<T>.Id;
+            effectId = PixelShaderEffect.For<T>.Instance.Id;
         }
 
         writer.Dispose();
@@ -270,38 +233,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <summary>
     /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
     /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
-    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(ID2D1TransformMapperFactory{T}?, out Guid)"/>.</remarks>
-    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
-    {
-        return GetRegistrationBlob<T>(null, out effectId);
-    }
-
-    /// <summary>
-    /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
-    /// <typeparam name="TMapper">The type of <see cref="ID2D1TransformMapper{T}"/> implementation to register.</typeparam>
-    /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
-    /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info and for details on the binary format, see <see cref="GetRegistrationBlob{T}(ID2D1TransformMapperFactory{T}?, out Guid)"/>.</remarks>
-    public static ReadOnlyMemory<byte> GetRegistrationBlob<T, TMapper>(out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
-        where TMapper : class, ID2D1TransformMapper<T>, new()
-    {
-        return GetRegistrationBlob(D2D1TransformMapper.FactoryOf<T, TMapper>.Instance, out effectId);
-    }
-
-    /// <summary>
-    /// Gets a binary blob containing serialized information that can be used to register an effect, by using <c>ID2D1Factory1::RegisterEffectFromString</c>.
-    /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the registration blob for.</typeparam>
-    /// <param name="mapperFactory">An optional factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for the transform.</param>
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <returns>A blob containing serialized information that can be used to register an effect.</returns>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
@@ -337,19 +269,17 @@ public static unsafe class D2D1PixelShaderEffect
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
     /// </para>
     /// </remarks>
-    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(ID2D1TransformMapperFactory<T>? mapperFactory, out Guid effectId)
+    public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
-        PixelShaderEffect.For<T>.Initialize(mapperFactory);
-
         ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
         writer.WriteRaw(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
-        writer.WriteRaw(PixelShaderEffect.For<T>.Id);
-        writer.WriteRaw(PixelShaderEffect.For<T>.InputCount);
+        writer.WriteRaw(PixelShaderEffect.For<T>.Instance.Id);
+        writer.WriteRaw(PixelShaderEffect.For<T>.Instance.InputCount);
 
         // Build the XML text
         writer.WriteRaw("""
@@ -368,7 +298,7 @@ public static unsafe class D2D1PixelShaderEffect
             """u8);
 
         // Add the input nodes
-        for (int i = 0; i < PixelShaderEffect.For<T>.InputCount; i++)
+        for (int i = 0; i < PixelShaderEffect.For<T>.Instance.InputCount; i++)
         {
             writer.WriteRaw("        <Input name='Source"u8);
             writer.WriteAsUtf8(i);
@@ -432,6 +362,9 @@ public static unsafe class D2D1PixelShaderEffect
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
                 </Property>
+                <Property name='TransformMapper' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapper'/>
+                </Property>
             </Effect>
             """u8);
 
@@ -439,7 +372,7 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
 
         // Bindings
-        writer.WriteRaw(17);
+        writer.WriteRaw(D2D1PixelShaderEffectProperty.NumberOfProperties);
         writer.WriteRaw("ConstantBuffer"u8);
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetConstantBuffer);
@@ -508,16 +441,20 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetResourceTextureManager15);
         writer.WriteRaw((nint)PixelShaderEffect.SetResourceTextureManager15);
+        writer.WriteRaw("TransformMapper"u8);
+        writer.WriteRaw((byte)'\0');
+        writer.WriteRaw((nint)PixelShaderEffect.GetTransformMapper);
+        writer.WriteRaw((nint)PixelShaderEffect.SetTransformMapper);
 
         // Effect factory
-        writer.WriteRaw((nint)PixelShaderEffect.For<T>.Factory);
+        writer.WriteRaw((nint)PixelShaderEffect.For<T>.Instance.Factory);
 
         byte[] registrationBlob = writer.WrittenSpan.ToArray();
 
         writer.Dispose();
 
         // Extract the effect id (the same that was encoded in the registration blob)
-        effectId = PixelShaderEffect.For<T>.Id;
+        effectId = PixelShaderEffect.For<T>.Instance.Id;
 
         return registrationBlob;
     }
@@ -548,14 +485,12 @@ public static unsafe class D2D1PixelShaderEffect
             ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The pointer to the target ID2D1Effect result cannot be null.");
         }
 
-        if (!PixelShaderEffect.For<T>.TryGetId(out Guid id))
+        fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
         {
-            ThrowHelper.ThrowInvalidOperationException("The effect for the input shader type has not been initialized yet.");
+            ((ID2D1DeviceContext*)d2D1DeviceContext)->CreateEffect(
+                effectId: pGuid,
+                effect: (ID2D1Effect**)d2D1Effect).Assert();
         }
-
-        ((ID2D1DeviceContext*)d2D1DeviceContext)->CreateEffect(
-            effectId: &id,
-            effect: (ID2D1Effect**)d2D1Effect).Assert();
     }
 
     /// <summary>
@@ -610,7 +545,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// Sets the resource texture manager from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
-    /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance..</param>
+    /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance.</param>
     /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
@@ -634,6 +569,63 @@ public static unsafe class D2D1PixelShaderEffect
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)resourceTextureManager2.GetAddressOf(),
+            dataSize: (uint)sizeof(void*)).Assert();
+    }
+
+    /// <summary>
+    /// Sets the transform mapper for an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object (see <see cref="D2D1TransformMapper{T}"/>).</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetTransformMapperForD2D1Effect(void* d2D1Effect, void* transformMapper)
+    {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (transformMapper is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input ID2D1TransformMapper object cannot be null.");
+        }
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.TransformMapper,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)&transformMapper,
+            dataSize: (uint)sizeof(void*)).Assert();
+    }
+
+    /// <summary>
+    /// Sets the transform mapper for an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
+    /// </summary>
+    /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
+    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
+    public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1TransformMapper<T> transformMapper)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        if (d2D1Effect is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
+        }
+
+        if (transformMapper is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input D2D1TransformMapper<T> object cannot be null.");
+        }
+
+        using ComPtr<ID2D1TransformMapper> transformMapper2 = default;
+
+        transformMapper.GetD2D1TransformMapper(transformMapper2.GetAddressOf());
+
+        ((ID2D1Effect*)d2D1Effect)->SetValue(
+            index: D2D1PixelShaderEffectProperty.TransformMapper,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)transformMapper2.GetAddressOf(),
             dataSize: (uint)sizeof(void*)).Assert();
     }
 }

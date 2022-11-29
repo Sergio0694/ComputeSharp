@@ -17,7 +17,7 @@ public partial class D2D1EffectRegistrationDataTests
         Assert.AreEqual(effectId, data.ClassId);
         Assert.AreEqual(2, data.NumberOfInputs);
         Assert.IsTrue(data.EffectFactory is not null);
-        Assert.AreEqual(17, data.PropertyBindings.Length);
+        Assert.AreEqual(18, data.PropertyBindings.Length);
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ConstantBuffer), data.PropertyBindings.Span[0].PropertyName);
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager0), data.PropertyBindings.Span[1].PropertyName);
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager1), data.PropertyBindings.Span[2].PropertyName);
@@ -35,6 +35,7 @@ public partial class D2D1EffectRegistrationDataTests
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager13), data.PropertyBindings.Span[14].PropertyName);
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager14), data.PropertyBindings.Span[15].PropertyName);
         Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager15), data.PropertyBindings.Span[16].PropertyName);
+        Assert.AreEqual(nameof(D2D1PixelShaderEffectProperty.TransformMapper), data.PropertyBindings.Span[17].PropertyName);
 
         foreach (ref readonly D2D1PropertyBinding propertyBinding in data.PropertyBindings.Span)
         {
@@ -103,6 +104,9 @@ public partial class D2D1EffectRegistrationDataTests
                 </Property>
                 <Property name='ResourceTextureManager15' type='iunknown'>
                     <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
+                </Property>
+                <Property name='TransformMapper' type='iunknown'>
+                    <Property name='DisplayName' type='string' value='TransformMapper'/>
                 </Property>
             </Effect>
             """, data.PropertyXml);

@@ -12,81 +12,81 @@ public static class D2D1TransformMapperFactory<T>
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.
     /// </summary>
     /// <param name="amount">The fixed inflate amount to use (applies to all edges of the input area).</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Inflate(int amount)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
+    public static D2D1TransformMapper<T> Inflate(int amount)
     {
-        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.ConstantAmount { Amount = amount } };
+        return new D2D1InflateTransformMapper<T>.ConstantAmount { Amount = amount };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.
     /// </summary>
     /// <param name="left">The fixed left inflate amount to use.</param>
     /// <param name="top">The fixed top inflate amount to use.</param>
     /// <param name="right">The fixed right inflate amount to use.</param>
     /// <param name="bottom">The fixed bottom inflate amount to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Inflate(int left, int top, int right, int bottom)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
+    public static D2D1TransformMapper<T> Inflate(int left, int top, int right, int bottom)
     {
-        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.ConstantLeftTopRightBottomAmount { Left = left, Top = top, Right = right, Bottom = bottom } };
+        return new D2D1InflateTransformMapper<T>.ConstantLeftTopRightBottomAmount { Left = left, Top = top, Right = right, Bottom = bottom };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the inflate amount to use (applies to all edges of the input area).</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Inflate(Accessor<int> accessor)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
+    public static D2D1TransformMapper<T> Inflate(Accessor<int> accessor)
     {
         if (accessor is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<int> object cannot be null.");
         }
 
-        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicAmount { Accessor = accessor } };
+        return new D2D1InflateTransformMapper<T>.DynamicAmount { Accessor = accessor };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the inflate amount to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an inflate transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
+    public static D2D1TransformMapper<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
     {
         if (accessor is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<(int Left, int Top, int Right, int Bottom)> object cannot be null.");
         }
 
-        return new D2D1InflateTransformMapperFactory<T> { ParametersAccessor = new D2D1InflateTransformMapperFactory<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor } };
+        return new D2D1InflateTransformMapper<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.
     /// </summary>
     /// <param name="matrix">The fixed transformation matrix to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Transform(Matrix3x2 matrix)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
+    public static D2D1TransformMapper<T> Transform(Matrix3x2 matrix)
     {
-        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.ConstantMatrix { Amount = matrix } };
+        return new D2D1AffineTransformMapper<T>.ConstantMatrix { Amount = matrix };
     }
 
     /// <summary>
-    /// Creates an <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.
+    /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.
     /// </summary>
     /// <param name="accessor">The input <see cref="Accessor{TResult}"/> instance to retrieve the transformation matrix to use.</param>
-    /// <returns>The resulting <see cref="ID2D1TransformMapperFactory{T}"/> instance for an affine transform.</returns>
-    public static ID2D1TransformMapperFactory<T> Transform(Accessor<Matrix3x2> accessor)
+    /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
+    public static D2D1TransformMapper<T> Transform(Accessor<Matrix3x2> accessor)
     {
         if (accessor is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> object cannot be null.");
         }
 
-        return new D2D1AffineTransformMapperFactory.For<T> { ParametersAccessor = new D2D1AffineTransformMapperFactory.For<T>.DynamicMatrix { Accessor = accessor } };
+        return new D2D1AffineTransformMapper<T>.DynamicMatrix { Accessor = accessor };
     }
 
     /// <summary>
