@@ -181,6 +181,7 @@ internal unsafe partial struct D2D1TransformMapperImpl
     /// </summary>
     /// <param name="transformMapper">The target <see cref="ID2D1TransformMapper"/> pointer.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    /// <remarks>This method must only be called if the caller has taken a lock on <see cref="SpinLock"/> already.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CopyToWithNoLock(ID2D1TransformMapper** transformMapper)
     {
@@ -190,7 +191,10 @@ internal unsafe partial struct D2D1TransformMapperImpl
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    ///<remarks>This method is the same as <see cref="QueryInterface(Guid*, void**)"/> but skips locks.</remarks>
+    /// <remarks>
+    /// <para>This method is the same as <see cref="QueryInterface(Guid*, void**)"/> but skips locks.</para>
+    /// <para>This method must only be called if the caller has taken a lock on <see cref="SpinLock"/> already.</para>
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int QueryInterfaceWithNoLock(Guid* riid, void** ppvObject)
     {
