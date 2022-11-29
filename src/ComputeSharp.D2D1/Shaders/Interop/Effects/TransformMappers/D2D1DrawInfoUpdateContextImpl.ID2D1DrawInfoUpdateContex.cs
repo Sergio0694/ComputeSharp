@@ -84,14 +84,14 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int GetConstantBufferSize(D2D1DrawInfoUpdateContextImpl* @this, uint* size)
         {
-            if (@this->d2D1DrawInfo is null)
-            {
-                return RO.RO_E_CLOSED;
-            }
-
             if (size is null)
             {
                 return E.E_POINTER;
+            }
+
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
             }
 
             *size = (uint)@this->constantBufferSize;
@@ -103,11 +103,6 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int GetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
-            if (@this->d2D1DrawInfo is null)
-            {
-                return RO.RO_E_CLOSED;
-            }
-
             if (buffer is null)
             {
                 return E.E_POINTER;
@@ -123,6 +118,11 @@ partial struct D2D1DrawInfoUpdateContextImpl
                 return E.E_NOT_VALID_STATE;
             }
 
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
+            }
+
             if (@this->constantBufferSize > 0)
             {
                 Buffer.MemoryCopy(@this->constantBuffer, buffer, bufferCount, @this->constantBufferSize);
@@ -135,11 +135,6 @@ partial struct D2D1DrawInfoUpdateContextImpl
         [UnmanagedCallersOnly]
         public static int SetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
-            if (@this->d2D1DrawInfo is null)
-            {
-                return RO.RO_E_CLOSED;
-            }
-
             if (buffer is null)
             {
                 return E.E_POINTER;
@@ -148,6 +143,11 @@ partial struct D2D1DrawInfoUpdateContextImpl
             if (bufferCount != (uint)@this->constantBufferSize)
             {
                 return E.E_INVALIDARG;
+            }
+
+            if (@this->d2D1DrawInfo is null)
+            {
+                return RO.RO_E_CLOSED;
             }
 
             // If the buffer is empty, just do nothing
