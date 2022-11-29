@@ -255,32 +255,38 @@ internal unsafe partial struct D2D1TransformMapperImpl
 
         this.spinLock.Enter(ref lockTaken);
 
+        uint referenceCount;
+
         try
         {
-            uint referenceCount = (uint)--this.referenceCount;
+            referenceCount = (uint)--this.referenceCount;
 
             // There are two special cases to consider here:
             //   - If the reference count is 1, it means that the D2D1TransformMapper<T> object is the only
             //     thing keeping this CCW alive. In that case, we can reset the GC handle pointing back to it,
             //     so that it can be collected if nobody else is referencing it. This breaks the reference cycle
             //     between the two object, which would have otherwise caused them to remain alive forever.
-            //   - If the reference count is 0, the object is simply being destroyed.
+            //   - If the reference count is 0, the object is simply being destroyed. This is moved outside of
+            //     this try/finally block, as otherwise accessing the lock from the finally block would write to
+            //     out of bounds memory (as the field is in native memory that has just been freed).
             if (referenceCount == 1)
             {
                 this.transformMapperHandle.Target = null;
             }
-            else if (referenceCount == 0)
-            {
-                this.transformMapperHandle.Free();
-
-                NativeMemory.Free(Unsafe.AsPointer(ref this));
-            }
-
-            return referenceCount;
         }
         finally
         {
             this.spinLock.Exit();
         }
+
+        // Destroy the object if this was the last reference left (see notes above as to why this is here)
+        if (referenceCount == 0)
+        {
+            this.transformMapperHandle.Free();
+
+            NativeMemory.Free(Unsafe.AsPointer(ref this));
+        }
+
+        return referenceCount;
     }
 }
