@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <inheritdoc/>
 unsafe partial struct D2D1DrawInfoUpdateContextImpl
 {
-    /// <inheritdoc cref="ID2D1DrawInfoUpdateContexInternal.Close"/>
+    /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
     public int Close()
     {
         this.d2D1DrawInfo = null;
@@ -19,9 +19,9 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
     }
 
     /// <summary>
-    /// The implementation for <see cref="ID2D1DrawInfoUpdateContexInternal"/>.
+    /// The implementation for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
     /// </summary>
-    private static class ID2D1DrawInfoUpdateContexInternalMethods
+    private static class ID2D1DrawInfoUpdateContextInternalMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Close"/>
@@ -76,7 +76,7 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContexInternal.Close"/>
+        /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
         [UnmanagedCallersOnly]
         public static int Close(D2D1DrawInfoUpdateContextImpl* @this)
         {

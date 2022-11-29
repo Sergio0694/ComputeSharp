@@ -29,12 +29,12 @@ namespace ComputeSharp.D2D1.Interop;
 /// interface ID2D1TransformMapper : IUnknown
 /// {
 ///     HRESULT MapInputRectsToOutputRect(
-///         [in]  const ID2D1DrawInfoUpdateContex* updateContext,
-///         [in]  const RECT*                      inputRects,
-///         [in]  const RECT*                      inputOpaqueSubRects,
-///               UINT32                           inputRectCount,
-///         [out] RECT*                            outputRect,
-///         [out] RECT*                            outputOpaqueSubRect);
+///         [in]  const ID2D1DrawInfoUpdateContext* updateContext,
+///         [in]  const RECT*                       inputRects,
+///         [in]  const RECT*                       inputOpaqueSubRects,
+///               UINT32                            inputRectCount,
+///         [out] RECT*                             outputRect,
+///         [out] RECT*                             outputOpaqueSubRect);
 /// 
 ///     HRESULT MapOutputRectToInputRects(
 ///         [in]  const RECT* outputRect,
@@ -60,10 +60,10 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>
 /// The main difference between these APIs and the ones in <c>ID2D1Transform</c> is the fact that this interface is standalone (ie. it doesn't inherit from <c>ID2D1TransformNode</c>),
 /// and that it allows transform mappers to also read and update additional data tied to an effect instance (such as the shader constant buffer). This is done through the
-/// <c>ID2D1DrawInfoUpdateContex</c> interface, that is passed to <c>MapInputRectsToOutputRect</c>. This interface is defined as follows:
+/// <c>ID2D1DrawInfoUpdateContext</c> interface, that is passed to <c>MapInputRectsToOutputRect</c>. This interface is defined as follows:
 /// <code>
 /// [uuid(430C5B40-AE16-485F-90E6-4FA4915144B6)]
-/// interface ID2D1DrawInfoUpdateContex : IUnknown
+/// interface ID2D1DrawInfoUpdateContext : IUnknown
 /// {
 ///     HRESULT GetConstantBufferSize([out] UINT32 *size);
 /// 
@@ -78,7 +78,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// </code>
 /// </para>
 /// <para>
-/// That is, <c>ID2D1DrawInfoUpdateContex</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
+/// That is, <c>ID2D1DrawInfoUpdateContext</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
 /// that is owned by the effect being used, in a safe way. For instance, it allows a transform to read and update the constant buffer, which can be used to allow a transform to
 /// pass the exact dispatch area size to an input shader, without the consumer having to manually query that information beforehand (which might not be available either).
 /// </para>

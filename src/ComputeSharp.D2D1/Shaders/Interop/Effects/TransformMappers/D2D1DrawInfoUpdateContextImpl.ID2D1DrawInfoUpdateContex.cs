@@ -13,7 +13,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
     /// <summary>
     /// The implementation for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
-    private static unsafe class ID2D1DrawInfoUpdateContexMethods
+    private static unsafe class ID2D1DrawInfoUpdateContextMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="GetConstantBufferSize"/>
