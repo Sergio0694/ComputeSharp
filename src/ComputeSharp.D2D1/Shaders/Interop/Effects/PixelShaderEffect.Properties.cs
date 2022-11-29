@@ -215,7 +215,12 @@ unsafe partial struct PixelShaderEffect
         }
         else
         {
-            _ = ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data);
+            HRESULT hresult = ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data);
+
+            if (!Windows.SUCCEEDED(hresult))
+            {
+                return hresult;
+            }
         }
 
         if (actualSize is not null)
@@ -299,7 +304,12 @@ unsafe partial struct PixelShaderEffect
 
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureIndex];
 
-        _ = resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
+        HRESULT hresult = resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
+
+        if (!Windows.SUCCEEDED(hresult))
+        {
+            return hresult;
+        }
 
         if (actualSize is not null)
         {
