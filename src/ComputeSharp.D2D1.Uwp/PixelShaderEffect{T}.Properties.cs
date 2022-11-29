@@ -1,5 +1,4 @@
 using System;
-using ComputeSharp.D2D1.Interop.Effects;
 using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Effects;
 
@@ -8,20 +7,6 @@ namespace ComputeSharp.D2D1.Uwp;
 /// <inheritdoc/>
 partial class PixelShaderEffect<T>
 {
-    /// <summary>
-    /// Configures the <see cref="ID2D1TransformMapperFactory{T}"/> to use for effects of type <typeparamref name="T"/>.
-    /// </summary>
-    /// <param name="d2D1DrawTransformMapperFactory">The factory of <see cref="ID2D1TransformMapper{T}"/> instances to use for each created effect.</param>
-    /// <exception cref="InvalidOperationException">Thrown if initialization is attempted with a mismatched transform factory.</exception>
-    /// <remarks>
-    /// <para>Initialization can only be done once, and is shared across all effects of type <typeparamref name="T"/>.</para>
-    /// <para>Initializing an effect is not necessary before using it: if no transform has been set, the default one will be used.</para>
-    /// </remarks>
-    public static void ConfigureD2D1TransformMapperFactory(ID2D1TransformMapperFactory<T>? d2D1DrawTransformMapperFactory)
-    {
-        PixelShaderEffect.For<T>.Initialize(d2D1DrawTransformMapperFactory);
-    }
-
     /// <summary>
     /// Gets or sets the current <typeparamref name="T"/> value in use.
     /// </summary>

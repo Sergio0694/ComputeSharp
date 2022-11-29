@@ -195,26 +195,12 @@ unsafe partial class PixelShaderEffect<T>
         // D2D1PixelShaderEffect APIs specifically need an ID2D1Factory1 (as ID2D1Factory1::RegisterEffectFromString is used)
         d2D1Factory.CopyTo(d2D1Factory1.GetAddressOf()).Assert();
 
-        bool isPossiblyRegistered = true;
-
-        // If the effect hasn't been initialized explicitly, initialize it now
-        if (!PixelShaderEffect.For<T>.TryGetId(out Guid effectId))
-        {
-            PixelShaderEffect.For<T>.Initialize(null);
-
-            effectId = PixelShaderEffect.For<T>.Id;
-            isPossiblyRegistered = false;
-        }
-
         fixed (ID2D1Effect** d2D1Effect = this.d2D1Effect)
         {
-            HRESULT hresult = D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED;
+            Guid effectId = PixelShaderEffect.For<T>.Instance.Id;
 
             // Try to create an instance of the effect in use and store it in the current object
-            if (isPossiblyRegistered)
-            {
-                hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
-            }
+            HRESULT hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
 
             // Check if creation failed due to the effect not being registered. In that case, register
             // it and then try again. This is much faster than check whether the effect is registered
@@ -222,7 +208,7 @@ unsafe partial class PixelShaderEffect<T>
             if (hresult == D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED)
             {
                 // Register the effect with the factory (pass the same D2D1 draw transform mapper factory that was used before)
-                D2D1PixelShaderEffect.RegisterForD2D1Factory1(d2D1Factory1.Get(), PixelShaderEffect.For<T>.D2D1DrawTransformMapperFactory, out _);
+                D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
 
                 // Try to create the effect again
                 hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
