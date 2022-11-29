@@ -122,4 +122,10 @@ public static class D2D1PixelShaderEffectProperty
     /// <para>For more info, see <see href="https://learn.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</para>
     /// </remarks>
     public const uint TransformMapper = 17;
+
+    /// <summary>
+    /// The total number of properties.
+    /// </summary>
+    /// <remarks>This should always be the value of the last property above, plus 1.</remarks>
+    internal const uint NumberOfProperties = 18;
 }

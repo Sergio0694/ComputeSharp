@@ -151,7 +151,7 @@ public static unsafe class D2D1PixelShaderEffect
         fixed (char* pTransformMapperPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapper))
         {
             // Prepare the effect binding functions
-            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[18];
+            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[(int)D2D1PixelShaderEffectProperty.NumberOfProperties];
 
             // Property names
             d2D1PropertyBinding[0].propertyName = (ushort*)pBufferPropertyName;
@@ -220,7 +220,7 @@ public static unsafe class D2D1PixelShaderEffect
                     classId: pGuid,
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
-                    bindingsCount: 18,
+                    bindingsCount: D2D1PixelShaderEffectProperty.NumberOfProperties,
                     effectFactory: PixelShaderEffect.For<T>.Instance.Factory).Assert();
             }
 
@@ -372,7 +372,7 @@ public static unsafe class D2D1PixelShaderEffect
         writer.WriteRaw((byte)'\0');
 
         // Bindings
-        writer.WriteRaw(18);
+        writer.WriteRaw(D2D1PixelShaderEffectProperty.NumberOfProperties);
         writer.WriteRaw("ConstantBuffer"u8);
         writer.WriteRaw((byte)'\0');
         writer.WriteRaw((nint)PixelShaderEffect.GetConstantBuffer);
