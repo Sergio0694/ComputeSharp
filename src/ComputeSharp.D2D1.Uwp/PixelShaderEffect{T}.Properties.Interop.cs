@@ -90,6 +90,49 @@ unsafe partial class PixelShaderEffect<T>
     }
 
     /// <summary>
+    /// Gets the marshalled value for <see cref="ResourceTextureManagers"/>.
+    /// </summary>
+    /// <param name="index">The index of the <see cref="D2D1ResourceTextureManager"/> source to get or set.</param>
+    /// <returns>The marshalled value for <see cref="ResourceTextureManagers"/>.</returns>
+    private D2D1ResourceTextureManager? GetResourceTextureManager(int index)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            D2D1ResourceTextureManager? resourceTextureManager = ResourceTextureManagers.Storage[index];
+
+            return this.d2D1Effect.Get() switch
+            {
+                not null => this.d2D1Effect.Get()->GetResourceTextureManager(resourceTextureManager, index),
+                _ => resourceTextureManager
+            };
+        }
+    }
+
+    /// <summary>
+    /// Sets the marshalled value for <see cref="ResourceTextureManagers"/>.
+    /// </summary>
+    /// <param name="value">The value to set for <see cref="ResourceTextureManagers"/>.</param>
+    /// <param name="index">The index of the <see cref="D2D1ResourceTextureManager"/> source to get or set.</param>
+    private void SetResourceTextureManager(D2D1ResourceTextureManager value, int index)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            if (this.d2D1Effect.Get() is not null)
+            {
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), value, index);
+            }
+            else
+            {
+                ResourceTextureManagers.Storage[index] = value;
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets the marshalled value for <see cref="CacheOutput"/>.
     /// </summary>
     /// <returns>The marshalled value for <see cref="CacheOutput"/>.</returns>

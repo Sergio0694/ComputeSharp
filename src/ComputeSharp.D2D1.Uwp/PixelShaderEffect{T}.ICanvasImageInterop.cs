@@ -166,7 +166,10 @@ unsafe partial class PixelShaderEffect<T>
             return;
         }
 
-        // Cache the last update values for the constant buffer, cache output and buffer precision properties
+        // Cache the last update values for the constant buffer, cache output, buffer precision properties, etc.
+        // Note: the resource texture managers are deliberately not read back, as the only supported way to set
+        // those is directly from the current effect instance. As such, they'd all either be the same instances
+        // that are already stored locally, or trying to retrieve them would just throw an exception.
         this.value = this.d2D1Effect.Get()->GetConstantBuffer<T>();
         this.transformMapper = this.d2D1Effect.Get()->GetTransformMapper<T>();
         this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
@@ -238,6 +241,15 @@ unsafe partial class PixelShaderEffect<T>
         if (this.d2D1BufferPrecision != D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_UNKNOWN)
         {
             this.d2D1Effect.Get()->SetPrecisionProperty(this.d2D1BufferPrecision);
+        }
+
+        // Set all available resource texture managers (only set those that are not null, as they're all null by default anyway)
+        for (int i = 0; i < 16; i++)
+        {
+            if (ResourceTextureManagers.Storage[i] is D2D1ResourceTextureManager resourceTextureManager)
+            {
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, i);
+            }
         }
 
         // TODO: port base CanvasEffect::Realize logic
