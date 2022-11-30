@@ -63,4 +63,15 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// The backing field for <see cref="BufferPrecision"/>.
     /// </summary>
     private D2D1_BUFFER_PRECISION d2D1BufferPrecision;
+
+    /// <summary>
+    /// Creates a new <see cref="PixelShaderEffect{T}"/> instance.
+    /// </summary>
+    public PixelShaderEffect()
+    {
+        this.referenceTracker = new ReferenceTracker(this);
+
+        Sources = new SourceCollection(this);
+        ResourceTextureManagers = new ResourceTextureManagerCollection(this);
+    }
 }
