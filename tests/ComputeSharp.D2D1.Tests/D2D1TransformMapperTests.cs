@@ -158,7 +158,7 @@ public partial class D2D1TransformMapperTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<ShaderWithDispatchArea>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new ShaderWithDispatchArea(111, 222), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), new ShaderWithDispatchArea(111, 222));
 
         DispatchAreaTransformMapper transformMapper = new() { ExpectedWidth = 111, ExpectedHeight = 222 };
 
