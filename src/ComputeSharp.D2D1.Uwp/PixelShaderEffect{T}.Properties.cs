@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
+using ComputeSharp.D2D1.Interop;
 using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Effects;
 
@@ -17,9 +19,15 @@ partial class PixelShaderEffect<T>
     }
 
     /// <summary>
-    /// Gets the <see cref="SourceCollection"/> object associated with the current instance.
+    /// Gets or sets the <see cref="D2D1TransformMapper{T}"/> instance to use for the effect, if any.
     /// </summary>
-    public SourceCollection Sources { get; } = new();
+    /// <exception cref="ArgumentNullException">Thrown if the value is set to <see langword="null"/>.</exception>
+    [DisallowNull]
+    public D2D1TransformMapper<T>? TransformMapper
+    {
+        get => GetTransformMapper();
+        set => SetTransformMapper(value);
+    }
 
     /// <summary>
     /// Gets or sets a value indicating whether to enable caching the output from drawing this effect.
@@ -39,6 +47,11 @@ partial class PixelShaderEffect<T>
         get => GetBufferPrecision();
         set => SetBufferPrecision(value);
     }
+
+    /// <summary>
+    /// Gets the <see cref="SourceCollection"/> object associated with the current instance.
+    /// </summary>
+    public SourceCollection Sources { get; } = new();
 
     /// <summary>
     /// Represents the collection of <see cref="IGraphicsEffectSource"/> sources in a <see cref="PixelShaderEffect{T}"/> instance.

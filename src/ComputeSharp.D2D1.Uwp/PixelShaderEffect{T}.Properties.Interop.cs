@@ -51,6 +51,45 @@ unsafe partial class PixelShaderEffect<T>
     }
 
     /// <summary>
+    /// Gets the marshalled value for <see cref="TransformMapper"/>.
+    /// </summary>
+    /// <returns>The marshalled value for <see cref="TransformMapper"/>.</returns>
+    private D2D1TransformMapper<T>? GetTransformMapper()
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            return this.d2D1Effect.Get() switch
+            {
+                not null => this.d2D1Effect.Get()->GetTransformMapper<T>(),
+                _ => this.transformMapper
+            };
+        }
+    }
+
+    /// <summary>
+    /// Sets the marshalled value for <see cref="TransformMapper"/>.
+    /// </summary>
+    /// <param name="value">The value to set for <see cref="TransformMapper"/>.</param>
+    private void SetTransformMapper(D2D1TransformMapper<T> value)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            if (this.d2D1Effect.Get() is not null)
+            {
+                D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(this.d2D1Effect.Get(), value);
+            }
+            else
+            {
+                this.transformMapper = value;
+            }
+        }
+    }
+
+    /// <summary>
     /// Gets the marshalled value for <see cref="CacheOutput"/>.
     /// </summary>
     /// <returns>The marshalled value for <see cref="CacheOutput"/>.</returns>
@@ -78,7 +117,6 @@ unsafe partial class PixelShaderEffect<T>
 
         lock (this.lockObject)
         {
-            // If the effect is realized, set the property on the underlying ID2D1Effect object
             if (this.d2D1Effect.Get() is not null)
             {
                 this.d2D1Effect.Get()->SetCachedProperty(value);
