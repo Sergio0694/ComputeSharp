@@ -168,6 +168,7 @@ unsafe partial class PixelShaderEffect<T>
 
         // Cache the last update values for the constant buffer, cache output and buffer precision properties
         this.value = this.d2D1Effect.Get()->GetConstantBuffer<T>();
+        this.transformMapper = this.d2D1Effect.Get()->GetTransformMapper<T>();
         this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
@@ -220,6 +221,12 @@ unsafe partial class PixelShaderEffect<T>
 
         // Set the constant buffer for the effect
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.value, this.d2D1Effect.Get());
+
+        // If there is a transform mapper, set it in the effect
+        if (this.transformMapper is not null)
+        {
+            D2D1PixelShaderEffect.SetTransformMapperForD2D1Effect(this.d2D1Effect.Get(), this.transformMapper);
+        }
 
         // If cache input has been set, forward that to the new effect
         if (this.cacheOutput)

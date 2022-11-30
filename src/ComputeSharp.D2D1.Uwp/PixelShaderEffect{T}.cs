@@ -1,4 +1,5 @@
 using ABI.Microsoft.Graphics.Canvas;
+using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
@@ -47,6 +48,11 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// The backing field for <see cref="Value"/>.
     /// </summary>
     private T value;
+
+    /// <summary>
+    /// The backing field for <see cref="TransformMapper"/>.
+    /// </summary>
+    private D2D1TransformMapper<T>? transformMapper;
 
     /// <summary>
     /// The backing field for <see cref="CacheOutput"/>.
