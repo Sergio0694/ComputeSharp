@@ -1,12 +1,14 @@
+using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
-using System;
-using ComputeSharp.D2D1.Extensions;
-using TerraFX.Interop.DirectX;
-using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
-using TerraFX.Interop.Windows;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
+using ComputeSharp.D2D1.Helpers;
+using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
@@ -82,6 +84,53 @@ internal static unsafe class ID2D1EffectExtensions
 
         // Retrieve the managed wrapper from the GCHandle
         return (D2D1TransformMapper<T>)GCHandle.FromIntPtr(handlePtr).Target!;
+    }
+
+    /// <summary>
+    /// Gets the <see cref="D2D1ResourceTextureManager"/> instance from a given <see cref="ID2D1Effect"/> object.
+    /// </summary>
+    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
+    /// <param name="source">The current cached source instance.</param>
+    /// <param name="index">The index of the resource texture manager to retrieve.</param>
+    /// <returns>The <see cref="D2D1ResourceTextureManager"/> instance for <paramref name="d2D1Effect"/>.</returns>
+    public static D2D1ResourceTextureManager? GetResourceTextureManager(
+        this ref ID2D1Effect d2D1Effect,
+        D2D1ResourceTextureManager? source,
+        int index)
+    {
+        using ComPtr<ID2D1ResourceTextureManager> d2D1ResourceTextureManager = default;
+
+        // Get the ID2D1ResourceTextureManager object from the effect
+        d2D1Effect.GetValue(
+            index: (uint)(D2D1PixelShaderEffectProperty.ResourceTextureManager0 + index),
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
+            data: (byte*)d2D1ResourceTextureManager.GetAddressOf(),
+            dataSize: (uint)sizeof(void*)).Assert();
+
+        // If there is no resource texture manager, just return null (this is the default state)
+        if (d2D1ResourceTextureManager.Get() is null)
+        {
+            return null;
+        }
+
+        // Otherwise, the source must not be null and wrapping the same CCW
+        if (source is not null)
+        {
+            using ComPtr<ID2D1ResourceTextureManager> d2D1ResourceTextureManagerSource = default;
+
+            source.GetD2D1ResourceTextureManager(d2D1ResourceTextureManagerSource.GetAddressOf());
+
+            // Check if the instances match, and return the managed wrapper we already have
+            if (d2D1ResourceTextureManager.IsSameInstance(in d2D1ResourceTextureManagerSource))
+            {
+                return source;
+            }
+        }
+
+        // There was no way to retrieve the correct managed wrapper
+        ThrowHelper.ThrowInvalidOperationException("Cannot retrieve a D2D1ResourceTextureManager instance wrapping a native object that was set externally.");
+
+        return null;
     }
 
     /// <summary>

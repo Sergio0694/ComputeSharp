@@ -95,10 +95,10 @@ internal struct Rectangle64
     /// <param name="rectangle">The input <see cref="Rectangle64"/> instance to compute the union with.</param>
     public void Union(Rectangle64 rectangle)
     {
-        long left = Math.Min(this.Left, rectangle.Left);
-        long top = Math.Min(this.Top, rectangle.Top);
-        long right = Math.Max(this.Right, rectangle.Right);
-        long bottom = Math.Max(this.Bottom, rectangle.Bottom);
+        long left = Math.Min(Left, rectangle.Left);
+        long top = Math.Min(Top, rectangle.Top);
+        long right = Math.Max(Right, rectangle.Right);
+        long bottom = Math.Max(Bottom, rectangle.Bottom);
 
         this.x = left;
         this.y = top;
@@ -114,8 +114,8 @@ internal struct Rectangle64
     {
         long left = Math.Max(this.x, rectangle.x);
         long top = Math.Max(this.y, rectangle.y);
-        long right = Math.Min(this.Right, rectangle.Right);
-        long bottom = Math.Min(this.Bottom, rectangle.Bottom);
+        long right = Math.Min(Right, rectangle.Right);
+        long bottom = Math.Min(Bottom, rectangle.Bottom);
 
         this.x = left;
         this.y = top;
