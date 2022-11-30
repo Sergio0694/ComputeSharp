@@ -223,7 +223,7 @@ unsafe partial class PixelShaderEffect<T>
         }
 
         // Set the constant buffer for the effect
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.value, this.d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.d2D1Effect.Get(), in this.value);
 
         // If there is a transform mapper, set it in the effect
         if (this.transformMapper is not null)

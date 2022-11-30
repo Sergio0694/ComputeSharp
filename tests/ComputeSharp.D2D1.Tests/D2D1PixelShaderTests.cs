@@ -630,6 +630,6 @@ public partial class D2D1PixelShaderTests
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void SetConstantBufferForD2D1DrawInfo_NullD2D1DrawInfo()
     {
-        D2D1PixelShader.SetConstantBufferForD2D1DrawInfo<InvertEffect>(default, null);
+        D2D1PixelShader.SetConstantBufferForD2D1DrawInfo<InvertEffect>(null, default);
     }
 }

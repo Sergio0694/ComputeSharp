@@ -425,9 +425,9 @@ public sealed partial class BokehBlurEffect
             // Set the constant buffers
             for (int i = 0; i < numberOfComponents; i++)
             {
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForReals[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new VerticalConvolution.Shader((int)kernelSize), verticalConvolutionEffectsForImaginaries[i].Get());
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, this.kernelParameters[i].Z, this.kernelParameters[i].W), horizontalConvolutionEffects[i].Get());
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(verticalConvolutionEffectsForReals[i].Get(), new VerticalConvolution.Shader((int)kernelSize));
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(verticalConvolutionEffectsForImaginaries[i].Get(), new VerticalConvolution.Shader((int)kernelSize));
+                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(horizontalConvolutionEffects[i].Get(), new HorizontalConvolutionAndAccumulatePartials.Shader((int)kernelSize, this.kernelParameters[i].Z, this.kernelParameters[i].W));
             }
 
             // Build the effect graph:
