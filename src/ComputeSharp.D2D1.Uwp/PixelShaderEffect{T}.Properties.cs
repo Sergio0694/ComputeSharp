@@ -51,7 +51,12 @@ partial class PixelShaderEffect<T>
     /// <summary>
     /// Gets the <see cref="SourceCollection"/> object associated with the current instance.
     /// </summary>
-    public SourceCollection Sources { get; } = new();
+    public SourceCollection Sources { get; }
+
+    /// <summary>
+    /// Gets the <see cref="ResourceTextureManagerCollection"/> object associated with the current instance.
+    /// </summary>
+    public ResourceTextureManagerCollection ResourceTextureManagers { get; }
 
     /// <summary>
     /// Represents the collection of <see cref="IGraphicsEffectSource"/> sources in a <see cref="PixelShaderEffect{T}"/> instance.
@@ -59,12 +64,60 @@ partial class PixelShaderEffect<T>
     public sealed class SourceCollection
     {
         /// <summary>
+        /// Creates a new <see cref="SourceCollection"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="owner">The owning <see cref="PixelShaderEffect{T}"/> instance.</param>
+        internal SourceCollection(PixelShaderEffect<T> owner)
+        {
+            Owner = owner;
+        }
+
+        /// <summary>
+        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
+        /// </summary>
+        internal PixelShaderEffect<T> Owner { get; }
+
+        /// <summary>
         /// Gets or sets the <see cref="IGraphicsEffectSource"/> source at a specified index.
         /// </summary>
         /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
         /// <returns>The <see cref="IGraphicsEffectSource"/> source at the specified index.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index for the current effect.</exception>
         public IGraphicsEffectSource this[int index]
+        {
+            get => null!;
+            set { }
+        }
+    }
+
+    /// <summary>
+    /// Represents the collection of <see cref="D2D1ResourceTextureManager"/> objects in a <see cref="PixelShaderEffect{T}"/> instance.
+    /// </summary>
+    public sealed class ResourceTextureManagerCollection
+    {
+        /// <summary>
+        /// Creates a new <see cref="ResourceTextureManagerCollection"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="owner">The owning <see cref="PixelShaderEffect{T}"/> instance.</param>
+        internal ResourceTextureManagerCollection(PixelShaderEffect<T> owner)
+        {
+            Owner = owner;
+        }
+
+        /// <summary>
+        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
+        /// </summary>
+        internal PixelShaderEffect<T> Owner { get; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="D2D1ResourceTextureManager"/> object at a specified index.
+        /// </summary>
+        /// <param name="index">The index of the <see cref="D2D1ResourceTextureManager"/> source to get or set.</param>
+        /// <returns>The <see cref="D2D1ResourceTextureManager"/> object at the specified index.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the value is set to <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index for the current effect.</exception>
+        [DisallowNull]
+        public D2D1ResourceTextureManager this[int index]
         {
             get => null!;
             set { }

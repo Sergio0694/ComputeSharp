@@ -8,14 +8,6 @@ namespace ComputeSharp.D2D1.Uwp;
 partial class PixelShaderEffect<T>
 {
     /// <summary>
-    /// Creates a new <see cref="PixelShaderEffect{T}"/> instance.
-    /// </summary>
-    public PixelShaderEffect()
-    {
-        this.referenceTracker = new();
-    }
-
-    /// <summary>
     /// Releases unmanaged resources and performs other cleanup operations.
     /// </summary>
     ~PixelShaderEffect()
