@@ -23,7 +23,7 @@ internal unsafe struct ID2D1TransformMapperInternal
             ReadOnlySpan<byte> data = new byte[] {
                 0x65, 0xFC, 0xD8, 0xC5,
                 0x86, 0xFB,
-                0xF5, 0x9E,
+                0x2D, 0x4C,
                 0x9E, 0xF5,
                 0x95,
                 0xAE,
