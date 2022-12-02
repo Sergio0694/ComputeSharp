@@ -32,4 +32,11 @@ internal unsafe partial struct ID2D1Effect
     {
         return ((delegate* unmanaged[Stdcall]<ID2D1Effect*, uint, D2D1_PROPERTY_TYPE, byte*, uint, int>)(lpVtbl[11]))((ID2D1Effect*)Unsafe.AsPointer(ref this), index, type, data, dataSize);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(16)]
+    public void GetInput([NativeTypeName("UINT32")] uint index, ID2D1Image** input)
+    {
+        ((delegate* unmanaged[Stdcall]<ID2D1Effect*, uint, ID2D1Image**, void>)(lpVtbl[16]))((ID2D1Effect*)Unsafe.AsPointer(ref this), index, input);
+    }
 }

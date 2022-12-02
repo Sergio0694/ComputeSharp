@@ -24,7 +24,7 @@ internal static unsafe class ICanvasDeviceExtensions
         // Get the ICanvasResourceWrapperNative wrapper around the input device
         canvasDevice.QueryInterface(
             riid: Win32.__uuidof<ICanvasResourceWrapperNative>(),
-            ppvObject: (void**)canvasDeviceResourceWrapperNative.GetAddressOf()).Assert();
+            ppvObject: canvasDeviceResourceWrapperNative.GetVoidAddressOf()).Assert();
 
         // Get the underlying ID2D1Device1 instance in use
         HRESULT hresult = canvasDeviceResourceWrapperNative.Get()->GetNativeResource(
