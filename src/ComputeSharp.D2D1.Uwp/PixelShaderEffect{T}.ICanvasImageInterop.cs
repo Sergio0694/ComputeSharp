@@ -107,7 +107,7 @@ unsafe partial class PixelShaderEffect<T>
 
                 // Check that the input D2D device is the same instance as the current realization device, if any.
                 // If not and the effect has already been realized, unrealize it and store the new device to use.
-                if (!d2D1Device1.IsSameInstance(in this.d2D1RealizationDevice))
+                if (!d2D1Device1.Get()->IsSameInstance(this.d2D1RealizationDevice.Get()))
                 {
                     Unrealize();
 
