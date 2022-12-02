@@ -3,6 +3,7 @@ using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
+using Windows.Graphics.Effects;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -86,6 +87,27 @@ unsafe partial class PixelShaderEffect<T>
             {
                 this.transformMapper = value;
             }
+        }
+    }
+
+    /// <summary>
+    /// Gets the marshalled value for <see cref="Sources"/>.
+    /// </summary>
+    /// <param name="index">The index of the <see cref="Sources"/> source to get or set.</param>
+    /// <returns>The marshalled value for <see cref="Sources"/>.</returns>
+    private IGraphicsEffectSource? GetSource(int index)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            ref SourceCollection.SourceReference source = ref Sources.Storage[index];
+
+            return this.d2D1Effect.Get() switch
+            {
+                not null => this.d2D1Effect.Get()->GetSource(this.canvasDevice.Get(), ref source, index),
+                _ => source.GetWrapper()
+            };
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
@@ -9,6 +10,7 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using Windows.Graphics.Effects;
 
 #pragma warning disable CS0618
 
@@ -87,6 +89,50 @@ internal static unsafe class ID2D1EffectExtensions
     }
 
     /// <summary>
+    /// Gets the <see cref="IGraphicsEffectSource"/> source from a given <see cref="ID2D1Effect"/> object, at a specified index.
+    /// </summary>
+    /// <typeparam name="T">The type of shader being used.</typeparam>
+    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
+    /// <param name="canvasDevice">The realization device currently in use.</param>
+    /// <param name="source">The input <see cref="PixelShaderEffect{T}.SourceCollection.SourceReference"/> object for the target index.</param>
+    /// <param name="index">The index for the source to retrieve.</param>
+    /// <returns>The <see cref="IGraphicsEffectSource"/> source from a given <see cref="ID2D1Effect"/> object, at a specified index.</returns>
+    public static IGraphicsEffectSource? GetSource<T>(
+        this ref ID2D1Effect d2D1Effect,
+        ICanvasDevice* canvasDevice,
+        ref PixelShaderEffect<T>.SourceCollection.SourceReference source,
+        int index)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        // Get the ID2D1Image input from the effect
+        d2D1Effect.GetInput(
+            index: (uint)index,
+            input: d2D1Image.GetAddressOf());
+
+        // Check whether the input had a DPI compensation effect added to it, and skip it if so
+        if (source.HasDpiCompensationEffect)
+        {
+            // Since a realized effect is the only source of authority for the effect state, we also
+            // need to check that the actual source is in fact the same that was previous set by the
+            // managed wrapper. If it is, we get the input and return that (ie. the underlying image).
+            // If not, we just return it directly and reset the locally stored DPI compensation effect.
+            if (d2D1Image.Get()->IsSameInstance(source.GetDpiCompensationEffect()))
+            {
+                source.GetDpiCompensationEffect()->GetInput(0, d2D1Image.ReleaseAndGetAddressOf());
+            }
+            else
+            {
+                source.SetDpiCompensationEffect(null);
+            }
+        }
+
+        // Get or create a wrapper for the input image
+        return source.GetOrCreateWrapper(null, d2D1Image.Get());
+    }
+
+    /// <summary>
     /// Gets the <see cref="D2D1ResourceTextureManager"/> instance from a given <see cref="ID2D1Effect"/> object.
     /// </summary>
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
@@ -121,7 +167,7 @@ internal static unsafe class ID2D1EffectExtensions
             source.GetD2D1ResourceTextureManager(d2D1ResourceTextureManagerSource.GetAddressOf());
 
             // Check if the instances match, and return the managed wrapper we already have
-            if (d2D1ResourceTextureManager.IsSameInstance(in d2D1ResourceTextureManagerSource))
+            if (d2D1ResourceTextureManager.Get()->IsSameInstance(d2D1ResourceTextureManagerSource.Get()))
             {
                 return source;
             }
