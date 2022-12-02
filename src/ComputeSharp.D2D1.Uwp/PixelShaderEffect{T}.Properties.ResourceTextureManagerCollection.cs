@@ -29,16 +29,6 @@ partial class PixelShaderEffect<T>
         }
 
         /// <summary>
-        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
-        /// </summary>
-        internal PixelShaderEffect<T> Owner { get; }
-
-        /// <summary>
-        /// Gets a reference to the <see cref="FixedBuffer"/> value containing the available <see cref="D2D1ResourceTextureManager"/>-s.
-        /// </summary>
-        internal ref FixedBuffer Storage => ref this.fixedBuffer;
-
-        /// <summary>
         /// Gets or sets the <see cref="D2D1ResourceTextureManager"/> object at a specified index.
         /// </summary>
         /// <param name="index">The index of the <see cref="D2D1ResourceTextureManager"/> source to get or set.</param>
@@ -51,6 +41,16 @@ partial class PixelShaderEffect<T>
             get => Owner.GetResourceTextureManager(index);
             set => Owner.SetResourceTextureManager(value, index);
         }
+
+        /// <summary>
+        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
+        /// </summary>
+        internal PixelShaderEffect<T> Owner { get; }
+
+        /// <summary>
+        /// Gets a reference to the <see cref="FixedBuffer"/> value containing the available <see cref="D2D1ResourceTextureManager"/>-s.
+        /// </summary>
+        internal ref FixedBuffer Storage => ref this.fixedBuffer;
 
         /// <summary>
         /// A fixed buffer type containing 16 <see cref="D2D1ResourceTextureManager"/> fields.
