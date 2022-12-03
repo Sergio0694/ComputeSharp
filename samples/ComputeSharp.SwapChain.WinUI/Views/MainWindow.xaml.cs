@@ -5,6 +5,7 @@ using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Windows.ApplicationModel;
 
 namespace ComputeSharp.SwapChain.WinUI.Views;
 
@@ -23,6 +24,7 @@ public sealed partial class MainWindow : Window
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;
 
+        this.Title = Package.Current.DisplayName;
         SetTitleBar(this.TitleBarRectangle);
 
         this.Root.DataContext = new MainViewModel(new DebugAnalyticsService());
