@@ -1,4 +1,6 @@
+using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
@@ -101,13 +103,53 @@ unsafe partial class PixelShaderEffect<T>
 
         lock (this.lockObject)
         {
-            ref SourceCollection.SourceReference source = ref Sources.Storage[index];
+            ref SourceReference source = ref Sources.Storage[index];
 
             return this.d2D1Effect.Get() switch
             {
                 not null => this.d2D1Effect.Get()->GetSource(this.canvasDevice.Get(), ref source, index),
                 _ => source.GetWrapper()
             };
+        }
+    }
+
+    /// <summary>
+    /// Sets the marshalled value for <see cref="Sources"/>.
+    /// </summary>
+    /// <param name="value">The value to set for <see cref="Sources"/>.</param>
+    /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
+    private void SetSource(IGraphicsEffectSource? value, int index)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        lock (this.lockObject)
+        {
+            ref SourceReference source = ref Sources.Storage[index];
+
+            if (this.d2D1Effect.Get() is not null)
+            {
+                const GetD2DImageFlags sourceFlags =
+                    GetD2DImageFlags.MinimalRealization |
+                    GetD2DImageFlags.AllowNullEffectInputs |
+                    GetD2DImageFlags.UnrealizeOnFailure;
+
+                // Try to set the source, and unrealize if the operation failed
+                if (!this.d2D1Effect.Get()->TrySetSource(
+                    canvasDevice: this.canvasDevice.Get(),
+                    deviceContext: null,
+                    flags: sourceFlags,
+                    targetDpi: 0,
+                    value: value,
+                    source: ref source,
+                    index: index))
+                {
+                    Unrealize();
+                }
+            }
+            else
+            {
+                source.SetWrapper(value);
+            }
         }
     }
 

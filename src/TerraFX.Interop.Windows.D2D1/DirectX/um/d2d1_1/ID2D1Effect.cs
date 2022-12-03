@@ -34,6 +34,13 @@ internal unsafe partial struct ID2D1Effect
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(14)]
+    public void SetInput([NativeTypeName("UINT32")] uint index, ID2D1Image* input, [NativeTypeName("BOOL")] int invalidate = 1)
+    {
+        ((delegate* unmanaged[Stdcall]<ID2D1Effect*, uint, ID2D1Image*, int, void>)(lpVtbl[14]))((ID2D1Effect*)Unsafe.AsPointer(ref this), index, input, invalidate);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(16)]
     public void GetInput([NativeTypeName("UINT32")] uint index, ID2D1Image** input)
     {
