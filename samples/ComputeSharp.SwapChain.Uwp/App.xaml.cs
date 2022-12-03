@@ -10,7 +10,7 @@ using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.SwapChain.Uwp.Extensions;
 using ComputeSharp.SwapChain.Uwp.Services;
 #endif
-using ComputeSharp.SwapChain.Uwp.Views;
+using ComputeSharp.SwapChain.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -33,7 +33,7 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     /// <inheritdoc/>
@@ -52,33 +52,6 @@ sealed partial class App : Application
         {
             Window.Current.Activate();
         }
-    }
-
-    /// <summary>
-    /// Configures the services for the application.
-    /// </summary>
-    private static void ConfigureServices()
-    {
-        ServiceCollection services = new();
-
-#if !DEBUG
-        if (!Debugger.IsAttached &&
-            Assembly.GetExecutingAssembly().TryReadAllTextFromManifestFile("Assets/ServiceTokens/AppCenter.txt", out string? secret) &&
-            Guid.TryParse(secret, out _))
-        {
-            services.AddSingleton<IAnalyticsService>(new AppCenterService(secret!));
-        }
-        else
-        {
-            services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
-        }
-#else
-        services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
-#endif
-
-        services.AddTransient<MainViewModel>();
-
-        Ioc.Default.ConfigureServices(services.BuildServiceProvider());
     }
 
     /// <summary>

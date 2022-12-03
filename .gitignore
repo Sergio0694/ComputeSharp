@@ -342,3 +342,6 @@ samples/**/city_*.jpg
 
 # XML docs files
 src/**/ComputeSharp*.xml
+
+# Generated UWP Xaml Files
+samples/ComputeSharp.SwapChain.Uwp/**/*.g.*

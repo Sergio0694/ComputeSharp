@@ -82,8 +82,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\SkipLocalsInitAttribute.cs" />
     <Compile Include="Services\AppCenterService.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
+    <Compile Include="Views\MainView.g.xaml.cs">
+      <DependentUpon>MainView.g.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +92,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\readme.txt" />
     <EmbeddedResource Include="Assets\ServiceTokens\AppCenter.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
@@ -134,11 +135,10 @@
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Page Include="Views\MainView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\MainView.g.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
@@ -150,4 +150,14 @@
   <PropertyGroup>
     <PreBuildEvent>powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File $(SolutionDir)\build\CreateBlankAppCenterToken.ps1</PreBuildEvent>
   </PropertyGroup>
+  <!-- This will rename our XAML namespaces for the Uwp version of the Sample App from our WinUI 3 based XAML -->
+  <Target Name="CopyXamlFromWinUI" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <InputFile>..\ComputeSharp.SwapChain.WinUI\Views\MainView.xaml</InputFile>
+      <OutputFile>Views\MainView.g.xaml</OutputFile>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(OutputFile)" Lines="&lt;!--  This file was auto-generated, see Link:ComputeSharp.SwapChain.WinUI\Views\MainView.xaml  --&gt;%0A$([System.IO.File]::ReadAllText($(InputFile)).Replace('CommunityToolkit.WinUI','Microsoft.Toolkit.Uwp').Replace('ComputeSharp.WinUI','ComputeSharp.Uwp'))" Overwrite="true" Encoding="Unicode" />
+    <!-- Note: We copy the xaml.cs file manually vs. using the shared project as then we couldn't nicely display the link between them in Visual Studio in either project. -->
+    <Copy SourceFiles="..\ComputeSharp.SwapChain.WinUI\Views\MainView.xaml.cs" DestinationFiles="Views\MainView.g.xaml.cs" />
+  </Target>
 </Project>

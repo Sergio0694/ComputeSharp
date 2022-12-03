@@ -1,0 +1,1 @@
+The View is auto-generated from the WinUI project, see Link:ComputeSharp.SwapChain.WinUI\Views\MainView.xaml

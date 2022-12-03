@@ -1,24 +1,38 @@
 using System;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using ComputeSharp.SwapChain.Core.Constants;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
+
+#if WINDOWS_UWP
 using ComputeSharp.Uwp;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+#else
+using ComputeSharp.WinUI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+#endif
 
-namespace ComputeSharp.SwapChain.Uwp.Views;
+namespace ComputeSharp.SwapChain.Views;
 
 /// <summary>
 /// A view for <see cref="Core.ViewModels.MainViewModel"/>.
 /// </summary>
 public sealed partial class MainView : UserControl
 {
+    /// <summary>
+    /// The mapping of currently alive shader panels.
+    /// </summary>
+    private readonly ConditionalWeakTable<AnimatedComputeShaderPanel, object?> shaderPanels = new();
+
     public MainView()
     {
-        this.InitializeComponent();
-        this.DataContext = Ioc.Default.GetRequiredService<MainViewModel>();
+        InitializeComponent();
+        DataContext = Ioc.Default.GetRequiredService<MainViewModel>();
     }
 
     /// <summary>
@@ -63,5 +77,24 @@ public sealed partial class MainView : UserControl
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
 
         this.RenderingErrorInfoBar.IsOpen = true;
+    }
+
+    /// <summary>
+    /// Stops all rendering when the application is closing.
+    /// </summary>
+    public void OnShutdown()
+    {
+        this.ShaderPanel.ShaderRunner = null;
+
+        foreach ((AnimatedComputeShaderPanel panel, object _) in this.shaderPanels)
+        {
+            panel.ShaderRunner = null;
+        }
+    }
+
+    // Tracks the current panel
+    private void AnimatedComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
+    {
+        this.shaderPanels.AddOrUpdate((AnimatedComputeShaderPanel)sender, null);
     }
 }

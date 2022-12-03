@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using ComputeSharp.SwapChain.WinUI.Views;
 using Microsoft.UI.Xaml;
 
 #pragma warning disable CA1001, IDE0052
@@ -30,6 +29,7 @@ public sealed partial class App : Application
     public App()
     {
         InitializeComponent();
+        ConfigureServices();
     }
 
     /// <inheritdoc/>
