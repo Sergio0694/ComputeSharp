@@ -4,10 +4,20 @@ using ComputeSharp.SwapChain.Core.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 #if WINDOWS_UWP
+using ComputeSharp.SwapChain.Uwp.Extensions;
+using ComputeSharp.SwapChain.Uwp.Services;
+using System;
+using System.Diagnostics;
+using System.Reflection;
+#endif
+
+#if WINDOWS_UWP
 namespace ComputeSharp.SwapChain.Uwp;
 #else
 namespace ComputeSharp.SwapChain.WinUI;
 #endif
+
+#nullable enable
 
 public sealed partial class App
 {
@@ -18,7 +28,7 @@ public sealed partial class App
     {
         ServiceCollection services = new();
 
-#if !DEBUG
+#if !DEBUG && WINDOWS_UWP
         if (!Debugger.IsAttached &&
             Assembly.GetExecutingAssembly().TryReadAllTextFromManifestFile("Assets/ServiceTokens/AppCenter.txt", out string? secret) &&
             Guid.TryParse(secret, out _))
