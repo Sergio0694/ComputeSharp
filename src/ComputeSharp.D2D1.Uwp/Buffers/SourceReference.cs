@@ -154,6 +154,25 @@ internal unsafe struct SourceReference : IDisposable
         return this.graphicsEffectSourceWrapper;
     }
 
+    /// <summary>
+    /// Updates the underlying <see cref="ID2D1Image"/> resource, if needed.
+    /// This is used after a potential re-realization of a lazily bound effect.
+    /// </summary>
+    /// <param name="d2D1Image">The input <see cref="ID2D1Image"/> object.</param>
+    /// <returns>Whether the resource has changed or not.</returns>
+    public bool UpdateResource(ID2D1Image* d2D1Image)
+    {
+        if (d2D1Image->IsSameInstance(this.d2D1ImageSource.Get()))
+        {
+            return false;
+        }
+
+        this.d2D1ImageSource.Dispose();
+        this.d2D1ImageSource = new ComPtr<ID2D1Image>(d2D1Image);
+
+        return true;
+    }
+
     /// <inheritdoc/>
     public void Dispose()
     {

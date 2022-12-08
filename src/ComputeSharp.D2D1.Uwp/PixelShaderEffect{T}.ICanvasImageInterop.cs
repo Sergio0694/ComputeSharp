@@ -1,7 +1,9 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Uwp.Extensions;
@@ -283,10 +285,6 @@ unsafe partial class PixelShaderEffect<T>
                 D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, i);
             }
         }
-
-        // TODO: port base CanvasEffect::Realize logic
-
-        // TODO: transfer properties (eg. D2D1ResourceTextureManager-s)
     }
 
     /// <summary>
@@ -297,6 +295,61 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
     private void RefreshInputs(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        // TODO
+        for (int i = 0; i < 16; i++)
+        {
+            // Retrieve the managed wrapper for the current source
+            IGraphicsEffectSource? source = GetD2DInput(i);
+
+            if (source is null)
+            {
+                // If the source is null and that is not valid here (eg. when drawing), just throw
+                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
+                {
+                    ThrowHelper.ThrowInvalidOperationException("The effect has one or more sources set to null, and null effect inputs are not valid at this time.");
+                }
+            }
+            else
+            {
+                using ComPtr<IUnknown> canvasImageInteropUnknown = default;
+                using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
+
+                // Get the underlying IUnknown object for the current source
+                canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(source));
+
+                // Convert to ICanvasImageInterop (this must always succeed, and throws if it doesn't)
+                canvasImageInteropUnknown.CopyTo(canvasImageInterop.GetAddressOf()).Assert();
+
+                using ComPtr<ID2D1Image> d2D1Image = default;
+
+                float realizedDpi;
+
+                // Invoke GetD2DImage on the underlying object (either a built-in effect or a custom one)
+                HRESULT hresult = canvasImageInterop.Get()->GetD2DImage(
+                    device: this.canvasDevice.Get(),
+                    deviceContext: deviceContext,
+                    flags: flags,
+                    targetDpi: targetDpi,
+                    realizeDpi: &realizedDpi,
+                    ppImage: d2D1Image.GetAddressOf());
+
+                // To match the behavior of ICanvasImageInternal::GetD2DImage in case of failure, check if the flags being used did have the flag
+                // WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE set. If not, and the call failed, then we explicitly throw from the returned HRESULT.
+                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
+                {
+                    Marshal.ThrowExceptionForHR(hresult);
+                }
+
+                bool isDifferentResource = Sources.Storage[i].UpdateResource(d2D1Image.Get());
+                bool isDifferentDpi = false;
+
+                // TODO: handle DPI compensation
+
+                // If the source or the DPI setting has changed, also update the D2D effect graph
+                if (isDifferentResource || isDifferentDpi)
+                {
+                    this.d2D1Effect.Get()->SetInput(index: (uint)i, input: d2D1Image.Get());
+                }
+            }
+        }
     }
 }
