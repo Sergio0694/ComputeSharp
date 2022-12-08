@@ -7,6 +7,9 @@ namespace TerraFX.Interop.Windows;
 
 internal static class E
 {
+    [NativeTypeName("#define E_NOTFOUND HRESULT_FROM_WIN32(ERROR_NOT_FOUND)")]
+    public const int E_NOTFOUND = -2147023728;
+
     [NativeTypeName("#define E_NOT_VALID_STATE HRESULT_FROM_WIN32(ERROR_INVALID_STATE)")]
     public const int E_NOT_VALID_STATE = -2147019873;
 
