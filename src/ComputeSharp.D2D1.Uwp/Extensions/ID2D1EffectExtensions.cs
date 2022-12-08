@@ -2,18 +2,13 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
-using ComputeSharp.D2D1.Uwp.Buffers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-using Windows.Graphics.Effects;
-using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
-using Win32 = TerraFX.Interop.Windows.Windows;
 
 #pragma warning disable CS0618
 
@@ -89,146 +84,6 @@ internal static unsafe class ID2D1EffectExtensions
 
         // Retrieve the managed wrapper from the GCHandle
         return (D2D1TransformMapper<T>)GCHandle.FromIntPtr(handlePtr).Target!;
-    }
-
-    /// <summary>
-    /// Gets the <see cref="IGraphicsEffectSource"/> source from a given <see cref="ID2D1Effect"/> object, at a specified index.
-    /// </summary>
-    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
-    /// <param name="canvasDevice">The realization device currently in use.</param>
-    /// <param name="source">The input <see cref="SourceReference"/> object for the target index.</param>
-    /// <param name="index">The index for the source to retrieve.</param>
-    /// <returns>The <see cref="IGraphicsEffectSource"/> source from a given <see cref="ID2D1Effect"/> object, at a specified index.</returns>
-    public static IGraphicsEffectSource? GetSource(
-        this ref ID2D1Effect d2D1Effect,
-        ICanvasDevice* canvasDevice,
-        ref SourceReference source,
-        int index)
-    {
-        using ComPtr<ID2D1Image> d2D1Image = default;
-
-        // Get the ID2D1Image input from the effect
-        d2D1Effect.GetInput(
-            index: (uint)index,
-            input: d2D1Image.GetAddressOf());
-
-        // Check whether the input had a DPI compensation effect added to it, and skip it if so
-        if (source.HasDpiCompensationEffect)
-        {
-            // Since a realized effect is the only source of authority for the effect state, we also
-            // need to check that the actual source is in fact the same that was previous set by the
-            // managed wrapper. If it is, we get the input and return that (ie. the underlying image).
-            // If not, we just return it directly and reset the locally stored DPI compensation effect.
-            if (d2D1Image.Get()->IsSameInstance(source.GetDpiCompensationEffect()))
-            {
-                source.GetDpiCompensationEffect()->GetInput(0, d2D1Image.ReleaseAndGetAddressOf());
-            }
-            else
-            {
-                source.SetDpiCompensationEffect(null);
-            }
-        }
-
-        // Get or create a wrapper for the input image
-        return source.GetOrCreateWrapper(null, d2D1Image.Get());
-    }
-
-    /// <summary>
-    /// Sets the <see cref="IGraphicsEffectSource"/> source for a given <see cref="ID2D1Effect"/> object, at a specified index.
-    /// </summary>
-    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
-    /// <param name="canvasDevice">The realization device currently in use.</param>
-    /// <param name="deviceContext">The device context currently in use.</param>
-    /// <param name="flags">The realization flags to use.</param>
-    /// <param name="targetDpi">The target DPI value for the source.</param>
-    /// <param name="value">The input <see cref="IGraphicsEffectSource"/> value to set.</param>
-    /// <param name="source">The target <see cref="SourceReference"/> value, for caching.</param>
-    /// <param name="index">The index of the source to set.</param>
-    /// <returns>Whether the operation succeeded (if it didn't the effect should be unrealized).</returns>
-    public static bool TrySetSource(
-        this ref ID2D1Effect d2D1Effect,
-        ICanvasDevice* canvasDevice,
-        ID2D1DeviceContext* deviceContext,
-        WIN2D_GET_D2D_IMAGE_FLAGS flags,
-        float targetDpi,
-        IGraphicsEffectSource? value,
-        ref SourceReference source,
-        int index)
-    {
-        using ComPtr<ID2D1Image> d2D1Image = default;
-
-        float realizedDpi = 0;
-
-        if (value is not null)
-        {
-            using ComPtr<IUnknown> canvasImageUnknown = default;
-
-            // Get the underlying IUnknown object for the input source
-            canvasImageUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(value));
-
-            using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
-
-            // Try to get the ICanvasImageInterop interface from the input source
-            HRESULT hresult = canvasImageUnknown.CopyTo(canvasImageInterop.GetAddressOf());
-
-            if (!Win32.SUCCEEDED(hresult))
-            {
-                // If unrealization isn't requested for failures, just throw
-                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-                {
-                    ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is not valid (it must implement ICanvasImageInterop).");
-                }
-
-                return false;
-            }
-
-            using ComPtr<ICanvasDevice> sourceCanvasDevice = default;
-
-            // Get the canvas device the source is realized on, if any
-            canvasImageInterop.Get()->GetDevice(sourceCanvasDevice.GetAddressOf()).Assert();
-
-            // If a device was retrieved, it must be the same as the input one. If the source has no device,
-            // that is fine, as it just means that its underlying D2D image has not been realized yet.
-            if (sourceCanvasDevice.Get() is not null && !canvasDevice->IsSameInstance(sourceCanvasDevice.Get()))
-            {
-                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-                {
-                    ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is realized on a different canvas device.");
-                }
-
-                return false;
-            }
-
-            // Try to realize the image from the input source
-            hresult = canvasImageInterop.Get()->GetD2DImage(
-                device: canvasDevice,
-                deviceContext: deviceContext,
-                flags: flags,
-                targetDpi: targetDpi,
-                realizeDpi: &realizedDpi,
-                ppImage: d2D1Image.GetAddressOf());
-
-            // Unless requested, a failure to retrieve the image should just bubble up the HRESULT in an exception
-            if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-            {
-                hresult.Assert();
-            }
-        }
-        else if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-        {
-            // If the source is null and this is not explicitly allowed, the invocation is not valid
-            ThrowHelper.ThrowArgumentNullException(nameof(value), "The effect source cannot be null.");
-        }
-
-        // Save the managed wrapper and realized image
-        source.SetWrapperAndResource(value, d2D1Image.Get());
-
-        // TODO: handle DPI compensation
-
-        // Set the actual effect input
-        d2D1Effect.SetInput(index: (uint)index, input: d2D1Image.Get());
-
-        return true;
     }
 
     /// <summary>

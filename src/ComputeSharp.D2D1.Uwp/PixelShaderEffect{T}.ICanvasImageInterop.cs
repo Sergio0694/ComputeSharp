@@ -8,6 +8,7 @@ using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
@@ -159,7 +160,22 @@ unsafe partial class PixelShaderEffect<T>
     /// <summary>
     /// Unrealizes the currently realized <see cref="ID2D1Effect"/> object.
     /// </summary>
-    private void Unrealize()
+    /// <param name="source">The value to set for <see cref="Sources"/>.</param>
+    /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
+    private void Unrealize(IGraphicsEffectSource source, int index)
+    {
+        // Unrealize the effect and indicate to the logic to skip the source at the current index.
+        // That is, there is no need to marshal it back to the cache, as we're about to do that here.
+        Unrealize(index);
+
+        // Once the effect is unrealized, also update the cached source managed wrapper
+        Sources.Storage[index].SetWrapper(source);
+    }
+
+    /// <summary>
+    /// Unrealizes the currently realized <see cref="ID2D1Effect"/> object.
+    /// </summary>
+    private void Unrealize(int? sourceIndexToSkip = null)
     {
         // If there is no ID2D1Effect object, there is nothing left to do
         if (this.d2D1Effect.Get() is null)
@@ -176,7 +192,22 @@ unsafe partial class PixelShaderEffect<T>
         this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
-        // TODO: read back D2D sources from the effect
+        // Loop over all effect inputs and update the cache back as well
+        for (int i = 0; i < 16; i++)
+        {
+            // If this index has been explicitly requested to be skipped, just dispose the source reference.
+            // This is the case when the effect is being unrealized, and callers will set this value on their own.
+            if (i == sourceIndexToSkip)
+            {
+                Sources.Storage[i].Dispose();
+            }
+            else
+            {
+                // Otherwise, just get the input, which will automatically update the cached values. The
+                // returned IGraphicsEffectSource managed wrapper is not used here and is safe to ignore.
+                _ = GetD2DInput(i);
+            }
+        }
 
         // Finally release the effect as well
         this.d2D1Effect.Dispose();
