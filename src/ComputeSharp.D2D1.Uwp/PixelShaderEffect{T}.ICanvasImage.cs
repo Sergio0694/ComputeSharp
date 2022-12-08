@@ -14,13 +14,13 @@ namespace ComputeSharp.D2D1.Uwp;
 unsafe partial class PixelShaderEffect<T>
 {
     /// <inheritdoc/>
-    Rect ICanvasImage.GetBounds(ICanvasResourceCreator resourceCreator)
+    public Rect GetBounds(ICanvasResourceCreator resourceCreator)
     {
         return GetBounds(resourceCreator, null);
     }
 
     /// <inheritdoc/>
-    Rect ICanvasImage.GetBounds(ICanvasResourceCreator resourceCreator, Matrix3x2 transform)
+    public Rect GetBounds(ICanvasResourceCreator resourceCreator, Matrix3x2 transform)
     {
         return GetBounds(resourceCreator, &transform);
     }
