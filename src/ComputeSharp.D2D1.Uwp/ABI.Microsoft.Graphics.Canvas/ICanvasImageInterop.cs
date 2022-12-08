@@ -37,7 +37,7 @@ internal unsafe struct ICanvasImageInterop
     /// <param name="device">The input canvas device (as a marshalled <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/>).</param>
     /// <param name="deviceContext">
     /// The device context in use. This value is is optional (but recommended), except when the
-    /// <see cref="GetD2DImageFlags.ReadDpiFromDeviceContext"/> flag is specified. This is because
+    /// <see cref="WIN2D_GET_D2D_IMAGE_FLAGS.WIN2D_GET_D2D_IMAGE_FLAGS_READ_DPI_FROM_DEVICE_CONTEXT"/> flag is specified. This is because
     /// not all callers of <see cref="GetD2DImage"/> have easy access to a context. It is always
     /// possible to get a resource creation context from the device, but the context is only
     /// actually necessary if a new effect realization needs to be created, so it is more efficient
@@ -47,8 +47,9 @@ internal unsafe struct ICanvasImageInterop
     /// <param name="targetDpi">
     /// The DPI of the target device context. This is used to determine when a <c>D2D1DpiCompensation</c>
     /// effect needs to be inserted. Behavior of this parameter can be overridden by the flag values
-    /// <see cref="GetD2DImageFlags.ReadDpiFromDeviceContext"/>, <see cref="GetD2DImageFlags.AlwaysInsertDpiCompensation"/>
-    /// or <see cref="GetD2DImageFlags.NeverInsertDpiCompensation"/>
+    /// <see cref="WIN2D_GET_D2D_IMAGE_FLAGS.WIN2D_GET_D2D_IMAGE_FLAGS_READ_DPI_FROM_DEVICE_CONTEXT"/>,
+    /// <see cref="WIN2D_GET_D2D_IMAGE_FLAGS.WIN2D_GET_D2D_IMAGE_FLAGS_ALWAYS_INSERT_DPI_COMPENSATION"/>
+    /// or <see cref="WIN2D_GET_D2D_IMAGE_FLAGS.WIN2D_GET_D2D_IMAGE_FLAGS_NEVER_INSERT_DPI_COMPENSATION"/>
     /// </param>
     /// <param name="realizeDpi">
     /// The DPI of a source bitmap, or zero if the image does not have a fixed DPI. A <c>D2D1DpiCompensation</c> effect
@@ -61,12 +62,12 @@ internal unsafe struct ICanvasImageInterop
     public HRESULT GetD2DImage(
         ICanvasDevice* device,
         ID2D1DeviceContext* deviceContext,
-        GetD2DImageFlags flags,
+        WIN2D_GET_D2D_IMAGE_FLAGS flags,
         float targetDpi,
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice*, ID2D1DeviceContext*, GetD2DImageFlags, float, float*, ID2D1Image**, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int>)this.lpVtbl[4])(
             (ICanvasImageInterop*)Unsafe.AsPointer(ref this),
             device,
             deviceContext,
@@ -95,7 +96,7 @@ internal unsafe struct ICanvasImageInterop
         int GetD2DImage(
             ICanvasDevice* device,
             ID2D1DeviceContext* deviceContext,
-            GetD2DImageFlags flags,
+            WIN2D_GET_D2D_IMAGE_FLAGS flags,
             float targetDpi,
             float* realizeDpi,
             ID2D1Image** ppImage);
