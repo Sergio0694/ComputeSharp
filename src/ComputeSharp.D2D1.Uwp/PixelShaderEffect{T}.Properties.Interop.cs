@@ -6,6 +6,7 @@ using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using Windows.Graphics.Effects;
+using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -128,10 +129,10 @@ unsafe partial class PixelShaderEffect<T>
 
             if (this.d2D1Effect.Get() is not null)
             {
-                const GetD2DImageFlags sourceFlags =
-                    GetD2DImageFlags.MinimalRealization |
-                    GetD2DImageFlags.AllowNullEffectInputs |
-                    GetD2DImageFlags.UnrealizeOnFailure;
+                const WIN2D_GET_D2D_IMAGE_FLAGS sourceFlags =
+                    WIN2D_GET_D2D_IMAGE_FLAGS_MINIMAL_REALIZATION |
+                    WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS |
+                    WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE;
 
                 // Try to set the source, and unrealize if the operation failed
                 if (!this.d2D1Effect.Get()->TrySetSource(

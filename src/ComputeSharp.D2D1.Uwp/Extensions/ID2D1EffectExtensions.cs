@@ -12,6 +12,7 @@ using ComputeSharp.D2D1.Uwp.Buffers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
+using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
 #pragma warning disable CS0618
@@ -148,7 +149,7 @@ internal static unsafe class ID2D1EffectExtensions
         this ref ID2D1Effect d2D1Effect,
         ICanvasDevice* canvasDevice,
         ID2D1DeviceContext* deviceContext,
-        GetD2DImageFlags flags,
+        WIN2D_GET_D2D_IMAGE_FLAGS flags,
         float targetDpi,
         IGraphicsEffectSource? value,
         ref SourceReference source,
@@ -173,7 +174,7 @@ internal static unsafe class ID2D1EffectExtensions
             if (!Win32.SUCCEEDED(hresult))
             {
                 // If unrealization isn't requested for failures, just throw
-                if ((flags & GetD2DImageFlags.UnrealizeOnFailure) == GetD2DImageFlags.None)
+                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
                 {
                     ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is not valid (it must implement ICanvasImageInterop).");
                 }
@@ -190,7 +191,7 @@ internal static unsafe class ID2D1EffectExtensions
             // that is fine, as it just means that its underlying D2D image has not been realized yet.
             if (sourceCanvasDevice.Get() is not null && !canvasDevice->IsSameInstance(sourceCanvasDevice.Get()))
             {
-                if ((flags & GetD2DImageFlags.UnrealizeOnFailure) == GetD2DImageFlags.None)
+                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
                 {
                     ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is realized on a different canvas device.");
                 }
@@ -208,12 +209,12 @@ internal static unsafe class ID2D1EffectExtensions
                 ppImage: d2D1Image.GetAddressOf());
 
             // Unless requested, a failure to retrieve the image should just bubble up the HRESULT in an exception
-            if ((flags & GetD2DImageFlags.UnrealizeOnFailure) == GetD2DImageFlags.None)
+            if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
             {
                 hresult.Assert();
             }
         }
-        else if ((flags & GetD2DImageFlags.AllowNullEffectInputs) == GetD2DImageFlags.None)
+        else if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
         {
             // If the source is null and this is not explicitly allowed, the invocation is not valid
             ThrowHelper.ThrowArgumentNullException(nameof(value), "The effect source cannot be null.");
