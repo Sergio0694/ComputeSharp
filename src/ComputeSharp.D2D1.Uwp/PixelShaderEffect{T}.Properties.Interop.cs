@@ -1,12 +1,8 @@
-using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
-using Windows.Graphics.Effects;
-using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -89,67 +85,6 @@ unsafe partial class PixelShaderEffect<T>
             else
             {
                 this.transformMapper = value;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets the marshalled value for <see cref="Sources"/>.
-    /// </summary>
-    /// <param name="index">The index of the <see cref="Sources"/> source to get or set.</param>
-    /// <returns>The marshalled value for <see cref="Sources"/>.</returns>
-    private IGraphicsEffectSource? GetSource(int index)
-    {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
-
-        lock (this.lockObject)
-        {
-            ref SourceReference source = ref Sources.Storage[index];
-
-            return this.d2D1Effect.Get() switch
-            {
-                not null => this.d2D1Effect.Get()->GetSource(this.canvasDevice.Get(), ref source, index),
-                _ => source.GetWrapper()
-            };
-        }
-    }
-
-    /// <summary>
-    /// Sets the marshalled value for <see cref="Sources"/>.
-    /// </summary>
-    /// <param name="value">The value to set for <see cref="Sources"/>.</param>
-    /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
-    private void SetSource(IGraphicsEffectSource? value, int index)
-    {
-        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
-
-        lock (this.lockObject)
-        {
-            ref SourceReference source = ref Sources.Storage[index];
-
-            if (this.d2D1Effect.Get() is not null)
-            {
-                const WIN2D_GET_D2D_IMAGE_FLAGS sourceFlags =
-                    WIN2D_GET_D2D_IMAGE_FLAGS_MINIMAL_REALIZATION |
-                    WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS |
-                    WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE;
-
-                // Try to set the source, and unrealize if the operation failed
-                if (!this.d2D1Effect.Get()->TrySetSource(
-                    canvasDevice: this.canvasDevice.Get(),
-                    deviceContext: null,
-                    flags: sourceFlags,
-                    targetDpi: 0,
-                    value: value,
-                    source: ref source,
-                    index: index))
-                {
-                    Unrealize();
-                }
-            }
-            else
-            {
-                source.SetWrapper(value);
             }
         }
     }

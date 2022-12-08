@@ -38,7 +38,7 @@ namespace ComputeSharp.D2D1.Uwp.Buffers;
 /// if one is needed. For unrealized effects, the resource is <see langword="null"/> and only the wrapper part is used.
 /// </para>
 /// </remarks>
-internal unsafe struct SourceReference
+internal unsafe struct SourceReference : IDisposable
 {
     /// <summary>
     /// The <see cref="ID2D1Image"/> produced by calling <see cref="ICanvasImageInterop.Interface.GetD2DImage"/>
@@ -107,6 +107,8 @@ internal unsafe struct SourceReference
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetWrapper(IGraphicsEffectSource? wrapper)
     {
+        this.d2D1ImageSource.Dispose();
+
         this.graphicsEffectSourceWrapper = wrapper;
     }
 
@@ -150,5 +152,13 @@ internal unsafe struct SourceReference
         }
 
         return this.graphicsEffectSourceWrapper;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.d2D1ImageSource.Dispose();
+        this.d2D1EffectDpiCompensation.Dispose();
+        this.graphicsEffectSourceWrapper = null;
     }
 }
