@@ -127,7 +127,12 @@ unsafe partial class PixelShaderEffect<T>
                 // Create the effect, if it doesn't exist already
                 if (this.d2D1Effect.Get() is null)
                 {
-                    Realize(flags, targetDpi, deviceContext);
+                    if (!Realize(flags, targetDpi, deviceContext))
+                    {
+                        *ppImage = null;
+
+                        return E.E_FAIL;
+                    }
                 }
                 else if (!flags.HasFlag(WIN2D_GET_D2D_IMAGE_FLAGS_MINIMAL_REALIZATION))
                 {
@@ -221,7 +226,8 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="flags">The current flags in use.</param>
     /// <param name="targetDpi">The target DPI in use.</param>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
-    private void Realize(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
+    /// <returns>Whether the effect was realized correctly.</returns>
+    private bool Realize(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
         using ComPtr<ID2D1Factory> d2D1Factory = default;
 
@@ -279,6 +285,20 @@ unsafe partial class PixelShaderEffect<T>
             this.d2D1Effect.Get()->SetPrecisionProperty(this.d2D1BufferPrecision);
         }
 
+        // Forward all available sources (the effect is being created now, so no need to validate the underlying resources)
+        for (int i = 0; i < SourceCollection.Count; i++)
+        {
+            if (!SetD2DInput(
+                index: i,
+                value: Sources.Storage[0].GetWrapper(),
+                flags: flags,
+                targetDpi: targetDpi,
+                d2D1DeviceContext: deviceContext))
+            {
+                return false;
+            }
+        }
+
         // Set all available resource texture managers (only set those that are not null, as they're all null by default anyway).
         // The loop only goes over the indices of valid slots for resource textures for the current effect, and ignores the others.
         foreach (int index in ResourceTextureManagerCollection.Indices)
@@ -288,6 +308,8 @@ unsafe partial class PixelShaderEffect<T>
                 D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, index);
             }
         }
+
+        return true;
     }
 
     /// <summary>
