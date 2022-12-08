@@ -195,7 +195,7 @@ unsafe partial class PixelShaderEffect<T>
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
         // Loop over all effect inputs and update the cache back as well
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < SourceCollection.Count; i++)
         {
             // If this index has been explicitly requested to be skipped, just dispose the source reference.
             // This is the case when the effect is being unrealized, and callers will set this value on their own.
@@ -277,12 +277,13 @@ unsafe partial class PixelShaderEffect<T>
             this.d2D1Effect.Get()->SetPrecisionProperty(this.d2D1BufferPrecision);
         }
 
-        // Set all available resource texture managers (only set those that are not null, as they're all null by default anyway)
-        for (int i = 0; i < 16; i++)
+        // Set all available resource texture managers (only set those that are not null, as they're all null by default anyway).
+        // The loop only goes over the indices of valid slots for resource textures for the current effect, and ignores the others.
+        foreach (int index in ResourceTextureManagerCollection.Indices)
         {
-            if (ResourceTextureManagers.Storage[i] is D2D1ResourceTextureManager resourceTextureManager)
+            if (ResourceTextureManagers.Storage[index] is D2D1ResourceTextureManager resourceTextureManager)
             {
-                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, i);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, index);
             }
         }
     }
@@ -295,7 +296,7 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
     private void RefreshInputs(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < SourceCollection.Count; i++)
         {
             // Retrieve the managed wrapper for the current source
             IGraphicsEffectSource? source = GetD2DInput(i);
