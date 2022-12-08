@@ -243,7 +243,9 @@ unsafe partial class PixelShaderEffect<T>
             // Check if creation failed due to the effect not being registered. In that case, register
             // it and then try again. This is much faster than check whether the effect is registered
             // manually every time, by enumerating all registered effects for the target device context.
-            if (hresult == D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED)
+            // An unregistered effect can also sometimes return E_NOTFOUND, although it's not documented.
+            if (hresult == D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED ||
+                hresult == E.E_NOTFOUND)
             {
                 // Register the effect with the factory (pass the same D2D1 draw transform mapper factory that was used before)
                 D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
