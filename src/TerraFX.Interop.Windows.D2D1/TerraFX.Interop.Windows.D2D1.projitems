@@ -27,6 +27,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformGraph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effects\CLSID.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effects\D2D1_BORDER_MODE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effects\D2D1_DPICOMPENSATION_INTERPOLATION_MODE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effects\D2D1_DPICOMPENSATION_PROP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\D2D1_EXTEND_MODE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\ID2D1Factory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\ID2D1Image.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\DirectX\um\d3dcommon\D3D_TESSELLATOR_PARTITIONING.cs" Link="DirectX\um\d3dcommon\D3D_TESSELLATOR_PARTITIONING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\DirectX\um\d3dcommon\D3D_TESSELLATOR_DOMAIN.cs" Link="DirectX\um\d3dcommon\D3D_TESSELLATOR_DOMAIN.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11shader\ID3D11ShaderReflection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dcommon\D2D_VECTOR_2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\uuids\Windows.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinRT\um\windows.graphics.directx.direct3d11.interop\IDirect3DDxgiInterfaceAccess.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\TerraFX.Interop.Windows\ComPtr`1.cs" Link="ComPtr`1.cs" />
