@@ -34,4 +34,28 @@ internal static partial class CLSID
             return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
         }
     }
+
+    [NativeTypeName("const GUID")]
+    public static ref readonly Guid CLSID_D2D1DpiCompensation
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data = new byte[] {
+                0xC7, 0xC5, 0x26, 0x6C,
+                0xE0, 0x34,
+                0xFC, 0x46,
+                0x9C,
+                0xFD,
+                0xE5,
+                0x82,
+                0x37,
+                0x06,
+                0xE2,
+                0x28
+            };
+
+            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
+        }
+    }
 }

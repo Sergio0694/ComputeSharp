@@ -365,9 +365,14 @@ unsafe partial class PixelShaderEffect<T>
                 }
 
                 bool isDifferentResource = Sources.Storage[i].UpdateResource(d2D1Image.Get());
-                bool isDifferentDpi = false;
 
-                // TODO: handle DPI compensation
+                bool isDifferentDpi = ApplyDpiCompensation(
+                    index: i,
+                    d2D1Image: ref *&d2D1Image,
+                    inputDpi: realizedDpi,
+                    flags: flags,
+                    targetDpi: targetDpi,
+                    d2D1DeviceContext: deviceContext);
 
                 // If the source or the DPI setting has changed, also update the D2D effect graph
                 if (isDifferentResource || isDifferentDpi)
