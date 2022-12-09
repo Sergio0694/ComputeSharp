@@ -4,7 +4,7 @@ namespace System.Runtime.CompilerServices;
 /// Indicates which arguments to a method involving an interpolated string handler should be passed to that handler.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-public sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
+internal sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="InterpolatedStringHandlerArgumentAttribute"/> class.
