@@ -25,12 +25,12 @@ internal static class FixedCountList<T>
 
         Span<T> span = array.AsSpan(index);
 
-        if (list.Count > span.Length)
+        if (list.Indices.Length > span.Length)
         {
             ThrowHelper.ThrowArgumentException(nameof(array), "The destination array range is smaller than the number of source items.");
         }
 
-        for (int i = 0; i < list.Count; i++)
+        foreach (int i in list.Indices)
         {
             span[i] = list[i];
         }
@@ -56,12 +56,12 @@ internal static class FixedCountList<T>
 
         int remainingLength = array.Length - index;
 
-        if (list.Count > remainingLength)
+        if (list.Indices.Length > remainingLength)
         {
             ThrowHelper.ThrowArgumentException(nameof(array), "The destination array range is smaller than the number of source items.");
         }
 
-        for (int i = 0; i < list.Count; i++)
+        foreach (int i in list.Indices)
         {
             array.SetValue(list[i], i);
         }
@@ -74,7 +74,7 @@ internal static class FixedCountList<T>
     /// <returns>An <see cref="IEnumerable{T}"/> instance for <paramref name="list"/>.</returns>
     public static IEnumerator<T> GetEnumerator(IFixedCountList<T> list)
     {
-        for (int i = 0; i < list.Count; i++)
+        foreach (int i in list.Indices)
         {
             yield return list[i];
         }
@@ -93,7 +93,7 @@ internal static class FixedCountList<T>
     /// </returns>
     public static int IndexOf(IFixedCountList<T> list, T value)
     {
-        for (int i = 0; i < list.Count; i++)
+        foreach (int i in list.Indices)
         {
             if (EqualityComparer<T>.Default.Equals(list[i], value))
             {

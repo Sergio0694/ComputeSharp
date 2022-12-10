@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
@@ -17,6 +18,11 @@ partial class PixelShaderEffect<T>
     /// </summary>
     public sealed class SourceCollection : IList<IGraphicsEffectSource?>, IReadOnlyList<IGraphicsEffectSource?>, IList, IFixedCountList<IGraphicsEffectSource?>
     {
+        /// <summary>
+        /// The collection of valid resource texture indices for the current effect.
+        /// </summary>
+        private static readonly ImmutableArray<int> Indices = GetIndices();
+
         /// <summary>
         /// The fixed buffer of <see cref="IGraphicsEffectSource"/> instances.
         /// </summary>
@@ -71,6 +77,9 @@ partial class PixelShaderEffect<T>
         /// Gets a reference to the <see cref="GraphicsEffectSourceBuffer"/> value containing the available <see cref="IGraphicsEffectSource"/>-s.
         /// </summary>
         internal ref GraphicsEffectSourceBuffer Storage => ref this.fixedBuffer;
+
+        /// <inheritdoc/>
+        ImmutableArray<int> IFixedCountList<IGraphicsEffectSource?>.Indices => Indices;
 
         /// <inheritdoc/>
         bool ICollection<IGraphicsEffectSource?>.IsReadOnly => false;
@@ -207,6 +216,29 @@ partial class PixelShaderEffect<T>
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is not a valid source index for the current effect.");
             }
+        }
+
+        /// <summary>
+        /// Gets the collection of valid indices for the current effect.
+        /// </summary>
+        /// <returns>The collection of valid indices for the current effect.</returns>
+        private static unsafe ImmutableArray<int> GetIndices()
+        {
+            int inputCount = D2D1PixelShader.GetInputCount<T>();
+
+            if (inputCount == 0)
+            {
+                return ImmutableArray<int>.Empty;
+            }
+
+            int[] indices = new int[inputCount];
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                indices[i] = i;
+            }
+
+            return *(ImmutableArray<int>*)&indices;
         }
     }
 }
