@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
@@ -13,7 +15,7 @@ partial class PixelShaderEffect<T>
     /// <summary>
     /// Represents the collection of <see cref="IGraphicsEffectSource"/> sources in a <see cref="PixelShaderEffect{T}"/> instance.
     /// </summary>
-    public sealed class SourceCollection
+    public sealed class SourceCollection : IList<IGraphicsEffectSource?>, IReadOnlyList<IGraphicsEffectSource?>, IList, IFixedCountList<IGraphicsEffectSource?>
     {
         /// <summary>
         /// The fixed buffer of <see cref="IGraphicsEffectSource"/> instances.
@@ -29,17 +31,14 @@ partial class PixelShaderEffect<T>
             Owner = owner;
         }
 
-        /// <summary>
-        /// Gets the actual input count for the current effect.
-        /// </summary>
-        internal static int Count { get; } = D2D1PixelShader.GetInputCount<T>();
+        /// <inheritdoc/>
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => D2D1PixelShader.GetInputCount<T>();
+        }
 
-        /// <summary>
-        /// Gets or sets the <see cref="IGraphicsEffectSource"/> source at a specified index.
-        /// </summary>
-        /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
-        /// <returns>The <see cref="IGraphicsEffectSource"/> source at the specified index.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not a valid index for the current effect.</exception>
+        /// <inheritdoc/>
         public IGraphicsEffectSource? this[int index]
         {
             get
@@ -56,6 +55,13 @@ partial class PixelShaderEffect<T>
             }
         }
 
+        /// <inheritdoc/>
+        object? IList.this[int index]
+        {
+            get => this[index];
+            set => this[index] = (IGraphicsEffectSource?)value;
+        }
+
         /// <summary>
         /// The owning <see cref="PixelShaderEffect{T}"/> instance.
         /// </summary>
@@ -66,6 +72,129 @@ partial class PixelShaderEffect<T>
         /// </summary>
         internal ref GraphicsEffectSourceBuffer Storage => ref this.fixedBuffer;
 
+        /// <inheritdoc/>
+        bool ICollection<IGraphicsEffectSource?>.IsReadOnly => false;
+
+        /// <inheritdoc/>
+        bool IList.IsReadOnly => false;
+
+        /// <inheritdoc/>
+        bool IList.IsFixedSize => true;
+
+        /// <inheritdoc/>
+        bool ICollection.IsSynchronized => true;
+
+        /// <inheritdoc/>
+        object ICollection.SyncRoot => throw new NotSupportedException("ICollection.SyncRoot is not supported for SourceCollection.");
+
+        /// <inheritdoc/>
+        void ICollection<IGraphicsEffectSource?>.Add(IGraphicsEffectSource? item)
+        {
+            throw new NotSupportedException("ICollection<T>.Add is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        int IList.Add(object value)
+        {
+            throw new NotSupportedException("IList.Add is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void ICollection<IGraphicsEffectSource?>.Clear()
+        {
+            throw new NotSupportedException("ICollection<T>.Clear is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void IList.Clear()
+        {
+            throw new NotSupportedException("IList.Clear is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<IGraphicsEffectSource?>.Contains(IGraphicsEffectSource? item)
+        {
+            return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, item) != -1;
+        }
+
+        /// <inheritdoc/>
+        bool IList.Contains(object value)
+        {
+            return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, (IGraphicsEffectSource?)value) != -1;
+        }
+
+        /// <inheritdoc/>
+        void ICollection<IGraphicsEffectSource?>.CopyTo(IGraphicsEffectSource?[] array, int arrayIndex)
+        {
+            FixedCountList<IGraphicsEffectSource?>.CopyTo(this, array, arrayIndex);
+        }
+
+        /// <inheritdoc/>
+        void ICollection.CopyTo(Array array, int index)
+        {
+            FixedCountList<IGraphicsEffectSource?>.CopyTo(this, array, index);
+        }
+
+        /// <inheritdoc/>
+        IEnumerator<IGraphicsEffectSource?> IEnumerable<IGraphicsEffectSource?>.GetEnumerator()
+        {
+            return FixedCountList<IGraphicsEffectSource?>.GetEnumerator(this);
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return FixedCountList<IGraphicsEffectSource?>.GetEnumerator(this);
+        }
+
+        /// <inheritdoc/>
+        int IList<IGraphicsEffectSource?>.IndexOf(IGraphicsEffectSource? item)
+        {
+            return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, item);
+        }
+
+        /// <inheritdoc/>
+        int IList.IndexOf(object value)
+        {
+            return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, (IGraphicsEffectSource?)value);
+        }
+
+        /// <inheritdoc/>
+        void IList<IGraphicsEffectSource?>.Insert(int index, IGraphicsEffectSource? item)
+        {
+            throw new NotSupportedException("IList<T>.Insert is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void IList.Insert(int index, object value)
+        {
+            throw new NotSupportedException("IList.Insert is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<IGraphicsEffectSource?>.Remove(IGraphicsEffectSource? item)
+        {
+            throw new NotSupportedException("ICollection<T>.Remove is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void IList.Remove(object value)
+        {
+            throw new NotSupportedException("IList.Remove is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void IList<IGraphicsEffectSource?>.RemoveAt(int index)
+        {
+            throw new NotSupportedException("IList<T>.RemoveAt is not supported for SourceCollection.");
+        }
+
+        /// <inheritdoc/>
+        void IList.RemoveAt(int index)
+        {
+            throw new NotSupportedException("IList.RemoveAt is not supported for SourceCollection.");
+        }
+
         /// <summary>
         /// Validates the input index for <see cref="this[int]"/>.
         /// </summary>
@@ -74,7 +203,7 @@ partial class PixelShaderEffect<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void ValidateIndex(int index)
         {
-            if ((uint)index >= Count)
+            if ((uint)index >= D2D1PixelShader.GetInputCount<T>())
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is not a valid source index for the current effect.");
             }

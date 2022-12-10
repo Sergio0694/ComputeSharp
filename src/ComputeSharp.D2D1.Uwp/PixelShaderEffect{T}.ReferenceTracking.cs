@@ -46,7 +46,7 @@ partial class PixelShaderEffect<T>
         // Also release all native resources for the used sources.
         // The transform mapper and resource texture managers don't
         // need to be disposed, as those could be shared between effects.
-        for (int i = 0; i < SourceCollection.Count; i++)
+        for (int i = 0; i < Sources.Count; i++)
         {
             Sources.Storage[i].Dispose();
         }

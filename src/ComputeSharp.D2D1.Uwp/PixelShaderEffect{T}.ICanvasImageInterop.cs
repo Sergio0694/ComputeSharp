@@ -200,7 +200,7 @@ unsafe partial class PixelShaderEffect<T>
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
 
         // Loop over all effect inputs and update the cache back as well
-        for (int i = 0; i < SourceCollection.Count; i++)
+        for (int i = 0; i < Sources.Count; i++)
         {
             // If this index has been explicitly requested to be skipped, just dispose the source reference.
             // This is the case when the effect is being unrealized, and callers will set this value on their own.
@@ -286,7 +286,7 @@ unsafe partial class PixelShaderEffect<T>
         }
 
         // Forward all available sources (the effect is being created now, so no need to validate the underlying resources)
-        for (int i = 0; i < SourceCollection.Count; i++)
+        for (int i = 0; i < Sources.Count; i++)
         {
             if (!SetD2DInput(
                 index: i,
@@ -320,7 +320,7 @@ unsafe partial class PixelShaderEffect<T>
     /// <param name="deviceContext">The <see cref="ID2D1DeviceContext"/> instance in use.</param>
     private void RefreshInputs(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        for (int i = 0; i < SourceCollection.Count; i++)
+        for (int i = 0; i < Sources.Count; i++)
         {
             // Retrieve the managed wrapper for the current source
             IGraphicsEffectSource? source = GetD2DInput(i);
