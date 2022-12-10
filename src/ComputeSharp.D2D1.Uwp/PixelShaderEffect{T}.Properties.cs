@@ -28,24 +28,22 @@ partial class PixelShaderEffect<T>
         set => SetTransformMapper(value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to enable caching the output from drawing this effect.
-    /// </summary>
+    /// <inheritdoc/>
     public bool CacheOutput
     {
         get => GetCacheOutput();
         set => SetCacheOutput(value);
     }
 
-    /// <summary>
-    /// Gets or sets the precision to use for intermediate buffers when drawing this effect.
-    /// </summary>
-    /// <remarks>If <see langword="null"/>, the default precision for effects will be used.</remarks>
+    /// <inheritdoc/>
     public CanvasBufferPrecision? BufferPrecision
     {
         get => GetBufferPrecision();
         set => SetBufferPrecision(value);
     }
+
+    /// <inheritdoc/>
+    public string? Name { get; set; }
 
     /// <summary>
     /// Gets the <see cref="SourceCollection"/> object associated with the current instance.

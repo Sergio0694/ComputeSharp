@@ -2,16 +2,17 @@ using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Uwp;
 
 /// <summary>
-/// A custom <see cref="ICanvasImage"/> implementation powered by a supplied shader type.
+/// A custom <see cref="ICanvasEffect"/> implementation powered by a supplied shader type.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
-public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasImage, ICanvasImageInterop.Interface
+public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasEffect, ICanvasImageInterop.Interface
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
