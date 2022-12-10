@@ -35,4 +35,25 @@ internal static unsafe class ICanvasDeviceExtensions
 
         return hresult;
     }
+
+    /// <summary>
+    /// Creates a new <see cref="ID2D1DeviceContext"/> from an input <see cref="ICanvasDevice"/>.
+    /// </summary>
+    /// <param name="canvasDevice">The input <see cref="ICanvasDevice"/> object.</param>
+    /// <param name="d2D1DeviceContext">The resulting <see cref="ID2D1DeviceContext"/> object.</param>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    public static HRESULT CreateD2DDeviceContext(this ref ICanvasDevice canvasDevice, ID2D1DeviceContext** d2D1DeviceContext)
+    {
+        using ComPtr<ID2D1Device1> d2D1Device1 = default;
+
+        // Get the underlying ID2D1Device1 object
+        canvasDevice.GetD2DDevice(d2D1Device1.GetAddressOf()).Assert();
+
+        // Create the new device context
+        HRESULT hresult = d2D1Device1.Get()->CreateDeviceContext(
+            options: D2D1_DEVICE_CONTEXT_OPTIONS.D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
+            deviceContext: d2D1DeviceContext);
+
+        return hresult;
+    }
 }

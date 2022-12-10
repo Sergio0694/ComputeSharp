@@ -280,14 +280,22 @@ unsafe partial class PixelShaderEffect<T>
             // Create an ID2D1Effect for the DPI compensation, if there isn't one already
             if (!sourceReference.HasDpiCompensationEffect)
             {
-                // We need to create a DPI compensation effect, so a device context must be available
+                using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
+
+                // We need to create a DPI compensation effect, so a device context must be available.
+                // If there is no input device context, just create a new one from the realization device.
                 if (d2D1DeviceContext is null)
                 {
-                    Marshal.ThrowExceptionForHR(E.E_POINTER);
+                    this.canvasDevice.Get()->CreateD2DDeviceContext(d2D1DeviceContextEffective.GetAddressOf()).Assert();
+                }
+                else
+                {
+                    // Otherwise, just use the input device context
+                    *&d2D1DeviceContextEffective = new ComPtr<ID2D1DeviceContext>(d2D1DeviceContext);
                 }
 
                 // Create the DPI compensation effect
-                d2D1DeviceContext->CreateEffect(
+                d2D1DeviceContextEffective.Get()->CreateEffect(
                     effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1DpiCompensation)),
                     effect: d2D1EffectDpiCompensation.GetAddressOf()).Assert();
 
