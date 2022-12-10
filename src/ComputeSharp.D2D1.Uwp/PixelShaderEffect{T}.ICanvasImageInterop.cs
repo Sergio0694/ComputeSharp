@@ -194,7 +194,7 @@ unsafe partial class PixelShaderEffect<T>
         // Note: the resource texture managers are deliberately not read back, as the only supported way to set
         // those is directly from the current effect instance. As such, they'd all either be the same instances
         // that are already stored locally, or trying to retrieve them would just throw an exception.
-        this.value = this.d2D1Effect.Get()->GetConstantBuffer<T>();
+        this.constantBuffer = this.d2D1Effect.Get()->GetConstantBuffer<T>();
         this.transformMapper = this.d2D1Effect.Get()->GetTransformMapper<T>();
         this.cacheOutput = this.d2D1Effect.Get()->GetCachedProperty();
         this.d2D1BufferPrecision = this.d2D1Effect.Get()->GetPrecisionProperty();
@@ -265,7 +265,7 @@ unsafe partial class PixelShaderEffect<T>
         }
 
         // Set the constant buffer for the effect
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.d2D1Effect.Get(), in this.value);
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.d2D1Effect.Get(), in this.constantBuffer);
 
         // If there is a transform mapper, set it in the effect
         if (this.transformMapper is not null)

@@ -22,15 +22,15 @@ unsafe partial class PixelShaderEffect<T>
             return this.d2D1Effect.Get() switch
             {
                 not null => this.d2D1Effect.Get()->GetConstantBuffer<T>(),
-                _ => this.value
+                _ => this.constantBuffer
             };
         }
     }
 
     /// <summary>
-    /// Sets the marshalled value for <see cref="Value"/>.
+    /// Sets the marshalled value for <see cref="ConstantBuffer"/>.
     /// </summary>
-    /// <param name="value">The value to set for <see cref="Value"/>.</param>
+    /// <param name="value">The value to set for <see cref="ConstantBuffer"/>.</param>
     private void SetConstantBuffer(in T value)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
@@ -45,7 +45,7 @@ unsafe partial class PixelShaderEffect<T>
             else
             {
                 // Otherwise, just store the value locally
-                this.value = value;
+                this.constantBuffer = value;
             }
         }
     }

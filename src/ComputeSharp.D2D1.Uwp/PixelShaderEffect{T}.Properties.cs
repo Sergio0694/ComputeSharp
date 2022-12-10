@@ -11,7 +11,7 @@ partial class PixelShaderEffect<T>
     /// <summary>
     /// Gets or sets the current <typeparamref name="T"/> value in use.
     /// </summary>
-    public T Value
+    public T ConstantBuffer
     {
         get => GetConstantBuffer();
         set => SetConstantBuffer(in value);
