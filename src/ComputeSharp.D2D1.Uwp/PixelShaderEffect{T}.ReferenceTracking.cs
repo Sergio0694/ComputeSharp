@@ -42,5 +42,13 @@ partial class PixelShaderEffect<T>
         this.canvasDevice.Dispose();
         this.d2D1RealizationDevice.Dispose();
         this.d2D1Effect.Dispose();
+
+        // Also release all native resources for the used sources.
+        // The transform mapper and resource texture managers don't
+        // need to be disposed, as those could be shared between effects.
+        for (int i = 0; i < SourceCollection.Count; i++)
+        {
+            Sources.Storage[i].Dispose();
+        }
     }
 }
