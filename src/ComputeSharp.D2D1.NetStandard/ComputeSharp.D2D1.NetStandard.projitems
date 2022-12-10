@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DoesNotReturnAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DisallowNullAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\NotNullAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\NotNullIfNotNullAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\InteropServices\NativeMemory.cs" Link="System\Runtime\InteropServices\NativeMemory.cs" />

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas;
 
@@ -103,7 +104,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <param name="storage">The storage for the effect property value.</param>
     /// <param name="value">The new effect property value to set.</param>
     /// <param name="invalidationType">The invalidation type to request.</param>
-    protected void SetAndInvalidateCanvasImage<T>(/*[NotNullIfNotNull(nameof(newValue))]*/ ref T storage, T value, InvalidationType invalidationType = InvalidationType.Update)
+    protected void SetAndInvalidateCanvasImage<T>([NotNullIfNotNull(nameof(value))] ref T storage, T value, InvalidationType invalidationType = InvalidationType.Update)
     {
         if (EqualityComparer<T>.Default.Equals(storage, value))
         {
