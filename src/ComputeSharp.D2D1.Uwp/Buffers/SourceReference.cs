@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Uwp.Extensions;
+using ComputeSharp.D2D1.Uwp.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
@@ -140,12 +141,14 @@ internal unsafe struct SourceReference : IDisposable
             // If that's not the case, create a new wrapper if the input image is not null
             if (d2D1Image is not null)
             {
-                // m_wrapper = ResourceManager::GetOrCreate<TWrapper>(device, resource);
-                throw new NotImplementedException();
+                this.graphicsEffectSourceWrapper = ResourceManager.GetOrCreate(
+                    device: canvasDevice,
+                    resource: (IUnknown*)d2D1Image,
+                    dpi: 0);
             }
             else
             {
-                this.d2D1ImageSource.Dispose();
+                this.graphicsEffectSourceWrapper = null;
             }
 
             this.d2D1ImageSource = new ComPtr<ID2D1Image>(d2D1Image);

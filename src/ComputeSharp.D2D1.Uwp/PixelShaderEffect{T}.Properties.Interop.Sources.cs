@@ -103,7 +103,7 @@ unsafe partial class PixelShaderEffect<T>
         }
 
         // Get or create a wrapper for the input image
-        return sourceReference.GetOrCreateWrapper(null, d2D1Image.Get());
+        return sourceReference.GetOrCreateWrapper(this.canvasDevice.Get(), d2D1Image.Get());
     }
 
     /// <param name="index">The index of the <see cref="IGraphicsEffectSource"/> source to get or set.</param>
