@@ -8,6 +8,7 @@ using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using ComputeSharp.D2D1.Uwp.Buffers;
+using ComputeSharp.D2D1.Uwp.Collections;
 
 #pragma warning disable CS0618, CS8767
 

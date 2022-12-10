@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace ComputeSharp.D2D1.Uwp.Buffers;
+namespace ComputeSharp.D2D1.Uwp.Collections;
 
 /// <summary>
 /// An interface for a list with a fixed collection.

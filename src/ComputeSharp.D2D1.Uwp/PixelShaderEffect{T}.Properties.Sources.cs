@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Uwp.Buffers;
+using ComputeSharp.D2D1.Uwp.Collections;
 using Windows.Graphics.Effects;
 
 namespace ComputeSharp.D2D1.Uwp;

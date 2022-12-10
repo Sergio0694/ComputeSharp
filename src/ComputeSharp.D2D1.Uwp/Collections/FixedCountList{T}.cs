@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ComputeSharp.D2D1.Helpers;
 
-namespace ComputeSharp.D2D1.Uwp.Buffers;
+namespace ComputeSharp.D2D1.Uwp.Collections;
 
 /// <summary>
 /// Shared helpers for all types implementing <see cref="IFixedCountList{T}"/>.
