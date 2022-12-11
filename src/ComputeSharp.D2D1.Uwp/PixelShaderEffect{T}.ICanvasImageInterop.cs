@@ -12,7 +12,6 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
-using Win32 = TerraFX.Interop.Windows.Windows;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -117,11 +116,7 @@ unsafe partial class PixelShaderEffect<T>
 
                     // Store the input realization device and canvas device for future uses
                     d2D1Device1.CopyTo(ref this.d2D1RealizationDevice).Assert();
-
-                    fixed (ICanvasDevice** canvasDevice = this.canvasDevice)
-                    {
-                        device->QueryInterface(Win32.__uuidof<ICanvasDevice>(), (void**)canvasDevice).Assert();
-                    }
+                    device->CopyTo(ref this.canvasDevice);
                 }
 
                 // Create the effect, if it doesn't exist already
