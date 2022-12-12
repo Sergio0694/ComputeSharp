@@ -116,7 +116,7 @@ unsafe partial class PixelShaderEffect<T>
 
                     // Store the input realization device and canvas device for future uses
                     d2D1Device1.CopyTo(ref this.d2D1RealizationDevice).Assert();
-                    device->CopyTo(ref this.canvasDevice);
+                    device->CopyTo(ref this.canvasDevice).Assert();
                 }
 
                 // Create the effect, if it doesn't exist already

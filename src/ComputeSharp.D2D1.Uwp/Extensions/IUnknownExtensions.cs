@@ -47,11 +47,18 @@ internal static unsafe class IUnknownExtensions
     /// <typeparam name="T">The type of object being copied.</typeparam>
     /// <param name="source">The source <see cref="IUnknown"/> object.</param>
     /// <param name="destination">The destination <see cref="ComPtr{T}"/> location.</param>
-    public static void CopyTo<T>(this ref T source, ref ComPtr<T> destination)
+    /// <returns>The <see cref="HRESULT"/> for the operation (always <see cref="S.S_OK"/>).</returns>
+    public static HRESULT CopyTo<T>(this ref T source, ref ComPtr<T> destination)
         where T : unmanaged // IUnknown
     {
-        destination.Dispose();
+        // Note: this explicitly needs a temporary copy to avoid issues in case source and destination were
+        // pointers to the same object (which can be the case even if the two pointers are not identical).
+        // To double check, a full check through an IUnknown* cast would be needed, but to avoid the extra
+        // QueryInterface call on both objects, we can just always do one AddRef call which avoids issues in
+        // all cases as well. The situation we need to avoid is that without a temporary copy, releasing the
+        // target object might actually destroy the object, causing the following AddRef call to AV.
+        using ComPtr<T> temporary = new((T*)Unsafe.AsPointer(ref source));
 
-        destination = new ComPtr<T>((T*)Unsafe.AsPointer(ref source));
+        return temporary.CopyTo(ref destination);
     }
 }
