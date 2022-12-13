@@ -69,7 +69,7 @@ internal static unsafe class ID2D1DeviceContextExtensions
     /// <param name="d2D1Factory1">The resulting <see cref="ID2D1Factory1"/> object.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     /// <remarks>
-    /// The <see cref="Interop.D2D1PixelShaderEffect"/> APIs specifically need an <see cref="ID2D1Factory1"/> (as <see cref="ID2D1Factory1.RegisterEffectFromString"/> is used).
+    /// The <see cref="D2D1.Interop.D2D1PixelShaderEffect"/> APIs specifically need an <see cref="ID2D1Factory1"/> (as <see cref="ID2D1Factory1.RegisterEffectFromString"/> is used).
     /// </remarks>
     public static HRESULT GetFactory1(this ref ID2D1DeviceContext deviceContext, ID2D1Factory1** d2D1Factory1)
     {

@@ -38,4 +38,9 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems" Label="Shared" />
+
+  <!-- Add the same alias for [UnmanagedCallersOnly] from the shader .props file for src\ -->
+  <ItemGroup>
+    <Using Include="System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute" Alias="UnmanagedCallersOnlyAttribute" />
+  </ItemGroup>
 </Project>
