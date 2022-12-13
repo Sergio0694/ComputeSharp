@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.D2D1.Interop.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -78,11 +79,29 @@ internal unsafe partial struct PassthroughEffect
     private volatile int referenceCount;
 
     /// <summary>
+    /// Gets the factory for the current effect.
+    /// </summary>
+#if NET6_0_OR_GREATER
+    public static delegate* unmanaged[Stdcall]<IUnknown**, HRESULT> Factory
+#else
+    public static void* Factory
+#endif
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET6_0_OR_GREATER
+        get => (delegate* unmanaged[Stdcall]<IUnknown**, HRESULT>)&CreateEffect;
+#else
+        get => (void*)Marshal.GetFunctionPointerForDelegate(CreateEffectWrapper);
+#endif
+    }
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="effectImpl">The resulting effect instance.</param>
     /// <returns>This always returns <c>0</c>.</returns>
-    private static int Factory(IUnknown** effectImpl)
+    [UnmanagedCallersOnly]
+    private static int CreateEffect(IUnknown** effectImpl)
     {
         PassthroughEffect* @this;
 

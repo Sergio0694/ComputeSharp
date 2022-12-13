@@ -17,7 +17,7 @@ unsafe partial struct PixelShaderEffect
     /// <param name="effectImpl">The resulting effect factory.</param>
     /// <returns>The <c>HRESULT</c> for the operation.</returns>
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int FactoryDelegate(IUnknown** effectImpl);
+    public delegate int FactoryDelegate(IUnknown** effectImpl);
 
     /// <summary>
     /// A generic pixel shader implementation.
