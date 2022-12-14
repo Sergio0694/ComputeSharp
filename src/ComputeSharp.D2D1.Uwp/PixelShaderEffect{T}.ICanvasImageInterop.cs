@@ -285,7 +285,7 @@ unsafe partial class PixelShaderEffect<T>
         {
             if (!SetD2DInput(
                 index: i,
-                value: Sources.Storage[0].GetWrapper(),
+                value: Sources.Storage[i].GetWrapper(),
                 flags: flags,
                 targetDpi: targetDpi,
                 d2D1DeviceContext: deviceContext))
