@@ -251,8 +251,27 @@ unsafe partial class PixelShaderEffect<T>
         {
             Guid effectId = PixelShaderEffect.For<T>.Instance.Id;
 
+            using ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default;
+            using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
+
+            // We need to realize the current effect (ComputeSharp.D2D1's ID2D1Effect), so a device context must
+            // be available. If there is no input device context, just create a new one from the realization device.
+            if (deviceContext is null)
+            {
+                // Get the ID2D1DeviceContextLease interface from the input device
+                this.canvasDevice.Get()->GetD2DDeviceContextLease(d2D1DeviceContextLease.GetAddressOf()).Assert();
+
+                // Rent a new device context from the lease (this is much faster than creating a new device context)
+                d2D1DeviceContextLease.Get()->GetD2DDeviceContext(d2D1DeviceContextEffective.GetAddressOf()).Assert();
+            }
+            else
+            {
+                // Otherwise, just use the input device context
+                *&d2D1DeviceContextEffective = new ComPtr<ID2D1DeviceContext>(deviceContext);
+            }
+
             // Try to create an instance of the effect in use and store it in the current object
-            HRESULT hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
+            HRESULT hresult = d2D1DeviceContextEffective.Get()->CreateEffect(effectId: &effectId, effect: d2D1Effect);
 
             // Check if creation failed due to the effect not being registered. In that case, register
             // it and then try again. This is much faster than check whether the effect is registered
@@ -270,7 +289,7 @@ unsafe partial class PixelShaderEffect<T>
                 D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
 
                 // Try to create the effect again
-                hresult = deviceContext->CreateEffect(effectId: &effectId, effect: d2D1Effect);
+                hresult = d2D1DeviceContextEffective.Get()->CreateEffect(effectId: &effectId, effect: d2D1Effect);
             }
 
             // Rethrow any other errors

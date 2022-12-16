@@ -302,19 +302,16 @@ unsafe partial class PixelShaderEffect<T>
                 using ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default;
                 using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
 
-                // We need to create a DPI compensation effect, so a device context must be available.
-                // If there is no input device context, just create a new one from the realization device.
+                // Just like when realizing the current effect, rent a device context from the pool if one is not available.
+                // That is, either get the ID2D1DeviceContextPool interface and rent a device, or just use the input one.
                 if (d2D1DeviceContext is null)
                 {
-                    // Get the ID2D1DeviceContextLease interface from the input device
                     this.canvasDevice.Get()->GetD2DDeviceContextLease(d2D1DeviceContextLease.GetAddressOf()).Assert();
 
-                    // Rent a new device context from the lease (this is much faster than creating a new device context)
                     d2D1DeviceContextLease.Get()->GetD2DDeviceContext(d2D1DeviceContextEffective.GetAddressOf()).Assert();
                 }
                 else
                 {
-                    // Otherwise, just use the input device context
                     *&d2D1DeviceContextEffective = new ComPtr<ID2D1DeviceContext>(d2D1DeviceContext);
                 }
 
