@@ -9,12 +9,12 @@ using TerraFX.Interop.Windows;
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
-/// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.ICanvasResourceCreator"/> objects.
+/// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi"/> objects.
 /// </summary>
-[Guid("8F6D8AA8-492F-4BC6-B3D0-E7F5EAE84B11")]
-[NativeTypeName("class ICanvasResourceCreator : IInspectable")]
+[Guid("1A75B512-E9FA-49E6-A876-38CAE194013E")]
+[NativeTypeName("class ICanvasResourceCreatorWithDpi : IInspectable")]
 [NativeInheritance("IInspectable")]
-internal unsafe struct ICanvasResourceCreator
+internal unsafe struct ICanvasResourceCreatorWithDpi
 {
     public void** lpVtbl;
 
@@ -23,7 +23,7 @@ internal unsafe struct ICanvasResourceCreator
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreatorWithDpi*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasResourceCreatorWithDpi*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -32,7 +32,7 @@ internal unsafe struct ICanvasResourceCreator
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, uint>)this.lpVtbl[1])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreatorWithDpi*, uint>)this.lpVtbl[1])((ICanvasResourceCreatorWithDpi*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -41,6 +41,6 @@ internal unsafe struct ICanvasResourceCreator
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, uint>)this.lpVtbl[2])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreatorWithDpi*, uint>)this.lpVtbl[2])((ICanvasResourceCreatorWithDpi*)Unsafe.AsPointer(ref this));
     }
 }
