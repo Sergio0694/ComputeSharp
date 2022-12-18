@@ -2,9 +2,9 @@ using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using ICanvasEffect = Microsoft.Graphics.Canvas.Effects.ICanvasEffect;
 
 namespace ComputeSharp.D2D1.Uwp;
 
