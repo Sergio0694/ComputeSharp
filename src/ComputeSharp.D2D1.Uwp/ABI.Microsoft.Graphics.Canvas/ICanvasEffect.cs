@@ -6,7 +6,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649, IDE1006
 
-namespace ABI.Microsoft.Graphics.Canvas;
+namespace ABI.Microsoft.Graphics.Canvas.Effects;
 
 /// <summary>
 /// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.Effects.ICanvasEffect"/> objects.
