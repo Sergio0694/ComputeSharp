@@ -19,7 +19,7 @@ namespace ComputeSharp.Tests.Attributes;
 public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITestDataSource
 {
     /// <inheritdoc/>
-    IEnumerable<object[]> ITestDataSource.GetData(MethodInfo methodInfo)
+    IEnumerable<object?[]> ITestDataSource.GetData(MethodInfo methodInfo)
     {
         Device[] devices;
 
@@ -270,8 +270,8 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
     }
 
     /// <inheritdoc/>
-    string ITestDataSource.GetDisplayName(MethodInfo methodInfo, object[] data)
+    string? ITestDataSource.GetDisplayName(MethodInfo methodInfo, object?[]? data)
     {
-        return $"{methodInfo.Name} ({string.Join(", ", data)})";
+        return $"{methodInfo.Name} ({string.Join(", ", data ?? Array.Empty<object?>())})";
     }
 }
