@@ -53,7 +53,7 @@
     As such, this needs to be changed before a new release as well.
   -->
   <PropertyGroup>
-    <ComputeSharpPackageVersion>2.0.0</ComputeSharpPackageVersion>
+    <ComputeSharpPackageVersion>2.1.0</ComputeSharpPackageVersion>
     <IsCommitOnReleaseBranch>false</IsCommitOnReleaseBranch>
   </PropertyGroup>
 
