@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.14" />
-    <PackageReference Include="Win2D.uwp" Version="1.26.0" />
+    <PackageReference Include="Win2D.uwp" Version="1.27.0-preview1" />
   </ItemGroup>
 
   <ItemGroup>
