@@ -14,6 +14,7 @@ using Win32.Graphics.Direct2D;
 
 namespace ComputeSharp.D2D1.Tests;
 
+using HRESULT = HResult;
 using D2D1_MAPPED_RECT = MappedRect;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -28,16 +29,20 @@ public partial class D2D1TransformMapperTests
 
         using ComPtr<IUnknown> unknown = default;
         using ComPtr<IUnknown> transformMapper2 = default;
+        using ComPtr<IUnknown> transformMapperInternal = default;
 
         Guid uuidOfIUnknown = typeof(IUnknown).GUID;
         Guid uuidOfTransformMapper = new("02E6D48D-B892-4FBC-AA54-119203BAB802");
+        Guid uuidOfTransformMapperInternal = new("C5D8FC65-FB86-4C2D-9EF5-95AEC639C952");
 
-        // The object implements IUnknown and the transform mapper interface
+        // The object implements IUnknown and the transform mapper interfaces
         Assert.AreEqual(CustomQueryInterfaceResult.Handled, ((ICustomQueryInterface)transformMapper).GetInterface(ref uuidOfIUnknown, out *(IntPtr*)unknown.GetAddressOf()));
         Assert.AreEqual(CustomQueryInterfaceResult.Handled, ((ICustomQueryInterface)transformMapper).GetInterface(ref uuidOfTransformMapper, out *(IntPtr*)transformMapper2.GetAddressOf()));
+        Assert.AreEqual(CustomQueryInterfaceResult.Handled, ((ICustomQueryInterface)transformMapper).GetInterface(ref uuidOfTransformMapperInternal, out *(IntPtr*)transformMapperInternal.GetAddressOf()));
 
         Assert.IsTrue(unknown.Get() is not null);
         Assert.IsTrue(transformMapper2.Get() is not null);
+        Assert.IsTrue(transformMapperInternal.Get() is not null);
 
         using ComPtr<IUnknown> garbage = default;
 
@@ -96,6 +101,41 @@ public partial class D2D1TransformMapperTests
         Assert.AreEqual(2u, transformMapper2.Get()->Release());
     }
 
+    [TestMethod]
+    public unsafe void VerifyManagedWrapperRetrieval()
+    {
+        D2D1TransformMapper<HelloWorld> transformMapper = D2D1TransformMapperFactory<HelloWorld>.Inflate(4);
+
+        using ComPtr<IUnknown> unknown = default;
+        using ComPtr<IUnknown> transformMapperInternal = default;
+
+        Guid uuidOfIUnknown = typeof(IUnknown).GUID;
+        Guid uuidOfTransformMapperInternal = new("C5D8FC65-FB86-4C2D-9EF5-95AEC639C952");
+
+        Assert.AreEqual(CustomQueryInterfaceResult.Handled, ((ICustomQueryInterface)transformMapper).GetInterface(ref uuidOfIUnknown, out *(IntPtr*)unknown.GetAddressOf()));
+
+        Assert.IsTrue(unknown.Get() is not null);
+
+        HRESULT hresult = unknown.CopyTo(&uuidOfTransformMapperInternal, (void**)transformMapperInternal.GetAddressOf());
+
+        Assert.AreEqual(hresult, HRESULT.Ok);
+        Assert.IsTrue(transformMapperInternal.Get() is not null);
+
+        IntPtr handlePtr;
+
+        // Invoke GetManagedWrapperHandle
+        hresult = ((delegate* unmanaged[Stdcall]<IUnknown*, void**, int>)(*(void***)transformMapperInternal.Get())[3])(
+            transformMapperInternal.Get(),
+            (void**)&handlePtr);
+
+        Assert.AreEqual(hresult, HRESULT.Ok);
+
+        GCHandle handle = GCHandle.FromIntPtr(handlePtr);
+
+        Assert.IsNotNull(handle.Target);
+        Assert.AreSame(handle.Target, transformMapper);
+    }
+
     [D2DInputCount(0)]
     private partial struct DummyShader : ID2D1PixelShader
     {
@@ -118,7 +158,7 @@ public partial class D2D1TransformMapperTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<ShaderWithDispatchArea>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(new ShaderWithDispatchArea(111, 222), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), new ShaderWithDispatchArea(111, 222));
 
         DispatchAreaTransformMapper transformMapper = new() { ExpectedWidth = 111, ExpectedHeight = 222 };
 

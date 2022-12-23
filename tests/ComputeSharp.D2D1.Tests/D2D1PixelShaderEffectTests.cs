@@ -47,7 +47,7 @@ public partial class D2D1PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException), AllowDerivedTypes = false)]
     public unsafe void SetConstantBufferForD2D1Effect_NullD2D1Effect()
     {
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect<InvertEffect>(default, null);
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect<InvertEffect>(null, default);
     }
 
     [TestMethod]

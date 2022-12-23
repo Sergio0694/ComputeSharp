@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
@@ -7,6 +9,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>This type exposes the values that can be set via <c>ID2D1RenderInfo::SetInputDescription</c>.</para>
 /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1renderinfo-setinputdescription"/>.</para>
 /// </remarks>
+[StructLayout(LayoutKind.Sequential)]
 public readonly struct D2D1InputDescription
 {
     /// <summary>
@@ -29,19 +32,6 @@ public readonly struct D2D1InputDescription
     /// The mip level to retrieve from the upstream transform, if specified.
     /// </summary>
     private readonly int levelOfDetailCount;
-
-    /// <summary>
-    /// Creates a new <see cref="D2D1InputDescription"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="index">The index of the resource the description belongs to.</param>
-    /// <param name="filter">The type of filter to apply to the input texture.</param>
-    /// <param name="levelOfDetailCount">The mip level to retrieve from the upstream transform, if specified.</param>
-    internal D2D1InputDescription(int index, D2D1Filter filter, int levelOfDetailCount)
-    {
-        this.index = index;
-        this.filter = filter;
-        this.levelOfDetailCount = levelOfDetailCount;
-    }
 
     /// <summary>
     /// Gets the index of the resource the description belongs to.

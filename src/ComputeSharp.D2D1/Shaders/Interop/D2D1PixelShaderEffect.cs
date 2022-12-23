@@ -497,11 +497,11 @@ public static unsafe class D2D1PixelShaderEffect
     /// Sets the constant buffer from an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to set the constant buffer for.</typeparam>
-    /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
+    /// <param name="shader">The input D2D1 pixel shader to set the contant buffer for.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> is <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetConstantBufferForD2D1Effect<T>(in T shader, void* d2D1Effect)
+    public static void SetConstantBufferForD2D1Effect<T>(void* d2D1Effect, in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
         if (d2D1Effect is null)

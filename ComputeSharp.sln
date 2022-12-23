@@ -132,6 +132,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B86A48A7-18B
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.Uwp", "src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj", "{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -372,6 +374,14 @@ Global
 		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.Build.0 = Release|ARM64
 		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.ActiveCfg = Release|x64
 		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.Build.0 = Release|x64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|ARM64.Build.0 = Debug|ARM64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|x64.ActiveCfg = Debug|x64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|x64.Build.0 = Debug|x64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Release|ARM64.ActiveCfg = Release|ARM64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Release|ARM64.Build.0 = Release|ARM64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Release|x64.ActiveCfg = Release|x64
+		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

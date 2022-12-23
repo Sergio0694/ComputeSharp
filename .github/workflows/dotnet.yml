@@ -50,8 +50,10 @@ jobs:
       run: dotnet build src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj -c Release
     - name: Build ComputeSharp.Uwp package
       run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
+    - name: Build ComputeSharp.D2D1.Uwp package
+      run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
     
-      # Packing needs to be done separately and with no previous build target for this to work correctly
+      # WinUI 3 packaging needs to be done separately and with no previous build target for it to work correctly
     - name: Build ComputeSharp.WinUI project
       run: >
         msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release;

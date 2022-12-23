@@ -198,7 +198,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<IndexFrom2DResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(IndexFrom2DResourceTextureShader), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), default(IndexFrom2DResourceTextureShader));
 
         using ComPtr<IUnknown> resourceTextureManager = default;
 
@@ -257,7 +257,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<IndexFrom2DResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(IndexFrom2DResourceTextureShader), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), default(IndexFrom2DResourceTextureShader));
 
         using ComPtr<IUnknown> resourceTextureManager = default;
 
@@ -321,7 +321,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<IndexFrom2DResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(IndexFrom2DResourceTextureShader), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), default(IndexFrom2DResourceTextureShader));
 
         string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string expectedPath = Path.Combine(assemblyPath, "Assets", "Landscape.png");
@@ -498,7 +498,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         IndexFrom3DResourceTextureShader shader = new(expected.Height / 4);
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
         using ComPtr<IUnknown> resourceTextureManager = default;
 
@@ -575,7 +575,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         CopyFromResourceTexture1DShader shader = new(width);
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
         byte[] texture = new byte[width];
 
@@ -663,7 +663,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         CopyFromResourceTexture2DShader shader = new(width, height);
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
         byte[] texture = new byte[width * height];
 
@@ -766,7 +766,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         CopyFromResourceTexture3DShader shader = new(width, height, depth);
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(in shader, d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
         byte[] texture = new byte[width * height * depth];
 
@@ -860,7 +860,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<NullResourceTextureShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(default(NullResourceTextureShader), d2D1Effect.Get());
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), default(NullResourceTextureShader));
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), 128, 128);
 
