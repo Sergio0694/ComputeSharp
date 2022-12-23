@@ -70,7 +70,7 @@ jobs:
     needs: [build-solution]
     strategy:
       matrix:
-        framework: [net6.0, netcoreapp3.1, net472]
+        framework: [net7.0, net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
 
     # Set the environment variable which is then looked up in ComputeSharp.Dynamic.
