@@ -14,7 +14,7 @@ public static class RenderingPauseConverter
     /// <summary>
     /// Gets a symbol for an input rendering state.
     /// </summary>
-    /// <param name="value">Whether or not the rendering is currently paaused.</param>
+    /// <param name="value">Whether or not the rendering is currently paused.</param>
     /// <returns>A symbol representing the next action for the rendering.</returns>
     public static Symbol ConvertPausedToSymbol(bool value)
     {

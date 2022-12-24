@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Event.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BoolConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\RenderingPauseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ResolutionScaleConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DebugAnalyticsService.cs" />

@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="ComputeSharp.SwapChain.WinUI.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -150,9 +150,9 @@
         <computesharp:AnimatedComputeShaderPanel
             x:Name="ShaderPanel"
             Grid.Row="1"
-            IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
             IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
+            IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
 
@@ -196,21 +196,25 @@
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
                             CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[0]}"
                             IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[0]), Mode=OneWay}"
+                            IsEnabled="{x:Bind converters:BoolConverter.Not(ViewModel.IsDynamicResolutionEnabled), Mode=OneWay}"
                             Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[0])}" />
                         <ToggleMenuFlyoutItem
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
                             CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[1]}"
                             IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[1]), Mode=OneWay}"
+                            IsEnabled="{x:Bind converters:BoolConverter.Not(ViewModel.IsDynamicResolutionEnabled), Mode=OneWay}"
                             Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[1])}" />
                         <ToggleMenuFlyoutItem
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
                             CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[2]}"
                             IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[2]), Mode=OneWay}"
+                            IsEnabled="{x:Bind converters:BoolConverter.Not(ViewModel.IsDynamicResolutionEnabled), Mode=OneWay}"
                             Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[2])}" />
                         <ToggleMenuFlyoutItem
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
                             CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[3]}"
                             IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[3]), Mode=OneWay}"
+                            IsEnabled="{x:Bind converters:BoolConverter.Not(ViewModel.IsDynamicResolutionEnabled), Mode=OneWay}"
                             Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[3])}" />
                     </MenuFlyout>
                 </Button.Flyout>
