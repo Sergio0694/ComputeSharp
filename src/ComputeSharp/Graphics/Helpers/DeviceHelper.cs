@@ -20,12 +20,12 @@ internal static partial class DeviceHelper
     /// <summary>
     /// The vendor id for Microsoft adapters (the "Microsoft Basic Render").
     /// </summary>
-    private const uint MicrosoftVendorId = 0x1414;
+    public const uint MicrosoftVendorId = 0x1414;
 
     /// <summary>
     /// The device id for the WARP device.
     /// </summary>
-    private const uint WarpDeviceId = 0x8C;
+    public const uint WarpDeviceId = 0x8C;
 
     /// <summary>
     /// Gets the default <see cref="GraphicsDevice"/> instance.
