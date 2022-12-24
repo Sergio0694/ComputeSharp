@@ -1,13 +1,11 @@
 #if !DEBUG
 using System;
 using System.Diagnostics;
-using System.Reflection;
 #endif
 using CommunityToolkit.Mvvm.DependencyInjection;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
 #if !DEBUG
-using ComputeSharp.SwapChain.Uwp.Extensions;
 using ComputeSharp.SwapChain.Uwp.Services;
 #endif
 using ComputeSharp.SwapChain.Uwp.Views;
@@ -62,11 +60,9 @@ sealed partial class App : Application
         ServiceCollection services = new();
 
 #if !DEBUG
-        if (!Debugger.IsAttached &&
-            Assembly.GetExecutingAssembly().TryReadAllTextFromManifestFile("Assets/ServiceTokens/AppCenter.txt", out string? secret) &&
-            Guid.TryParse(secret, out _))
+        if (Guid.TryParse(AppServiceSecret, out _) && !Debugger.IsAttached)
         {
-            services.AddSingleton<IAnalyticsService>(new AppCenterService(secret!));
+            services.AddSingleton<IAnalyticsService>(new AppCenterService(AppServiceSecret));
         }
         else
         {
