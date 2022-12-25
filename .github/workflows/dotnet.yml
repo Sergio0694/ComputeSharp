@@ -70,7 +70,7 @@ jobs:
     needs: [build-solution]
     strategy:
       matrix:
-        framework: [net6.0, netcoreapp3.1, net472]
+        framework: [net7.0, net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
 
     # Set the environment variable which is then looked up in ComputeSharp.Dynamic.
@@ -135,11 +135,11 @@ jobs:
     - name: Build and run ComputeSharp.Sample.FSharp
       run: >
         dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        ${{matrix.command}} samples\ComputeSharp.Sample.FSharp\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.FSharp.exe
+        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.FSharp.exe
     - name: Build and run ComputeSharp.ImageProcessing.csproj
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        ${{matrix.command}} samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
+        samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
       
       # Also publish the NativeAOT test when .NET 7 is used
     - if: matrix.framework == 'net7.0'
