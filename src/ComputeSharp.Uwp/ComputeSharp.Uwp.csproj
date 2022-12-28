@@ -6,7 +6,6 @@
     <TargetPlatformMinRevision>17763</TargetPlatformMinRevision>
     <TargetPlatformVersion>$(TargetPlatformBaseVersion).$(TargetPlatformRevision).0</TargetPlatformVersion>
     <TargetPlatformMinVersion>$(TargetPlatformBaseVersion).$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <DebugType>Portable</DebugType>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <IsPackable>true</IsPackable>
     <IsPublishable>true</IsPublishable>
