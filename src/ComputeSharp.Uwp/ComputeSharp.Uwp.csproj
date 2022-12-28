@@ -10,7 +10,6 @@
     <IsPackable>true</IsPackable>
     <IsPublishable>true</IsPublishable>
     <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <RootNamespace>ComputeSharp.Uwp</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
