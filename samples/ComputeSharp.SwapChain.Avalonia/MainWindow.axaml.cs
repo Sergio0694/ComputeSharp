@@ -16,7 +16,7 @@ public partial class MainWindow : Window
     }
 }
 
-public class ShaderPanel : NativeControlHost
+public sealed class ShaderPanel : NativeControlHost
 {
     private readonly SwapChainApplication<ColorfulInfinity> application = new(static time => new((float)time.TotalSeconds));
 
