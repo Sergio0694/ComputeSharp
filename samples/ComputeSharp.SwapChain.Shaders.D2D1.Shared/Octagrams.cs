@@ -1,4 +1,6 @@
-namespace ComputeSharp.D2D1.Tests.Shaders;
+using ComputeSharp.D2D1;
+
+namespace ComputeSharp.SwapChain.Shaders.D2D1;
 
 /// <summary>
 /// A shader creating an octagram animation, inspired by arabesque.
@@ -14,12 +16,12 @@ internal readonly partial struct Octagrams : ID2D1PixelShader
     /// <summary>
     /// The current time since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// The dispatch size for the current output.
     /// </summary>
-    public readonly int2 dispatchSize;
+    private readonly int2 dispatchSize;
 
     private static float2x2 Rotate(float a)
     {
