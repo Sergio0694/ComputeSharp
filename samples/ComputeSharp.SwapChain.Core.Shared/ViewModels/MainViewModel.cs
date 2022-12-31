@@ -135,10 +135,7 @@ public sealed partial class MainViewModel : ObservableObject
             typeof(TriangleGridContouring),
             new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-        new(
-            typeof(ContouredLayers),
-            new ContouredLayersRunner(),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.HelloWorld>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(typeof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersRunner()),
         new(
             typeof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),

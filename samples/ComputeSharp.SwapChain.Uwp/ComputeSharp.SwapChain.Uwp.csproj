@@ -200,7 +200,11 @@
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Assets\Textures\RustyMetal.1024x1024rgba32">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\D2D1AnimatedPixelShaderPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
