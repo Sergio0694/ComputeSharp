@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Constants;
 using ComputeSharp.SwapChain.Core.Services;
+using ComputeSharp.SwapChain.Core.Shaders;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
 #if WINDOWS_UWP
@@ -102,17 +103,46 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
     {
-        new(typeof(ColorfulInfinity), new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ExtrudedTruchetPattern),new ShaderRunner<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
-        new(typeof(FractalTiling),new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds))),
-        new(typeof(MengerJourney),new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds))),
-        new(typeof(Octagrams),new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ProteanClouds),new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
-        new(typeof(TwoTiledTruchet),new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
-        new(typeof(PyramidPattern),new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-        new(typeof(TriangleGridContouring),new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ContouredLayers),new ContouredLayersRunner()),
-        new(typeof(TerracedHills),new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds))),
+        new(
+            typeof(ColorfulInfinity),
+            new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(FractalTiling),
+            new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.FractalTiling>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(MengerJourney),
+            new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.MengerJourney>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(Octagrams),
+            new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.Octagrams>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(ProteanClouds),
+            new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ProteanClouds>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(TwoTiledTruchet),
+            new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TwoTiledTruchet>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(PyramidPattern),
+            new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.PyramidPattern>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(TriangleGridContouring),
+            new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(ContouredLayers),
+            new ContouredLayersRunner(),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.HelloWorld>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(TerracedHills),
+            new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
     };
 
     private ShaderRunnerViewModel selectedComputeShader;

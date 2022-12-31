@@ -10,6 +10,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewmodels="using:ComputeSharp.SwapChain.Core.ViewModels"
+    xmlns:views="using:ComputeSharp.SwapChain.Uwp.Views"
     SizeChanged="UserControl_SizeChanged">
 
     <Grid x:Name="Root">
@@ -153,7 +154,10 @@
             IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
             RenderingFailed="MainShaderPanel_RenderingFailed"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
-            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
+            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
+            Visibility="Collapsed"/>
+
+        <views:D2D1AnimatedPixelShaderPanel Grid.Row="1" ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}"/>
 
         <!--  Settings panel  -->
         <StackPanel

@@ -1,5 +1,6 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ComputeSharp.SwapChain.Core.Shaders;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp;
 #else
@@ -11,17 +12,25 @@ namespace ComputeSharp.SwapChain.Core.ViewModels;
 /// <summary>
 /// A viewmodel for a compute shader.
 /// </summary>
-public sealed class ShaderRunnerViewModel : ObservableObject
+public sealed partial class ShaderRunnerViewModel : ObservableObject
 {
+    /// <summary>
+    /// Gets or sets whether the current shader is selected.
+    /// </summary>
+    [ObservableProperty]
+    private bool isSelected;
+
     /// <summary>
     /// Creates a new <see cref="ShaderRunnerViewModel"/> instance.
     /// </summary>
     /// <param name="shaderType">The <see cref="Type"/> instance for the actual shader to execute.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to execute.</param>
-    public ShaderRunnerViewModel(Type shaderType, IShaderRunner shaderRunner)
+    /// <param name="d2D1ShaderRunner">The <see cref="ID2D1ShaderRunner"/> instance to execute.</param>
+    public ShaderRunnerViewModel(Type shaderType, IShaderRunner shaderRunner, ID2D1ShaderRunner d2D1ShaderRunner)
     {
         ShaderType = shaderType;
         ShaderRunner = shaderRunner;
+        D2D1ShaderRunner = d2D1ShaderRunner;
     }
 
     /// <summary>
@@ -34,14 +43,8 @@ public sealed class ShaderRunnerViewModel : ObservableObject
     /// </summary>
     public IShaderRunner ShaderRunner { get; }
 
-    private bool isSelected;
-
     /// <summary>
-    /// Gets or sets whether the current shader is selected.
+    /// Gets the <see cref="ID2D1ShaderRunner"/> instance to execute.
     /// </summary>
-    public bool IsSelected
-    {
-        get => this.isSelected;
-        set => SetProperty(ref this.isSelected, value);
-    }
+    public ID2D1ShaderRunner D2D1ShaderRunner { get; }
 }
