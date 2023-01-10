@@ -58,6 +58,27 @@ internal static unsafe class ID2D1EffectExtensions
     }
 
     /// <summary>
+    /// Sets the constant buffer of type <typeparamref name="T"/> from a given <see cref="ID2D1Effect"/> object.
+    /// </summary>
+    /// <typeparam name="T">The type of shader being used.</typeparam>
+    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
+    /// <param name="value">The constant buffer value to set.</param>
+    public static void SetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect, in T value)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        // Same as above, simply do nothing for empty types. This case is still handled to
+        // avoid crashing when someone's just setting an empty constant buffer, which is
+        // unnecessary but still valid (eg. a stateless shader). This could be the case if
+        // someone was eg. binding or using some other automated system to set constant buffer.
+        if (D2D1PixelShader.GetConstantBufferSize<T>() == 0)
+        {
+            return;
+        }
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect((ID2D1Effect*)Unsafe.AsPointer(ref d2D1Effect), in value);
+    }
+
+    /// <summary>
     /// Gets the <see cref="D2D1TransformMapper{T}"/> instance from a given <see cref="ID2D1Effect"/> object.
     /// </summary>
     /// <typeparam name="T">The type of shader being used.</typeparam>

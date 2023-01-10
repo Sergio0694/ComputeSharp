@@ -40,7 +40,7 @@ unsafe partial class PixelShaderEffect<T>
             // If the effect is realized, set the property on the underlying ID2D1Effect object
             if (this.d2D1Effect.Get() is not null)
             {
-                D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(this.d2D1Effect.Get(), in value);
+                this.d2D1Effect.Get()->SetConstantBuffer(in value);
             }
             else
             {
