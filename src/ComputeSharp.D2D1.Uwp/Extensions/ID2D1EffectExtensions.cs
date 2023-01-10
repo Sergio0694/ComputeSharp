@@ -29,6 +29,15 @@ internal static unsafe class ID2D1EffectExtensions
         where T : unmanaged, ID2D1PixelShader
     {
         int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
+
+        // Special cases the constant buffer type being empty. If that's the case, there is no
+        // need to try to retrieve the constant buffer from the underlying effect anyway, and
+        // most importantly, the ID2D1EffectImpl from ComputeSharp.D2D1 will return E_INVALIDARG.
+        if (constantBufferSize == 0)
+        {
+            return default;
+        }
+
         byte[] buffer = ArrayPool<byte>.Shared.Rent(constantBufferSize);
 
         fixed (byte* p = buffer)
