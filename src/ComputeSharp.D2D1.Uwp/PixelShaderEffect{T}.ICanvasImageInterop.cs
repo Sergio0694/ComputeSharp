@@ -12,6 +12,8 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
+using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_DEVICE_ASSOCIATION_TYPE;
+using Win32 = TerraFX.Interop.Windows.Windows;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -19,7 +21,7 @@ namespace ComputeSharp.D2D1.Uwp;
 unsafe partial class PixelShaderEffect<T>
 {
     /// <inheritdoc/>
-    int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device)
+    int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
@@ -40,15 +42,25 @@ unsafe partial class PixelShaderEffect<T>
             return E.E_NOT_VALID_STATE;
         }
 
+        HRESULT hresult;
+
         try
         {
             // Copy the device over to the target
-            return this.canvasDevice.CopyTo(device);
+            hresult = this.canvasDevice.CopyTo(device);
         }
         finally
         {
             Monitor.Exit(this.lockObject);
         }
+
+        // Set the association type if the copy was successful
+        if (Win32.SUCCEEDED(hresult))
+        {
+            *type = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_REALIZATION_DEVICE;
+        }
+
+        return hresult;
     }
 
     /// <inheritdoc/>

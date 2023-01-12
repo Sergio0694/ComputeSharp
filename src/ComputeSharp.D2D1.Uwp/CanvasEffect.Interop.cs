@@ -41,13 +41,13 @@ unsafe partial class CanvasEffect
     }
 
     /// <inheritdoc/>
-    unsafe int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device)
+    unsafe int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
         GetCanvasImageInterop(canvasImageInterop.GetAddressOf());
 
-        return canvasImageInterop.Get()->GetDevice(device);
+        return canvasImageInterop.Get()->GetDevice(device, type);
     }
 
     /// <inheritdoc/>
