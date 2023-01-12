@@ -23,6 +23,12 @@ unsafe partial class PixelShaderEffect<T>
     /// <inheritdoc/>
     int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
+        // Validate all input parameters
+        if (device is null || type is null)
+        {
+            return E.E_POINTER;
+        }
+
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         // Check for disposal
@@ -72,6 +78,12 @@ unsafe partial class PixelShaderEffect<T>
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
+        // No input pointer can be null
+        if (device is null || ppImage is null)
+        {
+            return E.E_POINTER;
+        }
+
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         // Check for disposal
