@@ -299,26 +299,20 @@ unsafe partial class PixelShaderEffect<T>
             // Create an ID2D1Effect for the DPI compensation, if there isn't one already
             if (!sourceReference.HasDpiCompensationEffect)
             {
-                using ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default;
-                using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
-
-                // Just like when realizing the current effect, rent a device context from the pool if one is not available.
-                // That is, either get the ID2D1DeviceContextPool interface and rent a device, or just use the input one.
-                if (d2D1DeviceContext is null)
+                using (ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default)
+                using (ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default)
                 {
-                    this.canvasDevice.Get()->GetD2DDeviceContextLease(d2D1DeviceContextLease.GetAddressOf()).Assert();
+                    // Just like when realizing the current effect, rent a device context from the pool if one is not available
+                    this.canvasDevice.Get()->GetEffectiveD2DDeviceContextWithOptionalLease(
+                        d2D1DeviceContext: d2D1DeviceContext,
+                        d2D1DeviceContextEffective: d2D1DeviceContextEffective.GetAddressOf(),
+                        d2D1DeviceContextLease: d2D1DeviceContextLease.GetAddressOf());
 
-                    d2D1DeviceContextLease.Get()->GetD2DDeviceContext(d2D1DeviceContextEffective.GetAddressOf()).Assert();
+                    // Create the DPI compensation effect
+                    d2D1DeviceContextEffective.Get()->CreateEffect(
+                        effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1DpiCompensation)),
+                        effect: d2D1EffectDpiCompensation.GetAddressOf()).Assert();
                 }
-                else
-                {
-                    *&d2D1DeviceContextEffective = new ComPtr<ID2D1DeviceContext>(d2D1DeviceContext);
-                }
-
-                // Create the DPI compensation effect
-                d2D1DeviceContextEffective.Get()->CreateEffect(
-                    effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1DpiCompensation)),
-                    effect: d2D1EffectDpiCompensation.GetAddressOf()).Assert();
 
                 D2D1_BORDER_MODE d2D1BorderMode = D2D1_BORDER_MODE_HARD;
                 D2D1_DPICOMPENSATION_INTERPOLATION_MODE d2D1DpiCompensationInterpolationMode = D2D1_DPICOMPENSATION_INTERPOLATION_MODE_LINEAR;
