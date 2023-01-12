@@ -29,6 +29,10 @@ unsafe partial class PixelShaderEffect<T>
             return E.E_POINTER;
         }
 
+        // Set parameters to default values
+        *device = null;
+        *type = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_UNSPECIFIED;
+
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         // Check for disposal
@@ -78,11 +82,14 @@ unsafe partial class PixelShaderEffect<T>
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
-        // No input pointer can be null
+        // The device and resulting image pointers cannot be null
         if (device is null || ppImage is null)
         {
             return E.E_POINTER;
         }
+
+        // Set the resulting image to null
+        *ppImage = null;
 
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
@@ -148,8 +155,6 @@ unsafe partial class PixelShaderEffect<T>
                 {
                     if (!Realize(flags, targetDpi, deviceContext))
                     {
-                        *ppImage = null;
-
                         return E.E_FAIL;
                     }
                 }
@@ -169,12 +174,6 @@ unsafe partial class PixelShaderEffect<T>
 
                 return S.S_OK;
             }
-        }
-        catch (Exception e)
-        {
-            *ppImage = null;
-
-            return e.HResult;
         }
         finally
         {
