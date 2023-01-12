@@ -46,5 +46,5 @@ internal enum WIN2D_GET_D2D_IMAGE_FLAGS : uint
     /// <summary>
     /// Ignored.
     /// </summary>
-    WIN2D_GET_D2D_IMAGE_FLAGS_FORCE_DWORD = 0xffffffff
+    WIN2D_GET_D2D_IMAGE_FLAGS_FORCE_DWORD = 0xFFFFFFFF
 }
