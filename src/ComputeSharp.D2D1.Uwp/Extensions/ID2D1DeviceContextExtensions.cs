@@ -57,4 +57,24 @@ internal static unsafe class ID2D1DeviceContextExtensions
 
         return dpiX;
     }
+
+    /// <summary>
+    /// Gets an <see cref="ID2D1Factory1"/> object from a given <see cref="ID2D1DeviceContext"/>.
+    /// </summary>
+    /// <param name="deviceContext">The input <see cref="ID2D1DeviceContext"/> instance.</param>
+    /// <param name="d2D1Factory1">The resulting <see cref="ID2D1Factory1"/> object.</param>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    /// <remarks>
+    /// The <see cref="Interop.D2D1PixelShaderEffect"/> APIs specifically need an <see cref="ID2D1Factory1"/> (as <see cref="ID2D1Factory1.RegisterEffectFromString"/> is used).
+    /// </remarks>
+    public static HRESULT GetFactory1(this ref ID2D1DeviceContext deviceContext, ID2D1Factory1** d2D1Factory1)
+    {
+        using ComPtr<ID2D1Factory> d2D1Factory = default;
+
+        // Get the underlying ID2D1Factory from the input context, which can be used to register effects
+        deviceContext.GetFactory(d2D1Factory.GetAddressOf());
+
+        // QueryInterface for the ID2D1Factory1 object (which should always be present)
+        return d2D1Factory.CopyTo(d2D1Factory1);
+    }
 }

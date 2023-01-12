@@ -224,16 +224,6 @@ unsafe partial class PixelShaderEffect<T>
     /// <returns>Whether the effect was realized correctly.</returns>
     private bool Realize(WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, ID2D1DeviceContext* deviceContext)
     {
-        using ComPtr<ID2D1Factory> d2D1Factory = default;
-
-        // Get the underlying ID2D1Factory from the input context, so we can register and create the effect
-        deviceContext->GetFactory(d2D1Factory.GetAddressOf());
-
-        using ComPtr<ID2D1Factory1> d2D1Factory1 = default;
-
-        // D2D1PixelShaderEffect APIs specifically need an ID2D1Factory1 (as ID2D1Factory1::RegisterEffectFromString is used)
-        d2D1Factory.CopyTo(d2D1Factory1.GetAddressOf()).Assert();
-
         fixed (ID2D1Effect** d2D1Effect = this.d2D1Effect)
         {
             Guid effectId = PixelShaderEffect.For<T>.Instance.Id;
@@ -248,6 +238,11 @@ unsafe partial class PixelShaderEffect<T>
             if (hresult == D2DERR.D2DERR_EFFECT_IS_NOT_REGISTERED ||
                 hresult == E.E_NOTFOUND)
             {
+                using ComPtr<ID2D1Factory1> d2D1Factory1 = default;
+
+                // Get the ID2D1Factory1 object to register the effect (required by D2D1PixelShaderEffect)
+                deviceContext->GetFactory1(d2D1Factory1.GetAddressOf()).Assert();
+
                 // Register the effect with the factory (pass the same D2D1 draw transform mapper factory that was used before)
                 D2D1PixelShaderEffect.RegisterForD2D1Factory1<T>(d2D1Factory1.Get(), out _);
 

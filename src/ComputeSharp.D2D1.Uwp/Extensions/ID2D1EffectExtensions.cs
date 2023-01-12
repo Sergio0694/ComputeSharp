@@ -29,6 +29,15 @@ internal static unsafe class ID2D1EffectExtensions
         where T : unmanaged, ID2D1PixelShader
     {
         int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
+
+        // Special cases the constant buffer type being empty. If that's the case, there is no
+        // need to try to retrieve the constant buffer from the underlying effect anyway, and
+        // most importantly, the ID2D1EffectImpl from ComputeSharp.D2D1 will return E_INVALIDARG.
+        if (constantBufferSize == 0)
+        {
+            return default;
+        }
+
         byte[] buffer = ArrayPool<byte>.Shared.Rent(constantBufferSize);
 
         fixed (byte* p = buffer)
@@ -46,6 +55,27 @@ internal static unsafe class ID2D1EffectExtensions
         shader.InitializeFromDispatchData(buffer.AsSpan(0, constantBufferSize));
 
         return shader;
+    }
+
+    /// <summary>
+    /// Sets the constant buffer of type <typeparamref name="T"/> from a given <see cref="ID2D1Effect"/> object.
+    /// </summary>
+    /// <typeparam name="T">The type of shader being used.</typeparam>
+    /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
+    /// <param name="value">The constant buffer value to set.</param>
+    public static void SetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect, in T value)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        // Same as above, simply do nothing for empty types. This case is still handled to
+        // avoid crashing when someone's just setting an empty constant buffer, which is
+        // unnecessary but still valid (eg. a stateless shader). This could be the case if
+        // someone was eg. binding or using some other automated system to set constant buffer.
+        if (D2D1PixelShader.GetConstantBufferSize<T>() == 0)
+        {
+            return;
+        }
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect((ID2D1Effect*)Unsafe.AsPointer(ref d2D1Effect), in value);
     }
 
     /// <summary>
