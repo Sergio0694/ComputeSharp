@@ -1,0 +1,67 @@
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+// Enumerates all distinct permutations of a given sequence
+IEnumerable<T[]> Permutations<T>(T[] array)
+{
+    HashSet<string> hashSet = new HashSet<string>();
+
+    static IEnumerable<T[]> Permutations(T[] array, int i, int n)
+    {
+        if (i == n)
+        {
+            yield return array;
+        }
+
+        for (int j = i; j <= n; j++)
+        {
+            (array[i], array[j]) = (array[j], array[i]);
+
+            foreach (T[] permutation in Permutations(array, i + 1, n))
+            {
+                yield return permutation;
+            }
+
+            (array[i], array[j]) = (array[j], array[i]);
+        }
+    }
+
+    foreach (T[] permutation in Permutations(array, 0, array.Length - 1))
+    {
+        string text = string.Join(",", permutation);
+
+        if (hashSet.Add(text))
+        {
+            yield return permutation;
+        }
+    }
+}
+
+// Enumerates all combinations of values that sum up to a given size
+IEnumerable<int[]> Combinations(int size)
+{
+    static IEnumerable<int[]> Combinations(int i, int n, List<int> list)
+    {
+        if (n == 0)
+        {
+            yield return list.ToArray();
+        }
+
+        for (int j = i; j <= n; j++)
+        {
+            if (j is not (1 or 2 or 3 or 4 or 6 or 8 or 9 or 12 or 16)) continue;
+
+            list.Add(j);
+
+            foreach (int[] combination in Combinations(j, n - j, list))
+            {
+                yield return combination;
+            }
+
+            list.RemoveAt(list.Count - 1);
+        }
+    }
+
+    return Combinations(1, size, new List<int>());
+}
+#>

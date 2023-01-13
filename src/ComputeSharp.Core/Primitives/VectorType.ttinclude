@@ -1,4 +1,5 @@
 <#@include file="..\Intrinsics\Hlsl.MulOverloads.ttinclude" #>
+<#@include file="VectorType.Ctors.ttinclude" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -94,6 +95,36 @@ public unsafe partial struct <#=typeName#>
         WriteLine($"[FieldOffset({"xyzw".IndexOf(name) * elementSize})]");
         WriteLine($"private {fieldElementTypeName} {name};");
         WriteLine("");
+    }
+
+    // Generate the constructors
+    foreach (int[] combination in Combinations(i))
+    {
+        foreach (int[] permutation in Permutations(combination))
+        {
+            WriteLine("/// <summary>");
+            WriteLine($"/// Creates a new <see cref=\"{typeName}\"/> instance with the specified parameters.");
+            WriteLine("/// </summary>");
+            WriteLine($"public {typeName}()");
+            WriteLine("{");
+            WriteLine("}");
+#>
+    /// <summary>
+    /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="x">The value to assign to the first vector component.</param>
+    /// <param name="y">The value to assign to the second vector component.</param>
+    /// <param name="z">The value to assign to the third vector component.</param>
+    /// <param name="w">The value to assign to the fourth vector component.</param>
+    public Float4(float x, float y, float z, float w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+<#
+        }
     }
 
     PopIndent();
