@@ -6,12 +6,9 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Tests.Helpers;
 using Win32;
 using Win32.Graphics.Direct2D;
-
-#pragma warning disable IDE0065
+using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
 
 namespace ComputeSharp.D2D1.Tests.Helpers;
-
-using D2D1_MAPPED_RECT = MappedRect;
 
 /// <summary>
 /// A test helper for D2D1 pixel shaders.

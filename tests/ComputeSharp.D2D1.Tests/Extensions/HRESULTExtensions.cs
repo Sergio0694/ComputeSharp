@@ -4,12 +4,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System.Runtime.CompilerServices;
-
-#pragma warning disable IDE0065
+using HRESULT = Win32.HResult;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
-
-using HRESULT = Win32.HResult;
 
 /// <summary>
 /// Helper methods to efficiently throw exceptions.

@@ -5,8 +5,8 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct3D12;
 
 namespace ComputeSharp.Tests.DeviceLost;
 

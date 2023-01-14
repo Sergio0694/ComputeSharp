@@ -3,13 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,14 +9,13 @@ using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct2D;
+using HRESULT = Win32.HResult;
+using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
+using Rectangle = System.Drawing.Rectangle;
 
-#pragma warning disable CS0649, IDE0044, IDE0065
+#pragma warning disable CS0649, IDE0044
 
 namespace ComputeSharp.D2D1.Tests;
-
-using HRESULT = HResult;
-using D2D1_MAPPED_RECT = MappedRect;
-using Rectangle = System.Drawing.Rectangle;
 
 [TestClass]
 [TestCategory("D2D1TransformMapper")]

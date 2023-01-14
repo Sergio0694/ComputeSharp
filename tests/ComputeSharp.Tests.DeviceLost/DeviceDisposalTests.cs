@@ -4,10 +4,12 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Win32;
+using Win32.Graphics.Direct3D12;
 
 namespace ComputeSharp.Tests.DeviceLost;
+
+using Win32 = Win32.Apis;
 
 [TestClass]
 [TestCategory("DeviceDisposal")]
@@ -51,7 +53,7 @@ public partial class DeviceDisposalTests
 
         graphicsDevice.Dispose();
 
-        InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        InteropServices.GetID3D12Device(graphicsDevice, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
     }
 
     [CombinatorialTestMethod]
