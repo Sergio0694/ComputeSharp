@@ -5,9 +5,6 @@ using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
-#endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 

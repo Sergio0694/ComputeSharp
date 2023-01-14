@@ -11,8 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\QueueExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\MemberNotNullAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\RequiresUnreferencedCodeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Enum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\GC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\IntPtrExtensions.cs" />
@@ -21,9 +19,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\MemoryMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\UnmanagedCallersOnlyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeMemory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\OSPlatformAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\SupportedOSPlatformAttribute.cs" />
   </ItemGroup>
 </Project>

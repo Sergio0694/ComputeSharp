@@ -6,7 +6,6 @@ using TerraFX.Interop.Windows;
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;

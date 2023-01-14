@@ -19,7 +19,6 @@ using static TerraFX.Interop.Windows.STGTY;
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
 namespace ComputeSharp.Graphics.Extensions;

@@ -1,7 +1,30 @@
 <Project>
   <Import Project="..\Directory.Build.props" />
 
+  <!-- Reference NuGetizer to manage the packaging process -->
   <ItemGroup>
     <PackageReference Include="NuGetizer" Version="0.9.1" PrivateAssets="all" />
   </ItemGroup>
+
+  <!--
+    Reference PolySharp for all .NET Standard 2.0 polyfills.
+    Only needed for the .Core project and all source generators.
+  -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(MSBuildProjectName.EndsWith('.SourceGenerators'))">
+    <PackageReference Include="PolySharp" Version="1.10.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build;analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Define the type alias for [UnmanagedCallersOnly] when on the .NET Standard 2.0 target -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Using Include="System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute" Alias="UnmanagedCallersOnlyAttribute" />
+  </ItemGroup>
+
+  <!-- Configure PolySharp options -->
+  <PropertyGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>true</PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>
+  </PropertyGroup>
 </Project>

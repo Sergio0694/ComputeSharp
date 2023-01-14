@@ -10,16 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)System\Buffers\BitOperations.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DoesNotReturnAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\DisallowNullAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\NotNullAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\NotNullIfNotNullAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\InteropServices\NativeMemory.cs" Link="System\Runtime\InteropServices\NativeMemory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\InteropServices\UnmanagedCallersOnlyAttribute.cs" Link="System\Runtime\InteropServices\UnmanagedCallersOnlyAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\Versioning\OSPlatformAttribute.cs" Link="System\Runtime\Versioning\OSPlatformAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.NetStandard\System\Runtime\Versioning\SupportedOSPlatformAttribute.cs" Link="System\Runtime\Versioning\SupportedOSPlatformAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Text\EncodingExtensions.cs" />
   </ItemGroup>
 </Project>

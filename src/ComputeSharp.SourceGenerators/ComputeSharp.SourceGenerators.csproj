@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -17,7 +17,6 @@
     <!-- ComputeSharp.Core.SourceGenerator APIs -->
 
     <!-- ComputeSharp.Core APIs -->
-    <Compile Include="..\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
