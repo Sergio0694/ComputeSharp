@@ -11,6 +11,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+    <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.13" />
+    <PackageReference Include="Vortice.Win32.Graphics.Dxgi" Version="1.9.13" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,16 +21,6 @@
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
-    
-  <!-- When the .NET Standard 2.0 version of ComputeSharp is resolved, the TerraFX APIs are internal, as they
-       are referenced from the shared project. The same reference is needed here to make all tests build fine. -->
-  <Import Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0'" Project="..\..\src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" />
-  <Import Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0'" Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
-
-  <!-- Only when the local TerraFX is referenced, ignore warnings from there -->
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0'">
-    <NoWarn>$(NoWarn);CS0649</NoWarn>
-  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\src\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="Properties\Polyfills\UnscopedRefAttribute.cs" />
