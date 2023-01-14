@@ -5,7 +5,6 @@
     <TargetFrameworks>net472;net6.0;net7.0</TargetFrameworks>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
     
   <ItemGroup>

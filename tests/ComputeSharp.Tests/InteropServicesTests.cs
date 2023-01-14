@@ -6,14 +6,12 @@ using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct3D12;
-
-#pragma warning disable IDE0065
-
-namespace ComputeSharp.Tests;
-
 using D3D12_RESOURCE_DIMENSION = Win32.Graphics.Direct3D12.ResourceDimension;
 using HRESULT = Win32.HResult;
 using LUID = Win32.Luid;
+
+namespace ComputeSharp.Tests;
+
 using Win32 = Win32.Apis;
 
 [TestClass]

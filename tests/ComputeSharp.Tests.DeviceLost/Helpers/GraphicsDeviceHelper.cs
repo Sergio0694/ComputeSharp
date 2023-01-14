@@ -5,8 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct3D12;
 
-#pragma warning disable IDE0065
-
 namespace ComputeSharp.Tests.DeviceLost.Helpers;
 
 using Win32 = Win32.Apis;

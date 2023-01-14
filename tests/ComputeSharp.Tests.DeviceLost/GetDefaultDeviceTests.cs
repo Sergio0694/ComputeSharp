@@ -4,13 +4,10 @@ using ComputeSharp.Tests.DeviceLost.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;
 using Win32.Graphics.Direct3D12;
-
-#pragma warning disable IDE0065
-
-namespace ComputeSharp.Tests.DeviceLost;
-
 using DXGI = Win32.Graphics.Dxgi.Apis;
 using HRESULT = Win32.HResult;
+
+namespace ComputeSharp.Tests.DeviceLost;
 
 [TestClass]
 [TestCategory("GetDefaultDevice")]

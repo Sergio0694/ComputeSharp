@@ -2,6 +2,14 @@
   <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup>
+
+    <!-- Unit tests don't need public XML docs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- Ignore platform compatibility warnings -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+
+    <!-- Ignore warnings for usings outside of a namespace (needed for some Vortice.Win32 type aliases) -->
+    <NoWarn>$(NoWarn);IDE0065</NoWarn>
   </PropertyGroup>
 </Project>

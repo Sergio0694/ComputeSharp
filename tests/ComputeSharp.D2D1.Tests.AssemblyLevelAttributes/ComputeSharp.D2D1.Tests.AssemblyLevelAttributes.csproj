@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
