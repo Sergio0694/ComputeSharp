@@ -18,7 +18,7 @@ using D2D1_FACTORY_TYPE = FactoryType;
 using D2D1_INTERPOLATION_MODE = InterpolationMode;
 using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
 using D2D1_MAP_OPTIONS = MapOptions;
-using D2D_RECT_U = Win32.Graphics.Direct2D.Common.RectU;
+using D2D_RECT_U = Win32.Numerics.Rect;
 using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
 using D2D1_BITMAP_PROPERTIES = BitmapProperties;
 using D2D1_BITMAP_PROPERTIES1 = BitmapProperties1;
@@ -223,10 +223,10 @@ internal static class D2D1Helper
 
         Point d2DPointDestination = default;
         D2D_RECT_U d2DRectSource = default;
-        d2DRectSource.top = 0;
-        d2DRectSource.left = 0;
-        d2DRectSource.right = (uint)d2DSize.Width;
-        d2DRectSource.bottom = (uint)d2DSize.Height;
+        d2DRectSource.Top = 0;
+        d2DRectSource.Left = 0;
+        d2DRectSource.Right = d2DSize.Width;
+        d2DRectSource.Bottom = d2DSize.Height;
 
         // Copy the image from the target to the readback bitmap
         _ = d2D1Bitmap1Buffer.Get()->CopyFromBitmap(
