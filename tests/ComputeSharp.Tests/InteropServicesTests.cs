@@ -4,11 +4,17 @@ using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_DIMENSION;
+using Win32;
+using Win32.Graphics.Direct3D12;
+
+#pragma warning disable IDE0065
 
 namespace ComputeSharp.Tests;
+
+using D3D12_RESOURCE_DIMENSION = Win32.Graphics.Direct3D12.ResourceDimension;
+using HRESULT = Win32.HResult;
+using LUID = Win32.Luid;
+using Win32 = Win32.Apis;
 
 [TestClass]
 [TestCategory("InteropServices")]
@@ -20,7 +26,7 @@ public unsafe partial class InteropServicesTests
     {
         using ComPtr<ID3D12Device> d3D12Device = default;
 
-        InteropServices.GetID3D12Device(device.Get(), Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        InteropServices.GetID3D12Device(device.Get(), Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
 
         Assert.IsTrue(d3D12Device.Get() != null);
 
@@ -30,9 +36,9 @@ public unsafe partial class InteropServicesTests
 
         d3D12Device.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Device(device.Get(), Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Device(device.Get(), Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Device.Get() != null);
 
         luid = d3D12Device.Get()->GetAdapterLuid();
@@ -51,18 +57,18 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
     }
 
     [CombinatorialTestMethod]
@@ -75,18 +81,18 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_TEXTURE2D);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Texture2D);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_TEXTURE2D);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Texture2D);
     }
 
     [CombinatorialTestMethod]
@@ -99,18 +105,18 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_TEXTURE3D);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Texture3D);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_TEXTURE3D);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Texture3D);
     }
 
     [CombinatorialTestMethod]
@@ -123,18 +129,18 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
     }
 
     [CombinatorialTestMethod]
@@ -147,18 +153,18 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
     }
 
     [CombinatorialTestMethod]
@@ -171,17 +177,17 @@ public unsafe partial class InteropServicesTests
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-        InteropServices.GetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        InteropServices.GetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
 
         d3D12Resource.Dispose();
 
-        int hResult = InteropServices.TryGetID3D12Resource(buffer, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        int hResult = InteropServices.TryGetID3D12Resource(buffer, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
-        Assert.AreEqual(hResult, S.S_OK);
+        Assert.AreEqual(hResult, (int)HRESULT.Ok);
         Assert.IsTrue(d3D12Resource.Get() != null);
-        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION_BUFFER);
+        Assert.AreEqual(d3D12Resource.Get()->GetDesc().Dimension, D3D12_RESOURCE_DIMENSION.Buffer);
     }
 }
