@@ -116,7 +116,7 @@ internal static class WICFormatHelper
     /// <exception cref="ArgumentException">Thrown when the input filename doesn't have a valid file extension.</exception>
     public static Guid GetForFilename(ReadOnlySpan<char> filename)
     {
-        return Path.GetExtension(filename).ToString() switch
+        return Path.GetExtension(filename) switch
         {
             ".bmp" => GUID.GUID_ContainerFormatBmp,
             ".png" => GUID.GUID_ContainerFormatPng,
