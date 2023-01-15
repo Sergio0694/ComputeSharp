@@ -4,7 +4,7 @@ using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using Math = System.Math;
 #else
-using Math = ComputeSharp.D2D1.NetStandard.System.Math;
+using Math = ComputeSharp.NetStandard.Math;
 #endif
 
 namespace ComputeSharp.D2D1.Extensions;

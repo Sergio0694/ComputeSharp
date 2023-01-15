@@ -105,10 +105,9 @@
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
 
-  <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
-
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
-  <Import Project="..\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems" Label="Shared" />
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 </Project>

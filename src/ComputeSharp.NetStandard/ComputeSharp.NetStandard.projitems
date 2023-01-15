@@ -9,6 +9,7 @@
     <Import_RootNamespace>ComputeSharp.NetStandard</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)System\Buffers\BitOperations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\QueueExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Enum.cs" />
@@ -16,9 +17,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\IntPtrExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\FormatExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\IO\StreamExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Path.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Math.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\IO\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\MemoryMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeMemory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Text\EncodingExtensions.cs" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.D2D1.NetStandard.System;
+namespace ComputeSharp.NetStandard;
 
 /// <summary>
 /// A polyfill type that mirrors some methods from <see cref="global::System.Math"/> on .NET 6.

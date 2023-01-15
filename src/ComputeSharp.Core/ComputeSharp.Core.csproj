@@ -27,5 +27,5 @@
   </ItemGroup>
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 </Project>

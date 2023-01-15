@@ -48,7 +48,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.NativeLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain", "samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj", "{E7C9247D-016B-4819-AF9F-0E9B3591E04B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.Cli", "samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj", "{C12D7ACE-98ED-4813-8118-6667C34F484F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.Cli", "samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj", "{C12D7ACE-98ED-4813-8118-6667C34F484F}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ComputeSharp.Sample.FSharp", "samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj", "{7C625EC4-F599-4350-A915-F046DF2406D3}"
 EndProject
@@ -84,11 +84,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1", "src\Co
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TerraFX.Interop.Windows.D2D1", "src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.shproj", "{9DA1DA9F-F8B2-4B25-BE80-C21F773029E3}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.D2D1.NetStandard", "src\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.shproj", "{2608EB41-F98B-4BE5-9F4D-68FED6115088}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Core", "src\ComputeSharp.Core\ComputeSharp.Core.csproj", "{764BC0F5-0C5E-49AD-ABAA-E3874C0F3286}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Core.NetStandard", "src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.shproj", "{3ACACF03-6B20-40BA-B8EC-11AC1624D2C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Core.SourceGenerators", "src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj", "{BFB003D1-788B-48DE-8065-39479C162CB0}"
 EndProject
@@ -132,7 +128,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B86A48A7-18B
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.Uwp", "src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj", "{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Uwp", "src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj", "{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -222,6 +218,14 @@ Global
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|ARM64.Build.0 = Release|ARM64
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|x64.ActiveCfg = Release|x64
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|x64.Build.0 = Release|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.Build.0 = Debug|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.ActiveCfg = Debug|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.Build.0 = Debug|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.ActiveCfg = Release|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.Build.0 = Release|ARM64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.ActiveCfg = Release|x64
+		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.Build.0 = Release|x64
 		{7C625EC4-F599-4350-A915-F046DF2406D3}.Debug|ARM64.ActiveCfg = Debug|Any CPU
 		{7C625EC4-F599-4350-A915-F046DF2406D3}.Debug|ARM64.Build.0 = Debug|Any CPU
 		{7C625EC4-F599-4350-A915-F046DF2406D3}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -366,14 +370,6 @@ Global
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|ARM64.Build.0 = Release|Any CPU
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|x64.ActiveCfg = Release|Any CPU
 		{669A414F-3B46-4B55-B587-061AF63C3067}.Release|x64.Build.0 = Release|Any CPU
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|ARM64.Build.0 = Debug|ARM64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.ActiveCfg = Debug|x64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Debug|x64.Build.0 = Debug|x64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.ActiveCfg = Release|ARM64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|ARM64.Build.0 = Release|ARM64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.ActiveCfg = Release|x64
-		{C12D7ACE-98ED-4813-8118-6667C34F484F}.Release|x64.Build.0 = Release|x64
 		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|ARM64.ActiveCfg = Debug|ARM64
 		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|ARM64.Build.0 = Debug|ARM64
 		{E60A3B1E-FC5D-41AC-ACF0-C2D75B6590D2}.Debug|x64.ActiveCfg = Debug|x64
@@ -395,6 +391,7 @@ Global
 		{BBBD0ADD-F2F9-49A3-BD5E-D223F0735D8B} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{BF52326F-E415-49E6-8595-62762216762B} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
+		{C12D7ACE-98ED-4813-8118-6667C34F484F} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{7C625EC4-F599-4350-A915-F046DF2406D3} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{A5997814-D8D2-4541-87AC-C3E53CAA67C0} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
@@ -406,8 +403,6 @@ Global
 		{4A8FCE22-851C-442A-8BC9-3EC3FD00B637} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{158F984D-CD96-4062-BD02-2268946031A0} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{9DA1DA9F-F8B2-4B25-BE80-C21F773029E3} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
-		{2608EB41-F98B-4BE5-9F4D-68FED6115088} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
-		{3ACACF03-6B20-40BA-B8EC-11AC1624D2C9} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{209C95A3-FA53-431B-B688-3299CA6C29D2} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{94178D51-0097-4AD2-B3D0-827E40D62F2E} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{CBA545B4-31EF-4E9F-A1A8-2A1290B54046} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
@@ -416,7 +411,6 @@ Global
 		{5DE90C85-ED26-4B5A-A0D7-2FF966A210AC} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{669A414F-3B46-4B55-B587-061AF63C3067} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{B86A48A7-18BD-4946-B995-3CE26B092DDF} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
-		{C12D7ACE-98ED-4813-8118-6667C34F484F} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
@@ -427,32 +421,26 @@ Global
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{0c82ede1-5b8a-4df3-87da-700b29d5e265}*SharedItemsImports = 13
 		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{158f984d-cd96-4062-bd02-2268946031a0}*SharedItemsImports = 13
-		src\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems*{2608eb41-f98b-4be5-9f4d-68fed6115088}*SharedItemsImports = 13
-		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
-		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{3acacf03-6b20-40ba-b8ec-11ac1624d2c9}*SharedItemsImports = 13
-		src\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{51d5a422-d3a5-4c4d-8a6d-a048940bf279}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{751bb05b-563d-4b3a-94c6-15e2d79d35ea}*SharedItemsImports = 13
-		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{764bc0f5-0c5e-49ad-abaa-e3874c0f3286}*SharedItemsImports = 5
+		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{764bc0f5-0c5e-49ad-abaa-e3874c0f3286}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{76c66257-fdaa-47ab-85e7-ef757eab10c0}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05}*SharedItemsImports = 13
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{9da1da9f-f8b2-4b25-be80-c21f773029e3}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
-		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
+		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{bfb003d1-788b-48de-8065-39479c162cb0}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{c12d7ace-98ed-4813-8118-6667c34f484f}*SharedItemsImports = 5
-		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
-		src\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
+		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{e44053bd-a761-47fb-aa78-087a599672ea}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e91f4d24-922a-4921-a8d7-9c45a143c45d}*SharedItemsImports = 5
-		src\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5

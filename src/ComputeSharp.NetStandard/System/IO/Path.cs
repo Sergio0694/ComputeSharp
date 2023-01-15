@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.NetStandard.System.IO;
+namespace ComputeSharp.NetStandard;
 
 /// <summary>
 /// A polyfill type that mirrors some methods from <see cref="global::System.IO.Path"/> on .NET 6.

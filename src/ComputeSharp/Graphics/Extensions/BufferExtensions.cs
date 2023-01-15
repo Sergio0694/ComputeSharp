@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 #if !NET6_0_OR_GREATER
-using GC = ComputeSharp.NetStandard.System.GC;
+using GC = ComputeSharp.NetStandard.GC;
 #endif
 
 namespace ComputeSharp;

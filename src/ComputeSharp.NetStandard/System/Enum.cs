@@ -1,4 +1,4 @@
-namespace ComputeSharp.NetStandard.System;
+namespace ComputeSharp.NetStandard;
 
 /// <summary>
 /// A polyfill type that mirrors some methods from <see cref="global::System.Enum"/> on .NET 6.

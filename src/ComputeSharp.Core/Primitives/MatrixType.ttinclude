@@ -1,4 +1,4 @@
-﻿<#@include file="..\Intrinsics\Hlsl.MulOverloads.ttinclude" #>
+<#@include file="..\Intrinsics\Hlsl.MulOverloads.ttinclude" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
     }
 #>
 #if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.Core.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
 #pragma warning disable CS0660, CS0661

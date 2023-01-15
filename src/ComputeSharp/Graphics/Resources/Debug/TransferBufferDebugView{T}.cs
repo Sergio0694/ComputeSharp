@@ -2,7 +2,7 @@ using System.Diagnostics;
 #if NET6_0_OR_GREATER
 using GC = System.GC;
 #else
-using GC = ComputeSharp.NetStandard.System.GC;
+using GC = ComputeSharp.NetStandard.GC;
 #endif
 
 namespace ComputeSharp.Resources.Debug;

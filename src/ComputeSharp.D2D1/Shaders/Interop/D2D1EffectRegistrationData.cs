@@ -2,9 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using ComputeSharp.D2D1.Helpers;
-#if !NET6_0_OR_GREATER
-using ComputeSharp.D2D1.NetStandard.System.Text;
-#endif
 
 namespace ComputeSharp.D2D1.Interop;
 

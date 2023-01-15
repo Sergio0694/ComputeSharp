@@ -6,7 +6,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 
 #pragma warning disable IDE1006
 

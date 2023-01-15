@@ -15,10 +15,8 @@ using static TerraFX.Interop.Windows.STATFLAG;
 using static TerraFX.Interop.Windows.STG;
 using static TerraFX.Interop.Windows.STGM;
 using static TerraFX.Interop.Windows.STGTY;
-#if NET6_0_OR_GREATER
-using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
-#else
-using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+#if !NET6_0_OR_GREATER
+using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
 namespace ComputeSharp.Graphics.Extensions;
