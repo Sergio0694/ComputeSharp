@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,7 +15,6 @@
       manually linking the source files from ComputeSharp\Core in here. We only need them to extract metadata
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\Internals\AutoConstructorBehaviorAttribute.cs" Link="ComputeSharp.Core\Attributes\Internals\AutoConstructorBehaviorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\Internals\AutoConstructorBehavior.cs" Link="ComputeSharp.Core\Attributes\Internals\AutoConstructorBehavior.cs" />
@@ -81,6 +80,5 @@
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
-    
+  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />    
 </Project>

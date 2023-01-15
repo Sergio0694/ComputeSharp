@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.NetStandard.System.Runtime.InteropServices;
+namespace ComputeSharp.NetStandard;
 
 /// <summary>
 /// A polyfill type that mirrors some methods from <see cref="MemoryMarshal"/> on .NET 6.

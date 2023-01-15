@@ -1,8 +1,6 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace ComputeSharp.D2D1.NetStandard.System.Text;
+namespace System.Text;
 
 /// <summary>
 /// A polyfill type that mirrors some methods from <see cref="Encoding"/> on .NET 5.

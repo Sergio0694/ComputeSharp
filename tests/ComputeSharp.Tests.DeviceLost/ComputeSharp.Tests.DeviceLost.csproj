@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="Properties\Polyfills\UnscopedRefAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalDataAttribute.cs" Link="Attributes\AdditionalDataAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalResourceAttribute.cs" Link="Attributes\AdditionalResourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\AllDevicesAttribute.cs" Link="Attributes\AllDevicesAttribute.cs" />

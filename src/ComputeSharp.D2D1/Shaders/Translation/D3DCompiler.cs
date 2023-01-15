@@ -7,9 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Extensions;
-#if !NET6_0_OR_GREATER
-using ComputeSharp.D2D1.NetStandard.System.Text;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 

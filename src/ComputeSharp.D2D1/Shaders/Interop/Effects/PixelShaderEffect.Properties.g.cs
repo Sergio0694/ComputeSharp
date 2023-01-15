@@ -1,12 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 #if !NET6_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
-#endif
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 

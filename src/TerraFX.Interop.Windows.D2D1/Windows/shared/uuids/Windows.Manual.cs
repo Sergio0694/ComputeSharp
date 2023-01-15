@@ -6,10 +6,8 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-#if NET6_0_OR_GREATER
-using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
-#else
-using RuntimeHelpers = ComputeSharp.D2D1.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+#if !NET6_0_OR_GREATER
+using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
 namespace TerraFX.Interop.Windows;

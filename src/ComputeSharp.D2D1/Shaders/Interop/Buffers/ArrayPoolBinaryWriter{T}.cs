@@ -6,7 +6,7 @@ using System.Numerics;
 #endif
 using System.Runtime.CompilerServices;
 #if !NET6_0_OR_GREATER
-using BitOperations = ComputeSharp.D2D1.NetStandard.System.Buffers.BitOperations;
+using BitOperations = ComputeSharp.NetStandard.BitOperations;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;

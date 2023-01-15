@@ -27,7 +27,4 @@
 
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
-
-  <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems" Label="Shared" />
 </Project>

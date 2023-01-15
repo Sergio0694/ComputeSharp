@@ -15,7 +15,6 @@
   <ItemGroup>
 
     <!-- ComputeSharp.Core APIs -->
-    <Compile Include="..\ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs" Link="ComputeSharp.Core\Properties\Polyfills\UnscopedRefAttribute.cs.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
 
     <!-- ComputeSharp.D2D1 APIs -->
-    <Compile Include="..\ComputeSharp.D2D1\Properties\Polyfills\StringSyntaxAttribute.cs" Link="ComputeSharp.D2D1\Properties\Polyfills\StringSyntaxAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1ShaderProfile.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1ShaderProfile.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1BufferPrecision.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1BufferPrecision.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\Enums\D2D1ChannelDepth.cs" Link="ComputeSharp.D2D1\Attributes\Enums\D2D1ChannelDepth.cs" />
@@ -107,10 +105,9 @@
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
 
-  <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Project="..\ComputeSharp.Core.NetStandard\ComputeSharp.Core.NetStandard.projitems" Label="Shared" />
-
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
-  <Import Project="..\ComputeSharp.D2D1.NetStandard\ComputeSharp.D2D1.NetStandard.projitems" Label="Shared" />
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 </Project>

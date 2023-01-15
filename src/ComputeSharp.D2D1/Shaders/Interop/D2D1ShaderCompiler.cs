@@ -2,9 +2,6 @@ using System;
 using System.Buffers;
 using System.Text;
 using ComputeSharp.D2D1.Exceptions;
-#if !NET6_0_OR_GREATER
-using ComputeSharp.D2D1.NetStandard.System.Text;
-#endif
 using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

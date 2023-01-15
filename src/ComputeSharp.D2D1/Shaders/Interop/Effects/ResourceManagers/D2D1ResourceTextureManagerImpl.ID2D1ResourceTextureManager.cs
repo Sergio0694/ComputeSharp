@@ -2,9 +2,6 @@ using System;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
-#endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 

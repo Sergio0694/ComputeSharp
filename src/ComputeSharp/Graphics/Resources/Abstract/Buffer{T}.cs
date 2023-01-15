@@ -16,7 +16,7 @@ using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 #if NET6_0_OR_GREATER
 using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
 #else
-using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
+using MemoryMarshal = ComputeSharp.NetStandard.MemoryMarshal;
 #endif
 
 namespace ComputeSharp.Resources;

@@ -5,9 +5,6 @@ using System.Buffers.Text;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-#if !NET6_0_OR_GREATER
-using ComputeSharp.D2D1.NetStandard.System.Text;
-#endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;
 
