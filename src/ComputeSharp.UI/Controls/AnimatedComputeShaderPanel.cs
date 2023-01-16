@@ -47,10 +47,10 @@ public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel, IDispos
     {
         this.swapChainManager = new SwapChainManager<AnimatedComputeShaderPanel>(this, device);
 
-        this.Loaded += AnimatedComputeShaderPanel_Loaded;
-        this.Unloaded += AnimatedComputeShaderPanel_Unloaded;
-        this.SizeChanged += AnimatedComputeShaderPanel_SizeChanged;
-        this.CompositionScaleChanged += AnimatedComputeShaderPanel_CompositionScaleChanged;
+        Loaded += AnimatedComputeShaderPanel_Loaded;
+        Unloaded += AnimatedComputeShaderPanel_Unloaded;
+        SizeChanged += AnimatedComputeShaderPanel_SizeChanged;
+        CompositionScaleChanged += AnimatedComputeShaderPanel_CompositionScaleChanged;
     }
 
     // Initializes the swap chain and starts the render thread

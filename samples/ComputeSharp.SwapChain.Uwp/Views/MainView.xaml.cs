@@ -17,8 +17,9 @@ public sealed partial class MainView : UserControl
 {
     public MainView()
     {
-        this.InitializeComponent();
-        this.DataContext = App.Current.Services.GetRequiredService<MainViewModel>();
+        InitializeComponent();
+
+        DataContext = App.Current.Services.GetRequiredService<MainViewModel>();
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ public sealed partial class MainView : UserControl
         App.Current.Services.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
 
         _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+
         this.Root.Children.Add(this.ShaderSelectionPanel);
     }
 

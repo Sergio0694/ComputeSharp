@@ -25,7 +25,7 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     /// <inheritdoc cref="Application.Current"/>
