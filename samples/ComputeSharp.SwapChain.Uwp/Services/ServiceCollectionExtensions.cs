@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
         }
         else
         {
-            _ = services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
+            _ = services.AddSingleton<IAnalyticsService>(new DebugAnalyticsService());
         }
 
         return services;

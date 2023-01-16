@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
+using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.SwapChain.Uwp.Services;
 using ComputeSharp.SwapChain.Uwp.Views;
@@ -53,7 +54,7 @@ sealed partial class App : Application
         ServiceCollection services = new();
 
         _ = services.AddAnalyticsService();
-        _ = services.AddTransient<MainViewModel>();
+        _ = services.AddTransient<MainViewModel>(static services => new MainViewModel(services.GetRequiredService<IAnalyticsService>()));
 
         Ioc.Default.ConfigureServices(services.BuildServiceProvider());
     }
