@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.DependencyInjection;
+using System;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.SwapChain.Uwp.Services;
@@ -28,12 +28,19 @@ sealed partial class App : Application
         this.InitializeComponent();
     }
 
+    /// <inheritdoc cref="Application.Current"/>
+    public static new App Current => (App)Application.Current;
+
+    /// <summary>
+    /// Gets the current <see cref="IServiceProvider"/> instance.
+    /// </summary>
+    public IServiceProvider Services { get; } = ConfigureServices();
+
     /// <inheritdoc/>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
         if (Window.Current.Content is not MainView)
         {
-            ConfigureServices();
             StyleTitleBar();
             ExpandViewIntoTitleBar();
 
@@ -49,14 +56,15 @@ sealed partial class App : Application
     /// <summary>
     /// Configures the services for the application.
     /// </summary>
-    private static void ConfigureServices()
+    /// <returns>The <see cref="IServiceProvider"/> instance to use.</returns>
+    private static IServiceProvider ConfigureServices()
     {
         ServiceCollection services = new();
 
         _ = services.AddAnalyticsService();
-        _ = services.AddTransient<MainViewModel>(static services => new MainViewModel(services.GetRequiredService<IAnalyticsService>()));
+        _ = services.AddTransient(static services => new MainViewModel(services.GetRequiredService<IAnalyticsService>()));
 
-        Ioc.Default.ConfigureServices(services.BuildServiceProvider());
+        return services.BuildServiceProvider();
     }
 
     /// <summary>
