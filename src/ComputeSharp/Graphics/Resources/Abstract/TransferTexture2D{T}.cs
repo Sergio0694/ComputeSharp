@@ -124,7 +124,7 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            using ReferenceTracker.Lease _0 = this.GetReferenceTracker().GetLease();
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
             return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
         }

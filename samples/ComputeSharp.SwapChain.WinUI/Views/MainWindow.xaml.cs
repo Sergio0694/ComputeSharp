@@ -20,8 +20,9 @@ public sealed partial class MainWindow : Window
 
     public MainWindow()
     {
-        this.InitializeComponent();
-        this.ExtendsContentIntoTitleBar = true;
+        InitializeComponent();
+
+        ExtendsContentIntoTitleBar = true;
 
         SetTitleBar(this.TitleBarRectangle);
 
@@ -50,6 +51,7 @@ public sealed partial class MainWindow : Window
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
     {
         _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+
         this.Root.Children.Add(this.ShaderSelectionPanel);
     }
 

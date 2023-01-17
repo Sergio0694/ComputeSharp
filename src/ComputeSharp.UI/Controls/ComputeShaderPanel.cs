@@ -47,10 +47,10 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel, IDisposable
     {
         this.swapChainManager = new SwapChainManager<ComputeShaderPanel>(this, device);
 
-        this.Loaded += ComputeShaderPanel_Loaded;
-        this.Unloaded += ComputeShaderPanel_Unloaded;
-        this.SizeChanged += ComputeShaderPanel_SizeChanged;
-        this.CompositionScaleChanged += ComputeShaderPanel_CompositionScaleChanged;
+        Loaded += ComputeShaderPanel_Loaded;
+        Unloaded += ComputeShaderPanel_Unloaded;
+        SizeChanged += ComputeShaderPanel_SizeChanged;
+        CompositionScaleChanged += ComputeShaderPanel_CompositionScaleChanged;
     }
 
     // Initializes the swap chain and starts the render thread

@@ -1,13 +1,7 @@
-#if !DEBUG
 using System;
-using System.Diagnostics;
-#endif
-using CommunityToolkit.Mvvm.DependencyInjection;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
-#if !DEBUG
 using ComputeSharp.SwapChain.Uwp.Services;
-#endif
 using ComputeSharp.SwapChain.Uwp.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel.Activation;
@@ -31,15 +25,22 @@ sealed partial class App : Application
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
+
+    /// <inheritdoc cref="Application.Current"/>
+    public static new App Current => (App)Application.Current;
+
+    /// <summary>
+    /// Gets the current <see cref="IServiceProvider"/> instance.
+    /// </summary>
+    public IServiceProvider Services { get; } = ConfigureServices();
 
     /// <inheritdoc/>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
         if (Window.Current.Content is not MainView)
         {
-            ConfigureServices();
             StyleTitleBar();
             ExpandViewIntoTitleBar();
 
@@ -55,26 +56,15 @@ sealed partial class App : Application
     /// <summary>
     /// Configures the services for the application.
     /// </summary>
-    private static void ConfigureServices()
+    /// <returns>The <see cref="IServiceProvider"/> instance to use.</returns>
+    private static IServiceProvider ConfigureServices()
     {
         ServiceCollection services = new();
 
-#if !DEBUG
-        if (Guid.TryParse(AppServiceSecret, out _) && !Debugger.IsAttached)
-        {
-            services.AddSingleton<IAnalyticsService>(new AppCenterService(AppServiceSecret));
-        }
-        else
-        {
-            services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
-        }
-#else
-        services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
-#endif
+        _ = services.AddAnalyticsService();
+        _ = services.AddTransient(static services => new MainViewModel(services.GetRequiredService<IAnalyticsService>()));
 
-        services.AddTransient<MainViewModel>();
-
-        Ioc.Default.ConfigureServices(services.BuildServiceProvider());
+        return services.BuildServiceProvider();
     }
 
     /// <summary>

@@ -1,9 +1,9 @@
 using System;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using ComputeSharp.SwapChain.Core.Constants;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.ViewModels;
 using ComputeSharp.Uwp;
+using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -17,8 +17,9 @@ public sealed partial class MainView : UserControl
 {
     public MainView()
     {
-        this.InitializeComponent();
-        this.DataContext = Ioc.Default.GetRequiredService<MainViewModel>();
+        InitializeComponent();
+
+        DataContext = App.Current.Services.GetRequiredService<MainViewModel>();
     }
 
     /// <summary>
@@ -29,16 +30,17 @@ public sealed partial class MainView : UserControl
     // Opens the shader selection panel
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
+        App.Current.Services.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
 
-        _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+        _ = this.Root.Resources.Remove(nameof(this.ShaderSelectionPanel));
+
         this.Root.Children.Add(this.ShaderSelectionPanel);
     }
 
     // Hides the shader selection panel
     private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.CloseShaderSelectionPanel);
+        App.Current.Services.GetRequiredService<IAnalyticsService>().Log(Event.CloseShaderSelectionPanel);
 
         _ = this.Root.Children.Remove(this.ShaderSelectionPanel);
     }
@@ -52,7 +54,7 @@ public sealed partial class MainView : UserControl
     // Logs rendering failed in the main panel
     private void MainShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, RenderingFailedEventArgs args)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnMainPanel));
+        App.Current.Services.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnMainPanel));
 
         this.RenderingErrorInfoBar.IsOpen = true;
     }
@@ -60,7 +62,7 @@ public sealed partial class MainView : UserControl
     // Logs rendering failed in a secondary panel
     private void SelectionShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, RenderingFailedEventArgs args)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
+        App.Current.Services.GetRequiredService<IAnalyticsService>().Log(args.Exception, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
 
         this.RenderingErrorInfoBar.IsOpen = true;
     }
