@@ -32,7 +32,7 @@ public sealed partial class MainView : UserControl
     {
         App.Current.Services.GetRequiredService<IAnalyticsService>().Log(Event.OpenShaderSelectionPanel);
 
-        _ = this.Root.Resources.Remove("ShaderSelectionPanel");
+        _ = this.Root.Resources.Remove(nameof(this.ShaderSelectionPanel));
 
         this.Root.Children.Add(this.ShaderSelectionPanel);
     }
