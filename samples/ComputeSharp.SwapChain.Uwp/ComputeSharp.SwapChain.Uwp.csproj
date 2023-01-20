@@ -184,9 +184,9 @@
       <Version>2.8.2</Version>
     </PackageReference>
     <PackageReference Include="PolySharp">
-      <Version>1.10.0</Version>
-      <IncludeAssets>build; analyzers</IncludeAssets>
+      <Version>1.11.0</Version>
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
