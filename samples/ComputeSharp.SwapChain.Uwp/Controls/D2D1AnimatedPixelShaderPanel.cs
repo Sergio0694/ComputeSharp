@@ -79,7 +79,41 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
         // Pause or start the render thread if a runner is available
         if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
         {
-            canvasAnimatedControl.Paused = e.NewValue is not ID2D1ShaderRunner;
+            bool shouldRender = @this.IsLoaded && !@this.IsPaused && shaderRunner is not null;
+
+            canvasAnimatedControl.Paused = !shouldRender;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets whether or not the rendering is paused.
+    /// </summary>
+    public bool IsPaused
+    {
+        get => (bool)GetValue(IsPausedProperty);
+        set => SetValue(IsPausedProperty, value);
+    }
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
+        nameof(IsPaused),
+        typeof(bool),
+        typeof(D2D1AnimatedPixelShaderPanel),
+        new PropertyMetadata(false, OnIsPausedPropertyChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        D2D1AnimatedPixelShaderPanel @this = (D2D1AnimatedPixelShaderPanel)d;
+        bool isPaused = (bool)e.NewValue;
+
+        if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
+        {
+            bool shouldRender = @this.IsLoaded && !isPaused && @this.ShaderRunner is ID2D1ShaderRunner;
+
+            canvasAnimatedControl.Paused = !shouldRender;
         }
     }
 }

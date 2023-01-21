@@ -148,7 +148,6 @@
 
         <!--  Shader  -->
         <computesharp:AnimatedComputeShaderPanel
-            x:Name="ShaderPanel"
             Grid.Row="1"
             IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
@@ -158,7 +157,10 @@
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
             Visibility="Collapsed"/>
 
-        <views:D2D1AnimatedPixelShaderPanel Grid.Row="1" ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}"/>
+        <views:D2D1AnimatedPixelShaderPanel
+            Grid.Row="1"
+            IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
+            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}"/>
 
         <!--  Settings panel  -->
         <StackPanel
