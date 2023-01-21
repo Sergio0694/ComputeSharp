@@ -201,11 +201,6 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Textures\RustyMetal.1024x1024rgba32">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Controls\D2D1AnimatedPixelShaderPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
