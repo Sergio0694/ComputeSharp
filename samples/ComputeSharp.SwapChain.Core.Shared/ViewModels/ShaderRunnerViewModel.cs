@@ -15,12 +15,6 @@ namespace ComputeSharp.SwapChain.Core.ViewModels;
 public sealed partial class ShaderRunnerViewModel : ObservableObject
 {
     /// <summary>
-    /// Gets or sets whether the current shader is selected.
-    /// </summary>
-    [ObservableProperty]
-    private bool isSelected;
-
-    /// <summary>
     /// Creates a new <see cref="ShaderRunnerViewModel"/> instance.
     /// </summary>
     /// <param name="shaderType">The <see cref="Type"/> instance for the actual shader to execute.</param>
@@ -47,4 +41,10 @@ public sealed partial class ShaderRunnerViewModel : ObservableObject
     /// Gets the <see cref="ID2D1ShaderRunner"/> instance to execute.
     /// </summary>
     public ID2D1ShaderRunner D2D1ShaderRunner { get; }
+
+    /// <summary>
+    /// Gets or sets whether the current shader is selected.
+    /// </summary>
+    [ObservableProperty]
+    private bool isSelected;
 }

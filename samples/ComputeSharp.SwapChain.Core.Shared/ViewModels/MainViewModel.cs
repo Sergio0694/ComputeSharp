@@ -44,87 +44,48 @@ public sealed partial class MainViewModel : ObservableObject
         this.selectedComputeShader.IsSelected = true;
     }
 
-    private RenderingMode selectedRenderingMode;
-
     /// <summary>
     /// Gets or sets the selected rendering mode.
     /// </summary>
-    public RenderingMode SelectedRenderingMode
-    {
-        get => this.selectedRenderingMode;
-        set
-        {
-            if (SetProperty(ref this.selectedRenderingMode, value))
-            {
-                OnPropertyChanged(nameof(IsResolutionScaleOptionEnabled));
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
+    private RenderingMode selectedRenderingMode;
 
-                this.analyticsService.Log(Event.SelectedRenderingModeChanged, (nameof(value), value));
-            }
-        }
-    }
+    /// <summary>
+    /// Gets or sets whether the vertical sync is enabled.
+    /// </summary>
+    [ObservableProperty]
+    private bool isVerticalSyncEnabled;
+
+    /// <summary>
+    /// Gets or sets whether the dynamic resolution is enabled.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
+    private bool isDynamicResolutionEnabled;
+
+    /// <summary>
+    /// Gets the currently selected resolution scale setting (as percentage value).
+    /// </summary>
+    [ObservableProperty]
+    private int selectedResolutionScale;
+
+    /// <summary>
+    /// Gets or sets the currently selected compute shader.
+    /// </summary>
+    [ObservableProperty]
+    private ShaderRunnerViewModel selectedComputeShader;
+
+    /// <summary>
+    /// Gets or sets whether the rendering is currently paused.
+    /// </summary>
+    [ObservableProperty]
+    private bool isRenderingPaused;
 
     /// <summary>
     /// Gets the available resolution scaling options (as percentage values).
     /// </summary>
     public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
-
-    private bool isVerticalSyncEnabled;
-
-    /// <summary>
-    /// Gets or sets whether the vertical sync is enabled.
-    /// </summary>
-    public bool IsVerticalSyncEnabled
-    {
-        get => this.isVerticalSyncEnabled;
-        set
-        {
-            if (SetProperty(ref this.isVerticalSyncEnabled, value))
-            {
-                this.analyticsService.Log(Event.IsVerticalSyncEnabledChanged, (nameof(value), value));
-            }
-        }
-    }
-
-    private bool isDynamicResolutionEnabled;
-
-    /// <summary>
-    /// Gets or sets whether the dynamic resolution is enabled.
-    /// </summary>
-    public bool IsDynamicResolutionEnabled
-    {
-        get => this.isDynamicResolutionEnabled;
-        set
-        {
-            if (SetProperty(ref this.isDynamicResolutionEnabled, value))
-            {
-                OnPropertyChanged(nameof(IsResolutionScaleOptionEnabled));
-
-                this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
-            }
-        }
-    }
-
-    private int selectedResolutionScale;
-
-    /// <summary>
-    /// Gets the currently selected resolution scale setting (as percentage valaue).
-    /// </summary>
-    public int SelectedResolutionScale
-    {
-        get => this.selectedResolutionScale;
-        private set
-        {
-            if (SetProperty(ref this.selectedResolutionScale, value))
-            {
-                this.analyticsService.Log(Event.SelectedResolutionScaleChanged, (nameof(value), value));
-            }
-        }
-    }
-
-    /// <summary>
-    /// Checks whether the resolution scale can currently be expliclty set.
-    /// </summary>
-    public bool IsResolutionScaleOptionEnabled => SelectedRenderingMode == RenderingMode.DirectX12 && !IsDynamicResolutionEnabled;
 
     /// <summary>
     /// Gets the collection of available compute shader.
@@ -170,44 +131,10 @@ public sealed partial class MainViewModel : ObservableObject
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
     };
 
-    private ShaderRunnerViewModel selectedComputeShader;
-
     /// <summary>
-    /// Gets or sets the currently selected compute shader.
+    /// Checks whether the resolution scale can currently be expliclty set.
     /// </summary>
-    public ShaderRunnerViewModel SelectedComputeShader
-    {
-        get => this.selectedComputeShader;
-        set
-        {
-            this.selectedComputeShader.IsSelected = false;
-
-            if (SetProperty(ref this.selectedComputeShader, value) &&
-                value is not null)
-            {
-                this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
-
-                value.IsSelected = true;
-            }
-        }
-    }
-
-    private bool isRenderingPaused;
-
-    /// <summary>
-    /// Gets or sets whether the rendering is currently paused.
-    /// </summary>
-    public bool IsRenderingPaused
-    {
-        get => this.isRenderingPaused;
-        set
-        {
-            if (SetProperty(ref this.isRenderingPaused, value))
-            {
-                this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
-            }
-        }
-    }
+    public bool IsResolutionScaleOptionEnabled => SelectedRenderingMode == RenderingMode.DirectX12 && !IsDynamicResolutionEnabled;
 
     /// <summary>
     /// Sets <see cref="SelectedRenderingMode"/>.
@@ -234,5 +161,48 @@ public sealed partial class MainViewModel : ObservableObject
     private void ToggleRenderingPaused()
     {
         IsRenderingPaused = !IsRenderingPaused;
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedRenderingModeChanged(RenderingMode value)
+    {
+        this.analyticsService.Log(Event.SelectedRenderingModeChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsVerticalSyncEnabledChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsVerticalSyncEnabledChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsDynamicResolutionEnabledChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedResolutionScaleChanged(int value)
+    {
+        this.analyticsService.Log(Event.SelectedResolutionScaleChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel value)
+    {
+        SelectedComputeShader.IsSelected = false;
+        value.IsSelected = true;
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedComputeShaderChanged(ShaderRunnerViewModel value)
+    {
+        this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsRenderingPausedChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
     }
 }
