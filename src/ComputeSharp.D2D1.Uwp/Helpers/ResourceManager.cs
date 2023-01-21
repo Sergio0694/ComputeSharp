@@ -26,6 +26,8 @@ internal static class ResourceManager
     /// <exception cref="Exception">Thrown if the managed wrapper could not be retrieved.</exception>
     public static unsafe IGraphicsEffectSource GetOrCreate(ICanvasDevice* device, IUnknown* resource, float dpi)
     {
+        using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
+
         const string activatableClassId = "Microsoft.Graphics.Canvas.CanvasDevice";
 
         fixed (char* pActivatableClassId = activatableClassId)
@@ -42,27 +44,25 @@ internal static class ResourceManager
 
             Guid canvasFactoryNativeId = typeof(ICanvasFactoryNative).GUID;
 
-            using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
-
             // Get the activation factory for CanvasDevice
             WinRT.RoGetActivationFactory(
                 activatableClassId: hStringActivatableClass,
                 iid: &canvasFactoryNativeId,
                 factory: canvasFactoryNative.GetVoidAddressOf()).Assert();
-
-            using ComPtr<IUnknown> wrapperUnknown = default;
-
-            // Get or create a WinRT wrapper for the resource
-            canvasFactoryNative.Get()->GetOrCreate(
-                device: device,
-                resource: resource,
-                dpi: dpi,
-                wrapper: wrapperUnknown.GetVoidAddressOf()).Assert();
-
-            // Get the runtime-provided RCW for the resulting WinRT wrapper
-            object wrapper = Marshal.GetObjectForIUnknown((IntPtr)wrapperUnknown.Get());
-
-            return (IGraphicsEffectSource)wrapper;
         }
+
+        using ComPtr<IUnknown> wrapperUnknown = default;
+
+        // Get or create a WinRT wrapper for the resource
+        canvasFactoryNative.Get()->GetOrCreate(
+            device: device,
+            resource: resource,
+            dpi: dpi,
+            wrapper: wrapperUnknown.GetVoidAddressOf()).Assert();
+
+        // Get the runtime-provided RCW for the resulting WinRT wrapper
+        object wrapper = Marshal.GetObjectForIUnknown((IntPtr)wrapperUnknown.Get());
+
+        return (IGraphicsEffectSource)wrapper;
     }
 }
