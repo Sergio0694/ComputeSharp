@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Helpers;
+using ComputeSharp.SwapChain.Shaders.D2D1;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -17,25 +18,25 @@ public class ShadersTests
     [TestMethod]
     public void HelloWorld()
     {
-        RunTest<Shaders.HelloWorld>();
+        RunTest<HelloWorld>();
     }
 
     [TestMethod]
     public void ColorfulInfinity()
     {
-        RunTest<Shaders.ColorfulInfinity>();
+        RunTest<ColorfulInfinity>();
     }
 
     [TestMethod]
     public void FractalTiling()
     {
-        RunTest<Shaders.FractalTiling>();
+        RunTest<FractalTiling>();
     }
 
     [TestMethod]
     public void MengerJourney()
     {
-        RunTest<Shaders.MengerJourney>(0.000011f);
+        RunTest<MengerJourney>(0.000011f);
     }
 
     // This test and the other 3 below are skipped because they do produce valid result,
@@ -46,33 +47,33 @@ public class ShadersTests
     [Ignore]
     public void TwoTiledTruchet()
     {
-        RunTest<Shaders.TwoTiledTruchet>();
+        RunTest<TwoTiledTruchet>();
     }
 
     [TestMethod]
     public void Octagrams()
     {
-        RunTest<Shaders.Octagrams>();
+        RunTest<Octagrams>();
     }
 
     [TestMethod]
     public void ProteanClouds()
     {
-        RunTest<Shaders.ProteanClouds>();
+        RunTest<ProteanClouds>();
     }
 
     [TestMethod]
     [Ignore]
     public void PyramidPattern()
     {
-        RunTest<Shaders.PyramidPattern>();
+        RunTest<PyramidPattern>();
     }
 
     [TestMethod]
     [Ignore]
     public void TriangleGridContouring()
     {
-        RunTest<Shaders.TriangleGridContouring>();
+        RunTest<TriangleGridContouring>();
     }
 
     [TestMethod]
@@ -101,15 +102,15 @@ public class ShadersTests
                 strides: stackalloc uint[] { (uint)(texture.Width * sizeof(Rgba32)) });
         }
 
-        Shaders.ContouredLayers shader = new(0f, new int2(1280, 720));
+        ContouredLayers shader = new(0f, new int2(1280, 720));
 
-        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{nameof(Shaders.ContouredLayers)}.png", nameof(Shaders.ContouredLayers), resourceTextures: (0, resourceTextureManager));
+        D2D1TestRunner.RunAndCompareShader(in shader, 1280, 720, $"{nameof(ContouredLayers)}.png", nameof(ContouredLayers), resourceTextures: (0, resourceTextureManager));
     }
 
     [TestMethod]
     public void TerracedHills()
     {
-        RunTest<Shaders.TerracedHills>(0.000026f);
+        RunTest<TerracedHills>(0.000026f);
     }
 
     private static void RunTest<T>(float threshold = 0.00001f)

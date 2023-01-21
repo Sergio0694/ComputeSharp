@@ -11,11 +11,14 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Error.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Constants\Event.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Converters\BoolConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\RenderingPauseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ResolutionScaleConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\RenderingMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DebugAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\ID2D1ShaderRunner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\D2D1ShaderRunner{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shaders\Runners\D2D1ContouredLayersRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Shaders\Runners\ContouredLayersRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ShaderRunnerViewModel.cs" />

@@ -100,4 +100,6 @@
     <None Include="..\..\samples\ComputeSharp.SwapChain\Textures\RustyMetal.png" Link="Assets\Textures\RustyMetal.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
+
 </Project>

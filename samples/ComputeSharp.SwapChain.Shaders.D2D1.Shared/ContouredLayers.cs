@@ -1,4 +1,6 @@
-namespace ComputeSharp.D2D1.Tests.Shaders;
+using ComputeSharp.D2D1;
+
+namespace ComputeSharp.SwapChain.Shaders.D2D1;
 
 /// <summary>
 /// Constructing some concise contoured layers, then applying various edge and shading effects to produce some faux depth.
@@ -19,7 +21,7 @@ internal readonly partial struct ContouredLayers : ID2D1PixelShader
     /// <summary>
     /// The dispatch size for the current output.
     /// </summary>
-    public readonly int2 dispatchSize;
+    private readonly int2 dispatchSize;
 
     /// <summary>
     /// The background texture to sample.

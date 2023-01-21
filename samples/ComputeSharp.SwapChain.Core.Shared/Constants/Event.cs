@@ -5,6 +5,7 @@ namespace ComputeSharp.SwapChain.Core.Constants;
 /// </summary>
 public static class Event
 {
+    public const string SelectedRenderingModeChanged = "[SETTINGS] SelectedRenderingMode";
     public const string IsVerticalSyncEnabledChanged = "[SETTINGS] IsVerticalSyncEnabled";
     public const string IsDynamicResolutionEnabledChanged = "[SETTINGS] IsDynamicResolutionEnabled";
     public const string SelectedResolutionScaleChanged = "[SETTINGS] SelectedResolutionScale";

@@ -1,4 +1,6 @@
-namespace ComputeSharp.D2D1.Tests.Shaders;
+using ComputeSharp.D2D1;
+
+namespace ComputeSharp.SwapChain.Shaders.D2D1;
 
 /// <summary>
 /// An abstract representation of some terraced hills. In essence, just a very basic terrain layout with a small code footprint.
@@ -19,7 +21,7 @@ internal readonly partial struct TerracedHills : ID2D1PixelShader
     /// <summary>
     /// The dispatch size for the current output.
     /// </summary>
-    public readonly int2 dispatchSize;
+    private readonly int2 dispatchSize;
 
     // 2x2 matrix rotation. Angle vector, courtesy of Fabrice
     private static float2x2 Rot2(float th)

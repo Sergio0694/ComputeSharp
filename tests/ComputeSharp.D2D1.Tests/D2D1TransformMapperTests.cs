@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Helpers;
-using ComputeSharp.D2D1.Tests.Shaders;
+using ComputeSharp.SwapChain.Shaders.D2D1;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Win32;

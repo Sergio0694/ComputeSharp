@@ -1,4 +1,6 @@
-namespace ComputeSharp.D2D1.Tests.Shaders;
+using ComputeSharp.D2D1;
+
+namespace ComputeSharp.SwapChain.Shaders.D2D1;
 
 /// <summary>
 /// Fully procedural 3D animated volume with three evaluations per step (for shading).
@@ -15,14 +17,14 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
     /// </summary>
-    public readonly float time;
+    private readonly float time;
 
     /// <summary>
     /// The dispatch size for the current output.
     /// </summary>
-    public readonly int2 dispatchSize;
+    private readonly int2 dispatchSize;
 
-    private static readonly float3x3 m3 = new float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
+    private static readonly float3x3 M3 = new float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
 
     private static float2x2 Rotate(in float a)
     {
@@ -65,7 +67,7 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
             z *= 0.57f;
             trk *= 1.4f;
 
-            p = Hlsl.Mul(p, m3);
+            p = Hlsl.Mul(p, M3);
         }
 
         d = Hlsl.Abs(d + (prm1 * 3.0f)) + (prm1 * 0.3f) - 2.5f + bsMo.Y;

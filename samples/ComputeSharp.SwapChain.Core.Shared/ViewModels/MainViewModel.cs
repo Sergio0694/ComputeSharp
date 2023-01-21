@@ -3,7 +3,9 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Constants;
+using ComputeSharp.SwapChain.Core.Enums;
 using ComputeSharp.SwapChain.Core.Services;
+using ComputeSharp.SwapChain.Core.Shaders;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
 #if WINDOWS_UWP
@@ -34,6 +36,7 @@ public sealed partial class MainViewModel : ObservableObject
         Guard.IsNotNull(analyticsService);
 
         this.analyticsService = analyticsService;
+        this.selectedRenderingMode = RenderingMode.DirectX12;
         this.isVerticalSyncEnabled = true;
         this.isDynamicResolutionEnabled = true;
         this.selectedResolutionScale = 100;
@@ -42,116 +45,104 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Gets the available resolution scaling options (as percentage values).
+    /// Gets or sets the selected rendering mode.
     /// </summary>
-    public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
-
-    private bool isVerticalSyncEnabled;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
+    private RenderingMode selectedRenderingMode;
 
     /// <summary>
     /// Gets or sets whether the vertical sync is enabled.
     /// </summary>
-    public bool IsVerticalSyncEnabled
-    {
-        get => this.isVerticalSyncEnabled;
-        set
-        {
-            if (SetProperty(ref this.isVerticalSyncEnabled, value))
-            {
-                this.analyticsService.Log(Event.IsVerticalSyncEnabledChanged, (nameof(value), value));
-            }
-        }
-    }
-
-    private bool isDynamicResolutionEnabled;
+    [ObservableProperty]
+    private bool isVerticalSyncEnabled;
 
     /// <summary>
     /// Gets or sets whether the dynamic resolution is enabled.
     /// </summary>
-    public bool IsDynamicResolutionEnabled
-    {
-        get => this.isDynamicResolutionEnabled;
-        set
-        {
-            if (SetProperty(ref this.isDynamicResolutionEnabled, value))
-            {
-                this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
-            }
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResolutionScaleOptionEnabled))]
+    private bool isDynamicResolutionEnabled;
 
+    /// <summary>
+    /// Gets the currently selected resolution scale setting (as percentage value).
+    /// </summary>
+    [ObservableProperty]
     private int selectedResolutionScale;
 
     /// <summary>
-    /// Gets the currently selected resolution scale setting (as percentage valaue).
+    /// Gets or sets the currently selected compute shader.
     /// </summary>
-    public int SelectedResolutionScale
-    {
-        get => this.selectedResolutionScale;
-        private set
-        {
-            if (SetProperty(ref this.selectedResolutionScale, value))
-            {
-                this.analyticsService.Log(Event.SelectedResolutionScaleChanged, (nameof(value), value));
-            }
-        }
-    }
+    [ObservableProperty]
+    private ShaderRunnerViewModel selectedComputeShader;
+
+    /// <summary>
+    /// Gets or sets whether the rendering is currently paused.
+    /// </summary>
+    [ObservableProperty]
+    private bool isRenderingPaused;
+
+    /// <summary>
+    /// Gets the available resolution scaling options (as percentage values).
+    /// </summary>
+    public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
 
     /// <summary>
     /// Gets the collection of available compute shader.
     /// </summary>
     public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
     {
-        new(typeof(ColorfulInfinity), new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ExtrudedTruchetPattern),new ShaderRunner<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
-        new(typeof(FractalTiling),new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds))),
-        new(typeof(MengerJourney),new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds))),
-        new(typeof(Octagrams),new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ProteanClouds),new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
-        new(typeof(TwoTiledTruchet),new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
-        new(typeof(PyramidPattern),new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-        new(typeof(TriangleGridContouring),new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
-        new(typeof(ContouredLayers),new ContouredLayersRunner()),
-        new(typeof(TerracedHills),new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds))),
+        new(
+            typeof(ColorfulInfinity),
+            new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(FractalTiling),
+            new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.FractalTiling>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(MengerJourney),
+            new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.MengerJourney>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(Octagrams),
+            new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.Octagrams>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(ProteanClouds),
+            new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ProteanClouds>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(TwoTiledTruchet),
+            new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TwoTiledTruchet>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(PyramidPattern),
+            new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.PyramidPattern>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(
+            typeof(TriangleGridContouring),
+            new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(typeof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersRunner()),
+        new(
+            typeof(TerracedHills),
+            new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
+            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
     };
 
-    private ShaderRunnerViewModel selectedComputeShader;
+    /// <summary>
+    /// Checks whether the resolution scale can currently be expliclty set.
+    /// </summary>
+    public bool IsResolutionScaleOptionEnabled => SelectedRenderingMode == RenderingMode.DirectX12 && !IsDynamicResolutionEnabled;
 
     /// <summary>
-    /// Gets or sets the currently selected compute shader.
+    /// Sets <see cref="SelectedRenderingMode"/>.
     /// </summary>
-    public ShaderRunnerViewModel SelectedComputeShader
+    [RelayCommand]
+    private void SetRenderingMode(RenderingMode renderingMode)
     {
-        get => this.selectedComputeShader;
-        set
-        {
-            this.selectedComputeShader.IsSelected = false;
-
-            if (SetProperty(ref this.selectedComputeShader, value) &&
-                value is not null)
-            {
-                this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
-
-                value.IsSelected = true;
-            }
-        }
-    }
-
-    private bool isRenderingPaused;
-
-    /// <summary>
-    /// Gets or sets whether the rendering is currently paused.
-    /// </summary>
-    public bool IsRenderingPaused
-    {
-        get => this.isRenderingPaused;
-        set
-        {
-            if (SetProperty(ref this.isRenderingPaused, value))
-            {
-                this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
-            }
-        }
+        SelectedRenderingMode = renderingMode;
     }
 
     /// <summary>
@@ -170,5 +161,48 @@ public sealed partial class MainViewModel : ObservableObject
     private void ToggleRenderingPaused()
     {
         IsRenderingPaused = !IsRenderingPaused;
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedRenderingModeChanged(RenderingMode value)
+    {
+        this.analyticsService.Log(Event.SelectedRenderingModeChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsVerticalSyncEnabledChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsVerticalSyncEnabledChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsDynamicResolutionEnabledChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedResolutionScaleChanged(int value)
+    {
+        this.analyticsService.Log(Event.SelectedResolutionScaleChanged, (nameof(value), value));
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel value)
+    {
+        SelectedComputeShader.IsSelected = false;
+        value.IsSelected = true;
+    }
+
+    /// <inheritdoc/>
+    partial void OnSelectedComputeShaderChanged(ShaderRunnerViewModel value)
+    {
+        this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
+    }
+
+    /// <inheritdoc/>
+    partial void OnIsRenderingPausedChanged(bool value)
+    {
+        this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
     }
 }
