@@ -33,7 +33,7 @@ public sealed class D2D1ContouredLayersRunner : ID2D1ShaderRunner
         {
             D2D1ResourceTextureManager resourceTextureManager;
 
-            string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.1024x1024rgba32");            
+            string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.1024x1024rgba32");
 
             // Open a file to read from the file (we're doing synchronous IO here by design, doesn't really matter)
             using (FileStream fileStream = new(filename, FileMode.Open, FileAccess.Read))
