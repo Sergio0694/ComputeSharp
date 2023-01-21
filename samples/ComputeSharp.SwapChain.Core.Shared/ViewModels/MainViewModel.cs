@@ -3,6 +3,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Constants;
+using ComputeSharp.SwapChain.Core.Enums;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.Shaders;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
@@ -35,11 +36,31 @@ public sealed partial class MainViewModel : ObservableObject
         Guard.IsNotNull(analyticsService);
 
         this.analyticsService = analyticsService;
+        this.selectedRenderingMode = RenderingMode.DirectX12;
         this.isVerticalSyncEnabled = true;
         this.isDynamicResolutionEnabled = true;
         this.selectedResolutionScale = 100;
         this.selectedComputeShader = ComputeShaderOptions[0];
         this.selectedComputeShader.IsSelected = true;
+    }
+
+    private RenderingMode selectedRenderingMode;
+
+    /// <summary>
+    /// Gets or sets the selected rendering mode.
+    /// </summary>
+    public RenderingMode SelectedRenderingMode
+    {
+        get => this.selectedRenderingMode;
+        set
+        {
+            if (SetProperty(ref this.selectedRenderingMode, value))
+            {
+                OnPropertyChanged(nameof(IsResolutionScaleOptionEnabled));
+
+                this.analyticsService.Log(Event.SelectedRenderingModeChanged, (nameof(value), value));
+            }
+        }
     }
 
     /// <summary>
@@ -76,6 +97,8 @@ public sealed partial class MainViewModel : ObservableObject
         {
             if (SetProperty(ref this.isDynamicResolutionEnabled, value))
             {
+                OnPropertyChanged(nameof(IsResolutionScaleOptionEnabled));
+
                 this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
             }
         }
@@ -97,6 +120,11 @@ public sealed partial class MainViewModel : ObservableObject
             }
         }
     }
+
+    /// <summary>
+    /// Checks whether the resolution scale can currently be expliclty set.
+    /// </summary>
+    public bool IsResolutionScaleOptionEnabled => SelectedRenderingMode == RenderingMode.DirectX12 && !IsDynamicResolutionEnabled;
 
     /// <summary>
     /// Gets the collection of available compute shader.
@@ -179,6 +207,15 @@ public sealed partial class MainViewModel : ObservableObject
                 this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
             }
         }
+    }
+
+    /// <summary>
+    /// Sets <see cref="SelectedRenderingMode"/>.
+    /// </summary>
+    [RelayCommand]
+    private void SetRenderingMode(RenderingMode renderingMode)
+    {
+        SelectedRenderingMode = renderingMode;
     }
 
     /// <summary>
