@@ -29,6 +29,9 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
     public D2D1AnimatedPixelShaderPanel()
     {
         DefaultStyleKey = typeof(D2D1AnimatedPixelShaderPanel);
+
+        Loaded += D2D1AnimatedPixelShaderPanel_Loaded;
+        Unloaded += D2D1AnimatedPixelShaderPanel_Unloaded;
     }
 
     /// <inheritdoc/>
@@ -38,6 +41,26 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
 
         this.canvasAnimatedControl = (CanvasAnimatedControl)GetTemplateChild("PART_CanvasAnimatedControl")!;
         this.canvasAnimatedControl.Draw += CanvasAnimatedControl_Draw;
+    }
+
+    // Ensure the panel is not paused when the control is loaded
+    private void D2D1AnimatedPixelShaderPanel_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (this.canvasAnimatedControl is { } canvasAnimatedControl &&
+            ShaderRunner is not null &&
+            !IsPaused)
+        {
+            canvasAnimatedControl.Paused = false;
+        }
+    }
+
+    // Always pause rendering when the control is unloaded
+    private void D2D1AnimatedPixelShaderPanel_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (this.canvasAnimatedControl is { } canvasAnimatedControl)
+        {
+            canvasAnimatedControl.Paused = true;
+        }
     }
 
     /// <summary>

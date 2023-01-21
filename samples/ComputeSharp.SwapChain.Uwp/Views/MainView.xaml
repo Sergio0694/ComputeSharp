@@ -155,12 +155,15 @@
             RenderingFailed="MainShaderPanel_RenderingFailed"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
-            Visibility="Collapsed"/>
+            x:Name="DirectX12ShaderPanel"
+            x:Load="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"/>
 
         <views:D2D1AnimatedPixelShaderPanel
             Grid.Row="1"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
-            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}"/>
+            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}"
+            x:Name="Win2DShaderPanel"
+            x:Load="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.Win2D), Mode=OneWay}"/>
 
         <!--  Settings panel  -->
         <StackPanel
