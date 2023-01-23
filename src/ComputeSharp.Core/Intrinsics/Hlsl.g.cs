@@ -11337,6 +11337,1126 @@ partial class Hlsl
     public static Float4x4 Log2(Float4x4 x) => default;
 
     /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static float Mad(float m, float a, float b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float2 Mad(Float2 m, Float2 a, Float2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float3 Mad(Float3 m, Float3 a, Float3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float4 Mad(Float4 m, Float4 a, Float4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float1x1 Mad(Float1x1 m, Float1x1 a, Float1x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float1x2 Mad(Float1x2 m, Float1x2 a, Float1x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float1x3 Mad(Float1x3 m, Float1x3 a, Float1x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float1x4 Mad(Float1x4 m, Float1x4 a, Float1x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float2x1 Mad(Float2x1 m, Float2x1 a, Float2x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float2x2 Mad(Float2x2 m, Float2x2 a, Float2x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float2x3 Mad(Float2x3 m, Float2x3 a, Float2x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float2x4 Mad(Float2x4 m, Float2x4 a, Float2x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float3x1 Mad(Float3x1 m, Float3x1 a, Float3x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float3x2 Mad(Float3x2 m, Float3x2 a, Float3x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float3x3 Mad(Float3x3 m, Float3x3 a, Float3x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float3x4 Mad(Float3x4 m, Float3x4 a, Float3x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float4x1 Mad(Float4x1 m, Float4x1 a, Float4x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float4x2 Mad(Float4x2 m, Float4x2 a, Float4x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float4x3 Mad(Float4x3 m, Float4x3 a, Float4x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Float4x4 Mad(Float4x4 m, Float4x4 a, Float4x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static double Mad(double m, double a, double b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double2 Mad(Double2 m, Double2 a, Double2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double3 Mad(Double3 m, Double3 a, Double3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double4 Mad(Double4 m, Double4 a, Double4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double1x1 Mad(Double1x1 m, Double1x1 a, Double1x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double1x2 Mad(Double1x2 m, Double1x2 a, Double1x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double1x3 Mad(Double1x3 m, Double1x3 a, Double1x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double1x4 Mad(Double1x4 m, Double1x4 a, Double1x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double2x1 Mad(Double2x1 m, Double2x1 a, Double2x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double2x2 Mad(Double2x2 m, Double2x2 a, Double2x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double2x3 Mad(Double2x3 m, Double2x3 a, Double2x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double2x4 Mad(Double2x4 m, Double2x4 a, Double2x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double3x1 Mad(Double3x1 m, Double3x1 a, Double3x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double3x2 Mad(Double3x2 m, Double3x2 a, Double3x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double3x3 Mad(Double3x3 m, Double3x3 a, Double3x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double3x4 Mad(Double3x4 m, Double3x4 a, Double3x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double4x1 Mad(Double4x1 m, Double4x1 a, Double4x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double4x2 Mad(Double4x2 m, Double4x2 a, Double4x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double4x3 Mad(Double4x3 m, Double4x3 a, Double4x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Double4x4 Mad(Double4x4 m, Double4x4 a, Double4x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static int Mad(int m, int a, int b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int2 Mad(Int2 m, Int2 a, Int2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int3 Mad(Int3 m, Int3 a, Int3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int4 Mad(Int4 m, Int4 a, Int4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int1x1 Mad(Int1x1 m, Int1x1 a, Int1x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int1x2 Mad(Int1x2 m, Int1x2 a, Int1x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int1x3 Mad(Int1x3 m, Int1x3 a, Int1x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int1x4 Mad(Int1x4 m, Int1x4 a, Int1x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int2x1 Mad(Int2x1 m, Int2x1 a, Int2x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int2x2 Mad(Int2x2 m, Int2x2 a, Int2x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int2x3 Mad(Int2x3 m, Int2x3 a, Int2x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int2x4 Mad(Int2x4 m, Int2x4 a, Int2x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int3x1 Mad(Int3x1 m, Int3x1 a, Int3x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int3x2 Mad(Int3x2 m, Int3x2 a, Int3x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int3x3 Mad(Int3x3 m, Int3x3 a, Int3x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int3x4 Mad(Int3x4 m, Int3x4 a, Int3x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int4x1 Mad(Int4x1 m, Int4x1 a, Int4x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int4x2 Mad(Int4x2 m, Int4x2 a, Int4x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int4x3 Mad(Int4x3 m, Int4x3 a, Int4x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static Int4x4 Mad(Int4x4 m, Int4x4 a, Int4x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static uint Mad(uint m, uint a, uint b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt2 Mad(UInt2 m, UInt2 a, UInt2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt3 Mad(UInt3 m, UInt3 a, UInt3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt4 Mad(UInt4 m, UInt4 a, UInt4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt1x1 Mad(UInt1x1 m, UInt1x1 a, UInt1x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt1x2 Mad(UInt1x2 m, UInt1x2 a, UInt1x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt1x3 Mad(UInt1x3 m, UInt1x3 a, UInt1x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt1x4 Mad(UInt1x4 m, UInt1x4 a, UInt1x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt2x1 Mad(UInt2x1 m, UInt2x1 a, UInt2x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt2x2 Mad(UInt2x2 m, UInt2x2 a, UInt2x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt2x3 Mad(UInt2x3 m, UInt2x3 a, UInt2x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt2x4 Mad(UInt2x4 m, UInt2x4 a, UInt2x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt3x1 Mad(UInt3x1 m, UInt3x1 a, UInt3x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt3x2 Mad(UInt3x2 m, UInt3x2 a, UInt3x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt3x3 Mad(UInt3x3 m, UInt3x3 a, UInt3x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt3x4 Mad(UInt3x4 m, UInt3x4 a, UInt3x4 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt4x1 Mad(UInt4x1 m, UInt4x1 a, UInt4x1 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt4x2 Mad(UInt4x2 m, UInt4x2 a, UInt4x2 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt4x3 Mad(UInt4x3 m, UInt4x3 a, UInt4x3 b) => default;
+
+    /// <summary>
+    /// Performs an arithmetic multiply/add operation on three values.
+    /// </summary>
+    /// <param name="m">The multiplication value.</param>
+    /// <param name="a">The first addition value.</param>
+    /// <param name="b">The second addition value.</param>
+    /// <returns>The result of <paramref name="m"/> * <paramref name="a"/> + <paramref name="b"/>.</returns>
+    /// <remarks>
+    /// For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/mad"/>.
+    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// </remarks>
+    [HlslIntrinsicName("mad")]
+    public static UInt4x4 Mad(UInt4x4 m, UInt4x4 a, UInt4x4 b) => default;
+
+    /// <summary>
     /// Selects the greater between two inputs.
     /// </summary>
     /// <param name="x">The first input value.</param>

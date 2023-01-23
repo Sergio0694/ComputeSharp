@@ -1,4 +1,4 @@
-﻿<#@include file="Hlsl.ttinclude" #>
+<#@include file="Hlsl.ttinclude" #>
 using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.Exceptions;
 
