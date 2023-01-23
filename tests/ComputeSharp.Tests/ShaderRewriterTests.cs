@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -769,6 +770,57 @@ public partial class ShaderRewriterTests
         public void Execute()
         {
             destination[ThreadIds.X] = source[ThreadIds.X].AddAndGetSum(ThreadIds.X + 1);
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void MiscHlslIntrinsics(Device device)
+    {
+        float[] data1 = { 1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 0, 0 };
+        int[] data2 = { 111, 222, 333, 2, 4, 8, 63, 42, 77, 0, 0, 0 };
+
+        using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer(data1);
+        using ReadWriteBuffer<int> buffer2 = device.Get().AllocateReadWriteBuffer(data2);
+
+        device.Get().For(1, new MiscHlslIntrinsicsShader(buffer1, buffer2));
+
+        float[] results1 = buffer1.ToArray();
+        int[] results2 = buffer2.ToArray();
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 2.8f, 7.08f },
+            actual: results1,
+            comparer: Comparer<float>.Create(static (x, y) => Math.Abs(x - y) < 0.000001f ? 0 : x.CompareTo(y)));
+
+        CollectionAssert.AreEqual(
+            expected: new[] { 111, 222, 333, 2, 4, 8, 63, 42, 77, 285, 930, 2741 },
+            actual: results2);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct MiscHlslIntrinsicsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<float> buffer1;
+        public readonly ReadWriteBuffer<int> buffer2;
+
+        public void Execute()
+        {
+            float2 f1 = new(buffer1[0], buffer1[1]);
+            float2 f2 = new(buffer1[2], buffer1[3]);
+            float2 f3 = new(buffer1[4], buffer1[5]);
+            int3 i1 = new(buffer2[0], buffer2[1], buffer2[2]);
+            int3 i2 = new(buffer2[3], buffer2[4], buffer2[5]);
+            int3 i3 = new(buffer2[6], buffer2[7], buffer2[8]);
+
+            float2 r1 = Hlsl.Mad(f1, f2, f3);
+            int3 r2 = Hlsl.Mad(i1, i2, i3);
+
+            buffer1[6] = r1.X;
+            buffer1[7] = r1.Y;
+            buffer2[9] = r2.X;
+            buffer2[10] = r2.Y;
+            buffer2[11] = r2.Z;
         }
     }
 }
