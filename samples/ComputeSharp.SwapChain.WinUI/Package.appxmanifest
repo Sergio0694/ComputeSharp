@@ -1,10 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  IgnorableNamespaces="uap">
 
   <Identity
     Name="0500384f-0d39-4588-96ba-14ccff63085b"
@@ -29,7 +28,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
+      EntryPoint="Windows.PartialTrustApplication">
       <uap:VisualElements
         DisplayName="ComputeSharp Sample App (WinUI 3)"
         Description="A sample app for ComputeSharp and its WinUI 3 shader panels"
@@ -41,8 +40,4 @@
       </uap:VisualElements>
     </Application>
   </Applications>
-
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-  </Capabilities>
 </Package>
