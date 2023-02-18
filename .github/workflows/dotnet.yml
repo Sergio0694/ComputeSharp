@@ -58,6 +58,12 @@ jobs:
       run: >
         msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release;
         msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
+    - name: Build ComputeSharp.D2D1.WinUI project
+      run: >
+        msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:restore /p:Configuration=Release;
+        msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:pack /p:Configuration=Release
+    
+      # Upload the packages to the pipeline artifacts
     - name: Upload package artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -96,13 +102,13 @@ jobs:
       name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
     
-    # DirectX 12 device lost unit tests.
-    # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
-    # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
+      # DirectX 12 device lost unit tests.
+      # These tests are run one class at a time to ensure there's no accidental conflicts between any of them. This is because
+      # the code paths being tested in this project are heavily dependent on process-wide mutable state (ie. DirectX 12 devices).
     - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
 
-    # These tests are failing randomly in the CI on .NET Framework, disabling them just for now
+      # These tests are failing randomly in the CI on .NET Framework, disabling them just for now
     - if: matrix.framework != 'net472'
       name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
@@ -110,7 +116,7 @@ jobs:
       name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
       run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
 
-    # D2D1 unit tests
+      # D2D1 unit tests
     - name: Run ComputeSharp.D2D1.Tests
       run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
