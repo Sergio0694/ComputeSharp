@@ -8,6 +8,8 @@ using Windows.Graphics.Effects;
 
 namespace ComputeSharp.D2D1.Uwp.Helpers;
 
+using WinRT = TerraFX.Interop.WinRT.WinRT;
+
 /// <summary>
 /// A helper type to replicate Win2D's <c>ResourceManager</c> type.
 /// </summary>

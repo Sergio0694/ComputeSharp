@@ -103,7 +103,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <inheritdoc/>
-        int IList.Add(object value)
+        int IList.Add(object? value)
         {
             return default(NotSupportedException).Throw<int>();
         }
@@ -127,7 +127,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <inheritdoc/>
-        bool IList.Contains(object value)
+        bool IList.Contains(object? value)
         {
             return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, (IGraphicsEffectSource?)value) != -1;
         }
@@ -163,7 +163,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <inheritdoc/>
-        int IList.IndexOf(object value)
+        int IList.IndexOf(object? value)
         {
             return FixedCountList<IGraphicsEffectSource?>.IndexOf(this, (IGraphicsEffectSource?)value);
         }
@@ -175,7 +175,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <inheritdoc/>
-        void IList.Insert(int index, object value)
+        void IList.Insert(int index, object? value)
         {
             default(NotSupportedException).Throw();
         }
@@ -187,7 +187,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <inheritdoc/>
-        void IList.Remove(object value)
+        void IList.Remove(object? value)
         {
             default(NotSupportedException).Throw();
         }

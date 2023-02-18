@@ -14,6 +14,7 @@
     <InternalsVisibleTo Include="ComputeSharp.WinUI, PublicKey=$(AssemblySignPublicKey)" />
     <InternalsVisibleTo Include="ComputeSharp.D2D1, PublicKey=$(AssemblySignPublicKey)" />
     <InternalsVisibleTo Include="ComputeSharp.D2D1.Uwp, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.D2D1.WinUI, PublicKey=$(AssemblySignPublicKey)" />
   </ItemGroup>
 
   <!-- .NET Standard 2.0 polyfill packages -->

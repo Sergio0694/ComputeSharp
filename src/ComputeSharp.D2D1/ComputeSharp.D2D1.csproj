@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="ComputeSharp.D2D1.Uwp, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.D2D1.WinUI, PublicKey=$(AssemblySignPublicKey)" />
   </ItemGroup>
 
   <ItemGroup>
