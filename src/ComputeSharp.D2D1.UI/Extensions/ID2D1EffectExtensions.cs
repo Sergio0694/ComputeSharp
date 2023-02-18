@@ -11,7 +11,11 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp.Extensions;
+#else
+namespace ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ID2D1Effect"/> type.

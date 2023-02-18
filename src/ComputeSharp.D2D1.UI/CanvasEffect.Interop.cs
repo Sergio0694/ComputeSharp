@@ -9,7 +9,11 @@ using TerraFX.Interop.Windows;
 using Windows.Foundation;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class CanvasEffect

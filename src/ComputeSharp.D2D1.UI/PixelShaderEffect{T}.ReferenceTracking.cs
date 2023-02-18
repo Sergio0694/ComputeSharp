@@ -2,7 +2,11 @@ using System;
 using ComputeSharp.Interop;
 using System.Runtime.CompilerServices;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 partial class PixelShaderEffect<T>
