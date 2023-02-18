@@ -3,8 +3,13 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Extensions;
+#else
+using ComputeSharp.D2D1.WinUI.Buffers;
+using ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -17,7 +22,11 @@ using static TerraFX.Interop.DirectX.D2D1_DPICOMPENSATION_PROP;
 using static TerraFX.Interop.DirectX.D2D1_PROPERTY_TYPE;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

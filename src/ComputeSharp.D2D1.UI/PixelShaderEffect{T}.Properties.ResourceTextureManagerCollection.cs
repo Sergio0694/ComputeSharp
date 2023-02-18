@@ -6,12 +6,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Loaders;
+#if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Collections;
+#else
+using ComputeSharp.D2D1.WinUI.Buffers;
+using ComputeSharp.D2D1.WinUI.Collections;
+#endif
 
 #pragma warning disable CS0618, CS8767
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 partial class PixelShaderEffect<T>

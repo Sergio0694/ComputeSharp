@@ -9,7 +9,11 @@ using Windows.Foundation;
 using ICanvasEffect = Microsoft.Graphics.Canvas.Effects.ICanvasEffect;
 using ICanvasResourceCreatorWithDpi = Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

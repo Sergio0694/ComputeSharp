@@ -6,7 +6,11 @@ using Microsoft.Graphics.Canvas.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
+#else
+namespace ComputeSharp.D2D1.WinUI;
+#endif
 
 /// <summary>
 /// A custom <see cref="ICanvasEffect"/> implementation powered by a supplied shader type.

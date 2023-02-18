@@ -3,7 +3,11 @@ using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.Windows;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
+#if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp.Extensions;
+#else
+namespace ComputeSharp.D2D1.WinUI.Extensions;
+#endif
 
 /// <summary>
 /// Helper methods for working with the <see cref="IUnknown"/> type.
