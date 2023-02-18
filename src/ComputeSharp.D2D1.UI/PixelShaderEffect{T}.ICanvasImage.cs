@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Interop;
-using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.Windows;
 using Windows.Foundation;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
@@ -25,7 +24,7 @@ unsafe partial class PixelShaderEffect<T>
         return GetBounds(resourceCreator, &transform);
     }
 
-    /// <inheritdoc cref="ICanvasImage.GetBounds(ICanvasResourceCreator, Matrix3x2)"/>
+    /// <inheritdoc cref="Microsoft.Graphics.Canvas.ICanvasImage.GetBounds(ICanvasResourceCreator, Matrix3x2)"/>
     private Rect GetBounds(ICanvasResourceCreator resourceCreator, Matrix3x2* transform)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
