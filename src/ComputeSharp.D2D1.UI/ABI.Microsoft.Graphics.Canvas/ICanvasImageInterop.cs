@@ -4,6 +4,10 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop;
+#if !WINDOWS_UWP
+using WinRT;
+using WinRT.Interop;
+#endif
 
 #pragma warning disable CS0649, IDE1006
 
@@ -79,20 +83,29 @@ internal unsafe struct ICanvasImageInterop
     }
 
     /// <summary>
-    /// The <see cref="ComImportAttribute"/> implementation of <see cref="ICanvasImageInterop"/>.
+    /// The managed implementation of <see cref="ICanvasImageInterop"/>.
     /// </summary>
-    [ComImport]
     [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
+#if WINDOWS_UWP
+    [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+#else
+    [WindowsRuntimeType]
+    [WindowsRuntimeHelperType(typeof(Interface))]
+#endif
     public interface Interface
     {
         /// <inheritdoc cref="ICanvasImageInterop.GetDevice"/>
+#if WINDOWS_UWP
         [PreserveSig]
+#endif
         [return: NativeTypeName("HRESULT")]
         int GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type);
 
         /// <inheritdoc cref="ICanvasImageInterop.GetD2DImage"/>
+#if WINDOWS_UWP
         [PreserveSig]
+#endif
         [return: NativeTypeName("HRESULT")]
         int GetD2DImage(
             ICanvasDevice* device,
@@ -101,5 +114,90 @@ internal unsafe struct ICanvasImageInterop
             float targetDpi,
             float* realizeDpi,
             ID2D1Image** ppImage);
+
+#if !WINDOWS_UWP
+        /// <summary>
+        /// The vtable type for <see cref="Interface"/>.
+        /// </summary>
+        [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
+        public struct Vftbl
+        {
+            /// <summary>
+            /// Allows CsWinRT to retrieve a pointer to the projection vtable (the name is hardcoded by convention).
+            /// </summary>
+            public static readonly IntPtr AbiToProjectionVftablePtr = InitVtbl();
+
+            /// <summary>
+            /// Builds the custom method table pointer for <see cref="Interface"/>.
+            /// </summary>
+            /// <returns>The method table pointer for <see cref="Interface"/>.</returns>
+            private static IntPtr InitVtbl()
+            {
+                Vftbl* lpVtbl = (Vftbl*)ComWrappersSupport.AllocateVtableMemory(typeof(Vftbl), sizeof(Vftbl));
+
+                lpVtbl->IUnknownVftbl = IUnknownVftbl.AbiToProjectionVftbl;
+                lpVtbl->GetDevice = &GetDeviceFromAbi;
+                lpVtbl->GetD2DImage = &GetD2DImageFromAbi;
+
+                return (IntPtr)lpVtbl;
+            }
+
+            /// <summary>
+            /// The IUnknown vtable.
+            /// </summary>
+            internal IUnknownVftbl IUnknownVftbl;
+
+            /// <summary>
+            /// Function pointer for <see cref="GetDeviceFromAbi"/>.
+            /// </summary>
+            internal delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int> GetDevice;
+
+            /// <summary>
+            /// Function pointer for <see cref="GetD2DImageFromAbi"/>.
+            /// </summary>
+            internal delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
+
+            /// <inheritdoc cref="Interface.GetDevice"/>
+            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [return: NativeTypeName("HRESULT")]
+            private static int GetDeviceFromAbi(IntPtr thisPtr, ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
+            {
+                try
+                {
+                    return ComWrappersSupport.FindObject<Interface>(thisPtr).GetDevice(device, type);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHelpers.SetErrorInfo(e);
+
+                    return Marshal.GetHRForException(e);
+                }
+            }
+
+            /// <inheritdoc cref="Interface.GetDevice"/>
+            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [return: NativeTypeName("HRESULT")]
+            private static int GetD2DImageFromAbi(
+                IntPtr thisPtr,
+                ICanvasDevice* device,
+                ID2D1DeviceContext* deviceContext,
+                WIN2D_GET_D2D_IMAGE_FLAGS flags,
+                float targetDpi,
+                float* realizeDpi,
+                ID2D1Image** ppImage)
+            {
+                try
+                {
+                    return ComWrappersSupport.FindObject<Interface>(thisPtr).GetD2DImage(device, deviceContext, flags, targetDpi, realizeDpi, ppImage);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHelpers.SetErrorInfo(e);
+
+                    return Marshal.GetHRForException(e);
+                }
+            }
+        }
+#endif
     }
 }
