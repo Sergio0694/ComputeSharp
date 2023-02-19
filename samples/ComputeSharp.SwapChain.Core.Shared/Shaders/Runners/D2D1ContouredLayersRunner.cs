@@ -1,16 +1,16 @@
-#if WINDOWS_UWP
 using System;
 using System.IO;
 using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Interop;
+#if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
+#else
+using ComputeSharp.D2D1.WinUI;
 #endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
-#if WINDOWS_UWP
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.ApplicationModel;
-#endif
 
 #nullable enable
 
@@ -19,9 +19,8 @@ namespace ComputeSharp.SwapChain.Core.Shaders.Runners;
 /// <summary>
 /// A specialized <see cref="ID2D1ShaderRunner"/> for <see cref="ContouredLayers"/>.
 /// </summary>
-public sealed class D2D1ContouredLayersRunner : ID2D1ShaderRunner
+public sealed class D2D1ContouredLayersRunner : ID2D1ShaderRunner, IDisposable
 {
-#if WINDOWS_UWP
     /// <summary>
     /// The reusable <see cref="PixelShaderEffect{T}"/> instance to use to render frames.
     /// </summary>
@@ -72,5 +71,10 @@ public sealed class D2D1ContouredLayersRunner : ID2D1ShaderRunner
         // Draw the shader
         args.DrawingSession.DrawImage(this.pixelShaderEffect);
     }
-#endif
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.pixelShaderEffect?.Dispose();
+    }
 }
