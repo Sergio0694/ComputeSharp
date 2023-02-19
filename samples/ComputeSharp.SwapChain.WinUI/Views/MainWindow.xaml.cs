@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Input;
 namespace ComputeSharp.SwapChain.WinUI.Views;
 
 /// <summary>
-/// A view for <see cref="Core.ViewModels.MainViewModel"/>.
+/// A view for <see cref="MainViewModel"/>.
 /// </summary>
 public sealed partial class MainWindow : Window
 {
@@ -62,7 +62,7 @@ public sealed partial class MainWindow : Window
     }
 
     // Updates the size of the shaders list panel
-    private void UserControl_SizeChanged(object sender, WindowSizeChangedEventArgs e)
+    private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
     {
         this.ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
     }
@@ -71,5 +71,17 @@ public sealed partial class MainWindow : Window
     private void AnimatedComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
     {
         this.shaderPanels.AddOrUpdate((AnimatedComputeShaderPanel)sender, null);
+    }
+
+    // Logs rendering failed in the main panel
+    private void MainShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, RenderingFailedEventArgs args)
+    {
+        this.RenderingErrorInfoBar.IsOpen = true;
+    }
+
+    // Logs rendering failed in a secondary panel
+    private void SelectionShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, RenderingFailedEventArgs args)
+    {
+        this.RenderingErrorInfoBar.IsOpen = true;
     }
 }
