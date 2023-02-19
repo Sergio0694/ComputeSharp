@@ -29,7 +29,7 @@ public sealed class CanvasAnimatedControl : Grid, ICanvasAnimatedControl, IDispo
     /// <summary>
     /// Indicates whether rendering is paused.
     /// </summary>
-    private bool isPaused;
+    private bool paused;
 
     /// <summary>
     /// Indicates whether a new frame is currently being drawn.
@@ -67,14 +67,14 @@ public sealed class CanvasAnimatedControl : Grid, ICanvasAnimatedControl, IDispo
     /// <summary>
     /// Gets or sets whether rendering has paused
     /// </summary>
-    public bool IsPaused
+    public bool Paused
     {
-        get => this.isPaused;
+        get => this.paused;
         set
         {
-            if (this.isPaused != value)
+            if (this.paused != value)
             {
-                this.isPaused = value;
+                this.paused = value;
 
                 // Start or stop the timers as needed
                 if (value)

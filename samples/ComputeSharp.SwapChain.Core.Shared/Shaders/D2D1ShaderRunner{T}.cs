@@ -3,9 +3,11 @@ using CommunityToolkit.Diagnostics;
 using ComputeSharp.D2D1;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
+#else
+using ComputeSharp.D2D1.WinUI;
+#endif
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
-#endif
 
 namespace ComputeSharp.SwapChain.Core.Shaders;
 
@@ -13,10 +15,9 @@ namespace ComputeSharp.SwapChain.Core.Shaders;
 /// A simple <see cref="ID2D1ShaderRunner"/> implementation powered by a supplied shader type.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
-public sealed class D2D1ShaderRunner<T> : ID2D1ShaderRunner
+public sealed class D2D1ShaderRunner<T> : ID2D1ShaderRunner, IDisposable
     where T : unmanaged, ID2D1PixelShader
 {
-#if WINDOWS_UWP
     /// <summary>
     /// The <see cref="Func{T1,T2,T3TResult}"/> instance used to create shaders to run.
     /// </summary>
@@ -26,7 +27,6 @@ public sealed class D2D1ShaderRunner<T> : ID2D1ShaderRunner
     /// The reusable <see cref="PixelShaderEffect{T}"/> instance to use to render frames.
     /// </summary>
     private readonly PixelShaderEffect<T> pixelShaderEffect;
-#endif
 
     /// <summary>
     /// Creates a new <see cref="D2D1ShaderRunner{T}"/> instance.
@@ -36,13 +36,10 @@ public sealed class D2D1ShaderRunner<T> : ID2D1ShaderRunner
     {
         Guard.IsNotNull(shaderFactory);
 
-#if WINDOWS_UWP
         this.shaderFactory = shaderFactory;
         this.pixelShaderEffect = new PixelShaderEffect<T>();
-#endif
     }
 
-#if WINDOWS_UWP
     /// <inheritdoc/>
     public void Execute(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
     {
@@ -55,5 +52,10 @@ public sealed class D2D1ShaderRunner<T> : ID2D1ShaderRunner
         // Draw the shader
         args.DrawingSession.DrawImage(this.pixelShaderEffect);
     }
-#endif
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        this.pixelShaderEffect.Dispose();
+    }
 }
