@@ -22,13 +22,14 @@ internal unsafe struct ICanvasImageInterop
     /// <summary>
     /// Gets the device that the effect is currently realized on, if any.
     /// </summary>
-    /// <param name="device">The resulting device, if available ((as a marshalled <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/>)).</param>
+    /// <param name="device">The resulting device, if available (as a marshalled <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/>).</param>
+    /// <param name="type">The <see cref="WIN2D_GET_DEVICE_ASSOCIATION_TYPE"/> value describing the returned instance.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(3)]
-    public HRESULT GetDevice(ICanvasDevice** device)
+    public HRESULT GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice**, int>)this.lpVtbl[3])((ICanvasImageInterop*)Unsafe.AsPointer(ref this), device);
+        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int>)this.lpVtbl[3])((ICanvasImageInterop*)Unsafe.AsPointer(ref this), device, type);
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ internal unsafe struct ICanvasImageInterop
         /// <inheritdoc cref="ICanvasImageInterop.GetDevice"/>
         [PreserveSig]
         [return: NativeTypeName("HRESULT")]
-        int GetDevice(ICanvasDevice** device);
+        int GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type);
 
         /// <inheritdoc cref="ICanvasImageInterop.GetD2DImage"/>
         [PreserveSig]

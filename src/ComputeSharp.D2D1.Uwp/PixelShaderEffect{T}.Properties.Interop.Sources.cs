@@ -11,6 +11,7 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
+using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_DEVICE_ASSOCIATION_TYPE;
 using static TerraFX.Interop.DirectX.D2D1_BORDER_MODE;
 using static TerraFX.Interop.DirectX.D2D1_DPICOMPENSATION_INTERPOLATION_MODE;
 using static TerraFX.Interop.DirectX.D2D1_DPICOMPENSATION_PROP;
@@ -158,12 +159,30 @@ unsafe partial class PixelShaderEffect<T>
 
             using ComPtr<ICanvasDevice> sourceCanvasDevice = default;
 
-            // Get the canvas device the source is realized on, if any
-            canvasImageInterop.Get()->GetDevice(sourceCanvasDevice.GetAddressOf()).Assert();
+            WIN2D_GET_DEVICE_ASSOCIATION_TYPE sourceCanvasDeviceType = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_UNSPECIFIED;
 
-            // If a device was retrieved, it must be the same as the input one. If the source has no device,
-            // that is fine, as it just means that its underlying D2D image has not been realized yet.
-            if (sourceCanvasDevice.Get() is not null && !this.canvasDevice.Get()->IsSameInstance(sourceCanvasDevice.Get()))
+            // Get the canvas device the source is realized on, if any, and its association type
+            canvasImageInterop.Get()->GetDevice(sourceCanvasDevice.GetAddressOf(), &sourceCanvasDeviceType).Assert();
+
+            // If the specified source is bound to a creation device, validate that this matches the one we are realized on.
+            // A "creation device" is a canvas device that is used to create the native resources in a given canvas image
+            // implementation, such that the canvas device and the canvas image are bound for the entire lifetime of the
+            // canvas image itself. This applies to eg. CanvasBitmap, which directly wraps some native memory allocated on
+            // a specific device. In these cases, if the associated device doesn't match the one this effect is currently
+            // realized on, that is an error and the source is invalid.
+            // 
+            // Otherwise, the device returned here will depend on the specific implementation of this external effect. That is,
+            // it could be null for an unrealized effect, it could be null for a lazily initialized device-bound resource, or it
+            // could also be an already instantiated resource tied to a specific device.
+            //
+            // The only case where the device has to be an exact match is if the device is an owning device for the canvas image.
+            // In all other cases (including when the device is null), we can proceed to resolve the effects graph normally. This
+            // will allow sources to either just work in case the device matches, or unrealize and re-realize themselves on the
+            // new device if they were already realized on a different device (so that things would just work fine if someone was
+            // trying to draw a reused effect after a device lost event, for instance). In the niche scenario where a given source
+            // was some lazily-initialized instance that doesn't allow changing device after that, then the call to Get2D2Image
+            // on that specific source will just fail during the recursive traversal, but that couldn't be checked from here anyway.
+            if (sourceCanvasDeviceType == WIN2D_GET_DEVICE_ASSOCIATION_TYPE_CREATION_DEVICE && !this.canvasDevice.Get()->IsSameInstance(sourceCanvasDevice.Get()))
             {
                 if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
                 {

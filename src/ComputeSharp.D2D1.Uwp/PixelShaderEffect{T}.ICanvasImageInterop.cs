@@ -12,6 +12,8 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
+using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_DEVICE_ASSOCIATION_TYPE;
+using Win32 = TerraFX.Interop.Windows.Windows;
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -19,8 +21,18 @@ namespace ComputeSharp.D2D1.Uwp;
 unsafe partial class PixelShaderEffect<T>
 {
     /// <inheritdoc/>
-    int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device)
+    int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
+        // Validate all input parameters
+        if (device is null || type is null)
+        {
+            return E.E_POINTER;
+        }
+
+        // Set parameters to default values
+        *device = null;
+        *type = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_UNSPECIFIED;
+
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         // Check for disposal
@@ -40,15 +52,25 @@ unsafe partial class PixelShaderEffect<T>
             return E.E_NOT_VALID_STATE;
         }
 
+        HRESULT hresult;
+
         try
         {
             // Copy the device over to the target
-            return this.canvasDevice.CopyTo(device);
+            hresult = this.canvasDevice.CopyTo(device);
         }
         finally
         {
             Monitor.Exit(this.lockObject);
         }
+
+        // Set the association type if the copy was successful
+        if (Win32.SUCCEEDED(hresult))
+        {
+            *type = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_REALIZATION_DEVICE;
+        }
+
+        return hresult;
     }
 
     /// <inheritdoc/>
@@ -60,6 +82,15 @@ unsafe partial class PixelShaderEffect<T>
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
+        // The device and resulting image pointers cannot be null
+        if (device is null || ppImage is null)
+        {
+            return E.E_POINTER;
+        }
+
+        // Set the resulting image to null
+        *ppImage = null;
+
         using ReferenceTracker.Lease _0 = GetReferenceTracker().TryGetLease(out bool leaseTaken);
 
         // Check for disposal
@@ -124,8 +155,6 @@ unsafe partial class PixelShaderEffect<T>
                 {
                     if (!Realize(flags, targetDpi, deviceContext))
                     {
-                        *ppImage = null;
-
                         return E.E_FAIL;
                     }
                 }
@@ -145,12 +174,6 @@ unsafe partial class PixelShaderEffect<T>
 
                 return S.S_OK;
             }
-        }
-        catch (Exception e)
-        {
-            *ppImage = null;
-
-            return e.HResult;
         }
         finally
         {
