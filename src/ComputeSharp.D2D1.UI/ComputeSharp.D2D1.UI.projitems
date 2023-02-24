@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>902d7b44-2c6c-4fcd-840b-ebcae811ee63</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ComputeSharp.D2D1.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasFactoryNative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasImageInterop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasResourceCreator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasResourceCreatorWithDpi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasResourceWrapperNative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ID2D1DeviceContextLease.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ID2D1DeviceContextPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\Win2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_D2D_IMAGE_FLAGS.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_DEVICE_ASSOCIATION_TYPE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\GraphicsEffectSourceBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\ResourceTextureManagerBuffer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Buffers\SourceReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffect.Interop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\FixedCountList{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\IFixedCountList{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ICanvasDeviceExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ID2D1DeviceContextExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ID2D1EffectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IUnknownExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourceManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1ImmutableArrayResourceTextureDescriptionsLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1IndexBitmaskResourceTextureDescriptionsLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasImageInterop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.Properties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.Properties.Interop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.Properties.Interop.Sources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.Properties.ResourceTextureManagerCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.Properties.SourceCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ReferenceTracking.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp\Graphics\Interop\IReferenceTrackedObject.cs" Link="Interop\IReferenceTrackedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp\Graphics\Interop\ReferenceTracker.cs" Link="Interop\ReferenceTracker.cs" />
+  </ItemGroup>
+</Project>
