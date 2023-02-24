@@ -47,8 +47,8 @@ unsafe partial class PixelShaderEffect<T>
             resourceCreatorWithDpi.GetAddressOf(),
             canvasImageInterop.GetAddressOf());
 
-        uint valueCount = 0;
-        Rect* valueElements = null;
+        uint valueCount;
+        Rect* valueElements;
 
         Win2D.GetInvalidRectanglesForICanvasImageInterop(
             resourceCreator: resourceCreatorWithDpi.Get(),
@@ -56,23 +56,11 @@ unsafe partial class PixelShaderEffect<T>
             valueCount: &valueCount,
             valueElements: &valueElements).Assert();
 
-        // If no rectangles have been returned, just use an empty array
-        if (valueCount == 0 && valueElements is null)
-        {
-            return Array.Empty<Rect>();
-        }
-
         try
         {
-            Rect[] result = new Rect[valueCount];
-
-            // Copy the data back from the COM array that Win2D created and returned
-            fixed (Rect* pResult = result)
-            {
-                Buffer.MemoryCopy(valueElements, pResult, valueCount * sizeof(Rect), valueCount * sizeof(Rect));
-            }
-
-            return result;
+            // Copy the data back from the COM array that Win2D created and returned.
+            // If no items were returned, this will automatically return an empty array.
+            return new Span<Rect>(valueElements, checked((int)valueCount)).ToArray();
         }
         finally
         {
