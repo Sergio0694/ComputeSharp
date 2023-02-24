@@ -6,15 +6,15 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649, IDE1006
 
-namespace ABI.Microsoft.Graphics.Canvas;
+namespace ABI.Microsoft.Graphics.Canvas.Effects;
 
 /// <summary>
-/// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.ICanvasResourceCreator"/> objects.
+/// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.Effects.ICanvasEffect"/> objects.
 /// </summary>
-[Guid("8F6D8AA8-492F-4BC6-B3D0-E7F5EAE84B11")]
-[NativeTypeName("class ICanvasResourceCreator : IInspectable")]
+[Guid("0EF96F8C-9B5E-4BF0-A399-AAD8CE53DB55")]
+[NativeTypeName("class ICanvasEffect : IInspectable")]
 [NativeInheritance("IInspectable")]
-internal unsafe struct ICanvasResourceCreator
+internal unsafe struct ICanvasEffect
 {
     public void** lpVtbl;
 
@@ -23,7 +23,7 @@ internal unsafe struct ICanvasResourceCreator
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasEffect*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -32,7 +32,7 @@ internal unsafe struct ICanvasResourceCreator
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, uint>)this.lpVtbl[1])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, uint>)this.lpVtbl[1])((ICanvasEffect*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -41,6 +41,6 @@ internal unsafe struct ICanvasResourceCreator
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceCreator*, uint>)this.lpVtbl[2])((ICanvasResourceCreator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, uint>)this.lpVtbl[2])((ICanvasEffect*)Unsafe.AsPointer(ref this));
     }
 }

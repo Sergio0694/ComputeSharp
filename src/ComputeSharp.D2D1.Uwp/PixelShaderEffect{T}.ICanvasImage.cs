@@ -30,25 +30,25 @@ unsafe partial class PixelShaderEffect<T>
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
-        using ComPtr<IUnknown> canvasResourceCreatorUnknown = default;
+        using ComPtr<IUnknown> resourceCreatorUnknown = default;
+        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator> resourceCreatorAbi = default;
+
+        // Get the ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator object from the input interface
+        resourceCreatorUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(resourceCreator));
+        resourceCreatorUnknown.CopyTo(resourceCreatorAbi.GetAddressOf()).Assert();
+
         using ComPtr<IUnknown> canvasImageInteropUnknown = default;
-
-        // Get the IUnknown* references for the ICanvasResourceCreator and ICanvasImageInterop objects
-        canvasResourceCreatorUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(resourceCreator));
-        canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(this));
-
-        using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator> canvasResourceCreator = default;
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-        // Get the ICanvasResourceCreator* and ICanvasImageInterop* pointers
-        canvasResourceCreatorUnknown.CopyTo(canvasResourceCreator.GetAddressOf()).Assert();
+        // Get the ICanvasImageInterop object from the current instance
+        canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(this));
         canvasImageInteropUnknown.CopyTo(canvasImageInterop.GetAddressOf()).Assert();
 
         Rect bounds;
 
         // Forward the actual logic to Win2D to compute the image bounds (it needs the internal context)
         Win2D.GetBoundsForICanvasImageInterop(
-            resourceCreator: canvasResourceCreator.Get(),
+            resourceCreator: resourceCreatorAbi.Get(),
             image: canvasImageInterop.Get(),
             transform: transform,
             rect: &bounds).Assert();
