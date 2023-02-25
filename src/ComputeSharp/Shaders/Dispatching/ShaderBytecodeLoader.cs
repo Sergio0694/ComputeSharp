@@ -35,7 +35,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     public unsafe void LoadDynamicBytecode(IntPtr handle)
     {
         default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
-        default(InvalidOperationException).ThrowIf(handle == IntPtr.Zero);
+        default(NotSupportedException).ThrowIf(handle == IntPtr.Zero);
 
         this.cachedShader = new ICachedShader.Dynamic((IDxcBlob*)handle);
     }

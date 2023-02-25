@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1.Helpers;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;
 
@@ -40,10 +39,7 @@ internal sealed unsafe class PinnedBufferMemoryManager : MemoryManager<byte>
     /// <inheritdoc/>
     public override unsafe MemoryHandle Pin(int elementIndex = 0)
     {
-        if ((uint)elementIndex >= this.length)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(elementIndex));
-        }
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(elementIndex, 0, this.length);
 
         return new(this.buffer + elementIndex);
     }

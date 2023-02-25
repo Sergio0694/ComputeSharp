@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
@@ -132,10 +131,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions compileOptions)
         where T : unmanaged, ID2D1PixelShader
     {
-        if ((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-        {
-            ThrowHelper.ThrowArgumentException(nameof(compileOptions), "The PackMatrixColumnMajor compile options is not compatible with ComputeSharp.D2D1 shaders.");
-        }
+        default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
         return LoadOrCompileBytecode<T>(null, compileOptions | D2D1CompileOptions.PackMatrixRowMajor, out _, out _);
     }
@@ -167,10 +163,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions compileOptions, out D2D1ShaderProfile shaderProfile)
         where T : unmanaged, ID2D1PixelShader
     {
-        if ((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-        {
-            ThrowHelper.ThrowArgumentException(nameof(compileOptions), "The PackMatrixColumnMajor compile options is not compatible with ComputeSharp.D2D1 shaders.");
-        }
+        default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
         return LoadOrCompileBytecode<T>(null, compileOptions | D2D1CompileOptions.PackMatrixRowMajor, out shaderProfile, out _);
     }
@@ -193,10 +186,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile, D2D1CompileOptions compileOptions)
         where T : unmanaged, ID2D1PixelShader
     {
-        if ((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
-        {
-            ThrowHelper.ThrowArgumentException(nameof(compileOptions), "The PackMatrixColumnMajor compile options is not compatible with ComputeSharp.D2D1 shaders.");
-        }
+        default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
         return LoadOrCompileBytecode<T>(shaderProfile, compileOptions | D2D1CompileOptions.PackMatrixRowMajor, out _, out _);
     }
@@ -280,10 +270,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        if ((uint)index >= shader.GetInputCount())
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is outside of range for the target pixel shader type.");
-        }
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, (int)shader.GetInputCount());
 
         return (D2D1PixelShaderInputType)shader.GetInputType((uint)index);
     }
@@ -395,7 +382,7 @@ public static class D2D1PixelShader
     {
         if (!TryGetConstantBuffer(in shader, span, out int writtenBytes))
         {
-            ThrowHelper.ThrowArgumentException(nameof(span), "The destination span is too short.");
+            default(ArgumentException).Throw(nameof(span));
         }
 
         return writtenBytes;

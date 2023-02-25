@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Uwp.Extensions;
@@ -350,10 +349,7 @@ unsafe partial class PixelShaderEffect<T>
             if (source is null)
             {
                 // If the source is null and that is not valid here (eg. when drawing), just throw
-                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-                {
-                    ThrowHelper.ThrowInvalidOperationException("The effect has one or more sources set to null, and null effect inputs are not valid at this time.");
-                }
+                default(InvalidOperationException).ThrowIf((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE);
             }
             else
             {

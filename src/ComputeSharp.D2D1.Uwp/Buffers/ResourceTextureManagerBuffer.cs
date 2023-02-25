@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 
 namespace ComputeSharp.D2D1.Uwp.Buffers;
@@ -103,10 +102,7 @@ internal struct ResourceTextureManagerBuffer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if ((uint)index >= 16)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The index must be in the [0, 15] range.");
-            }
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16);
 
             ref D2D1ResourceTextureManager? r0 = ref Unsafe.As<ResourceTextureManagerBuffer, D2D1ResourceTextureManager?>(ref this);
             ref D2D1ResourceTextureManager? r1 = ref Unsafe.Add(ref r0, index);

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using ComputeSharp.D2D1.Uwp.Buffers;
@@ -56,15 +55,16 @@ partial class PixelShaderEffect<T>
         {
             get
             {
-                ValidateIndex(index);
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16, nameof(index));
+                default(ArgumentOutOfRangeException).ThrowIf((IndexBitmask & (1 << index)) == 0, nameof(index));
 
                 return Owner.GetResourceTextureManager(index);
             }
             set
             {
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16, nameof(index));
+                default(ArgumentOutOfRangeException).ThrowIf((IndexBitmask & (1 << index)) == 0, nameof(index));
                 default(ArgumentNullException).ThrowIfNull(value);
-
-                ValidateIndex(index);
 
                 Owner.SetResourceTextureManager(value, index);
             }
@@ -216,20 +216,6 @@ partial class PixelShaderEffect<T>
         void IList.RemoveAt(int index)
         {
             throw new NotSupportedException("IList.RemoveAt is not supported for ResourceTextureManagerCollection.");
-        }
-
-        /// <summary>
-        /// Validates the input index for <see cref="this[int]"/>.
-        /// </summary>
-        /// <param name="index">The index to validate.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is out of range.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ValidateIndex(int index)
-        {
-            if ((uint)index >= 16 || (IndexBitmask & (1 << index)) == 0)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is not a valid resource texture manager index for the current effect.");
-            }
         }
 
         /// <summary>

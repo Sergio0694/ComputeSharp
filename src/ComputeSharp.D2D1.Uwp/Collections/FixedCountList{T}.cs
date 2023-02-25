@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ComputeSharp.D2D1.Helpers;
 
 namespace ComputeSharp.D2D1.Uwp.Collections;
 
@@ -22,10 +21,7 @@ internal static class FixedCountList<T>
 
         Span<T> span = array.AsSpan(index);
 
-        if (list.Indices.Length > span.Length)
-        {
-            ThrowHelper.ThrowArgumentException(nameof(array), "The destination array range is smaller than the number of source items.");
-        }
+        default(ArgumentException).ThrowIf(list.Indices.Length > span.Length, nameof(array));
 
         foreach (int i in list.Indices)
         {
@@ -42,18 +38,11 @@ internal static class FixedCountList<T>
     public static void CopyTo(IFixedCountList<T> list, Array array, int index)
     {
         default(ArgumentNullException).ThrowIfNull(array);
-
-        if ((uint)index >= array.Length)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The starting array index is out of range.");
-        }
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, array.Length);
 
         int remainingLength = array.Length - index;
 
-        if (list.Indices.Length > remainingLength)
-        {
-            ThrowHelper.ThrowArgumentException(nameof(array), "The destination array range is smaller than the number of source items.");
-        }
+        default(ArgumentException).ThrowIf(list.Indices.Length > remainingLength, nameof(array));
 
         foreach (int i in list.Indices)
         {

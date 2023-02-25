@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Collections;
@@ -50,13 +49,13 @@ partial class PixelShaderEffect<T>
         {
             get
             {
-                ValidateIndex(index);
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
 
                 return Owner.GetSource(index);
             }
             set
             {
-                ValidateIndex(index);
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
 
                 Owner.SetSource(value, index);
             }
@@ -203,20 +202,6 @@ partial class PixelShaderEffect<T>
         void IList.RemoveAt(int index)
         {
             throw new NotSupportedException("IList.RemoveAt is not supported for SourceCollection.");
-        }
-
-        /// <summary>
-        /// Validates the input index for <see cref="this[int]"/>.
-        /// </summary>
-        /// <param name="index">The index to validate.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is out of range.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ValidateIndex(int index)
-        {
-            if ((uint)index >= D2D1PixelShader.GetInputCount<T>())
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is not a valid source index for the current effect.");
-            }
         }
 
         /// <summary>

@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -49,16 +48,9 @@ internal unsafe struct D2D1ShaderBytecodeLoader : ID2D1BytecodeLoader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     unsafe void ID2D1BytecodeLoader.LoadDynamicBytecode(IntPtr handle)
     {
-        if (this.embeddedBytecodePtr is not null ||
-            this.d3DBlob.Get() is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
-
-        if (handle == IntPtr.Zero)
-        {
-            ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
-        }
+        default(InvalidOperationException).ThrowIf(this.embeddedBytecodePtr is not null);
+        default(InvalidOperationException).ThrowIf(this.d3DBlob.Get() is not null);
+        default(NotSupportedException).ThrowIf(handle == IntPtr.Zero);
 
         this.d3DBlob = new ComPtr<ID3DBlob>((ID3DBlob*)handle);
     }
@@ -67,11 +59,8 @@ internal unsafe struct D2D1ShaderBytecodeLoader : ID2D1BytecodeLoader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void ID2D1BytecodeLoader.LoadEmbeddedBytecode(ReadOnlySpan<byte> bytecode)
     {
-        if (this.embeddedBytecodePtr is not null ||
-            this.d3DBlob.Get() is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(this.embeddedBytecodePtr is not null);
+        default(InvalidOperationException).ThrowIf(this.d3DBlob.Get() is not null);
 
         this.embeddedBytecodePtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(bytecode));
         this.embeddedBytecodeSize = bytecode.Length;

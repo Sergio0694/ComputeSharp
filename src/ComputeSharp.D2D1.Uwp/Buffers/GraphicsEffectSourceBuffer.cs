@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using Windows.Graphics.Effects;
 
 namespace ComputeSharp.D2D1.Uwp.Buffers;
@@ -103,10 +102,7 @@ internal struct GraphicsEffectSourceBuffer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if ((uint)index >= 16)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The index must be in the [0, 15] range.");
-            }
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16);
 
             ref SourceReference r0 = ref Unsafe.As<GraphicsEffectSourceBuffer, SourceReference>(ref this);
             ref SourceReference r1 = ref Unsafe.Add(ref r0, index);
