@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -78,9 +77,9 @@ public static class Texture3DExtensions
     {
         default(ArgumentNullException).ThrowIfNull(source);
         default(ArgumentNullException).ThrowIfNull(destination);
-        Guard.IsEqualTo(destination.GetLength(0), source.Depth, nameof(destination));
-        Guard.IsEqualTo(destination.GetLength(1), source.Height, nameof(destination));
-        Guard.IsEqualTo(destination.GetLength(2), source.Width, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.GetLength(0) != source.Depth, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.GetLength(1) != source.Height, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.GetLength(2) != source.Width, nameof(destination));
 
         source.CopyTo(ref destination[0, 0, 0], destination.Length, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
@@ -336,9 +335,9 @@ public static class Texture3DExtensions
     {
         default(ArgumentNullException).ThrowIfNull(destination);
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsEqualTo(source.GetLength(0), destination.Depth, nameof(source));
-        Guard.IsEqualTo(source.GetLength(1), destination.Height, nameof(source));
-        Guard.IsEqualTo(source.GetLength(2), destination.Width, nameof(source));
+        default(ArgumentException).ThrowIf(source.GetLength(0) != destination.Depth, nameof(source));
+        default(ArgumentException).ThrowIf(source.GetLength(1) != destination.Height, nameof(source));
+        default(ArgumentException).ThrowIf(source.GetLength(2) != destination.Width, nameof(source));
 
         destination.CopyFrom(ref source[0, 0, 0], source.Length, 0, 0, 0, destination.Width, destination.Height, destination.Depth);
     }

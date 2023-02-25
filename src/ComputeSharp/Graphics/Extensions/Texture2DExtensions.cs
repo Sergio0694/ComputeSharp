@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 
@@ -69,8 +68,8 @@ public static class Texture2DExtensions
     {
         default(ArgumentNullException).ThrowIfNull(source);
         default(ArgumentNullException).ThrowIfNull(destination);
-        Guard.IsEqualTo(destination.GetLength(0), source.Height, nameof(destination));
-        Guard.IsEqualTo(destination.GetLength(1), source.Width, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.GetLength(0) != source.Height, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.GetLength(1) != source.Width, nameof(destination));
 
         source.CopyTo(ref destination[0, 0], destination.Length, 0, 0, source.Width, source.Height);
     }
@@ -359,8 +358,8 @@ public static class Texture2DExtensions
     {
         default(ArgumentNullException).ThrowIfNull(destination);
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsEqualTo(source.GetLength(0), destination.Height, nameof(source));
-        Guard.IsEqualTo(source.GetLength(1), destination.Width, nameof(source));
+        default(ArgumentException).ThrowIf(source.GetLength(0) != destination.Height, nameof(source));
+        default(ArgumentException).ThrowIf(source.GetLength(1) != destination.Width, nameof(source));
 
         destination.CopyFrom(ref source[0, 0], source.Length, 0, 0, destination.Width, destination.Height);
     }
