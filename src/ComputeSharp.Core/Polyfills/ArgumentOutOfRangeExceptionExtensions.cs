@@ -9,6 +9,20 @@ namespace System;
 internal static class ArgumentOutOfRangeExceptionExtensions
 {
     /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is not zero.
+    /// </summary>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="value">The argument to validate as zero.</param>
+    /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    public static void ThrowIfNotZero(this ArgumentOutOfRangeException? _, int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    {
+        if (value != 0)
+        {
+            Throw(parameterName, value);
+        }
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.
     /// </summary>
     /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
