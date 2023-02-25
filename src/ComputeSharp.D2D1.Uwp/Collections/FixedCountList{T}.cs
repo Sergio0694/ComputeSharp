@@ -18,10 +18,7 @@ internal static class FixedCountList<T>
     /// <param name="index">The initial index within <paramref name="array"/>.</param>
     public static void CopyTo(IFixedCountList<T> list, T[] array, int index)
     {
-        if (array is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(array), "The input array cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(array);
 
         Span<T> span = array.AsSpan(index);
 
@@ -44,10 +41,7 @@ internal static class FixedCountList<T>
     /// <param name="index">The initial index within <paramref name="array"/>.</param>
     public static void CopyTo(IFixedCountList<T> list, Array array, int index)
     {
-        if (array is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(array), "The input array cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(array);
 
         if ((uint)index >= array.Length)
         {

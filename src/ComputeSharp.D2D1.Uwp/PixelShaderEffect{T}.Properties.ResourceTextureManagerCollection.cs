@@ -62,10 +62,7 @@ partial class PixelShaderEffect<T>
             }
             set
             {
-                if (value is null)
-                {
-                    ThrowHelper.ThrowArgumentNullException(nameof(value), "Input resource texture managers cannot be null.");
-                }
+                default(ArgumentNullException).ThrowIfNull(value);
 
                 ValidateIndex(index);
 

@@ -1,5 +1,5 @@
+using System;
 using System.Numerics;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 namespace ComputeSharp.D2D1.Interop;
@@ -41,10 +41,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
     public static D2D1TransformMapper<T> Inflate(Accessor<int> accessor)
     {
-        if (accessor is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<int> object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(accessor);
 
         return new D2D1InflateTransformMapper<T>.DynamicAmount { Accessor = accessor };
     }
@@ -56,10 +53,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.</returns>
     public static D2D1TransformMapper<T> Inflate(Accessor<(int Left, int Top, int Right, int Bottom)> accessor)
     {
-        if (accessor is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<(int Left, int Top, int Right, int Bottom)> object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(accessor);
 
         return new D2D1InflateTransformMapper<T>.DynamicLeftTopRightBottomAmount { Accessor = accessor };
     }
@@ -81,10 +75,7 @@ public static class D2D1TransformMapperFactory<T>
     /// <returns>The resulting <see cref="D2D1TransformMapper{T}"/> instance for an affine transform.</returns>
     public static D2D1TransformMapper<T> Transform(Accessor<Matrix3x2> accessor)
     {
-        if (accessor is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(accessor), "The input D2D1TransformMapperFactory<T>.Accessor<Matrix3x2> object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(accessor);
 
         return new D2D1AffineTransformMapper<T>.DynamicMatrix { Accessor = accessor };
     }

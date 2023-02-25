@@ -220,7 +220,7 @@ unsafe partial class PixelShaderEffect<T>
         else if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
         {
             // If the source is null and this is not explicitly allowed, the invocation is not valid
-            ThrowHelper.ThrowArgumentNullException(nameof(value), "The effect source cannot be null.");
+            default(ArgumentNullException).Throw(nameof(value));
         }
 
         // Save the managed wrapper and realized image

@@ -433,10 +433,7 @@ public static class D2D1PixelShader
     public static unsafe void SetConstantBufferForD2D1DrawInfo<T>(void* d2D1DrawInfo, in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
-        if (d2D1DrawInfo is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1DrawInfo), "The input ID2D1DrawInfo object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1DrawInfo);
 
         D2D1DrawInfoDispatchDataLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
 
