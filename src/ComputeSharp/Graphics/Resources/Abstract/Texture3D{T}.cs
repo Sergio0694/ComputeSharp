@@ -195,9 +195,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(depth, 1, Depth);
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -303,9 +303,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -381,9 +381,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -444,9 +444,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(depth, 1, Depth);
-        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-        Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -549,12 +549,12 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, source.Width);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, source.Height);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(depth, 1, source.Depth);
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, source.Depth, nameof(sourceOffsetZ));
-        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-        Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetZ + depth, source.Depth, nameof(sourceOffsetZ));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();

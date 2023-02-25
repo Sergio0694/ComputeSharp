@@ -187,7 +187,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsX, 1, 1024);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsY, 1, 1024);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsZ, 1, 64);
-        Guard.IsLessThanOrEqualTo(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
 
         int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
