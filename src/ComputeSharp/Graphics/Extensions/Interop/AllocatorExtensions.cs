@@ -1,6 +1,6 @@
 #if NET6_0_OR_GREATER
 
-using CommunityToolkit.Diagnostics;
+using System;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -66,7 +66,7 @@ internal static unsafe class AllocatorExtensions
              ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
              ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
              ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-             _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+             _ => default(ArgumentException).Throw<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
          };
 
         using ComPtr<D3D12MA_Allocation> allocation = default;
@@ -117,7 +117,7 @@ internal static unsafe class AllocatorExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<D3D12MA_Allocation> allocation = default;
@@ -170,7 +170,7 @@ internal static unsafe class AllocatorExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<D3D12MA_Allocation> allocation = default;
@@ -225,7 +225,7 @@ internal static unsafe class AllocatorExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<D3D12MA_Allocation> allocation = default;

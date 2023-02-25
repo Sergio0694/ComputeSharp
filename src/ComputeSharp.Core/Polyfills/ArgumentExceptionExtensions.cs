@@ -9,6 +9,32 @@ namespace System;
 internal static class ArgumentExceptionExtensions
 {
     /// <summary>
+    /// Throws an <see cref="ArgumentException"/> for a given parameter name.
+    /// </summary>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="parameterName">The name of the parameter to report in the exception.</param>
+    /// <exception cref="ArgumentException">Thrown with <paramref name="parameterName"/>.</exception>
+    [DoesNotReturn]
+    public static void Throw(this ArgumentException? _, string? parameterName)
+    {
+        throw new ArgumentException(null, parameterName);
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentException"/> for a given parameter name.
+    /// </summary>
+    /// <typeparam name="T">The type to let the compiler assume it returns.</typeparam>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="parameterName">The name of the parameter to report in the exception.</param>
+    /// <returns>This method never returns any values.</returns>
+    /// <exception cref="ArgumentException">Thrown with <paramref name="parameterName"/>.</exception>
+    [DoesNotReturn]
+    public static T Throw<T>(this ArgumentException? _, string? parameterName)
+    {
+        throw new ArgumentException(null, parameterName);
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentException"/> if <paramref name="condition"/> is <see langword="true"/>.
     /// </summary>
     /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
@@ -31,6 +57,6 @@ internal static class ArgumentExceptionExtensions
     [DoesNotReturn]
     private static void Throw(string? parameterName)
     {
-        throw new ArgumentException(parameterName);
+        throw new ArgumentException(null, parameterName);
     }
 }

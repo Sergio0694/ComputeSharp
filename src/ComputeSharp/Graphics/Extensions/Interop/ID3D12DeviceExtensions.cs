@@ -1,8 +1,6 @@
 using System;
 #if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
-#else
-using CommunityToolkit.Diagnostics;
 #endif
 using ComputeSharp.Core.Extensions;
 #if !NET6_0_OR_GREATER
@@ -82,7 +80,7 @@ internal static unsafe class ID3D12DeviceExtensions
              ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
              ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
              ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-             _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+             _ => default(ArgumentException).Throw<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
          };
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
@@ -142,7 +140,7 @@ internal static unsafe class ID3D12DeviceExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
@@ -204,7 +202,7 @@ internal static unsafe class ID3D12DeviceExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
@@ -268,7 +266,7 @@ internal static unsafe class ID3D12DeviceExtensions
         {
             ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
             ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
-            _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            _ => default(ArgumentException).Throw<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>(nameof(resourceType))
         };
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;

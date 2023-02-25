@@ -1,5 +1,5 @@
+using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
 
@@ -28,6 +28,6 @@ internal static class ResourceStateHelper
             return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         }
 
-        return ThrowHelper.ThrowArgumentException<D3D12_RESOURCE_STATES>("The target resource state is not valid.");
+        return default(ArgumentException).Throw<D3D12_RESOURCE_STATES>(nameof(resourceState));
     }
 }

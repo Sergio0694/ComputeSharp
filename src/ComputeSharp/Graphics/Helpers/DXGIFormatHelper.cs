@@ -1,6 +1,6 @@
+using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 
@@ -46,7 +46,7 @@ internal static class DXGIFormatHelper
         if (typeof(T) == typeof(Rg16)) return DXGI_FORMAT_R8G8_UNORM;
         if (typeof(T) == typeof(Rg32)) return DXGI_FORMAT_R16G16_UNORM;
 
-        return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type.");
+        return default(ArgumentException).Throw<DXGI_FORMAT>(nameof(T));
     }
 
     /// <summary>
@@ -89,7 +89,7 @@ internal static class DXGIFormatHelper
             return true;
         }
 
-        return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type.");
+        return default(ArgumentException).Throw<bool>(nameof(T));
     }
 
     /// <summary>

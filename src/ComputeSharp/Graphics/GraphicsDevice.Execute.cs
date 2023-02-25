@@ -59,7 +59,7 @@ unsafe partial class GraphicsDevice
                 d3D12Fence = this.d3D12CopyFence;
                 d3D12FenceValue = ref this.nextD3D12CopyFenceValue;
                 break;
-            default: ThrowHelper.ThrowArgumentException(); return;
+            default: default(ArgumentException).Throw(nameof(commandList)); return;
         }
 
         // Execute the command list
