@@ -79,8 +79,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     {
         this.referenceTracker = new ReferenceTracker(this);
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
@@ -179,8 +179,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     {
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
@@ -271,12 +271,12 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
@@ -340,12 +340,12 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
@@ -402,8 +402,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     {
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
@@ -494,10 +494,10 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, source.Height);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, source.Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));

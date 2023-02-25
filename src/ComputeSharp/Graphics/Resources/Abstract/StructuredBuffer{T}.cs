@@ -36,7 +36,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
@@ -108,8 +108,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, destination.Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
@@ -156,8 +156,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, destination.Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
@@ -200,7 +200,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
-        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 0, Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
@@ -276,8 +276,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// <param name="count">The number of items to read.</param>
     internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
-        Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsBetweenOrEqualTo(count, 0, source.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(count, 0, source.Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, source.Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, Length);

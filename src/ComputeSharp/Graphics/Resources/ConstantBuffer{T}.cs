@@ -61,7 +61,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(ref T destination, int offset, int length)
     {
-        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 0, Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
@@ -88,8 +88,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
     {
-        Guard.IsBetweenOrEqualTo(length, 0, Length);
-        Guard.IsBetweenOrEqualTo(length, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 0, destination.Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
@@ -126,7 +126,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <inheritdoc/>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
-        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 0, Length);
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 

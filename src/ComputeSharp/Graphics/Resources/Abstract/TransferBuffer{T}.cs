@@ -58,7 +58,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         this.referenceTracker = new ReferenceTracker(this);
 
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-        Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 

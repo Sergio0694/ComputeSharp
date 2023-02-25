@@ -184,18 +184,18 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(x);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(y);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(z);
-        Guard.IsBetweenOrEqualTo(threadsX, 1, 1024);
-        Guard.IsBetweenOrEqualTo(threadsY, 1, 1024);
-        Guard.IsBetweenOrEqualTo(threadsZ, 1, 64);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsX, 1, 1024);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsY, 1, 1024);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsZ, 1, 64);
         Guard.IsLessThanOrEqualTo(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
 
         int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
         int groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
-        Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
@@ -231,8 +231,8 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
-        Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
