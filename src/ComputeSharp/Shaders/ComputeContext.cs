@@ -181,9 +181,9 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        Guard.IsGreaterThan(x, 0);
-        Guard.IsGreaterThan(y, 0);
-        Guard.IsGreaterThan(z, 0);
+        default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(x);
+        default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(y);
+        default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(z);
         Guard.IsBetweenOrEqualTo(threadsX, 1, 1024);
         Guard.IsBetweenOrEqualTo(threadsY, 1, 1024);
         Guard.IsBetweenOrEqualTo(threadsZ, 1, 64);
