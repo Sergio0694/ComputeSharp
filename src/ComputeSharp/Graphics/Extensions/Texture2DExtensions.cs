@@ -22,7 +22,7 @@ public static class Texture2DExtensions
     public static T[,] ToArray<T>(this Texture2D<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         T[,] data = new T[source.Height, source.Width];
 
@@ -44,7 +44,7 @@ public static class Texture2DExtensions
     public static unsafe T[,] ToArray<T>(this Texture2D<T> source, int x, int y, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
         Guard.IsGreaterThanOrEqualTo(width, 0);
         Guard.IsGreaterThanOrEqualTo(height, 0);
 
@@ -67,8 +67,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[,] destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
         Guard.IsEqualTo(destination.GetLength(0), source.Height, nameof(destination));
         Guard.IsEqualTo(destination.GetLength(1), source.Width, nameof(destination));
 
@@ -84,8 +84,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(), 0, 0, source.Width, source.Height);
     }
@@ -102,8 +102,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(), x, y);
     }
@@ -122,8 +122,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(), sourceOffsetX, sourceOffsetY, width, height);
     }
@@ -138,8 +138,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination, int destinationOffset)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(destinationOffset), 0, 0, source.Width, source.Height);
     }
@@ -157,8 +157,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination, int destinationOffset, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(destinationOffset), x, y);
     }
@@ -178,8 +178,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, T[] destination, int destinationOffset, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(destinationOffset), sourceOffsetX, sourceOffsetY, width, height);
     }
@@ -194,7 +194,7 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Span<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, 0, 0, source.Width, source.Height);
     }
@@ -211,7 +211,7 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Span<T> destination, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         (int offsetX, int width) = x.GetOffsetAndLength(source.Width);
         (int offsetY, int height) = y.GetOffsetAndLength(source.Height);
@@ -233,7 +233,7 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Span<T> destination, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(ref MemoryMarshal.GetReference(destination), destination.Length, sourceOffsetX, sourceOffsetY, width, height);
     }
@@ -247,8 +247,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Texture2D<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, 0, 0, 0, 0, source.Width, source.Height);
     }
@@ -266,8 +266,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
@@ -287,8 +287,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -302,8 +302,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, ReadBackTexture2D<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, 0, 0, 0, 0, source.Width, source.Height);
     }
@@ -321,8 +321,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
@@ -342,8 +342,8 @@ public static class Texture2DExtensions
     public static void CopyTo<T>(this Texture2D<T> source, ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -357,8 +357,8 @@ public static class Texture2DExtensions
     public static unsafe void CopyFrom<T>(this Texture2D<T> destination, T[,] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
         Guard.IsEqualTo(source.GetLength(0), destination.Height, nameof(source));
         Guard.IsEqualTo(source.GetLength(1), destination.Width, nameof(source));
 
@@ -374,8 +374,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(), 0, 0, destination.Width, destination.Height);
     }
@@ -392,8 +392,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, T[] source, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(), x, y);
     }
@@ -412,8 +412,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, T[] source, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(), destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -431,8 +431,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, T[] source, int sourceOffset, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(sourceOffset), x, y);
     }
@@ -452,8 +452,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, T[] source, int sourceOffset, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(sourceOffset), destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -468,7 +468,7 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, 0, 0, destination.Width, destination.Height);
     }
@@ -485,7 +485,7 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, ReadOnlySpan<T> source, Range x, Range y)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         (int offsetX, int width) = x.GetOffsetAndLength(destination.Width);
         (int offsetY, int height) = y.GetOffsetAndLength(destination.Height);
@@ -507,7 +507,7 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, ReadOnlySpan<T> source, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -521,8 +521,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, Texture2D<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source, 0, 0, 0, 0, source.Width, source.Height);
     }
@@ -540,8 +540,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, Texture2D<T> source, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
@@ -561,8 +561,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, Texture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -576,8 +576,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, 0, 0, 0, 0, source.Width, source.Height);
     }
@@ -595,8 +595,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
@@ -616,8 +616,8 @@ public static class Texture2DExtensions
     public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -631,8 +631,8 @@ public static class Texture2DExtensions
     public static void Save<T>(this Texture2D<T> texture, string filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
-        Guard.IsNotNull(filename);
+        default(ArgumentNullException).ThrowIfNull(texture);
+        default(ArgumentNullException).ThrowIfNull(filename);
 
         texture.Save(filename.AsSpan());
     }
@@ -646,7 +646,7 @@ public static class Texture2DExtensions
     public static void Save<T>(this Texture2D<T> texture, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
 
@@ -665,8 +665,8 @@ public static class Texture2DExtensions
     public static void Save<T>(this Texture2D<T> texture, Stream stream, ImageFormat format)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
-        Guard.IsNotNull(stream);
+        default(ArgumentNullException).ThrowIfNull(texture);
+        default(ArgumentNullException).ThrowIfNull(stream);
 
         using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
 
@@ -685,8 +685,8 @@ public static class Texture2DExtensions
     public static void Save<T>(this Texture2D<T> texture, IBufferWriter<byte> writer, ImageFormat format)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
-        Guard.IsNotNull(writer);
+        default(ArgumentNullException).ThrowIfNull(texture);
+        default(ArgumentNullException).ThrowIfNull(writer);
 
         using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
 

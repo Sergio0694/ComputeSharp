@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 
 namespace ComputeSharp;
@@ -71,7 +70,7 @@ partial class GraphicsDevice
     /// </remarks>
     public static IEnumerable<GraphicsDevice> QueryDevices(Predicate<GraphicsDeviceInfo> predicate)
     {
-        Guard.IsNotNull(predicate);
+        default(ArgumentNullException).ThrowIfNull(predicate);
 
         return new DeviceHelper.DeviceQuery(predicate);
     }

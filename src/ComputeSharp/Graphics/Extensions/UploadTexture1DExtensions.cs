@@ -1,4 +1,4 @@
-using CommunityToolkit.Diagnostics;
+using System;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -17,8 +17,8 @@ public static class UploadTexture1DExtensions
     public static void CopyTo<T>(this UploadTexture1D<T> source, Texture1D<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, 0, 0, source.Width);
     }
@@ -34,8 +34,8 @@ public static class UploadTexture1DExtensions
     public static void CopyTo<T>(this UploadTexture1D<T> source, Texture1D<T> destination, int sourceOffsetX, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, 0, width);
     }
@@ -52,8 +52,8 @@ public static class UploadTexture1DExtensions
     public static void CopyTo<T>(this UploadTexture1D<T> source, Texture1D<T> destination, int sourceOffsetX, int destinationOffsetX, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, destinationOffsetX, width);
     }

@@ -1,4 +1,4 @@
-using CommunityToolkit.Diagnostics;
+using System;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -17,8 +17,8 @@ public static class ReadBackTexture1DExtensions
     public static void CopyFrom<T>(this ReadBackTexture1D<T> destination, Texture1D<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, 0, 0, source.Width);
     }
@@ -34,8 +34,8 @@ public static class ReadBackTexture1DExtensions
     public static void CopyFrom<T>(this ReadBackTexture1D<T> destination, Texture1D<T> source, int sourceOffsetX, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, sourceOffsetX, 0, width);
     }
@@ -52,8 +52,8 @@ public static class ReadBackTexture1DExtensions
     public static void CopyFrom<T>(this ReadBackTexture1D<T> destination, Texture1D<T> source, int sourceOffsetX, int destinationOffsetX, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, sourceOffsetX, destinationOffsetX, width);
     }

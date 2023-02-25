@@ -1,5 +1,4 @@
 using System;
-using CommunityToolkit.Diagnostics;
 
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp;
@@ -40,7 +39,7 @@ public sealed class ShaderRunner<T> : IShaderRunner
     /// <param name="shaderFactory">The <see cref="Func{T1,TResult}"/> instance used to create shaders to run.</param>
     public ShaderRunner(Func<TimeSpan, T> shaderFactory)
     {
-        Guard.IsNotNull(shaderFactory);
+        default(ArgumentNullException).ThrowIfNull(shaderFactory);
 
         this.shaderFactory = shaderFactory;
     }
@@ -51,7 +50,7 @@ public sealed class ShaderRunner<T> : IShaderRunner
     /// <param name="shaderFactory">The <see cref="Func{T1,T2,TResult}"/> instance used to create shaders to run.</param>
     public ShaderRunner(Func<TimeSpan, object?, T> shaderFactory)
     {
-        Guard.IsNotNull(shaderFactory);
+        default(ArgumentNullException).ThrowIfNull(shaderFactory);
 
         this.statefulShaderFactory = shaderFactory;
     }
