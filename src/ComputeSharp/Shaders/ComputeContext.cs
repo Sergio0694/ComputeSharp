@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
@@ -60,7 +59,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         get
         {
-            ThrowInvalidOperationExceptionIfDeviceIsNull();
+            default(InvalidOperationException).ThrowIf(this.device is null);
 
             return this.device;
         }
@@ -72,7 +71,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
     internal readonly unsafe void Barrier(ID3D12Resource* d3D12Resource)
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         ref CommandList commandList = ref GetCommandList();
 
@@ -92,7 +91,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
         bool isNormalized)
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
@@ -112,7 +111,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
         Float4 value)
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
@@ -179,8 +178,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         ref T shader)
         where T : struct, IComputeShader
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
-
+        default(InvalidOperationException).ThrowIf(this.device is null);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(x);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(y);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(z);
@@ -221,7 +219,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         int x = texture.Width;
         int y = texture.Height;
@@ -263,7 +261,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
         D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         ref CommandList commandList = ref GetCommandList(pipelineState: null);
 
@@ -274,7 +272,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         GraphicsDevice device = this.device;
 
@@ -301,7 +299,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueTask DisposeAsync()
     {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
+        default(InvalidOperationException).ThrowIf(this.device is null);
 
         GraphicsDevice device = this.device;
 
@@ -342,10 +340,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         // original context would not see the changes done by the following queued dispatches.
         ref CommandList commandList = ref Unsafe.AsRef(in this.commandList);
 
-        if (!commandList.IsAllocated)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The current compute context has not yet been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(!commandList.IsAllocated);
 
         return ref commandList;
     }
@@ -376,19 +371,5 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
 
         return ref commandList;
-    }
-
-    /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> if <see cref="device"/> is <see langword="null"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if <see cref="device"/> is <see langword="null"/>.</exception>
-    [MemberNotNull(nameof(device))]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly void ThrowInvalidOperationExceptionIfDeviceIsNull()
-    {
-        if (this.device is null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The current compute context is not in a valid state.");
-        }
     }
 }

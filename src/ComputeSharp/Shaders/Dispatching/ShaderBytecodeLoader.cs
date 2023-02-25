@@ -38,10 +38,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     /// <inheritdoc/>
     public unsafe void LoadDynamicBytecode(IntPtr handle)
     {
-        if (this.cachedShader is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
 
         if (handle == IntPtr.Zero)
         {
@@ -55,10 +52,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LoadEmbeddedBytecode(ReadOnlySpan<byte> bytecode)
     {
-        if (this.cachedShader is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
 
         this.cachedShader = new ICachedShader.Embedded(bytecode);
     }

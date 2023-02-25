@@ -15,7 +15,7 @@ internal static class ArgumentExceptionExtensions
     /// <param name="condition">The condition to decide whether to throw the exception.</param>
     /// <param name="parameterName">The name of the parameter with which <paramref name="condition"/> corresponds.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void ThrowIf(this ArgumentException? _, bool condition, string? parameterName = null)
+    public static void ThrowIf(this ArgumentException? _, [DoesNotReturnIf(true)] bool condition, string? parameterName = null)
     {
         if (condition)
         {

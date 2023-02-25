@@ -105,10 +105,7 @@ internal static partial class DeviceHelper
                 d3D12DeviceCandidate.GetVoidAddressOf());
 
             // Check and throw if the device is a device lost state and not disposed properly
-            if (createDeviceResult.IsDeviceLostReason())
-            {
-                ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
-            }
+            default(InvalidOperationException).ThrowIf(createDeviceResult.IsDeviceLostReason());
 
             // Check for success, and then also filter out devices that support SM6.0. This can
             // only be checked on a concrete ID3D12Device instance, so it can't be done earlier.
@@ -151,10 +148,7 @@ internal static partial class DeviceHelper
             Windows.__uuidof<ID3D12Device>(),
             d3D12DeviceCandidate.GetVoidAddressOf());
 
-        if (createDeviceResult.IsDeviceLostReason())
-        {
-            ThrowHelper.ThrowInvalidOperationException("The default device is in device lost state and has not been disposed properly.");
-        }
+        default(InvalidOperationException).ThrowIf(createDeviceResult.IsDeviceLostReason());
 
         // There is no need to check for SM6.0, as it's guaranteed to be supported by Windows
         if (Windows.SUCCEEDED(createDeviceResult))
