@@ -25,26 +25,14 @@
          just copy the right native libraries to the output directory, with no subfolders. -->
     <When Condition="'$(Platform)' == 'x64' OR '$(CI_RUNNER_DOTNET_TEST_PLATFORM)' == 'x64'">
       <ItemGroup>
-        <None Include="Libraries\x64\dxcompiler.dll"
-              Link="dxcompiler.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
-        <None Include="Libraries\x64\dxil.dll"
-              Link="dxil.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Libraries\x64\dxcompiler.dll" Link="dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Libraries\x64\dxil.dll" Link="dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
       </ItemGroup>
     </When>
     <When Condition="'$(Platform)' == 'ARM64' OR '$(CI_RUNNER_DOTNET_TEST_PLATFORM)' == 'x64'">
       <ItemGroup>
-        <None Include="Libraries\arm64\dxcompiler.dll"
-              Link="dxcompiler.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
-        <None Include="Libraries\arm64\dxil.dll"
-              Link="dxil.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Libraries\arm64\dxcompiler.dll" Link="dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Libraries\arm64\dxil.dll" Link="dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
       </ItemGroup>
     </When>
 
@@ -57,26 +45,10 @@
          while still not causing any change in the final NuGet package (Link isn't looked up there). -->
     <Otherwise>
       <ItemGroup>
-        <None Include="Libraries\x64\dxcompiler.dll"
-              Link="runtimes\win-x64\native\dxcompiler.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-x64\native" />
-        <None Include="Libraries\x64\dxil.dll"
-              Link="runtimes\win-x64\native\dxil.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-x64\native" />
-        <None Include="Libraries\arm64\dxcompiler.dll"
-              Link="runtimes\win-arm64\native\dxcompiler.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-arm64\native" />
-        <None Include="Libraries\arm64\dxil.dll"
-              Link="runtimes\win-arm64\native\dxil.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest"
-              PackFolder="runtimes\win-arm64\native" />
+        <None Include="Libraries\x64\dxcompiler.dll" Link="runtimes\win-x64\native\dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" PackFolder="runtimes\win-x64\native" />
+        <None Include="Libraries\x64\dxil.dll" Link="runtimes\win-x64\native\dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" PackFolder="runtimes\win-x64\native" />
+        <None Include="Libraries\arm64\dxcompiler.dll" Link="runtimes\win-arm64\native\dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" PackFolder="runtimes\win-arm64\native" />
+        <None Include="Libraries\arm64\dxil.dll" Link="runtimes\win-arm64\native\dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" PackFolder="runtimes\win-arm64\native" />
       </ItemGroup>
     </Otherwise>
   </Choose>

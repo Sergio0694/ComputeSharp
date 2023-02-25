@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using ComputeSharp.Core.Extensions;
+using ComputeSharp.Extensions;
 
 #pragma warning disable IDE0052
 

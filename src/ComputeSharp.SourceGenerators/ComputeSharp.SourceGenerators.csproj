@@ -65,6 +65,7 @@
     <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" />
     <Compile Include="..\ComputeSharp.Dynamic\Attributes\ShaderMethodAttribute.cs" Link="ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" />
     <Compile Include="..\ComputeSharp.Dynamic\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Attributes\Extensions\MethodInfoExtensions.cs" Link="ComputeSharp\Extensions\MethodInfoExtensions.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchAxis.cs" Link="ComputeSharp\Core\Dispatch\DispatchAxis.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="ComputeSharp\Core\Dispatch\DispatchSize.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="ComputeSharp\Core\Dispatch\GridIds.cs" />
@@ -72,7 +73,6 @@
     <Compile Include="..\ComputeSharp\Core\Dispatch\GroupSize.cs" Link="ComputeSharp\Core\Dispatch\GroupSize.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" />
-    <Compile Include="..\ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" Link="ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" />
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" />
