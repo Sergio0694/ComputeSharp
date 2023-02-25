@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -107,20 +107,14 @@ partial class DeviceHelper
                                 riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedData1>(),
                                 ppvObject: d3D12DeviceRemovedExtendedData.GetVoidAddressOf());
 
-                            if (hresult != S.S_OK)
-                            {
-                                ThrowHelper.ThrowWin32Exception(hresult);
-                            }
+                            default(Win32Exception).ThrowIfFailed(hresult);
 
                             D3D12_DRED_AUTO_BREADCRUMBS_OUTPUT1 d3D12DredAutoBreadcrumbsOutput;
 
                             // Get the auto breadcrumbs for the current event
                             hresult = d3D12DeviceRemovedExtendedData.Get()->GetAutoBreadcrumbsOutput1(&d3D12DredAutoBreadcrumbsOutput);
 
-                            if (hresult != S.S_OK)
-                            {
-                                ThrowHelper.ThrowWin32Exception(hresult);
-                            }
+                            default(Win32Exception).ThrowIfFailed(hresult);
 
                             _ = builder.AppendLine("[DRED breadcrumbs START] ===============================");
 

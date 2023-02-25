@@ -18,7 +18,7 @@ internal static class ArgumentNullExceptionExtensions
     [DoesNotReturn]
     public static void Throw(this ArgumentNullException? _, string? parameterName)
     {
-        Throw(parameterName);
+        throw new ArgumentNullException(parameterName);
     }
 
     /// <summary>
