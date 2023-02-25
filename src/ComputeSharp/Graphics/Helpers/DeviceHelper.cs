@@ -1,5 +1,4 @@
 using System;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;
@@ -45,7 +44,7 @@ internal static partial class DeviceHelper
             return GetOrCreateDevice(d3D12Device.Get(), dxgiAdapter.Get(), &dxgiDescription1);
         }
 
-        return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("Failed to retrieve the default device.");
+        return default(NotSupportedException).Throw<GraphicsDevice>();
     }
 
     /// <summary>

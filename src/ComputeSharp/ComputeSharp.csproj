@@ -18,10 +18,6 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0" />
-  </ItemGroup>
-
   <!-- .NET 6 uses the NuGet packages for TerraFX -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.1.3" />

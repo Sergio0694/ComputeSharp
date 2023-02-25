@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 #if NET6_0_OR_GREATER
-using CommunityToolkit.Diagnostics;
 using TerraFX.Interop;
 #endif
 using TerraFX.Interop.Windows;
@@ -49,7 +48,7 @@ unsafe partial class IWICStreamExtensions
     {
 #if NET6_0_OR_GREATER
         /// <inheritdoc/>
-        static Guid* INativeGuid.NativeGuid => (Guid*)ThrowHelper.ThrowNotSupportedException<nint>();
+        static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
 #else
         /// <inheritdoc cref="QueryInterface"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]

@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using CommunityToolkit.Diagnostics;
 #if NET6_0_OR_GREATER
 using TerraFX.Interop;
 #endif
@@ -51,7 +50,7 @@ internal static unsafe partial class IWICStreamExtensions
     {
 #if NET6_0_OR_GREATER
         /// <inheritdoc/>
-        static Guid* INativeGuid.NativeGuid => (Guid*)ThrowHelper.ThrowNotSupportedException<nint>();
+        static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
 #else
         /// <inheritdoc cref="QueryInterface"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -571,7 +570,7 @@ internal static unsafe partial class IWICStreamExtensions
                 }
                 else
                 {
-                    ThrowHelper.ThrowNotSupportedException();
+                    default(NotSupportedException).Throw();
                 }
 
                 pstatstg->type = (uint)STGTY_STREAM;

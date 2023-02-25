@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 
 #pragma warning disable CS0809, CA1065
 
@@ -224,12 +223,9 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <exception cref="ArgumentException">Thrown when <paramref name="destination"/> doesn't match the size of the current <see cref="TextureView3D{T}"/> instance.</exception>
     public void CopyTo(TextureView3D<T> destination)
     {
-        if (destination.width != this.width ||
-            destination.height != this.height ||
-            destination.depth != this.depth)
-        {
-            ThrowHelper.ThrowArgumentException();
-        }
+        default(ArgumentException).ThrowIf(destination.width != this.width, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.height != this.height, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.depth != this.depth, nameof(destination));
 
         if (IsEmpty)
         {
