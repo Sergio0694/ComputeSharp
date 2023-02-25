@@ -2,7 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ComputeSharp.Core.Extensions;
+namespace ComputeSharp.Extensions;
 
 /// <summary>
 /// A <see langword="class"/> that provides extension methods for the <see cref="MethodInfo"/> type.
