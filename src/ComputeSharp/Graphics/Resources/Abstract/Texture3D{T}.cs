@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -198,7 +197,7 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, (long)width * height * depth);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -447,7 +446,7 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, (long)width * height * depth);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();

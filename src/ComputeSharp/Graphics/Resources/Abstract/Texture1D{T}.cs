@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -168,7 +167,7 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsGreaterThanOrEqualTo(size, width);
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, width);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -366,7 +365,7 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
         default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
         default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsGreaterThanOrEqualTo(size, width);
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, width);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
