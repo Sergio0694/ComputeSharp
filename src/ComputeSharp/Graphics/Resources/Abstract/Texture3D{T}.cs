@@ -189,9 +189,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetZ, 0, Depth);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(depth, 1, Depth);
@@ -288,12 +288,12 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(sourceOffsetZ, 0, Depth);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetZ, 0, Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetZ, 0, destination.Depth);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(depth, 1, Depth);
@@ -366,12 +366,12 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// <param name="depth">The depth of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(sourceOffsetZ, 0, Depth);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetZ, 0, Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetZ, 0, destination.Depth);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(depth, 1, Depth);
@@ -438,9 +438,9 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetZ, 0, Depth);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(depth, 1, Depth);
@@ -537,12 +537,12 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// <param name="depth">The depth of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
     {
-        Guard.IsInRange(sourceOffsetX, 0, source.Width);
-        Guard.IsInRange(sourceOffsetY, 0, source.Height);
-        Guard.IsInRange(sourceOffsetZ, 0, source.Depth);
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, source.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetZ, 0, source.Depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetZ, 0, Depth);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(depth, 1, Depth);

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands;
@@ -36,7 +37,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
         Guard.IsBetweenOrEqualTo(count, 0, Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -109,9 +110,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     {
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -157,9 +158,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     {
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, destination.Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -200,7 +201,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
         Guard.IsBetweenOrEqualTo(length, 0, Length);
-        Guard.IsInRange(offset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -277,9 +278,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     {
         Guard.IsBetweenOrEqualTo(count, 0, Length);
         Guard.IsBetweenOrEqualTo(count, 0, source.Length);
-        Guard.IsInRange(sourceOffset, 0, source.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, source.Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();

@@ -177,8 +177,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
@@ -267,10 +267,10 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
@@ -336,10 +336,10 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
@@ -400,8 +400,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
@@ -490,10 +490,10 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, source.Width);
-        Guard.IsInRange(sourceOffsetY, 0, source.Height);
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, source.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsBetweenOrEqualTo(width, 1, source.Width);

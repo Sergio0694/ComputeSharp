@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -61,7 +62,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     internal override unsafe void CopyTo(ref T destination, int offset, int length)
     {
         Guard.IsBetweenOrEqualTo(length, 0, Length);
-        Guard.IsInRange(offset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -89,9 +90,9 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     {
         Guard.IsBetweenOrEqualTo(length, 0, Length);
         Guard.IsBetweenOrEqualTo(length, 0, destination.Length);
-        Guard.IsInRange(sourceOffset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
@@ -126,7 +127,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
         Guard.IsBetweenOrEqualTo(length, 0, Length);
-        Guard.IsInRange(offset, 0, Length);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();

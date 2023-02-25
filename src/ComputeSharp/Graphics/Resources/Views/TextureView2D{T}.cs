@@ -127,8 +127,8 @@ public readonly unsafe ref struct TextureView2D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            Guard.IsInRange(x, 0, this.width);
-            Guard.IsInRange(y, 0, this.height);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(x, 0, this.width);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
 
             return ref *((T*)((byte*)this.pointer + (y * this.strideInBytes)) + x);
         }
@@ -297,7 +297,7 @@ public readonly unsafe ref struct TextureView2D<T>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y)
     {
-        Guard.IsInRange(y, 0, this.height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
 
         return new((byte*)this.pointer + (y * this.strideInBytes), this.width);
     }

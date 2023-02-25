@@ -165,7 +165,7 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="width">The width of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int width)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsGreaterThanOrEqualTo(size, width);
@@ -247,8 +247,8 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="width">The width of the memory area to copy.</param>
     internal void CopyTo(Texture1D<T> destination, int sourceOffsetX, int destinationOffsetX, int width)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
@@ -307,8 +307,8 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="width">The width of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture1D<T> destination, int sourceOffsetX, int destinationOffsetX, int width)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
@@ -363,7 +363,7 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="width">The width of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int width)
     {
-        Guard.IsInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsGreaterThanOrEqualTo(size, width);
@@ -445,8 +445,8 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="width">The width of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture1D<T> source, int sourceOffsetX, int destinationOffsetX, int width)
     {
-        Guard.IsInRange(sourceOffsetX, 0, source.Width);
-        Guard.IsInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
         Guard.IsBetweenOrEqualTo(width, 1, Width);
         Guard.IsBetweenOrEqualTo(width, 1, source.Width);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
