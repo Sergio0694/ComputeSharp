@@ -45,8 +45,8 @@ public static class Texture2DExtensions
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsGreaterThanOrEqualTo(width, 0);
-        Guard.IsGreaterThanOrEqualTo(height, 0);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(width);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(height);
 
         T[,] data = new T[height, width];
 

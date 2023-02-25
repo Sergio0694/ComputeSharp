@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 #if !NET6_0_OR_GREATER
 using GC = ComputeSharp.NetStandard.GC;
@@ -39,7 +38,7 @@ public static class BufferExtensions
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsGreaterThanOrEqualTo(count, 0);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(count);
 
         T[] data = GC.AllocateUninitializedArray<T>(count);
 

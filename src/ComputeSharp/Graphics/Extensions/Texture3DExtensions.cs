@@ -49,9 +49,9 @@ public static class Texture3DExtensions
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsGreaterThanOrEqualTo(width, 0);
-        Guard.IsGreaterThanOrEqualTo(height, 0);
-        Guard.IsGreaterThanOrEqualTo(depth, 0);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(width);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(height);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(depth);
 
         T[,,] data = new T[depth, height, width];
 

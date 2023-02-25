@@ -55,7 +55,7 @@ internal static class ArgumentNullExceptionExtensions
 
     /// <inheritdoc cref="Throw(ArgumentNullException?, string?)"/>
     [DoesNotReturn]
-    public static void Throw(string? parameterName)
+    private static void Throw(string? parameterName)
     {
         throw new ArgumentNullException(parameterName);
     }

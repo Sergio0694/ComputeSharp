@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp;
@@ -40,7 +39,7 @@ public static class Texture1DExtensions
         where T : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(source);
-        Guard.IsGreaterThanOrEqualTo(width, 0);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(width);
 
         T[] data = new T[width];
 
