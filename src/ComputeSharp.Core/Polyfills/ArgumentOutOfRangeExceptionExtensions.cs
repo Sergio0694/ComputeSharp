@@ -14,6 +14,7 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
     /// <param name="value">The argument to validate as zero.</param>
     /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfNotZero(this ArgumentOutOfRangeException? _, int value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value != 0)
@@ -59,6 +60,7 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
     /// <param name="other">The value to compare with <paramref name="value"/>.</param>
     /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfGreaterThan(this ArgumentOutOfRangeException? _, int value, int other, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value > other)
@@ -74,6 +76,7 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
     /// <param name="other">The value to compare with <paramref name="value"/>.</param>
     /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfLessThan(this ArgumentOutOfRangeException? _, int value, int other, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value < other)
@@ -89,6 +92,7 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
     /// <param name="other">The value to compare with <paramref name="value"/>.</param>
     /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ThrowIfLessThan(this ArgumentOutOfRangeException? _, long value, long other, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value < other)

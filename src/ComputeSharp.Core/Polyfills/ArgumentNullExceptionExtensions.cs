@@ -14,7 +14,6 @@ internal static class ArgumentNullExceptionExtensions
     /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
     /// <param name="parameterName">The name of the parameter to report in the exception.</param>
     /// <exception cref="ArgumentNullException">Thrown with <paramref name="parameterName"/>.</exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [DoesNotReturn]
     public static void Throw(this ArgumentNullException? _, string? parameterName)
     {
