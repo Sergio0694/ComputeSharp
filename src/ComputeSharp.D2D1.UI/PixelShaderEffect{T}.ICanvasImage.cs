@@ -1,7 +1,11 @@
 using System.Numerics;
-using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Helpers;
+#else
+using ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 using ComputeSharp.Interop;
 using TerraFX.Interop.Windows;
 using Windows.Foundation;
@@ -33,19 +37,15 @@ unsafe partial class PixelShaderEffect<T>
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
-        using ComPtr<IUnknown> resourceCreatorUnknown = default;
         using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator> resourceCreatorAbi = default;
 
         // Get the ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator object from the input interface
-        resourceCreatorUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(resourceCreator));
-        resourceCreatorUnknown.CopyTo(resourceCreatorAbi.GetAddressOf()).Assert();
+        RcwMarshaller.QueryInterface(resourceCreator, resourceCreatorAbi.GetAddressOf()).Assert();
 
-        using ComPtr<IUnknown> canvasImageInteropUnknown = default;
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
         // Get the ICanvasImageInterop object from the current instance
-        canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(this));
-        canvasImageInteropUnknown.CopyTo(canvasImageInterop.GetAddressOf()).Assert();
+        RcwMarshaller.QueryInterface(this, canvasImageInterop.GetAddressOf()).Assert();
 
         Rect bounds;
 

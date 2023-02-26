@@ -1,8 +1,12 @@
 using System;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Helpers;
+#else
+using ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -35,7 +39,7 @@ unsafe partial class CanvasEffect
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-        GetCanvasImageInterop(canvasImageInterop.GetAddressOf());
+        RcwMarshaller.QueryInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
         return canvasImageInterop.Get()->GetDevice(device, type);
     }
@@ -51,7 +55,7 @@ unsafe partial class CanvasEffect
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-        GetCanvasImageInterop(canvasImageInterop.GetAddressOf());
+        RcwMarshaller.QueryInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
         return canvasImageInterop.Get()->GetD2DImage(device, deviceContext, flags, targetDpi, realizeDpi, ppImage);
     }
@@ -78,18 +82,5 @@ unsafe partial class CanvasEffect
 
             return this.canvasImage;
         }
-    }
-
-    /// <summary>
-    /// Gets the <see cref="ICanvasImageInterop"/> object currently in use.
-    /// </summary>
-    /// <param name="canvasImageInterop">A pointer to the <see cref="ICanvasImageInterop"/> object currently in use.</param>
-    private void GetCanvasImageInterop(ICanvasImageInterop** canvasImageInterop)
-    {
-        using ComPtr<IUnknown> canvasImageUnknown = default;
-
-        canvasImageUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(GetCanvasImage()));
-
-        canvasImageUnknown.CopyTo(canvasImageInterop).Assert();
     }
 }
