@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -79,8 +78,8 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     {
         this.referenceTracker = new ReferenceTracker(this);
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
@@ -177,13 +176,13 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ref T destination, int size, int sourceOffsetX, int sourceOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, (long)width * height);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -267,18 +266,18 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -336,18 +335,18 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to copy.</param>
     internal void CopyTo(ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, Width);
-        Guard.IsInRange(sourceOffsetY, 0, Height);
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
-        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
-        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, destination.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, destination.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, Height, nameof(sourceOffsetY));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -400,13 +399,13 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(ref T source, int size, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfLessThan(size, (long)width * height);
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();
@@ -490,18 +489,18 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <param name="height">The height of the memory area to write to.</param>
     internal void CopyFrom(UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
     {
-        Guard.IsInRange(sourceOffsetX, 0, source.Width);
-        Guard.IsInRange(sourceOffsetY, 0, source.Height);
-        Guard.IsInRange(destinationOffsetX, 0, Width);
-        Guard.IsInRange(destinationOffsetY, 0, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, Width);
-        Guard.IsBetweenOrEqualTo(height, 1, Height);
-        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
-        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
-        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
-        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
-        Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
-        Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetX, 0, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(sourceOffsetY, 0, source.Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetX, 0, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(destinationOffsetY, 0, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, Height);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, source.Width);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, source.Height);
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetX + width, Width, nameof(destinationOffsetX));
+        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(destinationOffsetY + height, Height, nameof(destinationOffsetY));
 
         using ReferenceTracker.Lease _0 = GraphicsDevice.GetReferenceTracker().GetLease();
         using ReferenceTracker.Lease _1 = GetReferenceTracker().GetLease();

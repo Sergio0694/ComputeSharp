@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />

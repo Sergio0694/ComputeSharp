@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands.Interop;
 #if NET6_0_OR_GREATER
 using ComputeSharp.Core.Extensions;
@@ -440,7 +439,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
                 this.copyCommandListPool.Rent(this.d3D12Device.Get(), null, out d3D12CommandList, out d3D12CommandAllocator);
                 break;
             default:
-                _ = ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
+                default(ArgumentException).Throw(nameof(d3D12CommandListType));
                 d3D12CommandList = null;
                 d3D12CommandAllocator = null;
                 break;

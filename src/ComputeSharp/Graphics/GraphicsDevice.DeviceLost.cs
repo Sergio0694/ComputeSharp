@@ -35,7 +35,7 @@ unsafe partial class GraphicsDevice
         // For the same reason, this method doesn't have to worry about raising the event either.
         if (Volatile.Read(ref Unsafe.As<HRESULT, int>(ref this.deviceRemovedReason)) != S.S_OK)
         {
-            static void Throw(object self) => throw new InvalidOperationException($"The device \"{self}\" has been lost and can no longer be used.");
+            static void Throw(object self) => throw new InvalidOperationException($"""The device "{self}" has been lost and can no longer be used.""");
 
             Throw(this);
         }

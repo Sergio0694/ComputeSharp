@@ -1,7 +1,7 @@
+using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands.Interop;
@@ -75,12 +75,12 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
 
         if (resourceType == ResourceType.Constant)
         {
-            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
+            default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
         }
         else
         {
             // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-            Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
+            default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();

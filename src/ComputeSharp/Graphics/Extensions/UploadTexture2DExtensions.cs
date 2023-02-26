@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 
@@ -20,8 +19,8 @@ public static class UploadTexture2DExtensions
     public static void CopyTo<T>(this UploadTexture2D<T> source, Texture2D<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, 0, 0, 0, 0, source.Width, source.Height);
     }
@@ -39,8 +38,8 @@ public static class UploadTexture2DExtensions
     public static void CopyTo<T>(this UploadTexture2D<T> source, Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
@@ -60,8 +59,8 @@ public static class UploadTexture2DExtensions
     public static void CopyTo<T>(this UploadTexture2D<T> source, Texture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
@@ -75,8 +74,8 @@ public static class UploadTexture2DExtensions
     public static void Load<T>(this UploadTexture2D<T> texture, string filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
-        Guard.IsNotNull(filename);
+        default(ArgumentNullException).ThrowIfNull(texture);
+        default(ArgumentNullException).ThrowIfNull(filename);
 
         texture.Load(filename.AsSpan());
     }
@@ -90,7 +89,7 @@ public static class UploadTexture2DExtensions
     public static void Load<T>(this UploadTexture2D<T> texture, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         WICHelper.Instance.LoadTexture(texture.View, filename);
     }
@@ -105,7 +104,7 @@ public static class UploadTexture2DExtensions
     public static void Load<T>(this UploadTexture2D<T> texture, ReadOnlySpan<byte> span)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         WICHelper.Instance.LoadTexture(texture.View, span);
     }
@@ -119,8 +118,8 @@ public static class UploadTexture2DExtensions
     public static void Load<T>(this UploadTexture2D<T> texture, Stream stream)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
-        Guard.IsNotNull(stream);
+        default(ArgumentNullException).ThrowIfNull(texture);
+        default(ArgumentNullException).ThrowIfNull(stream);
 
         WICHelper.Instance.LoadTexture(texture.View, stream);
     }

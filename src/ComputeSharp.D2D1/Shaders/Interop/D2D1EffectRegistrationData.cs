@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using ComputeSharp.D2D1.Helpers;
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -94,31 +93,31 @@ public static class D2D1EffectRegistrationData
                 case LoadingResult.Success:
                     return data;
                 case LoadingResult.EmptyBuffer:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob is empty.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob is empty.");
                     break;
                 case LoadingResult.BufferTooShort:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob is too short.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob is too short.");
                     break;
                 case LoadingResult.BufferTooLong:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob is too long.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob is too long.");
                     break;
                 case LoadingResult.MismatchedBlobVersionId:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The blob version id from the input blob does not match.");
+                    default(ArgumentException).Throw(nameof(blob), "The blob version id from the input blob does not match.");
                     break;
                 case LoadingResult.InvalidNumberOfInputs:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob has an invalid number of inputs.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob has an invalid number of inputs.");
                     break;
                 case LoadingResult.InvalidPropertyXml:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The property XML value in the input blob is invalid.");
+                    default(ArgumentException).Throw(nameof(blob), "The property XML value in the input blob is invalid.");
                     break;
                 case LoadingResult.InvalidNumberOfBindings:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob declares an invalid number of bindings.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob declares an invalid number of bindings.");
                     break;
                 case LoadingResult.InvalidBindingPropertyName:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob has an invalid property name for one of its property bindings.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob has an invalid property name for one of its property bindings.");
                     break;
                 default:
-                    ThrowHelper.ThrowArgumentException(nameof(blob), "The input blob failed to be loaded for an unknown reason.");
+                    default(ArgumentException).Throw(nameof(blob), "The input blob failed to be loaded for an unknown reason.");
                     break;
             }
 

@@ -1,5 +1,4 @@
 using System;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -94,10 +93,7 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     {
         lock (this.d3D12DescriptorHandlePairs)
         {
-            if (this.size <= 0)
-            {
-                ThrowHelper.ThrowInvalidOperationException("There are no descriptor handles left in the pool.");
-            }
+            default(InvalidOperationException).ThrowIf(this.size <= 0);
 
             d3D12ResourceDescriptorHandles = this.d3D12DescriptorHandlePairs[this.head++];
 
@@ -118,10 +114,7 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     {
         lock (this.d3D12DescriptorHandlePairs)
         {
-            if (this.size >= DescriptorsPerHeap)
-            {
-                ThrowHelper.ThrowInvalidOperationException("The pool of descriptor heaps is already full.");
-            }
+            default(InvalidOperationException).ThrowIf(this.size >= DescriptorsPerHeap);
 
             this.d3D12DescriptorHandlePairs[this.tail++] = d3D12ResourceDescriptorHandles;
 

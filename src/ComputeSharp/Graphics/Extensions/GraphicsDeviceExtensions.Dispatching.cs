@@ -1,5 +1,5 @@
+using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Interop;
 
 namespace ComputeSharp;
@@ -19,7 +19,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -37,7 +37,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -56,7 +56,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -78,7 +78,7 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
         where T : struct, IComputeShader
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -96,8 +96,8 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -116,8 +116,8 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ComputeContext context = device.CreateComputeContext();
 
@@ -149,7 +149,7 @@ public static partial class GraphicsDeviceExtensions
     /// </remarks>
     public static ComputeContext CreateComputeContext(this GraphicsDevice device)
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 

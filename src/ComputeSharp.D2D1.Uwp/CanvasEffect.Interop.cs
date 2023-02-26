@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
@@ -69,10 +68,7 @@ unsafe partial class CanvasEffect
     {
         lock (this.lockObject)
         {
-            if (this.isDisposed)
-            {
-                ThrowObjectDisposedException();
-            }
+            default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
             this.canvasImage ??= CreateCanvasImage();
 
@@ -98,14 +94,5 @@ unsafe partial class CanvasEffect
         canvasImageUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(GetCanvasImage()));
 
         canvasImageUnknown.CopyTo(canvasImageInterop).Assert();
-    }
-
-    /// <summary>
-    /// Throws a new <see cref="ObjectDisposedException"/>.
-    /// </summary>
-    [DoesNotReturn]
-    public void ThrowObjectDisposedException()
-    {
-        throw new ObjectDisposedException(ToString(), "The current effect has been disposed and can no longer be used.");
     }
 }

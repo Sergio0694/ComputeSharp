@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 
 #pragma warning disable CS0809, CA1065
 
@@ -152,9 +151,9 @@ public readonly unsafe ref struct TextureView3D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            Guard.IsInRange(x, 0, this.width);
-            Guard.IsInRange(y, 0, this.height);
-            Guard.IsInRange(z, 0, this.depth);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(x, 0, this.width);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(z, 0, this.depth);
 
             return ref *((T*)((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes)) + x);
         }
@@ -224,12 +223,9 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <exception cref="ArgumentException">Thrown when <paramref name="destination"/> doesn't match the size of the current <see cref="TextureView3D{T}"/> instance.</exception>
     public void CopyTo(TextureView3D<T> destination)
     {
-        if (destination.width != this.width ||
-            destination.height != this.height ||
-            destination.depth != this.depth)
-        {
-            ThrowHelper.ThrowArgumentException();
-        }
+        default(ArgumentException).ThrowIf(destination.width != this.width, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.height != this.height, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.depth != this.depth, nameof(destination));
 
         if (IsEmpty)
         {
@@ -336,8 +332,8 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y, int z)
     {
-        Guard.IsInRange(y, 0, this.height);
-        Guard.IsInRange(z, 0, this.depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(z, 0, this.depth);
 
         return new((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes), this.width);
     }
@@ -350,7 +346,7 @@ public readonly unsafe ref struct TextureView3D<T>
     /// <returns>The resulting row <see cref="TextureView2D{T}"/>.</returns>
     public TextureView2D<T> GetDepthView(int z)
     {
-        Guard.IsInRange(z, 0, this.depth);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(z, 0, this.depth);
 
         return new(
             (T*)((byte*)this.pointer + (z * this.height * this.strideInBytes)),

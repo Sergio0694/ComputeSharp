@@ -1,5 +1,5 @@
+using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -59,8 +59,8 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
     {
         this.referenceTracker = new ReferenceTracker(this);
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 

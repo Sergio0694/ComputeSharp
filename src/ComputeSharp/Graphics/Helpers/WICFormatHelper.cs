@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using Path = System.IO.Path;
@@ -33,7 +32,7 @@ internal static class WICFormatHelper
         if (typeof(T) == typeof(R8)) return GUID.GUID_WICPixelFormat8bppGray;
         if (typeof(T) == typeof(R16)) return GUID.GUID_WICPixelFormat16bppGray;
 
-        return ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+        return default(ArgumentException).Throw<Guid>(nameof(T));
     }
 
     /// <summary>
@@ -53,7 +52,7 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = GUID.GUID_WICPixelFormat32bppBGRA;
             else if (typeof(T) == typeof(R8)) intermediateFormat = GUID.GUID_WICPixelFormat24bppBGR;
             else if (typeof(T) == typeof(R16)) intermediateFormat = GUID.GUID_WICPixelFormat24bppBGR;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else if (containerFormat == GUID.GUID_ContainerFormatPng)
         {
@@ -62,7 +61,7 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = default;
             else if (typeof(T) == typeof(R8)) intermediateFormat = default;
             else if (typeof(T) == typeof(R16)) intermediateFormat = GUID.GUID_WICPixelFormat8bppGray;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else if (containerFormat == GUID.GUID_ContainerFormatJpeg)
         {
@@ -71,7 +70,7 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = GUID.GUID_WICPixelFormat24bppBGR;
             else if (typeof(T) == typeof(R8)) intermediateFormat = default;
             else if (typeof(T) == typeof(R16)) intermediateFormat = GUID.GUID_WICPixelFormat8bppGray;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else if (containerFormat == GUID.GUID_ContainerFormatWmp)
         {
@@ -80,7 +79,7 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = default;
             else if (typeof(T) == typeof(R8)) intermediateFormat = default;
             else if (typeof(T) == typeof(R16)) intermediateFormat = default;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else if (containerFormat == GUID.GUID_ContainerFormatTiff)
         {
@@ -89,7 +88,7 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = default;
             else if (typeof(T) == typeof(R8)) intermediateFormat = default;
             else if (typeof(T) == typeof(R16)) intermediateFormat = default;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else if (containerFormat == GUID.GUID_ContainerFormatDds)
         {
@@ -98,11 +97,11 @@ internal static class WICFormatHelper
             else if (typeof(T) == typeof(Rgba64)) intermediateFormat = GUID.GUID_WICPixelFormat32bppBGRA;
             else if (typeof(T) == typeof(R8)) intermediateFormat = GUID.GUID_WICPixelFormat32bppBGRA;
             else if (typeof(T) == typeof(R16)) intermediateFormat = GUID.GUID_WICPixelFormat32bppBGRA;
-            else intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid texture type.");
+            else intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(T));
         }
         else
         {
-            intermediateFormat = ThrowHelper.ThrowArgumentException<Guid>("Invalid container format.");
+            intermediateFormat = default(ArgumentException).Throw<Guid>(nameof(containerFormat));
         }
 
         return intermediateFormat != default;
@@ -128,7 +127,7 @@ internal static class WICFormatHelper
             ".wmp" => GUID.GUID_ContainerFormatWmp,
             ".tiff" => GUID.GUID_ContainerFormatTiff,
             ".dds" => GUID.GUID_ContainerFormatDds,
-            _ => ThrowHelper.ThrowArgumentException<Guid>("Invalid filename."),
+            _ => default(ArgumentException).Throw<Guid>(nameof(filename))
         };
     }
 
@@ -148,7 +147,7 @@ internal static class WICFormatHelper
             ImageFormat.Wmp => GUID.GUID_ContainerFormatWmp,
             ImageFormat.Tiff => GUID.GUID_ContainerFormatTiff,
             ImageFormat.Dds => GUID.GUID_ContainerFormatDds,
-            _ => ThrowHelper.ThrowArgumentException<Guid>("Invalid format."),
+            _ => default(ArgumentException).Throw<Guid>(nameof(format))
         };
     }
 }

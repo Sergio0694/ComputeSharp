@@ -22,6 +22,7 @@
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Polyfills\Win32ExceptionExtensions.cs" Link="ComputeSharp.Core\Polyfills\Win32ExceptionExtensions.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.cs" />

@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -31,10 +30,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
-        if (d2D1Factory1 is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Factory1), "The input ID2D1Factory1 object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Factory1);
 
         effectId = default;
 
@@ -475,15 +471,8 @@ public static unsafe class D2D1PixelShaderEffect
     public static void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
-        if (d2D1DeviceContext is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1DeviceContext), "The input ID2D1DeviceContext object cannot be null.");
-        }
-
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The pointer to the target ID2D1Effect result cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1DeviceContext);
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
         fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
         {
@@ -504,10 +493,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static void SetConstantBufferForD2D1Effect<T>(void* d2D1Effect, in T shader)
         where T : unmanaged, ID2D1PixelShader
     {
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1DeviceContext object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
         D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
 
@@ -524,15 +510,8 @@ public static unsafe class D2D1PixelShaderEffect
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int resourceTextureIndex)
     {
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
-        }
-
-        if (resourceTextureManager is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(resourceTextureManager), "The input ID2D1ResourceTextureManager object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
+        default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
             index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
@@ -551,15 +530,8 @@ public static unsafe class D2D1PixelShaderEffect
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int resourceTextureIndex)
     {
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
-        }
-
-        if (resourceTextureManager is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(resourceTextureManager), "The input D2D1ResourceTextureManager object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
+        default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
 
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
 
@@ -581,15 +553,8 @@ public static unsafe class D2D1PixelShaderEffect
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetTransformMapperForD2D1Effect(void* d2D1Effect, void* transformMapper)
     {
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
-        }
-
-        if (transformMapper is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input ID2D1TransformMapper object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
+        default(ArgumentNullException).ThrowIfNull(transformMapper);
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
             index: D2D1PixelShaderEffectProperty.TransformMapper,
@@ -608,15 +573,8 @@ public static unsafe class D2D1PixelShaderEffect
     public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1TransformMapper<T> transformMapper)
         where T : unmanaged, ID2D1PixelShader
     {
-        if (d2D1Effect is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(d2D1Effect), "The input ID2D1Effect object cannot be null.");
-        }
-
-        if (transformMapper is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(transformMapper), "The input D2D1TransformMapper<T> object cannot be null.");
-        }
+        default(ArgumentNullException).ThrowIfNull(d2D1Effect);
+        default(ArgumentNullException).ThrowIfNull(transformMapper);
 
         using ComPtr<ID2D1TransformMapper> transformMapper2 = default;
 

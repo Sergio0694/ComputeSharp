@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -72,17 +72,26 @@ partial class DeviceHelper
                             // If the device removal reason is available, also include that in the output message
                             if (result != S.S_OK)
                             {
-                                string deviceRemovalReason = (int)result switch
+                                string? deviceRemovalReason = (int)result switch
                                 {
                                     DXGI.DXGI_ERROR_DEVICE_HUNG => nameof(DXGI.DXGI_ERROR_DEVICE_HUNG),
                                     DXGI.DXGI_ERROR_DEVICE_REMOVED => nameof(DXGI.DXGI_ERROR_DEVICE_REMOVED),
                                     DXGI.DXGI_ERROR_DEVICE_RESET => nameof(DXGI.DXGI_ERROR_DEVICE_RESET),
                                     DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR => nameof(DXGI.DXGI_ERROR_DRIVER_INTERNAL_ERROR),
                                     DXGI.DXGI_ERROR_INVALID_CALL => nameof(DXGI.DXGI_ERROR_INVALID_CALL),
-                                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>("Invalid GetDeviceRemovedReason HRESULT.")
+                                    _ => null
                                 };
 
-                                _ = builder.AppendLine($"[Reason]: {deviceRemovalReason}");
+                                // If it is a known HRESULT (this should always be the case), print the nicely formatted value
+                                if (deviceRemovalReason is not null)
+                                {
+                                    _ = builder.AppendLine($"[Reason]: {deviceRemovalReason}");
+                                }
+                                else
+                                {
+                                    // Otherwise just format the HRESULT as a hexadecimal number
+                                    _ = builder.AppendLine($"[Reason]: 0x{(int)result:X8}");
+                                }
                             }
                         }
 
@@ -98,20 +107,14 @@ partial class DeviceHelper
                                 riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedData1>(),
                                 ppvObject: d3D12DeviceRemovedExtendedData.GetVoidAddressOf());
 
-                            if (hresult != S.S_OK)
-                            {
-                                ThrowHelper.ThrowWin32Exception(hresult);
-                            }
+                            default(Win32Exception).ThrowIfFailed(hresult);
 
                             D3D12_DRED_AUTO_BREADCRUMBS_OUTPUT1 d3D12DredAutoBreadcrumbsOutput;
 
                             // Get the auto breadcrumbs for the current event
                             hresult = d3D12DeviceRemovedExtendedData.Get()->GetAutoBreadcrumbsOutput1(&d3D12DredAutoBreadcrumbsOutput);
 
-                            if (hresult != S.S_OK)
-                            {
-                                ThrowHelper.ThrowWin32Exception(hresult);
-                            }
+                            default(Win32Exception).ThrowIfFailed(hresult);
 
                             _ = builder.AppendLine("[DRED breadcrumbs START] ===============================");
 

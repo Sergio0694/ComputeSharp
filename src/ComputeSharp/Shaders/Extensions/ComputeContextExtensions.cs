@@ -1,5 +1,5 @@
+using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
@@ -23,7 +23,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        Guard.IsNotNull(buffer);
+        default(ArgumentNullException).ThrowIfNull(buffer);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -39,7 +39,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -55,7 +55,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -71,7 +71,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -89,7 +89,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -107,7 +107,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -125,7 +125,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -141,7 +141,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -157,7 +157,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -173,7 +173,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -189,7 +189,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        Guard.IsNotNull(buffer);
+        default(ArgumentNullException).ThrowIfNull(buffer);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = buffer.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice);
 
@@ -205,7 +205,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture1D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
@@ -221,7 +221,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
@@ -237,7 +237,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
@@ -255,7 +255,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -273,7 +273,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -291,7 +291,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -307,7 +307,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -325,7 +325,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -343,7 +343,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -364,7 +364,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -383,7 +383,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -402,7 +402,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -419,7 +419,7 @@ public static class ComputeContextExtensions
     public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture1D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -442,7 +442,7 @@ public static class ComputeContextExtensions
     public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -465,7 +465,7 @@ public static class ComputeContextExtensions
     public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -549,7 +549,7 @@ public static class ComputeContextExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         context.Run(texture, ref Unsafe.AsRef(default(T)));
     }
@@ -566,7 +566,7 @@ public static class ComputeContextExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         context.Run(texture, ref Unsafe.AsRef(in shader));
     }
@@ -579,7 +579,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<float> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -596,7 +596,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float2> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -613,7 +613,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float3> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -630,7 +630,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture1D<Float4> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -651,7 +651,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -668,7 +668,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<float> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -685,7 +685,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float2> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -702,7 +702,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float3> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -719,7 +719,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float4> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -740,7 +740,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -757,7 +757,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<float> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -774,7 +774,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float2> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -791,7 +791,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float3> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -808,7 +808,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float4> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 
@@ -829,7 +829,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture);
+        default(ArgumentNullException).ThrowIfNull(texture);
 
         using ReferenceTracker.Lease lease = default;
 

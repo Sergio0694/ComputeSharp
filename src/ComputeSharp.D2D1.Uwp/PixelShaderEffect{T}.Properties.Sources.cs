@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Collections;
@@ -50,13 +49,13 @@ partial class PixelShaderEffect<T>
         {
             get
             {
-                ValidateIndex(index);
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
 
                 return Owner.GetSource(index);
             }
             set
             {
-                ValidateIndex(index);
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
 
                 Owner.SetSource(value, index);
             }
@@ -95,30 +94,30 @@ partial class PixelShaderEffect<T>
         bool ICollection.IsSynchronized => true;
 
         /// <inheritdoc/>
-        object ICollection.SyncRoot => throw new NotSupportedException("ICollection.SyncRoot is not supported for SourceCollection.");
+        object ICollection.SyncRoot => default(NotSupportedException).Throw<object>();
 
         /// <inheritdoc/>
         void ICollection<IGraphicsEffectSource?>.Add(IGraphicsEffectSource? item)
         {
-            throw new NotSupportedException("ICollection<T>.Add is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         int IList.Add(object value)
         {
-            throw new NotSupportedException("IList.Add is not supported for SourceCollection.");
+            return default(NotSupportedException).Throw<int>();
         }
 
         /// <inheritdoc/>
         void ICollection<IGraphicsEffectSource?>.Clear()
         {
-            throw new NotSupportedException("ICollection<T>.Clear is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.Clear()
         {
-            throw new NotSupportedException("IList.Clear is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
@@ -172,51 +171,37 @@ partial class PixelShaderEffect<T>
         /// <inheritdoc/>
         void IList<IGraphicsEffectSource?>.Insert(int index, IGraphicsEffectSource? item)
         {
-            throw new NotSupportedException("IList<T>.Insert is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.Insert(int index, object value)
         {
-            throw new NotSupportedException("IList.Insert is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         bool ICollection<IGraphicsEffectSource?>.Remove(IGraphicsEffectSource? item)
         {
-            throw new NotSupportedException("ICollection<T>.Remove is not supported for SourceCollection.");
+            return default(NotSupportedException).Throw<bool>();
         }
 
         /// <inheritdoc/>
         void IList.Remove(object value)
         {
-            throw new NotSupportedException("IList.Remove is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList<IGraphicsEffectSource?>.RemoveAt(int index)
         {
-            throw new NotSupportedException("IList<T>.RemoveAt is not supported for SourceCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.RemoveAt(int index)
         {
-            throw new NotSupportedException("IList.RemoveAt is not supported for SourceCollection.");
-        }
-
-        /// <summary>
-        /// Validates the input index for <see cref="this[int]"/>.
-        /// </summary>
-        /// <param name="index">The index to validate.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is out of range.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ValidateIndex(int index)
-        {
-            if ((uint)index >= D2D1PixelShader.GetInputCount<T>())
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "The input index is not a valid source index for the current effect.");
-            }
+            default(NotSupportedException).Throw();
         }
 
         /// <summary>

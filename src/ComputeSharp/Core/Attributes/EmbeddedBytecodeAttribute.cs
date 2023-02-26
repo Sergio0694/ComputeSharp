@@ -1,7 +1,4 @@
 using System;
-#if !SOURCE_GENERATOR
-using CommunityToolkit.Diagnostics;
-#endif
 
 namespace ComputeSharp;
 
@@ -64,7 +61,7 @@ public sealed class EmbeddedBytecodeAttribute : Attribute
             DispatchAxis.XZ => (8, 1, 8),
             DispatchAxis.YZ => (1, 8, 8),
             DispatchAxis.XYZ => (4, 4, 4),
-            _ => ThrowHelper.ThrowArgumentException<(int, int, int)>(nameof(dispatchAxis), "Invalid dispatch axis value.")
+            _ => default(ArgumentException).Throw<(int, int, int)>(nameof(dispatchAxis))
         };
 #endif
     }

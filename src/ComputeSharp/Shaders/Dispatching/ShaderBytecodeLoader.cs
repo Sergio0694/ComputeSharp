@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Models;
 using TerraFX.Interop.DirectX;
@@ -27,26 +26,16 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ICachedShader GetCachedShader()
     {
-        if (this.cachedShader is not ICachedShader cachedShader)
-        {
-            return ThrowHelper.ThrowInvalidOperationException<ICachedShader>("The shader has not been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(this.cachedShader is null);
 
-        return cachedShader;
+        return this.cachedShader;
     }
 
     /// <inheritdoc/>
     public unsafe void LoadDynamicBytecode(IntPtr handle)
     {
-        if (this.cachedShader is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
-
-        if (handle == IntPtr.Zero)
-        {
-            ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
-        }
+        default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
+        default(NotSupportedException).ThrowIf(handle == IntPtr.Zero);
 
         this.cachedShader = new ICachedShader.Dynamic((IDxcBlob*)handle);
     }
@@ -55,10 +44,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LoadEmbeddedBytecode(ReadOnlySpan<byte> bytecode)
     {
-        if (this.cachedShader is not null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
-        }
+        default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
 
         this.cachedShader = new ICachedShader.Embedded(bytecode);
     }

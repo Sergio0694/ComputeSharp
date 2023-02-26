@@ -26,8 +26,10 @@
   -->
   <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT)' == 'true'">
     <PublishAot>true</PublishAot>
+    <DebuggerSupport>false</DebuggerSupport>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
     <IlcDisableReflection>true</IlcDisableReflection>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>

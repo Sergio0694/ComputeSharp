@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
 #if !NET6_0_OR_GREATER
 using GC = ComputeSharp.NetStandard.GC;
@@ -22,7 +21,7 @@ public static class BufferExtensions
     public static T[] ToArray<T>(this Buffer<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return source.ToArray(0, source.Length);
     }
@@ -38,8 +37,8 @@ public static class BufferExtensions
     public static T[] ToArray<T>(this Buffer<T> source, int offset, int count)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsGreaterThanOrEqualTo(count, 0);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(count);
 
         T[] data = GC.AllocateUninitializedArray<T>(count);
 
@@ -57,8 +56,8 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, T[] destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination.AsSpan(), 0);
     }
@@ -75,8 +74,8 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, T[] destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         Span<T> span = destination.AsSpan(destinationOffset, count);
 
@@ -92,7 +91,7 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, Span<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, 0);
     }
@@ -107,7 +106,7 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, Span<T> destination, int sourceOffset)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(ref MemoryMarshal.GetReference(destination), sourceOffset, destination.Length);
     }
@@ -121,8 +120,8 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, Buffer<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, 0, 0, source.Length);
     }
@@ -139,8 +138,8 @@ public static class BufferExtensions
     public static void CopyTo<T>(this Buffer<T> source, Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
-        Guard.IsNotNull(source);
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
@@ -154,8 +153,8 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         destination.CopyFrom(source.AsSpan(), 0);
     }
@@ -172,8 +171,8 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, T[] source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlySpan<T> span = source.AsSpan(sourceOffset, count);
 
@@ -189,7 +188,7 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(source, 0);
     }
@@ -204,7 +203,7 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, ReadOnlySpan<T> source, int destinationOffset)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
+        default(ArgumentNullException).ThrowIfNull(destination);
 
         destination.CopyFrom(ref MemoryMarshal.GetReference(source), destinationOffset, source.Length);
     }
@@ -218,8 +217,8 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, Buffer<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, 0, 0, source.Length);
     }
@@ -236,8 +235,8 @@ public static class BufferExtensions
     public static void CopyFrom<T>(this Buffer<T> destination, Buffer<T> source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(destination);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }

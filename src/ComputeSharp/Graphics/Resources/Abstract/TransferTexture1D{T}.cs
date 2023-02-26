@@ -1,7 +1,6 @@
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -60,7 +59,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
     {
         this.referenceTracker = new ReferenceTracker(this);
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
@@ -197,7 +196,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
         /// <inheritdoc/>
         public override MemoryHandle Pin(int elementIndex = 0)
         {
-            Guard.IsEqualTo(elementIndex, 0);
+            default(ArgumentOutOfRangeException).ThrowIfNotZero(elementIndex);
 
             using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 

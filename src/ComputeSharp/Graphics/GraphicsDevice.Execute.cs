@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
@@ -59,7 +59,7 @@ unsafe partial class GraphicsDevice
                 d3D12Fence = this.d3D12CopyFence;
                 d3D12FenceValue = ref this.nextD3D12CopyFenceValue;
                 break;
-            default: ThrowHelper.ThrowArgumentException(); return;
+            default: default(ArgumentException).Throw(nameof(commandList)); return;
         }
 
         // Execute the command list
@@ -215,7 +215,7 @@ unsafe partial class GraphicsDevice
 
             NativeMemory.Free(callbackContext);
 
-            ThrowHelper.ThrowWin32Exception("Failed to register the compute context completion callback.");
+            default(Win32Exception).Throw(E.E_FAIL);
         }
 
         return waitForFenceValueTaskSource;

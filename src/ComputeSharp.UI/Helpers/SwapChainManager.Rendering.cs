@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Interop;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp.Extensions;
@@ -28,7 +27,7 @@ partial class SwapChainManager<TOwner>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
     public async void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
-        Guard.IsNotNull(shaderRunner);
+        default(ArgumentNullException).ThrowIfNull(shaderRunner);
 
         using (await this.setupSemaphore.LockAsync())
         {

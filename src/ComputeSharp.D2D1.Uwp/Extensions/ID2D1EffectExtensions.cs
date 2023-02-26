@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
@@ -158,9 +157,7 @@ internal static unsafe class ID2D1EffectExtensions
         }
 
         // There was no way to retrieve the correct managed wrapper
-        ThrowHelper.ThrowInvalidOperationException("Cannot retrieve a D2D1ResourceTextureManager instance wrapping a native object that was set externally.");
-
-        return null;
+        return default(InvalidOperationException).Throw<D2D1ResourceTextureManager?>();
     }
 
     /// <summary>

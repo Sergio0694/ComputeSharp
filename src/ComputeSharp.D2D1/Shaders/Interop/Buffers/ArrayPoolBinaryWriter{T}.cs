@@ -57,10 +57,7 @@ internal ref struct ArrayPoolBufferWriter<T>
         {
             T[]? array = this.array;
 
-            if (array is null)
-            {
-                ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
-            }
+            default(ObjectDisposedException).ThrowIfNull(array);
 
             return array.AsSpan(0, this.index);
         }
@@ -70,28 +67,14 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// Advances the current writer.
     /// </summary>
     /// <param name="count">The amount to advance.</param>
-    /// <remarks>
-    /// <para>Must be called after <see cref="GetSpan"/>.</para>
-    /// <para>This and the methods below are <see langword="readonly"/> to enable mutating extensions.</para>
-    /// </remarks>
+    /// <remarks>Must be called after <see cref="GetSpan"/>.</remarks>
     internal void Advance(int count)
     {
         T[]? array = this.array;
 
-        if (array is null)
-        {
-            ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
-        }
-
-        if (count < 0)
-        {
-            ArrayPoolBufferWriterHelpers.ThrowArgumentOutOfRangeExceptionForNegativeCount();
-        }
-
-        if (this.index > array.Length - count)
-        {
-            ArrayPoolBufferWriterHelpers.ThrowArgumentExceptionForAdvancedTooFar();
-        }
+        default(ObjectDisposedException).ThrowIfNull(array);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(count);
+        default(ArgumentException).ThrowIf(this.index > array.Length - count);
 
         this.index += count;
     }
@@ -118,15 +101,8 @@ internal ref struct ArrayPoolBufferWriter<T>
     {
         T[]? array = this.array;
 
-        if (array is null)
-        {
-            ArrayPoolBufferWriterHelpers.ThrowObjectDisposedException();
-        }
-
-        if (sizeHint < 0)
-        {
-            ArrayPoolBufferWriterHelpers.ThrowArgumentOutOfRangeExceptionForNegativeSizeHint();
-        }
+        default(ObjectDisposedException).ThrowIfNull(array);
+        default(ArgumentOutOfRangeException).ThrowIfNegative(sizeHint);
 
         if (sizeHint == 0)
         {
@@ -180,47 +156,5 @@ internal ref struct ArrayPoolBufferWriter<T>
         this.array = null;
 
         ArrayPool<T>.Shared.Return(array);
-    }
-}
-
-/// <summary>
-/// Private helpers for <see cref="ArrayPoolBufferWriter{T}"/>.
-/// </summary>
-file static class ArrayPoolBufferWriterHelpers
-{
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeExceptionForNegativeCount()
-    {
-        throw new ArgumentOutOfRangeException("count", "The count can't be a negative value.");
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when the size hint is negative.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowArgumentOutOfRangeExceptionForNegativeSizeHint()
-    {
-        throw new ArgumentOutOfRangeException("sizeHint", "The size hint can't be a negative value.");
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> when the requested count is negative.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowArgumentExceptionForAdvancedTooFar()
-    {
-        throw new ArgumentException("The buffer writer has advanced too far.");
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ObjectDisposedException"/> when the array is <see langword="null"/>.
-    /// </summary>
-    [DoesNotReturn]
-    public static void ThrowObjectDisposedException()
-    {
-        throw new ObjectDisposedException("The current buffer has already been disposed.");
     }
 }

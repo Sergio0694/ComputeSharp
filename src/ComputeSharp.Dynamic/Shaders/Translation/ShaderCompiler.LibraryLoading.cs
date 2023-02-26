@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation;
@@ -31,7 +30,7 @@ unsafe partial class ShaderCompiler
             {
                 Architecture.X64 => "win-x64",
                 Architecture.Arm64 => "win-arm64",
-                _ => ThrowHelper.ThrowNotSupportedException<string>("Invalid process architecture.")
+                _ => default(NotSupportedException).Throw<string>()
             };
 
             // Test whether the native libraries are present in the same folder of the executable

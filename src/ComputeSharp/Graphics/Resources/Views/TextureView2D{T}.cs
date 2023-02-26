@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 
 #pragma warning disable CS0809, CA1065
 
@@ -127,8 +126,8 @@ public readonly unsafe ref struct TextureView2D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            Guard.IsInRange(x, 0, this.width);
-            Guard.IsInRange(y, 0, this.height);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(x, 0, this.width);
+            default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
 
             return ref *((T*)((byte*)this.pointer + (y * this.strideInBytes)) + x);
         }
@@ -177,7 +176,7 @@ public readonly unsafe ref struct TextureView2D<T>
         }
         else
         {
-            Guard.HasSizeGreaterThanOrEqualTo(destination, Length);
+            default(ArgumentException).ThrowIf(destination.Length != Length, nameof(destination));
 
             for (int y = 0, j = 0; y < this.height; y++, j += this.width)
             {
@@ -194,11 +193,8 @@ public readonly unsafe ref struct TextureView2D<T>
     /// <exception cref="ArgumentException">Thrown when <paramref name="destination"/> doesn't match the size of the current <see cref="TextureView2D{T}"/> instance.</exception>
     public void CopyTo(TextureView2D<T> destination)
     {
-        if (destination.width != this.width ||
-            destination.height != this.height)
-        {
-            ThrowHelper.ThrowArgumentException();
-        }
+        default(ArgumentException).ThrowIf(destination.width != this.width, nameof(destination));
+        default(ArgumentException).ThrowIf(destination.height != this.height, nameof(destination));
 
         if (IsEmpty)
         {
@@ -297,7 +293,7 @@ public readonly unsafe ref struct TextureView2D<T>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y)
     {
-        Guard.IsInRange(y, 0, this.height);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(y, 0, this.height);
 
         return new((byte*)this.pointer + (y * this.strideInBytes), this.width);
     }

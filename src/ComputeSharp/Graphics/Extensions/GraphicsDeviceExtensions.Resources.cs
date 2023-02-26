@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 
@@ -22,7 +21,7 @@ partial class GraphicsDeviceExtensions
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, length, allocationMode);
     }
@@ -38,8 +37,8 @@ partial class GraphicsDeviceExtensions
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateConstantBuffer<T>(source.AsSpan());
     }
@@ -55,7 +54,7 @@ partial class GraphicsDeviceExtensions
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ConstantBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
@@ -75,8 +74,8 @@ partial class GraphicsDeviceExtensions
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ConstantBuffer<T> constantBuffer = new(device, source.Length, AllocationMode.Default);
 
@@ -97,7 +96,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, length, allocationMode);
     }
@@ -113,8 +112,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyBuffer<T>(source.AsSpan());
     }
@@ -130,7 +129,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
@@ -150,8 +149,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
@@ -171,7 +170,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -187,8 +186,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture1D<T>(source.AsSpan(0, width));
     }
@@ -205,8 +204,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source, int offset, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture1D<T>(source.AsSpan(offset, width));
     }
@@ -221,8 +220,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -241,7 +240,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture1D<T> AllocateReadOnlyTexture1D<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -263,7 +262,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -281,8 +280,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture1D<T, TPixel>(source.AsSpan(0, width));
     }
@@ -301,8 +300,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture1D<T, TPixel>(source.AsSpan(offset, width));
     }
@@ -319,8 +318,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -341,7 +340,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -362,7 +361,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -379,8 +378,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture2D<T>(source.AsSpan(), width, height);
     }
@@ -398,8 +397,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture2D<T>(source.AsSpan(offset), width, height);
     }
@@ -414,8 +413,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[,] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -436,7 +435,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
@@ -459,7 +458,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -478,8 +477,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture2D<T, TPixel>(source.AsSpan(), width, height);
     }
@@ -499,8 +498,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture2D<T, TPixel>(source.AsSpan(offset), width, height);
     }
@@ -517,8 +516,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -541,7 +540,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
@@ -563,7 +562,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -581,8 +580,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture3D<T>(source.AsSpan(), width, height, depth);
     }
@@ -601,8 +600,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture3D<T>(source.AsSpan(offset), width, height, depth);
     }
@@ -621,8 +620,8 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -644,7 +643,7 @@ partial class GraphicsDeviceExtensions
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
@@ -668,7 +667,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -688,8 +687,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture3D<T, TPixel>(source.AsSpan(), width, height, depth);
     }
@@ -710,8 +709,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadOnlyTexture3D<T, TPixel>(source.AsSpan(offset), width, height, depth);
     }
@@ -732,8 +731,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadOnlyTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -757,7 +756,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadOnlyTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
@@ -778,7 +777,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, length, allocationMode);
     }
@@ -794,8 +793,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteBuffer<T>(source.AsSpan());
     }
@@ -811,7 +810,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
@@ -831,8 +830,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
@@ -852,7 +851,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -868,8 +867,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture1D<T>(source.AsSpan(0, width));
     }
@@ -886,8 +885,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source, int offset, int width)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture1D<T>(source.AsSpan(offset, width));
     }
@@ -902,8 +901,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -922,7 +921,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture1D<T> AllocateReadWriteTexture1D<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture1D<T> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -944,7 +943,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -962,8 +961,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture1D<T, TPixel>(source.AsSpan(0, width));
     }
@@ -982,8 +981,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture1D<T, TPixel>(source.AsSpan(offset, width));
     }
@@ -1000,8 +999,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -1022,7 +1021,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture1D<T, TPixel> texture = new(device, source.Length, AllocationMode.Default);
 
@@ -1043,7 +1042,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -1060,8 +1059,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture2D<T>(source.AsSpan(), width, height);
     }
@@ -1079,8 +1078,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture2D<T>(source.AsSpan(offset), width, height);
     }
@@ -1095,8 +1094,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[,] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -1117,7 +1116,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
@@ -1140,7 +1139,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -1159,8 +1158,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture2D<T, TPixel>(source.AsSpan(), width, height);
     }
@@ -1180,8 +1179,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture2D<T, TPixel>(source.AsSpan(offset), width, height);
     }
@@ -1198,8 +1197,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -1222,7 +1221,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
@@ -1244,7 +1243,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -1262,8 +1261,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture3D<T>(source.AsSpan(), width, height, depth);
     }
@@ -1282,8 +1281,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture3D<T>(source.AsSpan(offset), width, height, depth);
     }
@@ -1302,8 +1301,8 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -1325,7 +1324,7 @@ partial class GraphicsDeviceExtensions
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
@@ -1349,7 +1348,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -1369,8 +1368,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture3D<T, TPixel>(source.AsSpan(), width, height, depth);
     }
@@ -1391,8 +1390,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         return device.AllocateReadWriteTexture3D<T, TPixel>(source.AsSpan(offset), width, height, depth);
     }
@@ -1413,8 +1412,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(source);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(source);
 
         ReadWriteTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
@@ -1438,7 +1437,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         ReadWriteTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
@@ -1459,7 +1458,7 @@ partial class GraphicsDeviceExtensions
     public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, length, allocationMode);
     }
@@ -1475,7 +1474,7 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture1D<T> AllocateUploadTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -1492,7 +1491,7 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture2D<T> AllocateUploadTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -1510,7 +1509,7 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture3D<T> AllocateUploadTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -1527,7 +1526,7 @@ partial class GraphicsDeviceExtensions
     public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, length, allocationMode);
     }
@@ -1543,7 +1542,7 @@ partial class GraphicsDeviceExtensions
     public static ReadBackTexture1D<T> AllocateReadBackTexture1D<T>(this GraphicsDevice device, int width, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, allocationMode);
     }
@@ -1560,7 +1559,7 @@ partial class GraphicsDeviceExtensions
     public static ReadBackTexture2D<T> AllocateReadBackTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, allocationMode);
     }
@@ -1578,7 +1577,7 @@ partial class GraphicsDeviceExtensions
     public static ReadBackTexture3D<T> AllocateReadBackTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return new(device, width, height, depth, allocationMode);
     }
@@ -1595,8 +1594,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(filename);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(filename);
 
         return device.LoadReadOnlyTexture2D<T, TPixel>(filename.AsSpan());
     }
@@ -1613,7 +1612,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
 
@@ -1636,7 +1635,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
 
@@ -1659,8 +1658,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(stream);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(stream);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, stream);
 
@@ -1683,8 +1682,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(filename);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(filename);
 
         return device.LoadReadWriteTexture2D<T, TPixel>(filename.AsSpan());
     }
@@ -1701,7 +1700,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
 
@@ -1724,7 +1723,7 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
 
@@ -1747,8 +1746,8 @@ partial class GraphicsDeviceExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(stream);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(stream);
 
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, stream);
 
@@ -1769,8 +1768,8 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, string filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(filename);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(filename);
 
         return device.LoadUploadTexture2D<T>(filename.AsSpan());
     }
@@ -1785,7 +1784,7 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return WICHelper.Instance.LoadTexture<T>(device, filename);
     }
@@ -1800,7 +1799,7 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<byte> span)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
+        default(ArgumentNullException).ThrowIfNull(device);
 
         return WICHelper.Instance.LoadTexture<T>(device, span);
     }
@@ -1815,8 +1814,8 @@ partial class GraphicsDeviceExtensions
     public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, Stream stream)
         where T : unmanaged
     {
-        Guard.IsNotNull(device);
-        Guard.IsNotNull(stream);
+        default(ArgumentNullException).ThrowIfNull(device);
+        default(ArgumentNullException).ThrowIfNull(stream);
 
         return WICHelper.Instance.LoadTexture<T>(device, stream);
     }

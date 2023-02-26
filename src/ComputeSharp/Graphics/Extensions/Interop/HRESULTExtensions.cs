@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -38,10 +37,7 @@ internal static class HRESULTExtensions
         // single branch can then be inlined without bloating the code size in the caller.
         if (!Configuration.IsDebugOutputEnabled)
         {
-            if (result < 0)
-            {
-                ThrowHelper.ThrowWin32Exception(result);
-            }
+            default(Win32Exception).ThrowIfFailed(result);
         }
         else
         {
@@ -51,15 +47,11 @@ internal static class HRESULTExtensions
             {
                 bool hasErrorsOrWarnings = DeviceHelper.FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings();
 
-                if (result < 0)
-                {
-                    ThrowHelper.ThrowWin32Exception(result);
-                }
+                // First, check whether the current call has failed, and report that
+                default(Win32Exception).ThrowIfFailed(result);
 
-                if (hasErrorsOrWarnings)
-                {
-                    ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue.");
-                }
+                // If that's not the case, then throw if any errors are present in the info queue
+                default(Win32Exception).ThrowIf(hasErrorsOrWarnings, E.E_FAIL);
             }
 
             AssertWithDebugInfo(result);

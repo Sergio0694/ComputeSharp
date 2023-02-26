@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Helpers;
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.Interop;
@@ -147,10 +146,7 @@ unsafe partial class PixelShaderEffect<T>
                 }
 
                 // If unrealization isn't requested for failures, just throw
-                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-                {
-                    ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is not valid (it must implement ICanvasImageInterop).");
-                }
+                default(InvalidOperationException).ThrowIf((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE);
 
                 Unrealize(value, index);
 
@@ -184,10 +180,7 @@ unsafe partial class PixelShaderEffect<T>
             // on that specific source will just fail during the recursive traversal, but that couldn't be checked from here anyway.
             if (sourceCanvasDeviceType == WIN2D_GET_DEVICE_ASSOCIATION_TYPE_CREATION_DEVICE && !this.canvasDevice.Get()->IsSameInstance(sourceCanvasDevice.Get()))
             {
-                if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
-                {
-                    ThrowHelper.ThrowArgumentException(nameof(value), "The effect source is realized on a different canvas device.");
-                }
+                default(InvalidOperationException).ThrowIf((flags & WIN2D_GET_D2D_IMAGE_FLAGS_UNREALIZE_ON_FAILURE) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE);
 
                 Unrealize(value, index);
 
@@ -220,7 +213,7 @@ unsafe partial class PixelShaderEffect<T>
         else if ((flags & WIN2D_GET_D2D_IMAGE_FLAGS_ALLOW_NULL_EFFECT_INPUTS) == WIN2D_GET_D2D_IMAGE_FLAGS_NONE)
         {
             // If the source is null and this is not explicitly allowed, the invocation is not valid
-            ThrowHelper.ThrowArgumentNullException(nameof(value), "The effect source cannot be null.");
+            default(ArgumentNullException).Throw(nameof(value));
         }
 
         // Save the managed wrapper and realized image

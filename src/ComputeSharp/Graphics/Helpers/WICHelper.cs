@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.Windows;
@@ -305,8 +304,8 @@ internal sealed unsafe class WICHelper
         wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
 
         // Validate the target texture has the right size
-        Guard.IsEqualTo((uint)texture.Width, width, nameof(texture.Width));
-        Guard.IsEqualTo((uint)texture.Height, height, nameof(texture.Height));
+        default(ArgumentException).ThrowIf((uint)texture.Width != width, nameof(texture.Width));
+        default(ArgumentException).ThrowIf((uint)texture.Height != height, nameof(texture.Height));
 
         Guid wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>();
         Guid wicActualPixelFormatGuid;

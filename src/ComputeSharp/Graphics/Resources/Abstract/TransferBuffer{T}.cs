@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using CommunityToolkit.Diagnostics;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -58,7 +57,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         this.referenceTracker = new ReferenceTracker(this);
 
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
-        Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
+        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
         using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
 
@@ -192,7 +191,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
         /// <inheritdoc/>
         public override MemoryHandle Pin(int elementIndex = 0)
         {
-            Guard.IsEqualTo(elementIndex, 0);
+            default(ArgumentOutOfRangeException).ThrowIfNotZero(elementIndex);
 
             using ReferenceTracker.Lease _0 = this.buffer.GetReferenceTracker().GetLease();
 

@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using CommunityToolkit.Diagnostics;
 
 namespace ComputeSharp.Sample;
 
@@ -19,12 +18,6 @@ internal static class Formatting
     /// <param name="name">The name of the matrix to print.</param>
     public static void PrintMatrix(float[] array, int width, int height, string name)
     {
-        Guard.IsNotNull(array);
-        Guard.IsGreaterThan(width, 0);
-        Guard.IsGreaterThan(height, 0);
-        Guard.IsEqualTo(array.Length, (long)width * height, nameof(array));
-        Guard.IsNotNullOrEmpty(name);
-
         int pad = 48 - name.Length;
         string title = $"{new string('=', pad / 2)} {name} {new string('=', (pad + 1) / 2)}";
 
