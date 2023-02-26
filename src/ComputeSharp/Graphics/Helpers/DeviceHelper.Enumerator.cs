@@ -206,7 +206,7 @@ partial class DeviceHelper
             /// <inheritdoc/>
             public void Reset()
             {
-                throw new NotSupportedException();
+                default(NotSupportedException).Throw();
             }
 
             /// <inheritdoc/>

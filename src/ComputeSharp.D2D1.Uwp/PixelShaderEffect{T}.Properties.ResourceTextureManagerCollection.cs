@@ -108,30 +108,30 @@ partial class PixelShaderEffect<T>
         bool ICollection.IsSynchronized => true;
 
         /// <inheritdoc/>
-        object ICollection.SyncRoot => throw new NotSupportedException("ICollection.SyncRoot is not supported for ResourceTextureManagerCollection.");
+        object ICollection.SyncRoot => default(NotSupportedException).Throw<object>();
 
         /// <inheritdoc/>
         void ICollection<D2D1ResourceTextureManager?>.Add(D2D1ResourceTextureManager? item)
         {
-            throw new NotSupportedException("ICollection<T>.Add is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         int IList.Add(object value)
         {
-            throw new NotSupportedException("IList.Add is not supported for ResourceTextureManagerCollection.");
+            return default(NotSupportedException).Throw<int>();
         }
 
         /// <inheritdoc/>
         void ICollection<D2D1ResourceTextureManager?>.Clear()
         {
-            throw new NotSupportedException("ICollection<T>.Clear is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.Clear()
         {
-            throw new NotSupportedException("IList.Clear is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
@@ -185,37 +185,37 @@ partial class PixelShaderEffect<T>
         /// <inheritdoc/>
         void IList<D2D1ResourceTextureManager?>.Insert(int index, D2D1ResourceTextureManager? item)
         {
-            throw new NotSupportedException("IList<T>.Insert is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.Insert(int index, object value)
         {
-            throw new NotSupportedException("IList.Insert is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         bool ICollection<D2D1ResourceTextureManager?>.Remove(D2D1ResourceTextureManager? item)
         {
-            throw new NotSupportedException("ICollection<T>.Remove is not supported for ResourceTextureManagerCollection.");
+            return default(NotSupportedException).Throw<bool>();
         }
 
         /// <inheritdoc/>
         void IList.Remove(object value)
         {
-            throw new NotSupportedException("IList.Remove is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList<D2D1ResourceTextureManager?>.RemoveAt(int index)
         {
-            throw new NotSupportedException("IList<T>.RemoveAt is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <inheritdoc/>
         void IList.RemoveAt(int index)
         {
-            throw new NotSupportedException("IList.RemoveAt is not supported for ResourceTextureManagerCollection.");
+            default(NotSupportedException).Throw();
         }
 
         /// <summary>

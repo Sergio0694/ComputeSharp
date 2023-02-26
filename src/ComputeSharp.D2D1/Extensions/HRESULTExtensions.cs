@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
@@ -21,10 +20,7 @@ internal static class HRESULTExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(this HRESULT result)
     {
-        if ((int)result < 0)
-        {
-            ThrowWin32Exception(result);
-        }
+        default(Win32Exception).ThrowIfFailed((int)result);
     }
 
     /// <summary>
@@ -35,19 +31,6 @@ internal static class HRESULTExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(this int result)
     {
-        if (result < 0)
-        {
-            ThrowWin32Exception(result);
-        }
-    }
-
-    /// <summary>
-    /// Throws a <see cref="Win32Exception"/>.
-    /// </summary>
-    /// <param name="result">The input return code.</param>
-    [DoesNotReturn]
-    private static void ThrowWin32Exception(int result)
-    {
-        throw new Win32Exception(result);
+        default(Win32Exception).ThrowIfFailed(result);
     }
 }

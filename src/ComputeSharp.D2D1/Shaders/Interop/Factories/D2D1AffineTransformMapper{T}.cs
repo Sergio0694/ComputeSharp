@@ -95,7 +95,9 @@ internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Ma
         {
             static void Throw()
             {
-                throw new ArgumentException("The input transform matrix can't be inverted, so it can't be used for a transform mapper.");
+                // The parameter name is "matrix" and it's passed by users from D2D1TransformMapperFactory<T>.Transform.
+                // Additionally, we explicitly don't use a throw helper here to avoid loading the two string literals.
+                throw new ArgumentException("The input transform matrix can't be inverted, so it can't be used for a transform mapper.", "matrix");
             }
 
             Throw();
