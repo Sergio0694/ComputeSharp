@@ -3,6 +3,11 @@ using System.Buffers;
 using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+#if WINDOWS_UWP
+using ComputeSharp.D2D1.Uwp.Helpers;
+#else
+using ComputeSharp.D2D1.WinUI.Helpers;
+#endif
 using ComputeSharp.Interop;
 using TerraFX.Interop.Windows;
 using Windows.Foundation;
@@ -93,12 +98,10 @@ unsafe partial class PixelShaderEffect<T>
 
         Rect result;
 
-        using ComPtr<IUnknown> canvasEffectUnknown = default;
         using ComPtr<ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect> canvasEffectAbi = default;
 
         // Get the ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect object from the input interface
-        canvasEffectUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(sourceEffect));
-        canvasEffectUnknown.CopyTo(canvasEffectAbi.GetAddressOf()).Assert();
+        RcwMarshaller.QueryInterface(sourceEffect, canvasEffectAbi.GetAddressOf()).Assert();
 
         Win2D.GetRequiredSourceRectanglesForICanvasImageInterop(
             resourceCreator: resourceCreatorWithDpi.Get(),
@@ -152,10 +155,7 @@ unsafe partial class PixelShaderEffect<T>
             // Get the underlying ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect object for each input effect
             for (int i = 0; i < sourceEffects.Length; i++)
             {
-                using ComPtr<IUnknown> canvasEffectUnknown = default;
-
-                canvasEffectUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(sourceEffects[i]));
-                canvasEffectUnknown.CopyTo(canvasEffects[i].GetAddressOf()).Assert();
+                RcwMarshaller.QueryInterface(sourceEffects[i], canvasEffects[i].GetAddressOf()).Assert();
             }
 
             Rect[] result = new Rect[sourceEffects.Length];
@@ -209,16 +209,10 @@ unsafe partial class PixelShaderEffect<T>
         ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi** resourceCreatorWithDpi,
         ICanvasImageInterop** canvasImageInterop)
     {
-        using ComPtr<IUnknown> resourceCreatorUnknown = default;
-
         // Get the ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi object from the input interface
-        resourceCreatorUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(resourceCreator));
-        resourceCreatorUnknown.CopyTo(resourceCreatorWithDpi).Assert();
-
-        using ComPtr<IUnknown> canvasImageInteropUnknown = default;
+        RcwMarshaller.QueryInterface(resourceCreator, resourceCreatorWithDpi).Assert();
 
         // Get the ICanvasImageInterop object from the current instance
-        canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(this));
-        canvasImageInteropUnknown.CopyTo(canvasImageInterop).Assert();
+        RcwMarshaller.QueryInterface(this, canvasImageInterop).Assert();
     }
 }

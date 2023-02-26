@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ID2D1DeviceContextExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ID2D1EffectExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IUnknownExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\RcwMarshaller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1ImmutableArrayResourceTextureDescriptionsLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1IndexBitmaskResourceTextureDescriptionsLoader.cs" />

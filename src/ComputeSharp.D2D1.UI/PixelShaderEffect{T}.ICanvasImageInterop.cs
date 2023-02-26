@@ -7,8 +7,10 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Interop.Effects;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
+using ComputeSharp.D2D1.Uwp.Helpers;
 #else
 using ComputeSharp.D2D1.WinUI.Extensions;
+using ComputeSharp.D2D1.WinUI.Helpers;
 #endif
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
@@ -361,14 +363,10 @@ unsafe partial class PixelShaderEffect<T>
             }
             else
             {
-                using ComPtr<IUnknown> canvasImageInteropUnknown = default;
                 using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-                // Get the underlying IUnknown object for the current source
-                canvasImageInteropUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(source));
-
                 // Convert to ICanvasImageInterop (this must always succeed, and throws if it doesn't)
-                canvasImageInteropUnknown.CopyTo(canvasImageInterop.GetAddressOf()).Assert();
+                RcwMarshaller.QueryInterface(source, canvasImageInterop.GetAddressOf()).Assert();
 
                 using ComPtr<ID2D1Image> d2D1Image = default;
 
