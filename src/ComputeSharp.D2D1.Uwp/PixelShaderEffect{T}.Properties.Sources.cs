@@ -208,7 +208,7 @@ partial class PixelShaderEffect<T>
         /// Gets the collection of valid indices for the current effect.
         /// </summary>
         /// <returns>The collection of valid indices for the current effect.</returns>
-        private static unsafe ImmutableArray<int> GetIndices()
+        private static ImmutableArray<int> GetIndices()
         {
             int inputCount = D2D1PixelShader.GetInputCount<T>();
 
@@ -224,7 +224,7 @@ partial class PixelShaderEffect<T>
                 indices[i] = i;
             }
 
-            return *(ImmutableArray<int>*)&indices;
+            return Unsafe.As<int[], ImmutableArray<int>>(ref indices);
         }
     }
 }
