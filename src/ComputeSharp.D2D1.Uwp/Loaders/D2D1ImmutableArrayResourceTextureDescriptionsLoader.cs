@@ -30,7 +30,7 @@ internal struct D2D1ImmutableArrayResourceTextureDescriptionsLoader : ID2D1Resou
     }
 
     /// <inheritdoc/>
-    unsafe void ID2D1ResourceTextureDescriptionsLoader.LoadResourceTextureDescriptions(ReadOnlySpan<byte> data)
+    void ID2D1ResourceTextureDescriptionsLoader.LoadResourceTextureDescriptions(ReadOnlySpan<byte> data)
     {
         if (data.IsEmpty)
         {
@@ -47,7 +47,7 @@ internal struct D2D1ImmutableArrayResourceTextureDescriptionsLoader : ID2D1Resou
                 indices[i] = descriptions[i].Index;
             }
 
-            this.indices = *(ImmutableArray<int>*)&indices;
+            this.indices = Unsafe.As<int[], ImmutableArray<int>>(ref indices);
         }
     }
 }
