@@ -3,7 +3,7 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.D2D1.xml</DocumentationFile>
-    <SupportedOSVersion>windows6.1</SupportedOSVersion>
+    <!-- <SupportedOSVersion>windows6.1</SupportedOSVersion> -->
   </PropertyGroup>
 
   <ItemGroup>

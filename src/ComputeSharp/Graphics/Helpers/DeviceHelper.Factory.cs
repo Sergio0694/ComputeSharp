@@ -72,7 +72,7 @@ partial class DeviceHelper
 
             if (!DevicesCache.TryGetValue(luid, out GraphicsDevice? device))
             {
-                device = new GraphicsDevice(d3D12Device, dxgiAdapter, dxgiDescription1);
+                device = new D3D12GraphicsDevice(d3D12Device, dxgiAdapter, dxgiDescription1);
 
                 DevicesCache.Add(luid, device);
 

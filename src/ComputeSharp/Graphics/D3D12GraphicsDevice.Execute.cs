@@ -16,7 +16,7 @@ using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-unsafe partial class GraphicsDevice
+unsafe partial class D3D12GraphicsDevice
 {
 #if !NET6_0_OR_GREATER
     /// <summary>
@@ -175,7 +175,7 @@ unsafe partial class GraphicsDevice
     /// <remarks>This method is only supported for compute operations.</remarks>
     private static WaitForFenceValueTaskSource WaitForFenceAsync(
         ulong d3D12FenceValue,
-        GraphicsDevice device,
+        D3D12GraphicsDevice device,
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList,
         ID3D12CommandAllocator* d3D12CommandAllocator)
     {
@@ -232,7 +232,7 @@ unsafe partial class GraphicsDevice
         CallbackContext* callbackContext = (CallbackContext*)pContext;
 
         WaitForFenceValueTaskSource waitForFenceValueTaskSource = Unsafe.As<WaitForFenceValueTaskSource>(callbackContext->WaitForFenceValueTaskSourceHandle.Target)!;
-        GraphicsDevice device = Unsafe.As<GraphicsDevice>(callbackContext->GraphicsDeviceHandle.Target)!;
+        D3D12GraphicsDevice device = Unsafe.As<D3D12GraphicsDevice>(callbackContext->GraphicsDeviceHandle.Target)!;
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList = callbackContext->D3D12GraphicsCommandList;
         ID3D12CommandAllocator* d3D12CommandAllocator = callbackContext->D3D12CommandAllocator;
         HANDLE eventHandle = callbackContext->EventHandle;

@@ -10,7 +10,7 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-unsafe partial class GraphicsDevice
+unsafe partial class D3D12GraphicsDevice
 {
 #if !NET6_0_OR_GREATER
     /// <summary>
@@ -24,7 +24,7 @@ unsafe partial class GraphicsDevice
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if the current device has been lost.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal void ThrowIfDeviceLost()
+    internal override void ThrowIfDeviceLost()
     {
         // This method is called as a check before performing any operations. In order to minimize overhead,
         // the GetDeviceRemovedReason() method is not called here, and the local field is just used instead.

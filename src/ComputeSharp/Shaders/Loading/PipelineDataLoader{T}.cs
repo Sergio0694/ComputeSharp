@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Dispatching;
-using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.__Internals;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 using ComputeSharp.Shaders.Models;
 
 #pragma warning disable CS0618
@@ -85,21 +81,7 @@ internal static class PipelineDataLoader<T>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static unsafe void CreatePipelineData(GraphicsDevice device, ICachedShader shaderData, out PipelineData pipelineData)
     {
-        using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
-
-        ShaderDispatchMetadataLoader metadataLoader = new(device.D3D12Device);
-
-        Unsafe.SkipInit(out T shader);
-
-        shader.LoadDispatchMetadata(ref metadataLoader, out *(IntPtr*)&d3D12RootSignature);
-
-        using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.D3D12ShaderBytecode);
-
-        pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
-
+        device.CreatePipelineData(out pipelineData);
         shaderData.CachedPipelines.Add(device, pipelineData);
-
-        // Register the newly created pipeline data to enable early disposal
-        device.RegisterPipelineData(pipelineData);
     }
 }
