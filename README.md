@@ -1,4 +1,5 @@
 ![](https://user-images.githubusercontent.com/10199417/108635546-3512ea00-7480-11eb-8172-99bc59f4eb6f.png)
+<br/>
 [![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/ComputeSharp/actions) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
 
 # What is it? 🚀
@@ -10,6 +11,17 @@
 Since a video is worth a thousand words, here's a showcase of some pixel shaders (originally from [shadertoy.com](https://www.shadertoy.com/)), ported from GLSL to C# and running with **ComputeSharp** in a WinUI 3 sample app. You can use this library to create all sorts of things from scientific simulations, to animated backgrounds, audio visualizers and more!
 
 https://user-images.githubusercontent.com/10199417/126792509-c11feb11-a609-4fab-86b3-426d43df6d90.mp4
+
+# Where is it being used? ✈️
+
+**ComputeSharp** is production ready, and it's being used by several projects running on millions of devices!
+
+Here's a showcase of some of them:
+
+| Screenshot | Project |
+| ------ | ------  |
+| ![image](https://user-images.githubusercontent.com/10199417/223806227-3a08e65c-8387-4b44-90f4-5dda46a9a02c.png) | The [**Microsoft Store**](https://apps.microsoft.com/) is a first party application that ships with Windows and allows users to discover, search and download digital content such as apps, games, movies and more. Starting from the January 2023 release, it is using ComputeSharp.D2D1.Uwp to leverage custom effects and pixel shaders to power several graphics elements in the application, such as the new app cards. |
+| ![image](https://user-images.githubusercontent.com/10199417/223808546-1f6ecbf1-920d-407a-8385-d894fef0719c.png) | [**Paint.NET**](https://getpaint.net/) is an image and photo editing application for Windows. Starting from its 5.0 release, it is using ComputeSharp.D2D1 as a core component of its architecture (in fact, ComputeSharp.D2D1 was initially developed specifically to support Paint.NET!). The library is used both internally to accelerate dozens of built-in effects using custom D2D1 pixel shaders, as well as for external plugins. |
 
 # Try out the sample app! 💻
 
