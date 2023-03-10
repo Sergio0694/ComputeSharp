@@ -36,15 +36,7 @@ internal static class SyntaxNodeExtensions
 
         // If the base types list is empty, check if the type is partial. If it is, it means
         // that there could be another partial declaration with a non-empty base types list.
-        foreach (SyntaxToken modifier in typeDeclaration.Modifiers)
-        {
-            if (modifier.IsKind(SyntaxKind.PartialKeyword))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return typeDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword);
     }
 
     /// <summary>
