@@ -1,4 +1,3 @@
-using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ComputeSharp.SwapChain.Core.Shaders;
 #if WINDOWS_UWP
@@ -17,10 +16,10 @@ public sealed partial class ShaderRunnerViewModel : ObservableObject
     /// <summary>
     /// Creates a new <see cref="ShaderRunnerViewModel"/> instance.
     /// </summary>
-    /// <param name="shaderType">The <see cref="Type"/> instance for the actual shader to execute.</param>
+    /// <param name="shaderType">The name of the shader type to execute.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to execute.</param>
     /// <param name="d2D1ShaderRunner">The <see cref="ID2D1ShaderRunner"/> instance to execute.</param>
-    public ShaderRunnerViewModel(Type shaderType, IShaderRunner shaderRunner, ID2D1ShaderRunner d2D1ShaderRunner)
+    public ShaderRunnerViewModel(string shaderType, IShaderRunner shaderRunner, ID2D1ShaderRunner d2D1ShaderRunner)
     {
         ShaderType = shaderType;
         ShaderRunner = shaderRunner;
@@ -28,9 +27,9 @@ public sealed partial class ShaderRunnerViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Gets the <see cref="Type"/> instance for the actual shader to execute.
+    /// Gets the name of the shader type to execute.
     /// </summary>
-    public Type ShaderType { get; }
+    public string ShaderType { get; }
 
     /// <summary>
     /// Gets the <see cref="IShaderRunner"/> instance to execute.

@@ -93,40 +93,40 @@ public sealed partial class MainViewModel : ObservableObject
     public IReadOnlyList<ShaderRunnerViewModel> ComputeShaderOptions { get; } = new ShaderRunnerViewModel[]
     {
         new(
-            typeof(ColorfulInfinity),
+            nameof(ColorfulInfinity),
             new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(FractalTiling),
+            nameof(FractalTiling),
             new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.FractalTiling>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(MengerJourney),
+            nameof(MengerJourney),
             new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.MengerJourney>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(Octagrams),
+            nameof(Octagrams),
             new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.Octagrams>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(ProteanClouds),
+            nameof(ProteanClouds),
             new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ProteanClouds>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(TwoTiledTruchet),
+            nameof(TwoTiledTruchet),
             new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TwoTiledTruchet>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(PyramidPattern),
+            nameof(PyramidPattern),
             new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.PyramidPattern>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
-            typeof(TriangleGridContouring),
+            nameof(TriangleGridContouring),
             new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-        new(typeof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersRunner()),
+        new(nameof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersRunner()),
         new(
-            typeof(TerracedHills),
+            nameof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
             new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
     };
@@ -197,7 +197,7 @@ public sealed partial class MainViewModel : ObservableObject
     /// <inheritdoc/>
     partial void OnSelectedComputeShaderChanged(ShaderRunnerViewModel value)
     {
-        this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType.Name));
+        this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderType), value.ShaderType));
     }
 
     /// <inheritdoc/>
