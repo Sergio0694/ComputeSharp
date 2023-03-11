@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="ComputeSharp.Dynamic" />
-    <InternalsVisibleTo Include="ComputeSharp.Pix" />
-    <InternalsVisibleTo Include="ComputeSharp.Uwp" />
-    <InternalsVisibleTo Include="ComputeSharp.WinUI" />
-    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
+    <InternalsVisibleTo Include="ComputeSharp.Dynamic, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.Pix, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.Uwp, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.WinUI, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals, PublicKey=$(AssemblySignPublicKey)" />
   </ItemGroup>
 
   <ItemGroup>
