@@ -25,7 +25,11 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <summary>
     /// Indicates whether the current state has been invalidated (requiring <see cref="ConfigureCanvasImage"/> to be called).
     /// </summary>
-    private bool isInvalidated;
+    /// <remarks>
+    /// This is initially <see langword="true"/> so that <see cref="ConfigureCanvasImage"/> will always be called when
+    /// first creating the image, even if the effect has not bee invalidated. This ensures default parameters are set.
+    /// </remarks>
+    private bool isInvalidated = true;
 
     /// <summary>
     /// Indicates whether the effect is disposed.
