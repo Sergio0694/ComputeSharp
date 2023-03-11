@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas;
-
-#pragma warning disable CA1063
 
 namespace ComputeSharp.D2D1.Uwp;
 
@@ -35,6 +34,62 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// Indicates whether the effect is disposed.
     /// </summary>
     private bool isDisposed;
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Disposes any disposable resources in the current instance.
+    /// </summary>
+    /// <param name="disposing">
+    /// Indicates whether the method was called from <see cref="Dispose()"/> of from a finalizer:
+    /// <list type="bullet">
+    ///   <item><see langword="true"/>: the method was called from <see cref="Dispose()"/>.</item>
+    ///   <item><see langword="false"/>: the method was called from a finalizer.</item>
+    /// </list>
+    /// </param>
+    /// <remarks>
+    /// <para>
+    /// If implementing a type that derives from <see cref="CanvasEffect"/>, this method can be overridden to add logic to dispose
+    /// any additional state. Managed objects should only be disposed when <paramref name="disposing"/> is <see langword="true"/>.
+    /// </para>
+    /// <para>
+    /// If the derived type does not need a finalizer (ie. if it doesn't wrap any native resources), this method should not be
+    /// called directly. It will be called automatically by <see cref="Dispose()"/>. If the derived type does instead define a
+    /// finalizer, it should call <see cref="Dispose(bool)"/> with a value of <see langword="false"/>. As mentioned above, when
+    /// implementing <see cref="Dispose(bool)"/> in a derived type, managed objects should only be disposed when
+    /// <paramref name="disposing"/> is <see langword="true"/>, otherwise only unmanaged resorces should be disposed.
+    /// </para>
+    /// <para>
+    /// Though the pattern does support this, it is recommended not to add finalizers in types deriving from <see cref="CanvasEffect"/>.
+    /// Rather, if an effect needs to wrap native resources, it should do so via some same managed wrapper type (such as
+    /// <see cref="System.Runtime.InteropServices.SafeHandle"/>), or some other custom unmanaged resource wrapper type.
+    /// </para>
+    /// </remarks>
+    /// <seealso href="https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose"/>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            // Only take a lock and dispose the image if the method was called explicitly from user code. If instead it was
+            // called from the finalizer, we can make no guarantees on the order of objects being collected, meaning that
+            // the lock itself might have already been collected by the time this code runs, which would lead the lock
+            // statement to throw a NullReferenceException. So if a finalizer is running, just let objects be collected
+            // on their own. This is fine here since there are no unmanaged references to free, but just managed wrappers.
+            lock (this.lockObject)
+            {
+                this.canvasImage?.Dispose();
+                this.canvasImage = null;
+            }
+        }
+
+        this.isDisposed = true;
+    }
 
     /// <summary>
     /// Creates the resulting <see cref="ICanvasImage"/> representing the output node of the effect graph for this <see cref="CanvasEffect"/> instance.

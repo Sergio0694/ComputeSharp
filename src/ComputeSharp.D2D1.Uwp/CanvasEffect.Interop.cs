@@ -9,8 +9,6 @@ using TerraFX.Interop.Windows;
 using Windows.Foundation;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
 
-#pragma warning disable CA1063
-
 namespace ComputeSharp.D2D1.Uwp;
 
 /// <inheritdoc/>
@@ -29,17 +27,6 @@ unsafe partial class CanvasEffect
     }
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        lock (this.lockObject)
-        {
-            this.canvasImage?.Dispose();
-            this.canvasImage = null;
-            this.isDisposed = true;
-        }
-    }
-
-    /// <inheritdoc/>
     unsafe int ICanvasImageInterop.Interface.GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
@@ -50,7 +37,13 @@ unsafe partial class CanvasEffect
     }
 
     /// <inheritdoc/>
-    unsafe int ICanvasImageInterop.Interface.GetD2DImage(ICanvasDevice* device, ID2D1DeviceContext* deviceContext, WIN2D_GET_D2D_IMAGE_FLAGS flags, float targetDpi, float* realizeDpi, ID2D1Image** ppImage)
+    unsafe int ICanvasImageInterop.Interface.GetD2DImage(
+        ICanvasDevice* device,
+        ID2D1DeviceContext* deviceContext,
+        WIN2D_GET_D2D_IMAGE_FLAGS flags,
+        float targetDpi,
+        float* realizeDpi,
+        ID2D1Image** ppImage)
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
