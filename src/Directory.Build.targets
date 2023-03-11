@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Import Project="..\Directory.Build.targets" />
+  <Import Project="..\build\Directory.Build.targets" />
 
   <!-- Enable trimming support on .NET 6 -->
   <Target Name="ConfigureAssemblyTrimmingIfNeeded"

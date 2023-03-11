@@ -51,7 +51,7 @@
 
   <!-- Centralized location for all generated artifacts -->
   <PropertyGroup>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\</PackageOutputPath>
   </PropertyGroup>
 
   <!--
@@ -114,6 +114,6 @@
 
   <!-- Needed for deterministic builds -->
   <ItemGroup>
-    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)..\"/>
   </ItemGroup>
 </Project>
