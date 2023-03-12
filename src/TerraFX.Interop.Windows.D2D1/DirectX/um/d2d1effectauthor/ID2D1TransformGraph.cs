@@ -25,4 +25,11 @@ internal unsafe partial struct ID2D1TransformGraph
     {
         return ((delegate* unmanaged[Stdcall]<ID2D1TransformGraph*, ID2D1TransformNode*, int>)(lpVtbl[4]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), node);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(11)]
+    public HRESULT SetPassthroughGraph([NativeTypeName("UINT32")] uint effectInputIndex)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID2D1TransformGraph*, uint, int>)(lpVtbl[11]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), effectInputIndex);
+    }
 }

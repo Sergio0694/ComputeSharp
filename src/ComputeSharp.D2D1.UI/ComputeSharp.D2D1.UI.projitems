@@ -34,6 +34,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\IUnknownExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\RcwMarshaller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourceManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\Effects\PassthroughEffect.ID2D1EffectImplMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\Effects\PassthroughEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1ImmutableArrayResourceTextureDescriptionsLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1IndexBitmaskResourceTextureDescriptionsLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.cs" />

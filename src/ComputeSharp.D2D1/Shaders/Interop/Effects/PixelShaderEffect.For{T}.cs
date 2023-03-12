@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
@@ -9,10 +8,8 @@ using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 
-/// <summary>
-/// A simple <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/> implementation for a given pixel shader.
-/// </summary>
-internal unsafe partial struct PixelShaderEffect
+/// <inheritdoc/>
+unsafe partial struct PixelShaderEffect
 {
     /// <summary>
     /// A wrapper for an effect factory.
