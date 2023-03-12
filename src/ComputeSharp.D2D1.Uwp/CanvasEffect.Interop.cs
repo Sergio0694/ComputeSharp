@@ -63,11 +63,11 @@ unsafe partial class CanvasEffect
         {
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
-            this.canvasImage ??= CreateCanvasImage();
+            this.canvasImage ??= BuildEffectGraph();
 
             if (this.isInvalidated)
             {
-                ConfigureCanvasImage();
+                ConfigureEffectGraph();
 
                 this.isInvalidated = false;
             }
