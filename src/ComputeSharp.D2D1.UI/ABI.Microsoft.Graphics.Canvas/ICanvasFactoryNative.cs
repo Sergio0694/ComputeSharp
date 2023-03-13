@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.Windows;
+using TerraFX.Interop.WinRT;
 
 #pragma warning disable CS0649, IDE1006
 
@@ -55,9 +56,9 @@ internal unsafe struct ICanvasFactoryNative
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(6)]
     [return: NativeTypeName("ULONG")]
-    public HRESULT GetOrCreate(ICanvasDevice* device, IUnknown* resource, float dpi, [NativeTypeName("IInspectable**")] void** wrapper)
+    public HRESULT GetOrCreate(ICanvasDevice* device, IUnknown* resource, float dpi, IInspectable** wrapper)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, ICanvasDevice*, IUnknown*, float, void**, int>)this.lpVtbl[6])(
+        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, ICanvasDevice*, IUnknown*, float, IInspectable**, int>)this.lpVtbl[6])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             device,
             resource,

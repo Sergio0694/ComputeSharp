@@ -56,16 +56,16 @@ internal static class ResourceManager
                 factory: canvasFactoryNative.GetVoidAddressOf()).Assert();
         }
 
-        using ComPtr<IUnknown> wrapperUnknown = default;
+        using ComPtr<IInspectable> wrapperInspectable = default;
 
         // Get or create a WinRT wrapper for the resource
         canvasFactoryNative.Get()->GetOrCreate(
             device: device,
             resource: resource,
             dpi: dpi,
-            wrapper: wrapperUnknown.GetVoidAddressOf()).Assert();
+            wrapper: wrapperInspectable.GetAddressOf()).Assert();
 
         // Get the runtime-provided RCW for the resulting WinRT wrapper
-        return RcwMarshaller.GetOrCreateManagedObject<IGraphicsEffectSource>(wrapperUnknown.Get());
+        return RcwMarshaller.GetOrCreateManagedObject<IGraphicsEffectSource>((IUnknown*)wrapperInspectable.Get());
     }
 }
