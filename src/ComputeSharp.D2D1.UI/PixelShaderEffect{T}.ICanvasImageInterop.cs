@@ -366,7 +366,7 @@ unsafe partial class PixelShaderEffect<T>
                 using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
                 // Convert to ICanvasImageInterop (this must always succeed, and throws if it doesn't)
-                RcwMarshaller.QueryInterface(source, canvasImageInterop.GetAddressOf()).Assert();
+                RcwMarshaller.GetNativeObject(source, canvasImageInterop.GetAddressOf()).Assert();
 
                 using ComPtr<ID2D1Image> d2D1Image = default;
 

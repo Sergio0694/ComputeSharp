@@ -39,7 +39,7 @@ unsafe partial class CanvasEffect
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-        RcwMarshaller.QueryInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeObject(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
         return canvasImageInterop.Get()->GetDevice(device, type);
     }
@@ -55,7 +55,7 @@ unsafe partial class CanvasEffect
     {
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
-        RcwMarshaller.QueryInterface(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeObject(GetCanvasImage(), canvasImageInterop.GetAddressOf()).Assert();
 
         return canvasImageInterop.Get()->GetD2DImage(device, deviceContext, flags, targetDpi, realizeDpi, ppImage);
     }

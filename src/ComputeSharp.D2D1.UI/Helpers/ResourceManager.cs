@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.Windows;
@@ -67,8 +66,6 @@ internal static class ResourceManager
             wrapper: wrapperUnknown.GetVoidAddressOf()).Assert();
 
         // Get the runtime-provided RCW for the resulting WinRT wrapper
-        object wrapper = Marshal.GetObjectForIUnknown((IntPtr)wrapperUnknown.Get());
-
-        return (IGraphicsEffectSource)wrapper;
+        return RcwMarshaller.GetOrCreateManagedObject<IGraphicsEffectSource>(wrapperUnknown.Get());
     }
 }
