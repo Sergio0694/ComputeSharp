@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
@@ -65,6 +66,7 @@ unsafe partial class CanvasEffect
     /// </summary>
     /// <returns>The current <see cref="ICanvasImage"/> instance.</returns>
     /// <exception cref="ObjectDisposedException">Thrown if the current instance is disposed.</exception>
+    [MemberNotNull(nameof(canvasImage))]
     private ICanvasImage GetCanvasImage()
     {
         lock (this.lockObject)

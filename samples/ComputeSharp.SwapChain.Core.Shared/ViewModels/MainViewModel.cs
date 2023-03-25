@@ -95,40 +95,40 @@ public sealed partial class MainViewModel : ObservableObject
         new(
             nameof(ColorfulInfinity),
             new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.ColorfulInfinity>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(FractalTiling),
             new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.FractalTiling>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.FractalTiling>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(MengerJourney),
             new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.MengerJourney>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.MengerJourney>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(Octagrams),
             new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.Octagrams>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.Octagrams>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(ProteanClouds),
             new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.ProteanClouds>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.ProteanClouds>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(TwoTiledTruchet),
             new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TwoTiledTruchet>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TwoTiledTruchet>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(PyramidPattern),
             new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.PyramidPattern>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.PyramidPattern>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
         new(
             nameof(TriangleGridContouring),
             new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
-        new(nameof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersRunner()),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TriangleGridContouring>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+        new(nameof(ContouredLayers), new ContouredLayersRunner(), new D2D1ContouredLayersEffect()),
         new(
             nameof(TerracedHills),
             new ShaderRunner<TerracedHills>(static time => new((float)time.TotalSeconds)),
-            new D2D1ShaderRunner<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
+            new PixelShaderEffect.For<SwapChain.Shaders.D2D1.TerracedHills>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)))),
     };
 
     /// <summary>

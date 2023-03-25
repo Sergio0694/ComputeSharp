@@ -1,4 +1,5 @@
 using ComputeSharp.SwapChain.Core.Shaders;
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
@@ -28,9 +29,9 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
     private CanvasAnimatedControl? canvasAnimatedControl;
 
     /// <summary>
-    /// The <see cref="ID2D1ShaderRunner"/> instance currently in use, if any.
+    /// The <see cref="PixelShaderEffect"/> instance currently in use, if any.
     /// </summary>
-    private volatile ID2D1ShaderRunner? shaderRunner;
+    private volatile PixelShaderEffect? pixelShaderEffect;
 
     /// <summary>
     /// Creates a new <see cref="D2D1AnimatedPixelShaderPanel"/> instance.
@@ -56,7 +57,7 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
     private void D2D1AnimatedPixelShaderPanel_Loaded(object sender, RoutedEventArgs e)
     {
         if (this.canvasAnimatedControl is { } canvasAnimatedControl &&
-            ShaderRunner is not null &&
+            PixelShaderEffect is not null &&
             !IsPaused)
         {
             canvasAnimatedControl.Paused = false;
@@ -75,43 +76,50 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
     /// <summary>
     /// Draws a new frame on the wrapped <see cref="CanvasAnimatedControl"/> instance.
     /// </summary>
-    /// <inheritdoc cref="ID2D1ShaderRunner.Execute"/>
+    /// <param name="sender">The source <see cref="ICanvasAnimatedControl"/> instance.</param>
+    /// <param name="args">The <see cref="CanvasAnimatedDrawEventArgs"/> object to perform drawing with.</param>
     private void CanvasAnimatedControl_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
     {
-        this.shaderRunner?.Execute(sender, args);
+        // Set the effect properties
+        this.pixelShaderEffect!.ElapsedTime = args.Timing.TotalTime;
+        this.pixelShaderEffect.ScreenWidth = sender.ConvertDipsToPixels((float)sender.Size.Width, CanvasDpiRounding.Round);
+        this.pixelShaderEffect.ScreenHeight = sender.ConvertDipsToPixels((float)sender.Size.Height, CanvasDpiRounding.Round);
+
+        // Draw the effect
+        args.DrawingSession.DrawImage(this.pixelShaderEffect);
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="ID2D1ShaderRunner"/> instance to use to render content.
+    /// Gets or sets the <see cref="Core.Shaders.PixelShaderEffect"/> instance to use to render content.
     /// </summary>
-    public ID2D1ShaderRunner? ShaderRunner
+    public PixelShaderEffect? PixelShaderEffect
     {
-        get => (ID2D1ShaderRunner?)GetValue(ShaderRunnerProperty);
-        set => SetValue(ShaderRunnerProperty, value);
+        get => (PixelShaderEffect?)GetValue(PixelShaderEffectProperty);
+        set => SetValue(PixelShaderEffectProperty, value);
     }
 
     /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
+    /// The <see cref="DependencyProperty"/> backing <see cref="PixelShaderEffect"/>.
     /// </summary>
-    public static readonly DependencyProperty ShaderRunnerProperty = DependencyProperty.Register(
-        nameof(ShaderRunner),
-        typeof(ID2D1ShaderRunner),
+    public static readonly DependencyProperty PixelShaderEffectProperty = DependencyProperty.Register(
+        nameof(PixelShaderEffect),
+        typeof(PixelShaderEffect),
         typeof(D2D1AnimatedPixelShaderPanel),
-        new PropertyMetadata(null, OnShaderRunnerPropertyChanged));
+        new PropertyMetadata(null, OnPixelShaderEffectPropertyChanged));
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnPixelShaderEffectPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         D2D1AnimatedPixelShaderPanel @this = (D2D1AnimatedPixelShaderPanel)d;
-        ID2D1ShaderRunner? shaderRunner = (ID2D1ShaderRunner?)e.NewValue;
+        PixelShaderEffect? pixelShaderEffect = (PixelShaderEffect?)e.NewValue;
 
-        // Save the new shader runner for later (as the dependency property cannot be accessed by the render thread)
-        @this.shaderRunner = shaderRunner;
+        // Save the new pixel shader effect for later (as the dependency property cannot be accessed by the render thread)
+        @this.pixelShaderEffect = pixelShaderEffect;
 
-        // Pause or start the render thread if a runner is available
+        // Pause or start the render thread if an effect is available
         if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
         {
-            bool shouldRender = @this.IsLoaded && !@this.IsPaused && shaderRunner is not null;
+            bool shouldRender = @this.IsLoaded && !@this.IsPaused && pixelShaderEffect is not null;
 
             canvasAnimatedControl.Paused = !shouldRender;
         }
@@ -143,7 +151,7 @@ public sealed class D2D1AnimatedPixelShaderPanel : Control
 
         if (@this.canvasAnimatedControl is { } canvasAnimatedControl)
         {
-            bool shouldRender = @this.IsLoaded && !isPaused && @this.ShaderRunner is not null;
+            bool shouldRender = @this.IsLoaded && !isPaused && @this.PixelShaderEffect is not null;
 
             canvasAnimatedControl.Paused = !shouldRender;
         }

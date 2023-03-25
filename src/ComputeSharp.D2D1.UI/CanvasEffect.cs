@@ -155,14 +155,6 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
         InvalidateEffectGraph(invalidationType);
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-
-        GC.SuppressFinalize(this);
-    }
-
     /// <summary>
     /// Disposes any disposable resources in the current instance.
     /// </summary>
@@ -209,6 +201,14 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
         }
 
         this.isDisposed = true;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>

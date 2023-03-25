@@ -162,7 +162,7 @@
             <controls:Case Value="{x:Bind enums:RenderingMode.Win2D}">
 
                 <!--  Win2D shader  -->
-                <views:D2D1AnimatedPixelShaderPanel IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}" ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.D2D1ShaderRunner, Mode=OneWay}" />
+                <views:D2D1AnimatedPixelShaderPanel IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}" PixelShaderEffect="{x:Bind ViewModel.SelectedComputeShader.PixelShaderEffect, Mode=OneWay}" />
             </controls:Case>
         </controls:SwitchPresenter>
 
