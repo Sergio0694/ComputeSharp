@@ -2,14 +2,16 @@
 <Project>
   <Import Project="..\build\Directory.Build.targets" />
 
-  <!-- Enable trimming support on .NET 6 -->
-  <Target Name="ConfigureAssemblyTrimmingIfNeeded"
-          BeforeTargets="PrepareForBuild">
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-      <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-      <IsTrimmable>true</IsTrimmable>
-    </PropertyGroup>
-  </Target>
+  <!--
+    Enable trimming support on .NET 6 (we need to use StartsWith since it
+    could be a Windows TFM too). This can't be in a target unlike the other
+    properties set below, because if that is the case the trimmable attribute
+    will be set but the analyzers will not run, so warnings will be skipped.
+  -->
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <IsTrimmable>true</IsTrimmable>
+  </PropertyGroup>
 
   <!-- Emit the [SupportedOSVersion] attribute if needed -->
   <Target Name="EmitSupportedOSVersionAttributeForTargetOS"
@@ -21,10 +23,10 @@
     </ItemGroup>
   </Target>
 
-  <!-- Emit the [ComVisible(false)] attribute for UWP targets -->
+  <!-- Emit the [ComVisible(false)] attribute for UWP and WinUI targets -->
   <Target Name="EmitComVisibleAttributeForUwpProjects"
           BeforeTargets="PrepareForBuild">
-    <ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0'))">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('uap10.0')) OR $(TargetFramework.StartsWith('net6.0-windows'))">
       <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
         <_Parameter1>false</_Parameter1>
       </AssemblyAttribute>

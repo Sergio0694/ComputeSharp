@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 #if WINDOWS_UWP
 using System.Runtime.InteropServices;
 #endif
@@ -24,7 +25,7 @@ internal static class RcwMarshaller
     /// <typeparam name="T">The interface type to retrieve an instance of.</typeparam>
     /// <param name="nativeObject">A pointer to the native object to get a managed wrapper for.</param>
     /// <returns>The resulting managed object wrapping <paramref name="nativeObject"/>.</returns>
-    public static unsafe T GetOrCreateManagedObject<T>(IUnknown* nativeObject)
+    public static unsafe T GetOrCreateManagedObject<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.Interfaces)] T>(IUnknown* nativeObject)
         where T : class
     {
 #if WINDOWS_UWP
@@ -43,7 +44,7 @@ internal static class RcwMarshaller
     /// <param name="managedObject">The input RCW instance to unwrap.</param>
     /// <param name="nativeObject">A pointer to the resulting native object to retrieve.</param>
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
-    public static unsafe HRESULT GetNativeObject<TFrom, TTo>(TFrom managedObject, TTo** nativeObject)
+    public static unsafe HRESULT GetNativeObject<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.Interfaces)] TFrom, TTo>(TFrom managedObject, TTo** nativeObject)
         where TFrom : class
         where TTo : unmanaged // IUnknown
     {
