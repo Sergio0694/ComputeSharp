@@ -1,21 +1,6 @@
 <Project>
   <Import Project="..\build\Directory.Build.props" />
 
-  <PropertyGroup>
-
-    <!--
-      This ignores the following warning:
-      "DNG02: NuGetizer uses SponsorLink to properly attribute your sponsorship with
-      devlooped. Please install the GitHub app at https://github.com/apps/sponsorlink.
-    -->
-    <NoWarn>$(NoWarn);DNG02</NoWarn>
-  </PropertyGroup>
-
-  <!-- Reference NuGetizer to manage the packaging process -->
-  <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="0.9.5" PrivateAssets="all" />
-  </ItemGroup>
-
   <!--
     Reference PolySharp for all .NET Standard 2.0 polyfills.
     Only needed for the .Core project and all source generators.
