@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasEffectFactoryNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasFactoryNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasImageInterop.cs" />
