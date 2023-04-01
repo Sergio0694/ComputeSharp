@@ -243,6 +243,10 @@ unsafe partial class PixelShaderEffect<T>
             }
         }
 
+        // Unregister the wrapper for the effect. In case someone is still holding a reference
+        // to it, the effect is now "orphaned" and without a registered inspectable wrapper.
+        ResourceManager.UnregisterWrapper((IUnknown*)this.d2D1Effect.Get());
+
         // Finally release the effect as well
         this.d2D1Effect.Dispose();
     }
@@ -339,6 +343,9 @@ unsafe partial class PixelShaderEffect<T>
                 D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(this.d2D1Effect.Get(), resourceTextureManager, index);
             }
         }
+
+        // Register the new realized effect
+        ResourceManager.RegisterWrapper((IUnknown*)this.d2D1Effect.Get(), this);
 
         return true;
     }
