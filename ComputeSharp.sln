@@ -32,17 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_Solution
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SourceGenerators", "src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj", "{EB52CB67-4162-4722-874B-44EA8DA5450E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{FB17EF84-9208-47AC-921F-680CB1DAD8BA}"
-	ProjectSection(SolutionItems) = preProject
-		src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj = src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj
-		src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj = src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj
-		src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj = src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj
-		src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj = src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj
-		src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj = src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj
-		src\ComputeSharp.Core.Package\icon.png = src\ComputeSharp.Core.Package\icon.png
-		src\ComputeSharp.Core.Package\icon_highres.png = src\ComputeSharp.Core.Package\icon_highres.png
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample", "samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj", "{7048DEEA-0A6F-46A0-B951-B682A8F1CB75}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.SourceGenerators", "tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj", "{BBBD0ADD-F2F9-49A3-BD5E-D223F0735D8B}"
@@ -153,6 +142,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B54B6DCA
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.D2D1.Cli", "samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj", "{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{345F62CF-5320-4531-A087-DA5B488FDDE6}"
+	ProjectSection(SolutionItems) = preProject
+		assets\icon.png = assets\icon.png
+		assets\icon_highres.png = assets\icon_highres.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
