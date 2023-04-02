@@ -29,7 +29,7 @@ jobs:
         path: msbuild.binlog
         if-no-files-found: error
 
-  # Build the .msbuildproj projects and the UWP/WinUI projects to generate all the NuGet packages.
+  # Pack all projects with dotnet/MSBuild to generate NuGet packages.
   # This workflow also uploads the resulting packages as artifacts.
   build-packages:
     runs-on: windows-2022
@@ -39,15 +39,15 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build ComputeSharp.Core package
-      run: dotnet build src\ComputeSharp.Core.Package\ComputeSharp.Core.Package.msbuildproj -c Release
+      run: dotnet pack src\ComputeSharp.Core\ComputeSharp.Core.csproj -c Release
     - name: Build ComputeSharp package
-      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      run: dotnet pack src\ComputeSharp\ComputeSharp.csproj -c Release
     - name: Build ComputeSharp.Dynamic package
-      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release
+      run: dotnet pack src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj -c Release
     - name: Build ComputeSharp.D2D1 package
-      run: dotnet build src\ComputeSharp.D2D1.Package\ComputeSharp.D2D1.Package.msbuildproj -c Release
+      run: dotnet pack src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj -c Release
     - name: Build ComputeSharp.Pix package
-      run: dotnet build src\ComputeSharp.Pix.Package\ComputeSharp.Pix.Package.msbuildproj -c Release
+      run: dotnet pack src\ComputeSharp.Pix\ComputeSharp.Pix.csproj -c Release
     - name: Build ComputeSharp.Uwp package
       run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
     - name: Build ComputeSharp.D2D1.Uwp package
