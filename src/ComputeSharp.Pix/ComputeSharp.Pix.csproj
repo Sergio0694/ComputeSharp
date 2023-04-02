@@ -17,16 +17,16 @@
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+              CopyToOutputDirectory="PreserveNewest"
+              Visible="False" />
       </ItemGroup>
     </When>
     <When Condition="'$(Platform)' == 'ARM64'">
       <ItemGroup>
         <None Include="Libraries\arm64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+              CopyToOutputDirectory="PreserveNewest"
+              Visible="False" />
       </ItemGroup>
     </When>
 
@@ -39,25 +39,56 @@
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\x64"
+              Visible="False" />
         <None Include="Libraries\x64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\x64"
+              Visible="False" />
         <None Include="Libraries\arm64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\arm64"
+              Visible="False" />
         <None Include="Libraries\arm64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\arm64"
+              Visible="False" />
       </ItemGroup>
     </Otherwise>
   </Choose>
+
+  <!-- NuGet package info -->
+  <PropertyGroup Label="Package">
+    <Description>An extension library for ComputeSharp to enable PIX support to produce debugging information</Description>
+
+    <!--
+      This ignores the following warning:
+      "NU5100: the assembly 'winpixeventruntime.1.0.220810001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
+      be added as a reference when the package is installed into a project. Move it into the 'lib' folder if it needs to be referenced."
+      This is by design: we're copying the PIX assemblies into a separate folder and then unpacking them from the bundled .targets file.
+    -->
+    <NoWarn>$(NoWarn);NU5100</NoWarn>
+  </PropertyGroup>
+
+  <!-- NuGet package setup -->
+  <ItemGroup Label="Package">
+
+    <!-- Package icon -->
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
+
+    <!-- License file -->
+    <None Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
+
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="ComputeSharp.Pix.targets" PackagePath="buildTransitive" Pack="true" />
+    <None Include="ComputeSharp.Pix.targets" PackagePath="build" Pack="true" />
+  </ItemGroup>
 </Project>

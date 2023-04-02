@@ -36,7 +36,7 @@
   <ItemGroup Label="Package">
 
     <!-- Package icon -->
-    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
 
     <!-- Source generator reference -->
     <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
