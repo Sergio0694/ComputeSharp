@@ -26,4 +26,26 @@
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
+
+  <!-- NuGet package info -->
+  <PropertyGroup Label="Package">
+    <Description>A library containing basic primitives to support ComputeSharp (this package is not supposed to be referenced directly by developers)</Description>
+  </PropertyGroup>
+
+  <!-- NuGet package setup -->
+  <ItemGroup Label="Package">
+
+    <!-- Package icon -->
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+
+    <!-- Source generator reference -->
+    <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
+
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="ComputeSharp.Core.targets" PackagePath="buildTransitive" Pack="true" />
+    <None Include="ComputeSharp.Core.targets" PackagePath="build" Pack="true" />
+
+    <!-- Pack the source generator in the NuGet package for the project -->
+    <None Include="..\ComputeSharp.Core.SourceGenerators\bin\$(Configuration)\netstandard2.0\ComputeSharp.Core.SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" Visible="false" />
+  </ItemGroup>
 </Project>

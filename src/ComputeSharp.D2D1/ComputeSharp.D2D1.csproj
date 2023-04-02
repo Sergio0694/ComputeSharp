@@ -26,4 +26,26 @@
 
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
+
+  <!-- NuGet package info -->
+  <PropertyGroup Label="Package">
+    <Description>A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them</Description>
+  </PropertyGroup>
+
+  <!-- NuGet package setup -->
+  <ItemGroup Label="Package">
+
+    <!-- Package icon -->
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+
+    <!-- Source generator reference -->
+    <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
+
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="ComputeSharp.D2D1.targets" PackagePath="buildTransitive" Pack="true" />
+    <None Include="ComputeSharp.D2D1.targets" PackagePath="build" Pack="true" />
+
+    <!-- Pack the source generator in the NuGet package for the project -->
+    <None Include="..\ComputeSharp.D2D1.SourceGenerators\bin\$(Configuration)\netstandard2.0\ComputeSharp.D2D1.SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" Visible="false" />
+  </ItemGroup>
 </Project>

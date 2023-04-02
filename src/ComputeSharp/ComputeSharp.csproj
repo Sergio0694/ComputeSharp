@@ -35,4 +35,26 @@
 
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
+
+  <!-- NuGet package info -->
+  <PropertyGroup Label="Package">
+    <Description>A library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</Description>
+  </PropertyGroup>
+
+  <!-- NuGet package setup -->
+  <ItemGroup Label="Package">
+
+    <!-- Package icon -->
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+
+    <!-- Source generator reference -->
+    <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
+
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="ComputeSharp.targets" PackagePath="buildTransitive" Pack="true" />
+    <None Include="ComputeSharp.targets" PackagePath="build" Pack="true" />
+
+    <!-- Pack the source generator in the NuGet package for the project -->
+    <None Include="..\ComputeSharp.SourceGenerators\bin\$(Configuration)\netstandard2.0\ComputeSharp.SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" Visible="false" />
+  </ItemGroup>
 </Project>
