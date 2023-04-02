@@ -19,8 +19,10 @@
 
   <Choose>
 
-    <!-- When building locally for x64/ARM64 (using the project through a project reference),
-         just copy the right native libraries to the output directory, with no subfolders. -->
+    <!--
+      When building locally for x64/ARM64 (using the project through a project reference),
+      just copy the right native libraries to the output directory, with no subfolders.
+    -->
     <When Condition="'$(Platform)' == 'x64' OR '$(CI_RUNNER_DOTNET_TEST_PLATFORM)' == 'x64'">
       <ItemGroup>
         <None Include="Libraries\x64\dxcompiler.dll" Link="dxcompiler.dll" CopyToOutputDirectory="PreserveNewest" Visible="False" />
@@ -34,13 +36,15 @@
       </ItemGroup>
     </When>
 
-    <!-- When no RID is specified, it means the NuGet package is being packed. In this
-         case, copy all native libraries to the right runtimes/<RID>/native directory,
-         which will automatically be used by NuGet to deploy the right libs to consumers.
-         Still keep the link target to get the libraries to be copied to the output, which
-         allows them to be found even when running the library locally in Any CPU. This will
-         make life easier for developers using a project reference with an incorrect configuration,
-         while still not causing any change in the final NuGet package (Link isn't looked up there). -->
+    <!--
+      When no RID is specified, it means the NuGet package is being packed. In this
+      case, copy all native libraries to the right runtimes/<RID>/native directory,
+      which will automatically be used by NuGet to deploy the right libs to consumers.
+      Still keep the link target to get the libraries to be copied to the output, which
+      allows them to be found even when running the library locally in Any CPU. This will
+      make life easier for developers using a project reference with an incorrect configuration,
+      while still not causing any change in the final NuGet package (Link isn't looked up there).
+    -->
     <Otherwise>
       <ItemGroup>
         <None Include="Libraries\x64\dxcompiler.dll" Link="runtimes\win-x64\native\dxcompiler.dll" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="\runtimes\win-x64\native" Visible="False" />

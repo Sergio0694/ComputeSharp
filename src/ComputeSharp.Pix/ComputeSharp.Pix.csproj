@@ -30,8 +30,10 @@
       </ItemGroup>
     </When>
 
-    <!-- When no RID is specified, it means the NuGet package is being packed. In this case,
-         copy all libraries, and then rely on the custom .targets file to unpack them correctly. -->
+    <!--
+      When no RID is specified, it means the NuGet package is being packed. In this case,
+      copy all libraries, and then rely on the custom .targets file to unpack them correctly.
+    -->
     <Otherwise>
       <PropertyGroup>
         <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220810001</WinPixEventRuntimeVersion>
