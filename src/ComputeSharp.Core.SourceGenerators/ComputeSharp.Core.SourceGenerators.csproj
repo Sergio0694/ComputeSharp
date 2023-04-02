@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackSymbols>false</PackSymbols>
-    <Description>ComputeSharp.Core.SourceGenerators</Description>
     <NoWarn>$(NoWarn);CS1591;CS0649;CS1574</NoWarn>
   </PropertyGroup>
 

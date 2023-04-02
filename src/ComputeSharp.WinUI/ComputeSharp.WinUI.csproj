@@ -2,14 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>ComputeSharp.WinUI</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>ComputeSharp.WinUI</PackageId>
-    <Title>ComputeSharp.WinUI</Title>
     <Description>A WinUI 3 library with controls to render DX12 shaders powered by ComputeSharp</Description>
     <PackageTags>$(PackageTags) winui winui3 wasdk</PackageTags>
   </PropertyGroup>

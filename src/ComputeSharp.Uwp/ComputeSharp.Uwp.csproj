@@ -12,15 +12,12 @@
     <IsPublishable>true</IsPublishable>
     <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <RootNamespace>ComputeSharp.Uwp</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win-arm64</RuntimeIdentifiers>
     <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>ComputeSharp.Uwp</PackageId>
-    <Title>ComputeSharp.Uwp</Title>
     <Description>A UWP library with controls to render DX12 shaders powered by ComputeSharp</Description>
     <PackageTags>$(PackageTags) uwp winui</PackageTags>
   </PropertyGroup>

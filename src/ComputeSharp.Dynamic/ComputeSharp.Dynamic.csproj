@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-    <OutputPath>bin\Release</OutputPath>
-    <DocumentationFile>ComputeSharp.Dynamic.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
