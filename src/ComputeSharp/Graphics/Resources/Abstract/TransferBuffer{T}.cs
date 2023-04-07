@@ -54,12 +54,12 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
     [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected TransferBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, (uint.MaxValue / (uint)sizeof(T)) & ~255);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 

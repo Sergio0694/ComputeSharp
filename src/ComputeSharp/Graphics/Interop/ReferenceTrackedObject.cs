@@ -18,7 +18,7 @@ internal abstract partial class ReferenceTrackedObject : IReferenceTrackedObject
     /// </summary>
     public ReferenceTrackedObject()
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        ReferenceTracker.DangerousCreate(this, out this.referenceTracker);
     }
 
     /// <summary>

@@ -31,10 +31,59 @@ internal struct ReferenceTracker : IDisposable
     /// </summary>
     /// <param name="trackedObject">The input tracked object to wrap.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ReferenceTracker(IReferenceTrackedObject trackedObject)
+    private ReferenceTracker(IReferenceTrackedObject trackedObject)
     {
         this.trackedObject = trackedObject;
         this.referenceTrackingMask = 0;
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ReferenceTracker"/> instance with the specified parameters and returns a lease to keep the caller alive.
+    /// </summary>
+    /// <param name="trackedObject">The input tracked object to wrap.</param>
+    /// <param name="referenceTracker">The resulting <see cref="ReferenceTracker"/> field to initialize.</param>
+    /// <returns>A <see cref="Lease"/> object that can extend the lifetime of the tracked object.</returns>
+    /// <remarks>
+    /// <para>
+    /// This method should be used by all types using a <see cref="ReferenceTracker"/> object, to ensure that their constructors keep
+    /// the object alive while they're running. This is needed to ensure the GC doesn't start finalizing the object midway through.
+    /// </para>
+    /// <para>
+    /// That is, objects should initialize the tracker as the first thing in their constructors, and keep the lease around like so:
+    /// <code>
+    /// public ManagedObject()
+    /// {
+    ///     using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
+    ///
+    ///     // Rest of the constructor logic here...
+    /// }
+    /// </code>
+    /// This guarantees that if a concurrent GC happens, the code will not accidentally get into an invalid state.
+    /// </para>
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Lease Create(IReferenceTrackedObject trackedObject, out ReferenceTracker referenceTracker)
+    {
+        referenceTracker = new ReferenceTracker(trackedObject);
+
+        return referenceTracker.GetLease();
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ReferenceTracker"/> instance with the specified paramters.
+    /// </summary>
+    /// <param name="trackedObject">The input tracked object to wrap.</param>
+    /// <param name="referenceTracker">The resulting <see cref="ReferenceTracker"/> field to initialize.</param>
+    /// <remarks>
+    /// Contrary to <see cref="Create(IReferenceTrackedObject, out ReferenceTracker)"/>, this method doesn't also keep a lease
+    /// to ensure the object isn't finalized while the constructor is running. Derived types are responsible for getting a new
+    /// lease as the first thing they do in their constructors (using the tracker initialized in the base constructor), and
+    /// keeping that alive for the rest of their logic. This ensures a consistent behavior across derived types as well.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void DangerousCreate(IReferenceTrackedObject trackedObject, out ReferenceTracker referenceTracker)
+    {
+        referenceTracker = new ReferenceTracker(trackedObject);
     }
 
     /// <summary>

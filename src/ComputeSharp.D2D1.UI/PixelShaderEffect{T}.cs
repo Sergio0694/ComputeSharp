@@ -74,7 +74,7 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// </summary>
     public PixelShaderEffect()
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         Sources = new SourceCollection(this);
         ResourceTextureManagers = new ResourceTextureManagerCollection(this);

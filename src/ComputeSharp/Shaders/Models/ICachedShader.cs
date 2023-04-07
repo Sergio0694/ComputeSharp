@@ -76,6 +76,8 @@ internal interface ICachedShader
         /// <param name="dxcBlobBytecode">The <see cref="IDxcBlob"/> bytecode instance to wrap.</param>
         public Dynamic(IDxcBlob* dxcBlobBytecode)
         {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
             this.dxcBlobBytecode = new ComPtr<IDxcBlob>(dxcBlobBytecode);
         }
 
