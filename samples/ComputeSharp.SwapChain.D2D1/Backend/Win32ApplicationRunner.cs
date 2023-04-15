@@ -5,7 +5,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.SwapChain.Backend;
+namespace ComputeSharp.SwapChain.D2D1.Backend;
+
+using Windows = TerraFX.Interop.Windows.Windows;
 
 /// <summary>
 /// A helper class to manage the creation and execution of Win32 applications.
@@ -114,19 +116,11 @@ internal static unsafe class Win32ApplicationRunner
         {
             (Win32Application application, CancellationToken token) = ((Win32Application, CancellationToken))args!;
 
-            Stopwatch startStopwatch = Stopwatch.StartNew();
-            Stopwatch frameStopwatch = Stopwatch.StartNew();
-
-            const long targetFrameTimeInTicksFor60fps = 166666;
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             while (!token.IsCancellationRequested)
             {
-                if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
-                {
-                    frameStopwatch.Restart();
-
-                    application.OnUpdate(startStopwatch.Elapsed);
-                }
+                application.OnUpdate(stopwatch.Elapsed);
             }
         });
 
