@@ -153,6 +153,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B54B6DCA
 		tests\Directory.Build.targets = tests\Directory.Build.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.D2D1", "samples\ComputeSharp.SwapChain.D2D1\ComputeSharp.SwapChain.D2D1.csproj", "{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -409,6 +411,14 @@ Global
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|ARM64.Build.0 = Release|ARM64
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|x64.ActiveCfg = Release|x64
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|x64.Build.0 = Release|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|ARM64.Build.0 = Debug|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|x64.ActiveCfg = Debug|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|x64.Build.0 = Debug|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|ARM64.ActiveCfg = Release|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|ARM64.Build.0 = Release|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|x64.ActiveCfg = Release|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -445,6 +455,7 @@ Global
 		{F8BF7666-7CCF-4FE4-B055-2EBA4BCD4564} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{568E7009-5C13-4153-9C94-0AC7A3E6883C} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
 		{B54B6DCA-6EAB-46A8-83D3-15154659F47F} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
