@@ -66,7 +66,7 @@ internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
     /// <param name="resource">The input native resource to create a wrapper for.</param>
     /// <param name="dpi">The realization DPIs for <paramref name="resource"/></param>
     /// <param name="wrapper">The resulting wrapper for <paramref name="resource"/>.</param>
-    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    /// <returns>The <c>HRESULT</c> for the operation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetOrCreate(IUnknown* device, IUnknown* resource, float dpi, void** wrapper)
     {

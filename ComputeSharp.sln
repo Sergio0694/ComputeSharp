@@ -153,7 +153,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B54B6DCA
 		tests\Directory.Build.targets = tests\Directory.Build.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.D2D1", "samples\ComputeSharp.SwapChain.D2D1\ComputeSharp.SwapChain.D2D1.csproj", "{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.D2D1", "samples\ComputeSharp.SwapChain.D2D1\ComputeSharp.SwapChain.D2D1.csproj", "{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -478,6 +478,7 @@ Global
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{902d7b44-2c6c-4fcd-840b-ebcae811ee63}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05}*SharedItemsImports = 13
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{9da1da9f-f8b2-4b25-be80-c21f773029e3}*SharedItemsImports = 13
+		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{9ea5ae9d-c39a-4f43-b03e-0a848ea2558a}*SharedItemsImports = 5
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{bd9e6556-357e-4c20-bfcd-fb131f9372fa}*SharedItemsImports = 5

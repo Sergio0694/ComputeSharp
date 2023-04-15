@@ -38,7 +38,7 @@ internal sealed class Win32Application
     /// <summary>
     /// Raised whenever a draw operation can be performed.
     /// </summary>
-    public event EventHandler<CanvasDrawingSession>? Draw;
+    public event EventHandler<DrawEventArgs>? Draw;
 
     /// <summary>
     /// Initializes the current application.
@@ -172,7 +172,7 @@ internal sealed class Win32Application
         // Create the drawing session and invoke all registered draw handler
         using (CanvasDrawingSession canvasDrawingSession = this.canvasSwapChain!.CreateDrawingSession(default))
         {
-            Draw?.Invoke(this, canvasDrawingSession);
+            Draw?.Invoke(this, new DrawEventArgs { TotalTime = time, DrawingSession = canvasDrawingSession });
         }
 
         // Wait for v-sync
@@ -180,5 +180,21 @@ internal sealed class Win32Application
 
         // Present the new frame
         this.canvasSwapChain.Present(syncInterval: 1);
+    }
+
+    /// <summary>
+    /// Arguments for <see cref="Draw"/>.
+    /// </summary>
+    public sealed class DrawEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets the total time for the rendering loop.
+        /// </summary>
+        public required TimeSpan TotalTime { get; init; }
+
+        /// <summary>
+        /// Gets the <see cref="CanvasDrawingSession"/> instance to use.
+        /// </summary>
+        public required CanvasDrawingSession DrawingSession { get; init; }
     }
 }
