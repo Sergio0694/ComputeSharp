@@ -59,8 +59,8 @@ class Program
                 {
                     // Set the effect properties
                     effect.ElapsedTime = e.TotalTime;
-                    effect.ScreenWidth = 1280;
-                    effect.ScreenHeight = 720;
+                    effect.ScreenWidth = (int)e.ScreenWidth;
+                    effect.ScreenHeight = (int)e.ScreenHeight;
 
                     // Draw the effect
                     e.DrawingSession.DrawImage(effect);

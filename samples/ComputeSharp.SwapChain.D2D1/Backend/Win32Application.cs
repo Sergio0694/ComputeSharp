@@ -6,6 +6,7 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
 using Windows.Graphics.DirectX;
+using Windows.Graphics.Imaging;
 using WinRT;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
@@ -33,7 +34,17 @@ internal sealed class Win32Application
     /// <summary>
     /// Whether or not the window has been resized and requires the buffers to be updated.
     /// </summary>
-    private bool isResizePending;
+    private volatile bool isResizePending;
+
+    /// <summary>
+    /// The current screen width in raw pixels.
+    /// </summary>
+    private uint screenWidth;
+
+    /// <summary>
+    /// The current screen height in raw pixels.
+    /// </summary>
+    private uint screenHeight;
 
     /// <summary>
     /// Raised whenever a draw operation can be performed.
@@ -86,8 +97,8 @@ internal sealed class Win32Application
             dxgiSwapChainDesc1.BufferUsage = DXGI.DXGI_USAGE_RENDER_TARGET_OUTPUT;
             dxgiSwapChainDesc1.Flags = 0;
             dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
-            dxgiSwapChainDesc1.Width = 1;
-            dxgiSwapChainDesc1.Height = 1;
+            dxgiSwapChainDesc1.Width = this.screenWidth = 1;
+            dxgiSwapChainDesc1.Height = this.screenHeight = 1;
             dxgiSwapChainDesc1.SampleDesc = new DXGI_SAMPLE_DESC(count: 1, quality: 0);
             dxgiSwapChainDesc1.Scaling = DXGI_SCALING.DXGI_SCALING_STRETCH;
             dxgiSwapChainDesc1.Stereo = 0;
@@ -166,13 +177,24 @@ internal sealed class Win32Application
                 newFormat: DirectXPixelFormat.Unknown,
                 bufferCount: 0);
 
+            BitmapSize bitmapSize = this.canvasSwapChain!.SizeInPixels;
+
+            this.screenWidth = bitmapSize.Width;
+            this.screenHeight = bitmapSize.Height;
+
             this.isResizePending = false;
         }
 
         // Create the drawing session and invoke all registered draw handler
         using (CanvasDrawingSession canvasDrawingSession = this.canvasSwapChain!.CreateDrawingSession(default))
         {
-            Draw?.Invoke(this, new DrawEventArgs { TotalTime = time, DrawingSession = canvasDrawingSession });
+            Draw?.Invoke(this, new DrawEventArgs
+            {
+                ScreenWidth = this.screenWidth,
+                ScreenHeight = this.screenHeight,
+                TotalTime = time,
+                DrawingSession = canvasDrawingSession
+            });
         }
 
         // Wait for v-sync
@@ -187,6 +209,16 @@ internal sealed class Win32Application
     /// </summary>
     public sealed class DrawEventArgs : EventArgs
     {
+        /// <summary>
+        /// Gets the screen width in raw pixels.
+        /// </summary>
+        public required uint ScreenWidth { get; init; }
+
+        /// <summary>
+        /// Gets the screen height in raw pixels.
+        /// </summary>
+        public required uint ScreenHeight { get; init; }
+
         /// <summary>
         /// Gets the total time for the rendering loop.
         /// </summary>
