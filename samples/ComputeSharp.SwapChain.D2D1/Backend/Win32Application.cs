@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using ABI.Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -122,7 +121,7 @@ internal sealed class Win32Application
             {
                 ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
 
-                canvasFactoryNativeUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(canvasDeviceActivationFactory));
+                canvasFactoryNativeUnknown.Attach((IUnknown*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory));
 
                 hresult = canvasFactoryNativeUnknown.CopyTo(canvasFactoryNative.GetAddressOf());
 
