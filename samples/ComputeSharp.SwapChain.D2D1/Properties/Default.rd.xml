@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Directives>
+  <Application>
+    <Assembly Name="WinRT.Runtime">
+      <Type Name="WinRT.IObjectReference">
+        <Method Name="As" Dynamic="Required All">
+          <GenericArgument Name="ABI.Microsoft.Graphics.Canvas.ICanvasFactoryNative+Interface+Vftbl, ComputeSharp.SwapChain.D2D1" />
+        </Method>
+        <Method Name="As" Dynamic="Required All">
+          <GenericArgument Name="ABI.System.IDisposable+Vftbl, WinRT.Runtime" />
+        </Method>
+      </Type>
+    </Assembly>
+  </Application>
+</Directives>
