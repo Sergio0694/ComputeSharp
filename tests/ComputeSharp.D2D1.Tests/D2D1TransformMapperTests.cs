@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Helpers;
@@ -133,6 +134,67 @@ public partial class D2D1TransformMapperTests
 
         Assert.IsNotNull(handle.Target);
         Assert.AreSame(handle.Target, transformMapper);
+    }
+
+    [TestMethod]
+    public unsafe void VerifyReferenceTrackingWithManagedWrapper()
+    {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static void GetTransformMapperUnknownAndGCHandle(
+            IUnknown** transformMapperUnknown,
+            out GCHandle transformMapperHandle)
+        {
+            D2D1TransformMapper<HelloWorld> transformMapper = D2D1TransformMapperFactory<HelloWorld>.Inflate(4);
+
+            Guid uuidOfTransformMapper = new("02E6D48D-B892-4FBC-AA54-119203BAB802");
+
+            Assert.AreEqual(CustomQueryInterfaceResult.Handled, ((ICustomQueryInterface)transformMapper).GetInterface(ref uuidOfTransformMapper, out *(IntPtr*)transformMapperUnknown));
+
+            transformMapperHandle = GCHandle.Alloc(transformMapper, GCHandleType.Weak);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static void Test(out GCHandle transformMapperHandle)
+        {
+            using ComPtr<IUnknown> transformMapperUnknown = default;
+
+            GetTransformMapperUnknownAndGCHandle(transformMapperUnknown.GetAddressOf(), out transformMapperHandle);
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void Test(GCHandle transformMapperHandle)
+            {
+                // Sanity check: the wrapper is alive right now
+                Assert.IsNotNull(transformMapperHandle.Target);
+            }
+
+            Test(transformMapperHandle);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // The wrapper is still alive, as the CCW is rooting it
+            Assert.IsNotNull(transformMapperHandle.Target);
+        }
+
+        GCHandle transformMapperHandle = default;
+
+        try
+        {
+            Test(out transformMapperHandle);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            // The wrapper is gone, as the CCW has been released
+            Assert.IsNull(transformMapperHandle.Target);
+        }
+        finally
+        {
+            if (transformMapperHandle.IsAllocated)
+            {
+                transformMapperHandle.Free();
+            }
+        }
     }
 
     [D2DInputCount(0)]
