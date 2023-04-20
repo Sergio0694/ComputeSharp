@@ -6,13 +6,12 @@
     xmlns:computesharp="using:ComputeSharp.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:converters="using:ComputeSharp.SwapChain.Core.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:enums="using:ComputeSharp.SwapChain.Core.Enums"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI.UI"
     xmlns:viewmodels="using:ComputeSharp.SwapChain.Core.ViewModels"
-    SizeChanged="UserControl_SizeChanged"
-    mc:Ignorable="d">
+    xmlns:views="using:ComputeSharp.SwapChain.WinUI.Views"
+    SizeChanged="Window_SizeChanged">
 
     <Grid x:Name="Root">
         <Grid.Resources>
@@ -119,7 +118,10 @@
                                     <Grid>
 
                                         <!--  Shader preview  -->
-                                        <computesharp:AnimatedComputeShaderPanel Loaded="AnimatedComputeShaderPanel_Loaded" ShaderRunner="{x:Bind ShaderRunner}" />
+                                        <computesharp:AnimatedComputeShaderPanel
+                                            Loaded="AnimatedComputeShaderPanel_Loaded"
+                                            RenderingFailed="SelectionShaderPanel_RenderingFailed"
+                                            ShaderRunner="{x:Bind ShaderRunner}" />
 
                                         <!--
                                             Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
@@ -146,15 +148,26 @@
             </Border>
         </Grid.Resources>
 
-        <!--  Shader  -->
-        <computesharp:AnimatedComputeShaderPanel
-            x:Name="ShaderPanel"
-            Grid.Row="1"
-            IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
-            IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
-            IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
-            ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
-            ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
+        <!--  Shader switches (for DirectX 12 or Win2D)  -->
+        <controls:SwitchPresenter Grid.Row="1" Value="{x:Bind ViewModel.SelectedRenderingMode, Mode=OneWay}">
+            <controls:Case IsDefault="True" Value="{x:Bind enums:RenderingMode.DirectX12}">
+
+                <!--  DirectX 12 shader  -->
+                <computesharp:AnimatedComputeShaderPanel
+                    x:Name="ShaderPanel"
+                    IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
+                    IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
+                    IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
+                    RenderingFailed="MainShaderPanel_RenderingFailed"
+                    ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
+                    ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
+            </controls:Case>
+            <controls:Case Value="{x:Bind enums:RenderingMode.Win2D}">
+
+                <!--  Win2D shader  -->
+                <views:D2D1AnimatedPixelShaderPanel IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}" PixelShaderEffect="{x:Bind ViewModel.SelectedComputeShader.PixelShaderEffect, Mode=OneWay}" />
+            </controls:Case>
+        </controls:SwitchPresenter>
 
         <!--  Settings panel  -->
         <StackPanel
@@ -190,7 +203,25 @@
                 <SymbolIcon Symbol="Setting" />
                 <Button.Flyout>
                     <MenuFlyout>
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=TwoWay}" Text="Dynamic resolution" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetRenderingModeCommand}"
+                            CommandParameter="{x:Bind enums:RenderingMode.DirectX12}"
+                            IsChecked="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="DirectX 12" />
+                        <ToggleMenuFlyoutItem
+                            Command="{x:Bind ViewModel.SetRenderingModeCommand}"
+                            CommandParameter="{x:Bind enums:RenderingMode.Win2D}"
+                            IsChecked="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.Win2D), Mode=OneWay}"
+                            Text="Win2D (Direct2D)" />
+                        <MenuFlyoutSeparator />
+                        <ToggleMenuFlyoutItem
+                            IsChecked="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="Vertical sync" />
+                        <ToggleMenuFlyoutItem
+                            IsChecked="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.SelectedRenderingMode.Equals(enums:RenderingMode.DirectX12), Mode=OneWay}"
+                            Text="Dynamic resolution" />
                         <MenuFlyoutSeparator />
                         <ToggleMenuFlyoutItem
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
@@ -224,9 +255,35 @@
         <!--  Invisible title bar  -->
         <Rectangle
             x:Name="TitleBarRectangle"
-            Height="28"
+            Height="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Fill="Transparent" />
+
+        <!--  Info bar  -->
+        <InfoBar
+            x:Name="RenderingErrorInfoBar"
+            Title="Rendering error"
+            Margin="80"
+            Message="There was an error that caused the rendering to fail. Try pausing and starting the rendering again, or restarting the app. If the issue persists, please report it by opening an issue on GitHub."
+            Severity="Error">
+            <InfoBar.ActionButton>
+                <HyperlinkButton Content="Report the issue" NavigateUri="https://github.com/Sergio0694/ComputeSharp/issues" />
+            </InfoBar.ActionButton>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation
+                    From="0"
+                    To="1.0"
+                    Duration="0:0:0.5" />
+                <animations:TranslationAnimation
+                    From="0,20,0"
+                    To="0"
+                    Duration="0:0:0.5" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0" Duration="0:0:0.5" />
+                <animations:TranslationAnimation To="0,20,0" Duration="0:0:0.5" />
+            </animations:Implicit.HideAnimations>
+        </InfoBar>
     </Grid>
 </Window>

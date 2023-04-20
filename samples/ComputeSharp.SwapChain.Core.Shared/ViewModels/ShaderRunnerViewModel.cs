@@ -18,12 +18,12 @@ public sealed partial class ShaderRunnerViewModel : ObservableObject
     /// </summary>
     /// <param name="shaderType">The name of the shader type to execute.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to execute.</param>
-    /// <param name="d2D1ShaderRunner">The <see cref="ID2D1ShaderRunner"/> instance to execute.</param>
-    public ShaderRunnerViewModel(string shaderType, IShaderRunner shaderRunner, ID2D1ShaderRunner d2D1ShaderRunner)
+    /// <param name="pixelShaderEffect">The <see cref="Shaders.PixelShaderEffect"/> instance to execute.</param>
+    public ShaderRunnerViewModel(string shaderType, IShaderRunner shaderRunner, PixelShaderEffect pixelShaderEffect)
     {
         ShaderType = shaderType;
         ShaderRunner = shaderRunner;
-        D2D1ShaderRunner = d2D1ShaderRunner;
+        PixelShaderEffect = pixelShaderEffect;
     }
 
     /// <summary>
@@ -37,9 +37,9 @@ public sealed partial class ShaderRunnerViewModel : ObservableObject
     public IShaderRunner ShaderRunner { get; }
 
     /// <summary>
-    /// Gets the <see cref="ID2D1ShaderRunner"/> instance to execute.
+    /// Gets the <see cref="PixelShaderEffect"/> instance to execute.
     /// </summary>
-    public ID2D1ShaderRunner D2D1ShaderRunner { get; }
+    public PixelShaderEffect PixelShaderEffect { get; }
 
     /// <summary>
     /// Gets or sets whether the current shader is selected.
