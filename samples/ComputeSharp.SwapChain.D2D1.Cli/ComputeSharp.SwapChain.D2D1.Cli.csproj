@@ -7,6 +7,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
+    <AssemblyName>computesharp.d2d1.cli</AssemblyName>
+    <ApplicationIcon>..\ComputeSharp.SwapChain.Cli\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!-- Workaround for WinRT.TypeExtensions.GetAuthoringMetadataType(Type) trim warning (see https://github.com/microsoft/CsWinRT/issues/1319) -->
+    <NoWarn>$(NoWarn);IL2104;IL2026</NoWarn>
   </PropertyGroup>
 
   <!-- Same optional NativeAOT property group as in ComputeSharp.SwapChain.Cli -->
