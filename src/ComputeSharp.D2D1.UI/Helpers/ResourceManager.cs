@@ -52,7 +52,7 @@ internal static unsafe class ResourceManager
             wrapper: wrapperInspectable.GetAddressOf()).Assert();
 
         // Get the runtime-provided RCW for the resulting WinRT wrapper
-        return RcwMarshaller.GetOrCreateManagedObject<IGraphicsEffectSource>((IUnknown*)wrapperInspectable.Get());
+        return RcwMarshaller.GetOrCreateManagedInterface<IGraphicsEffectSource>((IUnknown*)wrapperInspectable.Get());
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ internal static unsafe class ResourceManager
         using ComPtr<IInspectable> wrapperInspectable = default;
 
         // Unwrap the input wrapper and get an IInspectable* object
-        RcwMarshaller.GetNativeObject(wrapper, wrapperInspectable.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeObject(wrapper, wrapperInspectable.GetAddressOf());
 
         // Register this pair of native resource and inspectable wrapper
         canvasFactoryNative.Get()->RegisterWrapper(resource, wrapperInspectable.Get()).Assert();
@@ -128,7 +128,7 @@ internal static unsafe class ResourceManager
         // For instance, this will ensure the following call will work fine in unpackaged apps.
         ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
 
-        *factoryNative = (ICanvasFactoryNative*)MarshalInspectable<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
+        *factoryNative = (ICanvasFactoryNative*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
 #endif
     }
 }

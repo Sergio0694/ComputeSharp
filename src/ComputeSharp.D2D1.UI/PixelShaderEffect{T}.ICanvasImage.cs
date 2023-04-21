@@ -40,12 +40,12 @@ unsafe partial class PixelShaderEffect<T>
         using ComPtr<ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator> resourceCreatorAbi = default;
 
         // Get the ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreator object from the input interface
-        RcwMarshaller.GetNativeObject(resourceCreator, resourceCreatorAbi.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeInterface(resourceCreator, resourceCreatorAbi.GetAddressOf()).Assert();
 
         using ComPtr<ICanvasImageInterop> canvasImageInterop = default;
 
         // Get the ICanvasImageInterop object from the current instance
-        RcwMarshaller.GetNativeObject(this, canvasImageInterop.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeInterface(this, canvasImageInterop.GetAddressOf()).Assert();
 
         Rect bounds;
 
