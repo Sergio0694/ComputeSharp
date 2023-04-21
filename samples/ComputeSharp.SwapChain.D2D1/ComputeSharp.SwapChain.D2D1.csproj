@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
     <TargetFramework>net7.0-windows10.0.22621</TargetFramework>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
@@ -22,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0-preview1" />
     <PackageReference Include="PolySharp" Version="1.13.1" PrivateAssets="all" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.1" />
   </ItemGroup>
