@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasEffectFactoryNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasFactoryNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasImageInterop.cs" />
@@ -18,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ICanvasResourceWrapperNative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ID2D1DeviceContextLease.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\ID2D1DeviceContextPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\Inspectable\IInspectable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\Win2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_D2D_IMAGE_FLAGS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ABI.Microsoft.Graphics.Canvas\WIN2D_GET_DEVICE_ASSOCIATION_TYPE.cs" />

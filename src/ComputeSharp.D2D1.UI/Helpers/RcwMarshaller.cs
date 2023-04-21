@@ -37,6 +37,24 @@ internal static class RcwMarshaller
     }
 
     /// <summary>
+    /// Retrieves the underlying native object for an input RCW.
+    /// </summary>
+    /// <typeparam name="T">The type of managed object to unwrap.</typeparam>
+    /// <param name="managedObject">The input RCW instance to unwrap.</param>
+    /// <param name="nativeObject">A pointer to the resulting native object to retrieve.</param>
+    public static unsafe void GetNativeObject<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.Interfaces)] T>(T managedObject, IUnknown** nativeObject)
+        where T : class
+    {
+#if WINDOWS_UWP
+        // On UWP, due to built-in COM/WinRT support, Marshal.GetIUnknownForObject can handle all the logic
+        *nativeObject = (IUnknown*)Marshal.GetIUnknownForObject(managedObject);
+#else
+        // On WinUI 3, delegate the RCW unwrapping or CCW creation logic to CsWinRT's APIs
+        *nativeObject = (IUnknown*)MarshalInspectable<T>.FromManaged(managedObject);
+#endif
+    }
+
+    /// <summary>
     /// Retrieves the underlying native object for an input RCW and casts it to the specified type.
     /// </summary>
     /// <typeparam name="TFrom">The type of managed object to unwrap.</typeparam>
@@ -50,15 +68,8 @@ internal static class RcwMarshaller
     {
         using ComPtr<IUnknown> unknownObject = default;
 
-#if WINDOWS_UWP
-        // On UWP, due to built-in COM/WinRT support, Marshal.GetIUnknownForObject can handle all the logic
-        unknownObject.Attach((IUnknown*)Marshal.GetIUnknownForObject(managedObject));
-#else
-        // On WinUI 3, delegate the RCW unwrapping or CCW creation logic to CsWinRT's APIs
-        unknownObject.Attach((IUnknown*)MarshalInspectable<TFrom>.FromManaged(managedObject));
-#endif
+        GetNativeObject(managedObject, unknownObject.GetAddressOf());
 
-        // QueryInterface to the specific interface we need
         return unknownObject.CopyTo(nativeObject);
     }
 }
