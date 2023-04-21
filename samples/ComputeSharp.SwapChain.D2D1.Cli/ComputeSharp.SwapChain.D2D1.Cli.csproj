@@ -8,7 +8,7 @@
     <Platforms>x64;ARM64</Platforms>
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
     <AssemblyName>computesharp.d2d1.cli</AssemblyName>
-    <ApplicationIcon>..\ComputeSharp.SwapChain.Cli\icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.13.1" PrivateAssets="all" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.1" />
   </ItemGroup>
 

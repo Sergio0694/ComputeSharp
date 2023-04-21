@@ -145,6 +145,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.D2D1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{345F62CF-5320-4531-A087-DA5B488FDDE6}"
 	ProjectSection(SolutionItems) = preProject
+		assets\icon.ico = assets\icon.ico
 		assets\icon.png = assets\icon.png
 		assets\icon_highres.png = assets\icon_highres.png
 	EndProjectSection
