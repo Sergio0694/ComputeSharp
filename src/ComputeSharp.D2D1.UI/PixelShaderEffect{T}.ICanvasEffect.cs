@@ -101,7 +101,7 @@ unsafe partial class PixelShaderEffect<T>
         using ComPtr<ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect> canvasEffectAbi = default;
 
         // Get the ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect object from the input interface
-        RcwMarshaller.GetNativeObject(sourceEffect, canvasEffectAbi.GetAddressOf()).Assert();
+        RcwMarshaller.GetNativeInterface(sourceEffect, canvasEffectAbi.GetAddressOf()).Assert();
 
         Win2D.GetRequiredSourceRectanglesForICanvasImageInterop(
             resourceCreator: resourceCreatorWithDpi.Get(),
@@ -155,7 +155,7 @@ unsafe partial class PixelShaderEffect<T>
             // Get the underlying ABI.Microsoft.Graphics.Canvas.Effects.ICanvasEffect object for each input effect
             for (int i = 0; i < sourceEffects.Length; i++)
             {
-                RcwMarshaller.GetNativeObject(sourceEffects[i], canvasEffects[i].GetAddressOf()).Assert();
+                RcwMarshaller.GetNativeInterface(sourceEffects[i], canvasEffects[i].GetAddressOf()).Assert();
             }
 
             Rect[] result = new Rect[sourceEffects.Length];
@@ -210,9 +210,9 @@ unsafe partial class PixelShaderEffect<T>
         ICanvasImageInterop** canvasImageInterop)
     {
         // Get the ABI.Microsoft.Graphics.Canvas.ICanvasResourceCreatorWithDpi object from the input interface
-        RcwMarshaller.GetNativeObject(resourceCreator, resourceCreatorWithDpi).Assert();
+        RcwMarshaller.GetNativeInterface(resourceCreator, resourceCreatorWithDpi).Assert();
 
         // Get the ICanvasImageInterop object from the current instance
-        RcwMarshaller.GetNativeObject(this, canvasImageInterop).Assert();
+        RcwMarshaller.GetNativeInterface(this, canvasImageInterop).Assert();
     }
 }
