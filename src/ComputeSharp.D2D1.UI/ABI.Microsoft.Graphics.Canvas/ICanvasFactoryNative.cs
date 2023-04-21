@@ -3,7 +3,13 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.Windows;
+#if WINDOWS_UWP
 using TerraFX.Interop.WinRT;
+#else
+using WinRT;
+using WinRT.Interop;
+using IInspectable = TerraFX.Interop.WinRT.IInspectable;
+#endif
 
 #pragma warning disable CS0649, IDE1006
 
@@ -142,4 +148,27 @@ internal unsafe struct ICanvasFactoryNative
         return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, int>)this.lpVtbl[10])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
     }
+
+#if !WINDOWS_UWP
+    /// <summary>
+    /// The managed interface for <see cref="ICanvasFactoryNative"/>.
+    /// </summary>
+    [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
+    [WindowsRuntimeType]
+    [WindowsRuntimeHelperType(typeof(Interface))]
+    public interface Interface
+    {
+        /// <summary>
+        /// The vtable type for <see cref="Interface"/>.
+        /// </summary>
+        [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
+        public readonly struct Vftbl
+        {
+            /// <summary>
+            /// Allows CsWinRT to retrieve a pointer to the projection vtable (the name is hardcoded by convention).
+            /// </summary>
+            public static readonly IntPtr AbiToProjectionVftablePtr = IUnknownVftbl.AbiToProjectionVftblPtr;
+        }
+    }
+#endif
 }

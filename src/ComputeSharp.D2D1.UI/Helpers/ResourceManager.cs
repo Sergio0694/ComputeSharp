@@ -3,15 +3,21 @@ using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.Windows;
+#if WINDOWS_UWP
 using TerraFX.Interop.WinRT;
+#endif
 using Windows.Graphics.Effects;
+#if !WINDOWS_UWP
+using WinRT;
+#endif
 
 #if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp.Helpers;
 #else
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 
-using WinRT = TerraFX.Interop.WinRT.WinRT;
+using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
+using IInspectable = TerraFX.Interop.WinRT.IInspectable;
 #endif
 
 /// <summary>
@@ -90,8 +96,11 @@ internal static unsafe class ResourceManager
     /// <param name="factoryNative">A pointer to the resulting activation factory.</param>
     private static void GetActivationFactory(ICanvasFactoryNative** factoryNative)
     {
+#if WINDOWS_UWP
         const string activatableClassId = "Microsoft.Graphics.Canvas.CanvasDevice";
 
+        // On UWP, the WinRT types from Win2D are automatically registered for activation.
+        // This means we can simply use RoGetActivationFactory to retrieve the factory.
         fixed (char* pActivatableClassId = activatableClassId)
         {
             HSTRING_HEADER hStringHeaderActivatableClassId;
@@ -112,5 +121,14 @@ internal static unsafe class ResourceManager
                 iid: &canvasFactoryNativeId,
                 factory: (void**)factoryNative).Assert();
         }
+#else
+        // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally,
+        // for concistency with other types, we just use the built-in T.As<I>() method, which will
+        // automatically handle fallback logic to resolve types to activate if they're not registered.
+        // For instance, this will ensure the following call will work fine in unpackaged apps.
+        ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
+
+        *factoryNative = (ICanvasFactoryNative*)MarshalInspectable<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
+#endif
     }
 }
