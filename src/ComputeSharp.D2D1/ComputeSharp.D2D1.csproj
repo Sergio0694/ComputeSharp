@@ -26,9 +26,4 @@
 
   <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
   <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
-
-  <!-- NuGet package info -->
-  <PropertyGroup Label="Package">
-    <Description>A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them</Description>
-  </PropertyGroup>
 </Project>

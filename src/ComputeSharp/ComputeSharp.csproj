@@ -35,9 +35,4 @@
 
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
-
-  <!-- NuGet package info -->
-  <PropertyGroup Label="Package">
-    <Description>A library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</Description>
-  </PropertyGroup>
 </Project>

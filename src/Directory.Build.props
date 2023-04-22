@@ -1,7 +1,45 @@
 <Project>
   <Import Project="..\build\Directory.Build.props" />
 
-  <!-- General properties for published projects-->
+    <!-- Centralized packaging metadata for published projects -->
+  <PropertyGroup Condition="$(IsPackagedProject)">
+
+    <!-- Package descriptions-->
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp'">
+<![CDATA[A library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core'">
+<![CDATA[A library containing basic primitives to support ComputeSharp (this package is not supposed to be referenced directly by developers).]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1'">
+<![CDATA[A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1.Uwp'">
+<![CDATA[A UWP library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1.WinUI'">
+<![CDATA[A WinUI 3 library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Dynamic'">
+<![CDATA[An extension library for ComputeSharp to enable dynamic compilation of shaders at runtime.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Pix'">
+<![CDATA[An extension library for ComputeSharp to enable PIX support to produce debugging information.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Uwp'">
+<![CDATA[A UWP library with controls to render DX12 shaders powered by ComputeSharp.]]>
+    </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.WinUI'">
+<![CDATA[A WinUI 3 library with controls to render DX12 shaders powered by ComputeSharp.]]>
+    </Description>
+
+    <!-- Package tags -->
+    <PackageTags Condition="$(MSBuildProjectName.Contains('.D2D1'))">$(PackageTags) d2d d2d1 direct2d pixel</PackageTags>
+    <PackageTags Condition="$(MSBuildProjectName.EndsWith('.Uwp'))">$(PackageTags) uwp winui</PackageTags>
+    <PackageTags Condition="$(MSBuildProjectName.EndsWith('.WinUI'))">$(PackageTags) winui winui3 wasdk</PackageTags>
+  </PropertyGroup>
+
+  <!-- Additional properties for all source projects-->
   <PropertyGroup>
 
     <!-- Generate documentation files (only for published, non source generator projects) -->
@@ -21,10 +59,10 @@
   </PropertyGroup>
 
   <!-- Additional items for published projects -->
-  <ItemGroup Label="Package">
+  <ItemGroup Condition="$(IsPackagedProject)" Label="Package">
 
     <!-- Pack the NuGet icon file -->
-    <None Condition="$(IsPackagedProject)" Include="$(MSBuildThisFileDirectory)..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
+    <None Include="$(MSBuildThisFileDirectory)..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
 
     <!-- Pack .targets files, if present -->
     <None Condition="$(IsTargetsFileAvailableForPacking)" Include="$(MSBuildProjectName).targets" PackagePath="buildTransitive" Pack="true" />

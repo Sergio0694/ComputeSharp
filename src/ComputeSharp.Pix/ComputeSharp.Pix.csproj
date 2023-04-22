@@ -37,6 +37,14 @@
     <Otherwise>
       <PropertyGroup>
         <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220810001</WinPixEventRuntimeVersion>
+
+        <!--
+          This ignores the following warning:
+          "NU5100: the assembly 'winpixeventruntime.1.0.220810001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
+          be added as a reference when the package is installed into a project. Move it into the 'lib' folder if it needs to be referenced."
+          This is by design: we're copying the PIX assemblies into a separate folder and then unpacking them from the bundled .targets file.
+        -->
+        <NoWarn>$(NoWarn);NU5100</NoWarn>
       </PropertyGroup>
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
@@ -66,17 +74,4 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
-
-  <!-- NuGet package info -->
-  <PropertyGroup Label="Package">
-    <Description>An extension library for ComputeSharp to enable PIX support to produce debugging information</Description>
-
-    <!--
-      This ignores the following warning:
-      "NU5100: the assembly 'winpixeventruntime.1.0.220810001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
-      be added as a reference when the package is installed into a project. Move it into the 'lib' folder if it needs to be referenced."
-      This is by design: we're copying the PIX assemblies into a separate folder and then unpacking them from the bundled .targets file.
-    -->
-    <NoWarn>$(NoWarn);NU5100</NoWarn>
-  </PropertyGroup>
 </Project>

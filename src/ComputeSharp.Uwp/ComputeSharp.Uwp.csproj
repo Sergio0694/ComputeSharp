@@ -15,11 +15,6 @@
     <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Description>A UWP library with controls to render DX12 shaders powered by ComputeSharp</Description>
-    <PackageTags>$(PackageTags) uwp winui</PackageTags>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>

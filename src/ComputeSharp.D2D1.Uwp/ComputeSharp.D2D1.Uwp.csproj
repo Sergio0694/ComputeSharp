@@ -15,11 +15,6 @@
     <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Description>A UWP library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1</Description>
-    <PackageTags>$(PackageTags) uwp winui</PackageTags>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Win2D.uwp" Version="1.27.0-preview3" />
   </ItemGroup>

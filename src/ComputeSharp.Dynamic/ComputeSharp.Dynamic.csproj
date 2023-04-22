@@ -54,9 +54,4 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
-
-  <!-- NuGet package info -->
-  <PropertyGroup Label="Package">
-    <Description>An extension library for ComputeSharp to enable dynamic compilation of shaders at runtime</Description>
-  </PropertyGroup>
 </Project>

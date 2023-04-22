@@ -26,9 +26,4 @@
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
   <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
-
-  <!-- NuGet package info -->
-  <PropertyGroup Label="Package">
-    <Description>A library containing basic primitives to support ComputeSharp (this package is not supposed to be referenced directly by developers)</Description>
-  </PropertyGroup>
 </Project>
