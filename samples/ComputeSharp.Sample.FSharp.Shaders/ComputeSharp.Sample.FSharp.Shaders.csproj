@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
@@ -12,5 +11,4 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
-
 </Project>

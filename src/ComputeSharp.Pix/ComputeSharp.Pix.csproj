@@ -1,8 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-    <OutputPath>bin\Release</OutputPath>
-    <DocumentationFile>ComputeSharp.Pix.xml</DocumentationFile>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
@@ -19,46 +17,60 @@
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+              CopyToOutputDirectory="PreserveNewest"
+              Visible="False" />
       </ItemGroup>
     </When>
     <When Condition="'$(Platform)' == 'ARM64'">
       <ItemGroup>
         <None Include="Libraries\arm64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
-              Visible="False"
-              CopyToOutputDirectory="PreserveNewest" />
+              CopyToOutputDirectory="PreserveNewest"
+              Visible="False" />
       </ItemGroup>
     </When>
 
-    <!-- When no RID is specified, it means the NuGet package is being packed. In this case,
-         copy all libraries, and then rely on the custom .targets file to unpack them correctly. -->
+    <!--
+      When no RID is specified, it means the NuGet package is being packed. In this case,
+      copy all libraries, and then rely on the custom .targets file to unpack them correctly.
+    -->
     <Otherwise>
       <PropertyGroup>
         <WinPixEventRuntimeVersion>winpixeventruntime.1.0.220810001</WinPixEventRuntimeVersion>
+
+        <!--
+          This ignores the following warning:
+          "NU5100: the assembly 'winpixeventruntime.1.0.220810001\x64\WinPixEventRuntime.dll' is not inside the 'lib' folder and hence it won't
+          be added as a reference when the package is installed into a project. Move it into the 'lib' folder if it needs to be referenced."
+          This is by design: we're copying the PIX assemblies into a separate folder and then unpacking them from the bundled .targets file.
+        -->
+        <NoWarn>$(NoWarn);NU5100</NoWarn>
       </PropertyGroup>
       <ItemGroup>
         <None Include="Libraries\x64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\x64"
+              Visible="False" />
         <None Include="Libraries\x64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\x64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\x64"
+              Visible="False" />
         <None Include="Libraries\arm64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\arm64"
+              Visible="False" />
         <None Include="Libraries\arm64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
-              Visible="False"
               CopyToOutputDirectory="PreserveNewest"
-              PackFolder="$(WinPixEventRuntimeVersion)\arm64" />
+              Pack="true"
+              PackagePath="$(WinPixEventRuntimeVersion)\arm64"
+              Visible="False" />
       </ItemGroup>
     </Otherwise>
   </Choose>

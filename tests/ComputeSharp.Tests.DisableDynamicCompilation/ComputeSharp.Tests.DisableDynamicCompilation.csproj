@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
@@ -30,6 +29,5 @@
     <Compile Include="..\ComputeSharp.Tests\Attributes\ResourceAttribute.cs" Link="Attributes\ResourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Extensions\DeviceExtensions.cs" Link="Extensions\DeviceExtensions.cs" />
     <Compile Include="..\ComputeSharp.Tests\Extensions\GraphicsDeviceExtensions.cs" Link="Extensions\GraphicsDeviceExtensions.cs" />
-  </ItemGroup>	
-
+  </ItemGroup>
 </Project>

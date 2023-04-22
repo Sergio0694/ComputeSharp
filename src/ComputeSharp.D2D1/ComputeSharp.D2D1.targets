@@ -13,10 +13,12 @@
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
           DependsOnTargets="_ComputeSharpD2D1GatherAnalyzers">
 
-    <!-- Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
-         MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
-         the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
-         someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check. -->
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
     <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
       <Output TaskParameter="Assemblies" ItemName="ComputeSharpD2D1CurrentCompilerAssemblyIdentity"/>
     </GetAssemblyIdentity>
@@ -35,9 +37,11 @@
       <Analyzer Remove="@(_ComputeSharpD2D1Analyzer)"/>
     </ItemGroup>
 
-    <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
-         emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
-         disabled, and that ComputeSharp will not work at all unless a more up to date IDE or compiler version are used. -->
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that ComputeSharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
     <Error Condition ="'$(ComputeSharpD2D1CurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The ComputeSharp.D2D1 source generators have been disabled on the current configuration, as they need Roslyn 4.4 in order to work. ComputeSharp.D2D1 requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.4 or greater) or .NET SDK version (.NET 7 SDK or greater)."/>  
   </Target>
   

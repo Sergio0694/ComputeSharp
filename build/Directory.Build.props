@@ -90,8 +90,11 @@
     <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request' AND '$(IsCommitOnReleaseBranch)' != 'true'">pr</VersionSuffix>
   </PropertyGroup>
 
+  <!-- NuGet info and basic configuration -->
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
+    <PackageId>$(MSBuildProjectName)</PackageId>
+    <Title>$(MSBuildProjectName)</Title>
     <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -99,13 +102,13 @@
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
-    <Copyright>Copyright (c) 2022 Sergio Pedri</Copyright>
+    <Copyright>Copyright (c) 2023 Sergio Pedri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
     <PackageTags>dotnet net netcore netstandard csharp library graphics directx shader hlsl compute gpu performance parallel windows</PackageTags>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -127,7 +130,11 @@
   <PropertyGroup>
     <ProjectDirectoryPathFromSourceRoot>$([MSBuild]::MakeRelative('$(MSBuildThisFileDirectory)..\', $(MSBuildProjectDirectory)))</ProjectDirectoryPathFromSourceRoot>
     <IsPublishedProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('src\'))</IsPublishedProject>
-    <IsTestProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('tests\'))</IsTestProject>
+    <IsSourceGeneratorProject>false</IsSourceGeneratorProject>
+    <IsSourceGeneratorProject Condition="$(IsPublishedProject) AND $(MSBuildProjectName.EndsWith('.SourceGenerators'))">true</IsSourceGeneratorProject>
+    <IsPackagedProject>false</IsPackagedProject>
+    <IsPackagedProject Condition="$(IsPublishedProject) AND !$(IsSourceGeneratorProject)">true</IsPackagedProject>
+    <IsTestProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('tests\'))</IsTestProject>    
     <IsInternalsTestProject>false</IsInternalsTestProject>
     <IsInternalsTestProject Condition="$(IsTestProject) AND $(MSBuildProjectName.EndsWith('.Internals'))">true</IsInternalsTestProject>
   </PropertyGroup>

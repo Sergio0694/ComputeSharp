@@ -2,6 +2,28 @@
 <Project>
   <Import Project="..\build\Directory.Build.targets" />
 
+  <!-- Check whether there is a source generator that should be packed with the project -->
+  <PropertyGroup Condition="$(IsPackagedProject)">
+    <IsSourceGeneratorAvailableForPacking>false</IsSourceGeneratorAvailableForPacking>
+    <IsSourceGeneratorAvailableForPacking Condition="Exists('..\$(MSBuildProjectName).SourceGenerators')">true</IsSourceGeneratorAvailableForPacking>
+    <SourceGeneratorReferenceTargetFramework Condition="$(IsSourceGeneratorAvailableForPacking)">$(TargetFrameworks.Split(';')[0].Trim())</SourceGeneratorReferenceTargetFramework>
+  </PropertyGroup>
+
+  <!-- Pack the source generator, if present -->
+  <ItemGroup Condition="'$(IsSourceGeneratorAvailableForPacking)' == 'true'" Label="Package">
+    
+    <!-- Source generator reference (to trigger building the generator) -->
+    <ProjectReference Condition="'$(TargetFramework)' == '$(SourceGeneratorReferenceTargetFramework)'"
+                      Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj"
+                      ReferenceOutputAssembly="false" />
+
+    <!-- Pack the source generator from its output directory -->
+    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\$(SourceGeneratorReferenceTargetFramework)\$(MSBuildProjectName).SourceGenerators.dll"
+          PackagePath="analyzers\dotnet\cs"
+          Pack="true"
+          Visible="false" />
+  </ItemGroup>
+
   <!--
     Enable trimming support on .NET 6 (we need to use StartsWith since it
     could be a Windows TFM too). This can't be in a target unlike the other

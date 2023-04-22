@@ -1,23 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>ComputeSharp.D2D1.WinUI</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>ComputeSharp.D2D1.WinUI</PackageId>
-    <Title>ComputeSharp.D2D1.WinUI</Title>
-    <Description>A WinUI 3 library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1</Description>
-    <PackageTags>$(PackageTags) winui winui3 wasdk</PackageTags>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\ComputeSharp.Core.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
-  </ItemGroup>
+    <!--
+      Ignore some warnings about ambiguous cref attribute references.
+      This happens for ICanvasImage, but it's not really clear why.
+    -->
+    <NoWarn>$(NoWarn);CS0419</NoWarn>
+
+    <!-- Ignore warnings for usings outside of a namespace (needed for some WinRT type aliases) -->
+    <NoWarn>$(NoWarn);IDE0065</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0-preview1" />

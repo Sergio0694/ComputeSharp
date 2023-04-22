@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64;ARM64</Platforms>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
-    <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <NoWarn>$(NoWarn);CA1416;IDE0210</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,5 +21,4 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
-
 </Project>

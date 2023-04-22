@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-    <OutputPath>bin\Release</OutputPath>
-    <DocumentationFile>ComputeSharp.D2D1.xml</DocumentationFile>
     <SupportedOSVersion>windows6.1</SupportedOSVersion>
   </PropertyGroup>
 
@@ -15,9 +13,8 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <!-- .NET Standard 2.0 polyfill packages -->
+  <!-- Explicitly reference System.Runtime.CompilerServices.Unsafe on .NET Standard 2.0 to get Unsafe.SkipInit  -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 

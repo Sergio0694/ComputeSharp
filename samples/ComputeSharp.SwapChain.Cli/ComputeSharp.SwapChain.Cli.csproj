@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
 
     <!--
@@ -14,7 +13,7 @@
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
     <AssemblyName>computesharp.cli</AssemblyName>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!--
@@ -40,11 +39,6 @@
     <PackageReference Include="PublishAotCompressed" Version="1.0.0" />
   </ItemGroup>
 
-  <!-- Application icon -->
-  <ItemGroup>
-    <Content Include="icon.ico" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
@@ -59,5 +53,4 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
-
 </Project>

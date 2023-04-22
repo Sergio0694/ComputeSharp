@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -15,5 +14,4 @@
     <Compile Remove="Project\*" />
     <None Include="Project\*" />
   </ItemGroup>
-
 </Project>
