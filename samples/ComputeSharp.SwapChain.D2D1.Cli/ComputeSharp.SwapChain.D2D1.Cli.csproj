@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
+    <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
+    <TargetFramework>net7.0-windows10.0.22621</TargetFramework>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64;ARM64</Platforms>
+    <NoWarn>$(NoWarn);IDE0065</NoWarn>
+    <AssemblyName>computesharp.d2d1.cli</AssemblyName>
+    <ApplicationIcon>..\ComputeSharp.SwapChain.Cli\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!-- Workaround for WinRT.TypeExtensions.GetAuthoringMetadataType(Type) trim warning (see https://github.com/microsoft/CsWinRT/issues/1319) -->
+    <NoWarn>$(NoWarn);IL2104;IL2026</NoWarn>
+  </PropertyGroup>
+
+  <!-- Same optional NativeAOT property group as in ComputeSharp.SwapChain.Cli -->
+  <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT)' == 'true'">
+    <PublishAot>true</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+  </PropertyGroup>
+
+  <!-- Also include the .rd.xml file to fix some NativeAOT issues with CsWinRT -->
+  <ItemGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT)' == 'true'">
+    <RdXmlFile Include="Properties\Default.rd.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PolySharp" Version="1.13.1" PrivateAssets="all" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
+
+</Project>

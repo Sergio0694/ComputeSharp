@@ -134,6 +134,8 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
     - name: Build and run ComputeSharp.Sample
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
@@ -147,7 +149,7 @@ jobs:
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
       
-      # Also publish the NativeAOT test when .NET 7 is used
+      # Publish the NativeAOT test when .NET 7 is used
     - if: matrix.framework == 'net7.0'
       name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
       run: >
@@ -168,6 +170,21 @@ jobs:
         name: computesharp.cli.exe
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
+
+      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908)
+    - if: matrix.framework == 'net7.0'
+      name: Publish ComputeSharp.SwapChain.D2D1.Cli
+      run: >
+        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj -t:restore,publish /p:Configuration=Release
+        /p:Platform=x64 /p:RuntimeIdentifier=win10-x64 /p:PublishSingleFile=True /p:SelfContained=True /p:PublishTrimmed=True
+    - if: matrix.framework == 'net7.0'
+      name: Run ComputeSharp.SwapChain.D2D1.Cli
+      run: >
+        $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net7.0-windows10.0.22621\win10-x64\publish\computesharp.d2d1.cli.exe -PassThru);
+        sleep -Seconds 2;
+        $process.CloseMainWindow() | Out-Null;
+        $process.WaitForExit();
+        $process.ExitCode
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as

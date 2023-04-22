@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -152,6 +151,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B54B6DCA
 		tests\Directory.Build.props = tests\Directory.Build.props
 		tests\Directory.Build.targets = tests\Directory.Build.targets
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain.D2D1.Cli", "samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj", "{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -409,6 +410,14 @@ Global
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|ARM64.Build.0 = Release|ARM64
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|x64.ActiveCfg = Release|x64
 		{BD9E6556-357E-4C20-BFCD-FB131F9372FA}.Release|x64.Build.0 = Release|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|ARM64.Build.0 = Debug|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|x64.ActiveCfg = Debug|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Debug|x64.Build.0 = Debug|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|ARM64.ActiveCfg = Release|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|ARM64.Build.0 = Release|ARM64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|x64.ActiveCfg = Release|x64
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -445,6 +454,7 @@ Global
 		{F8BF7666-7CCF-4FE4-B055-2EBA4BCD4564} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{568E7009-5C13-4153-9C94-0AC7A3E6883C} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
 		{B54B6DCA-6EAB-46A8-83D3-15154659F47F} = {1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}
+		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
@@ -467,6 +477,7 @@ Global
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{902d7b44-2c6c-4fcd-840b-ebcae811ee63}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05}*SharedItemsImports = 13
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{9da1da9f-f8b2-4b25-be80-c21f773029e3}*SharedItemsImports = 13
+		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{9ea5ae9d-c39a-4f43-b03e-0a848ea2558a}*SharedItemsImports = 5
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		src\ComputeSharp.D2D1.UI\ComputeSharp.D2D1.UI.projitems*{bd9e6556-357e-4c20-bfcd-fb131f9372fa}*SharedItemsImports = 5

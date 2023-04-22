@@ -71,7 +71,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
     /// <summary>
     /// Whether or not the window has been resized and requires the buffers to be updated.
     /// </summary>
-    private bool isResizePending;
+    private volatile bool isResizePending;
 
     /// <summary>
     /// Creates a new <see cref="SwapChainApplication{T}"/> instance with the specified parameters.
