@@ -151,7 +151,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
     internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
 

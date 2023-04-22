@@ -75,11 +75,11 @@ public abstract unsafe partial class Texture1D<T> : IReferenceTrackedObject, IGr
     /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
     private protected Texture1D(GraphicsDevice device, int width, ResourceType resourceType, AllocationMode allocationMode, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 

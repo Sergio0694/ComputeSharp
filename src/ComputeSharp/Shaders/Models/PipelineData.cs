@@ -26,6 +26,8 @@ internal sealed unsafe class PipelineData : ReferenceTrackedObject
     /// <param name="d3D12PipelineState">The compiled pipeline state to reuse for the current shader.</param>
     public PipelineData(ID3D12RootSignature* d3D12RootSignature, ID3D12PipelineState* d3D12PipelineState)
     {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
         this.d3D12RootSignature = new ComPtr<ID3D12RootSignature>(d3D12RootSignature);
         this.d3D12PipelineState = new ComPtr<ID3D12PipelineState>(d3D12PipelineState);
     }

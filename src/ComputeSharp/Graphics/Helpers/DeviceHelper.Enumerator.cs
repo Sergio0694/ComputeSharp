@@ -101,6 +101,8 @@ partial class DeviceHelper
             /// <inheritdoc/>
             public bool MoveNext()
             {
+                using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
                 if (!this.isInitialized)
                 {
                     this.isInitialized = true;

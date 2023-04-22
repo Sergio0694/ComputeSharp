@@ -76,6 +76,8 @@ partial class ReadWriteTexture1D<T>
         /// <param name="owner">The owning <see cref="ReadWriteTexture1D{T}"/> instance to wrap.</param>
         public ReadOnly(ReadWriteTexture1D<T> owner)
         {
+            using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
             owner.GetReferenceTracker().DangerousAddRef();
 
             this.owner = owner;

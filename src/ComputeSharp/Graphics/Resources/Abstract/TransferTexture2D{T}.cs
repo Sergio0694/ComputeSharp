@@ -57,12 +57,12 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture2D(GraphicsDevice device, int width, int height, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 

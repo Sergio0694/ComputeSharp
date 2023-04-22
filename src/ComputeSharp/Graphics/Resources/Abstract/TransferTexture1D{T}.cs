@@ -57,11 +57,11 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     private protected TransferTexture1D(GraphicsDevice device, int width, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(width, 1, D3D12.D3D12_REQ_TEXTURE1D_U_DIMENSION);
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 

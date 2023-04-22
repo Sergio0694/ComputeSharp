@@ -71,7 +71,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     [RequiresUnreferencedCode("This method reads type info of all fields of the resource element type (recursively).")]
     private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
     {
-        this.referenceTracker = new ReferenceTracker(this);
+        using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         if (resourceType == ResourceType.Constant)
         {
@@ -83,7 +83,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
             default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255);
         }
 
-        using ReferenceTracker.Lease _0 = device.GetReferenceTracker().GetLease();
+        using ReferenceTracker.Lease _1 = device.GetReferenceTracker().GetLease();
 
         device.ThrowIfDeviceLost();
 
