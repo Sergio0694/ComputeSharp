@@ -1,6 +1,22 @@
 <Project>
   <Import Project="..\build\Directory.Build.props" />
 
+  <!-- General properties for published projects-->
+  <PropertyGroup>
+
+    <!-- Generate documentation files (only for published, non source generator projects) -->
+    <GenerateDocumentationFile Condition="$(IsPackagedProject)">true</GenerateDocumentationFile>
+    <DocumentationFile Condition="'$(GenerateDocumentationFile)' == 'true'">$(MSBuildProjectName).xml</DocumentationFile>
+
+    <!-- Disable packing symbols for source generators -->
+    <PackSymbols Condition="$(IsSourceGeneratorProject)">false</PackSymbols>
+  </PropertyGroup>
+
+  <!-- Additional items for published projects -->
+  <ItemGroup>
+    <None Condition="$(IsPackagedProject)" Include="$(MSBuildThisFileDirectory)..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
+  </ItemGroup>
+
   <!--
     Reference PolySharp for all .NET Standard 2.0 polyfills.
     Only needed for the .Core project and all source generators.

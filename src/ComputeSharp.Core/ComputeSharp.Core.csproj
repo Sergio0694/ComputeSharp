@@ -35,9 +35,6 @@
   <!-- NuGet package setup -->
   <ItemGroup Label="Package">
 
-    <!-- Package icon -->
-    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
-
     <!-- Source generator reference -->
     <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
 

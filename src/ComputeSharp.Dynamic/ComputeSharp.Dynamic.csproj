@@ -59,11 +59,4 @@
   <PropertyGroup Label="Package">
     <Description>An extension library for ComputeSharp to enable dynamic compilation of shaders at runtime</Description>
   </PropertyGroup>
-
-  <!-- NuGet package setup -->
-  <ItemGroup Label="Package">
-
-    <!-- Package icon -->
-    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" Visible="False" />
-  </ItemGroup>
 </Project>

@@ -23,10 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\ComputeSharp.Core.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
 

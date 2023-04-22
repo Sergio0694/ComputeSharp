@@ -23,10 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\ComputeSharp.Core.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Win2D.uwp" Version="1.27.0-preview3" />
   </ItemGroup>
 
