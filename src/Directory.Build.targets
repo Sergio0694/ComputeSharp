@@ -13,10 +13,15 @@
   <ItemGroup Condition="'$(IsSourceGeneratorAvailableForPacking)' == 'true'" Label="Package">
     
     <!-- Source generator reference (to trigger building the generator) -->
-    <ProjectReference Condition="'$(TargetFramework)' == '$(SourceGeneratorReferenceTargetFramework)'" Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Condition="'$(TargetFramework)' == '$(SourceGeneratorReferenceTargetFramework)'"
+                      Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj"
+                      ReferenceOutputAssembly="false" />
 
     <!-- Pack the source generator from its output directory -->
-    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\$(SourceGeneratorReferenceTargetFramework)\$(MSBuildProjectName).SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" Visible="false" />
+    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\$(SourceGeneratorReferenceTargetFramework)\$(MSBuildProjectName).SourceGenerators.dll"
+          PackagePath="analyzers\dotnet\cs"
+          Pack="true"
+          Visible="false" />
   </ItemGroup>
 
   <!--

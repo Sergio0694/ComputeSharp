@@ -14,6 +14,10 @@
     <!-- Check whether the project has a .targets file to bundle -->
     <IsTargetsFileAvailableForPacking>false</IsTargetsFileAvailableForPacking>
     <IsTargetsFileAvailableForPacking Condition="$(IsPackagedProject) AND Exists('$(MSBuildProjectName).targets')">true</IsTargetsFileAvailableForPacking>
+
+    <!-- Same check for an optional LICENSE.txt file to bundle -->
+    <IsLicenseFileAvailableForPacking>false</IsLicenseFileAvailableForPacking>
+    <IsLicenseFileAvailableForPacking Condition="$(IsPackagedProject) AND Exists('LICENSE.txt')">true</IsLicenseFileAvailableForPacking>
   </PropertyGroup>
 
   <!-- Additional items for published projects -->
@@ -25,6 +29,9 @@
     <!-- Pack .targets files, if present -->
     <None Condition="$(IsTargetsFileAvailableForPacking)" Include="$(MSBuildProjectName).targets" PackagePath="buildTransitive" Pack="true" />
     <None Condition="$(IsTargetsFileAvailableForPacking)" Include="$(MSBuildProjectName).targets" PackagePath="build" Pack="true" />
+
+    <!-- Pack the license file, if present -->
+    <None Condition="$(IsLicenseFileAvailableForPacking)" Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
   </ItemGroup>
 
   <!--

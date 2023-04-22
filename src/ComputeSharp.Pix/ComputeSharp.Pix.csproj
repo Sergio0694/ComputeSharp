@@ -79,11 +79,4 @@
     -->
     <NoWarn>$(NoWarn);NU5100</NoWarn>
   </PropertyGroup>
-
-  <!-- NuGet package setup -->
-  <ItemGroup Label="Package">
-
-    <!-- License file -->
-    <None Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
-  </ItemGroup>
 </Project>
