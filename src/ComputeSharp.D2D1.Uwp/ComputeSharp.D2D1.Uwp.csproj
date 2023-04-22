@@ -8,8 +8,6 @@
     <TargetPlatformMinVersion>$(TargetPlatformBaseVersion).$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <ExtrasUwpMetaPackageVersion>6.2.14</ExtrasUwpMetaPackageVersion>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <IsPackable>true</IsPackable>
-    <IsPublishable>true</IsPublishable>
     <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <Platforms>x64;ARM64</Platforms>
