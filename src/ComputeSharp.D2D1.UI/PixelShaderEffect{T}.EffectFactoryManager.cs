@@ -1,6 +1,7 @@
 using System;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
+using ComputeSharp.D2D1.Interop.Effects;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.D2D1.Uwp.Helpers;
@@ -48,13 +49,16 @@ unsafe partial class PixelShaderEffect<T>
         /// </summary>
         public static EffectFactoryManager Instance { get; } = new();
 
+        /// <summary>
+        /// Ensures an effect factory is registered in Win2D for the current effect type, or registers one otherwise.
+        /// </summary>
         public void EnsureEffectFactoryIsRegistered()
         {
             lock (this.lockObject)
             {
                 if (!this.isEffectFactoryRegistered)
                 {
-                    // TODO
+                    ResourceManager.RegisterEffectFactory(PixelShaderEffect.For<T>.Instance.Id, this);
 
                     this.isEffectFactoryRegistered = true;
                 }
