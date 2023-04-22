@@ -54,11 +54,11 @@ jobs:
       run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
     
       # WinUI 3 packaging needs to be done separately and with no previous build target for it to work correctly
-    - name: Build ComputeSharp.WinUI project
+    - name: Build ComputeSharp.WinUI package
       run: >
         msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release;
         msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
-    - name: Build ComputeSharp.D2D1.WinUI project
+    - name: Build ComputeSharp.D2D1.WinUI package
       run: >
         msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:restore /p:Configuration=Release;
         msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:pack /p:Configuration=Release
