@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' == 'true'">Exe</OutputType>
     <OutputType Condition="'$(CI_RUNNER_SAMPLES_INTEGRATION_TESTS)' != 'true'">WinExe</OutputType>
@@ -43,5 +42,4 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
-
 </Project>
