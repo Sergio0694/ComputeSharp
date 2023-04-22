@@ -128,8 +128,9 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(9)]
     public HRESULT RegisterEffectFactory([NativeTypeName("const IID &")] Guid* effectId, ICanvasEffectFactoryNative* factory)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, ICanvasEffectFactoryNative*, int>)this.lpVtbl[9])(
+        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, Guid*, ICanvasEffectFactoryNative*, int>)this.lpVtbl[9])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
+            effectId,
             factory);
     }
 
@@ -145,8 +146,9 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(10)]
     public HRESULT UnregisterEffectFactory([NativeTypeName("const IID &")] Guid* effectId)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, int>)this.lpVtbl[10])(
-            (ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, Guid*, int>)this.lpVtbl[10])(
+            (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
+            effectId);
     }
 
 #if !WINDOWS_UWP
