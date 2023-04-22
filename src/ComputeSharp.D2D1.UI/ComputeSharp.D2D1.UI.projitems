@@ -38,7 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ResourceManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1ImmutableArrayResourceTextureDescriptionsLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Loaders\D2D1IndexBitmaskResourceTextureDescriptionsLoader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasEffectFactoryNative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.EffectFactoryManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffect{T}.ICanvasImage.cs" />
