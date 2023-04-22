@@ -85,9 +85,5 @@
 
     <!-- License file -->
     <None Include="LICENSE.txt" Pack="true" PackagePath="\" Visible="False" />
-
-    <!-- Include the custom .targets file to check the source generator -->
-    <None Include="ComputeSharp.Pix.targets" PackagePath="buildTransitive" Pack="true" />
-    <None Include="ComputeSharp.Pix.targets" PackagePath="build" Pack="true" />
   </ItemGroup>
 </Project>

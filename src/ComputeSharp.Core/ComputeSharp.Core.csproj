@@ -38,10 +38,6 @@
     <!-- Source generator reference -->
     <ProjectReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="..\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
 
-    <!-- Include the custom .targets file to check the source generator -->
-    <None Include="ComputeSharp.Core.targets" PackagePath="buildTransitive" Pack="true" />
-    <None Include="ComputeSharp.Core.targets" PackagePath="build" Pack="true" />
-
     <!-- Pack the source generator in the NuGet package for the project -->
     <None Include="..\ComputeSharp.Core.SourceGenerators\bin\$(Configuration)\netstandard2.0\ComputeSharp.Core.SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" Visible="false" />
   </ItemGroup>
