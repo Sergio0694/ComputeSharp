@@ -23,9 +23,9 @@ namespace ComputeSharp.D2D1.WinUI;
 unsafe partial class PixelShaderEffect<T>
 {
     /// <summary>
-    /// A manager type to handle the effect factory logic and registration for <see cref="ICanvasEffectFactoryNative"/>.
+    /// A manager type to handle the effect factory registration logic for <see cref="ICanvasEffectFactoryNative"/>.
     /// </summary>
-    private sealed class EffectFactoryManager : ICanvasEffectFactoryNative.Interface
+    private sealed class EffectFactoryManager
     {
         /// <summary>
         /// Lock object used to synchronize the registration logic.
@@ -58,13 +58,21 @@ unsafe partial class PixelShaderEffect<T>
             {
                 if (!this.isEffectFactoryRegistered)
                 {
-                    ResourceManager.RegisterEffectFactory(PixelShaderEffect.For<T>.Instance.Id, this);
+                    ResourceManager.RegisterEffectFactory(
+                        effectId: PixelShaderEffect.For<T>.Instance.Id,
+                        factory: new EffectFactory());
 
                     this.isEffectFactoryRegistered = true;
                 }
             }
         }
+    }
 
+    /// <summary>
+    /// A managed implementation of <see cref="ICanvasEffectFactoryNative"/> for <see cref="PixelShaderEffect{T}"/>.
+    /// </summary>
+    private sealed class EffectFactory : ICanvasEffectFactoryNative.Interface
+    {
         /// <inheritdoc/>
         int ICanvasEffectFactoryNative.Interface.CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
         {
