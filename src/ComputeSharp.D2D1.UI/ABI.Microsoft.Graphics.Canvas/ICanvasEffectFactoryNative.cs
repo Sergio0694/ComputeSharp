@@ -47,7 +47,7 @@ internal unsafe struct ICanvasEffectFactoryNative
     }
 
     /// <summary>
-    /// Creates a new inspectable wrapper for an inpute D2D effect previosly registered through <see cref="ICanvasFactoryNative.RegisterEffectFactory"/>.
+    /// Creates a new inspectable wrapper for an input D2D effect previosly registered through <see cref="ICanvasFactoryNative.RegisterEffectFactory"/>.
     /// </summary>
     /// <param name="device">The input canvas device.</param>
     /// <param name="resource">The input native effect to create a wrapper for.</param>
