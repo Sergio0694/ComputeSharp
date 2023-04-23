@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
@@ -35,7 +36,7 @@ unsafe partial class PixelShaderEffect<T>
         /// <summary>
         /// Indicates whether an effect factory for <see cref="PixelShaderEffect{T}"/> has been registered.
         /// </summary>
-        private bool isEffectFactoryRegistered;
+        private volatile bool isEffectFactoryRegistered;
 
         /// <summary>
         /// Creates a new <see cref="EffectFactoryManager"/> instance.
@@ -53,6 +54,20 @@ unsafe partial class PixelShaderEffect<T>
         /// Ensures an effect factory is registered in Win2D for the current effect type, or registers one otherwise.
         /// </summary>
         public void EnsureEffectFactoryIsRegistered()
+        {
+            if (this.isEffectFactoryRegistered)
+            {
+                return;
+            }
+
+            EnsureEffectFactoryIsRegisteredWithLock();
+        }
+
+        /// <summary>
+        /// Same as <see cref="EnsureEffectFactoryIsRegistered"/>, but with a slower path using a lock.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void EnsureEffectFactoryIsRegisteredWithLock()
         {
             lock (this.lockObject)
             {
