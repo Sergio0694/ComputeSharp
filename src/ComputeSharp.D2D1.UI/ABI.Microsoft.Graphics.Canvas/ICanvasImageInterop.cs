@@ -145,17 +145,17 @@ internal unsafe struct ICanvasImageInterop
             /// <summary>
             /// The IUnknown vtable.
             /// </summary>
-            internal IUnknownVftbl IUnknownVftbl;
+            private IUnknownVftbl IUnknownVftbl;
 
             /// <summary>
             /// Function pointer for <see cref="GetDeviceFromAbi"/>.
             /// </summary>
-            internal delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int> GetDevice;
+            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int> GetDevice;
 
             /// <summary>
             /// Function pointer for <see cref="GetD2DImageFromAbi"/>.
             /// </summary>
-            internal delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
+            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
 
             /// <inheritdoc cref="Interface.GetDevice"/>
             [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]

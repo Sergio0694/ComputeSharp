@@ -123,12 +123,12 @@ internal unsafe struct ICanvasEffectFactoryNative
             /// <summary>
             /// The IUnknown vtable.
             /// </summary>
-            internal IUnknownVftbl IUnknownVftbl;
+            private IUnknownVftbl IUnknownVftbl;
 
             /// <summary>
             /// Function pointer for <see cref="CreateWrapperFromAbi"/>.
             /// </summary>
-            internal delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
+            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
 
             /// <inheritdoc cref="Interface.CreateWrapper"/>
             [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]

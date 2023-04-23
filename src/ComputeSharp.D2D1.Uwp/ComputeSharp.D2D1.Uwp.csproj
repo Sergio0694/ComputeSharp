@@ -15,6 +15,15 @@
     <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
   </PropertyGroup>
 
+  <!--
+    Bundle the .rd.xml directives as embedded resource so they're picked up automatically.
+    See: https://devblogs.microsoft.com/dotnet/net-native-deep-dive-making-your-library-great/.
+  -->
+  <ItemGroup>
+    <None Remove="Properties\ComputeSharp.D2D1.Uwp.rd.xml" />
+    <EmbeddedResource Include="Properties\ComputeSharp.D2D1.Uwp.rd.xml" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Win2D.uwp" Version="1.27.0-preview3" />
   </ItemGroup>
