@@ -1,0 +1,18 @@
+<!--
+    Runtime directives for ComputeSharp.D2D1.Uwp.
+    Runtime Directives are documented at https://go.microsoft.com/fwlink/?LinkID=391919.
+-->
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Library Name="ComputeSharp.D2D1.Uwp">
+
+    <!--
+      Ensure that MCG generates CCWs for PixelShaderEffect<T>.EffectFactory types. By default,
+      this would not be the case, because the type only implements a single [ComImport] interface,
+      which MCG assumes would only be used for native -> RCW scenarios. As such, without adding this
+      directive, trying to QueryInterface on a CCW retrieved from an EffectFactory instance would
+      throw a MissingInteropDataException. With this instead, the object can correctly be marshalled
+      to native. This is necessary because the CCW is passed to Win2D as an ICanvasEffectFactoryNative.
+    -->
+    <Type Name="ComputeSharp.D2D1.Uwp.PixelShaderEffect{T}.EffectFactory" MarshalObject="All"/>
+  </Library>
+</Directives>

@@ -342,3 +342,6 @@ samples/**/city_*.jpg
 
 # XML docs files
 src/**/ComputeSharp*.xml
+
+# Preserve .rd.xml files
+!src/**/ComputeSharp*.rd.xml

@@ -4,7 +4,11 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-using TerraFX.Interop.WinRT;
+#if !WINDOWS_UWP
+using WinRT;
+using WinRT.Interop;
+#endif
+using IInspectable = TerraFX.Interop.WinRT.IInspectable;
 
 #pragma warning disable CS0649, IDE1006
 
@@ -47,7 +51,7 @@ internal unsafe struct ICanvasEffectFactoryNative
     }
 
     /// <summary>
-    /// Creates a new inspectable wrapper for an inpute D2D effect previosly registered through <see cref="ICanvasFactoryNative.RegisterEffectFactory"/>.
+    /// Creates a new inspectable wrapper for an input D2D effect previosly registered through <see cref="ICanvasFactoryNative.RegisterEffectFactory"/>.
     /// </summary>
     /// <param name="device">The input canvas device.</param>
     /// <param name="resource">The input native effect to create a wrapper for.</param>
@@ -68,5 +72,81 @@ internal unsafe struct ICanvasEffectFactoryNative
             resource,
             dpi,
             wrapper);
+    }
+
+    /// <summary>
+    /// The managed implementation of <see cref="ICanvasEffectFactoryNative"/>.
+    /// </summary>
+    [Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
+#if WINDOWS_UWP
+    [ComImport]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+#else
+    [WindowsRuntimeType]
+    [WindowsRuntimeHelperType(typeof(Interface))]
+#endif
+    public interface Interface
+    {
+        /// <inheritdoc cref="ICanvasEffectFactoryNative.CreateWrapper"/>
+#if WINDOWS_UWP
+        [PreserveSig]
+#endif
+        [return: NativeTypeName("HRESULT")]
+        int CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper);
+
+#if !WINDOWS_UWP
+        /// <summary>
+        /// The vtable type for <see cref="Interface"/>.
+        /// </summary>
+        [Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
+        public struct Vftbl
+        {
+            /// <summary>
+            /// Allows CsWinRT to retrieve a pointer to the projection vtable (the name is hardcoded by convention).
+            /// </summary>
+            public static readonly IntPtr AbiToProjectionVftablePtr = InitVtbl();
+
+            /// <summary>
+            /// Builds the custom method table pointer for <see cref="Interface"/>.
+            /// </summary>
+            /// <returns>The method table pointer for <see cref="Interface"/>.</returns>
+            private static IntPtr InitVtbl()
+            {
+                Vftbl* lpVtbl = (Vftbl*)ComWrappersSupport.AllocateVtableMemory(typeof(Vftbl), sizeof(Vftbl));
+
+                lpVtbl->IUnknownVftbl = IUnknownVftbl.AbiToProjectionVftbl;
+                lpVtbl->CreateWrapper = &CreateWrapperFromAbi;
+
+                return (IntPtr)lpVtbl;
+            }
+
+            /// <summary>
+            /// The IUnknown vtable.
+            /// </summary>
+            private IUnknownVftbl IUnknownVftbl;
+
+            /// <summary>
+            /// Function pointer for <see cref="CreateWrapperFromAbi"/>.
+            /// </summary>
+            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
+
+            /// <inheritdoc cref="Interface.CreateWrapper"/>
+            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [return: NativeTypeName("HRESULT")]
+            private static int CreateWrapperFromAbi(IntPtr thisPtr, ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
+            {
+                try
+                {
+                    return ComWrappersSupport.FindObject<Interface>(thisPtr).CreateWrapper(device, resource, dpi, wrapper);
+                }
+                catch (Exception e)
+                {
+                    ExceptionHelpers.SetErrorInfo(e);
+
+                    return Marshal.GetHRForException(e);
+                }
+            }
+        }
+#endif
     }
 }

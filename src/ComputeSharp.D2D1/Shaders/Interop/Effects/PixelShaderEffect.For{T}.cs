@@ -154,7 +154,7 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         /// <summary>
-        /// Gets the shader <see cref="For{T}"/> instance.
+        /// Gets the shared <see cref="For{T}"/> instance.
         /// </summary>
         public static For<T> Instance { get; } = CreateInstance();
 

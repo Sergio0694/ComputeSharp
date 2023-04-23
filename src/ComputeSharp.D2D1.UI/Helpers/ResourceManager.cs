@@ -91,6 +91,25 @@ internal static unsafe class ResourceManager
     }
 
     /// <summary>
+    /// Registers a factory of wrappers for custom effect with a given effect id.
+    /// </summary>
+    /// <param name="effectId">The id of the effects to register a factory for.</param>
+    /// <param name="factory">The input factory to create wrappers of native effects.</param>
+    public static void RegisterEffectFactory(Guid effectId, ICanvasEffectFactoryNative.Interface factory)
+    {
+        using ComPtr<ICanvasFactoryNative> canvasFactoryNative = default;
+
+        GetActivationFactory(canvasFactoryNative.GetAddressOf());
+
+        using ComPtr<ICanvasEffectFactoryNative> canvasEffectFactoryNative = default;
+
+        RcwMarshaller.GetNativeInterface(factory, canvasEffectFactoryNative.GetAddressOf()).Assert();
+
+        // Register the factory for the current effect from the activation factory
+        canvasFactoryNative.Get()->RegisterEffectFactory(&effectId, canvasEffectFactoryNative.Get()).Assert();
+    }
+
+    /// <summary>
     /// Gets the <see cref="ICanvasFactoryNative"/> activation factory.
     /// </summary>
     /// <param name="factoryNative">A pointer to the resulting activation factory.</param>

@@ -347,6 +347,9 @@ unsafe partial class PixelShaderEffect<T>
         // Register the new realized effect
         ResourceManager.RegisterWrapper((IUnknown*)this.d2D1Effect.Get(), this);
 
+        // Register the effect factory, if necessary
+        EffectFactoryManager.Instance.EnsureEffectFactoryIsRegistered();
+
         return true;
     }
 
