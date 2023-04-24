@@ -51,7 +51,7 @@ internal static unsafe class IUnknownExtensions
     /// <typeparam name="T">The type of object being copied.</typeparam>
     /// <param name="source">The source <see cref="IUnknown"/> object.</param>
     /// <param name="destination">The destination <see cref="ComPtr{T}"/> location.</param>
-    /// <returns>The <see cref="HRESULT"/> for the operation (always <see cref="S.S_OK"/>).</returns>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     public static HRESULT CopyTo<T>(this ref T source, ref ComPtr<T> destination)
         where T : unmanaged // IUnknown
     {
@@ -64,5 +64,22 @@ internal static unsafe class IUnknownExtensions
         using ComPtr<T> temporary = new((T*)Unsafe.AsPointer(ref source));
 
         return temporary.CopyTo(ref destination);
+    }
+
+    /// <summary>
+    /// Copies the source <see cref="IUnknown"/> object onto a target <typeparamref name="U"/> location.
+    /// </summary>
+    /// <typeparam name="T">The type of object being copied.</typeparam>
+    /// <typeparam name="U">The type of destination object being copied.</typeparam>
+    /// <param name="source">The source <see cref="IUnknown"/> object.</param>
+    /// <param name="destination">The destination <typeparamref name="U"/> location.</param>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    public static HRESULT CopyTo<T, U>(this ref T source, U** destination)
+        where T : unmanaged // IUnknown
+        where U : unmanaged // IUnknown
+    {
+        using ComPtr<T> temporary = new((T*)Unsafe.AsPointer(ref source));
+
+        return temporary.CopyTo(destination);
     }
 }
