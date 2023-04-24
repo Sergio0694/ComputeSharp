@@ -104,6 +104,11 @@ unsafe partial class PixelShaderEffect<T>
                 resource->CopyTo(ref @this.d2D1Effect).Assert();
             }
 
+            // Register the new wrapper for the input resource. This has to be done manually in this
+            // case, as the effect is not being realized through the usual path from GetD2DImage.
+            ResourceManager.RegisterWrapper((IUnknown*)resource, this);
+
+            // Unwrap the PixelShaderEffect<T> and return its CCW to the caller
             RcwMarshaller.GetNativeObject(@this, wrapper);
 
             return S.S_OK;
