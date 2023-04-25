@@ -129,13 +129,9 @@ jobs:
       matrix:
         framework: [net7.0, net6.0, netcoreapp3.1, net472]
     runs-on: windows-2022
-    env:
-      CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
     - name: Build and run ComputeSharp.Sample
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
@@ -148,14 +144,30 @@ jobs:
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f ${{matrix.framework}} -r win-x64 --no-self-contained -p:Platform=x64 -v n;
         samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
+
+  # Run the NativeAOT samples as well
+  run-samples-aot:
+    needs: [build-solution]
+    strategy:
+      matrix:
+        platform: [x64, arm64]
+    runs-on: windows-2022
+    env:
+      CI_RUNNER_SAMPLES_INTEGRATION_TESTS: true
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
       
-      # Publish the NativeAOT test when .NET 7 is used
-    - if: matrix.framework == 'net7.0'
-      name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
+      # Publish the NativeAOT CLI sample
+    - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
-        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-x64 -v n
-    - if: matrix.framework == 'net7.0'
+        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-${{matrix.platform}} -v n
+      
+      # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it)
+    - if: matrix.platform == 'x64'
       name: Run ComputeSharp.SwapChain.Cli
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe -PassThru);
@@ -163,7 +175,9 @@ jobs:
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
         $process.ExitCode
-    - if: matrix.framework == 'net7.0'
+      
+      # Upload the binary (to track binary size trends)
+    - if: matrix.platform == 'x64'
       name: Upload NativeAOT CLI sample
       uses: actions/upload-artifact@v3
       with:
@@ -171,13 +185,15 @@ jobs:
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
 
-      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908)
-    - if: matrix.framework == 'net7.0'
+      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908).
+    - if: matrix.platform == 'x64'
       name: Publish ComputeSharp.SwapChain.D2D1.Cli
       run: >
         msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj -t:restore,publish /p:Configuration=Release
-        /p:Platform=x64 /p:RuntimeIdentifier=win10-x64 /p:PublishSingleFile=True /p:SelfContained=True /p:PublishTrimmed=True
-    - if: matrix.framework == 'net7.0'
+        /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win10-${{matrix.platform}} /p:PublishSingleFile=True /p:SelfContained=True /p:PublishTrimmed=True
+      
+      # Just like for the DX12 sample, run it on x64 to validate it works correctly
+    - if: matrix.platform == 'x64'
       name: Run ComputeSharp.SwapChain.D2D1.Cli
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net7.0-windows10.0.22621\win10-x64\publish\computesharp.d2d1.cli.exe -PassThru);
@@ -239,7 +255,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-tests, run-samples, verify-packages]
+    needs: [run-tests, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -251,7 +267,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-tests, run-samples, verify-packages]
+    needs: [run-tests, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
