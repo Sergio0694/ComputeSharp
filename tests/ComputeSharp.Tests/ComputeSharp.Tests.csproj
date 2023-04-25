@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 

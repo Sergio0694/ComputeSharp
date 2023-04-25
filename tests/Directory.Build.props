@@ -3,6 +3,9 @@
 
   <PropertyGroup>
 
+    <!-- Test projects never need to be packaged -->
+    <IsPackable>false</IsPackable>
+
     <!-- Unit tests don't need public XML docs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 
