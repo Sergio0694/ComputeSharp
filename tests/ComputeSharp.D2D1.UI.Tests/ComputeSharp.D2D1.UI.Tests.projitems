@@ -9,8 +9,8 @@
     <Import_RootNamespace>ComputeSharp.D2D1.UI.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TolerantImageComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffectTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Tests\Helpers\TolerantImageComparer.cs" Link="Helpers\TolerantImageComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShadersTests.cs" />
   </ItemGroup>
 </Project>

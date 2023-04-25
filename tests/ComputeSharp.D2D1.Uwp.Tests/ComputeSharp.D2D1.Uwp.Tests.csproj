@@ -137,9 +137,6 @@
     <PackageReference Include="MSTest.TestFramework">
       <Version>2.2.7</Version>
     </PackageReference>
-    <PackageReference Include="SixLabors.ImageSharp">
-      <Version>2.1.4</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />

@@ -1,14 +1,13 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using ComputeSharp.D2D1.UI.Tests.Helpers;
 using ComputeSharp.D2D1.Uwp;
 using ComputeSharp.SwapChain.Shaders.D2D1;
-using ComputeSharp.Tests.Helpers;
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using Windows.Storage;
+using Windows.UI;
 
 namespace ComputeSharp.D2D1.UI.Tests;
 
@@ -64,9 +63,12 @@ public class ShadersTests
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
         PixelShaderEffect<T> effect = new() { ConstantBuffer = shader };
 
-        byte[] pixelBytes;
+        Color[] pixelColors;
 
-        using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 1280, 720, 96.0f))
+        using CanvasDevice canvasDevice = new();
+
+        // Compute the resulting image
+        using (CanvasRenderTarget renderTarget = new(canvasDevice, 1280, 720, 96.0f))
         {
             // Draw the shader on the render target
             using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
@@ -75,15 +77,16 @@ public class ShadersTests
             }
 
             // Get the BGRA32 pixel data from the render target
-            pixelBytes = renderTarget.GetPixelBytes();
+            pixelColors = renderTarget.GetPixelColors();
         }
 
         StorageFile imageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Shaders/{typeof(T).Name}.png"));
 
+        // Retrieve the expected image
         using Stream stream = await imageFile.OpenStreamForReadAsync();
-        using Image<Bgra32> expected = await Image.LoadAsync<Bgra32>(stream);
-        using Image<Bgra32> result = Image.WrapMemory<Bgra32>(pixelBytes, 1280, 720);
+        using CanvasBitmap expected = await CanvasBitmap.LoadAsync(canvasDevice, stream.AsRandomAccessStream());
+        using CanvasBitmap actual = CanvasBitmap.CreateFromColors(canvasDevice, pixelColors, 1280, 720);
 
-        TolerantImageComparer.AssertEqual(expected, result, threshold);
+        TolerantImageComparer.AssertEqual(expected, actual, threshold);
     }
 }
