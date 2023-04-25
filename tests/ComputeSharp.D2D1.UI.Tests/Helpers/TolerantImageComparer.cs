@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Graphics.Canvas;
-using System.Drawing;
 using Color = Windows.UI.Color;
 
 namespace ComputeSharp.D2D1.UI.Tests.Helpers;

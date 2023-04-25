@@ -1,8 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Interop;
+using ComputeSharp.D2D1.UI.Tests.Helpers;
 using ComputeSharp.D2D1.Uwp;
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.UI.Tests;
 
@@ -164,6 +168,216 @@ public partial class PixelShaderEffectTests
         Win2DHelper.GetD2DImage(effect5, new CanvasDevice(), d2D1Image.GetAddressOf());
     }
 
+    [TestMethod]
+    public unsafe void Interop_EffectPropertiesAreForwardedCorrectly()
+    {
+        ShaderWithSomePropertiesAndInputs shader = new(-1234567);
+
+        PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
+        PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new()
+        {
+            ConstantBuffer = shader,
+            CacheOutput = true,
+            BufferPrecision = CanvasBufferPrecision.Precision32Float,
+            Sources = { [0] = effect0 }
+        };
+
+        CanvasDevice canvasDevice = new();
+
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        // Realize the effect and get the D2D effect (this will also apply all local properties)
+        Win2DHelper.GetD2DImage(effect1, canvasDevice, d2D1Image.GetAddressOf());
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        Marshal.ThrowExceptionForHR(d2D1Image.CopyTo(d2D1Effect.GetAddressOf()));
+
+        int constantBufferDataSize = D2D1PixelShader.GetConstantBufferSize<ShaderWithSomePropertiesAndInputs>();
+        byte* constantBufferData = stackalloc byte[constantBufferDataSize];
+
+        int hresult = d2D1Effect.Get()->GetValue(
+            index: D2D1PixelShaderEffectProperty.ConstantBuffer,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,
+            data: constantBufferData,
+            dataSize: (uint)constantBufferDataSize);
+
+        Marshal.ThrowExceptionForHR(hresult);
+
+        ReadOnlyMemory<byte> expectedConstantBufferData = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        Assert.IsTrue(expectedConstantBufferData.Span.SequenceEqual(new ReadOnlySpan<byte>(constantBufferData, constantBufferDataSize)));
+
+        int cacheOutput;
+
+        hresult = d2D1Effect.Get()->GetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+            data: (byte*)&cacheOutput,
+            dataSize: sizeof(int));
+
+        Marshal.ThrowExceptionForHR(hresult);
+
+        Assert.AreEqual(1, cacheOutput);
+
+        D2D1_BUFFER_PRECISION d2D1BufferPrecision;
+
+        hresult = d2D1Effect.Get()->GetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+            data: (byte*)&d2D1BufferPrecision,
+            dataSize: sizeof(D2D1_BUFFER_PRECISION));
+
+        Marshal.ThrowExceptionForHR(hresult);
+
+        Assert.AreEqual(D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT, d2D1BufferPrecision);
+
+        using ComPtr<ID2D1Image> d2D1Image1 = default;
+        using ComPtr<ID2D1Image> d2D1Image2 = default;
+
+        Win2DHelper.GetD2DImage(effect0, canvasDevice, d2D1Image1.GetAddressOf());
+
+        d2D1Effect.Get()->GetInput(0, d2D1Image2.GetAddressOf());
+
+        using ComPtr<IUnknown> d2D1Image1Unknown = default;
+        using ComPtr<IUnknown> d2D1Image2Unknown = default;
+
+        Marshal.ThrowExceptionForHR(d2D1Image1.CopyTo(d2D1Image1Unknown.GetAddressOf()));
+        Marshal.ThrowExceptionForHR(d2D1Image2.CopyTo(d2D1Image2Unknown.GetAddressOf()));
+
+        // The image from the effect input should be the same retrieved from the original source wrapper
+        Assert.IsTrue(d2D1Image1Unknown.Get() == d2D1Image2Unknown.Get());
+    }
+
+    [TestMethod]
+    public unsafe void Interop_EffectPropertiesAreUpdatedFromNativeEffectCorrectly()
+    {
+        ShaderWithSomePropertiesAndInputs shader = new(-1234567);
+
+        PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
+        PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new();
+
+        CanvasDevice canvasDevice = new();
+
+        using ComPtr<ID2D1Image> d2D1Image0 = default;
+        using ComPtr<ID2D1Image> d2D1Image1 = default;
+
+        // Realize the effects and get the D2D effects
+        Win2DHelper.GetD2DImage(effect0, canvasDevice, d2D1Image0.GetAddressOf());
+        Win2DHelper.GetD2DImage(effect1, canvasDevice, d2D1Image1.GetAddressOf());
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        Marshal.ThrowExceptionForHR(d2D1Image1.CopyTo(d2D1Effect.GetAddressOf()));
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
+
+        int cacheOutput = 1;
+
+        int hresult = d2D1Effect.Get()->SetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
+            data: (byte*)&cacheOutput,
+            dataSize: sizeof(int));
+
+        Marshal.ThrowExceptionForHR(hresult);
+
+        Assert.AreEqual(1, cacheOutput);
+
+        D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
+
+        hresult = d2D1Effect.Get()->SetValue(
+            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
+            data: (byte*)&d2D1BufferPrecision,
+            dataSize: sizeof(D2D1_BUFFER_PRECISION));
+
+        Marshal.ThrowExceptionForHR(hresult);
+
+        d2D1Effect.Get()->SetInput(0, d2D1Image0.Get());
+
+        Assert.AreEqual(shader.Number, effect1.ConstantBuffer.Number);
+        Assert.IsTrue(effect1.CacheOutput);
+        Assert.AreEqual(CanvasBufferPrecision.Precision32Float, effect1.BufferPrecision);
+        Assert.AreSame(effect0, effect1.Sources[0]);
+    }
+
+    [TestMethod]
+    public unsafe void Interop_IsWrapperRegisteredCorrectly()
+    {
+        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        Win2DHelper.GetD2DImage(effect, new CanvasDevice(), d2D1Image.GetAddressOf());
+
+        object wrapper = Win2DHelper.GetOrCreate(d2D1Image.Get());
+
+        Assert.AreSame(effect, wrapper);
+    }
+
+    [TestMethod]
+    public unsafe void Interop_IsWrapperFactoryRegisteredCorrectlyAndWorking()
+    {
+        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        CanvasDevice canvasDevice1 = new();
+        CanvasDevice canvasDevice2 = new();
+
+        using ComPtr<ID2D1Image> d2D1Image1 = default;
+        using ComPtr<ID2D1Image> d2D1Image2 = default;
+
+        Win2DHelper.GetD2DImage(effect, canvasDevice1, d2D1Image1.GetAddressOf());
+        Win2DHelper.GetD2DImage(effect, canvasDevice2, d2D1Image2.GetAddressOf());
+
+        // The first resource is orphaned, so a new wrapper will be created
+        object wrapper1 = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice1);
+
+        Assert.IsTrue(wrapper1 is PixelShaderEffect<ShaderWith0Inputs>);
+        Assert.AreNotSame(wrapper1, effect);
+
+        // Getting the same wrapper again should return the newly created one
+        object wrapper1FromCache = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice1);
+
+        Assert.AreSame(wrapper1, wrapper1FromCache);
+
+        using ComPtr<ID2D1Image> d2D1Image1FromNewWrapper = default;
+
+        // Get the realized image from the newly created wrapper
+        Win2DHelper.GetD2DImage((ICanvasImage)wrapper1, canvasDevice1, d2D1Image1FromNewWrapper.GetAddressOf());
+
+        using ComPtr<IUnknown> d2D1Image1Unknown = default;
+        using ComPtr<IUnknown> d2D1Image1FromNewWrapperUnknown = default;
+
+        Marshal.ThrowExceptionForHR(d2D1Image1.CopyTo(d2D1Image1Unknown.GetAddressOf()));
+        Marshal.ThrowExceptionForHR(d2D1Image1FromNewWrapper.CopyTo(d2D1Image1FromNewWrapperUnknown.GetAddressOf()));
+
+        // The retrieved image should be the same one the new wrapper was created from
+        Assert.IsTrue(d2D1Image1Unknown.Get() == d2D1Image1FromNewWrapperUnknown.Get());
+
+        // The second resource is currently registered, so it returns the local wrapper
+        object wrapper2 = Win2DHelper.GetOrCreate(d2D1Image2.Get());
+
+        Assert.AreSame(effect, wrapper2);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public unsafe void Interop_WrapperFactoryDetectsMismatchedDevices()
+    {
+        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        CanvasDevice canvasDevice1 = new();
+        CanvasDevice canvasDevice2 = new();
+
+        using ComPtr<ID2D1Image> d2D1Image1 = default;
+        using ComPtr<ID2D1Image> d2D1Image2 = default;
+
+        Win2DHelper.GetD2DImage(effect, canvasDevice1, d2D1Image1.GetAddressOf());
+        Win2DHelper.GetD2DImage(effect, canvasDevice2, d2D1Image2.GetAddressOf());
+
+        // The factory should detect we're passing an incompatible device for the resource
+        _ = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice2);
+    }
+
     [D2DInputCount(0)]
     [AutoConstructor]
     private partial struct ShaderWithSomeProperties : ID2D1PixelShader
@@ -177,6 +391,18 @@ public partial class PixelShaderEffectTests
         public float4 Execute()
         {
             return default;
+        }
+    }
+
+    [D2DInputCount(1)]
+    [AutoConstructor]
+    private partial struct ShaderWithSomePropertiesAndInputs : ID2D1PixelShader
+    {
+        public int Number;
+
+        public float4 Execute()
+        {
+            return D2D.GetInput(0);
         }
     }
 
