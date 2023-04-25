@@ -1,3 +1,4 @@
+using System;
 using ComputeSharp.D2D1.Interop;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
@@ -92,6 +93,9 @@ unsafe partial class PixelShaderEffect<T>
             }
             else
             {
+                // If the effect is not realized, manually ensure the transform isn't null
+                default(ArgumentNullException).ThrowIfNull(value);
+
                 this.transformMapper = value;
             }
         }
