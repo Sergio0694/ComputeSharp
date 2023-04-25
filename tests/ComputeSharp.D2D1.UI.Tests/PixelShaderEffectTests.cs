@@ -56,6 +56,20 @@ public partial class PixelShaderEffectTests
 
         // The shader also matches when retrieving it through the realized effect
         Assert.IsTrue(actual.SequenceEqual(expected));
+
+        // Draw the effect on a different device (this forces it to unrealize and re-realize).
+        // This also acts as a unit test for the device changed logic, since that's used here.
+        using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
+        using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+        {
+            drawingSession.DrawImage(effect);
+        }
+
+        roundTripShader = effect.ConstantBuffer;
+        actual = new(&roundTripShader, sizeof(ShaderWithSomeProperties));
+
+        // The shader also matches when retrieving it through the realized effect
+        Assert.IsTrue(actual.SequenceEqual(expected));
     }
 
     [D2DInputCount(0)]

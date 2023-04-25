@@ -9,6 +9,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Windows.Storage;
 using Windows.UI;
 
+#nullable enable
+
 namespace ComputeSharp.D2D1.UI.Tests;
 
 [TestClass]
@@ -16,52 +18,72 @@ namespace ComputeSharp.D2D1.UI.Tests;
 public class ShadersTests
 {
     [TestMethod]
-    public async Task HelloWorld()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task HelloWorld(WrapperType wrapperType)
     {
-        await RunTestAsync<HelloWorld>();
+        await RunTestAsync<HelloWorld>(wrapperType);
     }
 
     [TestMethod]
-    public async Task ColorfulInfinity()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task ColorfulInfinity(WrapperType wrapperType)
     {
-        await RunTestAsync<ColorfulInfinity>();
+        await RunTestAsync<ColorfulInfinity>(wrapperType);
     }
 
     [TestMethod]
-    public async Task FractalTiling()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task FractalTiling(WrapperType wrapperType)
     {
-        await RunTestAsync<FractalTiling>();
+        await RunTestAsync<FractalTiling>(wrapperType);
     }
 
     [TestMethod]
-    public async Task MengerJourney()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task MengerJourney(WrapperType wrapperType)
     {
-        await RunTestAsync<MengerJourney>(0.000011f);
+        await RunTestAsync<MengerJourney>(wrapperType, 0.000011f);
     }
 
     [TestMethod]
-    public async Task Octagrams()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task Octagrams(WrapperType wrapperType)
     {
-        await RunTestAsync<Octagrams>();
+        await RunTestAsync<Octagrams>(wrapperType);
     }
 
     [TestMethod]
-    public async Task ProteanClouds()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task ProteanClouds(WrapperType wrapperType)
     {
-        await RunTestAsync<ProteanClouds>();
+        await RunTestAsync<ProteanClouds>(wrapperType);
     }
 
     [TestMethod]
-    public async Task TerracedHills()
+    [DataRow(WrapperType.PixelShaderEffect)]
+    [DataRow(WrapperType.CanvasEffect)]
+    public async Task TerracedHills(WrapperType wrapperType)
     {
-        await RunTestAsync<TerracedHills>(0.000026f);
+        await RunTestAsync<TerracedHills>(wrapperType, 0.000026f);
     }
 
-    private static async Task RunTestAsync<T>(float threshold = 0.00001f)
+    private static async Task RunTestAsync<T>(WrapperType wrapperType, float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
-        PixelShaderEffect<T> effect = new() { ConstantBuffer = shader };
+
+        // Either create the effect directly, or a canvas effect
+        ICanvasImage canvasImage = wrapperType switch
+        {
+            WrapperType.PixelShaderEffect => new PixelShaderEffect<T>() { ConstantBuffer = shader },
+            _ => new TestCanvasEffect<T> { ConstantBuffer = shader }
+        };
 
         Color[] pixelColors;
 
@@ -73,7 +95,7 @@ public class ShadersTests
             // Draw the shader on the render target
             using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
             {
-                drawingSession.DrawImage(effect);
+                drawingSession.DrawImage(canvasImage);
             }
 
             // Get the BGRA32 pixel data from the render target
@@ -88,5 +110,35 @@ public class ShadersTests
         using CanvasBitmap actual = CanvasBitmap.CreateFromColors(canvasDevice, pixelColors, 1280, 720);
 
         TolerantImageComparer.AssertEqual(expected, actual, threshold);
+    }
+
+    private sealed class TestCanvasEffect<T> : CanvasEffect
+        where T : unmanaged, ID2D1PixelShader
+    {
+        private PixelShaderEffect<T>? effect;
+
+        private T constantBuffer;
+
+        public T ConstantBuffer
+        {
+            get => this.constantBuffer;
+            set => SetAndInvalidateEffectGraph(ref this.constantBuffer, value);
+        }
+
+        protected override ICanvasImage BuildEffectGraph()
+        {
+            return this.effect = new PixelShaderEffect<T>();
+        }
+
+        protected override void ConfigureEffectGraph()
+        {
+            this.effect!.ConstantBuffer = this.constantBuffer;
+        }
+    }
+
+    public enum WrapperType
+    {
+        PixelShaderEffect,
+        CanvasEffect
     }
 }

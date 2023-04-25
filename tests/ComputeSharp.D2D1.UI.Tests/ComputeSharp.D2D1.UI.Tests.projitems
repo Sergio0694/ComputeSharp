@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TolerantImageComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffectTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PixelShaderEffectTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShadersTests.cs" />
   </ItemGroup>
