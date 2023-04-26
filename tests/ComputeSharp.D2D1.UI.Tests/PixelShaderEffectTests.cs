@@ -428,7 +428,6 @@ public partial class PixelShaderEffectTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public unsafe void Interop_WrapperFactoryDetectsMismatchedDevices()
     {
         using PixelShaderEffect<ShaderWith0Inputs> effect = new();
@@ -443,7 +442,16 @@ public partial class PixelShaderEffectTests
         Win2DHelper.GetD2DImage(effect, canvasDevice2, d2D1Image2.GetAddressOf());
 
         // The factory should detect we're passing an incompatible device for the resource
-        _ = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice2);
+        try
+        {
+            _ = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice2);
+
+            Assert.Fail();
+        }
+        catch (Exception e)
+        {
+            Assert.AreEqual(e.HResult, D2DERR.D2DERR_WRONG_FACTORY);
+        }
     }
 
     [D2DInputCount(0)]

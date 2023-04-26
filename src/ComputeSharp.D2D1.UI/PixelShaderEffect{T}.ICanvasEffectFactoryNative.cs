@@ -124,7 +124,7 @@ unsafe partial class PixelShaderEffect<T>
                     {
                         *wrapper = null;
 
-                        return E.E_INVALIDARG;
+                        return D2DERR.D2DERR_WRONG_FACTORY;
                     }
                 }
 
