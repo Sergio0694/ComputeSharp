@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.UI.Tests.Helpers;
@@ -314,6 +315,68 @@ public partial class PixelShaderEffectTests
         object wrapper = Win2DHelper.GetOrCreate(d2D1Image.Get());
 
         Assert.AreSame(effect, wrapper);
+    }
+
+    [TestMethod]
+    public unsafe void Interop_IsWrapperUnregisteredCorrectly_FromExplicitDispose()
+    {
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        CanvasDevice canvasDevice = new();
+
+        try
+        {
+            Win2DHelper.GetD2DImage(effect, canvasDevice, d2D1Image.GetAddressOf());
+        }
+        finally
+        {
+            effect.Dispose();
+        }
+
+        object wrapper = Win2DHelper.GetOrCreate(d2D1Image.Get(), canvasDevice);
+
+        Assert.IsTrue(wrapper is PixelShaderEffect<ShaderWith0Inputs>);
+        Assert.AreNotSame(effect, wrapper);
+
+        // Ensure the new wrapper is disposed as well
+        using PixelShaderEffect<ShaderWith0Inputs> _ = (PixelShaderEffect<ShaderWith0Inputs>)wrapper;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
+    public unsafe void Interop_IsWrapperUnregisteredCorrectly_FromExplicitDispose_FailsWithNoDevice()
+    {
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        using (PixelShaderEffect<ShaderWith0Inputs> effect = new())
+        {
+            Win2DHelper.GetD2DImage(effect, new CanvasDevice(), d2D1Image.GetAddressOf());
+        }
+
+        _ = Win2DHelper.GetOrCreate(d2D1Image.Get());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
+    public unsafe void Interop_IsWrapperUnregisteredCorrectly_FromFinalizer_FailsWithNoDevice()
+    {
+        using ComPtr<ID2D1Image> d2D1Image = default;
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        static void Test(ID2D1Image** d2D1Image)
+        {
+            PixelShaderEffect<ShaderWith0Inputs> effect = new();
+
+            Win2DHelper.GetD2DImage(effect, new CanvasDevice(), d2D1Image);
+        }
+
+        Test(d2D1Image.GetAddressOf());
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+
+        _ = Win2DHelper.GetOrCreate(d2D1Image.Get());
     }
 
     [TestMethod]
