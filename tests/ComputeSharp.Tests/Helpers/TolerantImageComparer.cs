@@ -85,6 +85,7 @@ internal static class TolerantImageComparer
                     if (differences.Count < 20)
                     {
                         PixelDifference diff = new(new Point(x, y), aBuffer[x], bBuffer[x]);
+
                         differences.Add(diff);
                     }
 
@@ -94,11 +95,13 @@ internal static class TolerantImageComparer
         }
 
         float normalizedDifference = totalDifference / (actual.Width * (float)actual.Height);
+
         normalizedDifference /= 4F * 65535F;
 
         if (normalizedDifference > threshold)
         {
             StringBuilder builder = new();
+
             _ = builder.AppendLine($"The input images don't match. Normalized delta: {normalizedDifference}%");
             _ = builder.AppendLine($"First {differences.Count} pixel deltas:");
 

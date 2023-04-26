@@ -6,6 +6,9 @@
     <!-- Test projects never need to be packaged -->
     <IsPackable>false</IsPackable>
 
+    <!-- Ignore warnings for public fields (TerraFX polyfills) -->
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+
     <!-- Unit tests don't need public XML docs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 

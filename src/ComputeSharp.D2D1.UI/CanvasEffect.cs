@@ -124,14 +124,12 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
                 this.canvasImage?.Dispose();
 
                 this.canvasImage = null;
-                this.isInvalidated = false;
             }
-            else
-            {
-                // Otherwise, just mark the internal state as not being valid anymore. The next
-                // time the image is requested, the effect graph will be configured if needed.
-                this.isInvalidated = true;
-            }
+
+            // For both invalidation types, always mark the internal state as not being valid anymore.
+            // The next time the image is requested, the effect graph will be configured if needed.
+            // This matches the default value for the field (which is needed for the first realization).
+            this.isInvalidated = true;
         }
     }
 

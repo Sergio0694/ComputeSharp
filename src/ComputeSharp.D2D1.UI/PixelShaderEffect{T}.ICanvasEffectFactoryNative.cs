@@ -124,7 +124,7 @@ unsafe partial class PixelShaderEffect<T>
                     {
                         *wrapper = null;
 
-                        return E.E_INVALIDARG;
+                        return D2DERR.D2DERR_WRONG_FACTORY;
                     }
                 }
 
@@ -139,7 +139,7 @@ unsafe partial class PixelShaderEffect<T>
 
             // Register the new wrapper for the input resource. This has to be done manually in this
             // case, as the effect is not being realized through the usual path from GetD2DImage.
-            ResourceManager.RegisterWrapper((IUnknown*)resource, this);
+            ResourceManager.RegisterWrapper((IUnknown*)resource, @this);
 
             // Unwrap the PixelShaderEffect<T> and return its CCW to the caller
             RcwMarshaller.GetNativeObject(@this, wrapper);

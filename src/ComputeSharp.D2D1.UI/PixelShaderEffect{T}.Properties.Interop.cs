@@ -1,3 +1,4 @@
+using System;
 using ComputeSharp.D2D1.Interop;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
@@ -92,6 +93,9 @@ unsafe partial class PixelShaderEffect<T>
             }
             else
             {
+                // If the effect is not realized, manually ensure the transform isn't null
+                default(ArgumentNullException).ThrowIfNull(value);
+
                 this.transformMapper = value;
             }
         }
@@ -196,7 +200,7 @@ unsafe partial class PixelShaderEffect<T>
             };
 
             // Map from D2D1_BUFFER_PRECISION to CanvasBufferPrecision, and return null for D2D1_BUFFER_PRECISION_UNKNOWN
-            return this.d2D1BufferPrecision switch
+            return d2D1BufferPrecision switch
             {
                 D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM => CanvasBufferPrecision.Precision8UIntNormalized,
                 D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_8BPC_UNORM_SRGB => CanvasBufferPrecision.Precision8UIntNormalizedSrgb,

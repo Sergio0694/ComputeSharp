@@ -71,7 +71,7 @@ jobs:
         path: artifacts\*.nupkg
         if-no-files-found: error
 
-  # Run all unit tests referencing the ComputeSharp project directly
+  # Run all unit tests referencing the ComputeSharp projects directly
   run-tests:
     needs: [build-solution]
     strategy:
@@ -121,6 +121,32 @@ jobs:
       run: dotnet test tests\ComputeSharp.D2D1.Tests\ComputeSharp.D2D1.Tests.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
+
+  # Run all UWP tests (separately, as they need VS Test)
+  run-tests-uwp:
+    needs: [build-solution]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+      # Build the D2D1 UWP unit tests (need to restore and build separately for it to build correctly)
+    - name: Build ComputeSharp.D2D1.Uwp.Tests
+      run: >
+        msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:restore /p:Configuration=${{matrix.configuration}} /p:Platform=x64;
+        msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
+
+      # Run the D2D1 UWP unit tests with VS Test (need to use vswhere to find the VS Test runner)
+    - name: Run ComputeSharp.D2D1.Uwp.Tests
+      run: >
+        $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
+        $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
+        & $vstest_path /Platform:x64 /framework:frameworkuap10 tests\ComputeSharp.D2D1.Uwp.Tests\bin\x64\${{matrix.configuration}}\ComputeSharp.D2D1.Uwp.Tests.build.appxrecipe
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
@@ -255,7 +281,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-tests, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-uwp, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -267,7 +293,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-tests, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-uwp, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
