@@ -17,7 +17,7 @@ public partial class PixelShaderEffectTests
     [TestMethod]
     public unsafe void ConstantBuffer_IsInitiallySetToDefault()
     {
-        PixelShaderEffect<ShaderWithSomeProperties> effect = new();
+        using PixelShaderEffect<ShaderWithSomeProperties> effect = new();
 
         ShaderWithSomeProperties shader = effect.ConstantBuffer;
         ShaderWithSomeProperties defaultShader = default;
@@ -39,7 +39,7 @@ public partial class PixelShaderEffectTests
             D: new uint2x2(8888, 123456, 98765, 192837465),
             E: new float2(-3.14f, 6.28f));
 
-        PixelShaderEffect<ShaderWithSomeProperties> effect = new() { ConstantBuffer = shader };
+        using PixelShaderEffect<ShaderWithSomeProperties> effect = new() { ConstantBuffer = shader };
 
         ShaderWithSomeProperties roundTripShader = effect.ConstantBuffer;
 
@@ -81,19 +81,19 @@ public partial class PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void SourcesOutOfRange_ThrowsArgumentOutOfRangeException()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
 
         _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => effect0.Sources[0] = null);
         _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => effect0.Sources[1] = null);
 
-        PixelShaderEffect<ShaderWith1Input> effect1 = new();
+        using PixelShaderEffect<ShaderWith1Input> effect1 = new();
 
         effect1.Sources[0] = null;
 
         _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => effect1.Sources[1] = null);
         _ = Assert.ThrowsException<ArgumentOutOfRangeException>(() => effect1.Sources[2] = null);
 
-        PixelShaderEffect<ShaderWith1Input> effect2 = new();
+        using PixelShaderEffect<ShaderWith1Input> effect2 = new();
 
         effect2.Sources[0] = null;
         effect2.Sources[1] = null;
@@ -106,7 +106,7 @@ public partial class PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void NullTransformMapper_UnrealizedEffect_ThrowsArgumentNullException()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect = new();
 
         effect.TransformMapper = null!;
     }
@@ -115,7 +115,7 @@ public partial class PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void NullTransformMapper_RealizedEffect_ThrowsArgumentNullException()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect = new();
 
         using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
         using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
@@ -130,13 +130,13 @@ public partial class PixelShaderEffectTests
     [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
     public unsafe void GraphCycle_IsDetectedCorrectly()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect1 = new();
-        PixelShaderEffect<ShaderWith2Inputs> effect2 = new();
-        PixelShaderEffect<ShaderWith1Input> effect3 = new();
-        PixelShaderEffect<ShaderWith1Input> effect4 = new();
-        PixelShaderEffect<ShaderWith2Inputs> effect5 = new();
-        PixelShaderEffect<ShaderWith2Inputs> effect6 = new();
-        PixelShaderEffect<ShaderWith0Inputs> effect7 = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect1 = new();
+        using PixelShaderEffect<ShaderWith2Inputs> effect2 = new();
+        using PixelShaderEffect<ShaderWith1Input> effect3 = new();
+        using PixelShaderEffect<ShaderWith1Input> effect4 = new();
+        using PixelShaderEffect<ShaderWith2Inputs> effect5 = new();
+        using PixelShaderEffect<ShaderWith2Inputs> effect6 = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect7 = new();
 
         // Build a graph with a cycle in it:
         //
@@ -173,8 +173,8 @@ public partial class PixelShaderEffectTests
     {
         ShaderWithSomePropertiesAndInputs shader = new(-1234567);
 
-        PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
-        PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new()
+        using PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
+        using PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new()
         {
             ConstantBuffer = shader,
             CacheOutput = true,
@@ -254,8 +254,8 @@ public partial class PixelShaderEffectTests
     {
         ShaderWithSomePropertiesAndInputs shader = new(-1234567);
 
-        PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
-        PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect0 = new();
+        using PixelShaderEffect<ShaderWithSomePropertiesAndInputs> effect1 = new();
 
         CanvasDevice canvasDevice = new();
 
@@ -305,7 +305,7 @@ public partial class PixelShaderEffectTests
     [TestMethod]
     public unsafe void Interop_IsWrapperRegisteredCorrectly()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect = new();
 
         using ComPtr<ID2D1Image> d2D1Image = default;
 
@@ -319,7 +319,8 @@ public partial class PixelShaderEffectTests
     [TestMethod]
     public unsafe void Interop_IsWrapperFactoryRegisteredCorrectlyAndWorking()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect = new();
+
         CanvasDevice canvasDevice1 = new();
         CanvasDevice canvasDevice2 = new();
 
@@ -334,6 +335,9 @@ public partial class PixelShaderEffectTests
 
         Assert.IsTrue(wrapper1 is PixelShaderEffect<ShaderWith0Inputs>);
         Assert.AreNotSame(wrapper1, effect);
+
+        // Property dispose the new wrapper as well
+        using PixelShaderEffect<ShaderWith0Inputs> _ = (PixelShaderEffect<ShaderWith0Inputs>)wrapper1;
 
         // Getting the same wrapper again should return the newly created one
         object wrapper1FromCache = Win2DHelper.GetOrCreate(d2D1Image1.Get(), canvasDevice1);
@@ -364,7 +368,8 @@ public partial class PixelShaderEffectTests
     [ExpectedException(typeof(ArgumentException))]
     public unsafe void Interop_WrapperFactoryDetectsMismatchedDevices()
     {
-        PixelShaderEffect<ShaderWith0Inputs> effect = new();
+        using PixelShaderEffect<ShaderWith0Inputs> effect = new();
+
         CanvasDevice canvasDevice1 = new();
         CanvasDevice canvasDevice2 = new();
 

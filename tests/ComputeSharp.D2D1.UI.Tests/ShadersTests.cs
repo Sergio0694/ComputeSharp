@@ -79,7 +79,7 @@ public class ShadersTests
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
 
         // Either create the effect directly, or a canvas effect
-        ICanvasImage canvasImage = wrapperType switch
+        using ICanvasImage canvasImage = wrapperType switch
         {
             WrapperType.PixelShaderEffect => new PixelShaderEffect<T>() { ConstantBuffer = shader },
             _ => new TestCanvasEffect<T> { ConstantBuffer = shader }

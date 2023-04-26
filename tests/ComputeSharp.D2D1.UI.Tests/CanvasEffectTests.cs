@@ -15,36 +15,48 @@ public partial class CanvasEffectTests
     {
         EffectWithNoInputs effect = new();
 
-        using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
-        using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+        try
         {
-            drawingSession.DrawImage(effect);
+            using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
+            using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+            {
+                drawingSession.DrawImage(effect);
+            }
+
+            Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 1);
+            Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 1);
+            Assert.AreEqual(effect.NumberOfDisposeCalls, 0);
+
+            effect.Value = 42;
+
+            using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
+            using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+            {
+                drawingSession.DrawImage(effect);
+            }
+
+            Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 1);
+            Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 2);
+            Assert.AreEqual(effect.NumberOfDisposeCalls, 0);
+
+            effect.ValueWithReload = 123;
+
+            using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
+            using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+            {
+                drawingSession.DrawImage(effect);
+            }
+
+            Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 2);
+            Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 3);
+            Assert.AreEqual(effect.NumberOfDisposeCalls, 0);
         }
-
-        Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 1);
-        Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 1);
-
-        effect.Value = 42;
-
-        using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
-        using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
+        finally
         {
-            drawingSession.DrawImage(effect);
+            effect.Dispose();
+
+            Assert.AreEqual(effect.NumberOfDisposeCalls, 1);
         }
-
-        Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 1);
-        Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 2);
-
-        effect.ValueWithReload = 123;
-
-        using (CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f))
-        using (CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession())
-        {
-            drawingSession.DrawImage(effect);
-        }
-
-        Assert.AreEqual(effect.NumberOfBuildEffectGraphCalls, 2);
-        Assert.AreEqual(effect.NumberOfConfigureEffectGraphCalls, 3);
     }
 
     private sealed class EffectWithNoInputs : CanvasEffect
@@ -69,6 +81,8 @@ public partial class CanvasEffectTests
 
         public int NumberOfConfigureEffectGraphCalls { get; private set; }
 
+        public int NumberOfDisposeCalls { get; private set; }
+
         protected override ICanvasImage BuildEffectGraph()
         {
             NumberOfBuildEffectGraphCalls++;
@@ -81,6 +95,15 @@ public partial class CanvasEffectTests
             NumberOfConfigureEffectGraphCalls++;
 
             this.effect!.ConstantBuffer = new ShaderWithNoInputs(this.value);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            NumberOfDisposeCalls++;
+
+            base.Dispose(disposing);
+
+            this.effect?.Dispose();
         }
     }
 
