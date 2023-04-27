@@ -154,6 +154,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.D2D1.UI.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.Uwp.Tests", "tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj", "{4D4BB2F6-5653-4DB5-A8DD-90D58D8FE4D3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.WinUI.Tests", "tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj", "{73C32D0F-64DB-4674-84E9-8FCC41228474}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -430,6 +432,18 @@ Global
 		{4D4BB2F6-5653-4DB5-A8DD-90D58D8FE4D3}.Release|x64.ActiveCfg = Release|x64
 		{4D4BB2F6-5653-4DB5-A8DD-90D58D8FE4D3}.Release|x64.Build.0 = Release|x64
 		{4D4BB2F6-5653-4DB5-A8DD-90D58D8FE4D3}.Release|x64.Deploy.0 = Release|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|ARM64.Build.0 = Debug|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|x64.ActiveCfg = Debug|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|x64.Build.0 = Debug|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Debug|x64.Deploy.0 = Debug|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|ARM64.ActiveCfg = Release|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|ARM64.Build.0 = Release|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|ARM64.Deploy.0 = Release|ARM64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.ActiveCfg = Release|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.Build.0 = Release|x64
+		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -469,6 +483,7 @@ Global
 		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{346AEB10-A4EA-427E-8578-F60915DB3053} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{4D4BB2F6-5653-4DB5-A8DD-90D58D8FE4D3} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{73C32D0F-64DB-4674-84E9-8FCC41228474} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
@@ -490,6 +505,8 @@ Global
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{51d5a422-d3a5-4c4d-8a6d-a048940bf279}*SharedItemsImports = 13
+		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{73c32d0f-64db-4674-84e9-8fcc41228474}*SharedItemsImports = 5
+		tests\ComputeSharp.D2D1.UI.Tests\ComputeSharp.D2D1.UI.Tests.projitems*{73c32d0f-64db-4674-84e9-8fcc41228474}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{751bb05b-563d-4b3a-94c6-15e2d79d35ea}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{764bc0f5-0c5e-49ad-abaa-e3874c0f3286}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{76c66257-fdaa-47ab-85e7-ef757eab10c0}*SharedItemsImports = 5

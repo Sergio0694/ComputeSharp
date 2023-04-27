@@ -1,4 +1,8 @@
+#if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
+#else
+using ComputeSharp.D2D1.WinUI;
+#endif
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

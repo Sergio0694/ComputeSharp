@@ -1,8 +1,13 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using ComputeSharp.D2D1.UI.Tests.Helpers;
+#if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
+#else
+using ComputeSharp.D2D1.WinUI;
+#endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -73,7 +78,7 @@ public class ShadersTests
         await RunTestAsync<TerracedHills>(wrapperType, 0.000026f);
     }
 
-    private static async Task RunTestAsync<T>(WrapperType wrapperType, float threshold = 0.00001f)
+    private static async Task RunTestAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(WrapperType wrapperType, float threshold = 0.00001f)
         where T : unmanaged, ID2D1PixelShader
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
@@ -133,6 +138,13 @@ public class ShadersTests
         protected override void ConfigureEffectGraph()
         {
             this.effect!.ConstantBuffer = this.constantBuffer;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            this.effect?.Dispose();
         }
     }
 

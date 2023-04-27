@@ -122,12 +122,13 @@ jobs:
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
 
-  # Run all UWP tests (separately, as they need VS Test)
-  run-tests-uwp:
+  # Run all Win2D tests (separately, as they need VS Test)
+  run-tests-win2d:
     needs: [build-solution]
     strategy:
       matrix:
         configuration: [Debug, Release]
+        framework: [uwp, wasdk]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -136,17 +137,34 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
       # Build the D2D1 UWP unit tests (need to restore and build separately for it to build correctly)
-    - name: Build ComputeSharp.D2D1.Uwp.Tests
+    - if: matrix.framework == 'uwp'
+      name: Build ComputeSharp.D2D1.Uwp.Tests
       run: >
         msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:restore /p:Configuration=${{matrix.configuration}} /p:Platform=x64;
         msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
 
       # Run the D2D1 UWP unit tests with VS Test (need to use vswhere to find the VS Test runner)
-    - name: Run ComputeSharp.D2D1.Uwp.Tests
+    - if: matrix.framework == 'uwp'
+      name: Run ComputeSharp.D2D1.Uwp.Tests
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
         & $vstest_path /Platform:x64 /framework:frameworkuap10 tests\ComputeSharp.D2D1.Uwp.Tests\bin\x64\${{matrix.configuration}}\ComputeSharp.D2D1.Uwp.Tests.build.appxrecipe
+    
+      # Build the D2D1 WinAppSDK unit tests (this also needs two steps, or the entry point won't be generated)
+    - if: matrix.framework == 'wasdk'
+      name: Build ComputeSharp.D2D1.WinUI.Tests
+      run: >
+        msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj -t:restore /p:Configuration=${{matrix.configuration}} /p:Platform=x64;
+        msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
+
+      # Run the D2D1 WinAppSDK unit tests with VS Test again
+    - if: matrix.framework == 'wasdk'
+      name: Run ComputeSharp.D2D1.WinUI.Tests
+      run: >
+        $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
+        $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
+        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests\bin\x64\${{matrix.configuration}}\net6.0-windows10.0.22621.0\win10-x64\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
@@ -281,7 +299,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-tests, run-tests-uwp, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -293,7 +311,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-tests, run-tests-uwp, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
