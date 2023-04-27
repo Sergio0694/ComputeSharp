@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ComputeSharp.D2D1.WinUI.Tests (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ComputeSharp.D2D1.WinUI.Tests (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

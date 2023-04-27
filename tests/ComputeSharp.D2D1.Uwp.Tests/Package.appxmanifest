@@ -5,9 +5,10 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="683f5570-5e7b-4565-aee0-7caf424526f1"
-            Publisher="CN=sergiopedri"
-            Version="1.0.0.0" />
+  <Identity
+    Name="683f5570-5e7b-4565-aee0-7caf424526f1"
+    Publisher="CN=sergiopedri"
+    Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="683f5570-5e7b-4565-aee0-7caf424526f1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
