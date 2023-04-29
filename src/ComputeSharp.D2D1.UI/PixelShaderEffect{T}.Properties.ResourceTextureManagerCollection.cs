@@ -92,7 +92,7 @@ partial class PixelShaderEffect<T>
         internal static ImmutableArray<int> Indices { get; } = GetIndices();
 
         /// <summary>
-        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
+        /// Gets the owning <see cref="PixelShaderEffect{T}"/> instance.
         /// </summary>
         internal PixelShaderEffect<T> Owner { get; }
 

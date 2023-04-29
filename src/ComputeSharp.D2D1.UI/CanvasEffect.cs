@@ -21,9 +21,26 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     private readonly object lockObject = new();
 
     /// <summary>
+    /// The mapping of registered transform nodes for the current effect graph.
+    /// </summary>
+    /// <remarks>
+    /// When not empty (ie. when an effect graph has been built), this will always also include <see cref="canvasImage"/>.
+    /// </remarks>
+    private readonly Dictionary<object, ICanvasImage> transformNodes = new();
+
+    /// <summary>
     /// The current cached result for <see cref="GetCanvasImage"/>, if available.
     /// </summary>
     private ICanvasImage? canvasImage;
+
+    /// <summary>
+    /// Indicates whether the current instance is within a call to <see cref="BuildEffectGraph"/>.
+    /// </summary>
+    /// <remarks>
+    /// This is used to validate method calls from within <see cref="EffectGraph"/>. That is, the
+    /// <see cref="EffectGraph.RegisterNode"/> APIs will use this to detect whether they can be called.
+    /// </remarks>
+    private bool isBuildingEffectGraph;
 
     /// <summary>
     /// Indicates whether the current state has been invalidated (requiring <see cref="ConfigureEffectGraph"/> to be called).
@@ -40,10 +57,10 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     private bool isDisposed;
 
     /// <summary>
-    /// Builds the effect graph for the current <see cref="CanvasEffect"/> instance, and returns an <see cref="ICanvasImage"/> object
-    /// representing the output node of the graph. This image will then be passed to Win2D to perform the actual drawing, when needed.
+    /// Builds the effect graph for the current <see cref="CanvasEffect"/> instance, and configures all effect nodes, as well as the output
+    /// node for the graph. That <see cref="ICanvasImage"/> instance will then be passed to Win2D to perform the actual drawing, when needed.
     /// </summary>
-    /// <returns>The resulting <see cref="ICanvasImage"/> object representing the output node of the effect graph.</returns>
+    /// <param name="effectGraph">The input <see cref="EffectGraph"/> value to use to build the effect graph.</param>
     /// <remarks>
     /// <para>
     /// This method is called once before the current effect is drawn, and the resulting image is automatically cached and reused.
@@ -74,29 +91,33 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <list type="bullet">
     ///   <item>Create an instance of all necessary nodes in the effect graph.</item>
     ///   <item>Connect the effect nodes as needed to build the connected graph.</item>
-    ///   <item>Save all effects that can be configured as instance fields in the effect type.</item>
-    ///   <item>Return the <see cref="ICanvasImage"/> instance for the output node of the graph.</item>
+    ///   <item>Register all effects as effect nodes in the graph, including the output node.</item>
     /// </list>
     /// </para>
     /// <para>
-    /// This method should never be called directly. It is automatically invoked when an <see cref="ICanvasImage"/> is needed.
+    /// For convenience, it is recommended to store all necessary <see cref="EffectNode{T}"/> objects in <see langword="static"/>
+    /// <see langword="readonly"/> fields, so they can easily be accessed from <see cref="BuildEffectGraph"/> and <see cref="ConfigureEffectGraph"/>.
+    /// </para>
+    /// <para>
+    /// This method should never be called directly. It is automatically invoked when an effect graph is needed.
     /// </para>
     /// </remarks>
-    protected abstract ICanvasImage BuildEffectGraph();
+    protected abstract void BuildEffectGraph(EffectGraph effectGraph);
 
     /// <summary>
     /// Configures the current effect graph whenever it is invalidated.
     /// </summary>
+    /// <param name="effectGraph">The input <see cref="EffectGraph"/> value to use to configure the effect graph.</param>
     /// <remarks>
     /// <para>
     /// This method is guaranteed to be called after <see cref="BuildEffectGraph"/> has been invoked already. As such, any instance
     /// fields that are set by <see cref="BuildEffectGraph"/> can be assumed to never be <see langword="null"/> when this method runs.
     /// </para>
     /// <para>
-    /// This method should never be called directly. It is used internally to configure the current <see cref="ICanvasImage"/> instance.
+    /// This method should never be called directly. It is used internally to configure the current effect graph.
     /// </para>
     /// </remarks>
-    protected abstract void ConfigureEffectGraph();
+    protected abstract void ConfigureEffectGraph(EffectGraph effectGraph);
 
     /// <summary>
     /// Invalidates the last returned result from <see cref="GetCanvasImage"/>.
@@ -193,8 +214,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
             // on their own. This is fine here since there are no unmanaged references to free, but just managed wrappers.
             lock (this.lockObject)
             {
-                this.canvasImage?.Dispose();
-                this.canvasImage = null;
+                DisposeEffectGraph();
             }
         }
 

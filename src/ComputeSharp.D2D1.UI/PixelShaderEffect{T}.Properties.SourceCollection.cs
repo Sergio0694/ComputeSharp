@@ -78,7 +78,7 @@ partial class PixelShaderEffect<T>
         }
 
         /// <summary>
-        /// The owning <see cref="PixelShaderEffect{T}"/> instance.
+        /// Gets the owning <see cref="PixelShaderEffect{T}"/> instance.
         /// </summary>
         internal PixelShaderEffect<T> Owner { get; }
 

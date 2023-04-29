@@ -73,16 +73,46 @@ unsafe partial class CanvasEffect
         {
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
-            this.canvasImage ??= BuildEffectGraph();
+            // Build the effect graph and get the output node, if missing
+            if (this.canvasImage is null)
+            {
+                this.isBuildingEffectGraph = true;
 
+                DisposeEffectGraph();
+                BuildEffectGraph(new EffectGraph(this));
+
+                this.isBuildingEffectGraph = false;
+
+                default(InvalidOperationException).ThrowIf(this.canvasImage is null);
+            }
+
+            // Configure the effect graph, if the effect is invalidated
             if (this.isInvalidated)
             {
-                ConfigureEffectGraph();
+                ConfigureEffectGraph(new EffectGraph(this));
 
                 this.isInvalidated = false;
             }
 
             return this.canvasImage;
         }
+    }
+
+    /// <summary>
+    /// Disposes and clears the current effect graph, if any.
+    /// </summary>
+    private void DisposeEffectGraph()
+    {
+        // Dispose all registered canvas images
+        foreach (ICanvasImage canvasImage in this.transformNodes.Values)
+        {
+            canvasImage.Dispose();
+        }
+
+        // Also clear the current effect graph. Note that the canvas image used as output
+        // node for the effect graph does not need to be explicitly disposed here, as that
+        // object is guaranteed to have been part of the dictionary of transform nodes.
+        this.transformNodes.Clear();
+        this.canvasImage = null;
     }
 }
