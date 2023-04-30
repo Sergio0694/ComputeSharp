@@ -56,6 +56,34 @@ partial class CanvasEffect
         }
 
         /// <summary>
+        /// Registers an <see cref="ICanvasImage"/> object in the effect graph.
+        /// </summary>
+        /// <param name="canvasImage">The <see cref="ICanvasImage"/> object to register in the effect graph.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="canvasImage"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the effect graph does not support modifications at this time.</exception>
+        /// <remarks>
+        /// <para><inheritdoc cref="RegisterNode{T}(EffectNode{T}, T)" path="/remarks/node()"/></para>
+        /// <para>
+        /// This method can be used when <paramref name="canvasImage"/> doesn't need to be retrieved from <see cref="ConfigureEffectGraph"/>, ie.
+        /// when it has no properties that the current effect instance will need to mutate over it. Using this method still allows the effect to
+        /// correctly track the image ownership, so that it can be disposed when the current effect instance is disposed.
+        /// </para>
+        /// <para>
+        /// If performing lookups on <paramref name="canvasImage"/> is required, use the <see cref="RegisterNode{T}(EffectNode{T}, T)"/> overload.
+        /// </para>
+        /// </remarks>
+        public void RegisterNode(ICanvasImage canvasImage)
+        {
+            default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
+
+            // Use a new dummy object as key to register the anonymous effect node. This is cheaper than having to maintain a different
+            // data structure (eg. a HashSet<ICanvasImage> instance) just to hold the anonymous effects that may be registered. This way,
+            // the same dictionary can be reused for all kinds of effect nodes instead. Anonymous effects are generally a nicher scenario.
+            _ = this.owner.transformNodes.TryAdd(new object(), canvasImage);
+        }
+
+        /// <summary>
         /// Registers an <see cref="ICanvasImage"/> object in the effect graph, associated with a given <see cref="EffectNode{T}"/> instance.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="ICanvasImage"/> object to register.</typeparam>
@@ -81,6 +109,34 @@ partial class CanvasEffect
             {
                 default(ArgumentException).Throw(nameof(effectNode), "The specified node is already registered in the effect graph.");
             }
+        }
+
+        /// <summary>
+        /// Registers an <see cref="ICanvasImage"/> object in the effect graph, and marks it as the output node for the effect graph being built.
+        /// </summary>
+        /// <remarks>
+        /// <para><inheritdoc cref="RegisterNode{T}(EffectNode{T}, T)" path="/remarks/node()"/></para>
+        /// <para>
+        /// This method can be used when <paramref name="canvasImage"/> doesn't need to be retrieved from <see cref="ConfigureEffectGraph"/>, ie.
+        /// when it has no properties that the current effect instance will need to mutate over it. Using this method still allows the effect to
+        /// correctly track the image ownership, so that it can be disposed when the current effect instance is disposed.
+        /// </para>
+        /// <para>
+        /// If performing lookups on <paramref name="canvasImage"/> is required, use the <see cref="RegisterAndSetOutputNode{T}(EffectNode{T}, T)"/> overload.
+        /// </para>
+        /// </remarks>
+        /// <inheritdoc cref="RegisterNode(ICanvasImage)"/>
+        public void RegisterAndSetOutputNode(ICanvasImage canvasImage)
+        {
+            default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
+            default(InvalidOperationException).ThrowIf(this.owner.canvasImage is not null);
+
+            // Register the anonymous effect node with a dummy object, same as above
+            _ = this.owner.transformNodes.TryAdd(new object(), canvasImage);
+
+            // Store the anonymous output node for later use
+            this.owner.canvasImage = canvasImage;
         }
 
         /// <summary>

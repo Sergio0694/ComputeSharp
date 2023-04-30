@@ -135,6 +135,17 @@ public partial class CanvasEffectTests
         drawingSession.DrawImage(effect);
     }
 
+    [TestMethod]
+    public unsafe void CanvasEffect_EffectOnlyUsingAnonymousNodes()
+    {
+        EffectOnlyUsingAnonymousNodes effect = new();
+
+        using CanvasRenderTarget renderTarget = new(new CanvasDevice(), 128, 128, 96.0f);
+        using CanvasDrawingSession drawingSession = renderTarget.CreateDrawingSession();
+
+        drawingSession.DrawImage(effect);
+    }
+
     private sealed class EffectWithNoInputs : CanvasEffect
     {
         private static readonly EffectNode<PixelShaderEffect<ShaderWithNoInputs>> Effect = new();
@@ -199,6 +210,7 @@ public partial class CanvasEffectTests
     {
         protected override void BuildEffectGraph(EffectGraph effectGraph)
         {
+            effectGraph.RegisterNode(new ColorSourceEffect());
             effectGraph.RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
             effectGraph.RegisterNode(new EffectNode<ColorSourceEffect>(), new ColorSourceEffect());
         }
@@ -248,9 +260,11 @@ public partial class CanvasEffectTests
         {
             void* ptr = &effectGraph;
 
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!, new ColorSourceEffect()));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(new EffectNode<ColorSourceEffect>(), null!));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterNode(null!, (ColorSourceEffect?)null!));
+            _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterAndSetOutputNode(null!));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterAndSetOutputNode(null!, new ColorSourceEffect()));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterAndSetOutputNode(new EffectNode<ColorSourceEffect>(), null!));
             _ = Assert.ThrowsException<ArgumentNullException>(() => (*(EffectGraph*)ptr).RegisterAndSetOutputNode(null!, (ColorSourceEffect)null!));
@@ -274,7 +288,7 @@ public partial class CanvasEffectTests
         private readonly ColorSourceEffect effect3 = new();
 #pragma warning restore CA2213
 
-        protected unsafe override void BuildEffectGraph(EffectGraph effectGraph)
+        protected override void BuildEffectGraph(EffectGraph effectGraph)
         {
             effectGraph.RegisterNode(EffectNode1, this.effect1);
             effectGraph.RegisterNode(EffectNode2, this.effect2);
@@ -293,6 +307,20 @@ public partial class CanvasEffectTests
             Assert.AreSame(effectGraph.GetNode(EffectNode1), this.effect1);
             Assert.AreSame(effectGraph.GetNode(EffectNode2), this.effect2);
             Assert.AreSame(effectGraph.GetNode(EffectNode3), this.effect3);
+        }
+    }
+
+    private sealed class EffectOnlyUsingAnonymousNodes : CanvasEffect
+    {
+        protected override void BuildEffectGraph(EffectGraph effectGraph)
+        {
+            effectGraph.RegisterNode(new ColorSourceEffect());
+            effectGraph.RegisterNode(new ColorSourceEffect());
+            effectGraph.RegisterAndSetOutputNode(new ColorSourceEffect());
+        }
+
+        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
+        {
         }
     }
 
