@@ -58,7 +58,7 @@ public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
         PixelShaderEffect<ContouredLayers> pixelShaderEffect = new() { ResourceTextureManagers = { [0] = resourceTextureManager } };
 
         // Register the pixel shader effect as the output node in the effect graph
-        effectGraph.RegisterAndSetOutputNode(PixelShaderEffect, pixelShaderEffect);
+        effectGraph.RegisterOutputNode(PixelShaderEffect, pixelShaderEffect);
     }
 
     /// <inheritdoc/>

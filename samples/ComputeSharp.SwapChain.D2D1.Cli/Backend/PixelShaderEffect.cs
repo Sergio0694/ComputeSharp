@@ -81,7 +81,7 @@ internal abstract class PixelShaderEffect : CanvasEffect
         /// <inheritdoc/>
         protected override void BuildEffectGraph(EffectGraph effectGraph)
         {
-            effectGraph.RegisterAndSetOutputNode(Effect, new PixelShaderEffect<T>());
+            effectGraph.RegisterOutputNode(Effect, new PixelShaderEffect<T>());
         }
 
         /// <inheritdoc/>

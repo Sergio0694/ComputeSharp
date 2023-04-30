@@ -73,26 +73,31 @@ unsafe partial class CanvasEffect
         {
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 
-            // Build the effect graph and get the output node, if missing
-            if (this.canvasImage is null)
+            // Build the effect graph (the output node might not have been set yet)
+            if (this.invalidationType == InvalidationType.Creation)
             {
-                this.isBuildingEffectGraph = true;
-
                 DisposeEffectGraph();
                 BuildEffectGraph(new EffectGraph(this));
 
-                this.isBuildingEffectGraph = false;
-
-                default(InvalidOperationException).ThrowIf(this.canvasImage is null);
+                // We successfully got past the effect graph creation, so update the current
+                // invalidation state. This ensures that even if the configuration failed, the
+                // next time the effect is drawn again the graph won't be created again too.
+                this.invalidationType = InvalidationType.Update;
             }
 
             // Configure the effect graph, if the effect is invalidated
-            if (this.isInvalidated)
+            if (this.invalidationType == InvalidationType.Update)
             {
                 ConfigureEffectGraph(new EffectGraph(this));
 
-                this.isInvalidated = false;
+                // The effect graph is now ready to go: no further work will be done before drawing
+                // unless it is explicitly invalidated again, using either creation or update mode.
+                this.invalidationType = default;
             }
+
+            // At this point, there must be an output canvas image being set.
+            // If not, it means a derived type has forgot to set an output node.
+            default(InvalidOperationException).ThrowIf(this.canvasImage is null);
 
             return this.canvasImage;
         }

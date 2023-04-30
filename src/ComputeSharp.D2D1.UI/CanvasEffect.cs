@@ -29,22 +29,9 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     private ICanvasImage? canvasImage;
 
     /// <summary>
-    /// Indicates whether the current instance is within a call to <see cref="BuildEffectGraph"/>.
+    /// Indicates the current invalidation state for the effect graph (which controls the logic in <see cref="GetCanvasImage"/>).
     /// </summary>
-    /// <remarks>
-    /// This is used to validate method calls from within <see cref="EffectGraph"/>. That is, the
-    /// <see cref="EffectGraph.RegisterNode"/> APIs will use this to detect whether they can be called.
-    /// </remarks>
-    private bool isBuildingEffectGraph;
-
-    /// <summary>
-    /// Indicates whether the current state has been invalidated (requiring <see cref="ConfigureEffectGraph"/> to be called).
-    /// </summary>
-    /// <remarks>
-    /// This is initially <see langword="true"/> so that <see cref="ConfigureEffectGraph"/> will always be called when
-    /// first creating the image, even if the effect has not bee invalidated. This ensures default parameters are set.
-    /// </remarks>
-    private bool isInvalidated = true;
+    private InvalidationType invalidationType = InvalidationType.Creation;
 
     /// <summary>
     /// Indicates whether the effect is disposed.
@@ -134,18 +121,13 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     {
         lock (this.transformNodes)
         {
-            // If the effect graph should be created again, dispose the image and throw it away
-            if (invalidationType == InvalidationType.Creation)
-            {
-                this.canvasImage?.Dispose();
-
-                this.canvasImage = null;
-            }
-
-            // For both invalidation types, always mark the internal state as not being valid anymore.
-            // The next time the image is requested, the effect graph will be configured if needed.
-            // This matches the default value for the field (which is needed for the first realization).
-            this.isInvalidated = true;
+            // This method only updates the invalidation type. The next time the effect is drawn,
+            // the current graph (if existing) will be disposed automatically before building a
+            // new one. If the invalidation mode just needs an update, no disposal will happen.
+            // The new invalidation type is always set to the maximum between the current one and
+            // the requested one. This means that eg. if the current invalidation type is creation,
+            // and a property only needing an update is set, the creation request will persist.
+            this.invalidationType = (InvalidationType)Math.Max((byte)this.invalidationType, (byte)invalidationType);
         }
     }
 
@@ -227,17 +209,8 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <summary>
     /// Indicates the invalidation type to request when invoking <see cref="InvalidateEffectGraph"/> and related methods.
     /// </summary>
-    protected enum InvalidationType
+    protected enum InvalidationType : byte
     {
-        /// <summary>
-        /// Fully invalidates the effect graph, causing it to be created again the next time it is needed.
-        /// </summary>
-        /// <remarks>
-        /// This will cause the last returned <see cref="ICanvasImage"/> instance to be disposed and discarded,
-        /// and <see cref="BuildEffectGraph"/> to be called again the next time the effect is used for drawing.
-        /// </remarks>
-        Creation,
-
         /// <summary>
         /// Invalidates the state of the effect graph, causing it to be configured again the next time it is used.
         /// </summary>
@@ -251,6 +224,15 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
         /// This is much less expensive than creating the effect graph again, and should be preferred if possible.
         /// </para>
         /// </remarks>
-        Update
+        Update,
+
+        /// <summary>
+        /// Fully invalidates the effect graph, causing it to be created again the next time it is needed.
+        /// </summary>
+        /// <remarks>
+        /// This will cause the last returned <see cref="ICanvasImage"/> instance to be disposed and discarded,
+        /// and <see cref="BuildEffectGraph"/> to be called again the next time the effect is used for drawing.
+        /// </remarks>
+        Creation
     }
 }

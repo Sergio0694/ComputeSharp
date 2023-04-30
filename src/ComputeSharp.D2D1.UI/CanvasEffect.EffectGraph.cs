@@ -80,7 +80,7 @@ partial class CanvasEffect
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
 
             // Use a new dummy object as key to register the anonymous effect node. This is cheaper than having to maintain a different
             // data structure (eg. a HashSet<ICanvasImage> instance) just to hold the anonymous effects that may be registered. This way,
@@ -109,7 +109,7 @@ partial class CanvasEffect
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
 
             // Try to add the new canvas image associated with the input effect node marker.
             // This must not have been previously added from another RegisterNode call.
@@ -130,16 +130,15 @@ partial class CanvasEffect
         /// correctly track the image ownership, so that it can be disposed when the current effect instance is disposed.
         /// </para>
         /// <para>
-        /// If performing lookups on <paramref name="canvasImage"/> is required, use the <see cref="RegisterAndSetOutputNode{T}(EffectNode{T}, T)"/> overload.
+        /// If performing lookups on <paramref name="canvasImage"/> is required, use the <see cref="RegisterOutputNode{T}(EffectNode{T}, T)"/> overload.
         /// </para>
         /// </remarks>
         /// <inheritdoc cref="RegisterNode(ICanvasImage)"/>
-        public void RegisterAndSetOutputNode(ICanvasImage canvasImage)
+        public void RegisterOutputNode(ICanvasImage canvasImage)
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
-            default(InvalidOperationException).ThrowIf(this.owner.canvasImage is not null);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
 
             // Register the anonymous effect node with a dummy object, same as above
             _ = this.owner.transformNodes.TryAdd(new object(), canvasImage);
@@ -153,14 +152,13 @@ partial class CanvasEffect
         /// Additionally, it also marks the input <see cref="ICanvasImage"/> object as the output node for the effect graph being built.
         /// </summary>
         /// <inheritdoc cref="RegisterNode"/>
-        public void RegisterAndSetOutputNode<T>(EffectNode<T> effectNode, T canvasImage)
+        public void RegisterOutputNode<T>(EffectNode<T> effectNode, T canvasImage)
             where T : class, ICanvasImage
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
-            default(InvalidOperationException).ThrowIf(this.owner.canvasImage is not null);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
 
             // Try to add the output node as in the method above (but with an extra check before doing so)
             if (!this.owner.transformNodes.TryAdd(effectNode, canvasImage))
@@ -169,6 +167,35 @@ partial class CanvasEffect
             }
 
             // Store the output node for later use
+            this.owner.canvasImage = canvasImage;
+        }
+
+        /// <summary>
+        /// Sets a previously registered <see cref="EffectNode{T}"/> instance as the output node for the effect graph.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="ICanvasImage"/> object that will be used as output image.</typeparam>
+        /// <param name="effectNode">The <see cref="EffectNode{T}"/> instance to set as output node for the effect graph.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the current <see cref="EffectGraph"/> instance is not valid.</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is not registered in the effect graph.</exception>
+        /// <remarks>
+        /// This method can be called from both <see cref="BuildEffectGraph"/> and <see cref="ConfigureEffectGraph"/>. It can be used for
+        /// efficiently changing the output node of a graph, without having to rebuild it. For instance, this can be used for effects that
+        /// have multiple paths that can be taken for their inputs, depending on the value of some property describing the effect behavior.
+        /// </remarks>
+        public void SetOutputNode<T>(EffectNode<T> effectNode)
+            where T : class, ICanvasImage
+        {
+            default(ArgumentNullException).ThrowIfNull(effectNode);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
+
+            // Get the canvas image for the registered effect node (which has to exist at this point)
+            if (!this.owner.transformNodes.TryGetValue(effectNode, out ICanvasImage? canvasImage))
+            {
+                default(ArgumentException).Throw(nameof(effectNode), "The specified output node is not registered in the effect graph.");
+            }
+
+            // Store the new output node
             this.owner.canvasImage = canvasImage;
         }
     }
