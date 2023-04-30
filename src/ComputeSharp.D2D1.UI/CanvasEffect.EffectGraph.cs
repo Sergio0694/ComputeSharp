@@ -38,10 +38,12 @@ partial class CanvasEffect
         /// <returns>The <see cref="ICanvasImage"/> object associated with <paramref name="effectNode"/> in the effect graph.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is not currently registered in the effect graph.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the current <see cref="EffectGraph"/> instance is not valid.</exception>
         public T GetNode<T>(EffectNode<T> effectNode)
             where T : class, ICanvasImage
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
 
             // Try to get the canvas image associated with the input effect node marker.
             // This must have been previously registered in a call to BuildEffectGraph.
@@ -60,7 +62,9 @@ partial class CanvasEffect
         /// </summary>
         /// <param name="canvasImage">The <see cref="ICanvasImage"/> object to register in the effect graph.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="canvasImage"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the effect graph does not support modifications at this time.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the current <see cref="EffectGraph"/> instance is not valid or if the effect graph does not support modifications at this time.
+        /// </exception>
         /// <remarks>
         /// <para><inheritdoc cref="RegisterNode{T}(EffectNode{T}, T)" path="/remarks/node()"/></para>
         /// <para>
@@ -75,6 +79,7 @@ partial class CanvasEffect
         public void RegisterNode(ICanvasImage canvasImage)
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
             default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
 
             // Use a new dummy object as key to register the anonymous effect node. This is cheaper than having to maintain a different
@@ -90,7 +95,9 @@ partial class CanvasEffect
         /// <param name="effectNode">The <see cref="EffectNode{T}"/> instance to use to register <paramref name="canvasImage"/>.</param>
         /// <param name="canvasImage">The <see cref="ICanvasImage"/> object to register in the effect graph.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> or <paramref name="canvasImage"/> are <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the effect graph does not support modifications at this time.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown if the current <see cref="EffectGraph"/> instance is not valid or if the effect graph does not support modifications at this time.
+        /// </exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is already registered in the effect graph.</exception>
         /// <remarks>
         /// This method can only be called from an <see cref="EffectGraph"/> value being passed to <see cref="BuildEffectGraph"/>. If this
@@ -101,6 +108,7 @@ partial class CanvasEffect
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
             default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
 
             // Try to add the new canvas image associated with the input effect node marker.
@@ -129,6 +137,7 @@ partial class CanvasEffect
         public void RegisterAndSetOutputNode(ICanvasImage canvasImage)
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
             default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
             default(InvalidOperationException).ThrowIf(this.owner.canvasImage is not null);
 
@@ -149,6 +158,7 @@ partial class CanvasEffect
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
             default(InvalidOperationException).ThrowIf(!this.owner.isBuildingEffectGraph);
             default(InvalidOperationException).ThrowIf(this.owner.canvasImage is not null);
 
