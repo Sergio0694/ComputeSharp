@@ -69,7 +69,7 @@ unsafe partial class CanvasEffect
     [MemberNotNull(nameof(canvasImage))]
     private ICanvasImage GetCanvasImage()
     {
-        lock (this.lockObject)
+        lock (this.transformNodes)
         {
             default(ObjectDisposedException).ThrowIf(this.isDisposed, this);
 

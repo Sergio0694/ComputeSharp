@@ -16,11 +16,6 @@ namespace ComputeSharp.D2D1.WinUI;
 public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.Interface
 {
     /// <summary>
-    /// Lock object used to synchronize calls to <see cref="ICanvasImageInterop"/> APIs.
-    /// </summary>
-    private readonly object lockObject = new();
-
-    /// <summary>
     /// The mapping of registered transform nodes for the current effect graph.
     /// </summary>
     /// <remarks>
@@ -137,7 +132,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// </remarks>
     protected void InvalidateEffectGraph(InvalidationType invalidationType = InvalidationType.Update)
     {
-        lock (this.lockObject)
+        lock (this.transformNodes)
         {
             // If the effect graph should be created again, dispose the image and throw it away
             if (invalidationType == InvalidationType.Creation)
@@ -212,7 +207,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
             // the lock itself might have already been collected by the time this code runs, which would lead the lock
             // statement to throw a NullReferenceException. So if a finalizer is running, just let objects be collected
             // on their own. This is fine here since there are no unmanaged references to free, but just managed wrappers.
-            lock (this.lockObject)
+            lock (this.transformNodes)
             {
                 DisposeEffectGraph();
             }
