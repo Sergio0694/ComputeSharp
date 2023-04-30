@@ -80,7 +80,7 @@ partial class CanvasEffect
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation, "The effect graph cannot be modified after its creation.");
 
             // Use a new dummy object as key to register the anonymous effect node. This is cheaper than having to maintain a different
             // data structure (eg. a HashSet<ICanvasImage> instance) just to hold the anonymous effects that may be registered. This way,
@@ -109,7 +109,7 @@ partial class CanvasEffect
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation, "The effect graph cannot be modified after its creation.");
 
             // Try to add the new canvas image associated with the input effect node marker.
             // This must not have been previously added from another RegisterNode call.
@@ -138,7 +138,7 @@ partial class CanvasEffect
         {
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation, "The effect graph cannot be modified after its creation.");
 
             // Register the anonymous effect node with a dummy object, same as above
             _ = this.owner.transformNodes.TryAdd(new object(), canvasImage);
@@ -158,7 +158,7 @@ partial class CanvasEffect
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(ArgumentNullException).ThrowIfNull(canvasImage);
             default(InvalidOperationException).ThrowIf(this.owner is null);
-            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation);
+            default(InvalidOperationException).ThrowIf(this.owner.invalidationType != InvalidationType.Creation, "The effect graph cannot be modified after its creation.");
 
             // Try to add the output node as in the method above (but with an extra check before doing so)
             if (!this.owner.transformNodes.TryAdd(effectNode, canvasImage))

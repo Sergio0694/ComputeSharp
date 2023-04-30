@@ -97,7 +97,7 @@ unsafe partial class CanvasEffect
 
             // At this point, there must be an output canvas image being set.
             // If not, it means a derived type has forgot to set an output node.
-            default(InvalidOperationException).ThrowIf(this.canvasImage is null);
+            default(InvalidOperationException).ThrowIf(this.canvasImage is null, "No output node is set in the effect graph.");
 
             return this.canvasImage;
         }
