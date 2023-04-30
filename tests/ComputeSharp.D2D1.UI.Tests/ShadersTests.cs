@@ -120,7 +120,7 @@ public class ShadersTests
     private sealed class TestCanvasEffect<T> : CanvasEffect
         where T : unmanaged, ID2D1PixelShader
     {
-        private PixelShaderEffect<T>? effect;
+        private static readonly EffectNode<PixelShaderEffect<T>> Effect = new();
 
         private T constantBuffer;
 
@@ -130,21 +130,14 @@ public class ShadersTests
             set => SetAndInvalidateEffectGraph(ref this.constantBuffer, value);
         }
 
-        protected override ICanvasImage BuildEffectGraph()
+        protected override void BuildEffectGraph(EffectGraph effectGraph)
         {
-            return this.effect = new PixelShaderEffect<T>();
+            effectGraph.RegisterAndSetOutputNode(Effect, new PixelShaderEffect<T>());
         }
 
-        protected override void ConfigureEffectGraph()
+        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
         {
-            this.effect!.ConstantBuffer = this.constantBuffer;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            this.effect?.Dispose();
+            effectGraph.GetNode(Effect).ConstantBuffer = this.constantBuffer;
         }
     }
 
