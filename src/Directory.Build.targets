@@ -31,8 +31,10 @@
     will be set but the analyzers will not run, so warnings will be skipped.
   -->
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <IsTrimmable>true</IsTrimmable>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
   </PropertyGroup>
 
   <!-- Emit the [SupportedOSVersion] attribute if needed -->
