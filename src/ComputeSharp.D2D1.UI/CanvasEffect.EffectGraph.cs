@@ -33,20 +33,42 @@ partial class CanvasEffect
         /// <summary>
         /// Gets a previously registered <see cref="ICanvasImage"/> object associated with a given effect graph node.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="ICanvasImage"/> object to retrieve.</typeparam>
-        /// <param name="effectNode">The <see cref="EffectNode{T}"/> instance to use to lookup the <see cref="ICanvasImage"/> object to retrieve.</param>
+        /// <param name="effectNode">The <see cref="IEffectNode"/> instance to use to lookup the <see cref="ICanvasImage"/> object to retrieve.</param>
         /// <returns>The <see cref="ICanvasImage"/> object associated with <paramref name="effectNode"/> in the effect graph.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is not currently registered in the effect graph.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the current <see cref="EffectGraph"/> instance is not valid.</exception>
-        public T GetNode<T>(EffectNode<T> effectNode)
-            where T : class, ICanvasImage
+        public ICanvasImage GetNode(IEffectNode effectNode)
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(InvalidOperationException).ThrowIf(this.owner is null);
 
             // Try to get the canvas image associated with the input effect node marker.
             // This must have been previously registered in a call to BuildEffectGraph.
+            if (!this.owner.transformNodes.TryGetValue(effectNode, out ICanvasImage? canvasImage))
+            {
+                default(ArgumentException).Throw(nameof(effectNode), "The specified node is not registered in the effect graph.");
+            }
+
+            return canvasImage;
+        }
+
+        /// <summary>
+        /// Gets a previously registered <typeparamref name="T"/> object (an <see cref="ICanvasImage"/> instance) associated with a given effect graph node.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="ICanvasImage"/> object to retrieve.</typeparam>
+        /// <param name="effectNode">The <see cref="IEffectNode{T}"/> instance to use to lookup the <see cref="ICanvasImage"/> object to retrieve.</param>
+        /// <returns>The <typeparamref name="T"/> object associated with <paramref name="effectNode"/> in the effect graph.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is not currently registered in the effect graph.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the current <see cref="EffectGraph"/> instance is not valid.</exception>
+        public T GetNode<T>(IEffectNode<T> effectNode)
+            where T : class, ICanvasImage
+        {
+            default(ArgumentNullException).ThrowIfNull(effectNode);
+            default(InvalidOperationException).ThrowIf(this.owner is null);
+
+            // Retrieve the registered canvas image, same as above
             if (!this.owner.transformNodes.TryGetValue(effectNode, out ICanvasImage? canvasImage))
             {
                 default(ArgumentException).Throw(nameof(effectNode), "The specified node is not registered in the effect graph.");
@@ -171,10 +193,9 @@ partial class CanvasEffect
         }
 
         /// <summary>
-        /// Sets a previously registered <see cref="EffectNode{T}"/> instance as the output node for the effect graph.
+        /// Sets a previously registered <see cref="IEffectNode"/> instance as the output node for the effect graph.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="ICanvasImage"/> object that will be used as output image.</typeparam>
-        /// <param name="effectNode">The <see cref="EffectNode{T}"/> instance to set as output node for the effect graph.</param>
+        /// <param name="effectNode">The <see cref="IEffectNode"/> instance to set as output node for the effect graph.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="effectNode"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the current <see cref="EffectGraph"/> instance is not valid.</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="effectNode"/> is not registered in the effect graph.</exception>
@@ -183,8 +204,7 @@ partial class CanvasEffect
         /// efficiently changing the output node of a graph, without having to rebuild it. For instance, this can be used for effects that
         /// have multiple paths that can be taken for their inputs, depending on the value of some property describing the effect behavior.
         /// </remarks>
-        public void SetOutputNode<T>(EffectNode<T> effectNode)
-            where T : class, ICanvasImage
+        public void SetOutputNode(IEffectNode effectNode)
         {
             default(ArgumentNullException).ThrowIfNull(effectNode);
             default(InvalidOperationException).ThrowIf(this.owner is null);
@@ -201,10 +221,44 @@ partial class CanvasEffect
     }
 
     /// <summary>
+    /// A marker interface for an effect node that was registered from an <see cref="EffectGraph"/> value.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This interface allows using <see cref="EffectGraph.GetNode"/> and <see cref="EffectGraph.SetOutputNode"/> in more scenarios,
+    /// including where the concrete type of the image being used (eg. to set the output node) is not known (or needed) by the caller.
+    /// </para>
+    /// <para>
+    /// This interface only implemented by <see cref="EffectNode{T}"/> and it's not meant to be implemented by external types.
+    /// </para>
+    /// </remarks>
+    protected interface IEffectNode
+    {
+    }
+
+    /// <summary>
+    /// A marker interface for a generic effect node that was registered from an <see cref="EffectGraph"/> value.
+    /// </summary>
+    /// <typeparam name="T">The covariant type of <see cref="ICanvasImage"/> associated with the current effect node.</typeparam>
+    /// <remarks>
+    /// <para>
+    /// This interface allows using <see cref="EffectGraph.GetNode"/> and <see cref="EffectGraph.SetOutputNode"/> in more scenarios,
+    /// including with ternary expressions returning multiple concrete <see cref="EffectNode{T}"/> instances with a common image type.
+    /// </para>
+    /// <para>
+    /// This interface only implemented by <see cref="EffectNode{T}"/> and it's not meant to be implemented by external types.
+    /// </para>
+    /// </remarks>
+    protected interface IEffectNode<out T> : IEffectNode
+        where T : ICanvasImage
+    {
+    }
+
+    /// <summary>
     /// A marker type for an effect node that can be registered and retrieved from an <see cref="EffectGraph"/> value.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="ICanvasImage"/> associated with the current effect node.</typeparam>
-    protected sealed class EffectNode<T>
+    protected sealed class EffectNode<T> : IEffectNode<T>
         where T : class, ICanvasImage
     {
     }

@@ -220,6 +220,8 @@ public partial class CanvasEffectTests
         await TestAsync(nameof(HelloWorld));
         await TestAsync(nameof(ColorfulInfinity));
         await TestAsync(nameof(FractalTiling));
+        await TestAsync(nameof(Octagrams));
+        await TestAsync(nameof(ProteanClouds));
     }
 
     [TestMethod]
@@ -415,6 +417,9 @@ public partial class CanvasEffectTests
             NumberOfConfigureEffectGraphCalls++;
 
             effectGraph.GetNode(Effect).ConstantBuffer = new ShaderWithNoInputs(this.value);
+
+            // Also test the non-generic overload
+            Assert.IsTrue(effectGraph.GetNode((IEffectNode)Effect) is PixelShaderEffect<ShaderWithNoInputs>);
         }
 
         protected override void Dispose(bool disposing)
@@ -596,6 +601,8 @@ public partial class CanvasEffectTests
         private static readonly EffectNode<PixelShaderEffect<HelloWorld>> HelloWorldNode = new();
         private static readonly EffectNode<PixelShaderEffect<ColorfulInfinity>> ColorfulInfinityNode = new();
         private static readonly EffectNode<PixelShaderEffect<FractalTiling>> FractalTilingNode = new();
+        private static readonly EffectNode<PixelShaderEffect<Octagrams>> OctagramsNode = new();
+        private static readonly EffectNode<PixelShaderEffect<ProteanClouds>> ProteanCloudsNode = new();
 
         private int step;
 
@@ -604,6 +611,8 @@ public partial class CanvasEffectTests
             effectGraph.RegisterNode(HelloWorldNode, new PixelShaderEffect<HelloWorld> { ConstantBuffer = new HelloWorld(0, new int2(1280, 720)) });
             effectGraph.RegisterNode(ColorfulInfinityNode, new PixelShaderEffect<ColorfulInfinity> { ConstantBuffer = new ColorfulInfinity(0, new int2(1280, 720)) });
             effectGraph.RegisterNode(FractalTilingNode, new PixelShaderEffect<FractalTiling> { ConstantBuffer = new FractalTiling(0, new int2(1280, 720)) });
+            effectGraph.RegisterNode(OctagramsNode, new PixelShaderEffect<Octagrams> { ConstantBuffer = new Octagrams(0, new int2(1280, 720)) });
+            effectGraph.RegisterNode(ProteanCloudsNode, new PixelShaderEffect<ProteanClouds> { ConstantBuffer = new ProteanClouds(0, new int2(1280, 720)) });
             effectGraph.SetOutputNode(HelloWorldNode);
         }
 
@@ -617,6 +626,10 @@ public partial class CanvasEffectTests
                     break;
                 case 2:
                     effectGraph.SetOutputNode(FractalTilingNode);
+                    break;
+                case 3 or 4:
+                    // Test the overload which is non-generic, allowing ternary expressions too
+                    effectGraph.SetOutputNode(this.step == 4 ? OctagramsNode : ProteanCloudsNode);
                     break;
                 default:
                     Assert.Fail();
