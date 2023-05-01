@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\GraphicsEffectSourceBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\ResourceTextureManagerBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Buffers\SourceReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CanvasEffect.EffectGraph.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CanvasEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CanvasEffect.Interop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\FixedCountList{T}.cs" />

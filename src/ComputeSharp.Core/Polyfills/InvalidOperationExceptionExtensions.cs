@@ -36,12 +36,38 @@ internal static class InvalidOperationExceptionExtensions
     }
 
     /// <summary>
-    /// Throws an <see cref="InvalidOperationException"/> for a given parameter name.
+    /// Throws an <see cref="InvalidOperationException"/> if <paramref name="condition"/> is <see langword="true"/>.
+    /// </summary>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="condition">The condition to decide whether to throw the exception.</param>
+    /// <param name="message">The message to include in the exception.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ThrowIf(this InvalidOperationException? _, [DoesNotReturnIf(true)] bool condition, string message)
+    {
+        if (condition)
+        {
+            Throw(message);
+        }
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/>.
     /// </summary>
     /// <exception cref="InvalidOperationException">Always thrown with no parameters.</exception>
     [DoesNotReturn]
     private static void Throw()
     {
         throw new InvalidOperationException();
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> with a given message.
+    /// </summary>
+    /// <param name="message">The message to include in the exception.</param>
+    /// <exception cref="InvalidOperationException">Always thrown with no parameters.</exception>
+    [DoesNotReturn]
+    private static void Throw(string message)
+    {
+        throw new InvalidOperationException(message);
     }
 }

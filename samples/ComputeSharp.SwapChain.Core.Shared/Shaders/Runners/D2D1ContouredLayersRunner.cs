@@ -8,7 +8,6 @@ using ComputeSharp.D2D1.Uwp;
 using ComputeSharp.D2D1.WinUI;
 #endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
-using Microsoft.Graphics.Canvas;
 using Windows.ApplicationModel;
 
 #nullable enable
@@ -21,12 +20,12 @@ namespace ComputeSharp.SwapChain.Core.Shaders.Runners;
 public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
 {
     /// <summary>
-    /// The reusable <see cref="PixelShaderEffect{T}"/> instance to use to render frames.
+    /// The reusable <see cref="PixelShaderEffect{T}"/> node to use to render frames.
     /// </summary>
-    private PixelShaderEffect<ContouredLayers>? pixelShaderEffect;
+    private static readonly EffectNode<PixelShaderEffect<ContouredLayers>> PixelShaderEffect = new();
 
     /// <inheritdoc/>
-    protected override unsafe ICanvasImage BuildEffectGraph()
+    protected override unsafe void BuildEffectGraph(EffectGraph effectGraph)
     {
         string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.png");
 
@@ -56,25 +55,15 @@ public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
             strides: stackalloc uint[] { (uint)strideInBytes });
 
         // Create the new pixel shader effect
-        this.pixelShaderEffect = new PixelShaderEffect<ContouredLayers>() { ResourceTextureManagers = { [0] = resourceTextureManager } };
+        PixelShaderEffect<ContouredLayers> pixelShaderEffect = new() { ResourceTextureManagers = { [0] = resourceTextureManager } };
 
-        return this.pixelShaderEffect;
+        // Register the pixel shader effect as the output node in the effect graph
+        effectGraph.RegisterOutputNode(PixelShaderEffect, pixelShaderEffect);
     }
 
     /// <inheritdoc/>
-    protected override void ConfigureEffectGraph()
+    protected override void ConfigureEffectGraph(EffectGraph effectGraph)
     {
-        this.pixelShaderEffect!.ConstantBuffer = new ContouredLayers((float)ElapsedTime.TotalSeconds, new int2(ScreenWidth, ScreenHeight));
-    }
-
-    /// <inheritdoc/>
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-
-        if (disposing)
-        {
-            this.pixelShaderEffect?.Dispose();
-        }
+        effectGraph.GetNode(PixelShaderEffect).ConstantBuffer = new ContouredLayers((float)ElapsedTime.TotalSeconds, new int2(ScreenWidth, ScreenHeight));
     }
 }

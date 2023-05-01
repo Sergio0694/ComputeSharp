@@ -60,14 +60,14 @@ internal abstract class PixelShaderEffect : CanvasEffect
         where T : unmanaged, ID2D1PixelShader
     {
         /// <summary>
+        /// The <see cref="PixelShaderEffect{T}"/> node in use.
+        /// </summary>
+        private static readonly EffectNode<PixelShaderEffect<T>> Effect = new();
+
+        /// <summary>
         /// The <typeparamref name="T"/> factory to use.
         /// </summary>
         private readonly Factory factory;
-
-        /// <summary>
-        /// The <see cref="PixelShaderEffect{T}"/> instance in use.
-        /// </summary>
-        private PixelShaderEffect<T>? effect;
 
         /// <summary>
         /// Creates a new <see cref="For{T}"/> instance with the specified parameters.
@@ -79,28 +79,15 @@ internal abstract class PixelShaderEffect : CanvasEffect
         }
 
         /// <inheritdoc/>
-        protected override ICanvasImage BuildEffectGraph()
+        protected override void BuildEffectGraph(EffectGraph effectGraph)
         {
-            this.effect = new PixelShaderEffect<T>();
-
-            return this.effect;
+            effectGraph.RegisterOutputNode(Effect, new PixelShaderEffect<T>());
         }
 
         /// <inheritdoc/>
-        protected override void ConfigureEffectGraph()
+        protected override void ConfigureEffectGraph(EffectGraph effectGraph)
         {
-            this.effect!.ConstantBuffer = this.factory(ElapsedTime, ScreenWidth, ScreenHeight);
-        }
-
-        /// <inheritdoc/>
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-            {
-                this.effect?.Dispose();
-            }
+            effectGraph.GetNode(Effect).ConstantBuffer = this.factory(ElapsedTime, ScreenWidth, ScreenHeight);
         }
 
         /// <summary>
