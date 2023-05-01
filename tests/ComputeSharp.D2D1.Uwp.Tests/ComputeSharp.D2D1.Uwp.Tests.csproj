@@ -133,10 +133,10 @@
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
-      <Version>2.2.7</Version>
+      <Version>3.0.2</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
-      <Version>2.2.7</Version>
+      <Version>3.0.2</Version>
     </PackageReference>
     <PackageReference Include="PolySharp">
       <Version>1.13.1</Version>
