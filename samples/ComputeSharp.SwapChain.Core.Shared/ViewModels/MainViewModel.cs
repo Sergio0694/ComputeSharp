@@ -188,10 +188,10 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     /// <inheritdoc/>
-    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel value)
+    partial void OnSelectedComputeShaderChanging(ShaderRunnerViewModel? oldValue, ShaderRunnerViewModel newValue)
     {
-        SelectedComputeShader.IsSelected = false;
-        value.IsSelected = true;
+        oldValue!.IsSelected = false;
+        newValue.IsSelected = true;
     }
 
     /// <inheritdoc/>
