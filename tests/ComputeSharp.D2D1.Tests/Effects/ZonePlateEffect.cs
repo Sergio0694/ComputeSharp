@@ -2,7 +2,7 @@ using System;
 
 namespace ComputeSharp.D2D1.Tests.Effects;
 
-#if !NETCOREAPP3_1_OR_GREATER 
+#if !NET6_0_OR_GREATER 
 internal static class MathF
 {
     public const float PI = (float)Math.PI;
