@@ -60,7 +60,7 @@ internal readonly partial struct TwoTiledTruchet : IPixelShader<float4>
                 ang.Y *= -1.0f;
             }
 
-            if (rnd3 < .5)
+            if (rnd3 < 0.5f)
             {
                 d = d.YX;
                 ang = ang.YX;
@@ -72,7 +72,7 @@ internal readonly partial struct TwoTiledTruchet : IPixelShader<float4>
         }
         else
         {
-            if (rnd < .5)
+            if (rnd < 0.5f)
             {
                 p = p.YX * new float2(1, -1);
             }

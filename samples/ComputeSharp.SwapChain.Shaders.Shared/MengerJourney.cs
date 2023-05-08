@@ -88,7 +88,7 @@ internal readonly partial struct MengerJourney : IPixelShader<float4>
 
             z = (Scale * z) - (Offset * (Scale - 1.0f));
 
-            if (z.Z < -0.5f * Offset.Z * (Scale - 1.0))
+            if (z.Z < -0.5f * Offset.Z * (Scale - 1.0f))
             {
                 z.Z += Offset.Z * (Scale - 1.0f);
             }
