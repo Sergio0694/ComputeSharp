@@ -206,19 +206,23 @@ internal static class SyntaxNodeExtensions
     }
 
     /// <summary>
-    /// Returns a <see cref="MethodDeclarationSyntax"/> instance with no accessibility modifiers.
+    /// Returns a <see cref="MethodDeclarationSyntax"/> instance with no invalid HLSL modifiers.
     /// </summary>
     /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
-    /// <returns>A node just like <paramref name="node"/> but with no accessibility modifiers.</returns>
-    public static MethodDeclarationSyntax WithoutAccessibilityModifiers(this MethodDeclarationSyntax node)
+    /// <returns>A node just like <paramref name="node"/> but with no invalid HLSL modifiers.</returns>
+    /// <remarks>This method will only strip modifiers that are expected and allowed on HLSL methods.</remarks>
+    public static MethodDeclarationSyntax WithoutInvalidHlslModifiers(this MethodDeclarationSyntax node)
     {
-        return node.WithModifiers(TokenList(node.Modifiers.Where(static modifier => modifier.Kind() switch
+        static bool IsAllowedHlslModifier(SyntaxToken syntaxToken)
         {
-            SyntaxKind.PublicKeyword => false,
-            SyntaxKind.PrivateKeyword => false,
-            SyntaxKind.ProtectedKeyword => false,
-            SyntaxKind.InternalKeyword => false,
-            _ => true
-        }).ToArray()));
+            return syntaxToken.Kind() is not (
+                SyntaxKind.PublicKeyword or
+                SyntaxKind.PrivateKeyword or
+                SyntaxKind.ProtectedKeyword or
+                SyntaxKind.InternalKeyword or
+                SyntaxKind.ReadOnlyKeyword);
+        }
+
+        return node.WithModifiers(TokenList(node.Modifiers.Where(IsAllowedHlslModifier)));
     }
 }
