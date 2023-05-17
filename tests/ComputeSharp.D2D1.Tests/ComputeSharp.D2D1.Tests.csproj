@@ -12,8 +12,8 @@
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.4" />
-    <PackageReference Include="Vortice.Win32.Graphics.Direct2D" Version="1.9.23" />
-    <PackageReference Include="Vortice.Win32.Graphics.Direct3D11" Version="1.9.23" />
+    <PackageReference Include="Vortice.Win32.Graphics.Direct2D" Version="1.9.24" />
+    <PackageReference Include="Vortice.Win32.Graphics.Direct3D11" Version="1.9.24" />
   </ItemGroup>
 
   <ItemGroup>
