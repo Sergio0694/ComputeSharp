@@ -24,7 +24,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     /// <returns>The current <see cref="ICachedShader"/> instance.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the shader has not been initialized.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ICachedShader GetCachedShader()
+    public readonly ICachedShader GetCachedShader()
     {
         default(InvalidOperationException).ThrowIf(this.cachedShader is null);
 

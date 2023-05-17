@@ -404,7 +404,7 @@ unsafe partial struct PixelShaderEffect
     /// <param name="resourceTextureIndex">The index of the resource texture to validate.</param>
     /// <param name="dimensions">The number of dimensions for the resource texture at the gven index.</param>
     /// <returns>Whether or not <paramref name="resourceTextureIndex"/> is valid for the current effect.</returns>
-    private bool IsResourceTextureManagerIndexValid(int resourceTextureIndex, out uint dimensions)
+    private readonly bool IsResourceTextureManagerIndexValid(int resourceTextureIndex, out uint dimensions)
     {
         foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
         {

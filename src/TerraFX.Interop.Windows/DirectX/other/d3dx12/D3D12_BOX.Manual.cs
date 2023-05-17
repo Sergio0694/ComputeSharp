@@ -49,9 +49,9 @@ internal partial struct D3D12_BOX : IEquatable<D3D12_BOX>
         return !(l == r);
     }
 
-    public override bool Equals(object? obj) => (obj is D3D12_BOX other) && Equals(other);
+    public override readonly bool Equals(object? obj) => (obj is D3D12_BOX other) && Equals(other);
 
-    public bool Equals(D3D12_BOX other) => this == other;
+    public readonly bool Equals(D3D12_BOX other) => this == other;
 
-    public override int GetHashCode() => HashCode.Combine(left, top, front, right, bottom, back);
+    public override readonly int GetHashCode() => HashCode.Combine(left, top, front, right, bottom, back);
 }

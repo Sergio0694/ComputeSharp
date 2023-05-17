@@ -22,7 +22,7 @@ internal unsafe struct D2D1BufferSizeDispatchDataLoader : ID2D1DispatchDataLoade
     /// </summary>
     /// <returns>The size of the constant buffer.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int GetConstantBufferSize()
+    private readonly int GetConstantBufferSize()
     {
         return this.size;
     }

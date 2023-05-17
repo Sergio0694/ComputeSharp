@@ -24,7 +24,7 @@ internal struct D2D1ImmutableArrayResourceTextureDescriptionsLoader : ID2D1Resou
     /// </summary>
     /// <returns>An array of indices for resource textures for the current effect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ImmutableArray<int> GetResultingIndices()
+    public readonly ImmutableArray<int> GetResultingIndices()
     {
         return this.indices;
     }

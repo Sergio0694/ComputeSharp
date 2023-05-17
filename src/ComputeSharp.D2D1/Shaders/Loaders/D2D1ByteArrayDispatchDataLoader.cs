@@ -22,7 +22,7 @@ internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
     /// </summary>
     /// <returns>A <see cref="byte"/> array with the constant buffer for the current shader.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public byte[] GetResultingDispatchData()
+    public readonly byte[] GetResultingDispatchData()
     {
         return this.data!;
     }

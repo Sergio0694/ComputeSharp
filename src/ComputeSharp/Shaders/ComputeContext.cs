@@ -55,7 +55,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <summary>
     /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
     /// </summary>
-    public GraphicsDevice GraphicsDevice
+    public readonly GraphicsDevice GraphicsDevice
     {
         get
         {

@@ -53,9 +53,9 @@ internal unsafe partial struct D3D12_RESOURCE_DESC : IEquatable<D3D12_RESOURCE_D
         return new D3D12_RESOURCE_DESC(D3D12_RESOURCE_DIMENSION_TEXTURE3D, alignment, width, height, depth, mipLevels, format, 1, 0, layout, flags);
     }
 
-    public ushort Depth => ((Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) ? DepthOrArraySize : (ushort)(1));
+    public readonly ushort Depth => ((Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D) ? DepthOrArraySize : (ushort)(1));
 
-    public ushort ArraySize => ((Dimension != D3D12_RESOURCE_DIMENSION_TEXTURE3D) ? DepthOrArraySize : (ushort)(1));
+    public readonly ushort ArraySize => ((Dimension != D3D12_RESOURCE_DIMENSION_TEXTURE3D) ? DepthOrArraySize : (ushort)(1));
 
     public static bool operator ==([NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC l, [NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC r)
     {
@@ -75,11 +75,11 @@ internal unsafe partial struct D3D12_RESOURCE_DESC : IEquatable<D3D12_RESOURCE_D
     public static bool operator !=([NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC l, [NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC r)
         => !(l == r);
 
-    public override bool Equals(object? obj) => (obj is D3D12_RESOURCE_DESC other) && Equals(other);
+    public override readonly bool Equals(object? obj) => (obj is D3D12_RESOURCE_DESC other) && Equals(other);
 
-    public bool Equals(D3D12_RESOURCE_DESC other) => this == other;
+    public readonly bool Equals(D3D12_RESOURCE_DESC other) => this == other;
 
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         var hashCode = new HashCode();
         {

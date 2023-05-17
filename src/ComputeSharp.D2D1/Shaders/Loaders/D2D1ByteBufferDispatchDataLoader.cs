@@ -46,7 +46,7 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     /// <param name="writtenBytes">The number of written bytes, of <c>0</c> in case of failure.</param>
     /// <returns>Whether or not the constant buffer was retrieved successfully.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetWrittenBytes(out int writtenBytes)
+    public readonly bool TryGetWrittenBytes(out int writtenBytes)
     {
         // If the -1 marker is present, it means copying to the target span failed.
         // In this case, the returned number of written bytes is still reported as 0.

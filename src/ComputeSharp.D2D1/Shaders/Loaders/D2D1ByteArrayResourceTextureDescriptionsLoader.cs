@@ -23,7 +23,7 @@ internal struct D2D1ByteArrayResourceTextureDescriptionsLoader : ID2D1ResourceTe
     /// </summary>
     /// <returns>A <see cref="D2D1ResourceTextureDescription"/> array with the available resource texture descriptions.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public D2D1ResourceTextureDescription[] GetResultingResourceTextureDescriptions()
+    public readonly D2D1ResourceTextureDescription[] GetResultingResourceTextureDescriptions()
     {
         return this.resourceTextureDescriptions!;
     }

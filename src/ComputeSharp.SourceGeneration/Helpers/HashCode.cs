@@ -439,7 +439,7 @@ internal struct HashCode
     /// Gets the resulting hashcode from the current instance.
     /// </summary>
     /// <returns>The resulting hashcode from the current instance.</returns>
-    public int ToHashCode()
+    public readonly int ToHashCode()
     {
         uint length = this.length;
         uint position = length % 4;

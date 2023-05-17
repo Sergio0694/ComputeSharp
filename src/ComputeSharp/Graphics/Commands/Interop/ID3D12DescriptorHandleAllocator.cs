@@ -83,7 +83,7 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     /// <summary>
     /// Gets the <see cref="ID3D12DescriptorHeap"/> in use for the current <see cref="ID3D12DescriptorHandleAllocator"/> instance.
     /// </summary>
-    public ID3D12DescriptorHeap* D3D12DescriptorHeap => this.d3D12DescriptorHeap;
+    public readonly ID3D12DescriptorHeap* D3D12DescriptorHeap => this.d3D12DescriptorHeap;
 
     /// <summary>
     /// Rents a new bundle of CPU and GPU handles to use in a resource.

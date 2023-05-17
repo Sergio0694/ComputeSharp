@@ -37,7 +37,7 @@ internal unsafe struct D2D1ShaderBytecodeLoader : ID2D1BytecodeLoader
     /// <returns>An <see cref="ID3DBlob"/> with the shader bytecode, if dynamically compiled.</returns>
     /// <remarks>Either <paramref name="precompiledBytecode"/> is empty, or the returned pointer is <see langword="null"/>.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ComPtr<ID3DBlob> GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode)
+    public readonly ComPtr<ID3DBlob> GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode)
     {
         precompiledBytecode = new ReadOnlySpan<byte>(this.embeddedBytecodePtr, this.embeddedBytecodeSize);
 

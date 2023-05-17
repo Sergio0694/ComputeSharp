@@ -30,5 +30,5 @@ internal struct ComplexVector4
     /// <param name="b">The 'b' parameter, for the imaginary component</param>
     /// <returns>The resulting <see cref="Vector4"/> value</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Vector4 WeightedSum(float a, float b) => (this.Real * a) + (this.Imaginary * b);
+    public readonly Vector4 WeightedSum(float a, float b) => (this.Real * a) + (this.Imaginary * b);
 }
