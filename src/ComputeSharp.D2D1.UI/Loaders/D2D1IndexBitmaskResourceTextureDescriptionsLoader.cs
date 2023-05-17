@@ -23,7 +23,7 @@ internal struct D2D1IndexBitmaskResourceTextureDescriptionsLoader : ID2D1Resourc
     /// </summary>
     /// <returns>A bitmask of indices for resource textures in the target shader.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int GetResultingIndexBitmask()
+    public readonly int GetResultingIndexBitmask()
     {
         return this.indexBitmask;
     }

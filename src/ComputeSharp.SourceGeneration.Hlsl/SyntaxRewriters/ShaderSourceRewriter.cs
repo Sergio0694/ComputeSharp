@@ -245,7 +245,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         return
             ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!)
             .WithBlockBody()
-            .WithoutAccessibilityModifiers()
+            .WithoutInvalidHlslModifiers()
             .WithAttributeLists(List<AttributeListSyntax>());
     }
 

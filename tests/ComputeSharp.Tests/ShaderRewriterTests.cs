@@ -823,4 +823,48 @@ public partial class ShaderRewriterTests
             buffer2[11] = r2.Z;
         }
     }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/525
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void ReadonlyModifierInMethods(Device device)
+    {
+        int[] data = { 0 };
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
+
+        device.Get().For(1, new ReadonlyModifierInMethodsShader(buffer, new MyStructWithReadonlyMethod { Number = 40 }));
+
+        int[] results = buffer.ToArray();
+
+        CollectionAssert.AreEqual(expected: new[] { 42 }, actual: results);
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ReadonlyModifierInMethodsShader : IComputeShader
+    {
+        private readonly ReadWriteBuffer<int> buffer;
+        private readonly MyStructWithReadonlyMethod myStruct;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            this.buffer[ThreadIds.X] = myStruct.GetNumber() + Foo();
+        }
+
+        private readonly int Foo()
+        {
+            return 2;
+        }
+    }
+
+    public struct MyStructWithReadonlyMethod
+    {
+        public int Number;
+
+        public readonly int GetNumber()
+        {
+            return this.Number;
+        }
+    }
 }

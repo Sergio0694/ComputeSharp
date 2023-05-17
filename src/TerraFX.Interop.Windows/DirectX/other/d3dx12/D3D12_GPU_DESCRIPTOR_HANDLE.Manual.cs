@@ -59,9 +59,9 @@ internal unsafe partial struct D3D12_GPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_GP
         handle.ptr = (ulong)((long)@base.ptr + ((long)offsetInDescriptors * (long)descriptorIncrementSize));
     }
 
-    public override bool Equals(object? obj) => (obj is D3D12_GPU_DESCRIPTOR_HANDLE other) && Equals(other);
+    public override readonly bool Equals(object? obj) => (obj is D3D12_GPU_DESCRIPTOR_HANDLE other) && Equals(other);
 
-    public bool Equals(D3D12_GPU_DESCRIPTOR_HANDLE other) => this == other;
+    public readonly bool Equals(D3D12_GPU_DESCRIPTOR_HANDLE other) => this == other;
 
-    public override int GetHashCode() => ptr.GetHashCode();
+    public override readonly int GetHashCode() => ptr.GetHashCode();
 }

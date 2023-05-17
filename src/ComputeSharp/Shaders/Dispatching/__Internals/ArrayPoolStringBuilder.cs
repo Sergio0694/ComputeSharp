@@ -136,7 +136,7 @@ public ref struct ArrayPoolStringBuilder
     }
 
     /// <inheritdoc/>
-    public void Dispose()
+    public readonly void Dispose()
     {
         ArrayPool<char>.Shared.Return(this.array);
     }

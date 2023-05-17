@@ -89,7 +89,7 @@ internal unsafe struct CommandList : IDisposable
     /// <summary>
     /// Gets the <see cref="GraphicsDevice"/> instance associated with the current command list.
     /// </summary>
-    public GraphicsDevice GraphicsDevice => this.device;
+    public readonly GraphicsDevice GraphicsDevice => this.device;
 
     /// <summary>
     /// Gets the command list type being used by the current instance.
