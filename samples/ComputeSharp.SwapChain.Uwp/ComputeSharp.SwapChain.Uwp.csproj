@@ -184,10 +184,10 @@
       <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.3</Version>
+      <Version>2.8.4</Version>
     </PackageReference>
     <PackageReference Include="PolySharp">
-      <Version>1.13.1</Version>
+      <Version>1.13.2</Version>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

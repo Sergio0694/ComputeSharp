@@ -139,7 +139,7 @@
       <Version>3.0.2</Version>
     </PackageReference>
     <PackageReference Include="PolySharp">
-      <Version>1.13.1</Version>
+      <Version>1.13.2</Version>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>

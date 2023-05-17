@@ -9,8 +9,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
-    <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.23" />
-    <PackageReference Include="Vortice.Win32.Graphics.Dxgi" Version="1.9.23" />
+    <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.24" />
+    <PackageReference Include="Vortice.Win32.Graphics.Dxgi" Version="1.9.24" />
   </ItemGroup>
 
   <ItemGroup>
