@@ -21,7 +21,7 @@ namespace ComputeSharp.D2D1.WinUI;
 #endif
 
 /// <inheritdoc/>
-unsafe partial class CanvasEffect
+partial class CanvasEffect
 {
     /// <inheritdoc/>
     public Rect GetBounds(ICanvasResourceCreator resourceCreator)
