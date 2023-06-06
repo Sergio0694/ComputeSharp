@@ -7,11 +7,11 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.4" />
-    <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.24" />
+    <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.33" />
   </ItemGroup>
 
   <ItemGroup>
