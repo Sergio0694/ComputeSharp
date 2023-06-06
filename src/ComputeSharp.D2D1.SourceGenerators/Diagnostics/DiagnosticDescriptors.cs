@@ -631,7 +631,8 @@ partial class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "A D2D1 shader generated with ComputeSharp.D2D1 (or an assembly) cannot use the PackMatrixColumnMajor option, as that is not compatible with the generated code used to load shader constant buffers.",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp",
+        customTags: WellKnownDiagnosticTags.CompilationEnd);
 
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DRequiresScenePosition]</c> attribute is missing.

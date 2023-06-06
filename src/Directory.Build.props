@@ -49,6 +49,9 @@
     <!-- Disable packing symbols for source generators -->
     <PackSymbols Condition="$(IsSourceGeneratorProject)">false</PackSymbols>
 
+    <!-- Enable extended analyzer rules for all source generators -->
+    <EnforceExtendedAnalyzerRules Condition="$(IsSourceGeneratorProject)">true</EnforceExtendedAnalyzerRules>
+
     <!-- Check whether the project has a .targets file to bundle -->
     <IsTargetsFileAvailableForPacking>false</IsTargetsFileAvailableForPacking>
     <IsTargetsFileAvailableForPacking Condition="$(IsPackagedProject) AND Exists('$(MSBuildProjectName).targets')">true</IsTargetsFileAvailableForPacking>
