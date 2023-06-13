@@ -8,6 +8,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
+#pragma warning disable RS1035
+
 namespace ComputeSharp.SourceGeneration.Helpers;
 
 /// <summary>

@@ -20,6 +20,8 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
+#pragma warning disable RS1035
+
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
