@@ -155,7 +155,7 @@ partial class ID2D1ShaderGenerator
                     // by the logic handling the info gathering for LoadResourceTextureDescriptions.
                     if (fieldSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DResourceTextureIndexAttribute", out AttributeData? attributeData))
                     {
-                        _ = attributeData!.TryGetConstructorArgument(0, out index);
+                        _ = attributeData.TryGetConstructorArgument(0, out index);
                     }
 
                     resourceTextures.Add((mapping ?? fieldSymbol.Name, typeName, index));

@@ -56,7 +56,7 @@ partial class ID2D1ShaderGenerator
                     {
                         // If the constructor argument isn't available, it means the code is invalid. Just do nothing then, as the
                         // user will have to fix that to get the code to compile anyway. This way the generator won't crash too.
-                        if (attributeData!.TryGetConstructorArgument(0, out int resourceIndex))
+                        if (attributeData.TryGetConstructorArgument(0, out int resourceIndex))
                         {
                             index = resourceIndex;
                         }
