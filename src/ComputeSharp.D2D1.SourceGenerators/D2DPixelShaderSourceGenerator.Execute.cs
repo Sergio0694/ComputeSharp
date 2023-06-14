@@ -85,12 +85,12 @@ partial class D2DPixelShaderSourceGenerator
         {
             if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
-                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
             }
 
             if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
-                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
             }
 
             diagnostics.Add(
@@ -112,12 +112,12 @@ partial class D2DPixelShaderSourceGenerator
         {
             if (methodSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
-                return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
             }
 
             if (methodSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
             {
-                return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
             }
 
             diagnostics.Add(

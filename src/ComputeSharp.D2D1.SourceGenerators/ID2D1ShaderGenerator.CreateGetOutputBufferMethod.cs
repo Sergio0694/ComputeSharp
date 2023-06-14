@@ -32,7 +32,7 @@ partial class ID2D1ShaderGenerator
             }
 
             // Extract the buffer precision and channel depth, if available
-            if (attributeData!.ConstructorArguments.Length == 1)
+            if (attributeData.ConstructorArguments.Length == 1)
             {
                 if (attributeData.AttributeConstructor is IMethodSymbol { Parameters.Length: 1 } constructorSymbol &&
                     constructorSymbol.Parameters[0].Type.HasFullyQualifiedMetadataName("ComputeSharp.D2D1.D2D1BufferPrecision"))

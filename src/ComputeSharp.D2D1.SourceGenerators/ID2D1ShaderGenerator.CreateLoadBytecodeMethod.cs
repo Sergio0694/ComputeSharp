@@ -35,12 +35,12 @@ partial class ID2D1ShaderGenerator
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
-                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
             }
 
             if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out attributeData))
             {
-                return (D2D1ShaderProfile)attributeData!.ConstructorArguments[0].Value!;
+                return (D2D1ShaderProfile)attributeData.ConstructorArguments[0].Value!;
             }
 
             return null;
@@ -56,7 +56,7 @@ partial class ID2D1ShaderGenerator
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
-                D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
+                D2D1CompileOptions options = (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
 
                 if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
                 {
@@ -73,7 +73,7 @@ partial class ID2D1ShaderGenerator
             if (structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out attributeData))
             {
                 // No need to validate against PackMatrixColumnMajor as that's checked separately
-                return (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value! | D2D1CompileOptions.PackMatrixRowMajor;
+                return (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value! | D2D1CompileOptions.PackMatrixRowMajor;
             }
 
             return null;

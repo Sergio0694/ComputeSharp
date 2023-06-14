@@ -31,7 +31,7 @@ public sealed class InvalidAssemblyLevelCompileOptionsAnalyzer : DiagnosticAnaly
             //   - The input D2D1CompileOptions value, which can be retrieved from the constructor arguments of the AttributeData object.
             if (assemblySymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
-                D2D1CompileOptions options = (D2D1CompileOptions)attributeData!.ConstructorArguments[0].Value!;
+                D2D1CompileOptions options = (D2D1CompileOptions)attributeData.ConstructorArguments[0].Value!;
 
                 if ((options & D2D1CompileOptions.PackMatrixColumnMajor) != 0)
                 {

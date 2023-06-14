@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
@@ -33,7 +34,7 @@ internal static class ISymbolExtensions
     /// <param name="name">The attribute name to look for.</param>
     /// <param name="attributeData">The resulting attribute data, if found.</param>
     /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
-    public static bool TryGetAttributeWithFullyQualifiedMetadataName(this ISymbol symbol, string name, out AttributeData? attributeData)
+    public static bool TryGetAttributeWithFullyQualifiedMetadataName(this ISymbol symbol, string name, [NotNullWhen(true)] out AttributeData? attributeData)
     {
         foreach (AttributeData attribute in symbol.GetAttributes())
         {

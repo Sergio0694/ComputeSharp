@@ -20,7 +20,7 @@ partial class ID2D1ShaderGenerator
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DPixelOptionsAttribute", out AttributeData? attributeData))
             {
-                pixelOptions = (D2D1PixelOptions)attributeData!.ConstructorArguments[0].Value!;
+                pixelOptions = (D2D1PixelOptions)attributeData.ConstructorArguments[0].Value!;
             }
             else
             {

@@ -63,7 +63,7 @@ partial class IShaderGenerator
             int threadsZ;
 
             // Check for a dispatch axis argument first
-            if (attribute!.ConstructorArguments.Length == 1)
+            if (attribute.ConstructorArguments.Length == 1)
             {
                 int dispatchAxis = (int)attribute.ConstructorArguments[0].Value!;
 
