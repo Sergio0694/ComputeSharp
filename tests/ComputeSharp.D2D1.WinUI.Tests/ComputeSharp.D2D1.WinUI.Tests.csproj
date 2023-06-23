@@ -55,7 +55,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
   </ItemGroup>
 
   <ItemGroup>
