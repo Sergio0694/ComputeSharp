@@ -24,17 +24,17 @@ internal static class Configuration
     private const string DisableGpuTimeout = "COMPUTESHARP_DISABLE_GPU_TIMEOUT";
 
     /// <summary>
-    /// Indicates whether or not the debug output is enabled.
+    /// Indicates whether or not the debug output is enabled (defaults to <see langword="false"/>).
     /// </summary>
     public static readonly bool IsDebugOutputEnabled = GetConfigurationValue(EnableDebugOutput);
 
     /// <summary>
-    /// Indicates whether or not the debug output is enabled.
+    /// Indicates whether or not the debug output is enabled (defaults to <see langword="false"/>).
     /// </summary>
     public static readonly bool IsDeviceRemovedExtendedDataEnabled = GetConfigurationValue(EnableDeviceRemovedExtendedDataInfo);
 
     /// <summary>
-    /// Indicates whether or not the GPU timeout is disabled.
+    /// Indicates whether or not the GPU timeout is disabled (defaults to <see langword="false"/>).
     /// </summary>
     public static readonly bool IsGpuTimeoutDisabled = GetConfigurationValue(DisableGpuTimeout);
 
