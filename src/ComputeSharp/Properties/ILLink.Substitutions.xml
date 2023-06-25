@@ -3,26 +3,26 @@
 
     <!-- COMPUTESHARP_ENABLE_DEBUG_OUTPUT switch -->
     <type fullname="Configuration" feature="COMPUTESHARP_ENABLE_DEBUG_OUTPUT" featurevalue="true">
-      <field name="IsDebugOutputEnabled" value="true" />
+      <field name="IsDebugOutputEnabledConfigurationValue" value="true" />
     </type>
     <type fullname="Configuration" feature="COMPUTESHARP_ENABLE_DEBUG_OUTPUT" featurevalue="false">
-      <field name="IsDebugOutputEnabled" value="false" />
+      <field name="IsDebugOutputEnabledConfigurationValue" value="false" />
     </type>
 
     <!-- COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA switch -->
     <type fullname="Configuration" feature="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" featurevalue="true">
-      <field name="IsDeviceRemovedExtendedDataEnabled" value="true" />
+      <field name="IsDeviceRemovedExtendedDataEnabledConfigurationValue" value="true" />
     </type>
     <type fullname="Configuration" feature="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" featurevalue="false">
-      <field name="IsDeviceRemovedExtendedDataEnabled" value="false" />
+      <field name="IsDeviceRemovedExtendedDataEnabledConfigurationValue" value="false" />
     </type>
 
     <!-- COMPUTESHARP_DISABLE_GPU_TIMEOUT switch -->
     <type fullname="Configuration" feature="COMPUTESHARP_DISABLE_GPU_TIMEOUT" featurevalue="true">
-      <field name="IsGpuTimeoutDisabled" value="true" />
+      <field name="IsGpuTimeoutDisabledConfigurationValue" value="true" />
     </type>
     <type fullname="Configuration" feature="COMPUTESHARP_DISABLE_GPU_TIMEOUT" featurevalue="false">
-      <field name="IsGpuTimeoutDisabled" value="false" />
+      <field name="IsGpuTimeoutDisabledConfigurationValue" value="false" />
     </type>
   </assembly>
 </linker>

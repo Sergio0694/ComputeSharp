@@ -2,6 +2,7 @@ using System;
 #if DEBUG
 using System.Diagnostics;
 #endif
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// A container for all shared <see cref="AppContext"/> configuration switches for ComputeSharp.
@@ -11,32 +12,59 @@ internal static class Configuration
     /// <summary>
     /// The configuration property name for <see cref="IsDebugOutputEnabled"/>.
     /// </summary>
-    private const string EnableDebugOutput = "COMPUTESHARP_ENABLE_DEBUG_OUTPUT";
+    private const string IsDebugOutputEnabledPropertyName = "COMPUTESHARP_ENABLE_DEBUG_OUTPUT";
 
     /// <summary>
     /// The configuration property name for <see cref="IsDeviceRemovedExtendedDataEnabled"/>.
     /// </summary>
-    private const string EnableDeviceRemovedExtendedDataInfo = "COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA";
+    private const string IsDeviceRemovedExtendedDataEnabledPropertyName = "COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA";
 
     /// <summary>
     /// The configuration property name for <see cref="IsGpuTimeoutDisabled"/>.
     /// </summary>
-    private const string DisableGpuTimeout = "COMPUTESHARP_DISABLE_GPU_TIMEOUT";
+    private const string IsGpuTimeoutDisabledPropertyName = "COMPUTESHARP_DISABLE_GPU_TIMEOUT";
 
     /// <summary>
-    /// Indicates whether or not the debug output is enabled (defaults to <see langword="false"/>).
+    /// The backing field for <see cref="IsDebugOutputEnabled"/>.
     /// </summary>
-    public static readonly bool IsDebugOutputEnabled = GetConfigurationValue(EnableDebugOutput);
+    private static readonly bool IsDebugOutputEnabledConfigurationValue = GetConfigurationValue(IsDebugOutputEnabledPropertyName);
 
     /// <summary>
-    /// Indicates whether or not the debug output is enabled (defaults to <see langword="false"/>).
+    /// The backing field for <see cref="IsDeviceRemovedExtendedDataEnabled"/>.
     /// </summary>
-    public static readonly bool IsDeviceRemovedExtendedDataEnabled = GetConfigurationValue(EnableDeviceRemovedExtendedDataInfo);
+    private static readonly bool IsDeviceRemovedExtendedDataEnabledConfigurationValue = GetConfigurationValue(IsDeviceRemovedExtendedDataEnabledPropertyName);
 
     /// <summary>
-    /// Indicates whether or not the GPU timeout is disabled (defaults to <see langword="false"/>).
+    /// The backing field for <see cref="IsGpuTimeoutDisabled"/>.
     /// </summary>
-    public static readonly bool IsGpuTimeoutDisabled = GetConfigurationValue(DisableGpuTimeout);
+    private static readonly bool IsGpuTimeoutDisabledConfigurationValue = GetConfigurationValue(IsGpuTimeoutDisabledPropertyName);
+
+    /// <summary>
+    /// Gets a value indicating whether or not the debug output is enabled (defaults to <see langword="false"/>).
+    /// </summary>
+    public static bool IsDebugOutputEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => IsDebugOutputEnabledConfigurationValue;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether or not the debug output is enabled (defaults to <see langword="false"/>).
+    /// </summary>
+    public static bool IsDeviceRemovedExtendedDataEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => IsDeviceRemovedExtendedDataEnabledConfigurationValue;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether or not the GPU timeout is disabled (defaults to <see langword="false"/>).
+    /// </summary>
+    public static bool IsGpuTimeoutDisabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => IsGpuTimeoutDisabledConfigurationValue;
+    }
 
     /// <summary>
     /// Gets a configuration value for a specified property.
@@ -46,7 +74,7 @@ internal static class Configuration
     private static bool GetConfigurationValue(string propertyName)
     {
 #if DEBUG
-        if (Debugger.IsAttached && propertyName != DisableGpuTimeout)
+        if (Debugger.IsAttached && propertyName != IsGpuTimeoutDisabledPropertyName)
         {
             return true;
         }
