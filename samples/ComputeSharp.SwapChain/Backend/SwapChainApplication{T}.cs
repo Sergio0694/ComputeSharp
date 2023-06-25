@@ -5,13 +5,17 @@ using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
 
-internal sealed class SwapChainApplication<T> : Win32Application
+/// <summary>
+/// A <see cref="Win32Application"/> type that renders an animated shader on a swapchain on a target <see cref="HWND"/>.
+/// </summary>
+/// <typeparam name="T">The shader type to render.</typeparam>
+internal sealed unsafe class SwapChainApplication<T> : Win32Application
     where T : struct, IPixelShader<float4>
 {
     /// <summary>
-    /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.
+    /// The function pointer used to create shaders to run.
     /// </summary>
-    private readonly Func<TimeSpan, T> shaderFactory;
+    private readonly delegate*<TimeSpan, T> shaderFactory;
 
     /// <summary>
     /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -76,8 +80,8 @@ internal sealed class SwapChainApplication<T> : Win32Application
     /// <summary>
     /// Creates a new <see cref="SwapChainApplication{T}"/> instance with the specified parameters.
     /// </summary>
-    /// <param name="shaderFactory">The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.</param>
-    public SwapChainApplication(Func<TimeSpan, T> shaderFactory)
+    /// <param name="shaderFactory">The function pointer used to create shaders to run.</param>
+    public SwapChainApplication(delegate*<TimeSpan, T> shaderFactory)
     {
         this.shaderFactory = shaderFactory;
     }

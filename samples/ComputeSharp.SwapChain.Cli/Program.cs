@@ -14,22 +14,39 @@ if (args is [] or [_])
         shaderName = nameof(ColorfulInfinity);
     }
 
-    // Get the requested shader, if possible
-    Win32Application? application = shaderName.ToLowerInvariant() switch
+    static HelloWorld HelloWorld(TimeSpan time) => new((float)time.TotalSeconds);
+    static ColorfulInfinity ColorfulInfinity(TimeSpan time) => new((float)time.TotalSeconds);
+    static FractalTiling FractalTiling(TimeSpan time) => new((float)time.TotalSeconds);
+    static TwoTiledTruchet TwoTiledTruchet(TimeSpan time) => new((float)time.TotalSeconds);
+    static MengerJourney MengerJourney(TimeSpan time) => new((float)time.TotalSeconds);
+    static Octagrams Octagrams(TimeSpan time) => new((float)time.TotalSeconds);
+    static ProteanClouds ProteanClouds(TimeSpan time) => new((float)time.TotalSeconds);
+    static ExtrudedTruchetPattern ExtrudedTruchetPattern(TimeSpan time) => new((float)time.TotalSeconds);
+    static PyramidPattern PyramidPattern(TimeSpan time) => new((float)time.TotalSeconds);
+    static TriangleGridContouring TriangleGridContouring(TimeSpan time) => new((float)time.TotalSeconds);
+    static TerracedHills TerracedHills(TimeSpan time) => new((float)time.TotalSeconds);
+
+    Win32Application? application;
+
+    unsafe
     {
-        "helloworld" => new SwapChainApplication<HelloWorld>(static time => new((float)time.TotalSeconds)),
-        "colorfulinfinity" => new SwapChainApplication<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
-        "fractaltiling" => new SwapChainApplication<FractalTiling>(static time => new((float)time.TotalSeconds)),
-        "twotiledtruchet" => new SwapChainApplication<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
-        "mengerjourney" => new SwapChainApplication<MengerJourney>(static time => new((float)time.TotalSeconds)),
-        "octagrams" => new SwapChainApplication<Octagrams>(static time => new((float)time.TotalSeconds)),
-        "proteanclouds" => new SwapChainApplication<ProteanClouds>(static time => new((float)time.TotalSeconds)),
-        "extrudedtruchetpattern" => new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds)),
-        "pyramidpattern" => new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds)),
-        "trianglegridcontouring" => new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds)),
-        "terracedhills" => new SwapChainApplication<TerracedHills>(static time => new((float)time.TotalSeconds)),
-        _ => null
-    };
+        // Get the requested shader, if possible
+        application = shaderName.ToLowerInvariant() switch
+        {
+            "helloworld" => new SwapChainApplication<HelloWorld>(&HelloWorld),
+            "colorfulinfinity" => new SwapChainApplication<ColorfulInfinity>(&ColorfulInfinity),
+            "fractaltiling" => new SwapChainApplication<FractalTiling>(&FractalTiling),
+            "twotiledtruchet" => new SwapChainApplication<TwoTiledTruchet>(&TwoTiledTruchet),
+            "mengerjourney" => new SwapChainApplication<MengerJourney>(&MengerJourney),
+            "octagrams" => new SwapChainApplication<Octagrams>(&Octagrams),
+            "proteanclouds" => new SwapChainApplication<ProteanClouds>(&ProteanClouds),
+            "extrudedtruchetpattern" => new SwapChainApplication<ExtrudedTruchetPattern>(&ExtrudedTruchetPattern),
+            "pyramidpattern" => new SwapChainApplication<PyramidPattern>(&PyramidPattern),
+            "trianglegridcontouring" => new SwapChainApplication<TriangleGridContouring>(&TriangleGridContouring),
+            "terracedhills" => new SwapChainApplication<TerracedHills>(&TerracedHills),
+            _ => null
+        };
+    }
 
     // If a shader is found, run it
     if (application is not null)
