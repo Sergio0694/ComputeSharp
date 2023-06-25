@@ -53,28 +53,6 @@ if (args is [] or [_])
     {
         return Win32ApplicationRunner.Run(application, "ComputeSharp", "ComputeSharp");
     }
-
-    // If no shader matches, check if help was requested
-    if (shaderName is "-h")
-    {
-        Console.WriteLine($"""
-            Available shaders:
-
-            - {nameof(HelloWorld)}
-            - {nameof(ColorfulInfinity)}
-            - {nameof(FractalTiling)}
-            - {nameof(TwoTiledTruchet)}
-            - {nameof(MengerJourney)}
-            - {nameof(Octagrams)}
-            - {nameof(ProteanClouds)}
-            - {nameof(ExtrudedTruchetPattern)}
-            - {nameof(PyramidPattern)}
-            - {nameof(TriangleGridContouring)}
-            - {nameof(TerracedHills)}
-            """);
-
-        return S.S_OK;
-    }
 }
 
 return E.E_INVALIDARG;
