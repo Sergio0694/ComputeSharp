@@ -3,6 +3,9 @@
 
   <PropertyGroup>
 
+    <!-- Workaround for https://github.com/dotnet/roslyn/issues/41640 (see notes in \src .props file) -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
     <!-- Samples don't need public XML docs for all APIs -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>

@@ -42,9 +42,15 @@
   <!-- Additional properties for all source projects-->
   <PropertyGroup>
 
-    <!-- Generate documentation files (only for published, non source generator projects) -->
-    <GenerateDocumentationFile Condition="$(IsPackagedProject)">true</GenerateDocumentationFile>
-    <DocumentationFile Condition="'$(GenerateDocumentationFile)' == 'true'">$(MSBuildProjectName).xml</DocumentationFile>
+    <!--
+      Generate documentation files. In theory this should only be abled for published, non source generator projects.
+      However, this is always enabled to work around https://github.com/dotnet/roslyn/issues/41640. Until that's fixed,
+      source generators will also produce an .xml file with their documentation. Note that this doesn't really impact
+      NuGet packages, since the analyzer binaries are packed manually after build, so the .xml files aren't included.
+      When this workaround is no longer needed, the same property should also removed for the \samples directory.
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
 
     <!-- Disable packing symbols for source generators -->
     <PackSymbols Condition="$(IsSourceGeneratorProject)">false</PackSymbols>
