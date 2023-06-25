@@ -1,7 +1,6 @@
 using System;
 using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.WinUI;
-using Microsoft.Graphics.Canvas;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
 
