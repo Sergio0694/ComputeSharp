@@ -57,4 +57,26 @@
     </ItemGroup>
   </Target>
 
+  <!-- Automatically set the configuration switches -->
+  <ItemGroup>
+
+    <!-- COMPUTESHARP_ENABLE_DEBUG_OUTPUT switch -->
+    <RuntimeHostConfigurationOption Condition="'$(ComputeSharpEnableDebugOutput)' != ''"
+                                    Include="COMPUTESHARP_ENABLE_DEBUG_OUTPUT"
+                                    Value="$(ComputeSharpEnableDebugOutput)"
+                                    Trim="true" />
+
+    <!-- COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA switch -->
+    <RuntimeHostConfigurationOption Condition="'$(ComputeSharpEnableDeviceRemovedExtendedData)' != ''"
+                                    Include="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA"
+                                    Value="$(ComputeSharpEnableDeviceRemovedExtendedData)"
+                                    Trim="true" />
+
+    <!-- COMPUTESHARP_DISABLE_GPU_TIMEOUT switch -->
+    <RuntimeHostConfigurationOption Condition="'$(ComputeSharpDisableGpuTimeout)' != ''"
+                                    Include="COMPUTESHARP_DISABLE_GPU_TIMEOUT"
+                                    Value="$(ComputeSharpDisableGpuTimeout)"
+                                    Trim="true" />
+  </ItemGroup>
+
 </Project>
