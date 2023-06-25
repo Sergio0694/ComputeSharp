@@ -7,6 +7,16 @@ using System.Runtime.CompilerServices;
 /// <summary>
 /// A container for all shared <see cref="AppContext"/> configuration switches for ComputeSharp.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This type uses a very specific setup for configuration switches to ensure ILLink can work the best.
+/// This mirrors the architecture of feature switches in the runtime as well, and it's needed so that
+/// no static constructor is generated for the type.
+/// </para>
+/// <para>
+/// For more info, see <see href="https://github.com/dotnet/runtime/blob/main/docs/workflow/trimming/feature-switches.md#adding-new-feature-switch"/>.
+/// </para>
+/// </remarks>
 internal static class Configuration
 {
     /// <summary>
@@ -27,17 +37,17 @@ internal static class Configuration
     /// <summary>
     /// The backing field for <see cref="IsDebugOutputEnabled"/>.
     /// </summary>
-    private static readonly bool IsDebugOutputEnabledConfigurationValue = GetConfigurationValue(IsDebugOutputEnabledPropertyName);
+    private static int isDebugOutputEnabledConfigurationValue;
 
     /// <summary>
     /// The backing field for <see cref="IsDeviceRemovedExtendedDataEnabled"/>.
     /// </summary>
-    private static readonly bool IsDeviceRemovedExtendedDataEnabledConfigurationValue = GetConfigurationValue(IsDeviceRemovedExtendedDataEnabledPropertyName);
+    private static int isDeviceRemovedExtendedDataEnabledConfigurationValue;
 
     /// <summary>
     /// The backing field for <see cref="IsGpuTimeoutDisabled"/>.
     /// </summary>
-    private static readonly bool IsGpuTimeoutDisabledConfigurationValue = GetConfigurationValue(IsGpuTimeoutDisabledPropertyName);
+    private static int isGpuTimeoutDisabledConfigurationValue;
 
     /// <summary>
     /// Gets a value indicating whether or not the debug output is enabled (defaults to <see langword="false"/>).
@@ -45,7 +55,7 @@ internal static class Configuration
     public static bool IsDebugOutputEnabled
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => IsDebugOutputEnabledConfigurationValue;
+        get => GetConfigurationValue(IsDebugOutputEnabledPropertyName, ref isDebugOutputEnabledConfigurationValue);
     }
 
     /// <summary>
@@ -54,7 +64,7 @@ internal static class Configuration
     public static bool IsDeviceRemovedExtendedDataEnabled
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => IsDeviceRemovedExtendedDataEnabledConfigurationValue;
+        get => GetConfigurationValue(IsDeviceRemovedExtendedDataEnabledPropertyName, ref isDeviceRemovedExtendedDataEnabledConfigurationValue);
     }
 
     /// <summary>
@@ -63,26 +73,77 @@ internal static class Configuration
     public static bool IsGpuTimeoutDisabled
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => IsGpuTimeoutDisabledConfigurationValue;
+        get => GetConfigurationValue(IsGpuTimeoutDisabledPropertyName, ref isGpuTimeoutDisabledConfigurationValue);
     }
 
     /// <summary>
     /// Gets a configuration value for a specified property.
     /// </summary>
     /// <param name="propertyName">The property name to retrieve the value for.</param>
+    /// <param name="cachedResult">The cached result for the target configuration value.</param>
     /// <returns>The value of the specified configuration setting.</returns>
-    private static bool GetConfigurationValue(string propertyName)
+    private static bool GetConfigurationValue(string propertyName, ref int cachedResult)
     {
-#if DEBUG
-        if (Debugger.IsAttached && propertyName != IsGpuTimeoutDisabledPropertyName)
+        // The cached switch value has 3 states:
+        //   0: unknown.
+        //   1: true
+        //   -1: false
+        //
+        // This method doesn't need to worry about concurrent accesses to the cached result,
+        // as even if the configuration value is retrieved twice, that'll always be the same.
+        if (cachedResult < 0)
+        {
+            return false;
+        }
+
+        if (cachedResult > 0)
         {
             return true;
         }
-#endif
 
-        if (AppContext.TryGetSwitch(propertyName, out bool isEnabled))
+        // Get the configuration switch value, or its default
+        if (!AppContext.TryGetSwitch(propertyName, out bool isEnabled))
         {
-            return isEnabled;
+            isEnabled = GetDefaultConfigurationValue(propertyName);
+        }
+
+        // Update the cached result
+        cachedResult = isEnabled ? 1 : -1;
+
+        return isEnabled;
+    }
+
+    /// <summary>
+    /// Gets the default configuration value for a given feature switch.
+    /// </summary>
+    /// <param name="propertyName">The property name to retrieve the value for.</param>
+    /// <returns>The default value for the target <paramref name="propertyName"/>.</returns>
+    private static bool GetDefaultConfigurationValue(string propertyName)
+    {
+        // Debug output (always enabled in DEBUG if there is an attached debugger)
+        if (propertyName == IsDebugOutputEnabledPropertyName)
+        {
+#if DEBUG
+            return Debugger.IsAttached;
+#else
+            return false;
+#endif
+        }
+
+        // Device removed extended data (same as for the debug output)
+        if (propertyName == IsDeviceRemovedExtendedDataEnabledPropertyName)
+        {
+#if DEBUG
+            return Debugger.IsAttached;
+#else
+            return false;
+#endif
+        }
+
+        // Disable GPU timeout (always false by default)
+        if (propertyName == IsGpuTimeoutDisabledPropertyName)
+        {
+            return false;
         }
 
         return false;
