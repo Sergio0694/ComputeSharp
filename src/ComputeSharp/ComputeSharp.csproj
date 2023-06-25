@@ -28,6 +28,11 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
+  <!-- Include the ILLink file on the .NET 6 target (to properly trim configuration switches in publish builds) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <EmbeddedResource Include="Properties\ILLink.Substitutions.xml" LogicalName="ILLink.Substitutions.xml" />
+  </ItemGroup>
+
   <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

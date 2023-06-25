@@ -34,6 +34,17 @@
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
+  <!--
+    Manually set all configuration switches to trim unused features. These are usually set automatically by the
+    .targets file included in ComputeSharp, but since this project is directly referencing the project and not
+    going through NuGet, it can't rely on that, so it's just copying those three directives here.
+  -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="COMPUTESHARP_ENABLE_DEBUG_OUTPUT" Value="false" Trim="true" />
+    <RuntimeHostConfigurationOption Include="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" Value="false" Trim="true" />
+    <RuntimeHostConfigurationOption Include="COMPUTESHARP_DISABLE_GPU_TIMEOUT" Value="false" Trim="true" />
+  </ItemGroup>
+
   <!-- If requested, also reference the UPX compression package -->
   <ItemGroup Condition="'$(PUBLISH_AOT_COMPRESSED)' == 'true'">
     <PackageReference Include="PublishAotCompressed" Version="1.0.0" />
