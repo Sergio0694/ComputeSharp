@@ -58,7 +58,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.SwapChain\Backend\SwapChainApplication{T}.cs" Link="Backend\SwapChainApplication{T}.cs" />
     <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32Application.cs" Link="Backend\Win32Application.cs" />
     <Compile Include="..\ComputeSharp.SwapChain\Backend\Win32ApplicationRunner.cs" Link="Backend\Win32ApplicationRunner.cs" />
   </ItemGroup>
