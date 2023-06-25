@@ -42,7 +42,7 @@
   <ItemGroup>
     <RuntimeHostConfigurationOption Include="COMPUTESHARP_ENABLE_DEBUG_OUTPUT" Value="false" Trim="true" />
     <RuntimeHostConfigurationOption Include="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" Value="false" Trim="true" />
-    <RuntimeHostConfigurationOption Include="COMPUTESHARP_DISABLE_GPU_TIMEOUT" Value="false" Trim="true" />
+    <RuntimeHostConfigurationOption Include="COMPUTESHARP_ENABLE_GPU_TIMEOUT" Value="true" Trim="true" />
   </ItemGroup>
 
   <!-- If requested, also reference the UPX compression package -->

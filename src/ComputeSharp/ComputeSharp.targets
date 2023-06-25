@@ -72,10 +72,10 @@
                                     Value="$(ComputeSharpEnableDeviceRemovedExtendedData)"
                                     Trim="true" />
 
-    <!-- COMPUTESHARP_DISABLE_GPU_TIMEOUT switch -->
-    <RuntimeHostConfigurationOption Condition="'$(ComputeSharpDisableGpuTimeout)' != ''"
-                                    Include="COMPUTESHARP_DISABLE_GPU_TIMEOUT"
-                                    Value="$(ComputeSharpDisableGpuTimeout)"
+    <!-- COMPUTESHARP_ENABLE_GPU_TIMEOUT switch -->
+    <RuntimeHostConfigurationOption Condition="'$(ComputeSharpEnableGpuTimeout)' != ''"
+                                    Include="COMPUTESHARP_ENABLE_GPU_TIMEOUT"
+                                    Value="$(ComputeSharpEnableGpuTimeout)"
                                     Trim="true" />
   </ItemGroup>
 

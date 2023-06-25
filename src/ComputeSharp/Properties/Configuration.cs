@@ -30,9 +30,9 @@ internal static class Configuration
     private const string IsDeviceRemovedExtendedDataEnabledPropertyName = "COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA";
 
     /// <summary>
-    /// The configuration property name for <see cref="IsGpuTimeoutDisabled"/>.
+    /// The configuration property name for <see cref="IsGpuTimeoutEnabled"/>.
     /// </summary>
-    private const string IsGpuTimeoutDisabledPropertyName = "COMPUTESHARP_DISABLE_GPU_TIMEOUT";
+    private const string IsGpuTimeoutEnabledPropertyName = "COMPUTESHARP_ENABLE_GPU_TIMEOUT";
 
     /// <summary>
     /// The backing field for <see cref="IsDebugOutputEnabled"/>.
@@ -45,9 +45,9 @@ internal static class Configuration
     private static int isDeviceRemovedExtendedDataEnabledConfigurationValue;
 
     /// <summary>
-    /// The backing field for <see cref="IsGpuTimeoutDisabled"/>.
+    /// The backing field for <see cref="IsGpuTimeoutEnabled"/>.
     /// </summary>
-    private static int isGpuTimeoutDisabledConfigurationValue;
+    private static int isGpuTimeoutEnabledConfigurationValue;
 
     /// <summary>
     /// Gets a value indicating whether or not the debug output is enabled (defaults to <see langword="false"/>).
@@ -68,12 +68,12 @@ internal static class Configuration
     }
 
     /// <summary>
-    /// Gets a value indicating whether or not the GPU timeout is disabled (defaults to <see langword="false"/>).
+    /// Gets a value indicating whether or not the GPU timeout is enabled (defaults to <see langword="true"/>).
     /// </summary>
-    public static bool IsGpuTimeoutDisabled
+    public static bool IsGpuTimeoutEnabled
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => GetConfigurationValue(IsGpuTimeoutDisabledPropertyName, ref isGpuTimeoutDisabledConfigurationValue);
+        get => GetConfigurationValue(IsGpuTimeoutEnabledPropertyName, ref isGpuTimeoutEnabledConfigurationValue);
     }
 
     /// <summary>
@@ -140,10 +140,10 @@ internal static class Configuration
 #endif
         }
 
-        // Disable GPU timeout (always false by default)
-        if (propertyName == IsGpuTimeoutDisabledPropertyName)
+        // GPU timeout (always enabled by default, disabling it is only recommended for debugging purposes)
+        if (propertyName == IsGpuTimeoutEnabledPropertyName)
         {
-            return false;
+            return true;
         }
 
         return false;

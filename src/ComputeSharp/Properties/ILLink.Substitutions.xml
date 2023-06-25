@@ -10,9 +10,9 @@
       <method signature="System.Boolean get_IsDeviceRemovedExtendedDataEnabled()" body="stub" value="false" feature="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" featurevalue="false"/>
       <method signature="System.Boolean get_IsDeviceRemovedExtendedDataEnabled()" body="stub" value="true" feature="COMPUTESHARP_ENABLE_DEVICE_REMOVED_EXTENDED_DATA" featurevalue="true"/>
 
-      <!-- COMPUTESHARP_DISABLE_GPU_TIMEOUT switch -->
-      <method signature="System.Boolean get_IsGpuTimeoutDisabled()" body="stub" value="false" feature="COMPUTESHARP_DISABLE_GPU_TIMEOUT" featurevalue="false"/>
-      <method signature="System.Boolean get_IsGpuTimeoutDisabled()" body="stub" value="true" feature="COMPUTESHARP_DISABLE_GPU_TIMEOUT" featurevalue="true"/>
+      <!-- COMPUTESHARP_ENABLE_GPU_TIMEOUT switch -->
+      <method signature="System.Boolean get_IsGpuTimeoutEnabled()" body="stub" value="false" feature="COMPUTESHARP_ENABLE_GPU_TIMEOUT" featurevalue="false"/>
+      <method signature="System.Boolean get_IsGpuTimeoutEnabled()" body="stub" value="true" feature="COMPUTESHARP_ENABLE_GPU_TIMEOUT" featurevalue="true"/>
     </type>
   </assembly>
 </linker>
