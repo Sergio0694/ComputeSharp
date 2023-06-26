@@ -1,4 +1,5 @@
 using System;
+using ComputeSharp;
 using ComputeSharp.SwapChain.Backend;
 using ComputeSharp.SwapChain.Shaders;
 using TerraFX.Interop.Windows;
@@ -14,44 +15,49 @@ if (args is [] or [_])
         shaderName = nameof(ColorfulInfinity);
     }
 
-    static HelloWorld HelloWorld(TimeSpan time) => new((float)time.TotalSeconds);
-    static ColorfulInfinity ColorfulInfinity(TimeSpan time) => new((float)time.TotalSeconds);
-    static FractalTiling FractalTiling(TimeSpan time) => new((float)time.TotalSeconds);
-    static TwoTiledTruchet TwoTiledTruchet(TimeSpan time) => new((float)time.TotalSeconds);
-    static MengerJourney MengerJourney(TimeSpan time) => new((float)time.TotalSeconds);
-    static Octagrams Octagrams(TimeSpan time) => new((float)time.TotalSeconds);
-    static ProteanClouds ProteanClouds(TimeSpan time) => new((float)time.TotalSeconds);
-    static ExtrudedTruchetPattern ExtrudedTruchetPattern(TimeSpan time) => new((float)time.TotalSeconds);
-    static PyramidPattern PyramidPattern(TimeSpan time) => new((float)time.TotalSeconds);
-    static TriangleGridContouring TriangleGridContouring(TimeSpan time) => new((float)time.TotalSeconds);
-    static TerracedHills TerracedHills(TimeSpan time) => new((float)time.TotalSeconds);
-
-    Win32Application? application;
+    // This CLI shader is heavily tuned for the smallest binary size possible when doing NativeAOT publish builds.
+    // As a result, the code is intentionally not really standard, and pulling all sorts of tricks to minimize the
+    // final binary size. These are callback functions to draw a shader, which are passed to the shared Win32 runner
+    // as function pointers. This is done to avoid the additional binary size increase due to delegate instantiations.
+    // Similarly, there is a single type hosting all rendering code to avoid per-shader reified generic instantiations.
+    static void _0(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new HelloWorld((float)time.TotalSeconds));
+    static void _1(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new ColorfulInfinity((float)time.TotalSeconds));
+    static void _2(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new FractalTiling((float)time.TotalSeconds));
+    static void _3(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new TwoTiledTruchet((float)time.TotalSeconds));
+    static void _4(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new MengerJourney((float)time.TotalSeconds));
+    static void _5(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new Octagrams((float)time.TotalSeconds));
+    static void _6(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new ProteanClouds((float)time.TotalSeconds));
+    static void _7(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new ExtrudedTruchetPattern((float)time.TotalSeconds));
+    static void _8(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new PyramidPattern((float)time.TotalSeconds));
+    static void _9(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new TriangleGridContouring((float)time.TotalSeconds));
+    static void _A(IReadWriteNormalizedTexture2D<float4> texture, TimeSpan time) => texture.GraphicsDevice.ForEach(texture, new TerracedHills((float)time.TotalSeconds));
 
     unsafe
     {
         // Get the requested shader, if possible
-        application = shaderName.ToLowerInvariant() switch
+        delegate*<IReadWriteNormalizedTexture2D<float4>, TimeSpan, void> shaderCallback = shaderName.ToLowerInvariant() switch
         {
-            "helloworld" => new SwapChainApplication<HelloWorld>(&HelloWorld),
-            "colorfulinfinity" => new SwapChainApplication<ColorfulInfinity>(&ColorfulInfinity),
-            "fractaltiling" => new SwapChainApplication<FractalTiling>(&FractalTiling),
-            "twotiledtruchet" => new SwapChainApplication<TwoTiledTruchet>(&TwoTiledTruchet),
-            "mengerjourney" => new SwapChainApplication<MengerJourney>(&MengerJourney),
-            "octagrams" => new SwapChainApplication<Octagrams>(&Octagrams),
-            "proteanclouds" => new SwapChainApplication<ProteanClouds>(&ProteanClouds),
-            "extrudedtruchetpattern" => new SwapChainApplication<ExtrudedTruchetPattern>(&ExtrudedTruchetPattern),
-            "pyramidpattern" => new SwapChainApplication<PyramidPattern>(&PyramidPattern),
-            "trianglegridcontouring" => new SwapChainApplication<TriangleGridContouring>(&TriangleGridContouring),
-            "terracedhills" => new SwapChainApplication<TerracedHills>(&TerracedHills),
+            "helloworld" => &_0,
+            "colorfulinfinity" => &_1,
+            "fractaltiling" => &_2,
+            "twotiledtruchet" => &_3,
+            "mengerjourney" => &_4,
+            "octagrams" => &_5,
+            "proteanclouds" => &_6,
+            "extrudedtruchetpattern" => &_7,
+            "pyramidpattern" => &_8,
+            "trianglegridcontouring" => &_9,
+            "terracedhills" => &_A,
             _ => null
         };
-    }
 
-    // If a shader is found, run it
-    if (application is not null)
-    {
-        return Win32ApplicationRunner.Run(application, "ComputeSharp", "ComputeSharp");
+        // Initialize the application instance and run it
+        if (shaderCallback is not null)
+        {
+            Win32Application? application = new(shaderCallback);
+
+            return Win32ApplicationRunner.Run(application, "ComputeSharp", "ComputeSharp");
+        }
     }
 }
 

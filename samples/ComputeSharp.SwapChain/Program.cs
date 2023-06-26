@@ -15,42 +15,23 @@ class Program
 
     static void Main()
     {
-        static HelloWorld HelloWorld(TimeSpan time) => new((float)time.TotalSeconds);
-        static FourColorGradient FourColorGradient(TimeSpan time) => new((float)time.TotalSeconds);
-        static ColorfulInfinity ColorfulInfinity(TimeSpan time) => new((float)time.TotalSeconds);
-        static FractalTiling FractalTiling(TimeSpan time) => new((float)time.TotalSeconds);
-        static TwoTiledTruchet TwoTiledTruchet(TimeSpan time) => new((float)time.TotalSeconds);
-        static MengerJourney MengerJourney(TimeSpan time) => new((float)time.TotalSeconds);
-        static Octagrams Octagrams(TimeSpan time) => new((float)time.TotalSeconds);
-        static ProteanClouds ProteanClouds(TimeSpan time) => new((float)time.TotalSeconds);
-        static ExtrudedTruchetPattern ExtrudedTruchetPattern(TimeSpan time) => new((float)time.TotalSeconds);
-        static PyramidPattern PyramidPattern(TimeSpan time) => new((float)time.TotalSeconds);
-        static TriangleGridContouring TriangleGridContouring(TimeSpan time) => new((float)time.TotalSeconds);
-        static ContouredLayers ContouredLayers(TimeSpan time) => new((float)time.TotalSeconds, RustyMetal.Value);
-        static TerracedHills TerracedHills(TimeSpan time) => new((float)time.TotalSeconds);
-
-        (string ShaderName, Win32Application Application)[] samples;
-
-        unsafe
+        // Prepare the mapping of available samples to choose from
+        (string ShaderName, Win32Application Application)[] samples = new[]
         {
-            // Prepare the mapping of available samples to choose from
-            samples = new (string, Win32Application)[]
-            {
-                (nameof(HelloWorld), new SwapChainApplication<HelloWorld>(&HelloWorld)),
-                (nameof(FourColorGradient), new SwapChainApplication<FourColorGradient>(&FourColorGradient)),
-                (nameof(ColorfulInfinity), new SwapChainApplication<ColorfulInfinity>(&ColorfulInfinity)),
-                (nameof(FractalTiling), new SwapChainApplication<FractalTiling>(&FractalTiling)),
-                (nameof(TwoTiledTruchet), new SwapChainApplication<TwoTiledTruchet>(&TwoTiledTruchet)),
-                (nameof(MengerJourney), new SwapChainApplication<MengerJourney>(&MengerJourney)),
-                (nameof(Octagrams), new SwapChainApplication<Octagrams>(&Octagrams)),
-                (nameof(ProteanClouds), new SwapChainApplication<ProteanClouds>(&ProteanClouds)),
-                (nameof(ExtrudedTruchetPattern), new SwapChainApplication<ExtrudedTruchetPattern>(&ExtrudedTruchetPattern)),
-                (nameof(PyramidPattern), new SwapChainApplication<PyramidPattern>(&PyramidPattern)),
-                (nameof(TriangleGridContouring), new SwapChainApplication<TriangleGridContouring>(&TriangleGridContouring)),
-                (nameof(ContouredLayers), new SwapChainApplication<ContouredLayers>(&ContouredLayers)),
-                (nameof(TerracedHills), new SwapChainApplication<TerracedHills>(&TerracedHills))
-            };
-        }
+            (nameof(HelloWorld), Win32ApplicationFactory<HelloWorld>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(FourColorGradient), Win32ApplicationFactory<FourColorGradient>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(ColorfulInfinity), Win32ApplicationFactory<ColorfulInfinity>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(FractalTiling), Win32ApplicationFactory<FractalTiling>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(TwoTiledTruchet), Win32ApplicationFactory<TwoTiledTruchet>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(MengerJourney), Win32ApplicationFactory<MengerJourney>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(Octagrams), Win32ApplicationFactory<Octagrams>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(ProteanClouds), Win32ApplicationFactory<ProteanClouds>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(ExtrudedTruchetPattern), Win32ApplicationFactory<ExtrudedTruchetPattern>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(PyramidPattern), Win32ApplicationFactory<PyramidPattern>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(TriangleGridContouring), Win32ApplicationFactory<TriangleGridContouring>.Create(static time => new((float)time.TotalSeconds))),
+            (nameof(ContouredLayers), Win32ApplicationFactory<ContouredLayers>.Create(static time => new((float)time.TotalSeconds, RustyMetal.Value))),
+            (nameof(TerracedHills), Win32ApplicationFactory<TerracedHills>.Create(static time => new((float)time.TotalSeconds))),
+        };
 
         int index;
 
