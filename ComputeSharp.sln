@@ -156,6 +156,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D2D1.Uwp.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.WinUI.Tests", "tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj", "{73C32D0F-64DB-4674-84E9-8FCC41228474}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.D3D12MemoryAllocator", "src\ComputeSharp.D3D12MemoryAllocator\ComputeSharp.D3D12MemoryAllocator.csproj", "{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -444,6 +446,14 @@ Global
 		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.ActiveCfg = Release|x64
 		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.Build.0 = Release|x64
 		{73C32D0F-64DB-4674-84E9-8FCC41228474}.Release|x64.Deploy.0 = Release|x64
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Debug|x64.Build.0 = Debug|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Release|ARM64.Build.0 = Release|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{E017B3B6-C7D3-4E53-A7F6-1036178E98C3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
