@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET6_0_OR_GREATER
+using TerraFX.Interop;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -12,7 +15,7 @@ namespace ComputeSharp.Interop.Allocation;
 /// An allocation wrapper for a native <see cref="ID3D12Resource"/> object.
 /// </summary>
 [Guid("D42D5782-2DE7-4539-A817-482E3AA01E2E")]
-internal unsafe struct ID3D12Allocation
+internal unsafe struct ID3D12Allocation : IUnknown.Interface
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12Allocation"/> (<c>D42D5782-2DE7-4539-A817-482E3AA01E2E</c>).
@@ -38,10 +41,36 @@ internal unsafe struct ID3D12Allocation
         }
     }
 
+#if NET6_0_OR_GREATER
+    /// <inheritdoc/>
+    static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
+#endif
+
     /// <summary>
     /// The vtable for the current instance.
     /// </summary>
     private readonly void** lpVtbl;
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HRESULT QueryInterface(Guid* riid, void** ppvObject)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12Allocation*)Unsafe.AsPointer(ref this), riid, ppvObject);
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint AddRef()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, uint>)this.lpVtbl[1])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint Release()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, uint>)this.lpVtbl[2])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
+    }
 
     /// <summary>
     /// Gets the underlying <see cref="ID3D12Resource"/> for the current instance.

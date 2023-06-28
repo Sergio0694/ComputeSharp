@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET6_0_OR_GREATER
+using TerraFX.Interop;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -12,7 +15,7 @@ namespace ComputeSharp.Interop.Allocation;
 /// An object that can allocate resources for a given <see cref="ID3D12Device"/> instance.
 /// </summary>
 [Guid("2D5E55D2-9244-431F-868E-0D90AAB6E575")]
-internal unsafe struct ID3D12MemoryAllocator
+internal unsafe struct ID3D12MemoryAllocator : IUnknown.Interface
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12MemoryAllocator"/> (<c>2D5E55D2-9244-431F-868E-0D90AAB6E575</c>).
@@ -38,10 +41,36 @@ internal unsafe struct ID3D12MemoryAllocator
         }
     }
 
+#if NET6_0_OR_GREATER
+    /// <inheritdoc/>
+    static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
+#endif
+
     /// <summary>
     /// The vtable for the current instance.
     /// </summary>
     private readonly void** lpVtbl;
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HRESULT QueryInterface(Guid* riid, void** ppvObject)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this), riid, ppvObject);
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint AddRef()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint Release()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
+    }
 
     /// <summary>
     /// Creates a new resource allocation from the current allocator.
