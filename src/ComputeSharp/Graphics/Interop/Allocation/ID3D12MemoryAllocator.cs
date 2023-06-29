@@ -77,7 +77,7 @@ internal unsafe struct ID3D12MemoryAllocator : IUnknown.Interface
     /// </summary>
     /// <param name="resourceDescription">The description of the resource to allocate.</param>
     /// <param name="heapType">The type of heap to use for the allocation.</param>
-    /// <param name="resourceState">The resource state to use initially for the resource.</param>
+    /// <param name="resourceStates">The resource states to use initially for the resource.</param>
     /// <param name="clearAllocation">Whether to clear the allocation after creating it.</param>
     /// <param name="allocation">The resulting allocation.</param>
     /// <returns>An <see cref="HRESULT"/> for the operation.</returns>
@@ -85,7 +85,7 @@ internal unsafe struct ID3D12MemoryAllocator : IUnknown.Interface
     public HRESULT AllocateResource(
         D3D12_RESOURCE_DESC* resourceDescription,
         D3D12_HEAP_TYPE heapType,
-        D3D12_RESOURCE_STATES resourceState,
+        D3D12_RESOURCE_STATES resourceStates,
         BOOL clearAllocation,
         ID3D12Allocation** allocation)
     {
@@ -93,7 +93,7 @@ internal unsafe struct ID3D12MemoryAllocator : IUnknown.Interface
             (ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this),
             resourceDescription,
             heapType,
-            resourceState,
+            resourceStates,
             clearAllocation,
             allocation);
     }
