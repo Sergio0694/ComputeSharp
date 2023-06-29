@@ -5,6 +5,7 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Interop.Allocation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
@@ -26,12 +27,10 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
     /// </summary>
     private ReferenceTracker referenceTracker;
 
-#if NET6_0_OR_GREATER
     /// <summary>
-    /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
+    /// The <see cref="ID3D12Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if available.
     /// </summary>
-    private ComPtr<D3D12MA_Allocation> allocation;
-#endif
+    private ComPtr<ID3D12Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -79,14 +78,12 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
             out _,
             out ulong totalSizeInBytes);
 
-#if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
-#else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
-#endif
-
-        device.RegisterAllocatedResource();
+        device.CreateOrAllocateResource(
+            resourceType,
+            allocationMode,
+            totalSizeInBytes,
+            out this.allocation,
+            out this.d3D12Resource);
 
         this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
@@ -139,14 +136,7 @@ public abstract unsafe partial class TransferTexture1D<T> : IReferenceTrackedObj
     void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
-#if NET6_0_OR_GREATER
         this.allocation.Dispose();
-#endif
-
-        if (GraphicsDevice is GraphicsDevice device)
-        {
-            device.UnregisterAllocatedResource();
-        }
     }
 
     /// <summary>

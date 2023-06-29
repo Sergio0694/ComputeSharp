@@ -5,6 +5,7 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
+using ComputeSharp.Interop.Allocation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -65,30 +66,23 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             nint byteOffset = (nint)sourceOffset * sizeof(T);
             nint byteLength = count * sizeof(T);
 
-#if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(GraphicsDevice.Pool, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
-#else
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+            using ComPtr<ID3D12Allocation> allocation = default;
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            GraphicsDevice.CreateOrAllocateResource(
                 ResourceType.ReadBack,
+                AllocationMode.Default,
                 (ulong)byteLength,
-                GraphicsDevice.IsCacheCoherentUMA);
-#endif
+                out *&allocation,
+                out *&d3D12Resource);
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
-#if NET6_0_OR_GREATER
-                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(allocation.Get()->GetResource(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
-#else
                 copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
-#endif
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
-#if NET6_0_OR_GREATER
-            using ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map();
-#else
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
-#endif
 
             fixed (void* destinationPointer = &destination)
             {
@@ -229,20 +223,18 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             nint byteOffset = (nint)offset * sizeof(T);
             nint byteLength = length * sizeof(T);
 
-#if NET6_0_OR_GREATER
-            using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(GraphicsDevice.Pool, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
-#else
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
-                ResourceType.Upload,
-                (ulong)byteLength,
-                GraphicsDevice.IsCacheCoherentUMA);
-#endif
+            using ComPtr<ID3D12Allocation> allocation = default;
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-#if NET6_0_OR_GREATER
-            using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
-#else
+            GraphicsDevice.CreateOrAllocateResource(
+                ResourceType.Upload,
+                AllocationMode.Default,
+                (ulong)byteLength,
+                out *&allocation,
+                out *&d3D12Resource);
+
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-#endif
+            {
                 fixed (void* sourcePointer = &source)
                 {
                     MemoryHelper.Copy<T>(
@@ -254,14 +246,11 @@ public abstract class StructuredBuffer<T> : Buffer<T>
                         destinationElementPitchInBytes: (uint)sizeof(T),
                         count: (uint)length);
                 }
+            }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-#if NET6_0_OR_GREATER
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, allocation.Get()->GetResource(), 0, (ulong)byteLength);
-#else
             copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteLength);
-#endif
             copyCommandList.ExecuteAndWaitForCompletion();
         }
     }

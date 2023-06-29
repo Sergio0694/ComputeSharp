@@ -9,6 +9,7 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
+using ComputeSharp.Interop.Allocation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -33,12 +34,10 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     /// </summary>
     private ReferenceTracker referenceTracker;
 
-#if NET6_0_OR_GREATER
     /// <summary>
-    /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
+    /// The <see cref="ID3D12Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if available.
     /// </summary>
-    private ComPtr<D3D12MA_Allocation> allocation;
-#endif
+    private ComPtr<ID3D12Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -94,28 +93,16 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
 
         GraphicsDevice = device;
 
-#if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(
-            device.Pool,
+        device.CreateOrAllocateResource(
             resourceType,
             allocationMode,
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
             (uint)height,
             (ushort)depth,
+            out this.allocation,
+            out this.d3D12Resource,
             out this.d3D12ResourceState);
-
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
-#else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
-            resourceType,
-            DXGIFormatHelper.GetForType<T>(),
-            (uint)width,
-            (uint)height,
-            (ushort)depth,
-            device.IsCacheCoherentUMA,
-            out this.d3D12ResourceState);
-#endif
 
         this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
             ? D3D12_COMMAND_LIST_TYPE_COPY
@@ -130,7 +117,6 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
             out _,
             out _);
 
-        device.RegisterAllocatedResource();
         device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
 
         switch (resourceType)
@@ -213,20 +199,15 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-#if NET6_0_OR_GREATER
-        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
-            GraphicsDevice.Pool,
+        using ComPtr<ID3D12Allocation> allocation = default;
+        using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+        GraphicsDevice.CreateOrAllocateResource(
             ResourceType.ReadBack,
             AllocationMode.Default,
-            totalSizeInBytes);
-
-        using ComPtr<ID3D12Resource> d3D12Resource = new(allocation.Get()->GetResource());
-#else
-        using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
-            ResourceType.ReadBack,
             totalSizeInBytes,
-            GraphicsDevice.IsCacheCoherentUMA);
-#endif
+            out *&allocation,
+            out *&d3D12Resource);
 
         using (CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType))
         {
@@ -462,20 +443,15 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-#if NET6_0_OR_GREATER
-        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
-            GraphicsDevice.Pool,
+        using ComPtr<ID3D12Allocation> allocation = default;
+        using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+        GraphicsDevice.CreateOrAllocateResource(
             ResourceType.Upload,
             AllocationMode.Default,
-            totalSizeInBytes);
-
-        using ComPtr<ID3D12Resource> d3D12Resource = new(allocation.Get()->GetResource());
-#else
-        using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
-            ResourceType.Upload,
             totalSizeInBytes,
-            GraphicsDevice.IsCacheCoherentUMA);
-#endif
+            out *&allocation,
+            out *&d3D12Resource);
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
         {
@@ -599,13 +575,10 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     protected virtual partial void DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
-#if NET6_0_OR_GREATER
         this.allocation.Dispose();
-#endif
 
         if (GraphicsDevice is GraphicsDevice device)
         {
-            device.UnregisterAllocatedResource();
             device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
         }
     }

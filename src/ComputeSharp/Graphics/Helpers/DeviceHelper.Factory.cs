@@ -128,7 +128,7 @@ unsafe partial class DeviceHelper
                 _ = TryGetMemoryAllocator(d3D12Device, dxgiAdapter, memoryAllocator.GetAddressOf());
 
                 // Create the device passing the underlying device, adapter, and optional allocator
-                device = new GraphicsDevice(d3D12Device, dxgiAdapter, dxgiDescription1);
+                device = new GraphicsDevice(d3D12Device, dxgiAdapter, dxgiDescription1, memoryAllocator.Get());
 
                 DevicesCache.Add(luid, device);
 
