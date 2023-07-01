@@ -16,7 +16,7 @@ internal static class ComPtrExtensions
     /// <param name="ptr">The input <see cref="ComPtr{T}"/> instance to move.</param>
     /// <returns>The moved <see cref="ComPtr{T}"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe ComPtr<T> Move<T>(this in ComPtr<T> ptr)
+    public static ComPtr<T> Move<T>(this in ComPtr<T> ptr)
         where T : unmanaged
     {
         ComPtr<T> copy = default;
