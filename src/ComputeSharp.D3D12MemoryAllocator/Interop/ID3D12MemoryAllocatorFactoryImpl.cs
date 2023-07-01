@@ -76,8 +76,8 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    [UnmanagedCallersOnly]
-    private static int QueryInterface(ID3D12MemoryAllocatorFactoryImpl* @this, Guid* riid, void** ppvObject)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int QueryInterface(Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
         {
@@ -87,9 +87,9 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
             riid->Equals(ID3D12MemoryAllocatorFactory.Guid))
         {
-            _ = Interlocked.Increment(ref @this->referenceCount);
+            _ = Interlocked.Increment(ref this.referenceCount);
 
-            *ppvObject = @this;
+            *ppvObject = Unsafe.AsPointer(ref this);
 
             return S.S_OK;
         }
@@ -97,6 +97,27 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
         *ppvObject = null;
 
         return E.E_NOINTERFACE;
+    }
+
+    /// <inheritdoc cref="IUnknown.Release"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint Release()
+    {
+        uint referenceCount = (uint)Interlocked.Decrement(ref this.referenceCount);
+
+        if (referenceCount == 0)
+        {
+            NativeMemory.Free(Unsafe.AsPointer(ref this));
+        }
+
+        return referenceCount;
+    }
+
+    /// <inheritdoc cref="IUnknown.QueryInterface"/>
+    [UnmanagedCallersOnly]
+    private static int QueryInterface(ID3D12MemoryAllocatorFactoryImpl* @this, Guid* riid, void** ppvObject)
+    {
+        return @this->QueryInterface(riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -110,14 +131,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
     [UnmanagedCallersOnly]
     private static uint Release(ID3D12MemoryAllocatorFactoryImpl* @this)
     {
-        uint referenceCount = (uint)Interlocked.Decrement(ref @this->referenceCount);
-
-        if (referenceCount == 0)
-        {
-            NativeMemory.Free(@this);
-        }
-
-        return referenceCount;
+        return @this->Release();
     }
 
     /// <inheritdoc cref="ID3D12MemoryAllocator.AllocateResource"/>

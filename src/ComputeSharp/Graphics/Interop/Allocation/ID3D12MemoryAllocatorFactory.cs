@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET6_0_OR_GREATER
+using TerraFX.Interop;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -12,7 +15,7 @@ namespace ComputeSharp.Interop.Allocation;
 /// A factory type for <see cref="ID3D12MemoryAllocator"/> objects.
 /// </summary>
 [Guid("CC1E74A7-786D-40F4-8AE2-F8B7A255587E")]
-internal unsafe struct ID3D12MemoryAllocatorFactory
+internal unsafe struct ID3D12MemoryAllocatorFactory : IUnknown.Interface
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12MemoryAllocatorFactory"/> (<c>CC1E74A7-786D-40F4-8AE2-F8B7A255587E</c>).
@@ -38,10 +41,36 @@ internal unsafe struct ID3D12MemoryAllocatorFactory
         }
     }
 
+#if NET6_0_OR_GREATER
+    /// <inheritdoc/>
+    static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
+#endif
+
     /// <summary>
     /// The vtable for the current instance.
     /// </summary>
     private readonly void** lpVtbl;
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public HRESULT QueryInterface(Guid* riid, void** ppvObject)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this), riid, ppvObject);
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint AddRef()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public uint Release()
+    {
+        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
+    }
 
     /// <summary>
     /// Creates a new <see cref="ID3D12MemoryAllocator"/> for a given device.
