@@ -3,6 +3,10 @@ using System.Buffers;
 using System.IO;
 using System.Reflection;
 using CommunityToolkit.HighPerformance.Buffers;
+#if USE_D3D12MA
+using ComputeSharp.D3D12MemoryAllocator;
+using ComputeSharp.Interop;
+#endif
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -23,6 +27,11 @@ public class ImagingTests
     public static void ConfigureImageSharp(TestContext _)
     {
         Configuration.Default.PreferContiguousImageBuffers = true;
+
+#if USE_D3D12MA
+        // If requested by the test runner, configure D3D12MA
+        AllocationServices.ConfigureAllocatorFactory(new D3D12MemoryAllocatorFactory());
+#endif
     }
 
     [CombinatorialTestMethod]
