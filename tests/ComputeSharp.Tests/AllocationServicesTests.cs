@@ -1,4 +1,4 @@
-#if NET6_0_OR_GREATER
+#if USE_D3D12MA
 
 using System;
 using System.Runtime.InteropServices;

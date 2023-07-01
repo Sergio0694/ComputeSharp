@@ -122,6 +122,29 @@ jobs:
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
 
+  # Run all unit tests using D3D12MA
+  run-tests-d3d12ma:
+    needs: [build-solution]
+    strategy:
+      matrix:
+        framework: [net7.0, net6.0]
+    runs-on: windows-2022
+    env:
+      CI_RUNNER_DOTNET_TEST_PLATFORM: x64
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+
+      # D3D12MA tests (main ComputeSharp tests, as well as the device lost ones)
+    - name: Run ComputeSharp.Tests
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceDisposal"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceDisposal" -c Release -f ${{matrix.framework}} /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "DeviceLost"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=DeviceLost" -c Release -f ${{matrix.framework}} /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.DeviceLost "GetDefaultDevice"
+      run: dotnet test tests\ComputeSharp.Tests.DeviceLost\ComputeSharp.Tests.DeviceLost.csproj --filter "TestCategory=GetDefaultDevice" -c Release -f ${{matrix.framework}} /p:UseD3D12MemoryAllocator=true -v n -l "console;verbosity=detailed"
+
   # Run all Win2D tests (separately, as they need VS Test)
   run-tests-win2d:
     needs: [build-solution]
@@ -299,7 +322,7 @@ jobs:
 
   # Publish the packages to GitHub packages
   publish-nightlies-github:
-    needs: [run-tests, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-d3d12ma, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
@@ -311,7 +334,7 @@ jobs:
 
   # Publish the packages to Azure DevOps
   publish-nightlies-azure-devops:
-    needs: [run-tests, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
+    needs: [run-tests, run-tests-d3d12ma, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
     if: ${{github.event_name == 'push'}}
     steps:
