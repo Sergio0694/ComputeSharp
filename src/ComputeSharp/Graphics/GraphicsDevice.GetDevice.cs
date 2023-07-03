@@ -21,13 +21,13 @@ partial class GraphicsDevice
     /// support device lost scenarios (see <see cref="DeviceLost"/>) and due to how the DirectX 12
     /// runtime handles caching of device instances, this method has the following behavior:
     /// <list type="bullet">
-    ///     <item>If no device has been created, create the default one, cache it, and return it.</item>
-    ///     <item>If a cached device is available, return that.</item>
-    ///     <item>If the returned device is disposed, the cache is reset.</item>
-    ///     <item>
-    ///         If <see cref="GetDefault"/> is called again after that, the returned device might map to a different adapter.
-    ///         This would be the case if the first device was lost due to the adapter being removed from the system.
-    ///     </item>
+    ///   <item>If no device has been created, create the default one, cache it, and return it.</item>
+    ///   <item>If a cached device is available, return that.</item>
+    ///   <item>If the returned device is disposed, the cache is reset.</item>
+    ///   <item>
+    ///     If <see cref="GetDefault"/> is called again after that, the returned device might map to a different adapter.
+    ///     This would be the case if the first device was lost due to the adapter being removed from the system.
+    ///   </item>
     /// </list>
     /// There is one additional caveat to the list above: if <see cref="GetDefault"/> is called, then that device is lost, then
     /// the returned <see cref="GraphicsDevice"/> instance is disposed incorrectly (eg. with some existing resources not being
