@@ -38,18 +38,4 @@ internal unsafe partial struct IUnknown
     {
         return ((delegate* unmanaged[Stdcall]<IUnknown*, uint>)(lpVtbl[2]))((IUnknown*)Unsafe.AsPointer(ref this));
     }
-
-    public interface Interface
-    {
-        [VtblIndex(0)]
-        HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject);
-
-        [VtblIndex(1)]
-        [return: NativeTypeName("ULONG")]
-        uint AddRef();
-
-        [VtblIndex(2)]
-        [return: NativeTypeName("ULONG")]
-        uint Release();
-    }
 }

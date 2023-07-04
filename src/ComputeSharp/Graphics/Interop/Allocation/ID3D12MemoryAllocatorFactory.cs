@@ -15,7 +15,10 @@ namespace ComputeSharp.Interop.Allocation;
 /// A factory type for <see cref="ID3D12MemoryAllocator"/> objects.
 /// </summary>
 [Guid("CC1E74A7-786D-40F4-8AE2-F8B7A255587E")]
-internal unsafe struct ID3D12MemoryAllocatorFactory : IUnknown.Interface
+internal unsafe struct ID3D12MemoryAllocatorFactory
+#if NET6_0_OR_GREATER
+    : IUnknown.Interface
+#endif
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12MemoryAllocatorFactory"/> (<c>CC1E74A7-786D-40F4-8AE2-F8B7A255587E</c>).

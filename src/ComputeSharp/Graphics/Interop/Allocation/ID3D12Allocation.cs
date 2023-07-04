@@ -15,7 +15,10 @@ namespace ComputeSharp.Interop.Allocation;
 /// An allocation wrapper for a native <see cref="ID3D12Resource"/> object.
 /// </summary>
 [Guid("D42D5782-2DE7-4539-A817-482E3AA01E2E")]
-internal unsafe struct ID3D12Allocation : IUnknown.Interface
+internal unsafe struct ID3D12Allocation
+#if NET6_0_OR_GREATER
+    : IUnknown.Interface
+#endif
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12Allocation"/> (<c>D42D5782-2DE7-4539-A817-482E3AA01E2E</c>).
