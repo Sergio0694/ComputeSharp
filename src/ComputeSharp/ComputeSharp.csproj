@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.D3D12MemoryAllocator, PublicKey=$(AssemblySignPublicKey)" />
     <InternalsVisibleTo Include="ComputeSharp.Dynamic, PublicKey=$(AssemblySignPublicKey)" />
     <InternalsVisibleTo Include="ComputeSharp.Pix, PublicKey=$(AssemblySignPublicKey)" />
     <InternalsVisibleTo Include="ComputeSharp.Uwp, PublicKey=$(AssemblySignPublicKey)" />
@@ -16,12 +17,12 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <!-- .NET 6 uses the NuGet packages for TerraFX -->
+  <!-- .NET 6 uses the NuGet package for TerraFX -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.1.3" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
   </ItemGroup>
 
-  <!-- .NET Standard 2.0 uses a local fork -->
+  <!-- .NET Standard 2.0 is missing some necessary APIs from the BCL -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

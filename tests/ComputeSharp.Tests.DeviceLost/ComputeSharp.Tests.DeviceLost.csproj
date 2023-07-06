@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(UseD3D12MemoryAllocator)' != 'true'">net472;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(UseD3D12MemoryAllocator)' == 'true'">net6.0;net7.0</TargetFrameworks>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <!-- Add a defined constant for D3D12MA, same as in the main test project -->
+  <PropertyGroup Condition="'$(UseD3D12MemoryAllocator)' == 'true'">
+    <DefineConstants>$(DefineConstants);USE_D3D12MA</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D3D12MemoryAllocator\ComputeSharp.D3D12MemoryAllocator.csproj" Condition="'$(UseD3D12MemoryAllocator)' == 'true'" />
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>

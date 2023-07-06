@@ -20,6 +20,9 @@
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D2D1.WinUI'">
 <![CDATA[A WinUI 3 library with APIs to leverage D2D1 functionality with D2D1 pixel shaders powered by ComputeSharp.D2D1.]]>
     </Description>
+    <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.D3D12MemoryAllocator'">
+<![CDATA[An extension library for ComputeSharp to enable using D3D12MA as the memory allocator for graphics resources.]]>
+    </Description>
     <Description Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Dynamic'">
 <![CDATA[An extension library for ComputeSharp to enable dynamic compilation of shaders at runtime.]]>
     </Description>

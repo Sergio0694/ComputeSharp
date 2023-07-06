@@ -4,12 +4,10 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Commands.Interop;
-#if NET6_0_OR_GREATER
-using ComputeSharp.Core.Extensions;
-#endif
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Interop.Allocation;
 using ComputeSharp.Shaders.Models;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -81,17 +79,10 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     /// </summary>
     private ulong nextD3D12CopyFenceValue;
 
-#if NET6_0_OR_GREATER
     /// <summary>
-    /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
+    /// The <see cref="ID3D12MemoryAllocator"/> in use associated to the current device, if available.
     /// </summary>
-    private ComPtr<D3D12MA_Allocator> allocator;
-
-    /// <summary>
-    /// The <see cref="D3D12MA_Pool"/> instance in use, if <see cref="IsCacheCoherentUMA"/> is <see langword="true"/>.
-    /// </summary>
-    private ComPtr<D3D12MA_Pool> pool;
-#endif
+    private ComPtr<ID3D12MemoryAllocator> allocator;
 
     /// <summary>
     /// A weak <see cref="GCHandle"/> to the current instance (used to support the device lost callback).
@@ -149,20 +140,20 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
     /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
     /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
-    internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
+    /// <param name="allocator">The optional <see cref="ID3D12MemoryAllocator"/> instance to use.</param>
+    internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1, ID3D12MemoryAllocator* allocator)
     {
         using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);
 
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
-
         this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
         this.d3D12CopyCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
         this.d3D12ComputeFence = d3D12Device->CreateFence();
         this.d3D12CopyFence = d3D12Device->CreateFence();
-
         this.shaderResourceViewDescriptorAllocator = new ID3D12DescriptorHandleAllocator(d3D12Device);
         this.computeCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
         this.copyCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COPY);
+        this.allocator = new ComPtr<ID3D12MemoryAllocator>(allocator);
 
         Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
         Name = new string((char*)dxgiDescription1->Description);
@@ -178,15 +169,6 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
         D3D12_FEATURE_DATA_ARCHITECTURE1 d3D12Architecture1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
 
         IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
-
-#if NET6_0_OR_GREATER
-        this.allocator = d3D12Device->CreateAllocator(dxgiAdapter);
-
-        if (IsCacheCoherentUMA)
-        {
-            this.pool = this.allocator.Get()->CreatePoolForCacheCoherentUMA();
-        }
-#endif
 
         this.deviceRemovedReason = S.S_OK;
         this.cachedPipelineData = new List<PipelineData>();
@@ -233,19 +215,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     /// <summary>
     /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
     /// </summary>
-    internal ID3D12Device* D3D12Device => this.d3D12Device;
-
-#if NET6_0_OR_GREATER
-    /// <summary>
-    /// Gets the underlying <see cref="D3D12MA_Allocator"/> wrapped by the current instance.
-    /// </summary>
-    internal D3D12MA_Allocator* Allocator => this.allocator;
-
-    /// <summary>
-    /// Gets the underlying <see cref="D3D12MA_Pool"/> wrapped by the current instance, if any.
-    /// </summary>
-    internal D3D12MA_Pool* Pool => this.pool;
-#endif
+    internal ID3D12Device* D3D12Device => this.d3D12Device.Get();
 
     /// <summary>
     /// Gets whether or not the current device has a cache coherent UMA architecture.
@@ -370,28 +340,6 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
     }
 
     /// <summary>
-    /// Registers that a new resource has been allocated on the current device.
-    /// </summary>
-    internal void RegisterAllocatedResource()
-    {
-#if NET6_0_OR_GREATER
-        this.pool.AddRef();
-        this.allocator.AddRef();
-#endif
-    }
-
-    /// <summary>
-    /// Unregisters a generic resource that was allocated on the current device.
-    /// </summary>
-    internal void UnregisterAllocatedResource()
-    {
-#if NET6_0_OR_GREATER
-        this.pool.Release();
-        this.allocator.Release();
-#endif
-    }
-
-    /// <summary>
     /// Registers a <see cref="PipelineData"/> object for the current device to enable early disposal.
     /// </summary>
     /// <param name="pipelineData">The <see cref="PipelineData"/> instance just loaded to run a shader.</param>
@@ -484,17 +432,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
         this.computeCommandListPool.Dispose();
         this.copyCommandListPool.Dispose();
         this.shaderResourceViewDescriptorAllocator.Dispose();
-
-        // On .NET 6, D3D12MA is used. In this case, the pool and allocator must be kept alive
-        // until all associated resources are returned and destroyed. Because of this, when the
-        // device is disposed (since there might be outstanding resources that are still alive),
-        // the pool and allocator are only released, but not disposed. This allows reosurces to
-        // also release them when disposed (since each resource keeps a reference back to the
-        // parent device). When the last one is disposed, the pool and allocator will be deleted.
-#if NET6_0_OR_GREATER
-        this.pool.Release();
-        this.allocator.Release();
-#endif
+        this.allocator.Dispose();
 
         UnregisterDeviceLostCallback(this);
 

@@ -13,6 +13,7 @@ using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
+using ComputeSharp.Interop.Allocation;
 #if NET6_0_OR_GREATER
 using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
 #else
@@ -33,12 +34,10 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     /// </summary>
     private ReferenceTracker referenceTracker;
 
-#if NET6_0_OR_GREATER
     /// <summary>
-    /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
+    /// The <see cref="ID3D12Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if available.
     /// </summary>
-    private ComPtr<D3D12MA_Allocation> allocation;
-#endif
+    private ComPtr<ID3D12Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -100,14 +99,13 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
         GraphicsDevice = device;
         Length = length;
 
-#if NET6_0_OR_GREATER
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)effectiveSizeInBytes);
-        this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
-#else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)effectiveSizeInBytes, device.IsCacheCoherentUMA);
-#endif
+        device.CreateOrAllocateResource(
+            resourceType,
+            allocationMode,
+            (ulong)effectiveSizeInBytes,
+            out this.allocation,
+            out this.d3D12Resource);
 
-        device.RegisterAllocatedResource();
         device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
         device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
 
@@ -214,13 +212,10 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
     void IReferenceTrackedObject.DangerousOnDispose()
     {
         this.d3D12Resource.Dispose();
-#if NET6_0_OR_GREATER
         this.allocation.Dispose();
-#endif
 
         if (GraphicsDevice is GraphicsDevice device)
         {
-            device.UnregisterAllocatedResource();
             device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
             device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
         }

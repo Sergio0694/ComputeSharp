@@ -1,32 +1,21 @@
 using System;
-#if NET6_0_OR_GREATER
-using System.Runtime.CompilerServices;
-#endif
 using ComputeSharp.Core.Extensions;
-#if !NET6_0_OR_GREATER
 using ComputeSharp.Graphics.Resources.Enums;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_PRIORITY;
-#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY;
-#endif
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.D3D12_FENCE_FLAGS;
-#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_HEAP_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_MEMORY_POOL;
-#endif
 using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
-#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
-#endif
 using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
 
@@ -37,26 +26,6 @@ namespace ComputeSharp.Graphics.Extensions;
 /// </summary>
 internal static unsafe class ID3D12DeviceExtensions
 {
-#if NET6_0_OR_GREATER
-    /// <summary>
-    /// Creates a <see cref="D3D12MA_Allocator"/> instance for a given device.
-    /// </summary>
-    /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the allocator.</param>
-    /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
-    /// <returns>A <see cref="D3D12MA_Allocator"/> instance to create resources on the device in use.</returns>
-    public static ComPtr<D3D12MA_Allocator> CreateAllocator(this ref ID3D12Device d3D12Device, IDXGIAdapter* dxgiAdapter)
-    {
-        using ComPtr<D3D12MA_Allocator> allocator = default;
-
-        D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
-        allocatorDesc.pDevice = (ID3D12Device*)Unsafe.AsPointer(ref d3D12Device);
-        allocatorDesc.pAdapter = dxgiAdapter;
-
-        D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator.GetAddressOf()).Assert();
-
-        return allocator.Move();
-    }
-#else
     /// <summary>
     /// Creates a committed resource for a given buffer type.
     /// </summary>
@@ -301,7 +270,6 @@ internal static unsafe class ID3D12DeviceExtensions
 
         return d3D12Resource.Move();
     }
-#endif
 
     /// <summary>
     /// Creates a new <see cref="ID3D12InfoQueue"/> for a given device.

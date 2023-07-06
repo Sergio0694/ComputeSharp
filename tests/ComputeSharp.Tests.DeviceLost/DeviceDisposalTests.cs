@@ -1,4 +1,7 @@
 using System;
+#if USE_D3D12MA
+using ComputeSharp.D3D12MemoryAllocator;
+#endif
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.DeviceLost.Helpers;
@@ -15,6 +18,15 @@ using Win32 = Win32.Apis;
 [TestCategory("DeviceDisposal")]
 public partial class DeviceDisposalTests
 {
+    [AssemblyInitialize]
+    public static void ConfigureImageSharp(TestContext _)
+    {
+#if USE_D3D12MA
+        // If requested by the test runner, configure D3D12MA
+        AllocationServices.ConfigureAllocatorFactory(new D3D12MemoryAllocatorFactory());
+#endif
+    }
+
     [TestMethod]
     public void DeviceDisposal_GetDefault_ReferenceCounting()
     {
