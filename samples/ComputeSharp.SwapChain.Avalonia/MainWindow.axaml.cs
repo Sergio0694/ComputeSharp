@@ -18,7 +18,7 @@ public partial class MainWindow : Window
 
 public sealed class ShaderPanel : NativeControlHost
 {
-    private readonly SwapChainApplication<ColorfulInfinity> application = new(static time => new((float)time.TotalSeconds));
+    private readonly Win32Application application = Win32ApplicationFactory<ColorfulInfinity>.Create(static time => new((float)time.TotalSeconds));
 
     private Thread? renderThread;
 
