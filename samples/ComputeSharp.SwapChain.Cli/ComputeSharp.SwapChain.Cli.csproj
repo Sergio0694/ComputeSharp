@@ -13,7 +13,9 @@
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
     <AssemblyName>computesharp.cli</AssemblyName>
-    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+
+    <!-- When explicitly optimizing for size, strip the icon (which adds about 100 KB of binary size) -->
+    <ApplicationIcon Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' != 'true'">..\..\assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!--
@@ -30,8 +32,9 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
-    <IlcDisableReflection>true</IlcDisableReflection>
-    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcDisableReflection Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_DISABLE_REFLECTION)' == 'true'">true</IlcDisableReflection>
+    <IlcOptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' == 'true'">Size</IlcOptimizationPreference>
+    <IlcOptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' != 'true'">Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
   <!--
