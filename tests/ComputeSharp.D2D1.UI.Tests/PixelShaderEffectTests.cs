@@ -216,7 +216,7 @@ public partial class PixelShaderEffectTests
         int cacheOutput;
 
         hresult = d2D1Effect.Get()->GetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+            index: unchecked((uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED),
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
             data: (byte*)&cacheOutput,
             dataSize: sizeof(int));
@@ -228,7 +228,7 @@ public partial class PixelShaderEffectTests
         D2D1_BUFFER_PRECISION d2D1BufferPrecision;
 
         hresult = d2D1Effect.Get()->GetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+            index: unchecked((uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION),
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
             data: (byte*)&d2D1BufferPrecision,
             dataSize: sizeof(D2D1_BUFFER_PRECISION));
@@ -280,7 +280,7 @@ public partial class PixelShaderEffectTests
         int cacheOutput = 1;
 
         int hresult = d2D1Effect.Get()->SetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED,
+            index: unchecked((uint)D2D1_PROPERTY.D2D1_PROPERTY_CACHED),
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BOOL,
             data: (byte*)&cacheOutput,
             dataSize: sizeof(int));
@@ -292,7 +292,7 @@ public partial class PixelShaderEffectTests
         D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
 
         hresult = d2D1Effect.Get()->SetValue(
-            index: (uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION,
+            index: unchecked((uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION),
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_UNKNOWN,
             data: (byte*)&d2D1BufferPrecision,
             dataSize: sizeof(D2D1_BUFFER_PRECISION));
