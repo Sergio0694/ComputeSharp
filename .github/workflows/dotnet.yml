@@ -230,14 +230,14 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
       
       # Publish the NativeAOT CLI sample (optimized for speed)
-    - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
+    - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT (speed)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-${{matrix.platform}} -v n
       
       # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it)
     - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.Cli
+      name: Run ComputeSharp.SwapChain.Cli (speed)
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
@@ -247,7 +247,7 @@ jobs:
 
       # Upload the binary (to track binary size trends)
     - if: matrix.platform == 'x64'
-      name: Upload NativeAOT CLI sample
+      name: Upload NativeAOT CLI sample (speed)
       uses: actions/upload-artifact@v3
       with:
         name: computesharp.cli.opt-speed.exe
@@ -255,7 +255,7 @@ jobs:
         if-no-files-found: error
 
       # Publish the NativeAOT CLI sample (optimized for size, and reflection-free)
-    - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT
+    - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT (size)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         $env:COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED='true';
@@ -265,7 +265,7 @@ jobs:
       
       # Again only on x64, also run the sample and validate it works correctly
     - if: matrix.platform == 'x64'
-      name: Run ComputeSharp.SwapChain.Cli
+      name: Run ComputeSharp.SwapChain.Cli (size)
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
@@ -275,7 +275,7 @@ jobs:
 
       # Upload the binary again (with a different name)
     - if: matrix.platform == 'x64'
-      name: Upload NativeAOT CLI sample
+      name: Upload NativeAOT CLI sample (size)
       uses: actions/upload-artifact@v3
       with:
         name: computesharp.cli.opt-size.exe
