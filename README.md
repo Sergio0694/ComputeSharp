@@ -1,6 +1,6 @@
 ![](https://user-images.githubusercontent.com/10199417/108635546-3512ea00-7480-11eb-8172-99bc59f4eb6f.png)
 <br/>
-[![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/ComputeSharp/actions) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
+[![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/ComputeSharp/actions) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version) [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/)
 
 # What is it? 🚀
 
@@ -31,15 +31,15 @@ The sample app is available in the Microsoft Store, showcasing several pixel sha
 
 # Available packages 📦
 
-| Name | Description | Latest version |
-| ------ | ------  | ------ |
-| **ComputeSharp** | The main library, with compiled shaders support | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/) |
-| **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Dynamic.svg)](https://www.nuget.org/packages/ComputeSharp.Dynamic/) |
-| **ComputeSharp.D3D12MemoryAllocator** | An extension for **ComputeSharp**, adding D3D12MA as the memory allocator for graphics resources. | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Dynamic.svg)](https://www.nuget.org/packages/ComputeSharp.Dynamic/) |
-| **ComputeSharp.Pix** | An extension library for **ComputeSharp**, enabling PIX support to produce debugging information | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Pix.svg)](https://www.nuget.org/packages/ComputeSharp.Pix/) |
-| **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Uwp.svg)](https://www.nuget.org/packages/ComputeSharp.Uwp/) |
-| **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.WinUI.svg)](https://www.nuget.org/packages/ComputeSharp.WinUI/) |
-| **ComputeSharp.D2D1** | A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.D2D1.svg)](https://www.nuget.org/packages/ComputeSharp.D2D1/) |
+| Name | Description |
+| ------ | ------  |
+| **ComputeSharp** | The main library, with compiled shaders support |
+| **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming |
+| **ComputeSharp.D3D12MemoryAllocator** | An extension for **ComputeSharp**, adding D3D12MA as the memory allocator for graphics resources. |
+| **ComputeSharp.Pix** | An extension library for **ComputeSharp**, enabling PIX support to produce debugging information |
+| **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** |
+| **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** |
+| **ComputeSharp.D2D1** | A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them |
 
 Preview builds are available at https://pkgs.computesharp.dev/index.json (as well as GitHub Packages).
 
