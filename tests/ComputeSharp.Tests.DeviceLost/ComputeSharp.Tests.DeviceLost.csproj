@@ -12,9 +12,9 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="Vortice.Win32.Graphics.Direct3D12" Version="1.9.34" />
     <PackageReference Include="Vortice.Win32.Graphics.Dxgi" Version="1.9.34" />
   </ItemGroup>
