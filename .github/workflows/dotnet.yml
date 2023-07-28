@@ -243,7 +243,8 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        $process.ExitCode
+        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        return $process.ExitCode;
 
       # Upload the binary (to track binary size trends)
     - if: matrix.platform == 'x64'
@@ -271,7 +272,8 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        $process.ExitCode
+        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        return $process.ExitCode;
 
       # Upload the binary again (with a different name)
     - if: matrix.platform == 'x64'
@@ -297,7 +299,8 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        $process.ExitCode
+        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        return $process.ExitCode;
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
