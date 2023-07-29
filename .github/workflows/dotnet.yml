@@ -21,7 +21,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: Build
-      run: msbuild -t:restore,build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
+      run: msbuild /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=${{matrix.platform}} /bl
     - name: Upload MSBuild binary log
       uses: actions/upload-artifact@v3
       with:
@@ -51,19 +51,13 @@ jobs:
     - name: Build ComputeSharp.Pix package
       run: dotnet pack src\ComputeSharp.Pix\ComputeSharp.Pix.csproj -c Release
     - name: Build ComputeSharp.Uwp package
-      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
+      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.D2D1.Uwp package
-      run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj -t:restore,build,pack /p:Configuration=Release
-    
-      # WinUI 3 packaging needs to be done separately and with no previous build target for it to work correctly
+      run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.WinUI package
-      run: >
-        msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release;
-        msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.D2D1.WinUI package
-      run: >
-        msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:restore /p:Configuration=Release;
-        msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj -t:pack /p:Configuration=Release
+      run: msbuild src\ComputeSharp.D2D1.WinUI\ComputeSharp.D2D1.WinUI.csproj /restore -t:pack /p:Configuration=Release
     
       # Upload the packages to the pipeline artifacts
     - name: Upload package artifacts
@@ -161,12 +155,10 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
-      # Build the D2D1 UWP unit tests (need to restore and build separately for it to build correctly)
+      # Build the D2D1 UWP unit tests
     - if: matrix.framework == 'uwp'
       name: Build ComputeSharp.D2D1.Uwp.Tests
-      run: >
-        msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:restore /p:Configuration=${{matrix.configuration}} /p:Platform=x64;
-        msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
+      run: msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
 
       # Run the D2D1 UWP unit tests with VS Test (need to use vswhere to find the VS Test runner)
     - if: matrix.framework == 'uwp'
@@ -176,12 +168,10 @@ jobs:
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
         & $vstest_path /Platform:x64 /framework:frameworkuap10 tests\ComputeSharp.D2D1.Uwp.Tests\bin\x64\${{matrix.configuration}}\ComputeSharp.D2D1.Uwp.Tests.build.appxrecipe
     
-      # Build the D2D1 WinAppSDK unit tests (this also needs two steps, or the entry point won't be generated)
+      # Build the D2D1 WinAppSDK unit tests
     - if: matrix.framework == 'wasdk'
       name: Build ComputeSharp.D2D1.WinUI.Tests
-      run: >
-        msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj -t:restore /p:Configuration=${{matrix.configuration}} /p:Platform=x64;
-        msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
+      run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
 
       # Run the D2D1 WinAppSDK unit tests with VS Test again
     - if: matrix.framework == 'wasdk'
@@ -284,11 +274,11 @@ jobs:
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
 
-      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908).
+      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908)
     - if: matrix.platform == 'x64'
       name: Publish ComputeSharp.SwapChain.D2D1.Cli
       run: >
-        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj -t:restore,publish /p:Configuration=Release
+        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish /p:Configuration=Release
         /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win10-${{matrix.platform}} /p:PublishSingleFile=True /p:SelfContained=True /p:PublishTrimmed=True
       
       # Just like for the DX12 sample, run it on x64 to validate it works correctly
@@ -301,6 +291,15 @@ jobs:
         $process.WaitForExit();
         if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
         return $process.ExitCode;
+      
+      # Publish the Win2D sample with NativeAOT (just verifying the build, can't run this yet, see above)
+    - if: matrix.platform == 'x64'
+      name: Publish ComputeSharp.SwapChain.D2D1.Cli with NativeAOT
+      run: >
+        $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='true';
+        git clean -fdx;
+        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish /p:Configuration=Release
+        /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win10-${{matrix.platform}}
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as

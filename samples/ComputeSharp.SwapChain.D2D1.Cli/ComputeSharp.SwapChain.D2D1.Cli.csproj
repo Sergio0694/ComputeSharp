@@ -22,6 +22,9 @@
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+
+    <!-- Workaround for WinRT.Runtime and System.Linq.Expressions producing trim warnings -->
+    <NoWarn>$(NoWarn);IL3053</NoWarn>
   </PropertyGroup>
 
   <!-- Also include the .rd.xml file to fix some NativeAOT issues with CsWinRT -->
