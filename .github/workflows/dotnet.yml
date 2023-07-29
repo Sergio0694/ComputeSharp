@@ -274,7 +274,7 @@ jobs:
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net7.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
 
-      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908).
+      # Also publish the Win2D sample on .NET 7 (without NativeAOT, see https://github.com/dotnet/runtime/issues/84908)
     - if: matrix.platform == 'x64'
       name: Publish ComputeSharp.SwapChain.D2D1.Cli
       run: >
@@ -291,6 +291,15 @@ jobs:
         $process.WaitForExit();
         if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
         return $process.ExitCode;
+      
+      # Publish the Win2D sample with NativeAOT (just verifying the build, can't run this yet, see above)
+    - if: matrix.platform == 'x64'
+      name: Publish ComputeSharp.SwapChain.D2D1.Cli with NativeAOT
+      run: >
+        $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='true';
+        git clean -fdx;
+        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish /p:Configuration=Release
+        /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win10-${{matrix.platform}}
 
   # Download the NuGet packages generated in the previous job and use them
   # to build and run the sample project referencing them. This is used as
