@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.Tests.Internals" />
   </ItemGroup>
 
   <!-- Reference to the main non-dynamic library-->
