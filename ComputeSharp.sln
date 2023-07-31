@@ -160,9 +160,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D3D12MemoryAll
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2D.Projections", "src\Win2D.Projections\Win2D.Projections.csproj", "{029AEBE4-3378-428A-9F72-09B32BC8BFFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.D2D1.Uwp", "samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj", "{C78CF726-264D-4FB5-A51D-D49DBE96FE48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.D2D1.Uwp", "samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj", "{C78CF726-264D-4FB5-A51D-D49DBE96FE48}"
 EndProject
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "ComputeSharp.SwapChain.D2D1.Uwp.Package", "samples\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.Package\ComputeSharp.SwapChain.D2D1.Uwp.Package.wapproj", "{9ABA4F6A-BF3F-438A-A2BD-89BC7CD419F4}"
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "ComputeSharp.SwapChain.D2D1.Uwp.Package", "samples\ComputeSharp.SwapChain.D2D1.Uwp.Package\ComputeSharp.SwapChain.D2D1.Uwp.Package.wapproj", "{9ABA4F6A-BF3F-438A-A2BD-89BC7CD419F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
