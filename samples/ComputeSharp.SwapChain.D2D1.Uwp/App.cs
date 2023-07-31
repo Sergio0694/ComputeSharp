@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using ComputeSharp.SwapChain.D2D1.Backend;
+using ComputeSharp.SwapChain.Shaders.D2D1;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
@@ -48,9 +50,22 @@ public sealed class App : IFrameworkViewSource, IFrameworkView
     /// <inheritdoc/>
     public void Run()
     {
-        this.window!.Activate();
+        PixelShaderEffect effect = new PixelShaderEffect.For<HelloWorld>(static (time, width, height) => new((float)time.TotalSeconds, new int2(width, height)));
 
-        this.window.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+        CoreWindowApplication coreWindowApplication = new();
+
+        coreWindowApplication.Draw += (_, e) =>
+        {
+            // Set the effect properties
+            effect.ElapsedTime = e.TotalTime;
+            effect.ScreenWidth = (int)e.ScreenWidth;
+            effect.ScreenHeight = (int)e.ScreenHeight;
+
+            // Draw the effect
+            e.DrawingSession.DrawImage(effect);
+        };
+
+        CoreWindowApplicationRunner.Run(this.window!, coreWindowApplication);
     }
 
     /// <inheritdoc/>
