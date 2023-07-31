@@ -342,6 +342,7 @@ samples/**/city_*.jpg
 
 # XML docs files
 src/**/ComputeSharp*.xml
+src/**/Win2D.Projections.xml
 
 # Preserve .rd.xml files
 !src/**/ComputeSharp*.rd.xml

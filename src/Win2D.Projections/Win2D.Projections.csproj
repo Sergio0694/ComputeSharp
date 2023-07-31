@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!--
+      Ignore some warnings about shadowed APIs, eg.:
+      "'CanvasRenderTarget.CreateFromDirect3D11Surface(ICanvasResourceCreator, IDirect3DSurface)' hides inherited member
+      'CanvasBitmap.CreateFromDirect3D11Surface(ICanvasResourceCreator, IDirect3DSurface)'. Use the new keyword if hiding was intended."
+    -->
+    <NoWarn>$(NoWarn);CS0108</NoWarn>
+
+    <!-- Ignore warnings about missing XML docs (for generated projections) -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CSWinRTIncludes>
+      Microsoft.Graphics.Canvas;
+    </CSWinRTIncludes>
+    <CsWinRTGenerateProjection>true</CsWinRTGenerateProjection>
+    <CsWinRTMessageImportance>high</CsWinRTMessageImportance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dongle.Windows.CsWinRT" Version="3.0.0-wux.1" />
+    <PackageReference Include="Win2D.uwp" Version="1.27.0-preview3" PrivateAssets="All">
+      <ExcludeAssets>build; buildtransitive; compile; runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <CsWinRTInputs Include="$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', 'win2d.uwp', '1.27.0-preview3'))lib\uap10.0\Microsoft.Graphics.Canvas.winmd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dongle.WindowsSDK.NET.Replace" Version="10.0.19041.6" />
+  </ItemGroup>
+</Project>
