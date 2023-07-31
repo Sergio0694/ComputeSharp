@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0'">
+    <VisualStudioVersion>15.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup>
+    <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
+  </PropertyGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
+  <PropertyGroup>
+    <ProjectGuid>9aba4f6a-bf3f-438a-a2bd-89bc7cd419f4</ProjectGuid>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <NoWarn>$(NoWarn);NU1702</NoWarn>
+    <EntryPointProjectUniqueName>..\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj</EntryPointProjectUniqueName>
+    <EntryPointOverride>ComputeSharp.SwapChain.D2D1.Uwp.App</EntryPointOverride>
+    <EntryPointExe>ComputeSharp.SwapChain.D2D1.Uwp.exe</EntryPointExe>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\SplashScreen.scale-200.png" />
+    <Content Include="Images\LockScreenLogo.scale-200.png" />
+    <Content Include="Images\Square150x150Logo.scale-200.png" />
+    <Content Include="Images\Square44x44Logo.scale-200.png" />
+    <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Images\StoreLogo.scale-200.png" />
+    <Content Include="Images\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" PrivateAssets="all" />
+  </ItemGroup>
+  <UsingTask TaskName="UpdateEntryPoint" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Projects ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <AppxManifestPath ParameterType="System.String" Required="true" />
+      <EntryPointProjectFullPath ParameterType="System.String" Required="true" />
+      <EntryPointProjectUniqueName ParameterType="System.String" Required="true" />
+      <EntryPoint ParameterType="System.String" Required="true">
+      </EntryPoint>
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Xml" />
+      <Reference Include="System.Xml.Linq" />
+      <Using Namespace="System.Xml.Linq" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+var entryProject = Projects.FirstOrDefault(p => 
+    p.ItemSpec.Equals(EntryPointProjectFullPath, StringComparison.OrdinalIgnoreCase) || 
+    p.ItemSpec.Equals(EntryPointProjectUniqueName, StringComparison.OrdinalIgnoreCase)
+);
+if (entryProject == null)
+{
+    Log.LogError("No entry point project found");
+    return false;
+}
+if (string.IsNullOrEmpty(EntryPoint))
+{
+    Log.LogError("New entry point is not specified, will not update");
+    return false;
+}
+try
+{
+    var xdoc = XDocument.Load(AppxManifestPath);
+    var ns = xdoc.Root.Name.Namespace;
+    var application = xdoc.Root.Descendants(ns + "Application").FirstOrDefault();
+    if (application != null)
+    {
+        var xattr = application.Attribute("EntryPoint");
+        if (xattr != null)
+        {
+            xattr.SetValue(EntryPoint);
+        }
+        else
+        {
+            Log.LogWarning("No entry point found in application node.");
+        }
+    }
+    else
+    {
+        Log.LogWarning("No application node found in Appx Manifest.");
+    }
+    xdoc.Save(AppxManifestPath);
+}
+catch (Exception)
+{
+        Log.LogError("Failed to load Appx Manifest.");
+        return false;
+}
+        ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="EntryPointOverride" AfterTargets="_GenerateDesktopBridgeAppxManifest">
+    <Message Importance="high" Text="EntryPointOverride" />
+    <Message Importance="high" Text="EntryPointProject: '$(EntryPointProjectUniqueName)'" />
+    <Message Importance="high" Text="NewEntryPoint: '$(EntryPointOverride)'" />
+    <UpdateEntryPoint Projects="@(ProjectReference)" AppxManifestPath="%(FinalAppxManifest.Identity)" EntryPointProjectFullPath="$(EntryPointProjectFullPath)" EntryPointProjectUniqueName="$(EntryPointProjectUniqueName)" EntryPoint="$(EntryPointOverride)">
+    </UpdateEntryPoint>
+  </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.SwapChain.D2D1.Uwp\ComputeSharp.SwapChain.D2D1.Uwp.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
