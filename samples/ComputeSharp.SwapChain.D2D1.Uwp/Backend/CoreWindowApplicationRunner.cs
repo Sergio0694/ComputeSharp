@@ -37,6 +37,9 @@ internal static unsafe class CoreWindowApplicationRunner
             }
         });
 
+        // Handle size changes
+        window.SizeChanged += (s, _) => application.OnResize();
+
         CancellationTokenSource tokenSource = new();
 
         renderThread.Start((application, tokenSource.Token));
