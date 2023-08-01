@@ -9,8 +9,9 @@
   <PropertyGroup>
 
     <!--
-      Ignore some warnings about ambiguous cref attribute references.
-      This happens for ICanvasImage, but it's not really clear why.
+      Ignore some warnings about ambiguous cref attribute references. These are because the assembly defines
+      blittable bindings for several ABI types from Win2D, in the same namespace as the ABI types from the
+      CsWinRT projections that are in Win2D. They are internal, but Roslyn will still complain about them.
     -->
     <NoWarn>$(NoWarn);CS0419</NoWarn>
 
