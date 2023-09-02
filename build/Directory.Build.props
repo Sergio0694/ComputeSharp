@@ -109,6 +109,16 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
     <PackageTags>dotnet net netcore netstandard csharp library graphics directx shader hlsl compute gpu performance parallel windows</PackageTags>
+
+    <!--
+      Generate documentation files. In theory this should only be abled for published, non source generator projects.
+      However, this is always enabled to work around https://github.com/dotnet/roslyn/issues/41640. Until that's fixed,
+      source generators will also produce an .xml file with their documentation. Note that this doesn't really impact
+      NuGet packages, since the analyzer binaries are packed manually after build, so the .xml files aren't included.
+      When this workaround is no longer needed, the same property should also removed for the \samples directory.
+      Once that issue is fixed, this should be moved down to the src\ specific .props file again, and otherwise disabled.
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
