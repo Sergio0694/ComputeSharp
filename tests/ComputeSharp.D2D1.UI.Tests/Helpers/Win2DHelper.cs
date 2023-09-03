@@ -155,7 +155,7 @@ internal static class Win2DHelper
     public interface ICanvasFactoryNative
     {
         /// <summary>
-        /// The vtable type for <see cref="Interface"/>.
+        /// The vtable type for <see cref="ICanvasFactoryNative"/>.
         /// </summary>
         [Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
         public readonly struct Vftbl
