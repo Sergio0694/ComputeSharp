@@ -1,5 +1,4 @@
 using ComputeSharp;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 float[] numbers = Enumerable.Range(0, 128).Select(i => (float)i).ToArray();
 
@@ -15,11 +14,12 @@ foreach (ref float number in numbers.AsSpan())
 
 float[] result = buffer.ToArray();
 
-CollectionAssert.AreEqual(
-    expected: numbers,
-    actual: result);
+if (!numbers.SequenceEqual(result))
+{
+    throw new Exception("The processed buffer does not match the expected results.");
+}
 
-Console.WriteLine("Test passed successfully");
+Console.WriteLine("Test passed successfully!");
 
 // See https://github.com/Sergio0694/ComputeSharp/issues/374
 [ShaderMethod]

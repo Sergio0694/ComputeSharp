@@ -11,6 +11,12 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
 
+  <PropertyGroup>
+
+    <!-- Ignore some warnings about ambiguous cref attribute references (same as in ComputeSharp.D2D1.WinUI) -->
+    <NoWarn>$(NoWarn);CS0419</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="..\ComputeSharp.Tests\Assets\ColorfulInfinity.png">
       <Link>Assets\Shaders\ColorfulInfinity.png</Link>
