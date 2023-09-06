@@ -89,7 +89,7 @@ jobs:
     - name: Run ComputeSharp.Tests.DisableDynamicCompilation
       run: dotnet test tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.GlobalStatements
-      run: dotnet test tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      run: dotnet run --project tests\ComputeSharp.Tests.GlobalStatements\ComputeSharp.Tests.GlobalStatements.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
     - name: Run ComputeSharp.Tests.Internals
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f ${{matrix.framework}} /p:Platform=x64 -v n -l "console;verbosity=detailed"
 
