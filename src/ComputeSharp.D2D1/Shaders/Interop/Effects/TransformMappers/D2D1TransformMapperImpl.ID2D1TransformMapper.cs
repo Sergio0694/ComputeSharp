@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Interop.Effects;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;

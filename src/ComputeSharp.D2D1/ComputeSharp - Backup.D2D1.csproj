@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <SupportedOSVersion>windows6.1</SupportedOSVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.D2D1.Uwp, PublicKey=$(AssemblySignPublicKey)" />
+    <InternalsVisibleTo Include="ComputeSharp.D2D1.WinUI, PublicKey=$(AssemblySignPublicKey)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+  </ItemGroup>
+
+  <!-- Explicitly reference System.Runtime.CompilerServices.Unsafe on .NET Standard 2.0 to get Unsafe.SkipInit  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
+  <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
+</Project>
