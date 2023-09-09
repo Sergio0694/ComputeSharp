@@ -9,7 +9,7 @@ using ComputeSharp.D2D1.Interop;
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// A resource texture descriptions loader for D2D1 pixel shaders.
+/// A resource texture descriptions loader for D2D1 shaders.
 /// </summary>
 internal struct D2D1ByteArrayResourceTextureDescriptionsLoader : ID2D1ResourceTextureDescriptionsLoader
 {

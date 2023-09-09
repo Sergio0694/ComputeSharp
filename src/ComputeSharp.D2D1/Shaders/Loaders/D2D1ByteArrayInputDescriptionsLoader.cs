@@ -9,7 +9,7 @@ using ComputeSharp.D2D1.Interop;
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// An input descriptions loader for D2D1 pixel shaders.
+/// An input descriptions loader for D2D1 shaders.
 /// </summary>
 internal struct D2D1ByteArrayInputDescriptionsLoader : ID2D1InputDescriptionsLoader
 {

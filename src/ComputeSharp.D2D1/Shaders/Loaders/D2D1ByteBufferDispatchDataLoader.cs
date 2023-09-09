@@ -1,14 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.__Internals;
-using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1DrawInfo"/>.
+/// A dispatch data loader for D2D1 shaders.
 /// </summary>
 internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoader
 {
@@ -31,7 +30,7 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     /// Creates a new <see cref="D2D1ByteBufferDispatchDataLoader"/> instance.
     /// </summary>
     /// <param name="buffer">The target buffer to write data to.</param>
-    /// <param name="length">The length of the buffer pointed to by <see cref="buffer"/>.</param>
+    /// <param name="length">The length of the buffer pointed to by <paramref name="buffer"/>.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal D2D1ByteBufferDispatchDataLoader(byte* buffer, int length)
     {

@@ -16,7 +16,7 @@ unsafe partial struct ComputeShaderEffect
     /// </summary>
     /// <typeparam name="T">The type of shader.</typeparam>
     public sealed class For<T>
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1ComputeShader
     {
         /// <inheritdoc cref="PixelShaderEffect.For{T}.effectFactory"/>
         private readonly PixelShaderEffect.FactoryDelegate effectFactory;
@@ -91,27 +91,27 @@ unsafe partial struct ComputeShaderEffect
         {
             // Load all shader properties
             Guid shaderId = typeof(T).GUID;
-            int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
-            D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
-            D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
-            int inputCount = D2D1PixelShader.GetInputCount<T>();
+            int constantBufferSize = D2D1ComputeShader.GetConstantBufferSize<T>();
+            D2D1BufferPrecision bufferPrecision = D2D1ComputeShader.GetOutputBufferPrecision<T>();
+            D2D1ChannelDepth channelDepth = D2D1ComputeShader.GetOutputBufferChannelDepth<T>();
+            int inputCount = D2D1ComputeShader.GetInputCount<T>();
 
             // Prepare the input descriptions
-            ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
+            ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1ComputeShader.GetInputDescriptions<T>();
             int inputDescriptionCount = inputDescriptionsInfo.Length;
             D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1InputDescription) * inputDescriptionCount);
 
             inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
 
             // Prepare the resource texture descriptions
-            ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1PixelShader.GetResourceTextureDescriptions<T>();
+            ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1ComputeShader.GetResourceTextureDescriptions<T>();
             int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
             D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
 
             resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
 
             // Copy the bytecode to the target buffer
-            ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
+            ReadOnlyMemory<byte> bytecodeInfo = D2D1ComputeShader.LoadBytecode<T>();
             int bytecodeSize = bytecodeInfo.Length;
             byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
 

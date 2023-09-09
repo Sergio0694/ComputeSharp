@@ -1,14 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.__Internals;
-using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1DrawInfo"/>, to just retrieve the constant buffer size.
+/// A data loader for D2D1 shaders, to just retrieve the constant buffer size.
 /// </summary>
 internal unsafe struct D2D1BufferSizeDispatchDataLoader : ID2D1DispatchDataLoader
 {
@@ -38,7 +37,7 @@ internal unsafe struct D2D1BufferSizeDispatchDataLoader : ID2D1DispatchDataLoade
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
     public static class For<T>
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1Shader
     {
         /// <summary>
         /// Gets the constant buffer size for a shader of type <typeparamref name="T"/>.

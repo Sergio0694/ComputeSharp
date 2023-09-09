@@ -1,14 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.__Internals;
-using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1DrawInfo"/>.
+/// A data loader for D2D1 shaders.
 /// </summary>
 internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
 {
@@ -18,7 +17,7 @@ internal struct D2D1ByteArrayDispatchDataLoader : ID2D1DispatchDataLoader
     private byte[]? data;
 
     /// <summary>
-    /// Gets the resulting pixel shader constant buffer.
+    /// Gets the resulting D2D1 shader constant buffer.
     /// </summary>
     /// <returns>A <see cref="byte"/> array with the constant buffer for the current shader.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
