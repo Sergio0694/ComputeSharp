@@ -208,6 +208,30 @@ internal unsafe partial struct PixelShaderEffect
     private ResourceTextureManagerBuffer resourceTextureManagerBuffer;
 
     /// <summary>
+    /// Releases all allocated resource texture managers being used.
+    /// </summary>
+    /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
+    /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
+    /// <param name="resourceTextureManagerBuffer">The resource texture managers to inspect and release.</param>
+    internal static void ReleaseResourceTextureManagers(
+        int resourceTextureDescriptionCount,
+        D2D1ResourceTextureDescription* resourceTextureDescriptions,
+        ref ResourceTextureManagerBuffer resourceTextureManagerBuffer)
+    {
+        // Use the list of resource texture descriptions to see the indices that might have accepted a resource texture manager.
+        // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
+        foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount))
+        {
+            ID2D1ResourceTextureManager* resourceTextureManager = resourceTextureManagerBuffer[resourceTextureDescription.Index];
+
+            if (resourceTextureManager is not null)
+            {
+                _ = ((IUnknown*)resourceTextureManager)->Release();
+            }
+        }
+    }
+
+    /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
     /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
@@ -224,7 +248,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
     /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
-    /// <returns>This always returns <c>0</c>.</returns>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private static int Factory(
         Guid shaderId,
         int constantBufferSize,
@@ -352,17 +376,7 @@ internal unsafe partial struct PixelShaderEffect
                 _ = this.d2D1EffectContext->Release();
             }
 
-            // Use the list of resource texture descriptions to see the indices that might have accepted a resource texture manager.
-            // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
-            foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
-            {
-                ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureDescription.Index];
-
-                if (resourceTextureManager is not null)
-                {
-                    _ = ((IUnknown*)resourceTextureManager)->Release();
-                }
-            }
+            ReleaseResourceTextureManagers(this.resourceTextureDescriptionCount, this.resourceTextureDescriptions, ref this.resourceTextureManagerBuffer);
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }

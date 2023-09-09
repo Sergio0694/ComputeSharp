@@ -7,10 +7,8 @@ using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 
-/// <summary>
-/// A simple <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/> implementation for a given pixel shader.
-/// </summary>
-internal unsafe partial struct PixelShaderEffect
+/// <inheritdoc/>
+unsafe partial struct PixelShaderEffect
 {
     /// <summary>
     /// The implementation for <see cref="ID2D1EffectImpl"/>.

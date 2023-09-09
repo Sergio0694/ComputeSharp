@@ -9,124 +9,59 @@ using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 namespace ComputeSharp.D2D1.Interop.Effects;
 
 /// <inheritdoc/>
-unsafe partial struct PixelShaderEffect
+unsafe partial struct ComputeShaderEffect
 {
     /// <summary>
-    /// A wrapper for an effect factory.
-    /// </summary>
-    /// <param name="effectImpl">The resulting effect factory.</param>
-    /// <returns>The <c>HRESULT</c> for the operation.</returns>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    internal delegate int FactoryDelegate(IUnknown** effectImpl);
-
-    /// <summary>
-    /// A generic pixel shader implementation.
+    /// A generic compute shader implementation.
     /// </summary>
     /// <typeparam name="T">The type of shader.</typeparam>
     public sealed class For<T>
         where T : unmanaged, ID2D1PixelShader
     {
-        /// <summary>
-        /// The <see cref="FactoryDelegate"/> wrapper for the shader factory.
-        /// </summary>
-        private readonly FactoryDelegate effectFactory;
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.effectFactory"/>
+        private readonly PixelShaderEffect.FactoryDelegate effectFactory;
 
-        /// <summary>
-        /// The <see cref="Guid"/> for the shader.
-        /// </summary>
-        /// <remarks>
-        /// This field could have used <see cref="FixedAddressValueTypeAttribute"/> to reduce some verbosity where it is
-        /// being used to pass its address to a native API, but the attribute is incompatible with collectible assemblies.
-        /// Because of that, it can't be used, as this project is explicitly meant to support plugin-like scenarios.
-        /// </remarks>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.shaderId"/>
         private readonly Guid shaderId;
 
-        /// <summary>
-        /// The size of the constant buffer for the shader.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.constantBufferSize"/>
         private readonly int constantBufferSize;
 
-        /// <summary>
-        /// The number of inputs for the shader.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.inputCount"/>
         private readonly int inputCount;
 
-        /// <summary>
-        /// The buffer with the types of inputs for the shader.
-        /// </summary>
-        private readonly D2D1PixelShaderInputType* inputTypes;
-
-        /// <summary>
-        /// The number of available input descriptions.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.inputDescriptionCount"/>
         private readonly int inputDescriptionCount;
 
-        /// <summary>
-        /// The buffer with the available input descriptions for the shader.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.inputDescriptions"/>
         private readonly D2D1InputDescription* inputDescriptions;
 
-        /// <summary>
-        /// The pixel options for the shader.
-        /// </summary>
-        private readonly D2D1PixelOptions pixelOptions;
-
-        /// <summary>
-        /// The shader bytecode.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.bytecode"/>
         private readonly byte* bytecode;
 
-        /// <summary>
-        /// The size of <see cref="bytecode"/>.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.bytecodeSize"/>
         private readonly int bytecodeSize;
 
-        /// <summary>
-        /// The buffer precision for the resulting output buffer.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.bufferPrecision"/>
         private readonly D2D1BufferPrecision bufferPrecision;
 
-        /// <summary>
-        /// The channel depth for the resulting output buffer.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.channelDepth"/>
         private readonly D2D1ChannelDepth channelDepth;
 
-        /// <summary>
-        /// The number of available resource texture descriptions.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.resourceTextureDescriptionCount"/>
         private readonly int resourceTextureDescriptionCount;
 
-        /// <summary>
-        /// The buffer with the available resource texture descriptions for the shader.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.resourceTextureDescriptions"/>
         private readonly D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
-        /// <summary>
-        /// Creates a new <see cref="For{T}"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="effectFactory">The <see cref="FactoryDelegate"/> wrapper for the shader factory.</param>
-        /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
-        /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
-        /// <param name="inputCount">The number of inputs for the shader.</param>
-        /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
-        /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
-        /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
-        /// <param name="pixelOptions">The pixel options for the shader.</param>
-        /// <param name="bytecode">The shader bytecode.</param>
-        /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
-        /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
-        /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
-        /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
-        /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.For"/>
         private For(
-            FactoryDelegate effectFactory,
+            PixelShaderEffect.FactoryDelegate effectFactory,
             Guid shaderId,
             int constantBufferSize,
             int inputCount,
-            D2D1PixelShaderInputType* inputTypes,
             int inputDescriptionCount,
             D2D1InputDescription* inputDescriptions,
-            D2D1PixelOptions pixelOptions,
             byte* bytecode,
             int bytecodeSize,
             D2D1BufferPrecision bufferPrecision,
@@ -138,10 +73,8 @@ unsafe partial struct PixelShaderEffect
             this.shaderId = shaderId;
             this.constantBufferSize = constantBufferSize;
             this.inputCount = inputCount;
-            this.inputTypes = inputTypes;
             this.inputDescriptionCount = inputDescriptionCount;
             this.inputDescriptions = inputDescriptions;
-            this.pixelOptions = pixelOptions;
             this.bytecode = bytecode;
             this.bytecodeSize = bytecodeSize;
             this.bufferPrecision = bufferPrecision;
@@ -150,15 +83,10 @@ unsafe partial struct PixelShaderEffect
             this.resourceTextureDescriptions = resourceTextureDescriptions;
         }
 
-        /// <summary>
-        /// Gets the shared <see cref="For{T}"/> instance.
-        /// </summary>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.Instance"/>
         public static For<T> Instance { get; } = CreateInstance();
 
-        /// <summary>
-        /// Creates a new <see cref="For{T}"/> instance.
-        /// </summary>
-        /// <returns>The initialized <see cref="For{T}"/> instance.</returns>
+        /// <inheritdoc cref="PixelShaderEffect.For{T}.CreateInstance"/>
         private static For<T> CreateInstance()
         {
             // Load all shader properties
@@ -166,16 +94,7 @@ unsafe partial struct PixelShaderEffect
             int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
             D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
             D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
-            D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
-
-            // Prepare the inputs info
             int inputCount = D2D1PixelShader.GetInputCount<T>();
-            D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1PixelShaderInputType) * inputCount);
-
-            for (int i = 0; i < inputCount; i++)
-            {
-                inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
-            }
 
             // Prepare the input descriptions
             ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
@@ -204,10 +123,8 @@ unsafe partial struct PixelShaderEffect
                 shaderId,
                 constantBufferSize,
                 inputCount,
-                inputTypes,
                 inputDescriptionCount,
                 inputDescriptions,
-                pixelOptions,
                 bytecode,
                 bytecodeSize,
                 bufferPrecision,
@@ -247,19 +164,17 @@ unsafe partial struct PixelShaderEffect
         /// </summary>
         public int InputCount => this.inputCount;
 
-        /// <inheritdoc cref="FactoryDelegate"/>
+        /// <inheritdoc cref="PixelShaderEffect.FactoryDelegate"/>
         private static int CreateEffect(IUnknown** effectImpl)
         {
             For<T> instance = Instance;
 
-            return PixelShaderEffect.Factory(
+            return ComputeShaderEffect.Factory(
                 instance.shaderId,
                 instance.constantBufferSize,
                 instance.inputCount,
-                instance.inputTypes,
                 instance.inputDescriptionCount,
                 instance.inputDescriptions,
-                instance.pixelOptions,
                 instance.bytecode,
                 instance.bytecodeSize,
                 instance.bufferPrecision,
