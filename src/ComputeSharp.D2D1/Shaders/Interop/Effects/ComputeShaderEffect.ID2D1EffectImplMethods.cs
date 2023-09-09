@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -82,9 +83,44 @@ unsafe partial struct ComputeShaderEffect
         [UnmanagedCallersOnly]
         public static int Initialize(ComputeShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph)
         {
-            // TODO
+            int hresult = effectContext->IsComputeShaderSupportAvailable();
 
-            return S.S_OK;
+            // If compute shaders are not supported, we need to return D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES
+            if (hresult == S.S_FALSE)
+            {
+                hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+            }
+
+            // If compute shaders are supported, actually try to load the current compute shader
+            if (Windows.SUCCEEDED(hresult))
+            {
+                hresult = effectContext->LoadComputeShader(
+                    resourceId: &@this->shaderId,
+                    shaderBuffer: @this->bytecode,
+                    shaderBufferCount: (uint)@this->bytecodeSize);
+            }
+
+            // If E_INVALIDARG was returned, use the same reflection check logic as for pixel shaders
+            if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(@this->bytecode, @this->bytecodeSize) == S.S_FALSE)
+            {
+                hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+            }
+
+            // If loading the bytecode succeeded, set the transform node
+            if (Windows.SUCCEEDED(hresult))
+            {
+                hresult = transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1ComputeTransform);
+            }
+
+            // If the transform node was set, also store the effect context
+            if (Windows.SUCCEEDED(hresult))
+            {
+                _ = effectContext->AddRef();
+
+                @this->d2D1EffectContext = effectContext;
+            }
+
+            return hresult;
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.PrepareForRender"/>

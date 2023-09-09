@@ -64,6 +64,13 @@ internal unsafe partial struct ID2D1EffectContext
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [VtblIndex(13)]
+    public HRESULT LoadComputeShader([NativeTypeName("const GUID &")] Guid* resourceId, [NativeTypeName("const BYTE *")] byte* shaderBuffer, [NativeTypeName("UINT32")] uint shaderBufferCount)
+    {
+        return ((delegate* unmanaged[Stdcall]<ID2D1EffectContext*, Guid*, byte*, uint, int>)(lpVtbl[13]))((ID2D1EffectContext*)Unsafe.AsPointer(ref this), resourceId, shaderBuffer, shaderBufferCount);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(14)]
     public int IsShaderLoaded([NativeTypeName("const GUID &")] Guid* shaderId)
     {
