@@ -1,10 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Interop.Helpers;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 
@@ -90,32 +88,18 @@ unsafe partial struct ComputeShaderEffect
         private static For<T> CreateInstance()
         {
             // Load all shader properties
-            Guid shaderId = typeof(T).GUID;
-            int constantBufferSize = D2D1ComputeShader.GetConstantBufferSize<T>();
-            D2D1BufferPrecision bufferPrecision = D2D1ComputeShader.GetOutputBufferPrecision<T>();
-            D2D1ChannelDepth channelDepth = D2D1ComputeShader.GetOutputBufferChannelDepth<T>();
-            int inputCount = D2D1ComputeShader.GetInputCount<T>();
-
-            // Prepare the input descriptions
-            ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1ComputeShader.GetInputDescriptions<T>();
-            int inputDescriptionCount = inputDescriptionsInfo.Length;
-            D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1InputDescription) * inputDescriptionCount);
-
-            inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
-
-            // Prepare the resource texture descriptions
-            ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1ComputeShader.GetResourceTextureDescriptions<T>();
-            int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
-            D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
-
-            resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
-
-            // Copy the bytecode to the target buffer
-            ReadOnlyMemory<byte> bytecodeInfo = D2D1ComputeShader.LoadBytecode<T>();
-            int bytecodeSize = bytecodeInfo.Length;
-            byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
-
-            bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
+            D2D1ShaderMarshaller.GetSharedEffectProperties<T>(
+                out Guid shaderId,
+                out int constantBufferSize,
+                out int inputCount,
+                out int inputDescriptionCount,
+                out D2D1InputDescription* inputDescriptions,
+                out byte* bytecode,
+                out int bytecodeSize,
+                out D2D1BufferPrecision bufferPrecision,
+                out D2D1ChannelDepth channelDepth,
+                out int resourceTextureDescriptionCount,
+                out D2D1ResourceTextureDescription* resourceTextureDescriptions);
 
             // Initialize the shared instance with the computed state
             return new(

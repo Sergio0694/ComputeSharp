@@ -5,6 +5,9 @@ using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
+#endif
 
 #pragma warning disable CS0618
 
@@ -198,5 +201,67 @@ internal static class D2D1ShaderMarshaller
 
             return dataLoader.TryGetWrittenBytes(out bytesWritten);
         }
+    }
+
+    /// <summary>
+    /// Retrieves all shared properties for D2D effects.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 shader to retrieve info for.</typeparam>
+    /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
+    /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
+    /// <param name="inputCount">The number of inputs for the shader.</param>
+    /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
+    /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
+    /// <param name="bytecode">The shader bytecode.</param>
+    /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
+    /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
+    /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
+    /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
+    /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
+    public static unsafe void GetSharedEffectProperties<T>(
+        out Guid shaderId,
+        out int constantBufferSize,
+        out int inputCount,
+        out int inputDescriptionCount,
+        out D2D1InputDescription* inputDescriptions,
+        out byte* bytecode,
+        out int bytecodeSize,
+        out D2D1BufferPrecision bufferPrecision,
+        out D2D1ChannelDepth channelDepth,
+        out int resourceTextureDescriptionCount,
+        out D2D1ResourceTextureDescription* resourceTextureDescriptions)
+        where T : unmanaged, ID2D1Shader
+    {
+        shaderId = typeof(T).GUID;
+        constantBufferSize = GetConstantBufferSize<T>();
+        inputCount = GetInputCount<T>();
+        bufferPrecision = GetOutputBufferPrecision<T>();
+        channelDepth = GetOutputBufferChannelDepth<T>();
+
+        // Retrieve the bytecode before setting up any of the remaining properties. Because we're using
+        // RuntimeHelpers.AllocateTypeAssociatedMemory, which doesn't have a way of explicitly releasing
+        // memory, we need to do all work that could possibly throw an exception before that method is
+        // called. So we first finish invoking all interface methods, and then copy all their results.
+        ReadOnlyMemory<byte> bytecodeInfo = LoadOrCompileBytecode<T>(null, null, out _, out _);
+        ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = GetInputDescriptions<T>();
+        ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = GetResourceTextureDescriptions<T>();
+
+        // Prepare the input descriptions
+        inputDescriptionCount = inputDescriptionsInfo.Length;
+        inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(T), sizeof(D2D1InputDescription) * inputDescriptionCount);
+
+        inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
+
+        // Prepare the resource texture descriptions
+        resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
+        resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(T), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
+
+        resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
+
+        // Finally, prepare the bytecode as well
+        bytecodeSize = bytecodeInfo.Length;
+        bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(T), bytecodeSize);
+
+        bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Interop.Helpers;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
 using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
@@ -162,41 +163,28 @@ unsafe partial struct PixelShaderEffect
         private static For<T> CreateInstance()
         {
             // Load all shader properties
-            Guid shaderId = typeof(T).GUID;
-            int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
-            D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
-            D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
+            D2D1ShaderMarshaller.GetSharedEffectProperties<T>(
+                out Guid shaderId,
+                out int constantBufferSize,
+                out int inputCount,
+                out int inputDescriptionCount,
+                out D2D1InputDescription* inputDescriptions,
+                out byte* bytecode,
+                out int bytecodeSize,
+                out D2D1BufferPrecision bufferPrecision,
+                out D2D1ChannelDepth channelDepth,
+                out int resourceTextureDescriptionCount,
+                out D2D1ResourceTextureDescription* resourceTextureDescriptions);
+
             D2D1PixelOptions pixelOptions = D2D1PixelShader.GetPixelOptions<T>();
 
-            // Prepare the inputs info
-            int inputCount = D2D1PixelShader.GetInputCount<T>();
-            D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1PixelShaderInputType) * inputCount);
+            // Prepare the input types info
+            D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(T), sizeof(D2D1PixelShaderInputType) * inputCount);
 
             for (int i = 0; i < inputCount; i++)
             {
                 inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
             }
-
-            // Prepare the input descriptions
-            ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();
-            int inputDescriptionCount = inputDescriptionsInfo.Length;
-            D2D1InputDescription* inputDescriptions = (D2D1InputDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1InputDescription) * inputDescriptionCount);
-
-            inputDescriptionsInfo.Span.CopyTo(new Span<D2D1InputDescription>(inputDescriptions, inputDescriptionCount));
-
-            // Prepare the resource texture descriptions
-            ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptionsInfo = D2D1PixelShader.GetResourceTextureDescriptions<T>();
-            int resourceTextureDescriptionCount = resourceTextureDescriptionsInfo.Length;
-            D2D1ResourceTextureDescription* resourceTextureDescriptions = (D2D1ResourceTextureDescription*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1ResourceTextureDescription) * resourceTextureDescriptionCount);
-
-            resourceTextureDescriptionsInfo.Span.CopyTo(new Span<D2D1ResourceTextureDescription>(resourceTextureDescriptions, resourceTextureDescriptionCount));
-
-            // Copy the bytecode to the target buffer
-            ReadOnlyMemory<byte> bytecodeInfo = D2D1PixelShader.LoadBytecode<T>();
-            int bytecodeSize = bytecodeInfo.Length;
-            byte* bytecode = (byte*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), bytecodeSize);
-
-            bytecodeInfo.Span.CopyTo(new Span<byte>(bytecode, bytecodeSize));
 
             // Initialize the shared instance with the computed state
             return new(
