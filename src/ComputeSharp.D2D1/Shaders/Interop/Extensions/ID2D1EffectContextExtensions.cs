@@ -79,7 +79,7 @@ internal static unsafe class ID2D1EffectContextExtensions
     ///   <item>Any other <see cref="HRESULT"/>: an error occurred while checking the shader support.</item>
     /// </list>
     /// </returns>
-    /// <remarks>If any calls needed to check support fail, the method will also return <see langword="false"/>.</remarks>
+    /// <remarks>If any calls needed to check support fail, the method will also return <see cref="S.S_FALSE"/>.</remarks>
     public static HRESULT IsShaderSupported(this ref ID2D1EffectContext effectContext, byte* bytecode, int bytecodeSize)
     {
         using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
@@ -147,6 +147,42 @@ internal static unsafe class ID2D1EffectContextExtensions
         }
 
         // All calls succeeded and no unsupported feature was detected, so assume the shader is supported
+        return S.S_OK;
+    }
+
+    /// <summary>
+    /// Checks whether the target <see cref="ID2D1EffectContext"/> instance supports D2D compute shaders
+    /// </summary>
+    /// <param name="effectContext">The input <see cref="ID2D1EffectContext"/> instance.</param>
+    /// <returns>
+    /// The <see cref="HRESULT"/> for the operation:
+    /// <list type="bullet">
+    ///   <item><see cref="S.S_OK"/>: the shader is supported.</item>
+    ///   <item><see cref="S.S_FALSE"/>: the shader is not supported.</item>
+    ///   <item>Any other <see cref="HRESULT"/>: an error occurred while checking the shader support.</item>
+    /// </list>
+    /// </returns>
+    /// <remarks>If any calls needed to check support fail, the method will also return <see cref="S.S_FALSE"/>.</remarks>
+    public static HRESULT IsComputeShaderSupportAvailable(this ref ID2D1EffectContext effectContext)
+    {
+        D2D1_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS d2D1FeatureDataD3D10XHardwareOptions = default;
+
+        // Check the feature support for the effect context in use
+        HRESULT hresult = effectContext.CheckFeatureSupport(
+            D2D1_FEATURE.D2D1_FEATURE_D3D10_X_HARDWARE_OPTIONS,
+            &d2D1FeatureDataD3D10XHardwareOptions,
+            (uint)sizeof(D2D1_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS));
+
+        if (!Windows.SUCCEEDED(hresult))
+        {
+            return hresult;
+        }
+
+        if (d2D1FeatureDataD3D10XHardwareOptions.computeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x == 0)
+        {
+            return S.S_FALSE;
+        }
+
         return S.S_OK;
     }
 }

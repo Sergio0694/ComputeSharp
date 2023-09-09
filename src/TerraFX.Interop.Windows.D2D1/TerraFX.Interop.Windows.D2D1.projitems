@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\headers\d3dcommon\D3D_FEATURE_LEVEL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_CHANGE_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_FEATURE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)directx\um\d2d1effectauthor\D2D1_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS .cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_FEATURE_DATA_DOUBLES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_FILTER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\D2D1_PIXEL_OPTIONS.cs" />
