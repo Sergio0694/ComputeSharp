@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
@@ -191,16 +190,46 @@ internal static unsafe partial class D3DCompiler
         // The error message will be in a format like this:
         // "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\Roslyn\Shader@0x0000019AD1B4BA70(22,32-35): error X3004: undeclared identifier 'this'"
         // This regex tries to match the unnecessary header and remove it, if present. This doesn't need to be bulletproof, and this regex should match all cases anyway.
-        message = Regex.Replace(message, @"^[A-Z]:\\[^:]+: (\w+ \w+:)", static m => m.Groups[1].Value, RegexOptions.Multiline).Trim();
+        //
+        // We cannot use Regex (this method was originally using Regex.Replace(message, @"^[A-Z]:\\[^:]+: (\w+ \w+:)", ...)), because that
+        // causes significant binary size increase, as it's the only thing rooting all the Regex stack across the whole library. So this
+        // code reimplements equivalent logic in a simple way. Because this is a throw helper, allocating a little bit of garbage is fine.
+        string[] lines = message.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-        // Add a trailing '.' if not present
-        if (message is { Length: > 0 } &&
-            message[message.Length - 1] != '.')
+        // Go over each (non empty) line and look for the leading file path to trim away
+        foreach (ref string line in lines.AsSpan())
         {
-            message += '.';
+            ReadOnlySpan<char> span = line.AsSpan().Trim();
+
+            // Check whether the trimmed line starts with a drive letter path (eg. 'C:\') and get the rest
+            if (span is [>= 'A' and <= 'Z', ':', '\\', .. { Length: > 0 } tail])
+            {
+                int indexOfColon = tail.IndexOf(':');
+
+                // We're looking for the color at the end of the file path. If we find it, and the line
+                // has at least another character (ie. there's content after that, which should always
+                // be the case), then we take that slice, trim its start to skip the leading whitespace,
+                // and finally allocate a string to replace the current line.
+                if (indexOfColon != -1 &&
+                    tail.Length > indexOfColon)
+                {
+                    ReadOnlySpan<char> trimmedLine = tail.Slice(indexOfColon + 1).TrimStart();
+
+                    line = trimmedLine.ToString();
+                }
+            }
         }
 
-        throw new FxcCompilationException(message);
+        // Merge the message again with normalized newlines
+        string updatedMessage = string.Join("\r\n", lines);
+
+        // Add a trailing '.' if not present
+        if (updatedMessage is not [.., '.'])
+        {
+            updatedMessage += '.';
+        }
+
+        throw new FxcCompilationException(updatedMessage);
     }
 
     /// <summary>
