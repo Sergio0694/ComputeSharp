@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -312,48 +313,29 @@ partial struct PixelShaderEffect
             @this->d2D1DrawInfo = drawInfo;
 
             // Set the pixel shader for the effect
-            HRESULT hresult = drawInfo->SetPixelShader(&@this->shaderId, (D2D1_PIXEL_OPTIONS)@this->pixelOptions);
+            int hresult = drawInfo->SetPixelShader(&@this->shaderId, (D2D1_PIXEL_OPTIONS)@this->pixelOptions);
 
-            if (hresult != S.S_OK)
+            // Process any input descriptions
+            if (Windows.SUCCEEDED(hresult))
             {
-                return hresult;
+                D2D1ShaderEffect.SetInputDescriptions(
+                    @this->inputDescriptionCount,
+                    @this->inputDescriptions,
+                    (ID2D1RenderInfo*)drawInfo,
+                    ref hresult);
             }
 
-            // If any input descriptions are present, set them
-            if (@this->inputDescriptionCount > 0)
+            // Also set the output buffer info
+            if (Windows.SUCCEEDED(hresult))
             {
-                for (int i = 0; i < @this->inputDescriptionCount; i++)
-                {
-                    ref D2D1InputDescription inputDescription = ref @this->inputDescriptions[i];
-
-                    D2D1_INPUT_DESCRIPTION d2D1InputDescription;
-                    d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
-                    d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
-
-                    hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
-
-                    if (hresult != S.S_OK)
-                    {
-                        return hresult;
-                    }
-                }
+                D2D1ShaderEffect.SetOutputBuffer(
+                    @this->bufferPrecision,
+                    @this->channelDepth,
+                    (ID2D1RenderInfo*)drawInfo,
+                    ref hresult);
             }
 
-            // If a custom buffer precision or channel depth is requested, set it
-            if (@this->bufferPrecision != D2D1BufferPrecision.Unknown ||
-                @this->channelDepth != D2D1ChannelDepth.Default)
-            {
-                hresult = drawInfo->SetOutputBuffer(
-                    (D2D1_BUFFER_PRECISION)@this->bufferPrecision,
-                    (D2D1_CHANNEL_DEPTH)@this->channelDepth);
-
-                if (hresult != S.S_OK)
-                {
-                    return hresult;
-                }
-            }
-
-            return S.S_OK;
+            return hresult;
         }
     }
 }

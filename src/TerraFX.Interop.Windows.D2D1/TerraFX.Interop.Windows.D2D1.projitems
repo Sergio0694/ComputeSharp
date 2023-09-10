@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1DrawTransform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1EffectImpl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)directx\um\d2d1effectauthor\ID2D1RenderInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1ResourceTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1TransformGraph.cs" />

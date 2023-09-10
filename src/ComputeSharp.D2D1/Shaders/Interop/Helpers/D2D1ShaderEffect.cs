@@ -118,4 +118,63 @@ internal static unsafe class D2D1ShaderEffect
             }
         }
     }
+
+    /// <summary>
+    /// Sets the input descriptions for a given effect.
+    /// </summary>
+    /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
+    /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
+    /// <param name="d2D1RenderInfo">The input <see cref="ID2D1RenderInfo"/> instance to use.</param>
+    /// <param name="hresult">The current <see cref="HRESULT"/>, to modify in case any operations are performed.</param>
+    public static void SetInputDescriptions(
+        int inputDescriptionCount,
+        D2D1InputDescription* inputDescriptions,
+        ID2D1RenderInfo* d2D1RenderInfo,
+        ref int hresult)
+    {
+        if (inputDescriptionCount == 0)
+        {
+            return;
+        }
+
+        // Process al input descriptions and set them
+        for (int i = 0; i < inputDescriptionCount; i++)
+        {
+            ref D2D1InputDescription inputDescription = ref inputDescriptions[i];
+
+            D2D1_INPUT_DESCRIPTION d2D1InputDescription;
+            d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
+            d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
+
+            hresult = d2D1RenderInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
+
+            if (!Windows.SUCCEEDED(hresult))
+            {
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets the output buffer for a given effect.
+    /// </summary>
+    /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
+    /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
+    /// <param name="d2D1RenderInfo">The input <see cref="ID2D1RenderInfo"/> instance to use.</param>
+    /// <param name="hresult">The current <see cref="HRESULT"/>, to modify in case any operations are performed.</param>
+    public static void SetOutputBuffer(
+        D2D1BufferPrecision bufferPrecision,
+        D2D1ChannelDepth channelDepth,
+        ID2D1RenderInfo* d2D1RenderInfo,
+        ref int hresult)
+    {
+        // If a custom buffer precision or channel depth is requested, set it
+        if (bufferPrecision != D2D1BufferPrecision.Unknown ||
+            channelDepth != D2D1ChannelDepth.Default)
+        {
+            hresult = d2D1RenderInfo->SetOutputBuffer(
+                (D2D1_BUFFER_PRECISION)bufferPrecision,
+                (D2D1_CHANNEL_DEPTH)channelDepth);
+        }
+    }
 }

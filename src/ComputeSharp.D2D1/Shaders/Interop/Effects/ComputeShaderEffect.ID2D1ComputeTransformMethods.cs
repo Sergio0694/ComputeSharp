@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -159,9 +160,41 @@ partial struct ComputeShaderEffect
         {
             @this = (ComputeShaderEffect*)&((void**)@this)[-1];
 
-            // TODO
+            // Free the previous ID2D1ComputeInfo object, if present
+            if (@this->d2D1ComputeInfo is not null)
+            {
+                _ = @this->d2D1ComputeInfo->Release();
+            }
 
-            return S.S_OK;
+            // Store the new ID2D1ComputeInfo object
+            _ = computeInfo->AddRef();
+
+            @this->d2D1ComputeInfo = computeInfo;
+
+            // Set the compute shader for the effect
+            int hresult = computeInfo->SetComputeShader(&@this->shaderId);
+
+            // Process any input descriptions
+            if (Windows.SUCCEEDED(hresult))
+            {
+                D2D1ShaderEffect.SetInputDescriptions(
+                    @this->inputDescriptionCount,
+                    @this->inputDescriptions,
+                    (ID2D1RenderInfo*)computeInfo,
+                    ref hresult);
+            }
+
+            // Also set the output buffer info
+            if (Windows.SUCCEEDED(hresult))
+            {
+                D2D1ShaderEffect.SetOutputBuffer(
+                    @this->bufferPrecision,
+                    @this->channelDepth,
+                    (ID2D1RenderInfo*)computeInfo,
+                    ref hresult);
+            }
+
+            return hresult;
         }
 
         /// <inheritdoc cref="ID2D1ComputeTransform.CalculateThreadgroups"/>
