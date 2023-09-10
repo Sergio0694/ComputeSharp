@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -277,7 +278,10 @@ internal unsafe partial struct ComputeShaderEffect
                 _ = this.d2D1EffectContext->Release();
             }
 
-            PixelShaderEffect.ReleaseResourceTextureManagers(this.resourceTextureDescriptionCount, this.resourceTextureDescriptions, ref this.resourceTextureManagerBuffer);
+            D2D1ShaderEffect.ReleaseResourceTextureManagers(
+                this.resourceTextureDescriptionCount,
+                this.resourceTextureDescriptions,
+                ref this.resourceTextureManagerBuffer);
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }

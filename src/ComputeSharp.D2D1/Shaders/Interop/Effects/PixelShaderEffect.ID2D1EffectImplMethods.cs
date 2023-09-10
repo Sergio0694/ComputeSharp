@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -118,14 +118,14 @@ unsafe partial struct PixelShaderEffect
         [UnmanagedCallersOnly]
         public static int PrepareForRender(PixelShaderEffect* @this, D2D1_CHANGE_TYPE changeType)
         {
-            int hresult = S.S_OK;
-
             // Validate the constant buffer
             if (@this->constantBufferSize > 0 &&
                 @this->constantBuffer is null)
             {
                 return E.E_NOT_VALID_STATE;
             }
+
+            int hresult = S.S_OK;
 
             // First, set the constant buffer, if available
             if (@this->constantBuffer is not null)
@@ -135,52 +135,20 @@ unsafe partial struct PixelShaderEffect
                     bufferCount: (uint)@this->constantBufferSize);
             }
 
+            // Set any resource texture managers, if needed
             if (Windows.SUCCEEDED(hresult))
             {
-                foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(@this->resourceTextureDescriptions, @this->resourceTextureDescriptionCount))
-                {
-                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
-
-                    // If the current resource texture manager is not set, we cannot render, as there's an unbound resource texture
-                    if (resourceTextureManager.Get() is null)
-                    {
-                        hresult = E.E_NOT_VALID_STATE;
-
-                        break;
-                    }
-
-                    using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
-
-                    // Get the ID2D1ResourceTextureManagerInternal object
-                    hresult = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
-
-                    // This cast should always succeed, as when an input resource texture managers is set it's
-                    // also checked for ID2D1ResourceTextureManagerInternal, but still validate for good measure.
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
-
-                    using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
-
-                    // Try to get the ID2D1ResourceTexture from the manager
-                    hresult = resourceTextureManagerInternal.Get()->GetResourceTexture(d2D1ResourceTexture.GetAddressOf());
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
-
-                    // Set the ID2D1ResourceTexture object to the current index in the ID2D1DrawInfo object in use
-                    hresult = @this->d2D1DrawInfo->SetResourceTexture(
-                        textureIndex: (uint)resourceTextureDescription.Index,
-                        resourceTexture: d2D1ResourceTexture.Get());
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
-                }
+                D2D1ShaderEffect.SetResourceTextureManagers(
+                    @this->resourceTextureDescriptionCount,
+                    @this->resourceTextureDescriptions,
+                    ref @this->resourceTextureManagerBuffer,
+                    @this->d2D1DrawInfo,
+#if NET6_0_OR_GREATER
+                    &SetResourceTextureForD2D1DrawInfo,
+#else
+                    (delegate*<void*, uint, ID2D1ResourceTexture*, int>)&SetResourceTextureForD2D1DrawInfo,
+#endif
+                    ref hresult);
             }
 
             return hresult;
@@ -191,6 +159,17 @@ unsafe partial struct PixelShaderEffect
         public static int SetGraph(PixelShaderEffect* @this, ID2D1TransformGraph* transformGraph)
         {
             return E.E_NOTIMPL;
+        }
+
+        /// <inheritdoc cref="ID2D1DrawInfo.SetResourceTexture"/>
+        private static int SetResourceTextureForD2D1DrawInfo(
+            void* d2D1DrawInfo,
+            uint textureIndex,
+            ID2D1ResourceTexture* resourceTexture)
+        {
+            return ((ID2D1DrawInfo*)d2D1DrawInfo)->SetResourceTexture(
+                textureIndex: textureIndex,
+                resourceTexture: resourceTexture);
         }
     }
 }

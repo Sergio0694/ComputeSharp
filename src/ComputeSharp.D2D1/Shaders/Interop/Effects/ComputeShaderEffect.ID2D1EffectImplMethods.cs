@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -127,9 +128,40 @@ unsafe partial struct ComputeShaderEffect
         [UnmanagedCallersOnly]
         public static int PrepareForRender(ComputeShaderEffect* @this, D2D1_CHANGE_TYPE changeType)
         {
-            // TODO
+            // Validate the constant buffer
+            if (@this->constantBufferSize > 0 &&
+                @this->constantBuffer is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
 
-            return S.S_OK;
+            int hresult = S.S_OK;
+
+            // Set the constant buffer, if available
+            if (@this->constantBuffer is not null)
+            {
+                hresult = @this->d2D1ComputeInfo->SetComputeShaderConstantBuffer(
+                    buffer: @this->constantBuffer,
+                    bufferCount: (uint)@this->constantBufferSize);
+            }
+
+            // Just like with pixel shaders, set any resource texture managers
+            if (Windows.SUCCEEDED(hresult))
+            {
+                D2D1ShaderEffect.SetResourceTextureManagers(
+                    @this->resourceTextureDescriptionCount,
+                    @this->resourceTextureDescriptions,
+                    ref @this->resourceTextureManagerBuffer,
+                    @this->d2D1ComputeInfo,
+#if NET6_0_OR_GREATER
+                    &SetResourceTextureForD2D1ComputeInfo,
+#else
+                    (delegate*<void*, uint, ID2D1ResourceTexture*, int>)&SetResourceTextureForD2D1ComputeInfo,
+#endif
+                    ref hresult);
+            }
+
+            return hresult;
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.SetGraph"/>
@@ -137,6 +169,17 @@ unsafe partial struct ComputeShaderEffect
         public static int SetGraph(ComputeShaderEffect* @this, ID2D1TransformGraph* transformGraph)
         {
             return E.E_NOTIMPL;
+        }
+
+        /// <inheritdoc cref="ID2D1ComputeInfo.SetResourceTexture"/>
+        private static int SetResourceTextureForD2D1ComputeInfo(
+            void* d2D1ComputeInfo,
+            uint textureIndex,
+            ID2D1ResourceTexture* resourceTexture)
+        {
+            return ((ID2D1ComputeInfo*)d2D1ComputeInfo)->SetResourceTexture(
+                textureIndex: textureIndex,
+                resourceTexture: resourceTexture);
         }
     }
 }
