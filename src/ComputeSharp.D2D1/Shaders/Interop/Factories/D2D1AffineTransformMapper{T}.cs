@@ -129,7 +129,7 @@ internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Ma
     public sealed class DynamicMatrix : D2D1AffineTransformMapper<T>
     {
         /// <summary>
-        /// Gets the <see cref="D2D1TransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
+        /// Gets the <see cref="D2D1DrawTransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic affine transform matrix.
         /// </summary>
         public required Accessor<Matrix3x2> Accessor { get; init; }
 

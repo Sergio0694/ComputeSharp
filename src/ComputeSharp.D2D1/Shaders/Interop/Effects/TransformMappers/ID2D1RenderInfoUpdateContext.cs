@@ -8,13 +8,13 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
-/// The updater for <see cref="TerraFX.Interop.DirectX.ID2D1DrawInfo"/> type to use with built-in effects.
+/// The updater for <see cref="TerraFX.Interop.DirectX.ID2D1RenderInfo"/> types to use with built-in effects.
 /// </summary>
 [Guid("430C5B40-AE16-485F-90E6-4FA4915144B6")]
-internal unsafe struct ID2D1DrawInfoUpdateContext
+internal unsafe struct ID2D1RenderInfoUpdateContext
 {
     /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1DrawInfoUpdateContext"/> (<c>430C5B40-AE16-485F-90E6-4FA4915144B6</c>).
+    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1RenderInfoUpdateContext"/> (<c>430C5B40-AE16-485F-90E6-4FA4915144B6</c>).
     /// </summary>
     public static ref readonly Guid Guid
     {
@@ -50,8 +50,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBufferSize(uint* size)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, uint*, int>)this.lpVtbl[3])(
-            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1RenderInfoUpdateContext*, uint*, int>)this.lpVtbl[3])(
+            (ID2D1RenderInfoUpdateContext*)Unsafe.AsPointer(ref this),
             size);
     }
 
@@ -64,8 +64,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[4])(
-            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1RenderInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[4])(
+            (ID2D1RenderInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);
     }
@@ -79,8 +79,8 @@ internal unsafe struct ID2D1DrawInfoUpdateContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT SetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[5])(
-            (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
+        return ((delegate* unmanaged[Stdcall]<ID2D1RenderInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[5])(
+            (ID2D1RenderInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);
     }

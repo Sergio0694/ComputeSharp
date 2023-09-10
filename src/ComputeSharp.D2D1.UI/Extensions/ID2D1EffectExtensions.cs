@@ -82,12 +82,12 @@ internal static unsafe class ID2D1EffectExtensions
     }
 
     /// <summary>
-    /// Gets the <see cref="D2D1TransformMapper{T}"/> instance from a given <see cref="ID2D1Effect"/> object.
+    /// Gets the <see cref="D2D1DrawTransformMapper{T}"/> instance from a given <see cref="ID2D1Effect"/> object.
     /// </summary>
     /// <typeparam name="T">The type of shader being used.</typeparam>
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
-    /// <returns>The <see cref="D2D1TransformMapper{T}"/> instance for <paramref name="d2D1Effect"/>.</returns>
-    public static D2D1TransformMapper<T>? GetTransformMapper<T>(this ref ID2D1Effect d2D1Effect)
+    /// <returns>The <see cref="D2D1DrawTransformMapper{T}"/> instance for <paramref name="d2D1Effect"/>.</returns>
+    public static D2D1DrawTransformMapper<T>? GetTransformMapper<T>(this ref ID2D1Effect d2D1Effect)
         where T : unmanaged, ID2D1PixelShader
     {
         using ComPtr<ID2D1TransformMapper> d2D1TransformMapper = default;
@@ -116,7 +116,7 @@ internal static unsafe class ID2D1EffectExtensions
         d2D1TransformMapperInternal.Get()->GetManagedWrapperHandle((void**)&handlePtr).Assert();
 
         // Retrieve the managed wrapper from the GCHandle
-        return (D2D1TransformMapper<T>)GCHandle.FromIntPtr(handlePtr).Target!;
+        return (D2D1DrawTransformMapper<T>)GCHandle.FromIntPtr(handlePtr).Target!;
     }
 
     /// <summary>

@@ -548,7 +548,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// Sets the transform mapper for an input D2D1 effect, by calling <c>ID2D1Effect::SetValue</c>.
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
-    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object (see <see cref="D2D1TransformMapper{T}"/>).</param>
+    /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object (see <see cref="D2D1DrawTransformMapper{T}"/>).</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetTransformMapperForD2D1Effect(void* d2D1Effect, void* transformMapper)
@@ -570,7 +570,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="transformMapper">The input <c>ID2D1TransformMapper</c> object.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1TransformMapper<T> transformMapper)
+    public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1DrawTransformMapper<T> transformMapper)
         where T : unmanaged, ID2D1PixelShader
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);

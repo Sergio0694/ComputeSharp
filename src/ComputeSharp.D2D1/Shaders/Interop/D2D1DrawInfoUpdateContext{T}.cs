@@ -9,22 +9,22 @@ using ComputeSharp.D2D1.Shaders.Loaders;
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
-/// An object allowing <see cref="D2D1TransformMapper{T}.MapInputsToOutput"/> to interact with the shader data from within a transform.
+/// An object allowing <see cref="D2D1DrawTransformMapper{T}.MapInputsToOutput"/> to interact with the shader data from within a transform.
 /// </summary>
 /// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
 public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
-    /// The <see cref="ID2D1DrawInfoUpdateContext"/> instance associated with the current object.
+    /// The <see cref="ID2D1RenderInfoUpdateContext"/> instance associated with the current object.
     /// </summary>
-    private readonly ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext;
+    private readonly ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext;
 
     /// <summary>
     /// Creates a new <see cref="D2D1DrawInfoUpdateContext{T}"/> instance with the specified parameters.
     /// </summary>
-    /// <param name="d2D1DrawInfoUpdateContext">The <see cref="ID2D1DrawInfoUpdateContext"/> instance associated with the current object.</param>
-    internal D2D1DrawInfoUpdateContext(ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext)
+    /// <param name="d2D1DrawInfoUpdateContext">The <see cref="ID2D1RenderInfoUpdateContext"/> instance associated with the current object.</param>
+    internal D2D1DrawInfoUpdateContext(ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext)
     {
         this.d2D1DrawInfoUpdateContext = d2D1DrawInfoUpdateContext;
     }

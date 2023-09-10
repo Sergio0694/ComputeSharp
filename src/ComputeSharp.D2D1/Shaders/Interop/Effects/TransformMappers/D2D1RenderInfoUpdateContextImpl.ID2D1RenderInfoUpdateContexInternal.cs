@@ -5,9 +5,9 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <inheritdoc/>
-unsafe partial struct D2D1DrawInfoUpdateContextImpl
+unsafe partial struct D2D1RenderInfoUpdateContextImpl
 {
-    /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
+    /// <inheritdoc cref="ID2D1RenderInfoUpdateContextInternal.Close"/>
     public int Close()
     {
         this.d2D1DrawInfo = null;
@@ -16,14 +16,14 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
     }
 
     /// <summary>
-    /// The implementation for <see cref="ID2D1DrawInfoUpdateContextInternal"/>.
+    /// The implementation for <see cref="ID2D1RenderInfoUpdateContextInternal"/>.
     /// </summary>
-    private static class ID2D1DrawInfoUpdateContextInternalMethods
+    private static class ID2D1RenderInfoUpdateContextInternalMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="Close"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int CloseDelegate(D2D1DrawInfoUpdateContextImpl* @this);
+        public delegate int CloseDelegate(D2D1RenderInfoUpdateContextImpl* @this);
 
         /// <summary>
         /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
@@ -46,38 +46,38 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
         public static readonly CloseDelegate CloseWrapper = Close;
 #endif
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
-        public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
+        public static int QueryInterface(D2D1RenderInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
         {
-            @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
+            @this = (D2D1RenderInfoUpdateContextImpl*)&((void**)@this)[-1];
 
             return @this->QueryInterface(riid, ppvObject);
         }
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.AddRef"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.AddRef"/>
         [UnmanagedCallersOnly]
-        public static uint AddRef(D2D1DrawInfoUpdateContextImpl* @this)
+        public static uint AddRef(D2D1RenderInfoUpdateContextImpl* @this)
         {
-            @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
+            @this = (D2D1RenderInfoUpdateContextImpl*)&((void**)@this)[-1];
 
             return @this->AddRef();
         }
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.Release"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.Release"/>
         [UnmanagedCallersOnly]
-        public static uint Release(D2D1DrawInfoUpdateContextImpl* @this)
+        public static uint Release(D2D1RenderInfoUpdateContextImpl* @this)
         {
-            @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
+            @this = (D2D1RenderInfoUpdateContextImpl*)&((void**)@this)[-1];
 
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
+        /// <inheritdoc cref="ID2D1RenderInfoUpdateContextInternal.Close"/>
         [UnmanagedCallersOnly]
-        public static int Close(D2D1DrawInfoUpdateContextImpl* @this)
+        public static int Close(D2D1RenderInfoUpdateContextImpl* @this)
         {
-            @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
+            @this = (D2D1RenderInfoUpdateContextImpl*)&((void**)@this)[-1];
 
             return @this->Close();
         }

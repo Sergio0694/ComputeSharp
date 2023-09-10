@@ -10,21 +10,21 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
-/// A data loader for D2D1 pixel shaders to be passed onto an <see cref="ID2D1DrawInfoUpdateContext"/> object.
+/// A data loader for D2D1 pixel shaders to be passed onto an <see cref="ID2D1RenderInfoUpdateContext"/> object.
 /// </summary>
 internal readonly unsafe struct D2D1DrawInfoUpdateContextDispatchDataLoader : ID2D1DispatchDataLoader
 {
     /// <summary>
-    /// The <see cref="ID2D1DrawInfoUpdateContext"/> object in use.
+    /// The <see cref="ID2D1RenderInfoUpdateContext"/> object in use.
     /// </summary>
-    private readonly ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext;
+    private readonly ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext;
 
     /// <summary>
     /// Creates a new <see cref="D2D1DrawInfoUpdateContextDispatchDataLoader"/> instance.
     /// </summary>
-    /// <param name="d2D1DrawInfoUpdateContext">The <see cref="ID2D1DrawInfoUpdateContext"/> object to use.</param>
+    /// <param name="d2D1DrawInfoUpdateContext">The <see cref="ID2D1RenderInfoUpdateContext"/> object to use.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal D2D1DrawInfoUpdateContextDispatchDataLoader(ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext)
+    internal D2D1DrawInfoUpdateContextDispatchDataLoader(ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext)
     {
         this.d2D1DrawInfoUpdateContext = d2D1DrawInfoUpdateContext;
     }

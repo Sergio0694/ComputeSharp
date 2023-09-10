@@ -78,7 +78,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     public sealed class DynamicAmount : D2D1InflateTransformMapper<T>
     {
         /// <summary>
-        /// Gets the <see cref="D2D1TransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic inflate amount.
+        /// Gets the <see cref="D2D1DrawTransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic inflate amount.
         /// </summary>
         public required Accessor<int> Accessor { get; init; }
 
@@ -97,7 +97,7 @@ internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (
     public sealed class DynamicLeftTopRightBottomAmount : D2D1InflateTransformMapper<T>
     {
         /// <summary>
-        /// Gets the <see cref="D2D1TransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic inflate LTRB amount.
+        /// Gets the <see cref="D2D1DrawTransformMapper{T}.Accessor{TResult}"/> instance to get the dynamic inflate LTRB amount.
         /// </summary>
         public required Accessor<(int, int, int, int)> Accessor { get; init; }
 

@@ -20,7 +20,7 @@ unsafe partial struct D2D1TransformMapperImpl
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate int MapInputRectsToOutputRectDelegate(
             D2D1TransformMapperImpl* @this,
-            ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
+            ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext,
             RECT* inputRects,
             RECT* inputOpaqueSubRects,
             uint inputRectCount,
@@ -99,7 +99,7 @@ unsafe partial struct D2D1TransformMapperImpl
         [UnmanagedCallersOnly]
         public static int MapInputRectsToOutputRect(
             D2D1TransformMapperImpl* @this,
-            ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
+            ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext,
             RECT* inputRects,
             RECT* inputOpaqueSubRects,
             uint inputRectCount,

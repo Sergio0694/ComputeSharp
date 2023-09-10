@@ -5,25 +5,25 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <inheritdoc/>
-partial struct D2D1DrawInfoUpdateContextImpl
+partial struct D2D1RenderInfoUpdateContextImpl
 {
     /// <summary>
-    /// The implementation for <see cref="ID2D1DrawInfoUpdateContext"/>.
+    /// The implementation for <see cref="ID2D1RenderInfoUpdateContext"/>.
     /// </summary>
-    private static unsafe class ID2D1DrawInfoUpdateContextMethods
+    private static unsafe class ID2D1RenderInfoUpdateContextMethods
     {
 #if !NET6_0_OR_GREATER
         /// <inheritdoc cref="GetConstantBufferSize"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetConstantBufferSizeDelegate(D2D1DrawInfoUpdateContextImpl* @this, uint* size);
+        public delegate int GetConstantBufferSizeDelegate(D2D1RenderInfoUpdateContextImpl* @this, uint* size);
 
         /// <inheritdoc cref="GetConstantBuffer"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetConstantBufferDelegate(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
+        public delegate int GetConstantBufferDelegate(D2D1RenderInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
 
         /// <inheritdoc cref="SetConstantBuffer"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int SetConstantBufferDelegate(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
+        public delegate int SetConstantBufferDelegate(D2D1RenderInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
 
         /// <summary>
         /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
@@ -56,30 +56,30 @@ partial struct D2D1DrawInfoUpdateContextImpl
         public static readonly SetConstantBufferDelegate SetConstantBufferWrapper = SetConstantBuffer;
 #endif
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
-        public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
+        public static int QueryInterface(D2D1RenderInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.AddRef"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.AddRef"/>
         [UnmanagedCallersOnly]
-        public static uint AddRef(D2D1DrawInfoUpdateContextImpl* @this)
+        public static uint AddRef(D2D1RenderInfoUpdateContextImpl* @this)
         {
             return @this->AddRef();
         }
 
-        /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.Release"/>
+        /// <inheritdoc cref="D2D1RenderInfoUpdateContextImpl.Release"/>
         [UnmanagedCallersOnly]
-        public static uint Release(D2D1DrawInfoUpdateContextImpl* @this)
+        public static uint Release(D2D1RenderInfoUpdateContextImpl* @this)
         {
             return @this->Release();
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBufferSize"/>
+        /// <inheritdoc cref="ID2D1RenderInfoUpdateContext.GetConstantBufferSize"/>
         [UnmanagedCallersOnly]
-        public static int GetConstantBufferSize(D2D1DrawInfoUpdateContextImpl* @this, uint* size)
+        public static int GetConstantBufferSize(D2D1RenderInfoUpdateContextImpl* @this, uint* size)
         {
             if (size is null)
             {
@@ -96,9 +96,9 @@ partial struct D2D1DrawInfoUpdateContextImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.GetConstantBuffer"/>
+        /// <inheritdoc cref="ID2D1RenderInfoUpdateContext.GetConstantBuffer"/>
         [UnmanagedCallersOnly]
-        public static int GetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
+        public static int GetConstantBuffer(D2D1RenderInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
             if (buffer is null)
             {
@@ -128,9 +128,9 @@ partial struct D2D1DrawInfoUpdateContextImpl
             return S.S_OK;
         }
 
-        /// <inheritdoc cref="ID2D1DrawInfoUpdateContext.SetConstantBuffer"/>
+        /// <inheritdoc cref="ID2D1RenderInfoUpdateContext.SetConstantBuffer"/>
         [UnmanagedCallersOnly]
-        public static int SetConstantBuffer(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
+        public static int SetConstantBuffer(D2D1RenderInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount)
         {
             if (buffer is null)
             {

@@ -174,10 +174,10 @@ partial struct PixelShaderEffect
 
             if (@this->d2D1TransformMapper is not null)
             {
-                using ComPtr<D2D1DrawInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
+                using ComPtr<D2D1RenderInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
 
-                // Create an ID2D1DrawInfoUpdateContext instance
-                HRESULT hresult = D2D1DrawInfoUpdateContextImpl.Factory(
+                // Create an ID2D1RenderInfoUpdateContext instance
+                HRESULT hresult = D2D1RenderInfoUpdateContextImpl.Factory(
                     drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
                     constantBuffer: @this->constantBuffer,
                     constantBufferSize: @this->constantBufferSize,
@@ -190,7 +190,7 @@ partial struct PixelShaderEffect
 
                 // Forward the call to the input ID2D1TransformMapper instance
                 hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
-                    updateContext: (ID2D1DrawInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
+                    updateContext: (ID2D1RenderInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
                     inputRects: inputRects,
                     inputOpaqueSubRects: inputOpaqueSubRects,
                     inputRectCount: inputRectCount,

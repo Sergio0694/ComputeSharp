@@ -47,12 +47,12 @@ internal unsafe partial struct D2D1TransformMapperImpl
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1TransformMapperImpl), sizeof(void*) * 10);
 
-        // ID2D1ResourceTextureManager
+        // ID2D1TransformMapper
 #if NET6_0_OR_GREATER
         lpVtbl[0] = (delegate* unmanaged<D2D1TransformMapperImpl*, Guid*, void**, int>)&ID2D1TransformMapperMethods.QueryInterface;
         lpVtbl[1] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperMethods.AddRef;
         lpVtbl[2] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint>)&ID2D1TransformMapperMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged<D2D1TransformMapperImpl*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1TransformMapperMethods.MapInputRectsToOutputRect;
+        lpVtbl[3] = (delegate* unmanaged<D2D1TransformMapperImpl*, ID2D1RenderInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1TransformMapperMethods.MapInputRectsToOutputRect;
         lpVtbl[4] = (delegate* unmanaged<D2D1TransformMapperImpl*, RECT*, RECT*, uint, int>)&ID2D1TransformMapperMethods.MapOutputRectToInputRects;
         lpVtbl[5] = (delegate* unmanaged<D2D1TransformMapperImpl*, uint, RECT, RECT*, int>)&ID2D1TransformMapperMethods.MapInvalidRect;
 #else

@@ -28,12 +28,12 @@ namespace ComputeSharp.D2D1.Interop;
 /// interface ID2D1TransformMapper : IUnknown
 /// {
 ///     HRESULT MapInputRectsToOutputRect(
-///         [in]  const ID2D1DrawInfoUpdateContext* updateContext,
-///         [in]  const RECT*                       inputRects,
-///         [in]  const RECT*                       inputOpaqueSubRects,
-///               UINT32                            inputRectCount,
-///         [out] RECT*                             outputRect,
-///         [out] RECT*                             outputOpaqueSubRect);
+///         [in]  const ID2D1RenderInfoUpdateContext* updateContext,
+///         [in]  const RECT*                         inputRects,
+///         [in]  const RECT*                         inputOpaqueSubRects,
+///               UINT32                              inputRectCount,
+///         [out] RECT*                               outputRect,
+///         [out] RECT*                               outputOpaqueSubRect);
 /// 
 ///     HRESULT MapOutputRectToInputRects(
 ///         [in]  const RECT* outputRect,
@@ -59,10 +59,10 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>
 /// The main difference between these APIs and the ones in <c>ID2D1Transform</c> is the fact that this interface is standalone (ie. it doesn't inherit from <c>ID2D1TransformNode</c>),
 /// and that it allows transform mappers to also read and update additional data tied to an effect instance (such as the shader constant buffer). This is done through the
-/// <c>ID2D1DrawInfoUpdateContext</c> interface, that is passed to <c>MapInputRectsToOutputRect</c>. This interface is defined as follows:
+/// <c>ID2D1RenderInfoUpdateContext</c> interface, that is passed to <c>MapInputRectsToOutputRect</c>. This interface is defined as follows:
 /// <code>
 /// [uuid(430C5B40-AE16-485F-90E6-4FA4915144B6)]
-/// interface ID2D1DrawInfoUpdateContext : IUnknown
+/// interface ID2D1RenderInfoUpdateContext : IUnknown
 /// {
 ///     HRESULT GetConstantBufferSize([out] UINT32 *size);
 /// 
@@ -77,22 +77,22 @@ namespace ComputeSharp.D2D1.Interop;
 /// </code>
 /// </para>
 /// <para>
-/// That is, <c>ID2D1DrawInfoUpdateContext</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
+/// That is, <c>ID2D1RenderInfoUpdateContext</c> allows a custom transform (an <c>ID2D1TransformMapper</c> instance) to interact with the underlying <c>ID2D1DrawInfo</c> object
 /// that is owned by the effect being used, in a safe way. For instance, it allows a transform to read and update the constant buffer, which can be used to allow a transform to
 /// pass the exact dispatch area size to an input shader, without the consumer having to manually query that information beforehand (which might not be available either).
 /// </para>
 /// <para>
-/// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1TransformMapper{T}"/>, in several ways.
-/// That is, consumers can either implement a type inheriting from <see cref="D2D1TransformMapper{T}"/> to implement their own fully customized transform
-/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1TransformMapper{T}"/> to easily retrieve ready to use transforms.
+/// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1DrawTransformMapper{T}"/>, in several ways.
+/// That is, consumers can either implement a type inheriting from <see cref="D2D1DrawTransformMapper{T}"/> to implement their own fully customized transform
+/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1DrawTransformMapper{T}"/> to easily retrieve ready to use transforms.
 /// </para>
 /// <para>
 /// A CCW (COM callable wrapper, see <see href="https://learn.microsoft.com/dotnet/standard/native-interop/com-callable-wrapper"/>) is also available for all
-/// of these APIs, implemented via the same <see cref="D2D1TransformMapper{T}"/> type. That is, a given instance can expose its underlying CCW through the
+/// of these APIs, implemented via the same <see cref="D2D1DrawTransformMapper{T}"/> type. That is, a given instance can expose its underlying CCW through the
 /// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
 /// </para>
 /// </remarks>
-public abstract unsafe partial class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
+public abstract unsafe partial class D2D1DrawTransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
@@ -101,9 +101,9 @@ public abstract unsafe partial class D2D1TransformMapper<T> : ICustomQueryInterf
     private ComPtr<D2D1TransformMapperImpl> d2D1TransformMapperImpl;
 
     /// <summary>
-    /// Creates a new <see cref="D2D1TransformMapper{T}"/> instance.
+    /// Creates a new <see cref="D2D1DrawTransformMapper{T}"/> instance.
     /// </summary>
-    public D2D1TransformMapper()
+    public D2D1DrawTransformMapper()
     {
         fixed (D2D1TransformMapperImpl** d2D1TransformMapperImpl = this.d2D1TransformMapperImpl)
         {
@@ -114,7 +114,7 @@ public abstract unsafe partial class D2D1TransformMapper<T> : ICustomQueryInterf
     /// <summary>
     /// Releases the underlying <c>ID2D1TransformMapper</c> object.
     /// </summary>
-    ~D2D1TransformMapper()
+    ~D2D1DrawTransformMapper()
     {
         this.d2D1TransformMapperImpl.Dispose();
     }
@@ -248,7 +248,7 @@ public abstract unsafe partial class D2D1TransformMapper<T> : ICustomQueryInterf
 
     /// <inheritdoc/>
     void ID2D1TransformMapperInterop.MapInputsToOutput(
-        ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
+        ID2D1RenderInfoUpdateContext* d2D1DrawInfoUpdateContext,
         ReadOnlySpan<Rectangle> inputs,
         ReadOnlySpan<Rectangle> opaqueInputs,
         out Rectangle output,
