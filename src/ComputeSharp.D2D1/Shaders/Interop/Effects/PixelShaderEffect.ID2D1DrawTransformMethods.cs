@@ -178,7 +178,7 @@ partial struct PixelShaderEffect
 
                 // Create an ID2D1RenderInfoUpdateContext instance
                 HRESULT hresult = D2D1RenderInfoUpdateContextImpl.Factory(
-                    drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
+                    renderInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
                     constantBuffer: @this->constantBuffer,
                     constantBufferSize: @this->constantBufferSize,
                     d2D1DrawInfo: @this->d2D1DrawInfo);

@@ -11,6 +11,7 @@ unsafe partial struct D2D1RenderInfoUpdateContextImpl
     public int Close()
     {
         this.d2D1DrawInfo = null;
+        this.d2D1ComputeInfo = null;
 
         return S.S_OK;
     }

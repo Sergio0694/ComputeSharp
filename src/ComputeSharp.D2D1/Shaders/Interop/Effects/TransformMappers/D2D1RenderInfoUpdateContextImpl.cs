@@ -106,47 +106,47 @@ internal unsafe partial struct D2D1RenderInfoUpdateContextImpl
     private int constantBufferSize;
 
     /// <summary>
-    /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
+    /// The <see cref="ID2D1DrawInfo"/> instance currently in use, if available.
     /// </summary>
     private ID2D1DrawInfo* d2D1DrawInfo;
 
     /// <summary>
+    /// The <see cref="ID2D1ComputeInfo"/> instance currently in use, if available.
+    /// </summary>
+    private ID2D1ComputeInfo* d2D1ComputeInfo;
+
+    /// <summary>
     /// The factory method for <see cref="D2D1RenderInfoUpdateContextImpl"/> instances.
     /// </summary>
-    /// <param name="drawInfoUpdateContext">The resulting draw info update context instance.</param>
+    /// <param name="renderInfoUpdateContext">The resulting draw info update context instance.</param>
     /// <param name="constantBuffer">The constant buffer data, if set.</param>
     /// <param name="constantBufferSize">The size of <paramref name="constantBuffer"/>.</param>
     /// <param name="d2D1DrawInfo">The <see cref="ID2D1DrawInfo"/> instance currently in use.</param>
     /// <returns>This always returns <c>0</c>.</returns>
     public static HRESULT Factory(
-        D2D1RenderInfoUpdateContextImpl** drawInfoUpdateContext,
+        D2D1RenderInfoUpdateContextImpl** renderInfoUpdateContext,
         byte* constantBuffer,
         int constantBufferSize,
         ID2D1DrawInfo* d2D1DrawInfo)
     {
-        D2D1RenderInfoUpdateContextImpl* @this;
+        return Factory(renderInfoUpdateContext, constantBuffer, constantBufferSize, d2D1DrawInfo, null);
+    }
 
-        try
-        {
-            @this = (D2D1RenderInfoUpdateContextImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1RenderInfoUpdateContextImpl));
-        }
-        catch (OutOfMemoryException)
-        {
-            *drawInfoUpdateContext = null;
-
-            return E.E_OUTOFMEMORY;
-        }
-
-        @this->lpVtblForID2D1RenderInfoUpdateContext = VtblForID2D1RenderInfoUpdateContext;
-        @this->lpVtblForID2D1RenderInfoUpdateContextInternal = VtblForID2D1RenderInfoUpdateContextInternal;
-        @this->referenceCount = 1;
-        @this->constantBuffer = constantBuffer;
-        @this->constantBufferSize = constantBufferSize;
-        @this->d2D1DrawInfo = d2D1DrawInfo;
-
-        *drawInfoUpdateContext = @this;
-
-        return S.S_OK;
+    /// <summary>
+    /// The factory method for <see cref="D2D1RenderInfoUpdateContextImpl"/> instances.
+    /// </summary>
+    /// <param name="renderInfoUpdateContext">The resulting draw info update context instance.</param>
+    /// <param name="constantBuffer">The constant buffer data, if set.</param>
+    /// <param name="constantBufferSize">The size of <paramref name="constantBuffer"/>.</param>
+    /// <param name="d2D1ComputeInfo">The <see cref="ID2D1ComputeInfo"/> instance currently in use.</param>
+    /// <returns>This always returns <c>0</c>.</returns>
+    public static HRESULT Factory(
+        D2D1RenderInfoUpdateContextImpl** renderInfoUpdateContext,
+        byte* constantBuffer,
+        int constantBufferSize,
+        ID2D1ComputeInfo* d2D1ComputeInfo)
+    {
+        return Factory(renderInfoUpdateContext, constantBuffer, constantBufferSize, null, d2D1ComputeInfo);
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
@@ -200,5 +200,48 @@ internal unsafe partial struct D2D1RenderInfoUpdateContextImpl
         }
 
         return referenceCount;
+    }
+
+    /// <summary>
+    /// The factory method for <see cref="D2D1RenderInfoUpdateContextImpl"/> instances.
+    /// </summary>
+    /// <param name="drawInfoUpdateContext">The resulting draw info update context instance.</param>
+    /// <param name="constantBuffer">The constant buffer data, if set.</param>
+    /// <param name="constantBufferSize">The size of <paramref name="constantBuffer"/>.</param>
+    /// <param name="d2D1DrawInfo">The <see cref="ID2D1DrawInfo"/> instance currently in use, if available.</param>
+    /// <param name="d2D1ComputeInfo">The <see cref="ID2D1ComputeInfo"/> instance currently in use, if available.</param>
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    /// <remarks>Callers are expected to always pass either <paramref name="d2D1DrawInfo"/> or <paramref name="d2D1ComputeInfo"/>.</remarks>
+    private static HRESULT Factory(
+        D2D1RenderInfoUpdateContextImpl** drawInfoUpdateContext,
+        byte* constantBuffer,
+        int constantBufferSize,
+        ID2D1DrawInfo* d2D1DrawInfo,
+        ID2D1ComputeInfo* d2D1ComputeInfo)
+    {
+        D2D1RenderInfoUpdateContextImpl* @this;
+
+        try
+        {
+            @this = (D2D1RenderInfoUpdateContextImpl*)NativeMemory.Alloc((nuint)sizeof(D2D1RenderInfoUpdateContextImpl));
+        }
+        catch (OutOfMemoryException)
+        {
+            *drawInfoUpdateContext = null;
+
+            return E.E_OUTOFMEMORY;
+        }
+
+        @this->lpVtblForID2D1RenderInfoUpdateContext = VtblForID2D1RenderInfoUpdateContext;
+        @this->lpVtblForID2D1RenderInfoUpdateContextInternal = VtblForID2D1RenderInfoUpdateContextInternal;
+        @this->referenceCount = 1;
+        @this->constantBuffer = constantBuffer;
+        @this->constantBufferSize = constantBufferSize;
+        @this->d2D1DrawInfo = d2D1DrawInfo;
+        @this->d2D1ComputeInfo = d2D1ComputeInfo;
+
+        *drawInfoUpdateContext = @this;
+
+        return S.S_OK;
     }
 }

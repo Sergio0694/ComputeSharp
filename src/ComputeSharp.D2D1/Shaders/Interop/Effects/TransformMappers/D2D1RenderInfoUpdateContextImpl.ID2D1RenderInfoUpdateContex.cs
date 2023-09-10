@@ -86,7 +86,7 @@ partial struct D2D1RenderInfoUpdateContextImpl
                 return E.E_POINTER;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo is null && @this->d2D1ComputeInfo is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -115,7 +115,7 @@ partial struct D2D1RenderInfoUpdateContextImpl
                 return E.E_NOT_VALID_STATE;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo is null && @this->d2D1ComputeInfo is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -142,7 +142,7 @@ partial struct D2D1RenderInfoUpdateContextImpl
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo is null && @this->d2D1ComputeInfo is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -156,8 +156,14 @@ partial struct D2D1RenderInfoUpdateContextImpl
             // Copy the buffer to the backing store, so the effect can also access it later
             Buffer.MemoryCopy(buffer, @this->constantBuffer, bufferCount, bufferCount);
 
-            // Propagate it to the ID2D1DrawInfo object in use as well
-            return @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(buffer, bufferCount);
+            // Propagate it to the ID2D1DrawInfo object in use, if present
+            if (@this->d2D1DrawInfo is not null)
+            {
+                return @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(buffer, bufferCount);
+            }
+
+            // Otherwise, the context is wrapping an ID2D1ComputeInfo object, so use that
+            return @this->d2D1ComputeInfo->SetComputeShaderConstantBuffer(buffer, bufferCount);
         }
     }
 }
