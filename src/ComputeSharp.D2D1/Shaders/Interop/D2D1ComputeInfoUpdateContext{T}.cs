@@ -4,7 +4,7 @@ using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
-/// An object allowing <see cref="D2D1DrawTransformMapper{T}.MapInputsToOutput"/> to interact with the shader data from within a transform.
+/// An object allowing <see cref="D2D1ComputeTransformMapper{T}.MapInputsToOutput"/> to interact with the shader data from within a transform.
 /// </summary>
 /// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
 public readonly unsafe ref struct D2D1ComputeInfoUpdateContext<T>

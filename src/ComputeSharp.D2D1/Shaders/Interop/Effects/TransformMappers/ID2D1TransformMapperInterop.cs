@@ -5,7 +5,7 @@ using ComputeSharp.D2D1.Interop;
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
-/// A base type to support non-generic <see cref="D2D1DrawTransformMapper{T}"/> uses.
+/// A base type to support non-generic <see cref="D2D1DrawTransformMapper{T}"/> and <see cref="D2D1ComputeTransformMapper{T}"/> uses.
 /// </summary>
 internal unsafe interface ID2D1TransformMapperInterop
 {

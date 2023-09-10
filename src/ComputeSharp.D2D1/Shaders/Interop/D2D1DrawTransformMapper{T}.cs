@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.Windows;
 
 #pragma warning disable CA1033
@@ -193,57 +194,13 @@ public abstract unsafe partial class D2D1DrawTransformMapper<T> : ICustomQueryIn
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void GetD2D1TransformMapper(ID2D1TransformMapper** transformMapper)
     {
-        bool lockTaken = false;
-
-        this.d2D1TransformMapperImpl.Get()->SpinLock.Enter(ref lockTaken);
-
-        // Whenever the CCW is requested from this object, we also make sure that the current instance is tracked
-        // in the GC handle stored in the CCW. This could've been reset in case there were no other references to
-        // the CCW (see comments in D2D1TransformMapperImpl about this), so here we're assigning a reference to the
-        // current object again to ensure the returned CCW object will keep the instance alive if needed.
-        try
-        {
-            this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
-            this.d2D1TransformMapperImpl.Get()->CopyToWithNoLock(transformMapper);
-        }
-        finally
-        {
-            this.d2D1TransformMapperImpl.Get()->SpinLock.Exit();
-
-            GC.KeepAlive(this);
-        }
+        D2D1TransformMapper.GetD2D1TransformMapper(this.d2D1TransformMapperImpl.Get(), this, transformMapper);
     }
 
     /// <inheritdoc/>
     CustomQueryInterfaceResult ICustomQueryInterface.GetInterface(ref Guid iid, out IntPtr ppv)
     {
-        fixed (Guid* pIid = &iid)
-        fixed (IntPtr* pPpv = &ppv)
-        {
-            int hresult;
-            bool lockTaken = false;
-
-            this.d2D1TransformMapperImpl.Get()->SpinLock.Enter(ref lockTaken);
-
-            try
-            {
-                this.d2D1TransformMapperImpl.Get()->EnsureTargetIsTracked(this);
-
-                hresult = this.d2D1TransformMapperImpl.Get()->QueryInterfaceWithNoLock(pIid, (void**)pPpv);
-            }
-            finally
-            {
-                this.d2D1TransformMapperImpl.Get()->SpinLock.Exit();
-
-                GC.KeepAlive(this);
-            }
-
-            return hresult switch
-            {
-                S.S_OK => CustomQueryInterfaceResult.Handled,
-                _ => CustomQueryInterfaceResult.Failed
-            };
-        }
+        return D2D1TransformMapper.GetInterface(this.d2D1TransformMapperImpl.Get(), this, ref iid, out ppv);
     }
 
     /// <inheritdoc/>
