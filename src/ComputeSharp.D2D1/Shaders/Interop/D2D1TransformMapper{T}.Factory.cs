@@ -4,12 +4,8 @@ using ComputeSharp.D2D1.Shaders.Interop.Factories;
 
 namespace ComputeSharp.D2D1.Interop;
 
-/// <summary>
-/// Provides built-in transform mapper factories for common transform mapping operations.
-/// </summary>
-/// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
-public static class D2D1TransformMapperFactory<T>
-    where T : unmanaged, ID2D1PixelShader
+/// <inheritdoc/>
+partial class D2D1TransformMapper<T>
 {
     /// <summary>
     /// Creates an <see cref="D2D1TransformMapper{T}"/> instance for an inflate transform.

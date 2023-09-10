@@ -84,7 +84,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <para>
 /// This interface is implemented by ComputeSharp.D2D1, and it can be used through the APIs in <see cref="D2D1TransformMapper{T}"/>, in several ways.
 /// That is, consumers can either implement a type inheriting from <see cref="D2D1TransformMapper{T}"/> to implement their own fully customized transform
-/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1TransformMapperFactory{T}"/> to easily retrieve ready to use transforms.
+/// mapping logic, or they can use the helper methods exposed by <see cref="D2D1TransformMapper{T}"/> to easily retrieve ready to use transforms.
 /// </para>
 /// <para>
 /// A CCW (COM callable wrapper, see <see href="https://learn.microsoft.com/dotnet/standard/native-interop/com-callable-wrapper"/>) is also available for all
@@ -92,7 +92,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// <see cref="ICustomQueryInterface"/> interface, and this can then be passed to an existing D2D1 effect instance.
 /// </para>
 /// </remarks>
-public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
+public abstract unsafe partial class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
     where T : unmanaged, ID2D1PixelShader
 {
     /// <summary>
