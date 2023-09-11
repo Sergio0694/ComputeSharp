@@ -37,6 +37,10 @@ internal readonly unsafe struct D2D1EffectDispatchDataLoader : ID2D1DispatchData
             return;
         }
 
+        // For all custom ID2D1Effect implementation in ComputeSharp.D2D1, the constant buffer
+        // is always at index 0 (applies to both pixel shader and compute shaders). This can
+        // be verified by also checking the constants in D2D1PixelShaderEffectProperty and
+        // in D2D1ComputeShaderEffectProperty. Their values should never change for any reason.
         this.d2D1Effect->SetValue(
             index: 0,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_BLOB,

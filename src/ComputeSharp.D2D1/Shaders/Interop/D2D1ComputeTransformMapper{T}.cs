@@ -12,7 +12,7 @@ namespace ComputeSharp.D2D1.Interop;
 
 /// <summary>
 /// Provides an <c>ID2D1TransformMapper</c> implementation, which can be used to customize the draw transform logic in
-/// an effect created with <see cref="D2D1PixelShaderEffect"/> and also shared across multiple instances of a given effect.
+/// an effect created with <see cref="D2D1ComputeShaderEffect"/> and also shared across multiple instances of a given effect.
 /// </summary>
 /// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
 /// <remarks>
