@@ -46,6 +46,10 @@ insert_final_newline = true
 [*.xaml]
 indent_size = 4
 
+# T4 files
+[*.tt]
+end_of_line = crlf
+
 # C# files
 [*.cs]
 

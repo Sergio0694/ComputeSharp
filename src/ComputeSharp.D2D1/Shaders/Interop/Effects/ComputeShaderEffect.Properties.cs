@@ -7,36 +7,28 @@ using TerraFX.Interop.Windows;
 namespace ComputeSharp.D2D1.Interop.Effects;
 
 /// <inheritdoc/>
-unsafe partial struct PixelShaderEffect
+unsafe partial struct ComputeShaderEffect
 {
 #if !NET6_0_OR_GREATER
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int PropertyGetFunctionDelegate(IUnknown* effect, byte* data, uint dataSize, uint* actualSize);
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.setFunction"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public delegate int PropertySetFunctionDelegate(IUnknown* effect, byte* data, uint dataSize);
+    /// <summary>
+    /// A cached <see cref="PixelShaderEffect.PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBufferImpl"/>.
+    /// </summary>
+    private static readonly PixelShaderEffect.PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBufferImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBufferImpl"/>.
+    /// A cached <see cref="PixelShaderEffect.PropertySetFunctionDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
     /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBufferImpl;
+    private static readonly PixelShaderEffect.PropertySetFunctionDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
+    /// A cached <see cref="PixelShaderEffect.PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetTransformMapperImpl"/>.
     /// </summary>
-    private static readonly PropertySetFunctionDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
+    private static readonly PixelShaderEffect.PropertyGetFunctionDelegate GetTransformMapperWrapper = GetTransformMapperImpl;
 
     /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetTransformMapperImpl"/>.
+    /// A cached <see cref="PixelShaderEffect.PropertySetFunctionDelegate"/> instance wrapping <see cref="SetTransformMapperImpl"/>.
     /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetTransformMapperWrapper = GetTransformMapperImpl;
-
-    /// <summary>
-    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetTransformMapperImpl"/>.
-    /// </summary>
-    private static readonly PropertySetFunctionDelegate SetTransformMapperWrapper = SetTransformMapperImpl;
+    private static readonly PixelShaderEffect.PropertySetFunctionDelegate SetTransformMapperWrapper = SetTransformMapperImpl;
 #endif
 
     /// <summary>
@@ -111,7 +103,7 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+        ComputeShaderEffect* @this = (ComputeShaderEffect*)effect;
 
         return D2D1ShaderEffect.GetConstantBuffer(
             data: data,
@@ -125,7 +117,7 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize)
     {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+        ComputeShaderEffect* @this = (ComputeShaderEffect*)effect;
 
         return D2D1ShaderEffect.SetConstantBuffer(
             data: data,
@@ -138,7 +130,7 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+        ComputeShaderEffect* @this = (ComputeShaderEffect*)effect;
 
         return D2D1ShaderEffect.GetTransformMapper(
             data: data,
@@ -151,7 +143,7 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize)
     {
-        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+        ComputeShaderEffect* @this = (ComputeShaderEffect*)effect;
 
         return D2D1ShaderEffect.SetTransformMapper(
             data: data,
