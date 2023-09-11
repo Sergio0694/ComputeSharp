@@ -1,15 +1,11 @@
 using System;
-using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
+using ComputeSharp.D2D1.Interop.Helpers;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
-using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -474,12 +470,7 @@ public static unsafe class D2D1PixelShaderEffect
         default(ArgumentNullException).ThrowIfNull(d2D1DeviceContext);
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
-        fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
-        {
-            ((ID2D1DeviceContext*)d2D1DeviceContext)->CreateEffect(
-                effectId: pGuid,
-                effect: (ID2D1Effect**)d2D1Effect).Assert();
-        }
+        D2D1ShaderEffectMarshaller.CreateFromD2D1DeviceContext(d2D1DeviceContext, d2D1Effect, in PixelShaderEffect.For<T>.Instance.Id);
     }
 
     /// <summary>
@@ -495,9 +486,7 @@ public static unsafe class D2D1PixelShaderEffect
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
-        D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
-
-        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+        D2D1ShaderEffectMarshaller.SetConstantBufferForD2D1Effect(d2D1Effect, in shader);
     }
 
     /// <summary>
@@ -513,11 +502,10 @@ public static unsafe class D2D1PixelShaderEffect
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
 
-        ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
-            data: (byte*)&resourceTextureManager,
-            dataSize: (uint)sizeof(void*)).Assert();
+        D2D1ShaderEffectMarshaller.SetUnknownForD2D1Effect(
+            d2D1Effect: d2D1Effect,
+            propertyIndex: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
+            propertyValueUnknown: resourceTextureManager);
     }
 
     /// <summary>
@@ -533,15 +521,10 @@ public static unsafe class D2D1PixelShaderEffect
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
 
-        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
-
-        resourceTextureManager.GetD2D1ResourceTextureManager(resourceTextureManager2.GetAddressOf());
-
-        ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
-            data: (byte*)resourceTextureManager2.GetAddressOf(),
-            dataSize: (uint)sizeof(void*)).Assert();
+        D2D1ShaderEffectMarshaller.SetResourceTextureManagerForD2D1Effect(
+            d2D1Effect: d2D1Effect,
+            propertyIndex: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
+            resourceTextureManager: resourceTextureManager);
     }
 
     /// <summary>
@@ -556,11 +539,10 @@ public static unsafe class D2D1PixelShaderEffect
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(transformMapper);
 
-        ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.TransformMapper,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
-            data: (byte*)&transformMapper,
-            dataSize: (uint)sizeof(void*)).Assert();
+        D2D1ShaderEffectMarshaller.SetUnknownForD2D1Effect(
+            d2D1Effect: d2D1Effect,
+            propertyIndex: D2D1PixelShaderEffectProperty.TransformMapper,
+            propertyValueUnknown: transformMapper);
     }
 
     /// <summary>
@@ -580,10 +562,9 @@ public static unsafe class D2D1PixelShaderEffect
 
         transformMapper.GetD2D1TransformMapper(transformMapper2.GetAddressOf());
 
-        ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.TransformMapper,
-            type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
-            data: (byte*)transformMapper2.GetAddressOf(),
-            dataSize: (uint)sizeof(void*)).Assert();
+        D2D1ShaderEffectMarshaller.SetUnknownForD2D1Effect(
+            d2D1Effect: d2D1Effect,
+            propertyIndex: D2D1PixelShaderEffectProperty.TransformMapper,
+            propertyValueUnknown: transformMapper2.Get());
     }
 }
