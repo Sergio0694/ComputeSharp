@@ -19,7 +19,7 @@ public interface ID2D1ComputeShader : ID2D1Shader
     /// <param name="sizeZ">The number of threads dispatched along the Z axis in each threads group.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetDispatchTreads(out int sizeX, out int sizeY, out int sizeZ);
+    void GetDispatchTreads(out int sizeX, out int sizeY, out int sizeZ);
 
     /// <summary>
     /// Executes the current compute shader.

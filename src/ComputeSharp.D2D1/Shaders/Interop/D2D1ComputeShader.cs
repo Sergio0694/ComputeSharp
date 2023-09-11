@@ -183,6 +183,26 @@ public static class D2D1ComputeShader
     }
 
     /// <summary>
+    /// Gets the dispatch thread numbers from an input D2D1 compute shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 compute shader to get the thread numbers count for.</typeparam>
+    /// <returns>A <see cref="D2D1DispatchThreadNumbers"/> value with the resulting thread numbers for the shader type.</returns>
+    public static unsafe D2D1DispatchThreadNumbers GetDispatchThreadNumbers<T>()
+        where T : unmanaged, ID2D1ComputeShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        D2D1DispatchThreadNumbers dispatchThreadNumbers;
+
+        shader.GetDispatchTreads(
+            out ((int*)&dispatchThreadNumbers)[0],
+            out ((int*)&dispatchThreadNumbers)[1],
+            out ((int*)&dispatchThreadNumbers)[2]);
+
+        return dispatchThreadNumbers;
+    }
+
+    /// <summary>
     /// Gets the number of inputs from an input D2D1 compute shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 compute shader to get the input count for.</typeparam>
