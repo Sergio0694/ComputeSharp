@@ -154,6 +154,9 @@ internal unsafe partial struct ComputeShaderEffect
     /// <inheritdoc cref="PixelShaderEffect.resourceTextureManagerBuffer"/>
     private ResourceTextureManagerBuffer resourceTextureManagerBuffer;
 
+    /// <inheritdoc cref="For{T}.dispatchThreadNumbers"/>
+    private D2D1DispatchThreadNumbers dispatchThreadNumbers;
+
     /// <inheritdoc cref="PixelShaderEffect.Factory"/>
     private static int Factory(
         Guid shaderId,
@@ -167,6 +170,7 @@ internal unsafe partial struct ComputeShaderEffect
         D2D1ChannelDepth channelDepth,
         int resourceTextureDescriptionCount,
         D2D1ResourceTextureDescription* resourceTextureDescriptions,
+        D2D1DispatchThreadNumbers dispatchThreadNumbers,
         IUnknown** effectImpl)
     {
         ComputeShaderEffect* @this;
@@ -199,6 +203,7 @@ internal unsafe partial struct ComputeShaderEffect
         @this->channelDepth = channelDepth;
         @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
         @this->resourceTextureDescriptions = resourceTextureDescriptions;
+        @this->dispatchThreadNumbers = dispatchThreadNumbers;
         @this->d2D1TransformMapper = null;
         @this->d2D1ComputeInfo = null;
         @this->d2D1EffectContext = null;

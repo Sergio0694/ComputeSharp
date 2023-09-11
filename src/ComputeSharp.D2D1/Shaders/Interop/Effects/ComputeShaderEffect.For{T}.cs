@@ -52,7 +52,27 @@ unsafe partial struct ComputeShaderEffect
         /// <inheritdoc cref="PixelShaderEffect.For{T}.resourceTextureDescriptions"/>
         private readonly D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
-        /// <inheritdoc cref="PixelShaderEffect.For{T}.For"/>
+        /// <summary>
+        /// The <see cref="D2D1DispatchThreadNumbers"/> value for the current shader type.
+        /// </summary>
+        private readonly D2D1DispatchThreadNumbers dispatchThreadNumbers;
+
+        /// <summary>
+        /// Creates a new <see cref="For{T}"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="effectFactory"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='effectFactory']/node()"/></param>
+        /// <param name="shaderId"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='shaderId']/node()"/></param>
+        /// <param name="constantBufferSize"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='constantBufferSize']/node()"/></param>
+        /// <param name="inputCount"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='inputCount']/node()"/></param>
+        /// <param name="inputDescriptionCount"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='inputDescriptionCount']/node()"/></param>
+        /// <param name="inputDescriptions"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='inputDescriptions']/node()"/></param>
+        /// <param name="bytecode"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='bytecode']/node()"/></param>
+        /// <param name="bytecodeSize"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='bytecodeSize']/node()"/></param>
+        /// <param name="bufferPrecision"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='bufferPrecision']/node()"/></param>
+        /// <param name="channelDepth"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='channelDepth']/node()"/></param>
+        /// <param name="resourceTextureDescriptionCount"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='resourceTextureDescriptionCount']/node()"/></param>
+        /// <param name="resourceTextureDescriptions"><inheritdoc cref="PixelShaderEffect.For{T}.For" path="/param[@name='resourceTextureDescriptions']/node()"/></param>
+        /// <param name="dispatchThreadNumbers">The <see cref="D2D1DispatchThreadNumbers"/> value for the current shader type.</param>
         private For(
             PixelShaderEffect.FactoryDelegate effectFactory,
             Guid shaderId,
@@ -65,7 +85,8 @@ unsafe partial struct ComputeShaderEffect
             D2D1BufferPrecision bufferPrecision,
             D2D1ChannelDepth channelDepth,
             int resourceTextureDescriptionCount,
-            D2D1ResourceTextureDescription* resourceTextureDescriptions)
+            D2D1ResourceTextureDescription* resourceTextureDescriptions,
+            D2D1DispatchThreadNumbers dispatchThreadNumbers)
         {
             this.effectFactory = effectFactory;
             this.shaderId = shaderId;
@@ -79,6 +100,7 @@ unsafe partial struct ComputeShaderEffect
             this.channelDepth = channelDepth;
             this.resourceTextureDescriptionCount = resourceTextureDescriptionCount;
             this.resourceTextureDescriptions = resourceTextureDescriptions;
+            this.dispatchThreadNumbers = dispatchThreadNumbers;
         }
 
         /// <inheritdoc cref="PixelShaderEffect.For{T}.Instance"/>
@@ -101,6 +123,9 @@ unsafe partial struct ComputeShaderEffect
                 out int resourceTextureDescriptionCount,
                 out D2D1ResourceTextureDescription* resourceTextureDescriptions);
 
+            // Also get the dispatch thread numbers, as this is a compute shader
+            D2D1DispatchThreadNumbers dispatchThreadNumbers = D2D1ComputeShader.GetDispatchThreadNumbers<T>();
+
             // Initialize the shared instance with the computed state
             return new(
                 CreateEffect,
@@ -114,7 +139,8 @@ unsafe partial struct ComputeShaderEffect
                 bufferPrecision,
                 channelDepth,
                 resourceTextureDescriptionCount,
-                resourceTextureDescriptions);
+                resourceTextureDescriptions,
+                dispatchThreadNumbers);
         }
 
         /// <summary>
@@ -165,6 +191,7 @@ unsafe partial struct ComputeShaderEffect
                 instance.channelDepth,
                 instance.resourceTextureDescriptionCount,
                 instance.resourceTextureDescriptions,
+                instance.dispatchThreadNumbers,
                 effectImpl);
         }
     }

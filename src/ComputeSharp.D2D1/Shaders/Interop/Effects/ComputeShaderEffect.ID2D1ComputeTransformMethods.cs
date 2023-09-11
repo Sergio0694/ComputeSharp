@@ -300,7 +300,15 @@ partial struct ComputeShaderEffect
         {
             @this = (ComputeShaderEffect*)&((void**)@this)[-1];
 
-            // TODO
+            // The default behavior simply calculates enough thread group size to cover the entire target rect.
+            // This is essentially equivalent to the invocation count for a pixel shader over the same area.
+            *dimensionX = (uint)Math.Ceiling((outputRect->right - outputRect->left) / (double)@this->dispatchThreadNumbers.ThreadsX);
+            *dimensionY = (uint)Math.Ceiling((outputRect->bottom - outputRect->top) / (double)@this->dispatchThreadNumbers.ThreadsY);
+
+            // The Z dimension is set to 1 by default, as the shader will only be
+            // executed once for each pixel in the input image. This value can be
+            // increased to perform additional executions for a given input position.
+            *dimensionZ = 1;
 
             return S.S_OK;
         }
