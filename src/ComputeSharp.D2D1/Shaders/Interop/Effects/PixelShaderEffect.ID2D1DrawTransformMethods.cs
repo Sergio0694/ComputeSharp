@@ -174,11 +174,11 @@ partial struct PixelShaderEffect
 
             if (@this->d2D1TransformMapper is not null)
             {
-                using ComPtr<D2D1RenderInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
+                using ComPtr<D2D1RenderInfoUpdateContextImpl> d2D1RenderInfoUpdateContext = default;
 
                 // Create an ID2D1RenderInfoUpdateContext instance
                 HRESULT hresult = D2D1RenderInfoUpdateContextImpl.Factory(
-                    renderInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
+                    renderInfoUpdateContext: d2D1RenderInfoUpdateContext.GetAddressOf(),
                     constantBuffer: @this->constantBuffer,
                     constantBufferSize: @this->constantBufferSize,
                     d2D1DrawInfo: @this->d2D1DrawInfo);
@@ -190,7 +190,7 @@ partial struct PixelShaderEffect
 
                 // Forward the call to the input ID2D1TransformMapper instance
                 hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
-                    updateContext: (ID2D1RenderInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
+                    updateContext: (ID2D1RenderInfoUpdateContext*)d2D1RenderInfoUpdateContext.Get(),
                     inputRects: inputRects,
                     inputOpaqueSubRects: inputOpaqueSubRects,
                     inputRectCount: inputRectCount,
@@ -198,7 +198,7 @@ partial struct PixelShaderEffect
                     outputOpaqueSubRect: outputOpaqueSubRect);
 
                 // Regardless of the operation result, always invalidate the context
-                _ = d2D1DrawInfoUpdateContext.Get()->Close();
+                _ = d2D1RenderInfoUpdateContext.Get()->Close();
 
                 if (!Windows.SUCCEEDED(hresult))
                 {

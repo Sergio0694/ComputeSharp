@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -127,7 +129,31 @@ partial struct ComputeShaderEffect
         {
             @this = (ComputeShaderEffect*)&((void**)@this)[-1];
 
-            // TODO
+            if (inputRectsCount != @this->inputCount)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            if (@this->d2D1TransformMapper is not null)
+            {
+                // Forward to the current ID2D1TransformMapper instance (same as with pixel shaders)
+                HRESULT hresult = @this->d2D1TransformMapper->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else
+            {
+                // If no custom transform is used, mark all input rects as infinite. This
+                // is because we can't really make assumption, so we just treat them the
+                // same way we would for a pixel shader only habing complex inputs.
+                foreach (ref RECT rect in new Span<RECT>(inputRects, (int)inputRectsCount))
+                {
+                    rect.MakeD2D1Infinite();
+                }
+            }
 
             return S.S_OK;
         }
@@ -138,7 +164,59 @@ partial struct ComputeShaderEffect
         {
             @this = (ComputeShaderEffect*)&((void**)@this)[-1];
 
-            // TODO
+            if (inputRectCount != @this->inputCount)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            if (@this->d2D1TransformMapper is not null)
+            {
+                using ComPtr<D2D1RenderInfoUpdateContextImpl> d2D1RenderInfoUpdateContext = default;
+
+                // Create an ID2D1RenderInfoUpdateContext instance
+                HRESULT hresult = D2D1RenderInfoUpdateContextImpl.Factory(
+                    renderInfoUpdateContext: d2D1RenderInfoUpdateContext.GetAddressOf(),
+                    constantBuffer: @this->constantBuffer,
+                    constantBufferSize: @this->constantBufferSize,
+                    d2D1ComputeInfo: @this->d2D1ComputeInfo);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+
+                // Forward the call to the input ID2D1TransformMapper instance
+                hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
+                    updateContext: (ID2D1RenderInfoUpdateContext*)d2D1RenderInfoUpdateContext.Get(),
+                    inputRects: inputRects,
+                    inputOpaqueSubRects: inputOpaqueSubRects,
+                    inputRectCount: inputRectCount,
+                    outputRect: outputRect,
+                    outputOpaqueSubRect: outputOpaqueSubRect);
+
+                // Regardless of the operation result, always invalidate the context
+                _ = d2D1RenderInfoUpdateContext.Get()->Close();
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else if (inputRectCount == 0)
+            {
+                // If there are no inputs, make the output rectangle infinite
+                outputRect->MakeD2D1Infinite();
+
+                *outputOpaqueSubRect = default;
+            }
+            else
+            {
+                // If at least one input is present and no custom mapper is available, apply the default
+                // mapping. Once again, same with pixel shaders with all inputs using complex sampling.
+                outputRect->MakeD2D1Infinite();
+
+                *outputOpaqueSubRect = default;
+            }
 
             return S.S_OK;
         }
@@ -149,7 +227,26 @@ partial struct ComputeShaderEffect
         {
             @this = (ComputeShaderEffect*)&((void**)@this)[-1];
 
-            // TODO
+            if (inputIndex >= (uint)@this->inputCount)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            if (@this->d2D1TransformMapper is not null)
+            {
+                // Forward to the current ID2D1TransformMapper instance
+                HRESULT hresult = @this->d2D1TransformMapper->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+            else
+            {
+                // Just mark the output as infinite, as we assume all inputs are using complex sampling
+                invalidOutputRect->MakeD2D1Infinite();
+            }
 
             return S.S_OK;
         }
