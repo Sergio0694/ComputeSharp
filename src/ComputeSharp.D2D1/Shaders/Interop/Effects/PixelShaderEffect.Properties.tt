@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 #if !NET6_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -88,14 +89,32 @@ for (int i = 0; i < 16; i++)
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(<#=i#>, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: <#=i#>);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(<#=i#>, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: <#=i#>);
     }
 <#
 }

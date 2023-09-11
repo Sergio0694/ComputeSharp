@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// Shared helpers for D2D shader effects of all kinds.
 /// </summary>
-internal static unsafe class D2D1ShaderEffect
+internal static unsafe partial class D2D1ShaderEffect
 {
     /// <summary>
     /// Releases all allocated resource texture managers being used.
@@ -43,7 +43,7 @@ internal static unsafe class D2D1ShaderEffect
     /// </summary>
     /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
     /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
-    /// <param name="resourceTextureManagerBuffer">The resource texture managers to inspect and release.</param>
+    /// <param name="resourceTextureManagerBuffer">The resource texture managers in use.</param>
     /// <param name="d2D1Info">The input D2D info (either <see cref="ID2D1DrawInfo"/> or <see cref="ID2D1ComputeInfo"/>.</param>
     /// <param name="setResourceTexture">A callback to set a resource texture on <paramref name="d2D1Info"/>.</param>
     /// <param name="hresult">The current <see cref="HRESULT"/>, to modify in case any operations are performed.</param>

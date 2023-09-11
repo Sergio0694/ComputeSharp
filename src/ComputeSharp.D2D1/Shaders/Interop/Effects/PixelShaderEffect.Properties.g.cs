@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 #if !NET6_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
+using ComputeSharp.D2D1.Shaders.Interop.Helpers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -816,208 +817,496 @@ unsafe partial struct PixelShaderEffect
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager0Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(0, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 0);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager0Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(0, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 0);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager1Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(1, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 1);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager1Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(1, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 1);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager2Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(2, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 2);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager2Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(2, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 2);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager3Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(3, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 3);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager3Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(3, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 3);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager4Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(4, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 4);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager4Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(4, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 4);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager5Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(5, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 5);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager5Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(5, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 5);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager6Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(6, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 6);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager6Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(6, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 6);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager7Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(7, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 7);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager7Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(7, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 7);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager8Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(8, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 8);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager8Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(8, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 8);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager9Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(9, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 9);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager9Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(9, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 9);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager10Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(10, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 10);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager10Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(10, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 10);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager11Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(11, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 11);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager11Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(11, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 11);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager12Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(12, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 12);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager12Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(12, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 12);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager13Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(13, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 13);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager13Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(13, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 13);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager14Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(14, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 14);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager14Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(14, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 14);
     }
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int GetResourceTextureManager15Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
-        return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(15, data, dataSize, actualSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.GetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            actualSize: actualSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            resourceTextureIndex: 15);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     private static int SetResourceTextureManager15Impl(IUnknown* effect, byte* data, uint dataSize)
     {
-        return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(15, data, dataSize);
+        PixelShaderEffect* @this = (PixelShaderEffect*)effect;
+
+        return @D2D1ShaderEffect.SetResourceTextureManagerAtIndex(
+            data: data,
+            dataSize: dataSize,
+            resourceTextureDescriptionCount: @this->resourceTextureDescriptionCount,
+            resourceTextureDescriptions: @this->resourceTextureDescriptions,
+            resourceTextureManagerBuffer: ref @this->resourceTextureManagerBuffer,
+            d2D1EffectContext: @this->d2D1EffectContext,
+            resourceTextureIndex: 15);
     }
 }
