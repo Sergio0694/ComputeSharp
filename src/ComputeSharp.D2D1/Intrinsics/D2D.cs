@@ -12,6 +12,16 @@ namespace ComputeSharp.D2D1;
 public static class D2D
 {
     /// <summary>
+    /// Converts the scene coordinates for a given input texture to normalized coordinates for sampling.
+    /// </summary>
+    /// <param name="index">The index of the input texture to convert the offset for.</param>
+    /// <param name="offset">The scene position to convert to normalized coordinates.</param>
+    /// <returns>The normalized coordinate that can be used to sample the target input texture.</returns>
+    /// <remarks>This method is only available for compute shaders.</remarks>
+    [HlslIntrinsicName("D2DConvertInputSceneToTexelSpace")]
+    public static Float2 ConvertInputSceneToTexelSpace(int index, Float2 offset) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(ConvertInputSceneToTexelSpace)}({typeof(int)}, {typeof(Float2)})");
+
+    /// <summary>
     /// Returns the color of the input texture at a specific index, for the curreent coordinate.
     /// </summary>
     /// <param name="index">The index of the input texture to get the input from.</param>
@@ -28,6 +38,22 @@ public static class D2D
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DGetInputCoordinate")]
     public static Float4 GetInputCoordinate(int index) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetInputCoordinate)}({typeof(int)})");
+
+    /// <summary>
+    /// Returns the bounds of the result rectangle currently used for dispatching the shader being run.
+    /// </summary>
+    /// <returns>The bounds of the result rectangle, in <c>SCENE_POSITION</c> format.</returns>
+    /// <remarks>This method is only available for compute shaders.</remarks>
+    [HlslIntrinsicName("D2DGetResultRectangleBounds")]
+    public static Float4 GetResultRectangleBounds() => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetResultRectangleBounds)}()");
+
+    /// <summary>
+    /// Returns the size of the result rectangle currently used for dispatching the shader being run.
+    /// </summary>
+    /// <returns>The size of the result rectangle.</returns>
+    /// <remarks>This method is only available for compute shaders.</remarks>
+    [HlslIntrinsicName("D2DGetResultRectangleSize")]
+    public static UInt2 GetResultRectangleSize() => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(GetResultRectangleSize)}()");
 
     /// <summary>
     /// Returns the value of the current scene position.
@@ -48,10 +74,10 @@ public static class D2D
     public static Float4 SampleInput(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInput)}({typeof(int)}, {typeof(Float2)})");
 
     /// <summary>
-    /// Samples the input texturee at a specified index and at a given offset from the input coordinate.
+    /// Samples the input texture at a specified index and at a given offset from the input coordinate.
     /// </summary>
     /// <param name="index">The index of the input texture to sample.</param>
-    /// <param name="offset">The normalized offset to use to sample the texture.</param>
+    /// <param name="offset">The offset to use to sample the texture.</param>
     /// <returns>The sampled value from the texture, in <c>TEXCOORDN</c> format.</returns>
     /// <remarks>This method is only available for simple inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInputAtOffset")]
@@ -66,4 +92,13 @@ public static class D2D
     /// <remarks>This method is only available for complex inputs.</remarks>
     [HlslIntrinsicName("D2DSampleInputAtPosition")]
     public static Float4 SampleInputAtPosition(int index, Float2 uv) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SampleInputAtPosition)}({typeof(int)}, {typeof(Float2)})");
+
+    /// <summary>
+    /// Sets a given output pixel.
+    /// </summary>
+    /// <param name="value">The value to set in the output texture.</param>
+    /// <param name="offset">The absolute scene position for the output pixel to set.</param>
+    /// <remarks>This method is only available for compute shaders.</remarks>
+    [HlslIntrinsicName("D2DSetOutput")]
+    public static void SetOutput(Float4 value, Float2 offset) => throw new InvalidExecutionContextException($"{typeof(D2D)}.{nameof(SetOutput)}({typeof(Float4)}, {typeof(Float2)})");
 }

@@ -87,6 +87,7 @@
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1computehelpers.hlsli.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1computehelpers.hlsli.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" />
   </ItemGroup>
 

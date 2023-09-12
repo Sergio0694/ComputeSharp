@@ -96,6 +96,14 @@ partial class D3DCompiler
                 return S.S_OK;
             }
 
+            if (new string(pFileName) == "d2d1computehelpers.hlsli")
+            {
+                *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1ComputeHelpers.TextUtf8));
+                *pBytes = (uint)D2D1ComputeHelpers.TextUtf8.Length;
+
+                return S.S_OK;
+            }
+
             return S.S_FALSE;
         }
 
