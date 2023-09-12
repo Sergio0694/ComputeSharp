@@ -88,7 +88,7 @@ partial class D3DCompiler
         {
             ReadOnlySpan<byte> fileName = MemoryMarshal2.CreateReadOnlySpanFromNullTerminated((byte*)pFileName);
 
-            if (fileName.SequenceEqual("d2d1effecthelpers.hlsli"u8))
+            if (fileName.SequenceEqual(D2D1EffectHelpers.NameUtf8))
             {
                 *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1EffectHelpers.TextUtf8));
                 *pBytes = (uint)D2D1EffectHelpers.TextUtf8.Length;
@@ -96,7 +96,7 @@ partial class D3DCompiler
                 return S.S_OK;
             }
 
-            if (new string(pFileName) == "d2d1computehelpers.hlsli")
+            if (fileName.SequenceEqual(D2D1ComputeHelpers.NameUtf8))
             {
                 *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1ComputeHelpers.TextUtf8));
                 *pBytes = (uint)D2D1ComputeHelpers.TextUtf8.Length;

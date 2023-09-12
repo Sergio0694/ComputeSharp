@@ -10,6 +10,11 @@ namespace ComputeSharp.D2D1.Shaders.Translation;
 internal static class D2D1ComputeHelpers
 {
     /// <summary>
+    /// Gets the name of the header, as UTF8 text.
+    /// </summary>
+    public static ReadOnlySpan<byte> NameUtf8 => "d2d1computehelpers.hlsli"u8;
+
+    /// <summary>
     /// Gets the contents of the custom<c>d2d1computehelpers.hlsli</c> header, as UTF8 text.
     /// </summary>
     public static ReadOnlySpan<byte> TextUtf8
