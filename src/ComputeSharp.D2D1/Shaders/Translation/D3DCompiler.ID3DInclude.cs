@@ -1,8 +1,12 @@
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
+using MemoryMarshal2 = System.Runtime.InteropServices.MemoryMarshal;
+#else
+using MemoryMarshal2 = ComputeSharp.NetStandard.MemoryMarshal;
 using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
@@ -82,7 +86,9 @@ partial class D3DCompiler
         [UnmanagedCallersOnly]
         public static int Open(ID3DIncludeForD2DHelpers* @this, D3D_INCLUDE_TYPE IncludeType, sbyte* pFileName, void* pParentData, void** ppData, uint* pBytes)
         {
-            if (new string(pFileName) == "d2d1effecthelpers.hlsli")
+            ReadOnlySpan<byte> fileName = MemoryMarshal2.CreateReadOnlySpanFromNullTerminated((byte*)pFileName);
+
+            if (fileName.SequenceEqual("d2d1effecthelpers.hlsli"u8))
             {
                 *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1EffectHelpers.TextUtf8));
                 *pBytes = (uint)D2D1EffectHelpers.TextUtf8.Length;
