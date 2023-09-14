@@ -28,22 +28,72 @@ partial class ID2D1ShaderGenerator
         /// Extracts the effect id info for the current shader.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type in use.</param>
         /// <returns>The resulting effect id.</returns>
-        public static ImmutableArray<byte> GetInfo(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        public static ImmutableArray<byte> GetInfo(
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+            Compilation compilation,
+            INamedTypeSymbol structDeclarationSymbol)
+        {
+            if (TryGetDefinedEffectId(compilation, structDeclarationSymbol, out ImmutableArray<byte> effectId))
+            {
+                return effectId;
+            }
+
+            return CreateDefaultEffectId(structDeclarationSymbol);
+        }
+
+        /// <summary>
+        /// Tries to get the defined effect id for a given shader type.
+        /// </summary>
+        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
+        /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
+        /// <param name="effectId">The resulting defined effect id, if found.</param>
+        /// <returns>Whether or not a defined effect id could be found.</returns>
+        private static bool TryGetDefinedEffectId(Compilation compilation, INamedTypeSymbol typeSymbol, out ImmutableArray<byte> effectId)
+        {
+            INamedTypeSymbol effectIdAttributeSymbol = compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DEffectIdAttribute")!;
+
+            foreach (AttributeData attributeData in typeSymbol.GetAttributes())
+            {
+                // Check that the attribute is [D2DEffectId] and with a valid parameter
+                if (SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, effectIdAttributeSymbol) &&
+                    attributeData.ConstructorArguments is [{ Value: string value }] &&
+                    Guid.TryParse(value, out Guid guid))
+                {
+                    byte[] bytes = guid.ToByteArray();
+
+                    effectId = Unsafe.As<byte[], ImmutableArray<byte>>(ref bytes);
+
+                    return true;
+                }
+            }
+
+            effectId = default;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Creates the default effect id for a given type symbol.
+        /// </summary>
+        /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
+        /// <returns>The resulting effect id.</returns>
+        private static ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
         {
             // Initialize an instance using the MD5 algorithm. We use this for several reasons:
             //   - We don't really need security, this is just to uniquely identify types
             //   - The hash size is 128 bits, which is exactly the size of a GUID.
             IncrementalHash incrementalHash = EffectId.incrementalHash ??= IncrementalHash.CreateHash(HashAlgorithmName.MD5);
 
-            string assemblyName = structDeclarationSymbol.ContainingAssembly?.Name ?? string.Empty;
+            string assemblyName = typeSymbol.ContainingAssembly?.Name ?? string.Empty;
 
             using ImmutableArrayBuilder<byte> byteBuffer = ImmutableArrayBuilder<byte>.Rent();
             using ImmutableArrayBuilder<char> charBuffer = ImmutableArrayBuilder<char>.Rent();
 
             // Format the fully qualified name into a pooled builder to avoid the string allocation
-            structDeclarationSymbol.AppendFullyQualifiedMetadataName(in charBuffer);
+            typeSymbol.AppendFullyQualifiedMetadataName(in charBuffer);
 
             int maxTypeNameCharsLength = Encoding.UTF8.GetMaxByteCount(charBuffer.Count);
             int maxAssemblyNameCharsLength = Encoding.UTF8.GetMaxByteCount(assemblyName.Length);

@@ -53,7 +53,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
                     // EffectId info
-                    ImmutableArray<byte> effectId = EffectId.GetInfo(diagnostics, typeSymbol);
+                    ImmutableArray<byte> effectId = EffectId.GetInfo(diagnostics, context.SemanticModel.Compilation, typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
