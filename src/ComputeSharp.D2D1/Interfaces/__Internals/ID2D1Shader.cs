@@ -12,6 +12,14 @@ namespace ComputeSharp.D2D1.__Internals;
 public interface ID2D1Shader
 {
     /// <summary>
+    /// Gets the effect id of the D2D effect using this shader.
+    /// </summary>
+    /// <remarks>
+    /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
+    /// </remarks>
+    ref readonly Guid EffectId { get; }
+
+    /// <summary>
     /// Gets the display name of the D2D effect using this shader.
     /// </summary>
     /// <remarks>
