@@ -52,6 +52,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
+                    // EffectId info
+                    ImmutableArray<byte> effectId = EffectId.GetInfo(diagnostics, typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
                         diagnostics,
@@ -115,6 +120,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     return new D2D1ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
+                        EffectId: new EffectIdInfo(effectId),
                         DispatchData: new DispatchDataInfo(fieldInfos, constantBufferSizeInBytes),
                         InputTypes: new InputTypesInfo(inputTypes),
                         ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
@@ -136,10 +142,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             shaderInfoWithErrors
             .Select(static (item, _) => item.Diagnostcs));
 
-        // Get the EffectDisplayName and EffectId info (hierarchy)
-        IncrementalValuesProvider<HierarchyInfo> hierarchyInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => item.Hierarchy);
+        // Get the EffectDisplayName info (hierarchy)
+        IncrementalValuesProvider<HierarchyInfo> hierarchyInfo = shaderInfoWithErrors.Select(static (item, _) => item.Hierarchy);
 
         // Generate the EffectDisplayName properties
         context.RegisterSourceOutput(hierarchyInfo, static (context, item) =>
@@ -150,14 +154,19 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.FullyQualifiedMetadataName}.{nameof(EffectDisplayName)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
+        // Get the EffectId info (hierarchy and effect id info)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EffectIdInfo EffectId)> effectIdInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.EffectId));
+
         // Generate the EffectId properties
-        context.RegisterSourceOutput(hierarchyInfo, static (context, item) =>
+        context.RegisterSourceOutput(effectIdInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectId.GetSyntax(item, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item, effectDisplayNameProperty, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax effectDisplayNameProperty = EffectId.GetSyntax(item.EffectId, out Func<SyntaxNode, SourceText> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, canUseSkipLocalsInit: false);
             SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.FullyQualifiedMetadataName}.{nameof(EffectId)}.g.cs", text);
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectId)}.g.cs", text);
         });
 
         // Get the GetInputCount() info (hierarchy and input count)

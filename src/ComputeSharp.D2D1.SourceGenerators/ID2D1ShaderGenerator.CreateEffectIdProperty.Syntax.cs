@@ -1,8 +1,8 @@
 using System;
 using System.Text;
 using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,10 +22,10 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectId</c> property.
         /// </summary>
-        /// <param name="info">The input <see cref="HierarchyInfo"/> instance.</param>
+        /// <param name="info">The input <see cref="EffectIdInfo"/> instance.</param>
         /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectId</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(HierarchyInfo info, out Func<SyntaxNode, SourceText> fixup)
+        public static PropertyDeclarationSyntax GetSyntax(EffectIdInfo info, out Func<SyntaxNode, SourceText> fixup)
         {
             // Create the local declaration:
             //
@@ -48,7 +48,7 @@ partial class ID2D1ShaderGenerator
                                     SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_EFFECT_ID_BYTES"))))))));
 
             // Prepare the initialization text
-            string effectIdLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(new byte[] { 1, 2, 3, 4 }.AsSpan());
+            string effectIdLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(info.Bytes.AsSpan());
 
             // Set the fixup function
             fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_EFFECT_ID_BYTES", effectIdLiterals), Encoding.UTF8);
