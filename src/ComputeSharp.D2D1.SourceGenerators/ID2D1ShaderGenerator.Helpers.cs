@@ -38,12 +38,12 @@ partial class ID2D1ShaderGenerator
     /// Creates a <see cref="CompilationUnitSyntax"/> instance wrapping the given method.
     /// </summary>
     /// <param name="hierarchyInfo">The <see cref="HierarchyInfo"/> instance for the current type.</param>
-    /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> item to insert.</param>
+    /// <param name="memberDeclarationSyntax">The <see cref="MemberDeclarationSyntax"/> item to insert.</param>
     /// <param name="canUseSkipLocalsInit">Whether <c>[SkipLocalsInit]</c> can be used.</param>
-    /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="methodDeclaration"/>.</returns>
-    private static CompilationUnitSyntax GetCompilationUnitFromMethod(
+    /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="memberDeclarationSyntax"/>.</returns>
+    private static CompilationUnitSyntax GetCompilationUnitFromMember(
         HierarchyInfo hierarchyInfo,
-        MethodDeclarationSyntax methodDeclaration,
+        MemberDeclarationSyntax memberDeclarationSyntax,
         bool canUseSkipLocalsInit)
     {
         // Method attributes
@@ -71,6 +71,6 @@ partial class ID2D1ShaderGenerator
             attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
         }
 
-        return hierarchyInfo.GetSyntax(methodDeclaration.AddAttributeLists(attributes.ToArray()));
+        return hierarchyInfo.GetSyntax(memberDeclarationSyntax.AddAttributeLists(attributes.ToArray()));
     }
 }

@@ -136,6 +136,20 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             shaderInfoWithErrors
             .Select(static (item, _) => item.Diagnostcs));
 
+        // Get the EffectDisplayName info (hierarchy)
+        IncrementalValuesProvider<HierarchyInfo> hierarchyInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => item.Hierarchy);
+
+        // Generate the EffectDisplayName properties
+        context.RegisterSourceOutput(hierarchyInfo, static (context, item) =>
+        {
+            PropertyDeclarationSyntax effectDisplayNameProperty = EffectDisplayName.GetSyntax(item);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item, effectDisplayNameProperty, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.FullyQualifiedMetadataName}.{nameof(EffectDisplayName)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+        });
+
         // Get the GetInputCount() info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
             shaderInfoWithErrors
@@ -145,7 +159,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getInputCountMethod = GetInputCount.GetSyntax(item.InputCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputCountMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputCountMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetInputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -159,7 +173,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getInputTypeMethod = GetInputType.GetSyntax(item.InputTypes.InputTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetInputType)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -173,7 +187,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -187,7 +201,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(initializeFromDispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InitializeFromDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -201,7 +215,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -221,7 +235,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
             MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Info.HlslSource, item.Info.Hierarchy.Hierarchy.Length, item.CanUseRawMultilineStringLiterals);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -279,7 +293,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
         {
             MethodDeclarationSyntax loadBytecodeMethod = LoadBytecode.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadBytecodeMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, loadBytecodeMethod, canUseSkipLocalsInit: false);
             SourceText text = fixup(compilationUnit);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);
@@ -294,7 +308,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getOutputBufferMethod = GetOutputBuffer.GetSyntax(item.OutputBuffer);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getOutputBufferMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getOutputBufferMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetOutputBuffer)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -309,7 +323,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadInputDescriptionsMethod, item.CanUseSkipLocalsInit);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadInputDescriptionsMethod, item.CanUseSkipLocalsInit);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
@@ -323,7 +337,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getPixelOptionsMethod = GetPixelOptions.GetSyntax(item.PixelOptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getPixelOptionsMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getPixelOptionsMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetPixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
