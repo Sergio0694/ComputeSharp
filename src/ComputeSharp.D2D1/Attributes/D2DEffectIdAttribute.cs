@@ -21,7 +21,7 @@ public sealed class D2DEffectIdAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the number of texture inputs for the shader.
+    /// Gets the effect id value.
     /// </summary>
     public Guid Value { get; }
 }
