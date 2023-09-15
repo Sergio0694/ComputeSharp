@@ -219,4 +219,57 @@ public partial class D2D1PixelShaderEffectTests
             return 0;
         }
     }
+
+    [TestMethod]
+    public unsafe void DefaultEffectDisplayName_MatchesValue()
+    {
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), typeof(ShaderWithDefaultEffectDisplayName).FullName);
+    }
+
+    [D2DInputCount(0)]
+    private partial struct ShaderWithDefaultEffectDisplayName : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [TestMethod]
+    public unsafe void ExplicitEffectDisplayName_MatchesValue()
+    {
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName>(), "Fancy blur");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName2>(), "Fancy&quot;&lt;");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName3>(), "FancyBlurEffect");
+    }
+
+    [D2DInputCount(0)]
+    [D2DEffectDisplayName("Fancy blur")]
+    private partial struct ShaderWithExplicitEffectDisplayName : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [D2DInputCount(0)]
+    [D2DEffectDisplayName("Fancy\"<")]
+    private partial struct ShaderWithExplicitEffectDisplayName2 : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [D2DInputCount(0)]
+    [D2DEffectDisplayName("Fancy\r\nBlur\nEffect")]
+    private partial struct ShaderWithExplicitEffectDisplayName3 : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
 }
