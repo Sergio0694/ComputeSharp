@@ -1,5 +1,4 @@
 using ComputeSharp.D2D1.__Internals;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -17,18 +16,18 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.
         /// </summary>
-        /// <param name="info">The input <see cref="HierarchyInfo"/> instance.</param>
+        /// <param name="effectDisplayName">The input effect display name value.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(HierarchyInfo info)
+        public static PropertyDeclarationSyntax GetSyntax(string effectDisplayName)
         {
             // This code produces a method declaration as follows:
             //
-            // readonly string global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectDisplayName => "<FULLY_QUALIFIED_NAME>";
+            // readonly string global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectDisplayName => "<EFFECT_DISPLAY_NAME>";
             return
                 PropertyDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)), Identifier(nameof(EffectDisplayName)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(info.FullyQualifiedMetadataName))))
+                .WithExpressionBody(ArrowExpressionClause(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(effectDisplayName))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
     }

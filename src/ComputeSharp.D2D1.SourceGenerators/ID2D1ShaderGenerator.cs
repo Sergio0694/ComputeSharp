@@ -57,6 +57,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
+                    // EffectDisplayName info
+                    string effectDisplayName = EffectDisplayName.GetInfo(diagnostics, context.SemanticModel.Compilation, typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
                         diagnostics,
@@ -121,6 +126,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     return new D2D1ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
                         EffectId: new EffectIdInfo(effectId),
+                        EffectDisplayName: effectDisplayName,
                         DispatchData: new DispatchDataInfo(fieldInfos, constantBufferSizeInBytes),
                         InputTypes: new InputTypesInfo(inputTypes),
                         ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
@@ -142,16 +148,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             shaderInfoWithErrors
             .Select(static (item, _) => item.Diagnostcs));
 
-        // Get the EffectDisplayName info (hierarchy)
-        IncrementalValuesProvider<HierarchyInfo> hierarchyInfo = shaderInfoWithErrors.Select(static (item, _) => item.Hierarchy);
+        // Get the EffectDisplayName info (hierarchy and effect display name)
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string EffectDisplayName)> effectDisplayNameInfo =
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.EffectDisplayName));
 
         // Generate the EffectDisplayName properties
-        context.RegisterSourceOutput(hierarchyInfo, static (context, item) =>
+        context.RegisterSourceOutput(effectDisplayNameInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectDisplayName.GetSyntax(item);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item, effectDisplayNameProperty, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax effectDisplayNameProperty = EffectDisplayName.GetSyntax(item.EffectDisplayName);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.FullyQualifiedMetadataName}.{nameof(EffectDisplayName)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectDisplayName)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the EffectId info (hierarchy and effect id info)
