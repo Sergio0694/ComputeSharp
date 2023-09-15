@@ -165,4 +165,58 @@ public partial class D2D1PixelShaderEffectTests
             return this.a + this.b + this.c.X + this.d + this.e;
         }
     }
+
+    [TestMethod]
+    public unsafe void DefaultEffectId_MatchesValue()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<ShaderWithDefaultEffectId>(d2D1Factory2.Get(), out Guid effectId);
+
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithDefaultEffectId>(), effectId);
+        Assert.AreNotEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithDefaultEffectId2>(), effectId);
+    }
+
+    [D2DInputCount(0)]
+    private partial struct ShaderWithDefaultEffectId : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [D2DInputCount(0)]
+    private partial struct ShaderWithDefaultEffectId2 : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [TestMethod]
+    public unsafe void ExplicitEffectId_MatchesValue()
+    {
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<ShaderWithExplicitEffectId>(d2D1Factory2.Get(), out Guid effectId);
+
+        Assert.AreEqual(Guid.Parse("8E1F7F49-EF0D-4242-8912-08ADA36AB4EC"), effectId);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithExplicitEffectId>(), effectId);
+    }
+
+    [D2DInputCount(0)]
+    [D2DEffectId("8E1F7F49-EF0D-4242-8912-08ADA36AB4EC")]
+    private partial struct ShaderWithExplicitEffectId : ID2D1PixelShader
+    {
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
 }
