@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Immutable;
+using ComputeSharp.D2D1.SourceGenerators.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -8,13 +8,13 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates an error whenever [D2DEffectId] is used with an invalid value.
+/// A diagnostic analyzer that generates an error whenever [D2DEffectName] is used with an invalid value.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class InvalidEffectIdValueAnalyzer : DiagnosticAnalyzer
+public sealed class InvalidEffectDisplayNameValueAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DEffectIdAttributeValue);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DEffectDisplayNameAttributeValue);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -24,8 +24,8 @@ public sealed class InvalidEffectIdValueAnalyzer : DiagnosticAnalyzer
 
         context.RegisterCompilationStartAction(static context =>
         {
-            // Get the [D2DEffectId] symbol
-            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DEffectIdAttribute") is not { } d2DEffectIdAttributeSymbol)
+            // Get the [D2DEffectDisplayName] symbol
+            if (context.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DEffectDisplayNameAttribute") is not { } d2DEffectIdAttributeSymbol)
             {
                 return;
             }
@@ -40,18 +40,17 @@ public sealed class InvalidEffectIdValueAnalyzer : DiagnosticAnalyzer
 
                 foreach (AttributeData attributeData in typeSymbol.GetAttributes())
                 {
-                    // Look for the [D2DEffectId] use
+                    // Look for the [D2DEffectDisplayName] use
                     if (!SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, d2DEffectIdAttributeSymbol))
                     {
                         continue;
                     }
 
-                    // Validate the GUID text and emit a diagnostic if needed
-                    if (attributeData.ConstructorArguments is not [{ Value: string value }] ||
-                        !Guid.TryParse(value, out _))
+                    // Validate the effect display name
+                    if (!D2D1EffectMetadataParser.IsValidEffectDisplayName(attributeData))
                     {
                         context.ReportDiagnostic(Diagnostic.Create(
-                            InvalidD2DEffectIdAttributeValue,
+                            InvalidD2DEffectDisplayNameAttributeValue,
                             attributeData.GetLocation()));
                     }
 

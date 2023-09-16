@@ -1,7 +1,5 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
-using System.Text.RegularExpressions;
+using ComputeSharp.D2D1.SourceGenerators.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -17,11 +15,6 @@ partial class ID2D1ShaderGenerator
     /// </summary>
     private static partial class EffectDisplayName
     {
-        /// <summary>
-        /// A <see cref="Regex"/> instance to find all newlines.
-        /// </summary>
-        private static readonly Regex NewLinesRegex = new("[\r\n\v]", RegexOptions.Compiled);
-
         /// <summary>
         /// Extracts the effect display name info for the current shader.
         /// </summary>
@@ -55,23 +48,10 @@ partial class ID2D1ShaderGenerator
 
             foreach (AttributeData attributeData in typeSymbol.GetAttributes())
             {
-                // Check that the attribute is [D2DEffectDisplayName] and with a valid parameter
-                if (SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, effectIdAttributeSymbol) &&
-                    attributeData.ConstructorArguments is [{ Value: string { Length: > 0 } value }])
+                // Check that the attribute is [D2DEffectDisplayName]
+                if (SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, effectIdAttributeSymbol))
                 {
-                    // Remove new lines (the values cannot span multiple lines in XML)
-                    string singleLineValue = NewLinesRegex.Replace(value, string.Empty);
-
-                    // Make sure to escape any invalid XML characters
-                    string escapedValue = SecurityElement.Escape(singleLineValue);
-
-                    // Trim the display name as well
-                    if (escapedValue.AsSpan().Trim() is { Length: > 0 } trimmedValue)
-                    {
-                        effectDisplayName = trimmedValue.ToString();
-
-                        return true;
-                    }
+                    return D2D1EffectMetadataParser.TryGetEffectDisplayName(attributeData, out effectDisplayName);
                 }
             }
 
