@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.D2D1.SourceGenerators.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
-using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -18,14 +16,10 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the effect display name info for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type in use.</param>
         /// <returns>The resulting effect display name.</returns>
-        public static string GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            Compilation compilation,
-            INamedTypeSymbol structDeclarationSymbol)
+        public static string GetInfo(Compilation compilation, INamedTypeSymbol structDeclarationSymbol)
         {
             if (TryGetDefinedEffectDisplayName(compilation, structDeclarationSymbol, out string? effectDisplayName))
             {

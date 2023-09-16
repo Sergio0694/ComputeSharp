@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -27,14 +26,10 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Extracts the effect id info for the current shader.
         /// </summary>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type in use.</param>
         /// <returns>The resulting effect id.</returns>
-        public static ImmutableArray<byte> GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
-            Compilation compilation,
-            INamedTypeSymbol structDeclarationSymbol)
+        public static ImmutableArray<byte> GetInfo(Compilation compilation, INamedTypeSymbol structDeclarationSymbol)
         {
             if (TryGetDefinedEffectId(compilation, structDeclarationSymbol, out ImmutableArray<byte> effectId))
             {
