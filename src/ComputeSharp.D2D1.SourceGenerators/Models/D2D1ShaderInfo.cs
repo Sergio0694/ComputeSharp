@@ -9,6 +9,9 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="Hierarchy">The hierarchy info for the shader type.</param>
 /// <param name="EffectId">The effect id info for the shader type.</param>
 /// <param name="EffectDisplayName">The effect display name for the shader type, if available.</param>
+/// <param name="EffectDescription">The effect description for the shader type, if available.</param>
+/// <param name="EffectCategory">The effect category for the shader type, if available.</param>
+/// <param name="EffectAuthor">The effect author for the shader type, if available.</param>
 /// <param name="DispatchData">The gathered shader dispatch data.</param>
 /// <param name="InputTypes">The gathered input types for the shader.</param>
 /// <param name="ResourceTextureDescriptions">The gathered resource texture descriptions for the shader.</param>
@@ -21,6 +24,9 @@ internal sealed record D2D1ShaderInfo(
     HierarchyInfo Hierarchy,
     EffectIdInfo EffectId,
     string? EffectDisplayName,
+    string? EffectDescription,
+    string? EffectCategory,
+    string? EffectAuthor,
     DispatchDataInfo DispatchData,
     InputTypesInfo InputTypes,
     ResourceTextureDescriptionsInfo ResourceTextureDescriptions,

@@ -24,6 +24,36 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDescription</c> property.
+        /// </summary>
+        /// <param name="effectDescription">The input effect description value, if available.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDescription</c> property.</returns>
+        public static PropertyDeclarationSyntax GetEffectDescriptionSyntax(string? effectDescription)
+        {
+            return GetEffectMetadataSyntax("EffectDescription", effectDescription);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectCategory</c> property.
+        /// </summary>
+        /// <param name="effectCategory">The input effect category value, if available.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectCategory</c> property.</returns>
+        public static PropertyDeclarationSyntax GetEffectCategorySyntax(string? effectCategory)
+        {
+            return GetEffectMetadataSyntax("EffectCategory", effectCategory);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectAuthor</c> property.
+        /// </summary>
+        /// <param name="effectAuthor">The input effect author value, if available.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectAuthor</c> property.</returns>
+        public static PropertyDeclarationSyntax GetEffectAuthorSyntax(string? effectAuthor)
+        {
+            return GetEffectMetadataSyntax("EffectAuthor", effectAuthor);
+        }
+
+        /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for a given metadata property.
         /// </summary>
         /// <param name="propertyName">The property name to generate.</param>
