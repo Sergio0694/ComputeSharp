@@ -228,7 +228,7 @@ public partial class D2D1PixelShaderEffectTests
     [TestMethod]
     public unsafe void DefaultEffectDisplayName_MatchesValue()
     {
-        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), typeof(ShaderWithDefaultEffectDisplayName).FullName);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), null);
     }
 
     [D2DInputCount(0)]

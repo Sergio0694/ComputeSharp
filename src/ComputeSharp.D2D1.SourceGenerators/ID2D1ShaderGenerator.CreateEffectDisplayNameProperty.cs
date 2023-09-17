@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.D2D1.SourceGenerators.Helpers;
-using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -18,15 +17,15 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type in use.</param>
-        /// <returns>The resulting effect display name.</returns>
-        public static string GetInfo(Compilation compilation, INamedTypeSymbol structDeclarationSymbol)
+        /// <returns>The resulting effect display name, if available.</returns>
+        public static string? GetInfo(Compilation compilation, INamedTypeSymbol structDeclarationSymbol)
         {
             if (TryGetDefinedEffectDisplayName(compilation, structDeclarationSymbol, out string? effectDisplayName))
             {
                 return effectDisplayName;
             }
 
-            return structDeclarationSymbol.GetFullyQualifiedMetadataName();
+            return null;
         }
 
         /// <summary>

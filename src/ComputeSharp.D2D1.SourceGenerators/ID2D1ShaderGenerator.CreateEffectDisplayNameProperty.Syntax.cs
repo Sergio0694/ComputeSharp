@@ -16,18 +16,25 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.
         /// </summary>
-        /// <param name="effectDisplayName">The input effect display name value.</param>
+        /// <param name="effectDisplayName">The input effect display name value, if available.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(string effectDisplayName)
+        public static PropertyDeclarationSyntax GetSyntax(string? effectDisplayName)
         {
+            // Get the expression: either a string literal, or just null
+            ExpressionSyntax displayNameExpression = effectDisplayName switch
+            {
+                { } => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(effectDisplayName)),
+                _ => LiteralExpression(SyntaxKind.NullLiteralExpression)
+            };
+
             // This code produces a method declaration as follows:
             //
-            // readonly string global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectDisplayName => "<EFFECT_DISPLAY_NAME>";
+            // readonly string? global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectDisplayName => <EFFECT_DISPLAY_NAME>;
             return
-                PropertyDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)), Identifier(nameof(EffectDisplayName)))
+                PropertyDeclaration(NullableType(PredefinedType(Token(SyntaxKind.StringKeyword))), Identifier(nameof(EffectDisplayName)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(effectDisplayName))))
+                .WithExpressionBody(ArrowExpressionClause(displayNameExpression))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
     }

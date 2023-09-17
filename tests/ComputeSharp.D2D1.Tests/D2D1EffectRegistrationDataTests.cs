@@ -46,7 +46,7 @@ public partial class D2D1EffectRegistrationDataTests
         Assert.AreEqual("""
             <?xml version='1.0'?>
             <Effect>
-                <Property name='DisplayName' type='string' value='ComputeSharp.D2D1.Tests.D2D1EffectRegistrationDataTests+TestRegistrationBlobShader'/>
+                <Property name='DisplayName' type='string' value=''/>
                 <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
                 <Property name='Category' type='string' value='Stylize'/>
                 <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>

@@ -32,11 +32,11 @@ public static unsafe class D2D1PixelShaderEffect
     }
 
     /// <summary>
-    /// Gets the effect display name of the D2D effect using this shader.
+    /// Gets the effect display name of the D2D effect using this shader, if available.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect id for.</typeparam>
-    /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders.</returns>
-    public static string GetEffectDisplayName<T>()
+    /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
+    public static string? GetEffectDisplayName<T>()
         where T : unmanaged, ID2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
@@ -71,7 +71,7 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """);
-        writer.WriteRaw(GetEffectDisplayName<T>());
+        writer.WriteRaw(GetEffectDisplayName<T>().AsSpan());
         writer.WriteRaw("""
             '/>
                 <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
@@ -311,7 +311,7 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """u8);
-        writer.WriteAsUtf8(GetEffectDisplayName<T>());
+        writer.WriteAsUtf8(GetEffectDisplayName<T>() ?? "");
         writer.WriteRaw("""
             '/>
                 <Property name='Author' type='string' value='ComputeSharp.D2D1'/>

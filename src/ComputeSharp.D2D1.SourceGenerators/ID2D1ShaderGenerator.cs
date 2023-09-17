@@ -58,7 +58,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     token.ThrowIfCancellationRequested();
 
                     // EffectDisplayName info
-                    string effectDisplayName = EffectDisplayName.GetInfo(context.SemanticModel.Compilation, typeSymbol);
+                    string? effectDisplayName = EffectDisplayName.GetInfo(context.SemanticModel.Compilation, typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -149,7 +149,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) => item.Diagnostcs));
 
         // Get the EffectDisplayName info (hierarchy and effect display name)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string EffectDisplayName)> effectDisplayNameInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string? EffectDisplayName)> effectDisplayNameInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.EffectDisplayName));
 
