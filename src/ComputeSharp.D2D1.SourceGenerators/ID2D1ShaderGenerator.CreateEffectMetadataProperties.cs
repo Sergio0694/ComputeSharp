@@ -23,6 +23,7 @@ partial class ID2D1ShaderGenerator
                 compilation,
                 structDeclarationSymbol,
                 "ComputeSharp.D2D1.D2DEffectDisplayNameAttribute",
+                isAssemblyLevelAttributeSupported: false,
                 out string? effectDisplayName))
             {
                 return effectDisplayName;
@@ -43,6 +44,7 @@ partial class ID2D1ShaderGenerator
                 compilation,
                 structDeclarationSymbol,
                 "ComputeSharp.D2D1.D2DEffectDescriptionAttribute",
+                isAssemblyLevelAttributeSupported: false,
                 out string? effectDescription))
             {
                 return effectDescription;
@@ -63,6 +65,7 @@ partial class ID2D1ShaderGenerator
                 compilation,
                 structDeclarationSymbol,
                 "ComputeSharp.D2D1.D2DEffectCategoryAttribute",
+                isAssemblyLevelAttributeSupported: true,
                 out string? effectCategory))
             {
                 return effectCategory;
@@ -83,6 +86,7 @@ partial class ID2D1ShaderGenerator
                 compilation,
                 structDeclarationSymbol,
                 "ComputeSharp.D2D1.D2DEffectAuthorAttribute",
+                isAssemblyLevelAttributeSupported: true,
                 out string? effectAuthor))
             {
                 return effectAuthor;

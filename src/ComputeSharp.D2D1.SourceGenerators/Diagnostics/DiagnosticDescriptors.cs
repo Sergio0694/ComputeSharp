@@ -877,7 +877,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectDisplayName]</c> attribute is being used with an invalid value.
     /// <para>
-    /// Format: <c>"The [D2DEffectDisplayName] attribute is being used with an invalid value (the input text must be a valid GUID)"</c>.
+    /// Format: <c>"The [D2DEffectDisplayName] attribute is being used with an invalid value"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DEffectDisplayNameAttributeValue = new DiagnosticDescriptor(
@@ -888,5 +888,53 @@ partial class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "The [D2DEffectDisplayName] attribute must contain valid text.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectDescription]</c> attribute is being used with an invalid value.
+    /// <para>
+    /// Format: <c>"The [D2DEffectDescription] attribute is being used with an invalid value"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DEffectDescriptionAttributeValue = new DiagnosticDescriptor(
+        id: "CMPSD2D0061",
+        title: "Invalid [D2DEffectDescription] attribute value",
+        messageFormat: "The [D2DEffectDescription] attribute is being used with an invalid value",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DEffectDescription] attribute must contain valid text.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectCategory]</c> attribute is being used with an invalid value.
+    /// <para>
+    /// Format: <c>"The [D2DEffectDescription] attribute is being used with an invalid value"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DEffectCategoryAttributeValue = new DiagnosticDescriptor(
+        id: "CMPSD2D0062",
+        title: "Invalid [D2DEffectCategory] attribute value",
+        messageFormat: "The [D2DEffectCategory] attribute is being used with an invalid value",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DEffectCategory] attribute must contain valid text.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectAuthor]</c> attribute is being used with an invalid value.
+    /// <para>
+    /// Format: <c>"The [D2DEffectAuthor] attribute is being used with an invalid value"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DEffectAuthorAttributeValue = new DiagnosticDescriptor(
+        id: "CMPSD2D0063",
+        title: "Invalid [D2DEffectAuthor] attribute value",
+        messageFormat: "The [D2DEffectAuthor] attribute is being used with an invalid value",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DEffectAuthor] attribute must contain valid text.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

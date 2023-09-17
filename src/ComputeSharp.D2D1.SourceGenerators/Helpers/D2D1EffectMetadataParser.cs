@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Text.RegularExpressions;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.D2D1.SourceGenerators.Helpers;
@@ -41,23 +42,29 @@ internal static class D2D1EffectMetadataParser
     /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
     /// <param name="attributeFullyQualifiedMetadataName">The fully qualified metadata name of the target attribute.</param>
+    /// <param name="isAssemblyLevelAttributeSupported">Whether the attribute can also be on the assembly.</param>
     /// <param name="effectMetadataName">The resulting defined effect metadata name, if found.</param>
     /// <returns>Whether or not a defined effect metadata name could be found.</returns>
     public static bool TryGetEffectMetadataName(
         Compilation compilation,
         INamedTypeSymbol typeSymbol,
         string attributeFullyQualifiedMetadataName,
+        bool isAssemblyLevelAttributeSupported,
         [NotNullWhen(true)] out string? effectMetadataName)
     {
         INamedTypeSymbol metadataAttributeSymbol = compilation.GetTypeByMetadataName(attributeFullyQualifiedMetadataName)!;
 
-        foreach (AttributeData attributeData in typeSymbol.GetAttributes())
+        // Always check the attributes on the type first
+        if (typeSymbol.TryGetAttributeWithType(metadataAttributeSymbol, out AttributeData? attributeData))
         {
-            // Check that the attribute is the one we're looking for
-            if (SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, metadataAttributeSymbol))
-            {
-                return TryGetEffectMetadataName(attributeData, out effectMetadataName);
-            }
+            return TryGetEffectMetadataName(attributeData, out effectMetadataName);
+        }
+
+        // Check assembly-level attributes next, if needed
+        if (isAssemblyLevelAttributeSupported &&
+            typeSymbol.ContainingAssembly!.TryGetAttributeWithType(metadataAttributeSymbol, out attributeData))
+        {
+            return TryGetEffectMetadataName(attributeData, out effectMetadataName);
         }
 
         effectMetadataName = default;

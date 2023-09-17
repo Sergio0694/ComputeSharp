@@ -8,7 +8,7 @@ namespace ComputeSharp.D2D1;
 /// <remarks>
 /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
 /// </remarks>
-[AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly, AllowMultiple = false)]
 public sealed class D2DEffectAuthorAttribute : Attribute
 {
     /// <summary>
