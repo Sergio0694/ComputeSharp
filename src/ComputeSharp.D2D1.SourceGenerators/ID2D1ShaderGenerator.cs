@@ -58,7 +58,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     token.ThrowIfCancellationRequested();
 
                     // EffectDisplayName info
-                    string? effectDisplayName = EffectDisplayName.GetInfo(context.SemanticModel.Compilation, typeSymbol);
+                    string? effectDisplayName = EffectMetadata.GetEffectDisplayNameInfo(context.SemanticModel.Compilation, typeSymbol);
 
                     token.ThrowIfCancellationRequested();
 
@@ -156,10 +156,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the EffectDisplayName properties
         context.RegisterSourceOutput(effectDisplayNameInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectDisplayName.GetSyntax(item.EffectDisplayName);
+            PropertyDeclarationSyntax effectDisplayNameProperty = EffectMetadata.GetEffectDisplayNameSyntax(item.EffectDisplayName);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectDisplayName)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectDisplayName.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the EffectId info (hierarchy and effect id info)

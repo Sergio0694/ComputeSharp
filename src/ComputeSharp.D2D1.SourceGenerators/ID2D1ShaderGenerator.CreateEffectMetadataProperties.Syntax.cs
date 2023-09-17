@@ -11,30 +11,41 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class EffectDisplayName
+    partial class EffectMetadata
     {
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.
         /// </summary>
         /// <param name="effectDisplayName">The input effect display name value, if available.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectDisplayName</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(string? effectDisplayName)
+        public static PropertyDeclarationSyntax GetEffectDisplayNameSyntax(string? effectDisplayName)
+        {
+            return GetEffectMetadataSyntax("EffectDisplayName", effectDisplayName);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for a given metadata property.
+        /// </summary>
+        /// <param name="propertyName">The property name to generate.</param>
+        /// <param name="metadataValue">The input effect metadata value, if available.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the given metadata property.</returns>
+        private static PropertyDeclarationSyntax GetEffectMetadataSyntax(string propertyName, string? metadataValue)
         {
             // Get the expression: either a string literal, or just null
-            ExpressionSyntax displayNameExpression = effectDisplayName switch
+            ExpressionSyntax metadataValueExpression = metadataValue switch
             {
-                { } => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(effectDisplayName)),
+                { } => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(metadataValue)),
                 _ => LiteralExpression(SyntaxKind.NullLiteralExpression)
             };
 
             // This code produces a method declaration as follows:
             //
-            // readonly string? global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectDisplayName => <EFFECT_DISPLAY_NAME>;
+            // readonly string? global::ComputeSharp.D2D1.__Internals.ID2D1Shader.<PROPERTY_NAME> => <METADATA_VALUE>;
             return
-                PropertyDeclaration(NullableType(PredefinedType(Token(SyntaxKind.StringKeyword))), Identifier(nameof(EffectDisplayName)))
+                PropertyDeclaration(NullableType(PredefinedType(Token(SyntaxKind.StringKeyword))), Identifier(propertyName))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(displayNameExpression))
+                .WithExpressionBody(ArrowExpressionClause(metadataValueExpression))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
     }

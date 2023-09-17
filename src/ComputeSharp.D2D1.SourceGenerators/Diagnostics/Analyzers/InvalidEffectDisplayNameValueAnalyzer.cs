@@ -47,7 +47,7 @@ public sealed class InvalidEffectDisplayNameValueAnalyzer : DiagnosticAnalyzer
                     }
 
                     // Validate the effect display name
-                    if (!D2D1EffectMetadataParser.IsValidEffectDisplayName(attributeData))
+                    if (!D2D1EffectMetadataParser.IsValidEffectMetadataName(attributeData))
                     {
                         context.ReportDiagnostic(Diagnostic.Create(
                             InvalidD2DEffectDisplayNameAttributeValue,

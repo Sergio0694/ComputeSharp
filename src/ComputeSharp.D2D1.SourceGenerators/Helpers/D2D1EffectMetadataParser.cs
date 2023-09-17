@@ -17,11 +17,11 @@ internal static class D2D1EffectMetadataParser
     private static readonly Regex NewLinesRegex = new("[\r\n\v]", RegexOptions.Compiled);
 
     /// <summary>
-    /// Checks whether a given <see cref="AttributeData"/> value contains a valid effect display name.
+    /// Checks whether a given <see cref="AttributeData"/> value contains a valid effect metadata name.
     /// </summary>
     /// <param name="attributeData">The input <see cref="AttributeData"/> object to inspect.</param>
-    /// <returns>Whether <paramref name="attributeData"/> contains a valid effect display name.</returns>
-    public static bool IsValidEffectDisplayName(AttributeData attributeData)
+    /// <returns>Whether <paramref name="attributeData"/> contains a valid effect metadata name.</returns>
+    public static bool IsValidEffectMetadataName(AttributeData attributeData)
     {
         if (attributeData.ConstructorArguments is [{ Value: string { Length: > 0 } value }])
         {
@@ -36,14 +36,44 @@ internal static class D2D1EffectMetadataParser
     }
 
     /// <summary>
-    /// Tries to get the defined effect display name for a given attribute.
+    /// Tries to get the defined effect metadata name for a given shader type.
+    /// </summary>
+    /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
+    /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
+    /// <param name="attributeFullyQualifiedMetadataName">The fully qualified metadata name of the target attribute.</param>
+    /// <param name="effectMetadataName">The resulting defined effect metadata name, if found.</param>
+    /// <returns>Whether or not a defined effect metadata name could be found.</returns>
+    public static bool TryGetEffectMetadataName(
+        Compilation compilation,
+        INamedTypeSymbol typeSymbol,
+        string attributeFullyQualifiedMetadataName,
+        [NotNullWhen(true)] out string? effectMetadataName)
+    {
+        INamedTypeSymbol metadataAttributeSymbol = compilation.GetTypeByMetadataName(attributeFullyQualifiedMetadataName)!;
+
+        foreach (AttributeData attributeData in typeSymbol.GetAttributes())
+        {
+            // Check that the attribute is the one we're looking for
+            if (SymbolEqualityComparer.Default.Equals(attributeData.AttributeClass, metadataAttributeSymbol))
+            {
+                return TryGetEffectMetadataName(attributeData, out effectMetadataName);
+            }
+        }
+
+        effectMetadataName = default;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Tries to get the defined effect metadata name for a given attribute.
     /// </summary>
     /// <param name="attributeData">The input <see cref="AttributeData"/> object to inspect.</param>
-    /// <param name="effectDisplayName">The resulting defined effect display name, if found.</param>
-    /// <returns>Whether or not a defined effect display name could be found.</returns>
-    public static bool TryGetEffectDisplayName(AttributeData attributeData, [NotNullWhen(true)] out string? effectDisplayName)
+    /// <param name="effectMetadataName">The resulting defined effect metadata name, if found.</param>
+    /// <returns>Whether or not a defined effect metadata name could be found.</returns>
+    public static bool TryGetEffectMetadataName(AttributeData attributeData, [NotNullWhen(true)] out string? effectMetadataName)
     {
-        // Check that the attribute is [D2DEffectDisplayName] and with a valid parameter
+        // Check that the attribute has a valid parameter
         if (attributeData.ConstructorArguments is [{ Value: string { Length: > 0 } value }])
         {
             // Remove new lines (the values cannot span multiple lines in XML)
@@ -55,13 +85,13 @@ internal static class D2D1EffectMetadataParser
             // Trim the display name as well
             if (escapedValue.AsSpan().Trim() is { Length: > 0 } trimmedValue)
             {
-                effectDisplayName = trimmedValue.ToString();
+                effectMetadataName = trimmedValue.ToString();
 
                 return true;
             }
         }
 
-        effectDisplayName = default;
+        effectMetadataName = default;
 
         return false;
     }
