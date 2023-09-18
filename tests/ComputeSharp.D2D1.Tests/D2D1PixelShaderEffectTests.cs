@@ -174,9 +174,14 @@ public partial class D2D1PixelShaderEffectTests
         using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
 
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<ShaderWithDefaultEffectId>(d2D1Factory2.Get(), out Guid effectId);
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<ShaderWithDefaultEffectId2>(d2D1Factory2.Get(), out Guid effectId2);
+
+        // Ensure that the dynamically generated GUIDs are deterministic and stable
+        Assert.AreEqual(Guid.Parse("F5287184-0EC7-0BC6-3942-8BFB70E77C4B"), effectId);
+        Assert.AreEqual(Guid.Parse("96310279-E716-D336-5097-BE516792CBF0"), effectId2);
 
         Assert.AreEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithDefaultEffectId>(), effectId);
-        Assert.AreNotEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithDefaultEffectId2>(), effectId);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectId<ShaderWithDefaultEffectId2>(), effectId2);
     }
 
     [D2DInputCount(0)]
