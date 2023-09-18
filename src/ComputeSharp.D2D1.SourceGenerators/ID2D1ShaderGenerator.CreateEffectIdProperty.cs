@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -77,46 +78,55 @@ partial class ID2D1ShaderGenerator
         /// <returns>The resulting effect id.</returns>
         private static ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
         {
-            // Initialize an instance using the MD5 algorithm. We use this for several reasons:
-            //   - We don't really need security, this is just to uniquely identify types
-            //   - The hash size is 128 bits, which is exactly the size of a GUID.
-            IncrementalHash incrementalHash = EffectId.incrementalHash ??= IncrementalHash.CreateHash(HashAlgorithmName.MD5);
+            try
+            {
+                // Initialize an instance using the MD5 algorithm. We use this for several reasons:
+                //   - We don't really need security, this is just to uniquely identify types
+                //   - The hash size is 128 bits, which is exactly the size of a GUID.
+                IncrementalHash incrementalHash = EffectId.incrementalHash ??= IncrementalHash.CreateHash(HashAlgorithmName.MD5);
 
-            string assemblyName = typeSymbol.ContainingAssembly?.Name ?? string.Empty;
+                string assemblyName = typeSymbol.ContainingAssembly?.Name ?? string.Empty;
 
-            using ImmutableArrayBuilder<byte> byteBuffer = ImmutableArrayBuilder<byte>.Rent();
-            using ImmutableArrayBuilder<char> charBuffer = ImmutableArrayBuilder<char>.Rent();
+                using ImmutableArrayBuilder<char> charBuffer = ImmutableArrayBuilder<char>.Rent();
 
-            // Format the fully qualified name into a pooled builder to avoid the string allocation
-            typeSymbol.AppendFullyQualifiedMetadataName(in charBuffer);
+                // Format the fully qualified name into a pooled builder to avoid the string allocation
+                typeSymbol.AppendFullyQualifiedMetadataName(in charBuffer);
 
-            int maxTypeNameCharsLength = Encoding.UTF8.GetMaxByteCount(charBuffer.Count);
-            int maxAssemblyNameCharsLength = Encoding.UTF8.GetMaxByteCount(assemblyName.Length);
-            int maxEncodedCharsLength = Math.Max(maxTypeNameCharsLength, maxAssemblyNameCharsLength);
+                int maxTypeNameByteCount = Encoding.UTF8.GetMaxByteCount(charBuffer.Count);
+                int maxAssemblyNameByteCount = Encoding.UTF8.GetMaxByteCount(assemblyName.Length);
+                int maxEncodedByteCount = Math.Max(maxTypeNameByteCount, maxAssemblyNameByteCount);
 
-            byteBuffer.EnsureCapacity(maxEncodedCharsLength);
+                byte[] bufferUtf8 = ArrayPool<byte>.Shared.Rent(maxEncodedByteCount);
 
-            // UTF8 encode the fully qualified name first
-            int typeNameCharsLength = Encoding.UTF8.GetBytes(charBuffer.WrittenSpan, byteBuffer.DangerousGetArray().AsSpan());
+                // UTF8 encode the fully qualified name first
+                int typeNameBytesWritten = Encoding.UTF8.GetBytes(charBuffer.WrittenSpan, bufferUtf8.AsSpan());
 
-            byteBuffer.Advance(typeNameCharsLength);
+                // Append the UTF8 fully qualified name to the MD5 hash
+                incrementalHash.AppendData(bufferUtf8, 0, typeNameBytesWritten);
 
-            // Append the UTF8 fully qualified name to the MD5 hash
-            incrementalHash.AppendData(byteBuffer.DangerousGetArray(), 0, byteBuffer.Count);
+                // UTF8 encode the assembly name as well
+                int assemblyNameBytesWritten = Encoding.UTF8.GetBytes(assemblyName.AsSpan(), bufferUtf8.AsSpan());
 
-            // UTF8 encode the assembly name as well
-            int assemblyNameCharsLength = Encoding.UTF8.GetBytes(assemblyName.AsSpan(), byteBuffer.DangerousGetArray().AsSpan());
+                // Append the UTF8 assembly name to the MD5 hash
+                incrementalHash.AppendData(bufferUtf8, 0, assemblyNameBytesWritten);
 
-            byteBuffer.Advance(assemblyNameCharsLength);
+                // The state is not fully in the incremental hash, we can return the array
+                ArrayPool<byte>.Shared.Return(bufferUtf8);
 
-            // Append the UTF8 assembly name to the MD5 hash
-            incrementalHash.AppendData(byteBuffer.DangerousGetArray(), 0, byteBuffer.Count);
+                // Get the resulting MD5 hash (128 bits)
+                byte[] hash = incrementalHash.GetHashAndReset();
 
-            // Get the resulting MD5 hash (128 bits)
-            byte[] hash = incrementalHash.GetHashAndReset();
+                // We own this buffer, so we can just reinterpret to an immutable array
+                return Unsafe.As<byte[], ImmutableArray<byte>>(ref hash);
+            }
+            catch
+            {
+                // Something went wrong, throw away the current incremental hash.
+                // Realistically speaking, this should just never happen.
+                incrementalHash = null;
 
-            // We own this buffer, so we can just reinterpret to an immutable array
-            return Unsafe.As<byte[], ImmutableArray<byte>>(ref hash);
+                throw;
+            }
         }
     }
 }

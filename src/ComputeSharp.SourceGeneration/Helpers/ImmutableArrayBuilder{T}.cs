@@ -76,33 +76,6 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     }
 
     /// <summary>
-    /// Advances the current writer by the specified amount.
-    /// </summary>
-    /// <param name="count">The amoutn to advance by.</param>
-    public readonly void Advance(int count)
-    {
-        this.writer!.Advance(count);
-    }
-
-    /// <summary>
-    /// Gets the array currently in use (rented from the pool).
-    /// </summary>
-    /// <returns>The array currently in use.</returns>
-    public readonly T[] DangerousGetArray()
-    {
-        return this.writer!.DangerousGetArray();
-    }
-
-    /// <summary>
-    /// Ensures that the current instance has enough free space to contain a given number of new items.
-    /// </summary>
-    /// <param name="requestedSize">The minimum number of items to ensure space for.</param>
-    public readonly void EnsureCapacity(int requestedSize)
-    {
-        this.writer!.EnsureCapacity(requestedSize);
-    }
-
-    /// <summary>
     /// Inserts an item to the builder at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
@@ -204,23 +177,6 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             this.index += items.Length;
         }
 
-        /// <inheritdoc cref="ImmutableArrayBuilder{T}.Advance"/>
-        public void Advance(int count)
-        {
-            if (count > this.array.Length - this.index)
-            {
-                ImmutableArrayBuilder.ThrowArgumentOutOfRangeExceptionForCount();
-            }
-
-            this.index += count;
-        }
-
-        /// <inheritdoc cref="ImmutableArrayBuilder{T}.DangerousGetArray"/>
-        public T[] DangerousGetArray()
-        {
-            return this.array;
-        }
-
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.Insert"/>
         public void Insert(int index, T item)
         {
@@ -253,9 +209,12 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             this.index = 0;
         }
 
-        /// <inheritdoc cref="ImmutableArrayBuilder{T}.EnsureCapacity"/>
+        /// <summary>
+        /// Ensures that <see cref="array"/> has enough free space to contain a given number of new items.
+        /// </summary>
+        /// <param name="requestedSize">The minimum number of items to ensure space for in <see cref="array"/>.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void EnsureCapacity(int requestedSize)
+        private void EnsureCapacity(int requestedSize)
         {
             if (requestedSize > this.array.Length - this.index)
             {
@@ -293,13 +252,5 @@ file static class ImmutableArrayBuilder
     public static void ThrowArgumentOutOfRangeExceptionForIndex()
     {
         throw new ArgumentOutOfRangeException("index");
-    }
-
-    /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> for <c>"count"</c>.
-    /// </summary>
-    public static void ThrowArgumentOutOfRangeExceptionForCount()
-    {
-        throw new ArgumentOutOfRangeException("count");
     }
 }
