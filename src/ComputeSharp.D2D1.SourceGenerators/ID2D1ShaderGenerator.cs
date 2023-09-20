@@ -265,8 +265,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the InputTypes properties
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
-            MemberDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax additionalType);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalType);
+            MemberDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
