@@ -12,9 +12,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>GetInputType</c> method.
+    /// A helper with all logic to generate the <c>InputTypes</c> properties.
     /// </summary>
-    private static partial class GetInputType
+    private static partial class InputTypes
     {
         /// <summary>
         /// Extracts the input info for the current shader.

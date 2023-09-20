@@ -14,24 +14,26 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class GetInputType
+    partial class InputTypes
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetInputTypeMethod</c> method.
+        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>InputTypes</c> property.
         /// </summary>
         /// <param name="inputTypes">The input types for the shader.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c
-        /// >GetInputTypeMethod</c> method.</returns>
-        public static (MemberDeclarationSyntax Member, MemberDeclarationSyntax Type) GetSyntax(ImmutableArray<uint> inputTypes)
+        /// <param name="additionalType">An additional <see cref="TypeDeclarationSyntax"/> instance needed by the generated code.</param>
+        /// <returns>The resulting <see cref="MemberDeclarationSyntax"/> instance for the <c>InputTypes</c> property.</returns>
+        public static PropertyDeclarationSyntax GetSyntax(ImmutableArray<uint> inputTypes, out TypeDeclarationSyntax additionalType)
         {
+            additionalType = GetMemoryManagerDeclaration(inputTypes);
+
             // This code produces a method declaration as follows:
             //
             // readonly uint global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => InputTypesMemoryManager.Memory;
-            MemberDeclarationSyntax member =
+            return
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
                     .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType")),
-                    Identifier("InputTypes")) // TODO: use nameof()
+                    Identifier(nameof(InputTypes)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(
@@ -40,8 +42,6 @@ partial class ID2D1ShaderGenerator
                         IdentifierName("InputTypesMemoryManager"),
                         IdentifierName("Memory"))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
-
-            return (member, GetMemoryManagerDeclaration(inputTypes));
         }
 
         /// <summary>
