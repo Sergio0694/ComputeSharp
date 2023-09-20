@@ -23,14 +23,40 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputType()
+    public unsafe void GetInputTypes_NoInputs()
     {
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(0), D2D1PixelShaderInputType.Simple);
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(1), D2D1PixelShaderInputType.Complex);
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(2), D2D1PixelShaderInputType.Simple);
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(3), D2D1PixelShaderInputType.Complex);
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(4), D2D1PixelShaderInputType.Complex);
-        Assert.AreEqual(D2D1PixelShader.GetInputType<ShaderWithMultipleInputs>(5), D2D1PixelShaderInputType.Complex);
+        ReadOnlyMemory<D2D1PixelShaderInputType> inputTypes = D2D1PixelShader.GetInputTypes<ZonePlateEffect>();
+
+        Assert.AreEqual(0, inputTypes.Length);
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(inputTypes, out MemoryManager<D2D1PixelShaderInputType>? _));
+    }
+
+    [TestMethod]
+    public unsafe void GetInputTypes_MultipleInputs()
+    {
+        CollectionAssert.AreEqual(new[]
+        {
+            D2D1PixelShaderInputType.Simple,
+            D2D1PixelShaderInputType.Complex,
+            D2D1PixelShaderInputType.Simple,
+            D2D1PixelShaderInputType.Complex,
+            D2D1PixelShaderInputType.Complex,
+            D2D1PixelShaderInputType.Complex,
+            D2D1PixelShaderInputType.Simple
+        }, D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>().ToArray());
+    }
+
+    [TestMethod]
+    public unsafe void GetInputTypes_SameManager()
+    {
+        ReadOnlyMemory<D2D1PixelShaderInputType> inputTypes1 = D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>();
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(inputTypes1, out MemoryManager<D2D1PixelShaderInputType>? memoryManager1));
+
+        ReadOnlyMemory<D2D1PixelShaderInputType> inputTypes2 = D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>();
+
+        Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(inputTypes2, out MemoryManager<D2D1PixelShaderInputType>? memoryManager2));
+        Assert.AreSame(memoryManager1, memoryManager2);
     }
 
     [D2DInputCount(7)]
