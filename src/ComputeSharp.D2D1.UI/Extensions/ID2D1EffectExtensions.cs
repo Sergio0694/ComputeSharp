@@ -57,6 +57,8 @@ internal static unsafe class ID2D1EffectExtensions
 
         shader.InitializeFromDispatchData(buffer.AsSpan(0, constantBufferSize));
 
+        ArrayPool<byte>.Shared.Return(buffer);
+
         return shader;
     }
 
