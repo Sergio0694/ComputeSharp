@@ -321,10 +321,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, buildHlslStringMethod, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax hlslStringProperty = BuildHlslSource.GetSyntax(item.Info.HlslSource, item.Info.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, hlslStringProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.HlslSource.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get a filtered sequence to enable caching for the HLSL source info, before the shader compilation step

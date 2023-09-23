@@ -33,7 +33,7 @@ public static class D2D1ReflectionServices
     {
         Unsafe.SkipInit(out T shader);
 
-        shader.BuildHlslSource(out string hlslSource);
+        string hlslSource = shader.HlslSource;
 
         D2D1ShaderBytecodeLoader bytecodeLoader = default;
 

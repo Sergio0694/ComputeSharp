@@ -122,12 +122,11 @@ public interface ID2D1Shader
         where TLoader : struct, ID2D1DispatchDataLoader;
 
     /// <summary>
-    /// Builds the HLSL source code for the current shader instance.
+    /// Gets the HLSL source code for the current shader instance.
     /// </summary>
-    /// <param name="hlslSource">The resulting HLSL source.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out string hlslSource);
+    string HlslSource { get; }
 
     /// <summary>
     /// Loads the bytecode for the current shader.
