@@ -131,8 +131,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the info for LoadInputDescriptions()
-                    LoadInputDescriptions.GetInfo(
+                    // Get the info for InputDescriptions
+                    InputDescriptions.GetInfo(
                         diagnostics,
                         typeSymbol,
                         out ImmutableArray<InputDescription> inputDescriptions);
@@ -400,19 +400,19 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetOutputBuffer)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the LoadInputDescriptions() info (hierarchy and input descriptions)
+        // Get the InputDescriptions info (hierarchy and input descriptions)
         IncrementalValuesProvider<((HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions) Info, bool CanUseSkipLocalsInit)> inputDescriptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions))
             .Combine(canUseSkipLocalsInit);
 
-        // Generate the LoadInputDescriptions() methods
+        // Generate the InputDescriptions properties
         context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax inputDescriptionsProperty = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions, out TypeDeclarationSyntax[] additionalTypes);
+            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.Info.InputDescriptions, out TypeDeclarationSyntax[] additionalTypes);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, inputDescriptionsProperty, item.CanUseSkipLocalsInit, additionalMemberDeclarations: additionalTypes);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the GetPixelOptions() info (hierarchy and pixel options)

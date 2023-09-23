@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritoc/>
-    private static partial class LoadInputDescriptions
+    private static partial class InputDescriptions
     {
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
@@ -39,7 +39,7 @@ partial class ID2D1ShaderGenerator
                 memoryExpression = MemberAccessExpression(
                     SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("Data"),
-                    IdentifierName("InputDescriptions"));
+                    IdentifierName(nameof(InputDescriptions)));
 
                 additionalTypes = new[] { GetArrayDeclaration(inputDescriptionsInfo) };
             }
@@ -54,7 +54,7 @@ partial class ID2D1ShaderGenerator
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
                     .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription")),
-                    Identifier("InputDescriptions"))
+                    Identifier(nameof(InputDescriptions)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(memoryExpression))
@@ -118,7 +118,7 @@ partial class ID2D1ShaderGenerator
                         ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription"))
                         .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                     .AddVariables(
-                        VariableDeclarator(Identifier("InputDescriptions"))
+                        VariableDeclarator(Identifier(nameof(InputDescriptions)))
                         .WithInitializer(EqualsValueClause(
                             InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                             .AddExpressions(inputDescriptionExpressions.ToArray())))))

@@ -13,9 +13,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadInputDescriptions</c> method.
+    /// A helper with all logic to generate the <c>InputDescriptions</c> property.
     /// </summary>
-    private static partial class LoadInputDescriptions
+    private static partial class InputDescriptions
     {
         /// <summary>
         /// Extracts the input descriptions for the current shader.

@@ -92,16 +92,6 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
 
     /// <summary>
-    /// Loads the input descriptions for the shader, if any.
-    /// </summary>
-    /// <typeparam name="TLoader">The type of input descriptions loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the input descriptions.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadInputDescriptions<TLoader>(ref TLoader loader)
-        where TLoader : struct, ID2D1InputDescriptionsLoader;
-
-    /// <summary>
     /// Loads the resource texture descriptions for the shader, if any.
     /// </summary>
     /// <typeparam name="TLoader">The type of resource texture descriptions loader being used.</typeparam>
