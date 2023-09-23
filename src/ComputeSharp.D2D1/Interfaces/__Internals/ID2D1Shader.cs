@@ -85,6 +85,13 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes { get; }
 
     /// <summary>
+    /// Gets the input descriptions for the current shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
+
+    /// <summary>
     /// Loads the input descriptions for the shader, if any.
     /// </summary>
     /// <typeparam name="TLoader">The type of input descriptions loader being used.</typeparam>

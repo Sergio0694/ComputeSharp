@@ -75,7 +75,7 @@ partial class ID2D1ShaderGenerator
             // Create the MemoryManager<T> declaration:
             //
             // /// <summary>
-            // /// <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the input types.
+            // /// A <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the input types.
             // /// </summary>
             // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
             // [global::System.Diagnostics.DebuggerNonUserCode]

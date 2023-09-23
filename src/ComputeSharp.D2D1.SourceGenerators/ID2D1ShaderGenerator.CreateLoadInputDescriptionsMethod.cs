@@ -47,7 +47,7 @@ partial class ID2D1ShaderGenerator
 
                             _ = attributeData.TryGetNamedArgument("LevelOfDetailCount", out int levelOfDetailCount);
 
-                            inputDescriptionsBuilder.Add(new InputDescription((uint)index, filter, levelOfDetailCount));
+                            inputDescriptionsBuilder.Add(new InputDescription(index, filter, levelOfDetailCount));
                         }
 
                         break;
@@ -82,7 +82,7 @@ partial class ID2D1ShaderGenerator
             // All input description indices must be unique
             foreach (InputDescription inputDescription in inputDescriptionsBuilder.WrittenSpan)
             {
-                ref bool isInputDescriptionIndexUsed = ref selectedInputDescriptionIndices[(int)inputDescription.Index];
+                ref bool isInputDescriptionIndexUsed = ref selectedInputDescriptionIndices[inputDescription.Index];
 
                 if (isInputDescriptionIndexUsed)
                 {

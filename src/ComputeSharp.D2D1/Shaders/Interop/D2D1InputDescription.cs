@@ -34,6 +34,17 @@ public readonly struct D2D1InputDescription
     private readonly int levelOfDetailCount;
 
     /// <summary>
+    /// Creates a new <see cref="D2D1InputDescription"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="index">The index of the resource the description belongs to.</param>
+    /// <param name="filter">The type of filter to apply to the input texture.</param>
+    public D2D1InputDescription(int index, D2D1Filter filter)
+    {
+        this.index = index;
+        this.filter = filter;
+    }
+
+    /// <summary>
     /// Gets the index of the resource the description belongs to.
     /// </summary>
     public int Index => this.index;
@@ -46,5 +57,9 @@ public readonly struct D2D1InputDescription
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.
     /// </summary>
-    public int LevelOfDetailCount => this.levelOfDetailCount;
+    public int LevelOfDetailCount
+    {
+        get => this.levelOfDetailCount;
+        init => this.levelOfDetailCount = value;
+    }
 }

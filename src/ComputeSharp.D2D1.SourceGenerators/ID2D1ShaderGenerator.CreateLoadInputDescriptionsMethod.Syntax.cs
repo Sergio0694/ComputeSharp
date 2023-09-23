@@ -1,7 +1,8 @@
-using System.Collections.Immutable;
+using System;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Helpers;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -17,12 +18,32 @@ partial class ID2D1ShaderGenerator
     private static partial class LoadInputDescriptions
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadInputDescriptions</c> method.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
         /// </summary>
         /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadInputDescriptions</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(InputDescriptionsInfo inputDescriptionsInfo)
+        /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetSyntax(InputDescriptionsInfo inputDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
         {
+            ExpressionSyntax memoryExpression;
+
+            // If there are no input descriptions, just return a default expression.
+            // Otherwise, declare the shared array and return it from the property.
+            if (inputDescriptionsInfo.InputDescriptions.Length == 0)
+            {
+                memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
+                additionalTypes = Array.Empty<TypeDeclarationSyntax>();
+            }
+            else
+            {
+                memoryExpression = MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName("Data"),
+                    IdentifierName("InputDescriptions"));
+
+                additionalTypes = new[] { GetArrayDeclaration(inputDescriptionsInfo) };
+            }
+
             // This code produces a method declaration as follows:
             //
             // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadInputDescriptions<TLoader>(ref TLoader loader)
@@ -30,120 +51,110 @@ partial class ID2D1ShaderGenerator
             //     <BODY>
             // }
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(LoadInputDescriptions)))
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.ReadOnlyMemory"))
+                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription")),
+                    Identifier("InputDescriptions"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
-                .AddParameterListParameters(Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")))
-                .WithBody(Block(GetInputDescriptionsLoadingStatements(inputDescriptionsInfo.InputDescriptions)));
+                .WithExpressionBody(ArrowExpressionClause(memoryExpression))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
-        /// Gets a sequence of statements to load the input descriptions for a given shader.
+        /// Gets the array declaration for the given input descriptions.
         /// </summary>
-        /// <param name="inputDescriptions">The array of <see cref="InputDescription"/> values for all available input descriptions.</param>
-        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load the input descriptions data.</returns>
-        private static ImmutableArray<StatementSyntax> GetInputDescriptionsLoadingStatements(ImmutableArray<InputDescription> inputDescriptions)
+        /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
+        /// <returns>The array declaration for the given input descriptions.</returns>
+        private static TypeDeclarationSyntax GetArrayDeclaration(InputDescriptionsInfo inputDescriptionsInfo)
         {
-            // If there are no input descriptions available, just load an empty buffer
-            if (inputDescriptions.IsEmpty)
+            using ImmutableArrayBuilder<ExpressionSyntax> inputDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
+
+            foreach (InputDescription inputDescription in inputDescriptionsInfo.InputDescriptions)
             {
-                // loader.LoadInputDescriptions(default);
-                return
-                    ImmutableArray.Create<StatementSyntax>(
-                        ExpressionStatement(
-                            InvocationExpression(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("loader"),
-                                    IdentifierName("LoadInputDescriptions")))
-                            .AddArgumentListArguments(Argument(
-                                LiteralExpression(
-                                    SyntaxKind.DefaultLiteralExpression,
-                                    Token(SyntaxKind.DefaultKeyword))))));
-            }
+                // Create the description expression (excluding level of detail):
+                //
+                // new(<INDEX>, <FILTER>)
+                ImplicitObjectCreationExpressionSyntax inputDescriptionExpression =
+                    ImplicitObjectCreationExpression()
+                    .AddArgumentListArguments(
+                        Argument(LiteralExpression(
+                            SyntaxKind.NumericLiteralExpression,
+                            Literal(inputDescription.Index))),
+                        Argument(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("global::ComputeSharp.D2D1.D2D1Filter"),
+                                IdentifierName(inputDescription.Filter.ToString()))));
 
-            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
-
-            // The size of the buffer with the input descriptions is the number of input descriptions, times the size of each
-            // input description, which is a struct containing three int-sized fields (index, filter, and level of detail).
-            int inputDescriptionSizeInBytes = inputDescriptions.Length * sizeof(int) * 3;
-
-            // global::System.Span<byte> data = stackalloc byte[<INPUT_DESCRIPTIONS_SIZE>];
-            statements.Add(
-                LocalDeclarationStatement(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.Span"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("data"))
-                        .WithInitializer(EqualsValueClause(
-                            StackAllocArrayCreationExpression(
-                                ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
-                                .AddRankSpecifiers(
-                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputDescriptionSizeInBytes)))))))))));
-
-            // ref byte r0 = ref data[0];
-            statements.Add(
-                LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("r0"))
-                        .WithInitializer(EqualsValueClause(
-                            RefExpression(
-                                ElementAccessExpression(IdentifierName("data"))
-                                .AddArgumentListArguments(Argument(
+                // Add the level of detail, if needed:
+                //
+                // { LevelOfDetailCount = <LEVEL_OF_DETAIL_COUNT> }
+                if (inputDescription.LevelOfDetailCount != 0)
+                {
+                    inputDescriptionExpression =
+                        inputDescriptionExpression
+                        .WithInitializer(
+                            InitializerExpression(SyntaxKind.ObjectInitializerExpression)
+                            .AddExpressions(
+                                AssignmentExpression(
+                                    SyntaxKind.SimpleAssignmentExpression,
+                                    IdentifierName("LevelOfDetailCount"),
                                     LiteralExpression(
                                         SyntaxKind.NumericLiteralExpression,
-                                        Literal(0))))))))));
+                                        Literal(inputDescription.LevelOfDetailCount)))));
+                }
 
-            int offset = 0;
-
-            // Generate loading statements for each input description
-            foreach (InputDescription inputDescription in inputDescriptions)
-            {
-                // Write the index of the current input description:
-                //
-                // global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET>)) = <INDEX>;
-                statements.Add(ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){offset}))"),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)inputDescription.Index)))));
-
-                // Write the filter of the current input description:
-                //
-                // global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET> + 4)) = <FILTER>;
-                statements.Add(ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){offset + 4}))"),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)inputDescription.Filter)))));
-
-                // Write the level of detail of the current input description:
-                //
-                // global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET> + 8)) = <LEVEL_OF_DETAIL>;
-                statements.Add(ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){offset + 8}))"),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputDescription.LevelOfDetail)))));
-
-                offset += sizeof(int) * 3;
+                inputDescriptionExpressions.Add(inputDescriptionExpression);
             }
 
-            // loader.LoadInputDescriptions(data);
-            statements.Add(
-                ExpressionStatement(
-                    InvocationExpression(
-                        MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("loader"),
-                            IdentifierName("LoadInputDescriptions")))
-                    .AddArgumentListArguments(Argument(IdentifierName("data")))));
+            // Declare the singleton property to get the memory instance:
+            //
+            // /// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>
+            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = { <INPUT_DESCRIPTIONS> };
+            FieldDeclarationSyntax fieldDeclaration =
+                FieldDeclaration(
+                    VariableDeclaration(
+                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription"))
+                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("InputDescriptions"))
+                        .WithInitializer(EqualsValueClause(
+                            InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                            .AddExpressions(inputDescriptionExpressions.ToArray())))))
+                .AddModifiers(
+                    Token(SyntaxKind.PublicKeyword),
+                    Token(SyntaxKind.StaticKeyword),
+                    Token(SyntaxKind.ReadOnlyKeyword))
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>"""));
 
-            return statements.ToImmutable();
+            // Create the container type declaration:
+            //
+            // /// <summary>
+            // /// A container type for input descriptions.
+            // /// </summary>
+            // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
+            // [global::System.Diagnostics.DebuggerNonUserCode]
+            // [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+            // file static class Data
+            // {
+            //     <FIELD_DECLARATION>
+            // }
+            return
+                ClassDeclaration("Data")
+                .AddModifiers(Token(SyntaxKind.FileKeyword), Token(SyntaxKind.StaticKeyword))
+                .AddAttributeLists(
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).FullName))),
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))))
+                .AddMembers(fieldDeclaration)
+                .WithLeadingTrivia(
+                    Comment("/// <summary>"),
+                    Comment("/// A container type for input descriptions."),
+                    Comment("/// </summary>"));
         }
     }
 }

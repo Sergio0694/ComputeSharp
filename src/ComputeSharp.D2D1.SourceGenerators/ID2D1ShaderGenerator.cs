@@ -409,8 +409,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the LoadInputDescriptions() methods
         context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax loadInputDescriptionsMethod = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadInputDescriptionsMethod, item.CanUseSkipLocalsInit);
+            PropertyDeclarationSyntax inputDescriptionsProperty = LoadInputDescriptions.GetSyntax(item.Info.InputDescriptions, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, inputDescriptionsProperty, item.CanUseSkipLocalsInit, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadInputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
