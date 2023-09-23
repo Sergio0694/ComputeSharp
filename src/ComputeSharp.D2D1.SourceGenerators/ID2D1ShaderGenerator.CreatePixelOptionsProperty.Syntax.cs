@@ -11,7 +11,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class GetPixelOptions
+    partial class PixelOptions
     {
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>PixelOptions</c> property.
@@ -41,7 +41,7 @@ partial class ID2D1ShaderGenerator
             //
             // readonly ComputeSharp.D2D1.D2D1PixelOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.PixelOptions => <PIXEL_OPTIONS>;
             return
-                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1PixelOptions"), Identifier("PixelOptions"))
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1PixelOptions"), Identifier(nameof(PixelOptions)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(pixelOptionsExpression))

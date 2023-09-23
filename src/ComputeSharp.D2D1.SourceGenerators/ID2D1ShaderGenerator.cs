@@ -139,8 +139,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the info for GetPixelOptions()
-                    GetPixelOptions.GetInfo(typeSymbol, out D2D1PixelOptions pixelOptions);
+                    // Get the info for PixelOptions
+                    PixelOptions.GetInfo(typeSymbol, out D2D1PixelOptions pixelOptions);
 
                     token.ThrowIfCancellationRequested();
 
@@ -415,18 +415,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the GetPixelOptions() info (hierarchy and pixel options)
+        // Get the PixelOptions info (hierarchy and pixel options)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOptions PixelOptions)> pixelOptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.PixelOptions));
 
-        // Generate the GetPixelOptions() methods
+        // Generate the PixelOptions properties
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax pixelOptionsProperty = GetPixelOptions.GetSyntax(item.PixelOptions);
+            PropertyDeclarationSyntax pixelOptionsProperty = PixelOptions.GetSyntax(item.PixelOptions);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, pixelOptionsProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetPixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(PixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 }
