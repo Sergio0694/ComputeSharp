@@ -398,6 +398,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getOutputBufferMethod, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetOutputBuffer)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+
+            PropertyDeclarationSyntax bufferPrecisionProperty = GetOutputBuffer.GetBufferPrecisionSyntax(item.OutputBuffer);
+            CompilationUnitSyntax bufferPrecisionCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, bufferPrecisionProperty, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.BufferPrecision.g.cs", bufferPrecisionCompilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the InputDescriptions info (hierarchy and input descriptions)

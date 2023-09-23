@@ -98,6 +98,13 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
 
     /// <summary>
+    /// Gets the buffer precision for the shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    D2D1BufferPrecision BufferPrecision { get; }
+
+    /// <summary>
     /// Gets the output buffer precision and depth for the shader.
     /// </summary>
     /// <param name="precision">The output buffer precision.</param>
