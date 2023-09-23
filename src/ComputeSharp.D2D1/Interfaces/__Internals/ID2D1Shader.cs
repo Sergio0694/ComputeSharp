@@ -64,10 +64,9 @@ public interface ID2D1Shader
     /// <summary>
     /// Gets the pixel options for the current shader.
     /// </summary>
-    /// <returns>The pixel options for the current shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetPixelOptions();
+    D2D1PixelOptions PixelOptions { get; }
 
     /// <summary>
     /// Gets the number of inputs for the current shader.

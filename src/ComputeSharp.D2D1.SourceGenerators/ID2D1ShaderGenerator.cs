@@ -423,8 +423,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the GetPixelOptions() methods
         context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getPixelOptionsMethod = GetPixelOptions.GetSyntax(item.PixelOptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getPixelOptionsMethod, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax pixelOptionsProperty = GetPixelOptions.GetSyntax(item.PixelOptions);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, pixelOptionsProperty, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetPixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });

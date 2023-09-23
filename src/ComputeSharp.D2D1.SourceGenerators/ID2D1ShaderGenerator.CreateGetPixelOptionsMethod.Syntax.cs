@@ -14,23 +14,38 @@ partial class ID2D1ShaderGenerator
     partial class GetPixelOptions
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetPixelOptions</c> method.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>PixelOptions</c> property.
         /// </summary>
         /// <param name="pixelOptions">The pixel options for the shader.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>GetPixelOptions</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(D2D1PixelOptions pixelOptions)
+        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>PixelOptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetSyntax(D2D1PixelOptions pixelOptions)
         {
-            // This code produces a method declaration as follows:
+            ExpressionSyntax pixelOptionsExpression;
+
+            // Set the right expression if the pixel options are valid
+            if (pixelOptions is D2D1PixelOptions.None or D2D1PixelOptions.TrivialSampling)
+            {
+                pixelOptionsExpression =
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName("ComputeSharp.D2D1.D2D1PixelOptions"),
+                        IdentifierName(pixelOptions.ToString()));
+            }
+            else
+            {
+                // Otherwise just return default (the analyzer will emit a diagnostic)
+                pixelOptionsExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
+            }
+
+            // This code produces a property declaration as follows:
             //
-            // readonly uint global::ComputeSharp.D2D1.__Internals.ID2D1Shader.GetPixelOptions()
-            // {
-            //     return <PIXEL_OPTIONS>;
-            // }
+            // readonly ComputeSharp.D2D1.D2D1PixelOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.PixelOptions => <PIXEL_OPTIONS>;
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)), Identifier(nameof(GetPixelOptions)))
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1PixelOptions"), Identifier("PixelOptions"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithBody(Block(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)pixelOptions)))));
+                .WithExpressionBody(ArrowExpressionClause(pixelOptionsExpression))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
     }
 }

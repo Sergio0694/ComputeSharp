@@ -242,7 +242,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        return (D2D1PixelOptions)shader.GetPixelOptions();
+        return shader.PixelOptions;
     }
 
     /// <summary>
