@@ -15,8 +15,6 @@ namespace ComputeSharp.D2D1;
 /// </code>
 /// </para>
 /// <para>
-/// </para>
-/// <para>
 /// Note that the <see cref="D2D1CompileOptions.PackMatrixRowMajor"/> is always enabled automatically and does not need to be
 /// specified. This option is mandatory, as the generated code to load the constant buffer from a shader assumes the layout
 /// for matrix types is row major. For the same reason, using <see cref="D2D1CompileOptions.PackMatrixColumnMajor"/> is not
