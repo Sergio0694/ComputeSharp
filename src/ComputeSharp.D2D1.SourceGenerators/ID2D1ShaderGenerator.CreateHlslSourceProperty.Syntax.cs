@@ -23,7 +23,8 @@ partial class ID2D1ShaderGenerator
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>HlslSource</c> property.</returns>
         public static PropertyDeclarationSyntax GetSyntax(string hlslSource, int hierarchyDepth)
         {
-            SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth);
+            // The indentation level is the current depth + 1 (for the property)
+            SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth + 1);
 
             // This code produces a property declaration as follows:
             //
