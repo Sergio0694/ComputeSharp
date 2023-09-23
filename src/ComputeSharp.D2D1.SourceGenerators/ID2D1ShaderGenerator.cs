@@ -107,8 +107,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         inputCount,
                         out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
 
-                    // Get HLSL source for BuildHlslSource()
-                    string hlslSource = BuildHlslSource.GetHlslSource(
+                    // Get HLSL source for HlslSource
+                    string hlslSource = HlslSource.GetHlslSource(
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeDeclaration,
@@ -313,18 +313,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the BuildHlslSource() info (hierarchy and HLSL source)
+        // Get the HlslSource info (hierarchy, HLSL source and parsing options)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource));
 
-        // Generate the BuildHlslSource() methods
+        // Generate the HlslSource properties
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax hlslStringProperty = BuildHlslSource.GetSyntax(item.Info.HlslSource, item.Info.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, hlslStringProperty, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax hlslStringProperty = HlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, hlslStringProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.HlslSource.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(HlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get a filtered sequence to enable caching for the HLSL source info, before the shader compilation step

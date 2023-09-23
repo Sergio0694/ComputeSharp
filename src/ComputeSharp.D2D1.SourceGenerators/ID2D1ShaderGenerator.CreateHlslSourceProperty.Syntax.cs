@@ -13,7 +13,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class BuildHlslSource
+    partial class HlslSource
     {
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>HlslSource</c> property.
@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
             //
             // readonly string global::ComputeSharp.D2D1.__Internals.ID2D1Shader.HlslSource => <HLSL_SOURCE>;
             return
-                PropertyDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("HlslSource"))
+                PropertyDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)), Identifier("HlslSource"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralExpression)))
