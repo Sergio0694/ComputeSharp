@@ -307,8 +307,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Hierarchy, item.Info.Dispatch, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });

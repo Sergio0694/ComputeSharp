@@ -181,8 +181,18 @@ internal static partial class HlslKnownTypes
     /// Gets the mapped HLSL-compatible type name for the input type name.
     /// </summary>
     /// <param name="originalName">The input type name to map.</param>
-    /// <param name="mappedName">The resulting mapped type name, if found.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+    public static string GetMappedName(string originalName)
+    {
+        return KnownHlslTypes[originalName];
+    }
+
+    /// <summary>
+    /// Tries to get the mapped HLSL-compatible type name for the input type name.
+    /// </summary>
+    /// <param name="originalName">The input type name to map.</param>
+    /// <param name="mappedName">The resulting mapped type name, if found.</param>
+    /// <returns>Whether a mapped name was available.</returns>
     public static bool TryGetMappedName(string originalName, out string? mappedName)
     {
         return KnownHlslTypes.TryGetValue(originalName, out mappedName);
