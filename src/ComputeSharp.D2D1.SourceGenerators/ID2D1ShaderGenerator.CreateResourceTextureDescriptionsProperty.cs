@@ -14,9 +14,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadResourceTextureDescriptions</c> method.
+    /// A helper with all logic to generate the <c>ResourceTextureDescriptions</c> property.
     /// </summary>
-    private static partial class LoadResourceTextureDescriptions
+    private static partial class ResourceTextureDescriptions
     {
         /// <summary>
         /// Extracts the resource texture descriptions for the current shader.

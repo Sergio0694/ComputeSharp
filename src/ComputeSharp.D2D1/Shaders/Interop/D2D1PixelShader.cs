@@ -292,13 +292,9 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        D2D1ByteArrayResourceTextureDescriptionsLoader resourceTextureDescriptionsLoader = default;
-
         Unsafe.SkipInit(out T shader);
 
-        shader.LoadResourceTextureDescriptions(ref resourceTextureDescriptionsLoader);
-
-        return resourceTextureDescriptionsLoader.GetResultingResourceTextureDescriptions();
+        return shader.ResourceTextureDescriptions;
     }
 
     /// <summary>

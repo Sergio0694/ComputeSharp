@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritoc/>
-    private static partial class LoadResourceTextureDescriptions
+    private static partial class ResourceTextureDescriptions
     {
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
@@ -39,7 +39,7 @@ partial class ID2D1ShaderGenerator
                 memoryExpression = MemberAccessExpression(
                     SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("Data"),
-                    IdentifierName("ResourceTextureDescriptions"));
+                    IdentifierName(nameof(ResourceTextureDescriptions)));
 
                 additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptionsInfo) };
             }
@@ -51,7 +51,7 @@ partial class ID2D1ShaderGenerator
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
                     .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription")),
-                    Identifier("ResourceTextureDescriptions"))
+                    Identifier(nameof(ResourceTextureDescriptions)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(memoryExpression))
@@ -93,7 +93,7 @@ partial class ID2D1ShaderGenerator
                         ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"))
                         .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                     .AddVariables(
-                        VariableDeclarator(Identifier("ResourceTextureDescriptions"))
+                        VariableDeclarator(Identifier(nameof(ResourceTextureDescriptions)))
                         .WithInitializer(EqualsValueClause(
                             InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                             .AddExpressions(resourceTextureDescriptionExpressions.ToArray())))))
