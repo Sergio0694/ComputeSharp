@@ -403,6 +403,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax bufferPrecisionCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, bufferPrecisionProperty, canUseSkipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.BufferPrecision.g.cs", bufferPrecisionCompilationUnit.GetText(Encoding.UTF8));
+
+            PropertyDeclarationSyntax channelDepthProperty = GetOutputBuffer.GetChannelDepthSyntax(item.OutputBuffer);
+            CompilationUnitSyntax channelDepthCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, channelDepthProperty, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ChannelDepth.g.cs", channelDepthCompilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the InputDescriptions info (hierarchy and input descriptions)
