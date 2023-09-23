@@ -5,7 +5,6 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -22,7 +21,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                "ComputeSharp.D2D1.D2DGeneratedShaderMarshallerAttribute",
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {
@@ -32,13 +32,13 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
-
                     // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
-                    if (context.SemanticModel.GetDeclaredSymbol(typeDeclaration, token) is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    if (context.TargetSymbol is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
                     {
                         return default;
                     }
+
+                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.TargetNode;
 
                     // Check that the shader implements the ID2D1PixelShader interface
                     if (!IsD2D1PixelShaderType(typeSymbol, context.SemanticModel.Compilation))
