@@ -10,6 +10,7 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+[D2DGeneratedShaderMarshaller]
 [AutoConstructor]
 internal readonly partial struct ContouredLayers : ID2D1PixelShader
 {

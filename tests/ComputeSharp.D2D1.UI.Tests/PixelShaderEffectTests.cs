@@ -459,6 +459,7 @@ public partial class PixelShaderEffectTests
     }
 
     [D2DInputCount(0)]
+    [D2DGeneratedShaderMarshaller]
     [AutoConstructor]
     private partial struct ShaderWithSomeProperties : ID2D1PixelShader
     {
@@ -475,6 +476,7 @@ public partial class PixelShaderEffectTests
     }
 
     [D2DInputCount(1)]
+    [D2DGeneratedShaderMarshaller]
     [AutoConstructor]
     private partial struct ShaderWithSomePropertiesAndInputs : ID2D1PixelShader
     {
@@ -487,6 +489,7 @@ public partial class PixelShaderEffectTests
     }
 
     [D2DInputCount(0)]
+    [D2DGeneratedShaderMarshaller]
     private partial struct ShaderWith0Inputs : ID2D1PixelShader
     {
         public float4 Execute()
@@ -497,6 +500,7 @@ public partial class PixelShaderEffectTests
 
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
+    [D2DGeneratedShaderMarshaller]
     private partial struct ShaderWith1Input : ID2D1PixelShader
     {
         public float4 Execute()
@@ -508,6 +512,7 @@ public partial class PixelShaderEffectTests
     [D2DInputCount(2)]
     [D2DInputSimple(0)]
     [D2DInputSimple(1)]
+    [D2DGeneratedShaderMarshaller]
     private partial struct ShaderWith2Inputs : ID2D1PixelShader
     {
         public float4 Execute()

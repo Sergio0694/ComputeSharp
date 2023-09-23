@@ -198,6 +198,7 @@ public partial class D2D1TransformMapperTests
     }
 
     [D2DInputCount(0)]
+    [D2DGeneratedShaderMarshaller]
     private partial struct DummyShader : ID2D1PixelShader
     {
         public float4 Execute()
@@ -287,6 +288,7 @@ public partial class D2D1TransformMapperTests
     [D2DInputCount(1)]
     [D2DInputSimple(0)]
     [D2DRequiresScenePosition]
+    [D2DGeneratedShaderMarshaller]
     [AutoConstructor]
     private partial struct ShaderWithDispatchArea : ID2D1PixelShader
     {
