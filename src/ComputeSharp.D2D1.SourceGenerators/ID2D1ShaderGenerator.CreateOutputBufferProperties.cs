@@ -7,9 +7,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>GetOutputBuffer</c> method.
+    /// A helper with all logic to generate the output buffer properties.
     /// </summary>
-    private static partial class GetOutputBuffer
+    private static partial class OutputBuffer
     {
         /// <summary>
         /// Extracts the output buffer info for the current shader.
