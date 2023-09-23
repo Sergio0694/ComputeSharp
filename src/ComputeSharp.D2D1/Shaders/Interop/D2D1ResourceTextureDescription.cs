@@ -20,6 +20,17 @@ public readonly struct D2D1ResourceTextureDescription
     private readonly int dimensions;
 
     /// <summary>
+    /// Creates a new <see cref="D2D1ResourceTextureDescription"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="index">The index of the resource texture the description belongs to.</param>
+    /// <param name="dimensions">The number of dimensions of the resource texture the description belongs to.</param>
+    public D2D1ResourceTextureDescription(int index, int dimensions)
+    {
+        this.index = index;
+        this.dimensions = dimensions;
+    }
+
+    /// <summary>
     /// Gets the index of the resource texture the description belongs to.
     /// </summary>
     public int Index => this.index;

@@ -1,7 +1,8 @@
-using System.Collections.Immutable;
+using System;
 using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Helpers;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -17,124 +18,118 @@ partial class ID2D1ShaderGenerator
     private static partial class LoadResourceTextureDescriptions
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadResourceTextureDescriptions</c> method.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
         /// </summary>
         /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadResourceTextureDescriptions</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo)
+        /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetSyntax(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
         {
+            ExpressionSyntax memoryExpression;
+
+            // If there are no resource texture descriptions, just return a default expression.
+            // Otherwise, declare the shared array and return it from the property.
+            if (resourceTextureDescriptionsInfo.ResourceTextureDescriptions.Length == 0)
+            {
+                memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
+                additionalTypes = Array.Empty<TypeDeclarationSyntax>();
+            }
+            else
+            {
+                memoryExpression = MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName("Data"),
+                    IdentifierName("ResourceTextureDescriptions"));
+
+                additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptionsInfo) };
+            }
+
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadResourceTextureDescriptions<TLoader>(ref TLoader loader)
-            // {
-            //     <BODY>
-            // }
+            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => <EXPRESSION>;
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(LoadResourceTextureDescriptions)))
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.ReadOnlyMemory"))
+                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription")),
+                    Identifier("ResourceTextureDescriptions"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
-                .AddParameterListParameters(Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")))
-                .WithBody(Block(GetInputDescriptionsLoadingStatements(resourceTextureDescriptionsInfo.ResourceTextureDescriptions)));
+                .WithExpressionBody(ArrowExpressionClause(memoryExpression))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
-        /// Gets a sequence of statements to load the resource texture descriptions for a given shader.
+        /// Gets the array declaration for the given resource texture descriptions.
         /// </summary>
-        /// <param name="resourceTextureDescriptionsInfo">The array of <see cref="ResourceTextureDescriptionsInfo"/> values for all available resource texture descriptions.</param>
-        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load the resource texture descriptions data.</returns>
-        private static ImmutableArray<StatementSyntax> GetInputDescriptionsLoadingStatements(ImmutableArray<ResourceTextureDescription> resourceTextureDescriptionsInfo)
+        /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
+        /// <returns>The array declaration for the given resource texture descriptions.</returns>
+        private static TypeDeclarationSyntax GetArrayDeclaration(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo)
         {
-            // If there are no resource texture descriptions available, just load an empty buffer
-            if (resourceTextureDescriptionsInfo.IsEmpty)
+            using ImmutableArrayBuilder<ExpressionSyntax> resourceTextureDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
+
+            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptionsInfo.ResourceTextureDescriptions)
             {
-                // loader.LoadResourceTextureDescriptions(default);
-                return
-                    ImmutableArray.Create<StatementSyntax>(
-                        ExpressionStatement(
-                            InvocationExpression(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("loader"),
-                                    IdentifierName("LoadResourceTextureDescriptions")))
-                            .AddArgumentListArguments(Argument(
-                                LiteralExpression(
-                                    SyntaxKind.DefaultLiteralExpression,
-                                    Token(SyntaxKind.DefaultKeyword))))));
+                // Create the description expression:
+                //
+                // new(<INDEX>, <RANK>)
+                resourceTextureDescriptionExpressions.Add(
+                    ImplicitObjectCreationExpression()
+                    .AddArgumentListArguments(
+                        Argument(LiteralExpression(
+                            SyntaxKind.NumericLiteralExpression,
+                            Literal(resourceTextureDescription.Index))),
+                        Argument(LiteralExpression(
+                            SyntaxKind.NumericLiteralExpression,
+                            Literal(resourceTextureDescription.Rank)))));
             }
 
-            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
-
-            // The size of the buffer with the resource texture descriptions is the number of resurce textures descriptions,
-            // times the size of each input description, which is a struct containing two int-sized fields (index and rank).
-            int resourceTextureDescriptionSizeInBytes = resourceTextureDescriptionsInfo.Length * sizeof(int) * 2;
-
-            // global::System.Span<byte> data = stackalloc byte[<RESOURCE_TEXTURE_DESCRIPTIONS_SIZE>];
-            statements.Add(
-                LocalDeclarationStatement(
+            // Declare the singleton property to get the memory instance:
+            //
+            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>
+            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions = { <RESOURCE_TEXTURE_DESCRIPTIONS> };
+            FieldDeclarationSyntax fieldDeclaration =
+                FieldDeclaration(
                     VariableDeclaration(
-                        GenericName(Identifier("global::System.Span"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"))
+                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                     .AddVariables(
-                        VariableDeclarator(Identifier("data"))
+                        VariableDeclarator(Identifier("ResourceTextureDescriptions"))
                         .WithInitializer(EqualsValueClause(
-                            StackAllocArrayCreationExpression(
-                                ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
-                                .AddRankSpecifiers(
-                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(resourceTextureDescriptionSizeInBytes)))))))))));
+                            InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                            .AddExpressions(resourceTextureDescriptionExpressions.ToArray())))))
+                .AddModifiers(
+                    Token(SyntaxKind.PublicKeyword),
+                    Token(SyntaxKind.StaticKeyword),
+                    Token(SyntaxKind.ReadOnlyKeyword))
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>"""));
 
-            // ref byte r0 = ref data[0];
-            statements.Add(
-                LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("r0"))
-                        .WithInitializer(EqualsValueClause(
-                            RefExpression(
-                                ElementAccessExpression(IdentifierName("data"))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(0))))))))));
-
-            int offset = 0;
-
-            // Generate loading statements for each resource texture description
-            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptionsInfo)
-            {
-                // Write the index of the current resource texture description:
-                //
-                // global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET>)) = <INDEX>;
-                statements.Add(ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){offset}))"),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)resourceTextureDescription.Index)))));
-
-                // Write the rank of the current resource texture description:
-                //
-                // global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET> + 4)) = <FILTER>;
-                statements.Add(ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){offset + 4}))"),
-                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal((int)resourceTextureDescription.Rank)))));
-
-                offset += sizeof(int) * 2;
-            }
-
-            // loader.LoadInputDescriptions(data);
-            statements.Add(
-                ExpressionStatement(
-                    InvocationExpression(
-                        MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("loader"),
-                            IdentifierName("LoadResourceTextureDescriptions")))
-                    .AddArgumentListArguments(Argument(IdentifierName("data")))));
-
-            return statements.ToImmutable();
+            // Create the container type declaration:
+            //
+            // /// <summary>
+            // /// A container type for input descriptions.
+            // /// </summary>
+            // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
+            // [global::System.Diagnostics.DebuggerNonUserCode]
+            // [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+            // file static class Data
+            // {
+            //     <FIELD_DECLARATION>
+            // }
+            return
+                ClassDeclaration("Data")
+                .AddModifiers(Token(SyntaxKind.FileKeyword), Token(SyntaxKind.StaticKeyword))
+                .AddAttributeLists(
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).FullName))),
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))))
+                .AddMembers(fieldDeclaration)
+                .WithLeadingTrivia(
+                    Comment("/// <summary>"),
+                    Comment("/// A container type for resource texture descriptions."),
+                    Comment("/// </summary>"));
         }
     }
 }

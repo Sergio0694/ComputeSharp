@@ -5,4 +5,4 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// </summary>
 /// <param name="Index">The index of the resource texture resource the description is for.</param>
 /// <param name="Rank">The rank of the resource texture.</param>
-internal sealed record ResourceTextureDescription(uint Index, uint Rank);
+internal sealed record ResourceTextureDescription(int Index, int Rank);

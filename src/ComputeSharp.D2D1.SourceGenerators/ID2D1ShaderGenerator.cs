@@ -265,7 +265,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the InputTypes properties
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
-            MemberDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
+            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
@@ -279,8 +279,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the LoadResourceTextureDescriptions() methods
         context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, resourceTextureDescriptionsProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });

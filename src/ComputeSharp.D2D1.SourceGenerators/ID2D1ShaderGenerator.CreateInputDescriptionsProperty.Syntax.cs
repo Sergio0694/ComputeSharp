@@ -46,10 +46,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadInputDescriptions<TLoader>(ref TLoader loader)
-            // {
-            //     <BODY>
-            // }
+            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputDescriptions => <EXPRESSION>;
             return
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
@@ -110,7 +107,7 @@ partial class ID2D1ShaderGenerator
 
             // Declare the singleton property to get the memory instance:
             //
-            // /// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>
+            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>
             // public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = { <INPUT_DESCRIPTIONS> };
             FieldDeclarationSyntax fieldDeclaration =
                 FieldDeclaration(

@@ -76,7 +76,7 @@ partial class ID2D1ShaderGenerator
             {
                 foreach ((int? index, int rank) in resourceTextureInfos.WrittenSpan)
                 {
-                    resourceTextureDescriptionsBuilder.Add(new ResourceTextureDescription((uint)(index ?? 0), (uint)rank));
+                    resourceTextureDescriptionsBuilder.Add(new ResourceTextureDescription(index ?? 0, rank));
                 }
 
                 resourceTextureDescriptions = resourceTextureDescriptionsBuilder.ToImmutable();

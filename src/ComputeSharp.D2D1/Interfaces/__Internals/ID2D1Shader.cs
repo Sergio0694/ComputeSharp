@@ -92,6 +92,13 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
 
     /// <summary>
+    /// Gets the resource texture descriptions for the shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
+
+    /// <summary>
     /// Loads the resource texture descriptions for the shader, if any.
     /// </summary>
     /// <typeparam name="TLoader">The type of resource texture descriptions loader being used.</typeparam>
