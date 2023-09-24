@@ -362,11 +362,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the LoadBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
         {
-            MethodDeclarationSyntax loadBytecodeMethod = LoadBytecode.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax loadBytecodeCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, loadBytecodeMethod, skipLocalsInit: false);
-            SourceText text = fixup(loadBytecodeCompilationUnit);
+            PropertyDeclarationSyntax hlslBytecodeProperty = LoadBytecode.GetHlslBytecodeSyntax(item.BytecodeInfo, out Func<SyntaxNode, SourceText> fixup, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax hlslBytecodeCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, hlslBytecodeProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
+            SourceText text = fixup(hlslBytecodeCompilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.HlslBytecode.g.cs", text);
 
             PropertyDeclarationSyntax shaderProfileProperty = LoadBytecode.GetShaderProfileSyntax(item.BytecodeInfo);
             CompilationUnitSyntax shaderProfileCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, shaderProfileProperty, skipLocalsInit: false);
@@ -374,7 +374,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ShaderProfile.g.cs", shaderProfileCompilationUnit.GetText(Encoding.UTF8));
 
             PropertyDeclarationSyntax compileOptionsProperty = LoadBytecode.GetCompileOptionsSyntax(item.BytecodeInfo);
-            CompilationUnitSyntax compileOptionsCompilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, compileOptionsProperty, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compileOptionsCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, compileOptionsProperty, skipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.CompileOptions.g.cs", compileOptionsCompilationUnit.GetText(Encoding.UTF8));
         });
