@@ -29,7 +29,18 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileBytecode<T>(null, null, out _, out _);
+        Unsafe.SkipInit(out T shader);
+
+        // This method is the one used by the built-in ID2D1Effect, so it has special optimization
+        // to help both performance and especially trimming. That is, we first check whether the
+        // HLSL code is already available, which should get completely inlined when using the
+        // generated code. This allows the entire fallback path below to be trimmed out.
+        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
+        {
+            return hlslBytecode;
+        }
+
+        return CompileBytecode<T>(null, null, out _, out _);
     }
 
     /// <summary>
@@ -234,7 +245,6 @@ public static class D2D1PixelShader
     /// <param name="effectiveShaderProfile">The effective shader profile that was used to get the shader bytecode.</param>
     /// <param name="effectiveCompileOptions">The effective compile options that were used to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
     private static unsafe ReadOnlyMemory<byte> LoadOrCompileBytecode<T>(
         D2D1ShaderProfile? requestedShaderProfile,
         D2D1CompileOptions? requestedCompileOptions,
@@ -255,19 +265,8 @@ public static class D2D1PixelShader
             return hlslBytecode;
         }
 
-        string hlslSource = shader.HlslSource;
-
-        // Set the effective profile and option to the requested ones or the default values
-        effectiveShaderProfile = requestedShaderProfile ?? shader.ShaderProfile;
-        effectiveCompileOptions = requestedCompileOptions ?? shader.CompileOptions;
-
-        // Compile the shader with the current settings
-        using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(hlslSource.AsSpan(), effectiveShaderProfile, effectiveCompileOptions);
-
-        byte* bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
-        int bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
-
-        return new ReadOnlySpan<byte>(bytecodePtr, bytecodeSize).ToArray();
+        // Fallback path just compiling the HLSL code on the fly
+        return CompileBytecode<T>(requestedShaderProfile, requestedCompileOptions, out effectiveShaderProfile, out effectiveCompileOptions);
     }
 
     /// <summary>
