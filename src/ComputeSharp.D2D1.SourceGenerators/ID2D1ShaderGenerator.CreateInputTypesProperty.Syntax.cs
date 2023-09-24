@@ -36,9 +36,16 @@ partial class ID2D1ShaderGenerator
             }
             else
             {
-                memoryExpression = MemberAccessExpression(
+                // Create a ReadOnlyMemory<D2D1PixelShaderInputType> instance from the memory manager:
+                //
+                // InputTypesMemoryManager.Instance.Memory
+                memoryExpression =
+                    MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
-                        IdentifierName("InputTypesMemoryManager"),
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("InputTypesMemoryManager"),
+                            IdentifierName("Instance")),
                         IdentifierName("Memory"));
 
                 additionalTypes = new TypeDeclarationSyntax[] { GetMemoryManagerDeclaration(inputTypes) };
@@ -46,7 +53,7 @@ partial class ID2D1ShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly uint global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => <MEMORY_EXPRESSION>;
+            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => <MEMORY_EXPRESSION>;
             return
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
@@ -96,34 +103,21 @@ partial class ID2D1ShaderGenerator
 
             using ImmutableArrayBuilder<MemberDeclarationSyntax> memberDeclarations = ImmutableArrayBuilder<MemberDeclarationSyntax>.Rent();
 
-            // Declare the singleton property to get the memory instance:
+            // Declare the singleton property to get the memory manager:
             //
-            // /// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>
-            // public static new readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> Memory = new InputTypesMemoryManager().CreateMemory(<INPUT_COUNT>);
+            // /// <summary>The singleton <see cref="InputTypesMemoryManager"/> instance to use.</summary>
+            // public static readonly InputTypesMemoryManager Instance = new();
             memberDeclarations.Add(
                 FieldDeclaration(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.ReadOnlyMemory"))
-                        .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType")))
+                    VariableDeclaration(IdentifierName("InputTypesMemoryManager"))
                     .AddVariables(
-                        VariableDeclarator(Identifier("Memory"))
-                        .WithInitializer(
-                            EqualsValueClause(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        ObjectCreationExpression(IdentifierName("InputTypesMemoryManager")).WithArgumentList(ArgumentList()),
-                                        IdentifierName("CreateMemory")))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(inputTypes.Length))))))))
+                        VariableDeclarator(Identifier("Instance"))
+                        .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression()))))
                 .AddModifiers(
                     Token(SyntaxKind.PublicKeyword),
                     Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.NewKeyword),
                     Token(SyntaxKind.ReadOnlyKeyword))
-                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>""")));
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="InputTypesMemoryManager"/> instance to use.</summary>""")));
 
             using (ImmutableArrayBuilder<ExpressionSyntax> inputTypeExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent())
             {
@@ -162,7 +156,7 @@ partial class ID2D1ShaderGenerator
             // /// <inheritdoc/>
             // public override unsafe global::System.Span<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> GetSpan
             // {
-            //     return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), <INPUT_COUNT>);
+            //     return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), Data.Length);
             // }
             memberDeclarations.Add(
                 MethodDeclaration(
@@ -189,7 +183,49 @@ partial class ID2D1ShaderGenerator
                                                 IdentifierName("GetReference")))
                                         .AddArgumentListArguments(Argument(IdentifierName("Data"))))
                                     .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))),
-                            Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputTypes.Length))))))
+                            Argument(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("Data"),
+                                    IdentifierName("Length"))))))
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
+            // Override the Memory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> property:
+            //
+            // /// <inheritdoc/>
+            // public override global::System.Memory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> Memory
+            // {
+            //     [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            //     get => CreateMemory(Data.Length);
+            // }
+            memberDeclarations.Add(
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.Memory"))
+                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType")),
+                    Identifier("Memory"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword))
+                .AddAccessorListAccessors(
+                    AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .AddAttributeLists(
+                        AttributeList(
+                            SingletonSeparatedList(
+                                Attribute(IdentifierName("global::System.Runtime.CompilerServices.MethodImpl"))
+                                .AddArgumentListArguments(
+                                    AttributeArgument(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Runtime.CompilerServices.MethodImplOptions"),
+                                            IdentifierName("AggressiveInlining")))))))
+                    .WithExpressionBody(
+                        ArrowExpressionClause(
+                            InvocationExpression(IdentifierName("CreateMemory"))
+                            .AddArgumentListArguments(
+                                Argument(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("Data"),
+                                        IdentifierName("Length"))))))
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
                 .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
 
             // Add the Pin(int elementIndex) method:
