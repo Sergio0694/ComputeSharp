@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
 
@@ -43,6 +44,16 @@ internal static class CompilationExtensions
         typeSymbols = builder.ToImmutable();
 
         return true;
+    }
+
+    /// <summary>
+    /// Checks whether the <c>AllowUnsafeBlocks</c> option is set for a given compilation.
+    /// </summary>
+    /// <param name="compilation">The <see cref="Compilation"/> object to check.</param>
+    /// <returns>Whether the <c>AllowUnsafeBlocks</c> option is set for <paramref name="compilation"/>.</returns>
+    public static bool IsAllowUnsafeBlocksEnabled(this Compilation compilation)
+    {
+        return compilation.Options is CSharpCompilationOptions { AllowUnsafe: true };
     }
 
     /// <summary>
