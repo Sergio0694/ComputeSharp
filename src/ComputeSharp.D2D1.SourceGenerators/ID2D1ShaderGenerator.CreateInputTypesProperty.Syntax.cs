@@ -247,48 +247,5 @@ partial class ID2D1ShaderGenerator
 
             return typeDeclaration.AddMembers(memberDeclarations.ToArray());
         }
-
-        /// <summary>
-        /// Gets the expression to get the type of a given shader input from its index.
-        /// </summary>
-        /// <param name="inputTypes">The input types for the shader.</param>
-        /// <returns>The expression to extract the values from <paramref name="inputTypes"/>.</returns>
-        private static ExpressionSyntax GetInputTypesSwitchExpression(ImmutableArray<uint> inputTypes)
-        {
-            // If there are no inputs, just return an unspecified value.
-            if (inputTypes.IsEmpty)
-            {
-                return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0));
-            }
-
-            // In order to avoid repeated branches, we can build a bitmask that stores in each
-            // bit whether the corresponding pixel shader input is simple or complex. This will
-            // allow the logic to be branchless and to just extract the target bit from the mask.
-            uint bitmask = 0;
-
-            for (int i = 0; i < inputTypes.Length; i++)
-            {
-                bitmask |= inputTypes[i] << i;
-            }
-
-            // If all inputs are simple, also just return 0
-            if (bitmask == 0)
-            {
-                return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0));
-            }
-
-            // This code produces a bitmask flag extraction expression as follows:
-            //
-            // (<BITMASK> >> (int)index) & 1;
-            return
-                BinaryExpression(
-                    SyntaxKind.BitwiseAndExpression,
-                    ParenthesizedExpression(
-                        BinaryExpression(
-                            SyntaxKind.RightShiftExpression,
-                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(bitmask)),
-                            CastExpression(PredefinedType(Token(SyntaxKind.IntKeyword)), IdentifierName("index")))),
-                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)));
-        }
     }
 }
