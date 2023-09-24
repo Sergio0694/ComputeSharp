@@ -67,20 +67,31 @@ partial class ID2D1ShaderGenerator
                         IdentifierName("IsEmpty")),
                     Block(ReturnStatement())));
 
-            // ref byte r0 = ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(data);
+            // ref readonly ConstantBuffer buffer = ref global::System.Runtime.CompilerServices.Unsafe.As<byte, ConstantBuffer>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(data));
             statements.Add(
                 LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("r0"))
-                        .WithInitializer(EqualsValueClause(
-                            RefExpression(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("global::System.Runtime.InteropServices.MemoryMarshal"),
-                                        IdentifierName("GetReference")))
-                                .AddArgumentListArguments(Argument(IdentifierName("data")))))))));
+                VariableDeclaration(RefType(IdentifierName("ConstantBuffer")).WithReadOnlyKeyword(Token(SyntaxKind.ReadOnlyKeyword)))
+                .AddVariables(
+                    VariableDeclarator(Identifier("buffer"))
+                    .WithInitializer(
+                        EqualsValueClause(RefExpression(
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                    GenericName(Identifier("As"))
+                                    .AddTypeArgumentListArguments(
+                                        PredefinedType(Token(SyntaxKind.ByteKeyword)),
+                                        IdentifierName("ConstantBuffer"))))
+                            .AddArgumentListArguments(
+                                Argument(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Runtime.InteropServices.MemoryMarshal"),
+                                            IdentifierName("GetReference")))
+                                    .AddArgumentListArguments(Argument(IdentifierName("data"))))
+                                .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))))))));
 
             // Generate loading statements for each captured field
             foreach (FieldInfo fieldInfo in fieldInfos)
@@ -89,40 +100,66 @@ partial class ID2D1ShaderGenerator
                 {
                     case FieldInfo.Primitive primitive:
 
-                        // Read a primitive value from the target buffer. This will generate:
+                        // Read a primitive value:
                         //
-                        // Unsafe.AsRef(in <FIELD_PATH>) = global::System.Runtime.CompilerServices.Unsafe.As<byte, global::<TYPE_NAME>>(
-                        //     ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)<OFFSET>))
-                        statements.Add(ExpressionStatement(
-                            AssignmentExpression(
-                                SyntaxKind.SimpleAssignmentExpression,
-                                ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.AsRef(in {string.Join(".", primitive.FieldPath)})"),
-                                ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::{primitive.TypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset}))"))));
+                        // global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.<FIELD_PATH>) = buffer.<CONSTANT_BUFFER_PATH>;
+                        statements.Add(
+                            ExpressionStatement(
+                                AssignmentExpression(
+                                    SyntaxKind.SimpleAssignmentExpression,
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                            IdentifierName("AsRef")))
+                                    .AddArgumentListArguments(
+                                        Argument(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            ThisExpression(),
+                                            IdentifierName(string.Join(".", primitive.FieldPath))))
+                                        .WithRefKindKeyword(Token(SyntaxKind.InKeyword))),
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("buffer"),
+                                        IdentifierName(string.Join("_", primitive.FieldPath))))));
                         break;
 
                     case FieldInfo.NonLinearMatrix matrix:
-                        string rowTypeName = $"global::ComputeSharp.{matrix.ElementName}{matrix.Columns}";
-                        string rowLocalName = $"__{string.Join("_", matrix.FieldPath)}__row0";
+                        string fieldPath = string.Join(".", matrix.FieldPath);
+                        string fieldNamePrefix = string.Join("_", matrix.FieldPath);
 
-                        // Declare a local to index into individual rows. This will generate:
+                        // Read all rows of a given matrix type:
                         //
-                        // ref <ROW_TYPE> <ROW_NAME> = ref global::System.Runtime.CompilerServices.Unsafe.As<global::<TYPE_NAME>, <ROW_TYPE_NAME>>(
-                        //     ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in <FIELD_PATH>));
-                        statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref global::System.Runtime.CompilerServices.Unsafe.As<global::{matrix.TypeName}, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in {string.Join(".", matrix.FieldPath)}));"));
-
-                        // Generate the loading code for each individual row, with proper alignment.
-                        // This will result in the following (assuming Float2x3 m):
-                        //
-                        // ref global::ComputeSharp.Float3 __m__row0 = ref global::System.Runtime.CompilerServices.Unsafe.As<global::ComputeSharp.Float2x3, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in m));
-                        // global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0) = global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset));
-                        // global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 1) = global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16)));
+                        // global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.<FIELD_PATH>)[0] = buffer.<CONSTANT_BUFFER_ROW_0_PATH>;
+                        // global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.<FIELD_PATH>)[1] = buffer.<CONSTANT_BUFFER_ROW_1_PATH>;
+                        // ...
+                        // global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.<FIELD_PATH>)[N] = buffer.<CONSTANT_BUFFER_ROW_N_PATH>;
                         for (int j = 0; j < matrix.Rows; j++)
                         {
-                            statements.Add(ExpressionStatement(
-                                AssignmentExpression(
-                                    SyntaxKind.SimpleAssignmentExpression,
-                                    ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.Add(ref {rowLocalName}, {j})"),
-                                    ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<byte, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){matrix.Offsets[j]}))"))));
+                            statements.Add(
+                                ExpressionStatement(
+                                    AssignmentExpression(
+                                        SyntaxKind.SimpleAssignmentExpression,
+                                        ElementAccessExpression(
+                                            InvocationExpression(
+                                                MemberAccessExpression(
+                                                    SyntaxKind.SimpleMemberAccessExpression,
+                                                    IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                                    IdentifierName("AsRef")))
+                                            .AddArgumentListArguments(
+                                                Argument(MemberAccessExpression(
+                                                    SyntaxKind.SimpleMemberAccessExpression,
+                                                    ThisExpression(),
+                                                    IdentifierName(fieldPath)))
+                                                .WithRefKindKeyword(Token(SyntaxKind.InKeyword))))
+                                        .AddArgumentListArguments(
+                                            Argument(LiteralExpression(
+                                                SyntaxKind.NumericLiteralExpression,
+                                                Literal(j)))),
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("buffer"),
+                                            IdentifierName($"{fieldNamePrefix}_{j}")))));
                         }
 
                         break;

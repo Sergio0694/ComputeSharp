@@ -199,11 +199,11 @@ partial class ID2D1ShaderGenerator
 
             using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
-            // ConstantBuffer data;
+            // ConstantBuffer buffer;
             statements.Add(
                 LocalDeclarationStatement(
                     VariableDeclaration(IdentifierName("ConstantBuffer"))
-                    .AddVariables(VariableDeclarator(Identifier("data")))));
+                    .AddVariables(VariableDeclarator(Identifier("buffer")))));
 
             // Generate loading statements for each captured field
             foreach (FieldInfo fieldInfo in fieldInfos)
@@ -214,14 +214,14 @@ partial class ID2D1ShaderGenerator
 
                         // Assign a primitive value:
                         //
-                        // data.<CONSTANT_BUFFER_PATH> = this.<FIELD_PATH>;
+                        // buffer.<CONSTANT_BUFFER_PATH> = this.<FIELD_PATH>;
                         statements.Add(
                             ExpressionStatement(
                                 AssignmentExpression(
                                     SyntaxKind.SimpleAssignmentExpression,
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("data"),
+                                        IdentifierName("buffer"),
                                         IdentifierName(string.Join("_", primitive.FieldPath))),
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
@@ -235,10 +235,10 @@ partial class ID2D1ShaderGenerator
 
                         // Assign all rows of a given matrix type:
                         //
-                        // data.<CONSTANT_BUFFER_ROW_0_PATH> = this.<FIELD_PATH>[0];
-                        // data.<CONSTANT_BUFFER_ROW_1_PATH> = this.<FIELD_PATH>[1];
+                        // buffer.<CONSTANT_BUFFER_ROW_0_PATH> = this.<FIELD_PATH>[0];
+                        // buffer.<CONSTANT_BUFFER_ROW_1_PATH> = this.<FIELD_PATH>[1];
                         // ...
-                        // data.<CONSTANT_BUFFER_ROW_N_PATH> = this.<FIELD_PATH>[N];
+                        // buffer.<CONSTANT_BUFFER_ROW_N_PATH> = this.<FIELD_PATH>[N];
                         for (int j = 0; j < matrix.Rows; j++)
                         {
                             statements.Add(
@@ -247,7 +247,7 @@ partial class ID2D1ShaderGenerator
                                         SyntaxKind.SimpleAssignmentExpression,
                                         MemberAccessExpression(
                                             SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName("data"),
+                                            IdentifierName("buffer"),
                                             IdentifierName($"{fieldNamePrefix}_{j}")),
                                         ElementAccessExpression(
                                             MemberAccessExpression(
@@ -264,7 +264,7 @@ partial class ID2D1ShaderGenerator
                 }
             }
 
-            // loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&data, sizeof(ConstantBuffer)));
+            // loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(ConstantBuffer)));
             statements.Add(
                 ExpressionStatement(
                     InvocationExpression(
@@ -280,7 +280,7 @@ partial class ID2D1ShaderGenerator
                             Argument(
                                 PrefixUnaryExpression(
                                     SyntaxKind.AddressOfExpression,
-                                    IdentifierName("data"))),
+                                    IdentifierName("buffer"))),
                             Argument(SizeOfExpression(IdentifierName("ConstantBuffer"))))))));
 
             return statements.ToImmutable();
