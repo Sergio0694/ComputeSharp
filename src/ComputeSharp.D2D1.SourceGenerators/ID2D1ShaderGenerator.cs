@@ -372,6 +372,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax shaderProfileCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, shaderProfileProperty, skipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ShaderProfile.g.cs", shaderProfileCompilationUnit.GetText(Encoding.UTF8));
+
+            PropertyDeclarationSyntax compileOptionsProperty = LoadBytecode.GetCompileOptionsSyntax(item.BytecodeInfo);
+            CompilationUnitSyntax compileOptionsCompilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, compileOptionsProperty, canUseSkipLocalsInit: false);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.CompileOptions.g.cs", compileOptionsCompilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the output buffer info (hierarchy and output buffers)

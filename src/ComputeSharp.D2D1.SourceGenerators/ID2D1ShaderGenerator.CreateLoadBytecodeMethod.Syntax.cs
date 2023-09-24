@@ -39,7 +39,34 @@ partial class ID2D1ShaderGenerator
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                        IdentifierName(bytecodeInfo.ShaderProfile.ToString()))))
+                        IdentifierName(bytecodeInfo.ShaderProfile.ToString(CultureInfo.InvariantCulture)))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.
+        /// </summary>
+        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetCompileOptionsSyntax(EmbeddedBytecodeInfo bytecodeInfo)
+        {
+            // Get a formatted representation of the compile options being used
+            ExpressionSyntax compileOptionsExpression =
+                ParseExpression(
+                    bytecodeInfo.CompileOptions
+                    .ToString(CultureInfo.InvariantCulture)
+                    .Split(',')
+                    .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
+                    .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right));
+
+            // This code produces a method declaration as follows:
+            //
+            // readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.CompileOptions => <COMPILE_OPTIONS_EXPRESSION>;
+            return
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1CompileOptions"), Identifier(nameof(ID2D1Shader.CompileOptions)))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExpressionBody(ArrowExpressionClause(compileOptionsExpression))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
