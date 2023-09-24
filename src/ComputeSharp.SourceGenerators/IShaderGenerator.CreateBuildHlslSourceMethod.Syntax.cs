@@ -25,13 +25,12 @@ partial class IShaderGenerator
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
-        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
             ImmutableArray<StatementSyntax> bodyStatements = supportsDynamicShaders
-                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth, useRawMultiLineStringLiteralExpression)
+                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth)
                 : GenerateEmptyMethodBody();
 
             // This code produces a method declaration as follows:
@@ -83,9 +82,8 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
-        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
+        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth)
         {
             using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
 
@@ -121,11 +119,7 @@ partial class IShaderGenerator
 
                     sizeHint += textBuilder.Length;
 
-                    SyntaxToken hlslSourceLiteralExpression = useRawMultiLineStringLiteralExpression switch
-                    {
-                        true => SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth),
-                        false => Literal(hlslSource)
-                    };
+                    SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth);
 
                     statements.Add(
                         ExpressionStatement(

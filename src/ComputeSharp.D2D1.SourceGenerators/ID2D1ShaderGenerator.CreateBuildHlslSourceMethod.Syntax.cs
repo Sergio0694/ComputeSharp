@@ -20,15 +20,10 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="hlslSource">The input HLSL source.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
-        /// <param name="useRawMultiLineStringLiteralExpression">Whether to use a raw multiline string literal expression</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(string hlslSource, int hierarchyDepth, bool useRawMultiLineStringLiteralExpression)
+        public static MethodDeclarationSyntax GetSyntax(string hlslSource, int hierarchyDepth)
         {
-            SyntaxToken hlslSourceLiteralExpression = useRawMultiLineStringLiteralExpression switch
-            {
-                true => SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth),
-                false => Literal(hlslSource)
-            };
+            SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth);
 
             // This code produces a method declaration as follows:
             //
