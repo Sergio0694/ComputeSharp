@@ -94,10 +94,17 @@ partial class ID2D1ShaderGenerator
             }
             else
             {
-                memoryExpression = MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("HlslBytecodeMemoryManager"),
-                    IdentifierName("Memory"));
+                // Create a ReadOnlyMemory<byte> instance from the memory manager:
+                //
+                // HlslBytecodeMemoryManager.Instance.Memory
+                memoryExpression =
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("HlslBytecodeMemoryManager"),
+                            IdentifierName("Instance")),
+                        IdentifierName("Memory"));
 
                 TypeDeclarationSyntax memoryManagerDeclaration = GetMemoryManagerDeclaration(bytecodeInfo);
                 string bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
@@ -158,34 +165,21 @@ partial class ID2D1ShaderGenerator
 
             using ImmutableArrayBuilder<MemberDeclarationSyntax> memberDeclarations = ImmutableArrayBuilder<MemberDeclarationSyntax>.Rent();
 
-            // Declare the singleton property to get the memory instance:
+            // Declare the singleton property to get the memory manager:
             //
-            // /// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>
-            // public static new readonly global::System.ReadOnlyMemory<byte> Memory = new HlslBytecodeMemoryManager().CreateMemory(<BYTECODE_SIZE>);
+            // /// <summary>The singleton <see cref="HlslBytecodeMemoryManager"/> instance to use.</summary>
+            // public static readonly HlslBytecodeMemoryManager Instance = new();
             memberDeclarations.Add(
                 FieldDeclaration(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.ReadOnlyMemory"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                    VariableDeclaration(IdentifierName("HlslBytecodeMemoryManager"))
                     .AddVariables(
-                        VariableDeclarator(Identifier("Memory"))
-                        .WithInitializer(
-                            EqualsValueClause(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        ObjectCreationExpression(IdentifierName("HlslBytecodeMemoryManager")).WithArgumentList(ArgumentList()),
-                                        IdentifierName("CreateMemory")))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(bytecodeInfo.Bytecode.Length))))))))
+                        VariableDeclarator(Identifier("Instance"))
+                        .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression()))))
                 .AddModifiers(
                     Token(SyntaxKind.PublicKeyword),
                     Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.NewKeyword),
                     Token(SyntaxKind.ReadOnlyKeyword))
-                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::System.ReadOnlyMemory{T}"/> instance for the memory manager.</summary>""")));
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="HlslBytecodeMemoryManager"/> instance to use.</summary>""")));
 
             // Construct the RVA span property:
             //
@@ -208,12 +202,50 @@ partial class ID2D1ShaderGenerator
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                 .WithLeadingTrivia(Comment("/// <summary>The RVA data with the HLSL bytecode.</summary>")));
 
+            // Override the Memory<byte> property:
+            //
+            // /// <inheritdoc/>
+            // public override global::System.Memory<byte> Memory
+            // {
+            //     [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            //     get => CreateMemory(Data.Length);
+            // }
+            memberDeclarations.Add(
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.Memory"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
+                    Identifier("Memory"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword))
+                .AddAccessorListAccessors(
+                    AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .AddAttributeLists(
+                        AttributeList(
+                            SingletonSeparatedList(
+                                Attribute(IdentifierName("global::System.Runtime.CompilerServices.MethodImpl"))
+                                .AddArgumentListArguments(
+                                    AttributeArgument(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Runtime.CompilerServices.MethodImplOptions"),
+                                            IdentifierName("AggressiveInlining")))))))
+                    .WithExpressionBody(
+                        ArrowExpressionClause(
+                            InvocationExpression(IdentifierName("CreateMemory"))
+                            .AddArgumentListArguments(
+                                Argument(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("Data"),
+                                        IdentifierName("Length"))))))
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
             // Add the GetSpan() method:
             //
             // /// <inheritdoc/>
             // public override unsafe global::System.Span<byte> GetSpan
             // {
-            //     return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), <BYTECODE_SIZE>);
+            //     return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), Data.Length);
             // }
             memberDeclarations.Add(
                 MethodDeclaration(
@@ -240,7 +272,11 @@ partial class ID2D1ShaderGenerator
                                                 IdentifierName("GetReference")))
                                         .AddArgumentListArguments(Argument(IdentifierName("Data"))))
                                     .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))),
-                            Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(bytecodeInfo.Bytecode.Length))))))
+                            Argument(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("Data"),
+                                    IdentifierName("Length"))))))
                 .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
 
             // Add the Pin(int elementIndex) method:
