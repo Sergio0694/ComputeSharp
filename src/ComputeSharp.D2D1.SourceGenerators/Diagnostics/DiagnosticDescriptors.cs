@@ -937,4 +937,21 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The [D2DEffectAuthor] attribute must contain valid text.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>AllowUnsafeBlocks</c> option is not set.
+    /// <para>
+    /// Format: <c>"Unsafe blocks must be enabled for the source generators to emit valid code (add &lt;AllowUnsafeBlocks&gt;true&lt;/AllowUnsafeBlocks&gt; to your .csproj/.props file)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingAllowUnsafeBlocksOption = new DiagnosticDescriptor(
+        id: "CMPSD2D0064",
+        title: "Missing 'AllowUnsafeBlocks' compilation option",
+        messageFormat: "Unsafe blocks must be enabled for the source generators to emit valid code (add <AllowUnsafeBlocks>true</AllowUnsafeBlocks> to your .csproj/.props file)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "Unsafe blocks must be enabled for the source generators to emit valid code (the <AllowUnsafeBlocks>true</AllowUnsafeBlocks> option must be set in the .csproj/.props file).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp",
+        customTags: WellKnownDiagnosticTags.CompilationEnd);
 }
