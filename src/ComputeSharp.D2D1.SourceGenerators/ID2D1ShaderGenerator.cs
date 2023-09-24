@@ -285,30 +285,21 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(ResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the info for InitializeFromDispatchData() (hierarchy and dispatch data)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> initializeFromDispatchDataInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
-
-        // Generate the InitializeFromDispatchData() methods
-        context.RegisterSourceOutput(initializeFromDispatchDataInfo, static (context, item) =>
-        {
-            MethodDeclarationSyntax loadDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Dispatch);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, loadDispatchDataMethod, canUseSkipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InitializeFromDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the info for LoadDispatchData() (same as InitializeFromDispatchData(), but with [SkipLocalsInit] support flag as well)
+        // Get the info for InitializeFromDispatchData() and LoadDispatchData() (hierarchy, dispatch data and [SkipLocalsInit] support flag)
         IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo Dispatch) Info, bool CanUseSkipLocalsInit)> dispatchDataInfo =
-            initializeFromDispatchDataInfo
+            shaderInfoWithErrors
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchData))
             .Combine(canUseSkipLocalsInit);
 
-        // Generate the LoadDispatchData() methods
+        // Generate the InitializeFromDispatchData() and LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
+            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Info.Dispatch);
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Info.Hierarchy, item.Info.Dispatch, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit, additionalMemberDeclarations: additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMembers(
+                item.Info.Hierarchy,
+                memberDeclarations: new (MemberDeclarationSyntax, bool)[] { (initializeFromDispatchDataMethod, false), (loadDispatchDataMethod, item.CanUseSkipLocalsInit) },
+                additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });

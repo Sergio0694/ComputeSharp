@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -32,6 +33,53 @@ partial class ID2D1ShaderGenerator
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Creates a <see cref="CompilationUnitSyntax"/> instance wrapping the given method.
+    /// </summary>
+    /// <param name="hierarchyInfo">The <see cref="HierarchyInfo"/> instance for the current type.</param>
+    /// <param name="memberDeclarations">The <see cref="MethodDeclarationSyntax"/> items to insert.</param>
+    /// <param name="additionalMemberDeclarations">Additional member declarations to also emit, if any.</param>
+    /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="memberDeclarations"/>.</returns>
+    private static CompilationUnitSyntax GetCompilationUnitFromMembers(
+        HierarchyInfo hierarchyInfo,
+        (MemberDeclarationSyntax Member, bool SkipLocalsInit)[] memberDeclarations,
+        params MemberDeclarationSyntax[] additionalMemberDeclarations)
+    {
+        // Method attributes
+        AttributeListSyntax[] attributes =
+        {
+            AttributeList(SingletonSeparatedList(
+                Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
+                    AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).FullName))),
+                    AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
+            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))),
+            AttributeList(SingletonSeparatedList(
+                Attribute(IdentifierName("global::System.ComponentModel.EditorBrowsable")).AddArgumentListArguments(
+                AttributeArgument(ParseExpression("global::System.ComponentModel.EditorBrowsableState.Never"))))),
+            AttributeList(SingletonSeparatedList(
+                Attribute(IdentifierName("global::System.Obsolete")).AddArgumentListArguments(
+                AttributeArgument(LiteralExpression(
+                    SyntaxKind.StringLiteralExpression,
+                    Literal("This method is not intended to be used directly by user code"))))))
+        };
+
+        MemberDeclarationSyntax[] membersToAdd = memberDeclarations.Select(item =>
+        {
+            MemberDeclarationSyntax memberToAdd = item.Member.AddAttributeLists(attributes);
+
+            // Add [SkipLocalsInit] if needed
+            if (item.SkipLocalsInit)
+            {
+                memberToAdd = memberToAdd.AddAttributeLists(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
+            }
+
+            return memberToAdd;
+        }).ToArray();
+
+        return hierarchyInfo.GetSyntax(membersToAdd, additionalMemberDeclarations);
     }
 
     /// <summary>
