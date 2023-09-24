@@ -9,8 +9,6 @@ using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-#pragma warning disable IDE1006
-
 namespace ComputeSharp.D2D1.Shaders.Translation;
 
 /// <summary>
@@ -39,7 +37,7 @@ internal static unsafe partial class D3DCompiler
         try
         {
             // Compile the standalone D2D1 full shader
-            using ComPtr<ID3DBlob> d3DBlobFullShader = CompileShader(
+            using ComPtr<ID3DBlob> d3DBlobFullShader = Compile(
                 source: buffer.AsSpan(0, writtenBytes),
                 macro: ASCII.D2D_FULL_SHADER,
                 d2DEntry: ASCII.Execute,
@@ -53,7 +51,7 @@ internal static unsafe partial class D3DCompiler
             }
 
             // Compile the export function
-            using ComPtr<ID3DBlob> d3DBlobFunction = CompileShader(
+            using ComPtr<ID3DBlob> d3DBlobFunction = Compile(
                 source: buffer.AsSpan(0, writtenBytes),
                 macro: ASCII.D2D_FUNCTION,
                 d2DEntry: ASCII.Execute,
@@ -73,7 +71,7 @@ internal static unsafe partial class D3DCompiler
     }
 
     /// <summary>
-    /// Compiles a D2D1 pixel shader with the specified parameters.
+    /// Compiles an HLSL shader with the specified parameters.
     /// </summary>
     /// <param name="source">The HLSL source code to compile (in ASCII).</param>
     /// <param name="macro">The target macro to define for the shader (either <c>D2D_FULL_SHADER</c> or <c>D2D_FUNCTION</c>).</param>
@@ -83,7 +81,7 @@ internal static unsafe partial class D3DCompiler
     /// <param name="flags">The compilationm flag to use.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
     /// <exception cref="FxcCompilationException">Thrown if the compilation fails.</exception>
-    public static ComPtr<ID3DBlob> CompileShader(
+    public static ComPtr<ID3DBlob> Compile(
         ReadOnlySpan<byte> source,
         ReadOnlySpan<byte> macro,
         ReadOnlySpan<byte> d2DEntry,
