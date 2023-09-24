@@ -128,6 +128,16 @@ public interface ID2D1Shader
     string HlslSource { get; }
 
     /// <summary>
+    /// Gets the shader profile for the current shader.
+    /// </summary>
+    /// <remarks>
+    /// This shader profile is either explicitly set by users, or the default one for D2D1 shaders.
+    /// </remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    D2D1ShaderProfile ShaderProfile { get; }
+
+    /// <summary>
     /// Loads the bytecode for the current shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of bytecode loader being used.</typeparam>

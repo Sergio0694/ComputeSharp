@@ -22,6 +22,28 @@ partial class ID2D1ShaderGenerator
     partial class LoadBytecode
     {
         /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.
+        /// </summary>
+        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.</returns>
+        public static PropertyDeclarationSyntax GetShaderProfileSyntax(EmbeddedBytecodeInfo bytecodeInfo)
+        {
+            // This code produces a method declaration as follows:
+            //
+            // readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ShaderProfile => <SHADER_PROFILE>;
+            return
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1ShaderProfile"), Identifier(nameof(ID2D1Shader.ShaderProfile)))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExpressionBody(ArrowExpressionClause(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
+                        IdentifierName(bytecodeInfo.ShaderProfile.ToString()))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.
         /// </summary>
         /// <param name="bytecodeInfo">The input bytecode info.</param>
