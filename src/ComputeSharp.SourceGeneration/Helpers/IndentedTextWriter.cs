@@ -109,11 +109,13 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
-    /// Writes a line to the underlying buffer.
+    /// Writes content to the underlying buffer.
     /// </summary>
-    public void WriteLine()
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void Write(string content, bool isMultiline = false)
     {
-        this.builder.Add(DefaultNewLine);
+        Write(content.AsSpan(), isMultiline);
     }
 
     /// <summary>
@@ -121,17 +123,7 @@ internal sealed class IndentedTextWriter : IDisposable
     /// </summary>
     /// <param name="content">The content to write.</param>
     /// <param name="isMultiline">Whether the input content is multiline.</param>
-    public void WriteLine(string content, bool isMultiline = false)
-    {
-        WriteLine(content.AsSpan(), isMultiline);
-    }
-
-    /// <summary>
-    /// Writes content to the underlying buffer.
-    /// </summary>
-    /// <param name="content">The content to write.</param>
-    /// <param name="isMultiline">Whether the input content is multiline.</param>
-    public void WriteLine(ReadOnlySpan<char> content, bool isMultiline = false)
+    public void Write(ReadOnlySpan<char> content, bool isMultiline = false)
     {
         if (isMultiline)
         {
@@ -142,12 +134,12 @@ internal sealed class IndentedTextWriter : IDisposable
                 if (newLineIndex < 0)
                 {
                     // There are no new lines left, so the content can be written as a single line
-                    WriteSingleLine(content);
+                    WriteRawText(content);
                 }
                 else
                 {
                     // Write the current line
-                    WriteSingleLine(content[..newLineIndex]);
+                    WriteRawText(content[..newLineIndex]);
 
                     // Move past the new line character (the result could be an empty span)
                     content = content[(newLineIndex + 1)..];
@@ -156,8 +148,37 @@ internal sealed class IndentedTextWriter : IDisposable
         }
         else
         {
-            WriteSingleLine(content);
+            WriteRawText(content);
         }
+    }
+
+    /// <summary>
+    /// Writes a line to the underlying buffer.
+    /// </summary>
+    public void WriteLine()
+    {
+        this.builder.Add(DefaultNewLine);
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line.
+    /// </summary>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteLine(string content, bool isMultiline = false)
+    {
+        WriteLine(content.AsSpan(), isMultiline);
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line.
+    /// </summary>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteLine(ReadOnlySpan<char> content, bool isMultiline = false)
+    {
+        Write(content, isMultiline);
+        WriteLine();
     }
 
     /// <inheritdoc/>
@@ -173,10 +194,10 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
-    /// Writes a single line to the underlying buffer.
+    /// Writes raw text to the underlying buffer, adding leading indentation if needed.
     /// </summary>
-    /// <param name="content">The content to write.</param>
-    private void WriteSingleLine(ReadOnlySpan<char> content)
+    /// <param name="content">The raw text to write.</param>
+    private void WriteRawText(ReadOnlySpan<char> content)
     {
         if (this.builder.Count == 0 || this.builder.WrittenSpan[^1] == DefaultNewLine)
         {
