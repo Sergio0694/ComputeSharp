@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace ComputeSharp.SourceGeneration.Helpers;
 
@@ -153,6 +156,15 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
+    /// Writes content to the underlying buffer.
+    /// </summary>
+    /// <param name="handler">The interpolated string handler with content to write.</param>
+    public void Write([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
+    {
+        _ = this;
+    }
+
+    /// <summary>
     /// Writes a line to the underlying buffer.
     /// </summary>
     public void WriteLine()
@@ -178,6 +190,15 @@ internal sealed class IndentedTextWriter : IDisposable
     public void WriteLine(ReadOnlySpan<char> content, bool isMultiline = false)
     {
         Write(content, isMultiline);
+        WriteLine();
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line.
+    /// </summary>
+    /// <param name="handler">The interpolated string handler with content to write.</param>
+    public void WriteLine([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
+    {
         WriteLine();
     }
 
@@ -237,6 +258,75 @@ internal sealed class IndentedTextWriter : IDisposable
             {
                 writer.DecreaseIndent();
                 writer.WriteLine("}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Provides a handler used by the language compiler to append interpolated strings into <see cref="IndentedTextWriter"/> instances.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [InterpolatedStringHandler]
+    public readonly ref struct WriteInterpolatedStringHandler
+    {
+        /// <summary>The associated <see cref="IndentedTextWriter"/> to which to append.</summary>
+        private readonly IndentedTextWriter writer;
+
+        /// <summary>Creates a handler used to append an interpolated string into a <see cref="StringBuilder"/>.</summary>
+        /// <param name="literalLength">The number of constant characters outside of interpolation expressions in the interpolated string.</param>
+        /// <param name="formattedCount">The number of interpolation expressions in the interpolated string.</param>
+        /// <param name="writer">The associated <see cref="IndentedTextWriter"/> to which to append.</param>
+        /// <remarks>This is intended to be called only by compiler-generated code. Arguments are not validated as they'd otherwise be for members intended to be used directly.</remarks>
+        public WriteInterpolatedStringHandler(int literalLength, int formattedCount, IndentedTextWriter writer)
+        {
+            this.writer = writer;
+        }
+
+        /// <summary>Writes the specified string to the handler.</summary>
+        /// <param name="value">The string to write.</param>
+        public void AppendLiteral(string value)
+        {
+            this.writer.Write(value);
+        }
+
+        /// <summary>Writes the specified value to the handler.</summary>
+        /// <param name="value">The value to write.</param>
+        public void AppendFormatted(string? value)
+        {
+            AppendFormatted<string?>(value);
+        }
+
+        /// <summary>Writes the specified character span to the handler.</summary>
+        /// <param name="value">The span to write.</param>
+        public void AppendFormatted(ReadOnlySpan<char> value)
+        {
+            this.writer.Write(value);
+        }
+
+        /// <summary>Writes the specified value to the handler.</summary>
+        /// <param name="value">The value to write.</param>
+        /// <typeparam name="T">The type of the value to write.</typeparam>
+        public void AppendFormatted<T>(T value)
+        {
+            if (value is not null)
+            {
+                this.writer.Write(value.ToString());
+            }
+        }
+
+        /// <summary>Writes the specified value to the handler.</summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="format">The format string.</param>
+        /// <typeparam name="T">The type of the value to write.</typeparam>
+        public void AppendFormatted<T>(T value, string? format)
+        {
+            if (value is IFormattable)
+            {
+                this.writer.Write(((IFormattable)value).ToString(format));
+            }
+            else if (value is not null)
+            {
+                this.writer.Write(value.ToString());
             }
         }
     }
