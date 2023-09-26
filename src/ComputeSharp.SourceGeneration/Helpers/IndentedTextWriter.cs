@@ -73,6 +73,26 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
+    /// Advances the current writer and gets a <see cref="Span{T}"/> to the requested memory area.
+    /// </summary>
+    /// <param name="requestedSize">The requested size to advance by.</param>
+    /// <returns>A <see cref="Span{T}"/> to the requested memory area.</returns>
+    /// <remarks>
+    /// No other data should be written to the writer while the returned <see cref="Span{T}"/>
+    /// is in use, as it could invalidate the memory area wrapped by it, if resizing occurs.
+    /// </remarks>
+    public Span<char> Advance(int requestedSize)
+    {
+        // Add the leading whitespace if needed (same as WriteRawText below)
+        if (this.builder.Count == 0 || this.builder.WrittenSpan[^1] == DefaultNewLine)
+        {
+            this.builder.AddRange(this.currentIndentation.AsSpan());
+        }
+
+        return this.builder.Advance(requestedSize);
+    }
+
+    /// <summary>
     /// Increases the current indentation level.
     /// </summary>
     public void IncreaseIndent()
