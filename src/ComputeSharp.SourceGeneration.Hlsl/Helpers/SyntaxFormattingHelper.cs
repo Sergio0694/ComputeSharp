@@ -31,6 +31,58 @@ internal static class SyntaxFormattingHelper
     };
 
     /// <summary>
+    /// Writes a formatted expression to initialize a <see cref="ReadOnlySpan{T}"/> with a given content.
+    /// </summary>
+    /// <param name="bytecode">The input byte content to serialize.</param>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write the expressions to.</param>
+    /// <remarks>
+    /// This function will write raw byte initialization expressions, such as:
+    /// <c>[1, 2, 3, 4, 5]</c> => <c>0x01, 0x02, 0x03, 0x04, 0x05</c>.
+    /// </remarks>
+    public static void WriteByteArrayInitializationExpressions(ReadOnlySpan<byte> bytecode, IndentedTextWriter writer)
+    {
+        if (bytecode.Length == 0)
+        {
+            return;
+        }
+
+        // Calculate the buffer size:
+        //   - 4 characters per item (eg. "0x00")
+        //   - 2 characters between each pair of items (ie. ", ")
+        int length = (bytecode.Length * 4) + ((bytecode.Length - 1) * 2);
+
+        // Reserve the space and get a span into the writer buffer
+        Span<char> span = writer.Advance(length);
+
+        // Cache the value expressions to avoid accessing the static fields multiple times
+        ReadOnlySpan<string> expressions = FormattedBytes.AsSpan();
+
+        // First write the first item (which has no leading separator)
+        expressions[0].AsSpan().CopyTo(span);
+
+        // Special case: stop early if there's only one element
+        if (bytecode.Length == 1)
+        {
+            return;
+        }
+
+        // Advance the span to right past the item we've already written.
+        // This is so that each new item can assume it's starting from 0.
+        span = span.Slice(4);
+
+        // Loop over all remaining items, and add the separator and encoded value.
+        // Then slice the remaining span so following items can repeat the same.
+        foreach (byte b in bytecode.Slice(1))
+        {
+            span[0] = ',';
+            span[1] = ' ';
+            expressions[b].AsSpan().CopyTo(span.Slice(2));
+
+            span = span.Slice(6);
+        }
+    }
+
+    /// <summary>
     /// Creates a formatted expression to initialize a <see cref="ReadOnlySpan{T}"/> with a given content.
     /// </summary>
     /// <param name="bytecode">The input byte content to serialize.</param>
