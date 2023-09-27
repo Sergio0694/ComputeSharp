@@ -91,8 +91,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the input info for GetInputInfo()
-                    GetInputType.GetInfo(
+                    // Get the input info for InputTypes
+                    InputTypes.GetInfo(
                         diagnostics,
                         typeSymbol,
                         out int inputCount,
@@ -257,18 +257,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetInputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the GetInputType() info (hierarchy and input types)
+        // Get the InputTypes info (hierarchy and input types)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputTypesInfo InputTypes)> inputTypesInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputTypes));
 
-        // Generate the GetInputType() methods
+        // Generate the InputTypes properties
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputTypeMethod = GetInputType.GetSyntax(item.InputTypes.InputTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            MemberDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetInputType)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the LoadResourceTextureDescriptions() info (hierarchy and resource texture descriptions)

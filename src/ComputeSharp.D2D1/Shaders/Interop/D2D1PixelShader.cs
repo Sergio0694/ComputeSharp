@@ -259,20 +259,16 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
-    /// Gets the type of a given input for a D2D1 pixel shader.
+    /// Gets the input types for a D2D1 pixel shader.
     /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the input type for.</typeparam>
-    /// <param name="index">The index of the input to get the type for.</param>
-    /// <returns>The type of the input of the target D2D1 pixel shader at the specified index.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is not in range for the available inputs for the shader type.</exception>
-    public static D2D1PixelShaderInputType GetInputType<T>(int index)
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input types for.</typeparam>
+    /// <returns>The input types of the target D2D1 pixel shader.</returns>
+    public static ReadOnlyMemory<D2D1PixelShaderInputType> GetInputTypes<T>()
         where T : unmanaged, ID2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, (int)shader.GetInputCount());
-
-        return (D2D1PixelShaderInputType)shader.GetInputType((uint)index);
+        return shader.InputTypes;
     }
 
     /// <summary>

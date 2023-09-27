@@ -175,10 +175,7 @@ internal unsafe partial struct PixelShaderEffect
             int inputCount = D2D1PixelShader.GetInputCount<T>();
             D2D1PixelShaderInputType* inputTypes = (D2D1PixelShaderInputType*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(For<T>), sizeof(D2D1PixelShaderInputType) * inputCount);
 
-            for (int i = 0; i < inputCount; i++)
-            {
-                inputTypes[i] = D2D1PixelShader.GetInputType<T>(i);
-            }
+            D2D1PixelShader.GetInputTypes<T>().Span.CopyTo(new Span<D2D1PixelShaderInputType>(inputTypes, inputCount));
 
             // Prepare the input descriptions
             ReadOnlyMemory<D2D1InputDescription> inputDescriptionsInfo = D2D1PixelShader.GetInputDescriptions<T>();

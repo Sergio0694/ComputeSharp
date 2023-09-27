@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using ComputeSharp.D2D1.Interop;
 
 namespace ComputeSharp.D2D1.__Internals;
 
@@ -77,14 +78,11 @@ public interface ID2D1Shader
     uint GetInputCount();
 
     /// <summary>
-    /// Gets the input type for the input at the input index.
+    /// Gets the input types for the current shader.
     /// </summary>
-    /// <param name="index">The index of the shader input to get the type for.</param>
-    /// <returns>The type of input at the specified index.</returns>
-    /// <remarks>The return value if the input is out of range is undefined.</remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetInputType(uint index);
+    ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes { get; }
 
     /// <summary>
     /// Loads the input descriptions for the shader, if any.
