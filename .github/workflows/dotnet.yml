@@ -225,7 +225,10 @@ jobs:
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -f net7.0 -r win-${{matrix.platform}} -v n
       
-      # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it)
+      # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it).
+      # Note: for this and all other equivalent tests below, we're only throwing on failures that are not
+      # -1073741510 (STATUS_CONTROL_C_EXIT). That error is sometimes thrown when running the test in the CI.
+      # We don't want to fail in that case, as it still means the sample has in fact ran with no problems.
     - if: matrix.platform == 'x64'
       name: Run ComputeSharp.SwapChain.Cli (speed)
       run: >
@@ -233,7 +236,7 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
         return $process.ExitCode;
 
       # Upload the binary (to track binary size trends)
@@ -262,7 +265,7 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
         return $process.ExitCode;
 
       # Upload the binary again (with a different name)
@@ -289,7 +292,7 @@ jobs:
         sleep -Seconds 2;
         $process.CloseMainWindow() | Out-Null;
         $process.WaitForExit();
-        if ($process.ExitCode -lt 0) { throw $process.ExitCode; }
+        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
         return $process.ExitCode;
       
       # Publish the Win2D sample with NativeAOT (just verifying the build, can't run this yet, see above)
