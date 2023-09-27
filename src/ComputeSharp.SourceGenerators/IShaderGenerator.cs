@@ -152,24 +152,20 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Check whether raw multiline string literals can be used (C# 11)
-        IncrementalValueProvider<bool> canUseRawMultilineStringLiterals =
-            context.ParseOptionsProvider
-            .Select((item, _) => item is CSharpParseOptions { LanguageVersion: >= LanguageVersion.CSharp11 });
-
         // Get the BuildHlslSource info (hierarchy, HLSL source and parsing options)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Info, (bool CanUseSkipLocalsInit, bool SupportsDynamicShaders, bool CanUseRawMultilineStringLiterals) Options)> hlslSourceInfo =
+        IncrementalValuesProvider<(((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Left, bool CanUseSkipLocalsInit) Left, bool SupportsDynamicShaders)> hlslSourceInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource))
-            .Combine(canUseSkipLocalsInit.Combine(supportsDynamicShaders, canUseRawMultilineStringLiterals));
+            .Combine(canUseSkipLocalsInit)
+            .Combine(supportsDynamicShaders);
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Info.HlslShaderSource, item.Options.SupportsDynamicShaders, item.Info.Hierarchy.Hierarchy.Length, item.Options.CanUseRawMultilineStringLiterals);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, item.Options.CanUseSkipLocalsInit);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.Left.HlslShaderSource, item.SupportsDynamicShaders, item.Left.Left.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Left.Hierarchy, buildHlslStringMethod, item.Left.CanUseSkipLocalsInit);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Left.Left.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
