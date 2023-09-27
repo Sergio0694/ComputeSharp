@@ -80,11 +80,11 @@
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" Link="ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1InputDescriptionsLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1InputDescriptionsLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1ResourceTextureDescriptionsLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1ResourceTextureDescriptionsLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1Shader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1Shader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\D2D.cs" Link="ComputeSharp.D2D1\Intrinsics\D2D.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" />

@@ -279,13 +279,9 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        D2D1ByteArrayInputDescriptionsLoader inputDescriptionsLoader = default;
-
         Unsafe.SkipInit(out T shader);
 
-        shader.LoadInputDescriptions(ref inputDescriptionsLoader);
-
-        return inputDescriptionsLoader.GetResultingInputDescriptions();
+        return shader.InputDescriptions;
     }
 
     /// <summary>
