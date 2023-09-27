@@ -71,10 +71,9 @@ public interface ID2D1Shader
     /// <summary>
     /// Gets the number of inputs for the current shader.
     /// </summary>
-    /// <returns>The number of inputs for the current shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetInputCount();
+    int InputCount { get; }
 
     /// <summary>
     /// Gets the input types for the current shader.

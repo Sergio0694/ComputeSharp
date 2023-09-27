@@ -255,7 +255,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        return (int)shader.GetInputCount();
+        return shader.InputCount;
     }
 
     /// <summary>

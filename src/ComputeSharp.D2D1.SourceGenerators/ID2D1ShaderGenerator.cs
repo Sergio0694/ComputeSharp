@@ -243,18 +243,18 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectAuthor.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the GetInputCount() info (hierarchy and input count)
+        // Get the InputCount info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputTypes.InputTypes.Length));
 
-        // Generate the GetInputCount() methods
+        // Generate the InputCount properties
         context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputCountMethod = GetInputCount.GetSyntax(item.InputCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputCountMethod, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax inputCountProperty = InputCount.GetSyntax(item.InputCount);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputCountProperty, canUseSkipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetInputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the InputTypes info (hierarchy and input types)
