@@ -69,41 +69,18 @@ internal static class CompilationExtensions
     /// <returns>Whether a type with the specified metadata name can be accessed from the given compilation.</returns>
     public static bool HasAccessibleTypeWithMetadataName(this Compilation compilation, string fullyQualifiedMetadataName)
     {
-        // Try to get the unique type with this name
-        INamedTypeSymbol? type = compilation.GetTypeByMetadataName(fullyQualifiedMetadataName);
-
         // If there is only a single matching symbol, check its accessibility
-        if (type is not null)
+        if (compilation.GetTypeByMetadataName(fullyQualifiedMetadataName) is INamedTypeSymbol typeSymbol)
         {
-            return type.CanBeAccessedFrom(compilation.Assembly);
+            return compilation.IsSymbolAccessibleWithin(typeSymbol, compilation.Assembly);
         }
 
-        // Otherwise, try to get the unique type with this name originally defined in 'compilation'
-        type ??= compilation.Assembly.GetTypeByMetadataName(fullyQualifiedMetadataName);
-
-        if (type is not null)
+        // Otherwise, check all available types
+        foreach (INamedTypeSymbol currentTypeSymbol in compilation.GetTypesByMetadataName(fullyQualifiedMetadataName))
         {
-            return type.CanBeAccessedFrom(compilation.Assembly);
-        }
-
-        // Otherwise, check whether the type is defined and accessible from any of the referenced assemblies
-        foreach (IModuleSymbol module in compilation.Assembly.Modules)
-        {
-            foreach (IAssemblySymbol referencedAssembly in module.ReferencedAssemblySymbols)
+            if (compilation.IsSymbolAccessibleWithin(currentTypeSymbol, compilation.Assembly))
             {
-                if (referencedAssembly.GetTypeByMetadataName(fullyQualifiedMetadataName) is not INamedTypeSymbol currentType)
-                {
-                    continue;
-                }
-
-                switch (currentType.GetEffectiveAccessibility())
-                {
-                    case Accessibility.Public:
-                    case Accessibility.Internal when referencedAssembly.GivesAccessTo(compilation.Assembly):
-                        return true;
-                    default:
-                        continue;
-                }
+                return true;
             }
         }
 
