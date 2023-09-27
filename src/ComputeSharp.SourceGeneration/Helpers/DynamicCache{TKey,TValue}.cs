@@ -206,16 +206,24 @@ public sealed class DynamicCache<TKey, TValue>
 
             bool isMatch = EqualityComparer<TKey>.Default.Equals(left, right);
 
-            // If we have a match and we're in lookup mode, store the last item.
-            // Otherwise, clear it to also make sure not to accidentally root
-            // keys that are not actually in the cache anymore.
-            if (isMatch && this.isPerformingLookup)
+            // If we have a match and we're in lookup mode, store the last item. Note that the dictionary
+            // does not guarantee the order of arguments to Equals calls, so we cannot rely on the Entry
+            // object being used for lookup the one whose Equals method is being called. So if there is
+            // a match, we check which of the two input Entry instances is the one being used for lookups,
+            // and set the last match key object on that one. If there is no match, there is no need to
+            // clear the last key, as even in case the entry ends up being inserted into the map in the
+            // falback path, before doing so SetIsPerformingLookup(false) will be called, which will clear
+            // any previous matches. So there is already no way for the key to be accidentally rooted here.
+            if (isMatch)
             {
-                this.lastMatchedKey = right;
-            }
-            else
-            {
-                this.lastMatchedKey = null;
+                if (this.isPerformingLookup)
+                {
+                    this.lastMatchedKey = right;
+                }
+                else if (entry.isPerformingLookup)
+                {
+                    entry.lastMatchedKey = left;
+                }
             }
 
             return isMatch;
