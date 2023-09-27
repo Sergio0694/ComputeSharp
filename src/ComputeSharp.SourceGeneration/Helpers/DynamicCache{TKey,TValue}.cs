@@ -22,6 +22,11 @@ public sealed class DynamicCache<TKey, TValue>
     private readonly ConcurrentDictionary<Entry, TValue> map = new();
 
     /// <summary>
+    /// The <see cref="ConditionalWeakTable{TKey, TValue}"/> tracking dead entries to remove.
+    /// </summary>
+    private readonly ConditionalWeakTable<TKey, EntryRemover> table = new();
+
+    /// <summary>
     /// Gets or creates a new value for a given key, using a supplied callback if needed.
     /// </summary>
     /// <param name="key">The key to use as lookup.</param>
@@ -97,14 +102,12 @@ public sealed class DynamicCache<TKey, TValue>
             return false;
         }
 
-        // As part of the fallback step, traverse all items and remove dead keys
-        foreach (Entry candidateKey in this.map.Keys)
-        {
-            if (!candidateKey.IsAlive)
-            {
-                _ = this.map.TryRemove(candidateKey, out _);
-            }
-        }
+        // We need to setup the removal of this key-value pair when the key is no longer
+        // referenced. To do this, we add a new EntryRemover instance to the table. When
+        // the key has no active references and is collected (which means the entry will
+        // also become invalid), the finalizer of the EntryRemover instance will run on
+        // a following GC, and remove that dead Entry instance from the map automatically.
+        this.table.Add(key, new EntryRemover(this.map, entry));
 
         return true;
     }
@@ -127,6 +130,11 @@ public sealed class DynamicCache<TKey, TValue>
         private readonly WeakReference<TKey> reference;
 
         /// <summary>
+        /// The hashcode of the target key (so it's available even after the key is gone).
+        /// </summary>
+        private readonly int hashCode;
+
+        /// <summary>
         /// The last key matched from <see cref="Equals(object?)"/>, if available.
         /// </summary>
         private TKey? lastMatchedKey;
@@ -143,6 +151,7 @@ public sealed class DynamicCache<TKey, TValue>
         public Entry(TKey key)
         {
             this.reference = new WeakReference<TKey>(key);
+            this.hashCode = EqualityComparer<TKey>.Default.GetHashCode(key);
         }
 
         /// <summary>
@@ -185,6 +194,13 @@ public sealed class DynamicCache<TKey, TValue>
                 return false;
             }
 
+            // Special case matching on the entry identity directly. This is used
+            // by the finalizer of EntryRemover to find the entry to remove.
+            if (this == entry)
+            {
+                return true;
+            }
+
             _ = this.reference.TryGetTarget(out TKey? left);
             _ = entry.reference.TryGetTarget(out TKey? right);
 
@@ -208,12 +224,40 @@ public sealed class DynamicCache<TKey, TValue>
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            if (this.reference.TryGetTarget(out TKey? value))
-            {
-                return EqualityComparer<TKey>.Default.GetHashCode(value);
-            }
+            return this.hashCode;
+        }
+    }
 
-            return 0;
+    /// <summary>
+    /// An object reponsible for removing dead <see cref="Entry"/> instance from the table.
+    /// </summary>
+    private sealed class EntryRemover
+    {
+        /// <inheritdoc cref="DynamicCache{TKey, TValue}.map"/>
+        private readonly ConcurrentDictionary<Entry, TValue> map;
+
+        /// <summary>
+        /// The target <see cref="Entry"/> instance to remove from <see cref="map"/>.
+        /// </summary>
+        private readonly Entry entry;
+
+        /// <summary>
+        /// Creates a new <see cref="EntryRemover"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="map"><inheritdoc cref="DynamicCache{TKey, TValue}.map" path="/node()"/></param>
+        /// <param name="entry"><inheritdoc cref="entry" path="/node()"/></param>
+        public EntryRemover(ConcurrentDictionary<Entry, TValue> map, Entry entry)
+        {
+            this.map = map;
+            this.entry = entry;
+        }
+
+        /// <summary>
+        /// Removes <see cref="entry"/> from <see cref="map"/> when the current instance is finalized.
+        /// </summary>
+        ~EntryRemover()
+        {
+            _ = this.map.TryRemove(this.entry, out _);
         }
     }
 }
