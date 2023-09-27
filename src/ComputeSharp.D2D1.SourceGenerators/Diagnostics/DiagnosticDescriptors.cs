@@ -857,4 +857,36 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A D2D1 shader must be annotated with the [D2DInputCount] attribute.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectId]</c> attribute is being used with an invalid value.
+    /// <para>
+    /// Format: <c>"The [D2DEffectId] attribute is being used with an invalid value (the input text must be a valid GUID)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DEffectIdAttributeValue = new DiagnosticDescriptor(
+        id: "CMPSD2D0059",
+        title: "Invalid [D2DEffectId] attribute value",
+        messageFormat: "The [D2DEffectId] attribute is being used with an invalid value (the input text must be a valid GUID)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DEffectId] attribute must use a valid GUID expression as value.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[D2DEffectDisplayName]</c> attribute is being used with an invalid value.
+    /// <para>
+    /// Format: <c>"The [D2DEffectDisplayName] attribute is being used with an invalid value (the input text must be a valid GUID)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2DEffectDisplayNameAttributeValue = new DiagnosticDescriptor(
+        id: "CMPSD2D0060",
+        title: "Invalid [D2DEffectDisplayName] attribute value",
+        messageFormat: "The [D2DEffectDisplayName] attribute is being used with an invalid value",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DEffectDisplayName] attribute must contain valid text.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

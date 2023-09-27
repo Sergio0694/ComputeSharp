@@ -19,6 +19,32 @@ namespace ComputeSharp.D2D1.Interop;
 public static unsafe class D2D1PixelShaderEffect
 {
     /// <summary>
+    /// Gets the effect id of the D2D effect using this shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect id for.</typeparam>
+    /// <returns>The effect id of the D2D effect using <typeparamref name="T"/> shaders.</returns>
+    public static ref readonly Guid GetEffectId<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return ref shader.EffectId;
+    }
+
+    /// <summary>
+    /// Gets the effect display name of the D2D effect using this shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect id for.</typeparam>
+    /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders.</returns>
+    public static string GetEffectDisplayName<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.EffectDisplayName;
+    }
+
+    /// <summary>
     /// Registers an effect from an input D2D1 pixel shader, by calling <c>ID2D1Factory1::RegisterEffectFromString</c>.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to register.</typeparam>
@@ -26,7 +52,10 @@ public static unsafe class D2D1PixelShaderEffect
     /// <param name="effectId">The <see cref="Guid"/> of the registered effect, which can be used to call <c>ID2D1DeviceContext::CreateEffect</c>.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Factory1"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown if an effect is registered multiple times with different properties.</exception>
-    /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</remarks>
+    /// <remarks>
+    /// <para>The returned <paramref name="effectId"/> value is the same as that returned by <see cref="GetEffectId{T}"/>.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</para>
+    /// </remarks>
     public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
     {
@@ -42,7 +71,7 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """);
-        writer.WriteRaw(typeof(T).FullName!);
+        writer.WriteRaw(GetEffectDisplayName<T>());
         writer.WriteRaw("""
             '/>
                 <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
@@ -261,9 +290,8 @@ public static unsafe class D2D1PixelShaderEffect
     /// To make the deserialization easier, the <see cref="D2D1EffectRegistrationData"/> type can be used to read and validate the returned blob.
     /// The leading blob id will determine what subtype should be used to deserialize the blob (eg. <see cref="D2D1EffectRegistrationData.V1"/>).
     /// </para>
-    /// <para>
-    /// For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.
-    /// </para>
+    /// <para>The returned <paramref name="effectId"/> value is the same as that returned by <see cref="GetEffectId{T}"/>.</para>
+    /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</para>
     /// </remarks>
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader
@@ -283,7 +311,7 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """u8);
-        writer.WriteAsUtf8(typeof(T).FullName!);
+        writer.WriteAsUtf8(GetEffectDisplayName<T>());
         writer.WriteRaw("""
             '/>
                 <Property name='Author' type='string' value='ComputeSharp.D2D1'/>

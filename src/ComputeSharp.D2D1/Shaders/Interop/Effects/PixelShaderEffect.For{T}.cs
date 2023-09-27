@@ -165,7 +165,7 @@ internal unsafe partial struct PixelShaderEffect
         private static For<T> CreateInstance()
         {
             // Load all shader properties
-            Guid shaderId = typeof(T).GUID;
+            Guid shaderId = D2D1PixelShaderEffect.GetEffectId<T>();
             int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
             D2D1BufferPrecision bufferPrecision = D2D1PixelShader.GetOutputBufferPrecision<T>();
             D2D1ChannelDepth channelDepth = D2D1PixelShader.GetOutputBufferChannelDepth<T>();
