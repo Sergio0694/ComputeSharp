@@ -15,21 +15,21 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritoc/>
-    private static partial class InputDescriptions
+    private static partial class ResourceTextureDescriptions
     {
         /// <summary>
-        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
         /// </summary>
-        /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
+        /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
         /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
-        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(InputDescriptionsInfo inputDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetSyntax(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
         {
             ExpressionSyntax memoryExpression;
 
-            // If there are no input descriptions, just return a default expression.
+            // If there are no resource texture descriptions, just return a default expression.
             // Otherwise, declare the shared array and return it from the property.
-            if (inputDescriptionsInfo.InputDescriptions.Length == 0)
+            if (resourceTextureDescriptionsInfo.ResourceTextureDescriptions.Length == 0)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
                 additionalTypes = Array.Empty<TypeDeclarationSyntax>();
@@ -39,19 +39,19 @@ partial class ID2D1ShaderGenerator
                 memoryExpression = MemberAccessExpression(
                     SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("Data"),
-                    IdentifierName(nameof(InputDescriptions)));
+                    IdentifierName(nameof(ResourceTextureDescriptions)));
 
-                additionalTypes = new[] { GetArrayDeclaration(inputDescriptionsInfo) };
+                additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptionsInfo) };
             }
 
             // This code produces a method declaration as follows:
             //
-            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputDescriptions => <EXPRESSION>;
+            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => <EXPRESSION>;
             return
                 PropertyDeclaration(
                     GenericName(Identifier("global::System.ReadOnlyMemory"))
-                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription")),
-                    Identifier(nameof(InputDescriptions)))
+                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription")),
+                    Identifier(nameof(ResourceTextureDescriptions)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithExpressionBody(ArrowExpressionClause(memoryExpression))
@@ -59,71 +59,49 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Gets the array declaration for the given input descriptions.
+        /// Gets the array declaration for the given resource texture descriptions.
         /// </summary>
-        /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
-        /// <returns>The array declaration for the given input descriptions.</returns>
-        private static TypeDeclarationSyntax GetArrayDeclaration(InputDescriptionsInfo inputDescriptionsInfo)
+        /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
+        /// <returns>The array declaration for the given resource texture descriptions.</returns>
+        private static TypeDeclarationSyntax GetArrayDeclaration(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo)
         {
-            using ImmutableArrayBuilder<ExpressionSyntax> inputDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
+            using ImmutableArrayBuilder<ExpressionSyntax> resourceTextureDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
 
-            foreach (InputDescription inputDescription in inputDescriptionsInfo.InputDescriptions)
+            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptionsInfo.ResourceTextureDescriptions)
             {
-                // Create the description expression (excluding level of detail):
+                // Create the description expression:
                 //
-                // new(<INDEX>, <FILTER>)
-                ImplicitObjectCreationExpressionSyntax inputDescriptionExpression =
+                // new(<INDEX>, <RANK>)
+                resourceTextureDescriptionExpressions.Add(
                     ImplicitObjectCreationExpression()
                     .AddArgumentListArguments(
                         Argument(LiteralExpression(
                             SyntaxKind.NumericLiteralExpression,
-                            Literal(inputDescription.Index))),
-                        Argument(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("global::ComputeSharp.D2D1.D2D1Filter"),
-                                IdentifierName(inputDescription.Filter.ToString()))));
-
-                // Add the level of detail, if needed:
-                //
-                // { LevelOfDetailCount = <LEVEL_OF_DETAIL_COUNT> }
-                if (inputDescription.LevelOfDetailCount != 0)
-                {
-                    inputDescriptionExpression =
-                        inputDescriptionExpression
-                        .WithInitializer(
-                            InitializerExpression(SyntaxKind.ObjectInitializerExpression)
-                            .AddExpressions(
-                                AssignmentExpression(
-                                    SyntaxKind.SimpleAssignmentExpression,
-                                    IdentifierName("LevelOfDetailCount"),
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(inputDescription.LevelOfDetailCount)))));
-                }
-
-                inputDescriptionExpressions.Add(inputDescriptionExpression);
+                            Literal(resourceTextureDescription.Index))),
+                        Argument(LiteralExpression(
+                            SyntaxKind.NumericLiteralExpression,
+                            Literal(resourceTextureDescription.Rank)))));
             }
 
             // Declare the singleton property to get the memory instance:
             //
-            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>
-            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = { <INPUT_DESCRIPTIONS> };
+            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>
+            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions = { <RESOURCE_TEXTURE_DESCRIPTIONS> };
             FieldDeclarationSyntax fieldDeclaration =
                 FieldDeclaration(
                     VariableDeclaration(
-                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription"))
+                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"))
                         .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                     .AddVariables(
-                        VariableDeclarator(Identifier(nameof(InputDescriptions)))
+                        VariableDeclarator(Identifier(nameof(ResourceTextureDescriptions)))
                         .WithInitializer(EqualsValueClause(
                             InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                            .AddExpressions(inputDescriptionExpressions.ToArray())))))
+                            .AddExpressions(resourceTextureDescriptionExpressions.ToArray())))))
                 .AddModifiers(
                     Token(SyntaxKind.PublicKeyword),
                     Token(SyntaxKind.StaticKeyword),
                     Token(SyntaxKind.ReadOnlyKeyword))
-                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>"""));
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>"""));
 
             // Create the container type declaration:
             //
@@ -150,7 +128,7 @@ partial class ID2D1ShaderGenerator
                 .AddMembers(fieldDeclaration)
                 .WithLeadingTrivia(
                     Comment("/// <summary>"),
-                    Comment("/// A container type for input descriptions."),
+                    Comment("/// A container type for resource texture descriptions."),
                     Comment("/// </summary>"));
         }
     }

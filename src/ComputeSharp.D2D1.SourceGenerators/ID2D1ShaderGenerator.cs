@@ -100,8 +100,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         out ImmutableArray<int> inputComplexIndices,
                         out ImmutableArray<uint> inputTypes);
 
-                    // Get the resource texture info for LoadResourceTextureDescriptions()
-                    LoadResourceTextureDescriptions.GetInfo(
+                    // Get the resource texture info for ResourceTextureDescriptions
+                    ResourceTextureDescriptions.GetInfo(
                         diagnostics,
                         typeSymbol,
                         inputCount,
@@ -265,24 +265,24 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the InputTypes properties
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
-            MemberDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
+            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Get the LoadResourceTextureDescriptions() info (hierarchy and resource texture descriptions)
+        // Get the ResourceTextureDescriptions info (hierarchy and resource texture descriptions)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, ResourceTextureDescriptionsInfo ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.ResourceTextureDescriptions));
 
-        // Generate the LoadResourceTextureDescriptions() methods
+        // Generate the ResourceTextureDescriptions properties
         context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax getInputTypeMethod = LoadResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, getInputTypeMethod, canUseSkipLocalsInit: false);
+            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out TypeDeclarationSyntax[] additionalTypes);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, resourceTextureDescriptionsProperty, canUseSkipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(ResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the info for InitializeFromDispatchData() (hierarchy and dispatch data)

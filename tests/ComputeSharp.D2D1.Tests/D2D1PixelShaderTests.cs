@@ -222,16 +222,16 @@ public partial class D2D1PixelShaderTests
 
         ReadOnlySpan<D2D1ResourceTextureDescription> span = resourceTextureDescriptions.Span;
 
-        Assert.AreEqual(span[0].Index, 5);
+        Assert.AreEqual(span[0].Index, 4);
         Assert.AreEqual(span[0].Dimensions, 1);
 
-        Assert.AreEqual(span[1].Index, 6);
+        Assert.AreEqual(span[1].Index, 5);
         Assert.AreEqual(span[1].Dimensions, 2);
 
-        Assert.AreEqual(span[2].Index, 7);
+        Assert.AreEqual(span[2].Index, 6);
         Assert.AreEqual(span[2].Dimensions, 3);
 
-        Assert.AreEqual(span[3].Index, 8);
+        Assert.AreEqual(span[3].Index, 7);
         Assert.AreEqual(span[3].Dimensions, 2);
     }
 
@@ -246,16 +246,16 @@ public partial class D2D1PixelShaderTests
     {
         float number;
 
-        [D2DResourceTextureIndex(5)]
+        [D2DResourceTextureIndex(4)]
         D2D1ResourceTexture1D<float4> myTexture1;
 
-        [D2DResourceTextureIndex(6)]
+        [D2DResourceTextureIndex(5)]
         D2D1ResourceTexture2D<float4> myTexture2;
 
-        [D2DResourceTextureIndex(7)]
+        [D2DResourceTextureIndex(6)]
         D2D1ResourceTexture3D<float4> myTexture3;
 
-        [D2DResourceTextureIndex(8)]
+        [D2DResourceTextureIndex(7)]
         D2D1ResourceTexture2D<float> myTexture4;
 
         public Float4 Execute()

@@ -5,7 +5,6 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.Shaders.Loaders;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Buffers;
 using ComputeSharp.D2D1.Uwp.Collections;
@@ -233,13 +232,16 @@ partial class PixelShaderEffect<T>
         /// <returns>The bitmask of indices for resource textures in the target shader.</returns>
         private static int GetIndexBitmask()
         {
-            D2D1IndexBitmaskResourceTextureDescriptionsLoader bitmaskLoader = default;
-
             Unsafe.SkipInit(out T shader);
 
-            shader.LoadResourceTextureDescriptions(ref bitmaskLoader);
+            int indexBitmask = 0;
 
-            return bitmaskLoader.GetResultingIndexBitmask();
+            foreach (ref readonly D2D1ResourceTextureDescription description in shader.ResourceTextureDescriptions.Span)
+            {
+                indexBitmask |= 1 << description.Index;
+            }
+
+            return indexBitmask;
         }
 
         /// <summary>
@@ -248,13 +250,24 @@ partial class PixelShaderEffect<T>
         /// <returns>The collection of valid indices for the current effect.</returns>
         private static ImmutableArray<int> GetIndices()
         {
-            D2D1ImmutableArrayResourceTextureDescriptionsLoader indicesLoader = default;
-
             Unsafe.SkipInit(out T shader);
 
-            shader.LoadResourceTextureDescriptions(ref indicesLoader);
+            ReadOnlySpan<D2D1ResourceTextureDescription> descriptions = shader.ResourceTextureDescriptions.Span;
 
-            return indicesLoader.GetResultingIndices();
+            // Skip the array allocation if there are no resource texture descriptions
+            if (descriptions.IsEmpty)
+            {
+                return ImmutableArray<int>.Empty;
+            }
+
+            int[] indices = new int[descriptions.Length];
+
+            for (int i = 0; i < descriptions.Length; i++)
+            {
+                indices[i] = descriptions[i].Index;
+            }
+
+            return Unsafe.As<int[], ImmutableArray<int>>(ref indices);
         }
     }
 }

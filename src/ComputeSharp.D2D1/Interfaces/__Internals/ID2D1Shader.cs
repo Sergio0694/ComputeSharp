@@ -92,14 +92,11 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
 
     /// <summary>
-    /// Loads the resource texture descriptions for the shader, if any.
+    /// Gets the resource texture descriptions for the shader.
     /// </summary>
-    /// <typeparam name="TLoader">The type of resource texture descriptions loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the resource texture descriptions.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadResourceTextureDescriptions<TLoader>(ref TLoader loader)
-        where TLoader : struct, ID2D1ResourceTextureDescriptionsLoader;
+    ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
 
     /// <summary>
     /// Gets the output buffer precision and depth for the shader.
