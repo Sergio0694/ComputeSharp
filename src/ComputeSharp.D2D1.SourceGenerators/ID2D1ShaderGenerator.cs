@@ -36,6 +36,12 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {
+                    // The source generator requires unsafe blocks to be enabled (eg. for pointers, [SkipLocalsInit], etc.)
+                    if (!context.SemanticModel.Compilation.IsAllowUnsafeBlocksEnabled())
+                    {
+                        return default;
+                    }
+
                     StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
 
                     // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
