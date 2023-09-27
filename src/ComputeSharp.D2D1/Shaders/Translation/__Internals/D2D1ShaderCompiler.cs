@@ -26,7 +26,7 @@ public static class D2D1ShaderCompiler
         where TLoader : struct, ID2D1BytecodeLoader
         where T : struct, ID2D1Shader
     {
-        Unsafe.AsRef(in shader).BuildHlslSource(out string hlslSource);
+        string hlslSource = Unsafe.AsRef(in shader).HlslSource;
 
         using ComPtr<ID3DBlob> d3DBlobBytecode = Shaders.Translation.D3DCompiler.Compile(
             hlslSource.AsSpan(),

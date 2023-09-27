@@ -14,17 +14,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
-
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>BuildHlslSource</c> method.
+    /// A helper with all logic to generate the <c>HlslSource</c> property.
     /// </summary>
-    private static partial class BuildHlslSource
+    private static partial class HlslSource
     {
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.

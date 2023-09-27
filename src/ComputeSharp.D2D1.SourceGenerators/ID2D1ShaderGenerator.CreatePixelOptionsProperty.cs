@@ -7,9 +7,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>GetPixelOptions</c> method.
+    /// A helper with all logic to generate the <c>PixelOptions</c> property.
     /// </summary>
-    private static partial class GetPixelOptions
+    private static partial class PixelOptions
     {
         /// <summary>
         /// Extracts the pixel options for the current shader.

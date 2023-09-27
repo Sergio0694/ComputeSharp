@@ -64,18 +64,16 @@ public interface ID2D1Shader
     /// <summary>
     /// Gets the pixel options for the current shader.
     /// </summary>
-    /// <returns>The pixel options for the current shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetPixelOptions();
+    D2D1PixelOptions PixelOptions { get; }
 
     /// <summary>
     /// Gets the number of inputs for the current shader.
     /// </summary>
-    /// <returns>The number of inputs for the current shader.</returns>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    uint GetInputCount();
+    int InputCount { get; }
 
     /// <summary>
     /// Gets the input types for the current shader.
@@ -99,13 +97,18 @@ public interface ID2D1Shader
     ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
 
     /// <summary>
-    /// Gets the output buffer precision and depth for the shader.
+    /// Gets the buffer precision for the shader.
     /// </summary>
-    /// <param name="precision">The output buffer precision.</param>
-    /// <param name="depth">The output buffer channel depth.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    void GetOutputBuffer(out uint precision, out uint depth);
+    D2D1BufferPrecision BufferPrecision { get; }
+
+    /// <summary>
+    /// Gets the channel depth for the shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    D2D1ChannelDepth ChannelDepth { get; }
 
     /// <summary>
     /// Loads the dispatch data for the shader.
@@ -118,12 +121,11 @@ public interface ID2D1Shader
         where TLoader : struct, ID2D1DispatchDataLoader;
 
     /// <summary>
-    /// Builds the HLSL source code for the current shader instance.
+    /// Gets the HLSL source code for the current shader instance.
     /// </summary>
-    /// <param name="hlslSource">The resulting HLSL source.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out string hlslSource);
+    string HlslSource { get; }
 
     /// <summary>
     /// Loads the bytecode for the current shader.

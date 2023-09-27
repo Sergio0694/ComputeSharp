@@ -242,7 +242,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        return (D2D1PixelOptions)shader.GetPixelOptions();
+        return shader.PixelOptions;
     }
 
     /// <summary>
@@ -255,7 +255,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        return (int)shader.GetInputCount();
+        return shader.InputCount;
     }
 
     /// <summary>
@@ -307,9 +307,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        shader.GetOutputBuffer(out uint precision, out _);
-
-        return (D2D1BufferPrecision)precision;
+        return shader.BufferPrecision;
     }
 
     /// <summary>
@@ -322,9 +320,7 @@ public static class D2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
-        shader.GetOutputBuffer(out _, out uint depth);
-
-        return (D2D1ChannelDepth)depth;
+        return shader.ChannelDepth;
     }
 
     /// <summary>

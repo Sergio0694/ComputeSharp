@@ -79,7 +79,7 @@ partial class ID2D1ShaderGenerator
                                 .AddArgumentListArguments(Argument(IdentifierName("bytes"))))
                             .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))));
 
-            // This code produces a method declaration as follows:
+            // This code produces a property declaration as follows:
             //
             // readonly ref readonly global::System.Guid global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectId
             // {

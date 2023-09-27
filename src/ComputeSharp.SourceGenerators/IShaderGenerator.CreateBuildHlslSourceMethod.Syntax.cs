@@ -119,7 +119,8 @@ partial class IShaderGenerator
 
                     sizeHint += textBuilder.Length;
 
-                    SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth);
+                    // The indentation level is the current depth + 2 (the method, and the return expression)
+                    SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth + 2);
 
                     statements.Add(
                         ExpressionStatement(
