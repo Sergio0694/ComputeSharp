@@ -32,16 +32,55 @@ public static unsafe class D2D1PixelShaderEffect
     }
 
     /// <summary>
-    /// Gets the effect display name of the D2D effect using this shader.
+    /// Gets the effect display name of the D2D effect using this shader, if available.
     /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect id for.</typeparam>
-    /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders.</returns>
-    public static string GetEffectDisplayName<T>()
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect display name for.</typeparam>
+    /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
+    public static string? GetEffectDisplayName<T>()
         where T : unmanaged, ID2D1PixelShader
     {
         Unsafe.SkipInit(out T shader);
 
         return shader.EffectDisplayName;
+    }
+
+    /// <summary>
+    /// Gets the effect description of the D2D effect using this shader, if available.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect description for.</typeparam>
+    /// <returns>The effect description of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
+    public static string? GetEffectDescription<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.EffectDescription;
+    }
+
+    /// <summary>
+    /// Gets the effect category of the D2D effect using this shader, if available.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect category for.</typeparam>
+    /// <returns>The effect category of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
+    public static string? GetEffectCategory<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.EffectCategory;
+    }
+
+    /// <summary>
+    /// Gets the effect author of the D2D effect using this shader, if available.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the effect author for.</typeparam>
+    /// <returns>The effect author of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
+    public static string? GetEffectAuthor<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.EffectAuthor;
     }
 
     /// <summary>
@@ -71,12 +110,24 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """);
-        writer.WriteRaw(GetEffectDisplayName<T>());
+        writer.WriteRaw(GetEffectDisplayName<T>().AsSpan());
         writer.WriteRaw("""
             '/>
-                <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
-                <Property name='Category' type='string' value='Stylize'/>
-                <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
+                <Property name='Description' type='string' value='
+            """);
+        writer.WriteRaw(GetEffectDescription<T>().AsSpan());
+        writer.WriteRaw("""
+            '/>
+                <Property name='Category' type='string' value='
+            """);
+        writer.WriteRaw(GetEffectCategory<T>().AsSpan());
+        writer.WriteRaw("""
+            '/>
+                <Property name='Author' type='string' value='
+            """);
+        writer.WriteRaw(GetEffectAuthor<T>().AsSpan());
+        writer.WriteRaw("""
+            '/>
                 <Inputs>
 
             """);
@@ -311,12 +362,24 @@ public static unsafe class D2D1PixelShaderEffect
             <Effect>
                 <Property name='DisplayName' type='string' value='
             """u8);
-        writer.WriteAsUtf8(GetEffectDisplayName<T>());
+        writer.WriteAsUtf8(GetEffectDisplayName<T>() ?? "");
         writer.WriteRaw("""
             '/>
-                <Property name='Author' type='string' value='ComputeSharp.D2D1'/>
-                <Property name='Category' type='string' value='Stylize'/>
-                <Property name='Description' type='string' value='A custom D2D1 effect using a pixel shader'/>
+                <Property name='Description' type='string' value='
+            """u8);
+        writer.WriteAsUtf8(GetEffectDescription<T>() ?? "");
+        writer.WriteRaw("""
+            '/>
+                <Property name='Category' type='string' value='
+            """u8);
+        writer.WriteAsUtf8(GetEffectCategory<T>() ?? "");
+        writer.WriteRaw("""
+            '/>
+                <Property name='Author' type='string' value='
+            """u8);
+        writer.WriteAsUtf8(GetEffectAuthor<T>() ?? "");
+        writer.WriteRaw("""
+            '/>
                 <Inputs>
 
             """u8);

@@ -20,12 +20,36 @@ public interface ID2D1Shader
     ref readonly Guid EffectId { get; }
 
     /// <summary>
-    /// Gets the display name of the D2D effect using this shader.
+    /// Gets the display name of the D2D effect using this shader, if specified.
     /// </summary>
     /// <remarks>
     /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
     /// </remarks>
-    string EffectDisplayName { get; }
+    string? EffectDisplayName { get; }
+
+    /// <summary>
+    /// Gets the description of the D2D effect using this shader, if specified.
+    /// </summary>
+    /// <remarks>
+    /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
+    /// </remarks>
+    string? EffectDescription { get; }
+
+    /// <summary>
+    /// Gets the category of the D2D effect using this shader, if specified.
+    /// </summary>
+    /// <remarks>
+    /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
+    /// </remarks>
+    string? EffectCategory { get; }
+
+    /// <summary>
+    /// Gets the author of the D2D effect using this shader, if specified.
+    /// </summary>
+    /// <remarks>
+    /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
+    /// </remarks>
+    string? EffectAuthor { get; }
 
     /// <summary>
     /// Initializes the current shader from a buffer with the serialized dispatch data.

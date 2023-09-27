@@ -226,9 +226,12 @@ public partial class D2D1PixelShaderEffectTests
     }
 
     [TestMethod]
-    public unsafe void DefaultEffectDisplayName_MatchesValue()
+    public unsafe void DefaultEffectMetadata_MatchesValue()
     {
-        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), typeof(ShaderWithDefaultEffectDisplayName).FullName);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), null);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), null);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), null);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithDefaultEffectDisplayName>(), null);
     }
 
     [D2DInputCount(0)]
@@ -241,16 +244,17 @@ public partial class D2D1PixelShaderEffectTests
     }
 
     [TestMethod]
-    public unsafe void ExplicitEffectDisplayName_MatchesValue()
+    public unsafe void ExplicitEffectMetadata1_MatchesValue()
     {
-        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName>(), "Fancy blur");
-        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName2>(), "Fancy&quot;&lt;");
-        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName3>(), "FancyBlurEffect");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName1>(), "Fancy blur");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDescription<ShaderWithExplicitEffectDisplayName1>(), null);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectCategory<ShaderWithExplicitEffectDisplayName1>(), null);
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectAuthor<ShaderWithExplicitEffectDisplayName1>(), null);
     }
 
     [D2DInputCount(0)]
     [D2DEffectDisplayName("Fancy blur")]
-    private partial struct ShaderWithExplicitEffectDisplayName : ID2D1PixelShader
+    private partial struct ShaderWithExplicitEffectDisplayName1 : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -258,19 +262,21 @@ public partial class D2D1PixelShaderEffectTests
         }
     }
 
+    [TestMethod]
+    public unsafe void ExplicitEffectMetadata2_MatchesValue()
+    {
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDisplayName<ShaderWithExplicitEffectDisplayName2>(), "Fancy&quot;&lt;");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectDescription<ShaderWithExplicitEffectDisplayName2>(), "A test effect with some custom metadata");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectCategory<ShaderWithExplicitEffectDisplayName2>(), "Test effects!");
+        Assert.AreEqual(D2D1PixelShaderEffect.GetEffectAuthor<ShaderWithExplicitEffectDisplayName2>(), "Bob Ross");
+    }
+
     [D2DInputCount(0)]
-    [D2DEffectDisplayName("Fancy\"<")]
+    [D2DEffectDisplayName("F\r\na\nncy\"<")]
+    [D2DEffectDescription("A test effect with \nsome custom metadata")]
+    [D2DEffectCategory("Test effects!")]
+    [D2DEffectAuthor("Bob \r\nRoss")]
     private partial struct ShaderWithExplicitEffectDisplayName2 : ID2D1PixelShader
-    {
-        public float4 Execute()
-        {
-            return 0;
-        }
-    }
-
-    [D2DInputCount(0)]
-    [D2DEffectDisplayName("Fancy\r\nBlur\nEffect")]
-    private partial struct ShaderWithExplicitEffectDisplayName3 : ID2D1PixelShader
     {
         public float4 Execute()
         {

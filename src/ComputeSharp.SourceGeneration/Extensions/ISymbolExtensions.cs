@@ -28,6 +28,30 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
+    /// Tries to get an attribute with the specified type.
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
+    /// <param name="typeSymbol">The <see cref="ITypeSymbol"/> instance for the attribute type to look for.</param>
+    /// <param name="attributeData">The resulting attribute, if it was found.</param>
+    /// <returns>Whether or not <paramref name="symbol"/> has an attribute with the specified name.</returns>
+    public static bool TryGetAttributeWithType(this ISymbol symbol, ITypeSymbol typeSymbol, [NotNullWhen(true)] out AttributeData? attributeData)
+    {
+        foreach (AttributeData attribute in symbol.GetAttributes())
+        {
+            if (SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, typeSymbol))
+            {
+                attributeData = attribute;
+
+                return true;
+            }
+        }
+
+        attributeData = null;
+
+        return false;
+    }
+
+    /// <summary>
     /// Tries to get an attribute with the specified fully qualified metadata name.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance to check.</param>
