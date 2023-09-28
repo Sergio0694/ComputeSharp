@@ -147,7 +147,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         ConstantBufferSizeInBytes: constantBufferSizeInBytes,
                         Fields: fieldInfos,
                         InputTypes: inputTypes,
-                        ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
+                        ResourceTextureDescriptions: resourceTextureDescriptions,
                         HlslShaderSource: new HlslShaderSourceInfo(
                             hlslSource,
                             shaderProfile,
@@ -266,7 +266,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the ResourceTextureDescriptions info (hierarchy and resource texture descriptions)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, ResourceTextureDescriptionsInfo ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<ResourceTextureDescription> ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.ResourceTextureDescriptions));
 

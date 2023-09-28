@@ -20,16 +20,16 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
         /// </summary>
-        /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
+        /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
         /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
+        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions, out TypeDeclarationSyntax[] additionalTypes)
         {
             ExpressionSyntax memoryExpression;
 
             // If there are no resource texture descriptions, just return a default expression.
             // Otherwise, declare the shared array and return it from the property.
-            if (resourceTextureDescriptionsInfo.ResourceTextureDescriptions.Length == 0)
+            if (resourceTextureDescriptions.Length == 0)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
                 additionalTypes = Array.Empty<TypeDeclarationSyntax>();
@@ -41,7 +41,7 @@ partial class ID2D1ShaderGenerator
                     IdentifierName("Data"),
                     IdentifierName(nameof(ResourceTextureDescriptions)));
 
-                additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptionsInfo) };
+                additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptions) };
             }
 
             // This code produces a method declaration as follows:
@@ -61,13 +61,13 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets the array declaration for the given resource texture descriptions.
         /// </summary>
-        /// <param name="resourceTextureDescriptionsInfo">The resource texture descriptions info gathered for the current shader.</param>
+        /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
         /// <returns>The array declaration for the given resource texture descriptions.</returns>
-        private static TypeDeclarationSyntax GetArrayDeclaration(ResourceTextureDescriptionsInfo resourceTextureDescriptionsInfo)
+        private static TypeDeclarationSyntax GetArrayDeclaration(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
             using ImmutableArrayBuilder<ExpressionSyntax> resourceTextureDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
 
-            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptionsInfo.ResourceTextureDescriptions)
+            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptions)
             {
                 // Create the description expression:
                 //

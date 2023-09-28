@@ -31,7 +31,7 @@ internal sealed record D2D1ShaderInfo(
     int ConstantBufferSizeInBytes,
     EquatableArray<FieldInfo> Fields,
     EquatableArray<uint> InputTypes,
-    ResourceTextureDescriptionsInfo ResourceTextureDescriptions,
+    EquatableArray<ResourceTextureDescription> ResourceTextureDescriptions,
     HlslShaderSourceInfo HlslShaderSource,
     OutputBufferInfo OutputBuffer,
     InputDescriptionsInfo InputDescriptions,
