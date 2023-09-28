@@ -198,11 +198,10 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the EffectId properties
         context.RegisterSourceOutput(effectIdInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectId.GetSyntax(item.EffectId, out Func<SyntaxNode, SourceText> fixup);
+            PropertyDeclarationSyntax effectDisplayNameProperty = EffectId.GetSyntax(item.EffectId);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, skipLocalsInit: false);
-            SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectId)}.g.cs", text);
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the EffectDisplayName info (hierarchy and effect display name)
