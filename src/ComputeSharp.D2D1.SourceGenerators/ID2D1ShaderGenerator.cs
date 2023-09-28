@@ -113,9 +113,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Get the shader profile and linking info for LoadBytecode()
-                    D2D1ShaderProfile? shaderProfile = LoadBytecode.GetShaderProfile(typeSymbol);
-                    D2D1CompileOptions? compileOptions = LoadBytecode.GetCompileOptions(diagnostics, typeSymbol);
                     bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(typeSymbol, inputCount);
+                    D2D1ShaderProfile? requestedShaderProfile = LoadBytecode.GetRequestedShaderProfile(typeSymbol);
+                    D2D1CompileOptions? requestedCompileOptions = LoadBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
+                    D2D1ShaderProfile effectiveShaderProfile = LoadBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
+                    D2D1CompileOptions effectiveCompileOptions = LoadBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
 
                     token.ThrowIfCancellationRequested();
 
@@ -150,8 +152,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         ResourceTextureDescriptions: resourceTextureDescriptions,
                         HlslShaderSource: new HlslShaderSourceInfo(
                             hlslSource,
-                            shaderProfile,
-                            compileOptions,
+                            requestedShaderProfile,
+                            requestedCompileOptions,
                             isLinkingSupported,
                             HasErrors: diagnostics.Count > 0),
                         BufferPrecision: bufferPrecision,
@@ -322,7 +324,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(
+                ImmutableArray<byte> bytecode = LoadBytecode.GetInfo(
                     item.Source,
                     token,
                     out D2D1ShaderProfile shaderProfile,

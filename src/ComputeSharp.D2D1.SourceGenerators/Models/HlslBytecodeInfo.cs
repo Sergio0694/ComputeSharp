@@ -14,13 +14,25 @@ internal abstract record HlslBytecodeInfo
     public sealed record Success(EquatableArray<byte> Bytecode) : HlslBytecodeInfo;
 
     /// <summary>
-    /// An HLSL shader that failed to compile.
+    /// An HLSL shader that failed to compile due to a Win32 error.
     /// </summary>
     /// <param name="Message">The error message from compiling the shader.</param>
-    public sealed record Error(string Message) : HlslBytecodeInfo;
+    public sealed record Win32Error(string Message) : HlslBytecodeInfo;
 
     /// <summary>
-    /// No HLSL bytecode is available (ie. compilation was not requested).
+    /// An HLSL shader that failed to compile due to an FXC compiler error.
     /// </summary>
-    public sealed record Missing : HlslBytecodeInfo;
+    /// <param name="Message">The error message from compiling the shader.</param>
+    public sealed record FxcError(string Message) : HlslBytecodeInfo;
+
+    /// <summary>
+    /// No HLSL bytecode is available (ie. compilation was not requested or some other error was detected).
+    /// </summary>
+    public sealed record Missing : HlslBytecodeInfo
+    {
+        /// <summary>
+        /// Gets the shared <see cref="Missing"/> instance.
+        /// </summary>
+        public static Missing Instance { get; } = new();
+    }
 }
