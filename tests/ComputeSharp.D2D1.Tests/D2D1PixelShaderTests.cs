@@ -278,7 +278,7 @@ public partial class D2D1PixelShaderTests
     {
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithoutEmbeddedBytecode>();
 
-        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
         Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out ArraySegment<byte> segment));
         Assert.AreEqual(0, segment.Offset);
         Assert.IsTrue(segment.Count > 0);
@@ -323,7 +323,7 @@ public partial class D2D1PixelShaderTests
         // Incorrect profile
         bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader50);
 
-        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
         Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out ArraySegment<byte> segment));
         Assert.AreEqual(0, segment.Offset);
         Assert.IsTrue(segment.Count > 0);
@@ -331,7 +331,7 @@ public partial class D2D1PixelShaderTests
         // Incorrect options
         bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default | D2D1CompileOptions.EnableStrictness);
 
-        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
         Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out segment));
         Assert.AreEqual(0, segment.Offset);
         Assert.IsTrue(segment.Count > 0);

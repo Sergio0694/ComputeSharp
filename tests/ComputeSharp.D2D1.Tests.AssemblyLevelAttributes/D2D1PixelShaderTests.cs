@@ -17,15 +17,32 @@ public partial class D2D1PixelShaderTests
 
         // Verify the shader was precompiled
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
-        _ = D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(
+        // Compile with the same assembly level options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(
             shaderProfile: D2D1ShaderProfile.PixelShader41,
             compileOptions: D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PartialPrecision);
 
-        // Verify the expected options were used
+        // Verify the same bytecode is returned
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+        // Incorrect profile
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(D2D1ShaderProfile.PixelShader50);
+
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
+        Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out ArraySegment<byte> segment));
+        Assert.AreEqual(0, segment.Offset);
+        Assert.IsTrue(segment.Count > 0);
+
+        // Incorrect options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithNoCompileAttributes>(D2D1CompileOptions.Default);
+
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
+        Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out segment));
+        Assert.AreEqual(0, segment.Offset);
+        Assert.IsTrue(segment.Count > 0);
     }
 
     [D2DInputCount(3)]
@@ -51,14 +68,25 @@ public partial class D2D1PixelShaderTests
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>();
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
-        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>(
+        // Try to recompile with the correct combined options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>(
             shaderProfile: D2D1ShaderProfile.PixelShader50,
             compileOptions: D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PartialPrecision);
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+        // Incorrect profile (overridden profile)
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfile>(
+            shaderProfile: D2D1ShaderProfile.PixelShader41,
+            compileOptions: D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.PartialPrecision);
+
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
+        Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out ArraySegment<byte> segment));
+        Assert.AreEqual(0, segment.Offset);
+        Assert.IsTrue(segment.Count > 0);
     }
 
     [D2DInputCount(3)]
@@ -85,14 +113,25 @@ public partial class D2D1PixelShaderTests
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>();
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
-        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>(
+        // Try to recompile with the correct combined options
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>(
             shaderProfile: D2D1ShaderProfile.PixelShader41,
             compileOptions: D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision);
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
+
+        // Incorrect profile (overridden compile options)
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenOptions>(
+            shaderProfile: D2D1ShaderProfile.PixelShader41,
+            compileOptions: D2D1CompileOptions.Default);
+
+        Assert.IsFalse(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? _));
+        Assert.IsTrue(MemoryMarshal.TryGetArray(bytecode, out ArraySegment<byte> segment));
+        Assert.AreEqual(0, segment.Offset);
+        Assert.IsTrue(segment.Count > 0);
     }
 
     [D2DInputCount(3)]
@@ -119,14 +158,15 @@ public partial class D2D1PixelShaderTests
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfileAndOptions>();
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out MemoryManager<byte>? manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
 
-        _ = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfileAndOptions>(
+        // Try to get the new bytecode
+        bytecode = D2D1PixelShader.LoadBytecode<ShaderWithOverriddenProfileAndOptions>(
             shaderProfile: D2D1ShaderProfile.PixelShader50,
             compileOptions: D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision);
 
         Assert.IsTrue(MemoryMarshal.TryGetMemoryManager(bytecode, out manager));
-        Assert.AreEqual("PinnedBufferMemoryManager", manager!.GetType().Name);
+        Assert.IsTrue(manager!.GetType().Name.Contains("HlslBytecodeMemoryManager"));
     }
 
     [D2DInputCount(3)]
