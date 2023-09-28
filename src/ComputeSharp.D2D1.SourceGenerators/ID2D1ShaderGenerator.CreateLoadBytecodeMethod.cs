@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
@@ -188,25 +187,12 @@ partial class ID2D1ShaderGenerator
             }
             catch (Win32Exception e)
             {
-                return new HlslBytecodeInfo.Win32Error(FixupExceptionMessage(e.Message));
+                return new HlslBytecodeInfo.Win32Error(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
-                return new HlslBytecodeInfo.FxcError(FixupExceptionMessage(e.Message));
+                return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
-        }
-
-        /// <summary>
-        /// Fixes up an exception message to improve the way it's displayed in VS.
-        /// </summary>
-        /// <param name="message">The input exception message.</param>
-        /// <returns>The updated exception message.</returns>
-        internal static string FixupExceptionMessage(string message)
-        {
-            // Add square brackets around error headers
-            message = Regex.Replace(message, @"((?:error|warning) \w+):", static m => $"[{m.Groups[1].Value}]:");
-
-            return message.NormalizeToSingleLine();
         }
     }
 }

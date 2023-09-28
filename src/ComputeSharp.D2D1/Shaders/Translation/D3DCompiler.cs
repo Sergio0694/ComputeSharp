@@ -175,16 +175,12 @@ internal static unsafe partial class D3DCompiler
     }
 
     /// <summary>
-    /// Throws an exception when a shader compilation fails.
+    /// Returns a "prettified" version of an FXC error message.
     /// </summary>
-    /// <param name="d3DOperationResult">The input (faulting) operation.</param>
-    /// <returns>This method always throws and never actually returs.</returns>
-    [DoesNotReturn]
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
+    /// <param name="message">The input error message.</param>
+    /// <returns>The "prettified" error message.</returns>
+    public static string PrettifyFxcErrorMessage(string message)
     {
-        string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
-
         // The error message will be in a format like this:
         // "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\Roslyn\Shader@0x0000019AD1B4BA70(22,32-35): error X3004: undeclared identifier 'this'"
         // This regex tries to match the unnecessary header and remove it, if present. This doesn't need to be bulletproof, and this regex should match all cases anyway.
@@ -226,6 +222,21 @@ internal static unsafe partial class D3DCompiler
         {
             updatedMessage += '.';
         }
+
+        return updatedMessage;
+    }
+
+    /// <summary>
+    /// Throws an exception when a shader compilation fails.
+    /// </summary>
+    /// <param name="d3DOperationResult">The input (faulting) operation.</param>
+    /// <returns>This method always throws and never actually returs.</returns>
+    [DoesNotReturn]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ThrowHslsCompilationException(ID3DBlob* d3DOperationResult)
+    {
+        string message = new((sbyte*)d3DOperationResult->GetBufferPointer());
+        string updatedMessage = PrettifyFxcErrorMessage(message);
 
         throw new FxcCompilationException(updatedMessage);
     }
