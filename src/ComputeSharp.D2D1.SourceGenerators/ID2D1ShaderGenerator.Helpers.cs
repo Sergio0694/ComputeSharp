@@ -87,13 +87,13 @@ partial class ID2D1ShaderGenerator
     /// </summary>
     /// <param name="hierarchyInfo">The <see cref="HierarchyInfo"/> instance for the current type.</param>
     /// <param name="memberDeclaration">The <see cref="MemberDeclarationSyntax"/> item to insert.</param>
-    /// <param name="canUseSkipLocalsInit">Whether <c>[SkipLocalsInit]</c> can be used.</param>
+    /// <param name="skipLocalsInit">Whether <c>[SkipLocalsInit]</c> should also be generated.</param>
     /// <param name="additionalMemberDeclarations">Additional member declarations to also emit, if any.</param>
     /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="memberDeclaration"/>.</returns>
     private static CompilationUnitSyntax GetCompilationUnitFromMember(
         HierarchyInfo hierarchyInfo,
         MemberDeclarationSyntax memberDeclaration,
-        bool canUseSkipLocalsInit,
+        bool skipLocalsInit,
         params MemberDeclarationSyntax[] additionalMemberDeclarations)
     {
         // Method attributes
@@ -115,8 +115,8 @@ partial class ID2D1ShaderGenerator
                     Literal("This method is not intended to be used directly by user code"))))))
         };
 
-        // Add [SkipLocalsInit] if the target project allows it
-        if (canUseSkipLocalsInit)
+        // Add [SkipLocalsInit] if needed
+        if (skipLocalsInit)
         {
             attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
         }
