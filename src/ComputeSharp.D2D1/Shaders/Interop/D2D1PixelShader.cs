@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Shaders.Interop.Buffers;
 using ComputeSharp.D2D1.Shaders.Loaders;
+using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -29,7 +29,18 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return LoadOrCompileBytecode<T>(null, null, out _, out _);
+        Unsafe.SkipInit(out T shader);
+
+        // This method is the one used by the built-in ID2D1Effect, so it has special optimization
+        // to help both performance and especially trimming. That is, we first check whether the
+        // HLSL code is already available, which should get completely inlined when using the
+        // generated code. This allows the entire fallback path below to be trimmed out.
+        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
+        {
+            return hlslBytecode;
+        }
+
+        return CompileBytecode<T>(null, null, out _, out _);
     }
 
     /// <summary>
@@ -192,6 +203,40 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Compiles the bytecode from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
+    /// <param name="requestedShaderProfile">The requested shader profile to use to get the shader bytecode.</param>
+    /// <param name="requestedCompileOptions">The requested compile options to use to get the shader bytecode.</param>
+    /// <param name="effectiveShaderProfile">The effective shader profile that was used to get the shader bytecode.</param>
+    /// <param name="effectiveCompileOptions">The effective compile options that were used to get the shader bytecode.</param>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static unsafe ReadOnlyMemory<byte> CompileBytecode<T>(
+        D2D1ShaderProfile? requestedShaderProfile,
+        D2D1CompileOptions? requestedCompileOptions,
+        out D2D1ShaderProfile effectiveShaderProfile,
+        out D2D1CompileOptions effectiveCompileOptions)
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        string hlslSource = shader.HlslSource;
+
+        // Set the effective profile and option to the requested ones or the default values
+        effectiveShaderProfile = requestedShaderProfile ?? shader.ShaderProfile;
+        effectiveCompileOptions = requestedCompileOptions ?? shader.CompileOptions;
+
+        // Compile the shader with the current settings
+        using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(hlslSource.AsSpan(), effectiveShaderProfile, effectiveCompileOptions);
+
+        byte* bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
+        int bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
+
+        return new ReadOnlySpan<byte>(bytecodePtr, bytecodeSize).ToArray();
+    }
+
+    /// <summary>
     /// Loads or compiles the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
@@ -200,7 +245,6 @@ public static class D2D1PixelShader
     /// <param name="effectiveShaderProfile">The effective shader profile that was used to get the shader bytecode.</param>
     /// <param name="effectiveCompileOptions">The effective compile options that were used to get the shader bytecode.</param>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> instance with the resulting shader bytecode.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the input shader has not been precompiled.</exception>
     private static unsafe ReadOnlyMemory<byte> LoadOrCompileBytecode<T>(
         D2D1ShaderProfile? requestedShaderProfile,
         D2D1CompileOptions? requestedCompileOptions,
@@ -208,28 +252,21 @@ public static class D2D1PixelShader
         out D2D1CompileOptions effectiveCompileOptions)
         where T : unmanaged, ID2D1PixelShader
     {
-        D2D1ShaderBytecodeLoader bytecodeLoader = default;
-
         Unsafe.SkipInit(out T shader);
 
-        shader.LoadBytecode(ref bytecodeLoader, ref requestedShaderProfile, ref requestedCompileOptions);
-
-        effectiveShaderProfile = requestedShaderProfile.GetValueOrDefault();
-        effectiveCompileOptions = requestedCompileOptions.GetValueOrDefault();
-
-        using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
-
-        // If a precompiled shader is available, return it
-        if (!precompiledBytecode.IsEmpty)
+        // Check whether there is precompiled bytecode we can use
+        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode &&
+            (requestedShaderProfile is null || shader.ShaderProfile == requestedShaderProfile.GetValueOrDefault()) &&
+            (requestedCompileOptions is null || shader.CompileOptions == requestedCompileOptions.GetValueOrDefault()))
         {
-            return new PinnedBufferMemoryManager(precompiledBytecode).Memory;
+            effectiveShaderProfile = shader.ShaderProfile;
+            effectiveCompileOptions = shader.CompileOptions;
+
+            return hlslBytecode;
         }
 
-        // Otherwise, return the dynamic shader instead
-        byte* bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
-        int bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
-
-        return new ReadOnlySpan<byte>(bytecodePtr, bytecodeSize).ToArray();
+        // Fallback path just compiling the HLSL code on the fly
+        return CompileBytecode<T>(requestedShaderProfile, requestedCompileOptions, out effectiveShaderProfile, out effectiveCompileOptions);
     }
 
     /// <summary>

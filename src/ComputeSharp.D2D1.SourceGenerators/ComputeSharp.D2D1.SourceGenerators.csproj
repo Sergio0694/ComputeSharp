@@ -78,7 +78,6 @@
     <Compile Include="..\ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" Link="ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" Link="ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" Link="ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1BytecodeLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1DispatchDataLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\__Internals\ID2D1Shader.cs" Link="ComputeSharp.D2D1\Interfaces\__Internals\ID2D1Shader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\D2D.cs" Link="ComputeSharp.D2D1\Intrinsics\D2D.cs" />

@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Shaders.Loaders;
+using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -35,36 +34,34 @@ public static class D2D1ReflectionServices
 
         string hlslSource = shader.HlslSource;
 
-        D2D1ShaderBytecodeLoader bytecodeLoader = default;
+        using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
 
-        D2D1ShaderProfile? shaderProfile = null;
-        D2D1CompileOptions? compileOptions = null;
-
-        shader.LoadBytecode(ref bytecodeLoader, ref shaderProfile, ref compileOptions);
-
-        using ComPtr<ID3DBlob> dynamicBytecode = bytecodeLoader.GetResultingShaderBytecode(out ReadOnlySpan<byte> precompiledBytecode);
-
-        byte* bytecodePtr;
-        int bytecodeSize;
-
-        if (!precompiledBytecode.IsEmpty)
+        // If the shader already has embedded bytecode, use that directly
+        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
         {
-            bytecodePtr = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(precompiledBytecode));
-            bytecodeSize = precompiledBytecode.Length;
+            fixed (byte* hlslBytecodePtr = hlslBytecode.Span)
+            {
+                DirectX.D3DReflect(
+                    pSrcData: hlslBytecodePtr,
+                    SrcDataSize: (nuint)hlslBytecode.Length,
+                    pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
+                    ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
+            }
         }
         else
         {
-            bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
-            bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
+            // Otherwise, compile it with default shader profile and compile options and use that.
+            // Note that we're intentionally retrieving an ID3DBlob instance here to avoid having
+            // to allocate a ReadOnlyMemory<byte> object to throw away immediately, as we don't
+            // actually need to keep the bytecode for later.
+            using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(hlslSource.AsSpan(), shader.ShaderProfile, shader.CompileOptions);
+
+            DirectX.D3DReflect(
+                pSrcData: (byte*)dynamicBytecode.Get()->GetBufferPointer(),
+                SrcDataSize: dynamicBytecode.Get()->GetBufferSize(),
+                pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
+                ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
         }
-
-        using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
-
-        DirectX.D3DReflect(
-            pSrcData: bytecodePtr,
-            SrcDataSize: (nuint)bytecodeSize,
-            pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-            ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
 
         D3D11_SHADER_DESC d3D11ShaderDescription;
 

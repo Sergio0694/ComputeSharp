@@ -22,63 +22,34 @@ partial class ID2D1ShaderGenerator
     partial class LoadBytecode
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.
         /// </summary>
         /// <param name="bytecodeInfo">The input bytecode info.</param>
-        /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(EmbeddedBytecodeInfo bytecodeInfo, out Func<SyntaxNode, SourceText> fixup)
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.</returns>
+        public static PropertyDeclarationSyntax GetShaderProfileSyntax(EmbeddedBytecodeInfo bytecodeInfo)
         {
-            BlockSyntax block = GetShaderBytecodeBody(bytecodeInfo, out string? bytecodeLiterals);
-
-            if (bytecodeLiterals is not null)
-            {
-                fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals), Encoding.UTF8);
-            }
-            else
-            {
-                fixup = static tree => tree.GetText(Encoding.UTF8);
-            }
-
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadBytecode<TLoader>(ref TLoader loader, ref global::ComputeSharp.D2D1.D2D1ShaderProfile? shaderProfile, ref global::ComputeSharp.D2D1.D2D1CompileOptions? compileOptions)
-            // {
-            //     <BODY>
-            // }
+            // readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ShaderProfile => <SHADER_PROFILE>;
             return
-                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier(nameof(LoadBytecode)))
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1ShaderProfile"), Identifier(nameof(ID2D1Shader.ShaderProfile)))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
-                .AddParameterListParameters(
-                    Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")),
-                    Parameter(Identifier("shaderProfile")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))),
-                    Parameter(Identifier("compileOptions")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(NullableType(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))))
-                .WithBody(block);
+                .WithExpressionBody(ArrowExpressionClause(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
+                        IdentifierName(bytecodeInfo.ShaderProfile.ToString(CultureInfo.InvariantCulture)))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
-        /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.
         /// </summary>
         /// <param name="bytecodeInfo">The input bytecode info.</param>
-        /// <param name="bytecodeLiterals">The resulting bytecode literals to insert into the final source code.</param>
-        /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
-        private static unsafe BlockSyntax GetShaderBytecodeBody(EmbeddedBytecodeInfo bytecodeInfo, out string? bytecodeLiterals)
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.</returns>
+        public static PropertyDeclarationSyntax GetCompileOptionsSyntax(EmbeddedBytecodeInfo bytecodeInfo)
         {
-            // This method needs to handle several different scenarions, which are as follows:
-            //   1) If [EmbeddedBytecode] is used, then the shader is precompiled and stored as a ReadOnlySpan<byte>. In this case,
-            //      this bytecode would have been generated with some specific D2D1ShaderProfile and D2D1CompileOptions values. So,
-            //      a branch is generated to try to retrieve this precompiled bytecode, which can be returned if and only if the
-            //      requested shader profile and compile options are either null, or either matches the values that have been used
-            //      to generate that bytecode. If this is the case, then no further work is done and that binary data is returned.
-            //   2) If either the requested shader profile or options do not match the values used to create the shader bytecode,
-            //      then a call to the internal D2D1ShaderCompiler.LoadDynamicBytecode API is used, to create the shader on the fly.
-            //   3) If [EmbeddedBytecode] is not used, then regardless of the requested profile and options, a new shader is compiled.
-            //   4) If this is the case and either the shader profile or the options are null, then this method will manually set the
-            //      value being null to the default one to use. That is, D2D1ShaderProfile.PixelShader50 will be used as the target,
-            //      and the options will be set to D2D1CompileOptions.Default (and optionally, D2D1CompileOptions.EnableLinking too).
-
             // Get a formatted representation of the compile options being used
             ExpressionSyntax compileOptionsExpression =
                 ParseExpression(
@@ -88,134 +59,280 @@ partial class ID2D1ShaderGenerator
                     .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
                     .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right));
 
-            // Add parantheses if needed
-            if (compileOptionsExpression is BinaryExpressionSyntax)
+            // This code produces a method declaration as follows:
+            //
+            // readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.CompileOptions => <COMPILE_OPTIONS_EXPRESSION>;
+            return
+                PropertyDeclaration(IdentifierName("ComputeSharp.D2D1.D2D1CompileOptions"), Identifier(nameof(ID2D1Shader.CompileOptions)))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExpressionBody(ArrowExpressionClause(compileOptionsExpression))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>HlslBytecode</c> property.
+        /// </summary>
+        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <param name="fixup">An opaque <see cref="Func{TResult}"/> instance to transform the final tree into text.</param>
+        /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
+        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>HlslBytecode</c> property.</returns>
+        public static PropertyDeclarationSyntax GetHlslBytecodeSyntax(
+            EmbeddedBytecodeInfo bytecodeInfo,
+            out Func<SyntaxNode, SourceText> fixup,
+            out TypeDeclarationSyntax[] additionalTypes)
+        {
+            ExpressionSyntax memoryExpression;
+
+            // If there is no bytecode, simply return a default expression.
+            // Otherwise, declare the memory manager and access it.
+            if (bytecodeInfo.Bytecode.Length == 0)
             {
-                compileOptionsExpression = ParenthesizedExpression(compileOptionsExpression);
+                memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
+                fixup = static tree => tree.GetText(Encoding.UTF8);
+                additionalTypes = Array.Empty<TypeDeclarationSyntax>();
+            }
+            else
+            {
+                // Create a ReadOnlyMemory<byte> instance from the memory manager:
+                //
+                // HlslBytecodeMemoryManager.Instance.Memory
+                memoryExpression =
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("HlslBytecodeMemoryManager"),
+                            IdentifierName("Instance")),
+                        IdentifierName("Memory"));
+
+                TypeDeclarationSyntax memoryManagerDeclaration = GetMemoryManagerDeclaration(bytecodeInfo);
+                string bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
+
+                additionalTypes = new TypeDeclarationSyntax[] { memoryManagerDeclaration };
+                fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals), Encoding.UTF8);
             }
 
-            // This code produces a block declaration as follows:
+            // This code produces a method declaration as follows:
             //
-            // global::ComputeSharp.D2D1.D2D1ShaderProfile effectiveShaderProfile = shaderProfile ??= <DEFAULT_PROFILE>;
-            // global::ComputeSharp.D2D1.D2D1CompileOptions effectiveCompileOptions = compileOptions ??= <REQUESTED_OPTIONS>;
+            // readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.HlslBytecode => <MEMORY_EXPRESSION>;
+            return
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.ReadOnlyMemory"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
+                    Identifier(nameof(ID2D1Shader.HlslBytecode)))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExpressionBody(ArrowExpressionClause(memoryExpression))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        /// <summary>
+        /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
+        /// </summary>
+        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
+        private static unsafe TypeDeclarationSyntax GetMemoryManagerDeclaration(EmbeddedBytecodeInfo bytecodeInfo)
+        {
+            // Create the MemoryManager<T> declaration:
             //
-            // global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler.LoadDynamicBytecode(ref loader, in this, effectiveShaderProfile, effectiveCompileOptions);
-            BlockSyntax dynamicLoadingBlock =
-                Block(
-                    LocalDeclarationStatement(
-                        VariableDeclaration(IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"))
-                        .AddVariables(
-                            VariableDeclarator(Identifier("effectiveShaderProfile"))
-                            .WithInitializer(EqualsValueClause(
-                                AssignmentExpression(
-                                    SyntaxKind.CoalesceAssignmentExpression,
-                                    IdentifierName("shaderProfile"),
-                                    IdentifierName($"global::ComputeSharp.D2D1.D2D1ShaderProfile.{D2D1ShaderProfile.PixelShader50}")))))),
-                    LocalDeclarationStatement(
-                        VariableDeclaration(IdentifierName("global::ComputeSharp.D2D1.D2D1CompileOptions"))
-                        .AddVariables(
-                            VariableDeclarator(Identifier("effectiveCompileOptions"))
-                            .WithInitializer(EqualsValueClause(
-                                AssignmentExpression(
-                                    SyntaxKind.CoalesceAssignmentExpression,
-                                    IdentifierName("compileOptions"),
-                                    compileOptionsExpression))))),
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("global::ComputeSharp.D2D1.__Internals.D2D1ShaderCompiler"),
-                                IdentifierName("LoadDynamicBytecode")))
-                        .AddArgumentListArguments(
-                            Argument(IdentifierName("loader")).WithRefKindKeyword(Token(SyntaxKind.RefKeyword)),
-                            Argument(ThisExpression()).WithRefKindKeyword(Token(SyntaxKind.InKeyword)),
-                            Argument(IdentifierName("effectiveShaderProfile")),
-                            Argument(IdentifierName("effectiveCompileOptions")))));
-
-            // If there is no precompiled bytecode, just return the dynamic path
-            if (bytecodeInfo.Bytecode.IsDefaultOrEmpty)
-            {
-                bytecodeLiterals = null;
-
-                return dynamicLoadingBlock;
-            }
-
-            bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
-
-            // Prepare the expression for the default shader profile to use
-            ExpressionSyntax shaderProfileExpression =
-                MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                    IdentifierName(bytecodeInfo.ShaderProfile.ToString(CultureInfo.InvariantCulture)));
-
-            // This code produces a branch as follows:
-            //
-            // if (shaderProfile is null or <SHADER_PROFILE> && compileOptions is null or <COMPILE_OPTIONS>)
+            // /// <summary>
+            // /// <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the HLSL bytecode.
+            // /// </summary>
+            // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
+            // [global::System.Diagnostics.DebuggerNonUserCode]
+            // [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+            // file sealed HlslBytecodeMemoryManager : global::System.Buffers.MemoryManager<byte>
             // {
-            //     global::System.ReadOnlySpan<byte> bytecode = new byte[] { __EMBEDDED_SHADER_BYTECODE };
-            //
-            //     loader.LoadEmbeddedBytecode(bytecode);
-            //
-            //     shaderProfile = <SHADER_PROFILE>;
-            //     compileOptions =  <COMPILE_OPTIONS>;
             // }
+            TypeDeclarationSyntax typeDeclaration =
+                ClassDeclaration("HlslBytecodeMemoryManager")
+                .AddModifiers(Token(SyntaxKind.FileKeyword), Token(SyntaxKind.SealedKeyword))
+                .AddBaseListTypes(SimpleBaseType(
+                    GenericName(Identifier("global::System.Buffers.MemoryManager"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword)))))
+                .AddAttributeLists(
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).FullName))),
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))))
+                .WithLeadingTrivia(
+                    Comment("/// <summary>"),
+                    Comment("""/// A <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the HLSL bytecode."""),
+                    Comment("/// </summary>"));
+
+            using ImmutableArrayBuilder<MemberDeclarationSyntax> memberDeclarations = ImmutableArrayBuilder<MemberDeclarationSyntax>.Rent();
+
+            // Declare the singleton property to get the memory manager:
             //
-            // Note that the __EMBEDDED_SHADER_BYTECODE identifier will be replaced after the string
-            // is created by the generator. This greatly speeds up the code generation, as it avoids
-            // having to create/parse tens of thousands of literal expression nodes for every shader.
-            IfStatementSyntax embeddedBranch =
-                IfStatement(
-                    BinaryExpression(
-                        SyntaxKind.LogicalAndExpression,
-                        IsPatternExpression(
-                            IdentifierName("shaderProfile"),
-                            BinaryPattern(
-                                SyntaxKind.OrPattern,
-                                ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                ConstantPattern(shaderProfileExpression))),
-                        IsPatternExpression(
-                            IdentifierName("compileOptions"),
-                            BinaryPattern(
-                                SyntaxKind.OrPattern,
-                                ConstantPattern(LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                                ConstantPattern(compileOptionsExpression)))),
-                    Block(
-                        LocalDeclarationStatement(
-                            VariableDeclaration(
-                                GenericName(Identifier("global::System.ReadOnlySpan"))
-                                .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                            .AddVariables(
-                                VariableDeclarator(Identifier("bytecode"))
-                                .WithInitializer(
-                                    EqualsValueClause(
-                                        ArrayCreationExpression(
-                                        ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
-                                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                                    .WithInitializer(
-                                        InitializerExpression(
-                                            SyntaxKind.ArrayInitializerExpression,
-                                            SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_SHADER_BYTECODE")))))))),
-                        ExpressionStatement(
-                            InvocationExpression(
+            // /// <summary>The singleton <see cref="HlslBytecodeMemoryManager"/> instance to use.</summary>
+            // public static readonly HlslBytecodeMemoryManager Instance = new();
+            memberDeclarations.Add(
+                FieldDeclaration(
+                    VariableDeclaration(IdentifierName("HlslBytecodeMemoryManager"))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("Instance"))
+                        .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression()))))
+                .AddModifiers(
+                    Token(SyntaxKind.PublicKeyword),
+                    Token(SyntaxKind.StaticKeyword),
+                    Token(SyntaxKind.ReadOnlyKeyword))
+                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="HlslBytecodeMemoryManager"/> instance to use.</summary>""")));
+
+            // Construct the RVA span property:
+            //
+            // /// <summary>The RVA data with the HLSL bytecode.</summary>
+            // private static global::System.ReadOnlySpan<byte> Data => new byte[] { __EMBEDDED_SHADER_BYTECODE };
+            memberDeclarations.Add(
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.ReadOnlySpan"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
+                    Identifier("Data"))
+                .AddModifiers(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.StaticKeyword))
+                .WithExpressionBody(
+                    ArrowExpressionClause(
+                        ArrayCreationExpression(
+                            ArrayType(PredefinedType(Token(SyntaxKind.ByteKeyword)))
+                            .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))),
+                            InitializerExpression(
+                                SyntaxKind.ArrayInitializerExpression,
+                                SingletonSeparatedList<ExpressionSyntax>(IdentifierName("__EMBEDDED_SHADER_BYTECODE"))))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                .WithLeadingTrivia(Comment("/// <summary>The RVA data with the HLSL bytecode.</summary>")));
+
+            // Override the Memory<byte> property:
+            //
+            // /// <inheritdoc/>
+            // public override global::System.Memory<byte> Memory
+            // {
+            //     [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+            //     get => CreateMemory(Data.Length);
+            // }
+            memberDeclarations.Add(
+                PropertyDeclaration(
+                    GenericName(Identifier("global::System.Memory"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
+                    Identifier("Memory"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword))
+                .AddAccessorListAccessors(
+                    AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .AddAttributeLists(
+                        AttributeList(
+                            SingletonSeparatedList(
+                                Attribute(IdentifierName("global::System.Runtime.CompilerServices.MethodImpl"))
+                                .AddArgumentListArguments(
+                                    AttributeArgument(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Runtime.CompilerServices.MethodImplOptions"),
+                                            IdentifierName("AggressiveInlining")))))))
+                    .WithExpressionBody(
+                        ArrowExpressionClause(
+                            InvocationExpression(IdentifierName("CreateMemory"))
+                            .AddArgumentListArguments(
+                                Argument(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("Data"),
+                                        IdentifierName("Length"))))))
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)))
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
+            // Add the GetSpan() method:
+            //
+            // /// <inheritdoc/>
+            // public override unsafe global::System.Span<byte> GetSpan
+            // {
+            //     return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), Data.Length);
+            // }
+            memberDeclarations.Add(
+                MethodDeclaration(
+                    GenericName(Identifier("global::System.Span"))
+                    .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))),
+                    Identifier("GetSpan"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword), Token(SyntaxKind.UnsafeKeyword))
+                .AddBodyStatements(
+                    ReturnStatement(
+                        ImplicitObjectCreationExpression()
+                        .AddArgumentListArguments(
+                            Argument(
+                                InvocationExpression(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                        IdentifierName("AsPointer")))
+                                .AddArgumentListArguments(
+                                    Argument(
+                                        InvocationExpression(
+                                            MemberAccessExpression(
+                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                IdentifierName("global::System.Runtime.InteropServices.MemoryMarshal"),
+                                                IdentifierName("GetReference")))
+                                        .AddArgumentListArguments(Argument(IdentifierName("Data"))))
+                                    .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))),
+                            Argument(
                                 MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("loader"),
-                                    IdentifierName("LoadEmbeddedBytecode")))
-                            .AddArgumentListArguments(Argument(IdentifierName("bytecode")))),
-                        ExpressionStatement(
-                            AssignmentExpression(
-                                SyntaxKind.SimpleAssignmentExpression,
-                                IdentifierName("shaderProfile"),
-                                shaderProfileExpression)),
-                        ExpressionStatement(
-                            AssignmentExpression(
-                                SyntaxKind.SimpleAssignmentExpression,
-                                IdentifierName("compileOptions"),
-                                compileOptionsExpression))));
+                                    IdentifierName("Data"),
+                                    IdentifierName("Length"))))))
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
 
-            // Return the combined block
-            return Block(embeddedBranch.WithElse(ElseClause(dynamicLoadingBlock)));
+            // Add the Pin(int elementIndex) method:
+            //
+            // /// <inheritdoc/>
+            // public override unsafe global::System.Buffers.MemoryHandle Pin(int elementIndex)
+            // {
+            //     return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
+            // }
+            memberDeclarations.Add(
+                MethodDeclaration(IdentifierName("global::System.Buffers.MemoryHandle"), Identifier("Pin"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword), Token(SyntaxKind.UnsafeKeyword))
+                .AddParameterListParameters(Parameter(Identifier("elementIndex")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
+                .AddBodyStatements(
+                    ReturnStatement(
+                        ImplicitObjectCreationExpression()
+                        .AddArgumentListArguments(
+                            Argument(
+                                InvocationExpression(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                        IdentifierName("AsPointer")))
+                                .AddArgumentListArguments(
+                                    Argument(
+                                        InvocationExpression(
+                                            MemberAccessExpression(
+                                                SyntaxKind.SimpleMemberAccessExpression,
+                                                IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
+                                                IdentifierName("AsRef")))
+                                        .AddArgumentListArguments(
+                                            Argument(
+                                                ElementAccessExpression(IdentifierName("Data"))
+                                                .AddArgumentListArguments(Argument(IdentifierName("elementIndex"))))
+                                            .WithRefOrOutKeyword(Token(SyntaxKind.InKeyword))))
+                                    .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))),
+                            Argument(ThisExpression()).WithNameColon(NameColon(IdentifierName("pinnable"))))))
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
+            // Add the empty Unpin() method
+            memberDeclarations.Add(
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("Unpin"))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword))
+                .WithBody(Block())
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
+            // Add the empty Dispose(bool disposing) method
+            memberDeclarations.Add(
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("Dispose"))
+                .AddModifiers(Token(SyntaxKind.ProtectedKeyword), Token(SyntaxKind.OverrideKeyword))
+                .AddParameterListParameters(
+                    Parameter(Identifier("disposing")).WithType(PredefinedType(Token(SyntaxKind.BoolKeyword))))
+                .WithBody(Block())
+                .WithLeadingTrivia(Comment("/// <inheritdoc/>")));
+
+            return typeDeclaration.AddMembers(memberDeclarations.ToArray());
         }
     }
 }

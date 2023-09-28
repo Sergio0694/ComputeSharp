@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using ComputeSharp.D2D1.Interop;
 
 namespace ComputeSharp.D2D1.__Internals;
@@ -128,16 +127,32 @@ public interface ID2D1Shader
     string HlslSource { get; }
 
     /// <summary>
-    /// Loads the bytecode for the current shader.
+    /// Gets the shader profile for the current shader.
     /// </summary>
-    /// <typeparam name="TLoader">The type of bytecode loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the bytecode.</param>
-    /// <param name="shaderProfile">The shader profile to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
-    /// <param name="compileOptions">The compile options to use to get the shader bytecode (if <see langword="null"/>, the precompiled shader will be used).</param>
-    /// <exception cref="InvalidOperationException">Thrown if a precompiled bytecode was requested (<paramref name="shaderProfile"/> is <see langword="null"/>), but it wasn't availablle.</exception>
-    /// <remarks>When this method returns, <paramref name="shaderProfile"/> and <paramref name="compileOptions"/> will be set to the effective laues used to create the shader bytecode that was loaded.</remarks>
+    /// <remarks>
+    /// This shader profile is either explicitly set by users, or the default one for D2D1 shaders.
+    /// </remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadBytecode<TLoader>(ref TLoader loader, [NotNull] ref D2D1ShaderProfile? shaderProfile, [NotNull] ref D2D1CompileOptions? compileOptions)
-        where TLoader : struct, ID2D1BytecodeLoader;
+    D2D1ShaderProfile ShaderProfile { get; }
+
+    /// <summary>
+    /// Gets the compile options for the current shader.
+    /// </summary>
+    /// <remarks>
+    /// This compile options are either explicitly set by users, or the default one for D2D1 shaders.
+    /// </remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    D2D1CompileOptions CompileOptions { get; }
+
+    /// <summary>
+    /// Gets the HLSL bytecode for the current shader, if available.
+    /// </summary>
+    /// <remarks>
+    /// If no precompiled HLSL bytecode is available, the returned <see cref="ReadOnlyMemory{T}"/> instance will be empty.
+    /// </remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    ReadOnlyMemory<byte> HlslBytecode { get; }
 }

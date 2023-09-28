@@ -74,7 +74,7 @@ public static class D2D1ShaderCompiler
         options &= ~D2D1CompileOptions.EnableLinking;
 
         // Compile the standalone D2D1 full shader
-        using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.CompileShader(
+        using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.Compile(
             source: hlslSourceAscii,
             macro: D3DCompiler.ASCII.D2D_FULL_SHADER,
             d2DEntry: entryPointAscii,
@@ -91,7 +91,7 @@ public static class D2D1ShaderCompiler
         }
 
         // Compile the export function
-        using ComPtr<ID3DBlob> d3DBlobFunction = D3DCompiler.CompileShader(
+        using ComPtr<ID3DBlob> d3DBlobFunction = D3DCompiler.Compile(
             source: hlslSourceAscii,
             macro: D3DCompiler.ASCII.D2D_FUNCTION,
             d2DEntry: entryPointAscii,
