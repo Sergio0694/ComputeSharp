@@ -154,7 +154,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                             compileOptions,
                             isLinkingSupported,
                             HasErrors: diagnostics.Count > 0),
-                        OutputBuffer: new OutputBufferInfo(bufferPrecision, channelDepth),
+                        BufferPrecision: bufferPrecision,
+                        ChannelDepth: channelDepth,
                         InputDescriptions: new InputDescriptionsInfo(inputDescriptions),
                         PixelOptions: pixelOptions,
                         Diagnostcs: diagnostics.ToImmutable());
@@ -381,19 +382,19 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the output buffer info (hierarchy and output buffers)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, OutputBufferInfo OutputBuffer)> outputBufferInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1BufferPrecision BufferPrecision, D2D1ChannelDepth ChannelDepth)> outputBufferInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.OutputBuffer));
+            .Select(static (item, _) => (item.Hierarchy, item.BufferPrecision, item.ChannelDepth));
 
         // Generate the output buffer properties
         context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax bufferPrecisionProperty = OutputBuffer.GetBufferPrecisionSyntax(item.OutputBuffer);
+            PropertyDeclarationSyntax bufferPrecisionProperty = OutputBuffer.GetBufferPrecisionSyntax(item.BufferPrecision);
             CompilationUnitSyntax bufferPrecisionCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, bufferPrecisionProperty, skipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.BufferPrecision.g.cs", bufferPrecisionCompilationUnit.GetText(Encoding.UTF8));
 
-            PropertyDeclarationSyntax channelDepthProperty = OutputBuffer.GetChannelDepthSyntax(item.OutputBuffer);
+            PropertyDeclarationSyntax channelDepthProperty = OutputBuffer.GetChannelDepthSyntax(item.ChannelDepth);
             CompilationUnitSyntax channelDepthCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, channelDepthProperty, skipLocalsInit: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ChannelDepth.g.cs", channelDepthCompilationUnit.GetText(Encoding.UTF8));

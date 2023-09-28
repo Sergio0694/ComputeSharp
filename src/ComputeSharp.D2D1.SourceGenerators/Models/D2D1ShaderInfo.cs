@@ -17,7 +17,8 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="InputTypes">The gathered input types for the shader.</param>
 /// <param name="ResourceTextureDescriptions">The gathered resource texture descriptions for the shader.</param>
 /// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
-/// <param name="OutputBuffer">The output buffer info for the shader.</param>
+/// <param name="BufferPrecision">The buffer precision for the resulting output buffer.</param>
+/// <param name="ChannelDepth">The channel depth for the resulting output buffer.</param>
 /// <param name="InputDescriptions">The gathered input descriptions for the shader.</param>
 /// <param name="PixelOptions">The pixel options used by the shader.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
@@ -33,7 +34,8 @@ internal sealed record D2D1ShaderInfo(
     EquatableArray<uint> InputTypes,
     EquatableArray<ResourceTextureDescription> ResourceTextureDescriptions,
     HlslShaderSourceInfo HlslShaderSource,
-    OutputBufferInfo OutputBuffer,
+    D2D1BufferPrecision BufferPrecision,
+    D2D1ChannelDepth ChannelDepth,
     InputDescriptionsInfo InputDescriptions,
     D2D1PixelOptions PixelOptions,
     EquatableArray<DiagnosticInfo> Diagnostcs);
