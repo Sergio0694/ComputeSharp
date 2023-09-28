@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace ComputeSharp.SourceGeneration.Helpers;
 
@@ -31,20 +32,26 @@ public sealed class DynamicCache<TKey, TValue>
     /// </summary>
     /// <param name="key">The key to use as lookup.</param>
     /// <param name="callback">The callback to use to create new values, if needed.</param>
+    /// <param name="cancellationToken">A cancellation token for the operation of creating a new value.</param>
     /// <returns>The resulting value.</returns>
+    /// <exception cref="OperationCanceledException">Thrown if <paramref name="cancellationToken"/> is canceled.</exception>
     /// <remarks>
     /// This method might replace <typeparamref name="TKey"/> with a new instance that has the same
     /// value according to its equality comparison logic. Callers should always use the last value of
     /// <typeparamref name="TKey"/> after this method returns and discard the previous one, if different.
     /// </remarks>
-    public TValue GetOrCreate(ref TKey key, GetOrCreateCallback callback)
+    public TValue GetOrCreate(ref TKey key, GetOrCreateCallback callback, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         // Create a new entry that we will use to perform the lookup.
         // Each entry simply forwards equality logic to the wrapped object.
         Entry entry = new(key);
 
         while (true)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // We're performing a lookup on this temporary entry. We need it to
             // track the value it will potentially match against, so we can
             // return it to the caller. This ensures the same object is used.
@@ -56,6 +63,8 @@ public sealed class DynamicCache<TKey, TValue>
             // object). If we find it, we return it and throw away the new entry.
             if (this.map.TryGetValue(entry, out TValue? value))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // We have a match, so replace the object with the one that actually matched.
                 // This guarantees that it will remain alive, so the entry will not die.
                 key = entry.GetLastMatchedValue();
@@ -63,14 +72,21 @@ public sealed class DynamicCache<TKey, TValue>
                 return value;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Execute the slow fallback path, invoking the callback and trying to add a new
             // value to the cache. If this succeeds, it means that the current key object has
             // been added to the cache, so there is nothing left to do. If this fails, it means
             // another thread has beat us to adding the key, so we should perform the initial
             // lookup again to make sure we can find the exact instance that is in the cache.
             // This is needed to ensure valid cache entries remain alive over time.
-            if (TryGetOrCreate(entry, key, callback, out value))
+            if (TryGetOrCreate(entry, key, callback, cancellationToken, out value))
             {
+                // If the operation has been canceled after inserting a new key and value,
+                // the value will just be wasted, but there isn't really anything we can do
+                // about it at this point. We also ignore the unnecessary remover finalizer.
+                cancellationToken.ThrowIfCancellationRequested();
+
                 return value;
             }
         }
@@ -82,13 +98,22 @@ public sealed class DynamicCache<TKey, TValue>
     /// <param name="entry">The <see cref="Entry"/> instance to try to insert into the cache.</param>
     /// <param name="key">The key to use as lookup.</param>
     /// <param name="callback">The callback to use to create new values, if needed.</param>
+    /// <param name="cancellationToken">A cancellation token for the operation of creating a new value.</param>
     /// <param name="value">The resulting value (should be ignored if the method fails).</param>
     /// <returns>Whether <paramref name="entry"/> was successfully inserted into the cache.</returns>
+    /// <exception cref="OperationCanceledException">Thrown if <paramref name="cancellationToken"/> is canceled.</exception>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private bool TryGetOrCreate(Entry entry, TKey key, GetOrCreateCallback callback, out TValue value)
+    private bool TryGetOrCreate(
+        Entry entry,
+        TKey key,
+        GetOrCreateCallback callback,
+        CancellationToken cancellationToken,
+        out TValue value)
     {
         // No value is present, so we can create it now
-        value = callback(key);
+        value = callback(key, cancellationToken);
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         // We're about to try to add the item to the cache, so we no longer need to
         // track the last matched value. We already have a reference to the object.
@@ -116,8 +141,9 @@ public sealed class DynamicCache<TKey, TValue>
     /// A callback to create a new value from a given key.
     /// </summary>
     /// <param name="key">The resulting <typeparamref name="TValue"/> instance.</param>
+    /// <param name="cancellationToken">A cancellation token for the operation of creating a new value.</param>
     /// <returns></returns>
-    public delegate TValue GetOrCreateCallback(TKey key);
+    public delegate TValue GetOrCreateCallback(TKey key, CancellationToken cancellationToken);
 
     /// <summary>
     /// An entry to use in <see cref="DynamicCache{TKey, TValue}"/>.
