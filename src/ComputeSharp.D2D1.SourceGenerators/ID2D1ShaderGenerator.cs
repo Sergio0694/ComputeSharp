@@ -146,7 +146,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         EffectAuthor: effectAuthor,
                         ConstantBufferSizeInBytes: constantBufferSizeInBytes,
                         Fields: fieldInfos,
-                        InputTypes: new InputTypesInfo(inputTypes),
+                        InputTypes: inputTypes,
                         ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
                         HlslShaderSource: new HlslShaderSourceInfo(
                             hlslSource,
@@ -240,7 +240,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Get the InputCount info (hierarchy and input count)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.InputTypes.InputTypes.Length));
+            .Select(static (item, _) => (item.Hierarchy, item.InputTypes.Length));
 
         // Generate the InputCount properties
         context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
@@ -252,14 +252,14 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the InputTypes info (hierarchy and input types)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputTypesInfo InputTypes)> inputTypesInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<uint> InputTypes)> inputTypesInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputTypes));
 
         // Generate the InputTypes properties
         context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
+            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
