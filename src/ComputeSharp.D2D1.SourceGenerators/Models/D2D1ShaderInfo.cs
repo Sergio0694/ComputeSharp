@@ -7,7 +7,7 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// A model representing all necessary info for a full generation pass for a D2D1 shader.
 /// </summary>
 /// <param name="Hierarchy">The hierarchy info for the shader type.</param>
-/// <param name="EffectId">The effect id info for the shader type.</param>
+/// <param name="EffectId">The GUID bytes for the effect id.</param>
 /// <param name="EffectDisplayName">The effect display name for the shader type, if available.</param>
 /// <param name="EffectDescription">The effect description for the shader type, if available.</param>
 /// <param name="EffectCategory">The effect category for the shader type, if available.</param>
@@ -22,7 +22,7 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record D2D1ShaderInfo(
     HierarchyInfo Hierarchy,
-    EffectIdInfo EffectId,
+    EquatableArray<byte> EffectId,
     string? EffectDisplayName,
     string? EffectDescription,
     string? EffectCategory,

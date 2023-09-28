@@ -139,7 +139,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     return new D2D1ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
-                        EffectId: new EffectIdInfo(effectId),
+                        EffectId: effectId,
                         EffectDisplayName: effectDisplayName,
                         EffectDescription: effectDescription,
                         EffectCategory: effectCategory,
@@ -166,7 +166,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) => item.Diagnostcs));
 
         // Get the EffectId info (hierarchy and effect id info)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EffectIdInfo EffectId)> effectIdInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<byte> EffectId)> effectIdInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.EffectId));
 
