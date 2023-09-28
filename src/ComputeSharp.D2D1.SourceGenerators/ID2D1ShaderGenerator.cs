@@ -93,12 +93,16 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         out ImmutableArray<int> inputComplexIndices,
                         out ImmutableArray<uint> inputTypes);
 
+                    token.ThrowIfCancellationRequested();
+
                     // Get the resource texture info for ResourceTextureDescriptions
                     ResourceTextureDescriptions.GetInfo(
                         diagnostics,
                         typeSymbol,
                         inputCount,
                         out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions);
+
+                    token.ThrowIfCancellationRequested();
 
                     // Get HLSL source for HlslSource
                     string hlslSource = HlslSource.GetHlslSource(
@@ -109,15 +113,6 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         inputCount,
                         inputSimpleIndices,
                         inputComplexIndices);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // Get the shader profile and linking info for LoadBytecode()
-                    bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(typeSymbol, inputCount);
-                    D2D1ShaderProfile? requestedShaderProfile = LoadBytecode.GetRequestedShaderProfile(typeSymbol);
-                    D2D1CompileOptions? requestedCompileOptions = LoadBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
-                    D2D1ShaderProfile effectiveShaderProfile = LoadBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
-                    D2D1CompileOptions effectiveCompileOptions = LoadBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
 
                     token.ThrowIfCancellationRequested();
 
@@ -139,6 +134,36 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
+                    // Get the shader profile and linking info for LoadBytecode()
+                    bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(typeSymbol, inputCount);
+                    D2D1ShaderProfile? requestedShaderProfile = LoadBytecode.GetRequestedShaderProfile(typeSymbol);
+                    D2D1CompileOptions? requestedCompileOptions = LoadBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
+                    D2D1ShaderProfile effectiveShaderProfile = LoadBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
+                    D2D1CompileOptions effectiveCompileOptions = LoadBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
+                    bool hasErrors = diagnostics.Count > 0;
+
+                    token.ThrowIfCancellationRequested();
+
+                    // As the last steps in the pipeline, try to compile the shader if needed.
+                    // This is done last so that it can be skipped if any errors happened before.
+                    HlslBytecodeInfoKey hlslInfoKey = new(
+                        hlslSource,
+                        requestedShaderProfile,
+                        requestedCompileOptions,
+                        effectiveShaderProfile,
+                        effectiveCompileOptions,
+                        hasErrors);
+
+                    // TODO: cache this across transform runs
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetInfo(hlslInfoKey, token);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Append any diagnostic for the shader compilation
+                    LoadBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
                     return new D2D1ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
                         EffectId: effectId,
@@ -147,19 +172,15 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         EffectCategory: effectCategory,
                         EffectAuthor: effectAuthor,
                         ConstantBufferSizeInBytes: constantBufferSizeInBytes,
-                        Fields: fieldInfos,
                         InputTypes: inputTypes,
+                        InputDescriptions: inputDescriptions,
                         ResourceTextureDescriptions: resourceTextureDescriptions,
-                        HlslShaderSource: new HlslShaderSourceInfo(
-                            hlslSource,
-                            requestedShaderProfile,
-                            requestedCompileOptions,
-                            isLinkingSupported,
-                            HasErrors: diagnostics.Count > 0),
+                        Fields: fieldInfos,
                         BufferPrecision: bufferPrecision,
                         ChannelDepth: channelDepth,
-                        InputDescriptions: inputDescriptions,
                         PixelOptions: pixelOptions,
+                        HlslInfoKey: hlslInfoKey,
+                        HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
             .Where(static item => item is not null)!;

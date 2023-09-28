@@ -13,14 +13,15 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="EffectCategory">The effect category for the shader type, if available.</param>
 /// <param name="EffectAuthor">The effect author for the shader type, if available.</param>
 /// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
-/// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="InputTypes">The gathered input types for the shader.</param>
+/// <param name="InputDescriptions">The gathered input descriptions for the shader.</param>
 /// <param name="ResourceTextureDescriptions">The gathered resource texture descriptions for the shader.</param>
-/// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
+/// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="BufferPrecision">The buffer precision for the resulting output buffer.</param>
 /// <param name="ChannelDepth">The channel depth for the resulting output buffer.</param>
-/// <param name="InputDescriptions">The gathered input descriptions for the shader.</param>
 /// <param name="PixelOptions">The pixel options used by the shader.</param>
+/// <param name="HlslInfoKey">The key with processed info on the shader.</param>
+/// <param name="HlslInfo">The value with processed info on the shader.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record D2D1ShaderInfo(
     HierarchyInfo Hierarchy,
@@ -30,12 +31,13 @@ internal sealed record D2D1ShaderInfo(
     string? EffectCategory,
     string? EffectAuthor,
     int ConstantBufferSizeInBytes,
-    EquatableArray<FieldInfo> Fields,
     EquatableArray<uint> InputTypes,
+    EquatableArray<InputDescription> InputDescriptions,
     EquatableArray<ResourceTextureDescription> ResourceTextureDescriptions,
-    HlslShaderSourceInfo HlslShaderSource,
+    EquatableArray<FieldInfo> Fields,
     D2D1BufferPrecision BufferPrecision,
     D2D1ChannelDepth ChannelDepth,
-    EquatableArray<InputDescription> InputDescriptions,
     D2D1PixelOptions PixelOptions,
+    HlslBytecodeInfoKey HlslInfoKey,
+    HlslBytecodeInfo HlslInfo,
     EquatableArray<DiagnosticInfo> Diagnostcs);

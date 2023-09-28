@@ -138,28 +138,16 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
         /// </summary>
-        /// <param name="hlslSource">The input HLSL source code.</param>
-        /// <param name="requestedShaderProfile">The requested shader profile, if available.</param>
-        /// <param name="requestedCompileOptions">The requested compile options, if available.</param>
-        /// <param name="effectiveShaderProfile">The effective shader profile.</param>
-        /// <param name="effectiveCompileOptions">The effective compile options.</param>
-        /// <param name="hasErrors">Whether any errors were produced when analyzing the shader.</param>
+        /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns></returns>
-        public static unsafe HlslBytecodeInfo GetInfo(
-            string hlslSource,
-            D2D1ShaderProfile? requestedShaderProfile,
-            D2D1CompileOptions? requestedCompileOptions,
-            D2D1ShaderProfile effectiveShaderProfile,
-            D2D1CompileOptions effectiveCompileOptions,
-            bool hasErrors,
-            CancellationToken token)
+        public static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
         {
             // No embedded shader was requested, or there were some errors earlier in the pipeline.
             // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
             // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
             // We also skip compilation if no shader profile has been requested (we never just assume one).
-            if (hasErrors || requestedShaderProfile is null)
+            if (key.HasErrors || key.RequestedShaderProfile is null)
             {
                 return HlslBytecodeInfo.Missing.Instance;
             }
@@ -170,9 +158,9 @@ partial class ID2D1ShaderGenerator
 
                 // Compile the shader bytecode using the effective parameters
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
-                    hlslSource.AsSpan(),
-                    effectiveShaderProfile,
-                    effectiveCompileOptions);
+                    key.HlslSource.AsSpan(),
+                    key.EffectiveShaderProfile,
+                    key.EffectiveCompileOptions);
 
                 token.ThrowIfCancellationRequested();
 
@@ -187,11 +175,45 @@ partial class ID2D1ShaderGenerator
             }
             catch (Win32Exception e)
             {
-                return new HlslBytecodeInfo.Win32Error(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
                 return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+            }
+        }
+
+        /// <summary>
+        /// Gets any diagnostics from a processed <see cref="HlslBytecodeInfo"/> instance.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        public static void GetInfoDiagnostics(
+            INamedTypeSymbol structDeclarationSymbol,
+            HlslBytecodeInfo info,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
+        {
+            DiagnosticInfo? diagnostic = null;
+
+            if (info is HlslBytecodeInfo.Win32Error win32Error)
+            {
+                diagnostic = DiagnosticInfo.Create(
+                    EmbeddedBytecodeFailedWithWin32Exception,
+                    structDeclarationSymbol,
+                    new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
+            }
+            else if (info is HlslBytecodeInfo.FxcError fxcError)
+            {
+                diagnostic = DiagnosticInfo.Create(
+                    EmbeddedBytecodeFailedWithFxcCompilationException,
+                    structDeclarationSymbol,
+                    new object[] { structDeclarationSymbol, fxcError.Message });
+            }
+
+            if (diagnostic is not null)
+            {
+                diagnostics.Add(diagnostic);
             }
         }
     }

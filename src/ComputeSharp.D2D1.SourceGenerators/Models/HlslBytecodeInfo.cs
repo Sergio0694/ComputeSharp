@@ -16,8 +16,9 @@ internal abstract record HlslBytecodeInfo
     /// <summary>
     /// An HLSL shader that failed to compile due to a Win32 error.
     /// </summary>
+    /// <param name="HResult">The HRESULT for the error.</param>
     /// <param name="Message">The error message from compiling the shader.</param>
-    public sealed record Win32Error(string Message) : HlslBytecodeInfo;
+    public sealed record Win32Error(int HResult, string Message) : HlslBytecodeInfo;
 
     /// <summary>
     /// An HLSL shader that failed to compile due to an FXC compiler error.
