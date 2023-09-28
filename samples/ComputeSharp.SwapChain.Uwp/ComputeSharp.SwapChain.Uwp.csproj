@@ -186,10 +186,6 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.5</Version>
     </PackageReference>
-    <PackageReference Include="PolySharp">
-      <Version>1.13.2</Version>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
