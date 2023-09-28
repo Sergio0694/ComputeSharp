@@ -367,7 +367,9 @@ jobs:
         path: artifacts
     - run: dotnet nuget push "artifacts\*.nupkg" --source "https://nuget.pkg.github.com/${{github.repository_owner}}/index.json" --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
 
-  # Publish the packages to Azure DevOps
+  # Publish the packages to Azure DevOps. This step has will not fail the CI even if it is not
+  # successful, so as to not block PRs and hinder development just because eg. the Azure storage
+  # has exceeded the limit. These packages are rarely needed anyway, so that's fine.
   publish-nightlies-azure-devops:
     needs: [run-tests, run-tests-d3d12ma, run-tests-win2d, run-samples, run-samples-aot, verify-packages]
     runs-on: windows-2022
@@ -383,3 +385,4 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.ADO_FEED_PERSONAL_ACCESS_TOKEN }}
     - run: dotnet nuget push "artifacts\*.nupkg" --api-key AzureDevOps --skip-duplicate
+      continue-on-error: true
