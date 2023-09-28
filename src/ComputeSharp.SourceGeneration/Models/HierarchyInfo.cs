@@ -43,6 +43,26 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
     }
 
     /// <summary>
+    /// Gets the fully qualified type name for the current instance.
+    /// </summary>
+    /// <returns>The fully qualified type name for the current instance.</returns>
+    public string GetFullyQualifiedTypeName()
+    {
+        using ImmutableArrayBuilder<char> fullyQualifiedTypeName = ImmutableArrayBuilder<char>.Rent();
+
+        fullyQualifiedTypeName.AddRange("global::".AsSpan());
+        fullyQualifiedTypeName.AddRange(Namespace.AsSpan());
+
+        for (int i = Hierarchy.Length - 1; i >= 0; i--)
+        {
+            fullyQualifiedTypeName.Add('.');
+            fullyQualifiedTypeName.AddRange(Hierarchy[i].QualifiedName.AsSpan());
+        }
+
+        return fullyQualifiedTypeName.ToString();
+    }
+
+    /// <summary>
     /// Creates a <see cref="CompilationUnitSyntax"/> instance for the current hierarchy.
     /// </summary>
     /// <param name="memberDeclarations">The member declarations to add to the generated type.</param>

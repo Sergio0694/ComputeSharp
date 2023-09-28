@@ -1,4 +1,4 @@
-﻿<#@include file="..\MatrixType.ttinclude" #>
+<#@include file="..\MatrixType.ttinclude" #>
 <#
 GenerateAllMatrixProperties("Double", sizeof(double));
 #>

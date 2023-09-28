@@ -36,10 +36,10 @@ public unsafe partial struct UInt1x1
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref uint this[int row] => ref *(uint*)UndefinedData;
+    public ref uint this[int row] => ref Unsafe.As<uint, uint>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(uint) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x1"/> instance.
@@ -329,10 +329,10 @@ public unsafe partial struct UInt1x2
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt2 this[int row] => ref *(UInt2*)UndefinedData;
+    public ref UInt2 this[int row] => ref Unsafe.As<uint, UInt2>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt2) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x2"/> instance.
@@ -640,10 +640,10 @@ public unsafe partial struct UInt1x3
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt3 this[int row] => ref *(UInt3*)UndefinedData;
+    public ref UInt3 this[int row] => ref Unsafe.As<uint, UInt3>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt3) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x3"/> instance.
@@ -963,10 +963,10 @@ public unsafe partial struct UInt1x4
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt4 this[int row] => ref *(UInt4*)UndefinedData;
+    public ref UInt4 this[int row] => ref Unsafe.As<uint, UInt4>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt4) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x4"/> instance.
@@ -1283,10 +1283,10 @@ public unsafe partial struct UInt2x1
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref uint this[int row] => ref *(uint*)UndefinedData;
+    public ref uint this[int row] => ref Unsafe.As<uint, uint>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(uint) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x1"/> instance.
@@ -1612,10 +1612,10 @@ public unsafe partial struct UInt2x2
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt2 this[int row] => ref *(UInt2*)UndefinedData;
+    public ref UInt2 this[int row] => ref Unsafe.As<uint, UInt2>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt2) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x2"/> instance.
@@ -1961,10 +1961,10 @@ public unsafe partial struct UInt2x3
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt3 this[int row] => ref *(UInt3*)UndefinedData;
+    public ref UInt3 this[int row] => ref Unsafe.As<uint, UInt3>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt3) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x3"/> instance.
@@ -2336,10 +2336,10 @@ public unsafe partial struct UInt2x4
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt4 this[int row] => ref *(UInt4*)UndefinedData;
+    public ref UInt4 this[int row] => ref Unsafe.As<uint, UInt4>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt4) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x4"/> instance.
@@ -2683,10 +2683,10 @@ public unsafe partial struct UInt3x1
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref uint this[int row] => ref *(uint*)UndefinedData;
+    public ref uint this[int row] => ref Unsafe.As<uint, uint>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(uint) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x1"/> instance.
@@ -3032,10 +3032,10 @@ public unsafe partial struct UInt3x2
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt2 this[int row] => ref *(UInt2*)UndefinedData;
+    public ref UInt2 this[int row] => ref Unsafe.As<uint, UInt2>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt2) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x2"/> instance.
@@ -3414,10 +3414,10 @@ public unsafe partial struct UInt3x3
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt3 this[int row] => ref *(UInt3*)UndefinedData;
+    public ref UInt3 this[int row] => ref Unsafe.As<uint, UInt3>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt3) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x3"/> instance.
@@ -3835,10 +3835,10 @@ public unsafe partial struct UInt3x4
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt4 this[int row] => ref *(UInt4*)UndefinedData;
+    public ref UInt4 this[int row] => ref Unsafe.As<uint, UInt4>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt4) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x4"/> instance.
@@ -4215,10 +4215,10 @@ public unsafe partial struct UInt4x1
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref uint this[int row] => ref *(uint*)UndefinedData;
+    public ref uint this[int row] => ref Unsafe.As<uint, uint>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(uint) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x1"/> instance.
@@ -4584,10 +4584,10 @@ public unsafe partial struct UInt4x2
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt2 this[int row] => ref *(UInt2*)UndefinedData;
+    public ref UInt2 this[int row] => ref Unsafe.As<uint, UInt2>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt2) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x2"/> instance.
@@ -4999,10 +4999,10 @@ public unsafe partial struct UInt4x3
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt3 this[int row] => ref *(UInt3*)UndefinedData;
+    public ref UInt3 this[int row] => ref Unsafe.As<uint, UInt3>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt3) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x3"/> instance.
@@ -5466,10 +5466,10 @@ public unsafe partial struct UInt4x4
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref UInt4 this[int row] => ref *(UInt4*)UndefinedData;
+    public ref UInt4 this[int row] => ref Unsafe.As<uint, UInt4>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(UInt4) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x4"/> instance.

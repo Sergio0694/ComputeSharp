@@ -32,12 +32,6 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
         return new(c, -s, s, c);
     }
 
-    // IQ's float2 to float hash.
-    private static float Hash21(float2 p)
-    {
-        return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new float2(27.619f, 57.583f))) * 43758.5453f);
-    }
-
     // float2 to float2 hash.
     private float2 Hash22(float2 p)
     {

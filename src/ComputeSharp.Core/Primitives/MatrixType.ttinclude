@@ -152,10 +152,10 @@ public unsafe partial struct <#=fullTypeName#>
     /// <param name="row">The row to access.</param>
     /// <remarks>
     /// <para>Unlike with vector types, these properties cannot validate in advance which combinations are writeable, so callers should ensure proper use.</para>
-    /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
+    /// <para>Invoking this method with an invalid row argument results in undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
+    public ref <#=rowTypeName#> this[int row] => ref Unsafe.As<<#=fieldElementTypeName#>, <#=rowTypeName#>>(ref Unsafe.AddByteOffset(ref this.m11, (nint)(uint)(sizeof(<#=rowTypeName#>) * row)));
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
