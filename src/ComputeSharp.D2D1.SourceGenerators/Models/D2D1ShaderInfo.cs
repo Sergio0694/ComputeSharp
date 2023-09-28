@@ -36,6 +36,6 @@ internal sealed record D2D1ShaderInfo(
     HlslShaderSourceInfo HlslShaderSource,
     D2D1BufferPrecision BufferPrecision,
     D2D1ChannelDepth ChannelDepth,
-    InputDescriptionsInfo InputDescriptions,
+    EquatableArray<InputDescription> InputDescriptions,
     D2D1PixelOptions PixelOptions,
     EquatableArray<DiagnosticInfo> Diagnostcs);

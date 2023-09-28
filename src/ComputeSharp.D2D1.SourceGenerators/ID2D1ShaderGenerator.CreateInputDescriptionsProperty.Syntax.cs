@@ -20,16 +20,16 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
         /// </summary>
-        /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
+        /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
         /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(InputDescriptionsInfo inputDescriptionsInfo, out TypeDeclarationSyntax[] additionalTypes)
+        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<InputDescription> inputDescriptions, out TypeDeclarationSyntax[] additionalTypes)
         {
             ExpressionSyntax memoryExpression;
 
             // If there are no input descriptions, just return a default expression.
             // Otherwise, declare the shared array and return it from the property.
-            if (inputDescriptionsInfo.InputDescriptions.Length == 0)
+            if (inputDescriptions.Length == 0)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
                 additionalTypes = Array.Empty<TypeDeclarationSyntax>();
@@ -41,7 +41,7 @@ partial class ID2D1ShaderGenerator
                     IdentifierName("Data"),
                     IdentifierName(nameof(InputDescriptions)));
 
-                additionalTypes = new[] { GetArrayDeclaration(inputDescriptionsInfo) };
+                additionalTypes = new[] { GetArrayDeclaration(inputDescriptions) };
             }
 
             // This code produces a method declaration as follows:
@@ -61,13 +61,13 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets the array declaration for the given input descriptions.
         /// </summary>
-        /// <param name="inputDescriptionsInfo">The input descriptions info gathered for the current shader.</param>
+        /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
         /// <returns>The array declaration for the given input descriptions.</returns>
-        private static TypeDeclarationSyntax GetArrayDeclaration(InputDescriptionsInfo inputDescriptionsInfo)
+        private static TypeDeclarationSyntax GetArrayDeclaration(EquatableArray<InputDescription> inputDescriptions)
         {
             using ImmutableArrayBuilder<ExpressionSyntax> inputDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
 
-            foreach (InputDescription inputDescription in inputDescriptionsInfo.InputDescriptions)
+            foreach (InputDescription inputDescription in inputDescriptions)
             {
                 // Create the description expression (excluding level of detail):
                 //

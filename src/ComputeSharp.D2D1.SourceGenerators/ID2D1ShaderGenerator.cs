@@ -156,7 +156,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                             HasErrors: diagnostics.Count > 0),
                         BufferPrecision: bufferPrecision,
                         ChannelDepth: channelDepth,
-                        InputDescriptions: new InputDescriptionsInfo(inputDescriptions),
+                        InputDescriptions: inputDescriptions,
                         PixelOptions: pixelOptions,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
@@ -401,7 +401,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the InputDescriptions info (hierarchy and input descriptions)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, InputDescriptionsInfo InputDescriptions)> inputDescriptionsInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<InputDescription> InputDescriptions)> inputDescriptionsInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions));
 
