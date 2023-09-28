@@ -144,7 +144,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         EffectDescription: effectDescription,
                         EffectCategory: effectCategory,
                         EffectAuthor: effectAuthor,
-                        DispatchData: new DispatchDataInfo(fieldInfos, constantBufferSizeInBytes),
+                        ConstantBufferSizeInBytes: constantBufferSizeInBytes,
+                        Fields: fieldInfos,
                         InputTypes: new InputTypesInfo(inputTypes),
                         ResourceTextureDescriptions: new ResourceTextureDescriptionsInfo(resourceTextureDescriptions),
                         HlslShaderSource: new HlslShaderSourceInfo(
@@ -279,15 +280,15 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         });
 
         // Get the info for InitializeFromDispatchData() and LoadDispatchData() (hierarchy and dispatch data)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo Dispatch)> dispatchDataInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<FieldInfo> Fields, int ConstantBufferSizeInBytes)> dispatchDataInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
+            .Select(static (item, _) => (item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes));
 
         // Generate the InitializeFromDispatchData() and LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Dispatch);
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Hierarchy, item.Dispatch, out TypeDeclarationSyntax[] additionalTypes);
+            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Fields);
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes, out TypeDeclarationSyntax[] additionalTypes);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMembers(
                 item.Hierarchy,
                 memberDeclarations: new (MemberDeclarationSyntax, bool)[] { (initializeFromDispatchDataMethod, false), (loadDispatchDataMethod, true) },

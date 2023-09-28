@@ -12,7 +12,8 @@ namespace ComputeSharp.D2D1.SourceGenerators.Models;
 /// <param name="EffectDescription">The effect description for the shader type, if available.</param>
 /// <param name="EffectCategory">The effect category for the shader type, if available.</param>
 /// <param name="EffectAuthor">The effect author for the shader type, if available.</param>
-/// <param name="DispatchData">The gathered shader dispatch data.</param>
+/// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
+/// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="InputTypes">The gathered input types for the shader.</param>
 /// <param name="ResourceTextureDescriptions">The gathered resource texture descriptions for the shader.</param>
 /// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
@@ -27,7 +28,8 @@ internal sealed record D2D1ShaderInfo(
     string? EffectDescription,
     string? EffectCategory,
     string? EffectAuthor,
-    DispatchDataInfo DispatchData,
+    int ConstantBufferSizeInBytes,
+    EquatableArray<FieldInfo> Fields,
     InputTypesInfo InputTypes,
     ResourceTextureDescriptionsInfo ResourceTextureDescriptions,
     HlslShaderSourceInfo HlslShaderSource,
