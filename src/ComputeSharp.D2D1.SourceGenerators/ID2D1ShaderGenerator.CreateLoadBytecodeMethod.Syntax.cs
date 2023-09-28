@@ -24,9 +24,9 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.
         /// </summary>
-        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <param name="shaderProfile">The input shader profile.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ShaderProfile</c> property.</returns>
-        public static PropertyDeclarationSyntax GetShaderProfileSyntax(EmbeddedBytecodeInfo bytecodeInfo)
+        public static PropertyDeclarationSyntax GetShaderProfileSyntax(D2D1ShaderProfile shaderProfile)
         {
             // This code produces a method declaration as follows:
             //
@@ -39,21 +39,21 @@ partial class ID2D1ShaderGenerator
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName("global::ComputeSharp.D2D1.D2D1ShaderProfile"),
-                        IdentifierName(bytecodeInfo.ShaderProfile.ToString(CultureInfo.InvariantCulture)))))
+                        IdentifierName(shaderProfile.ToString(CultureInfo.InvariantCulture)))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.
         /// </summary>
-        /// <param name="bytecodeInfo">The input bytecode info.</param>
+        /// <param name="compileOptions">The input compile options.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>CompileOptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetCompileOptionsSyntax(EmbeddedBytecodeInfo bytecodeInfo)
+        public static PropertyDeclarationSyntax GetCompileOptionsSyntax(D2D1CompileOptions compileOptions)
         {
             // Get a formatted representation of the compile options being used
             ExpressionSyntax compileOptionsExpression =
                 ParseExpression(
-                    bytecodeInfo.CompileOptions
+                    compileOptions
                     .ToString(CultureInfo.InvariantCulture)
                     .Split(',')
                     .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
@@ -78,7 +78,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>HlslBytecode</c> property.</returns>
         public static PropertyDeclarationSyntax GetHlslBytecodeSyntax(
-            EmbeddedBytecodeInfo bytecodeInfo,
+            HlslBytecodeInfo bytecodeInfo,
             out Func<SyntaxNode, SourceText> fixup,
             out TypeDeclarationSyntax[] additionalTypes)
         {
@@ -86,7 +86,7 @@ partial class ID2D1ShaderGenerator
 
             // If there is no bytecode, simply return a default expression.
             // Otherwise, declare the memory manager and access it.
-            if (bytecodeInfo.Bytecode.Length == 0)
+            if (bytecodeInfo is not HlslBytecodeInfo.Success success)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
                 fixup = static tree => tree.GetText(Encoding.UTF8);
@@ -106,8 +106,8 @@ partial class ID2D1ShaderGenerator
                             IdentifierName("Instance")),
                         IdentifierName("Memory"));
 
-                TypeDeclarationSyntax memoryManagerDeclaration = GetMemoryManagerDeclaration(bytecodeInfo);
-                string bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(bytecodeInfo.Bytecode.AsSpan());
+                TypeDeclarationSyntax memoryManagerDeclaration = GetMemoryManagerDeclaration();
+                string bytecodeLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(success.Bytecode.AsSpan());
 
                 additionalTypes = new TypeDeclarationSyntax[] { memoryManagerDeclaration };
                 fixup = tree => SourceText.From(tree.ToFullString().Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals), Encoding.UTF8);
@@ -130,9 +130,8 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
         /// </summary>
-        /// <param name="bytecodeInfo">The input bytecode info.</param>
         /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
-        private static unsafe TypeDeclarationSyntax GetMemoryManagerDeclaration(EmbeddedBytecodeInfo bytecodeInfo)
+        private static unsafe TypeDeclarationSyntax GetMemoryManagerDeclaration()
         {
             // Create the MemoryManager<T> declaration:
             //

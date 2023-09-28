@@ -23,7 +23,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Discover all shader types and extract all the necessary info from each of them
-        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfoWithErrors =
+        IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
             context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
@@ -185,269 +185,56 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 })
             .Where(static item => item is not null)!;
 
+        // We need to create two more incremental steps to ensure we correctly emit diagnostics and re-generate sources:
+        //   - One with just the diagnostics, which will trigger every time any of them changes
+        //   - One with just the shader info (and no diagnostics), so that changes there don't trigger generation unnecessarily
+        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo = shaderInfo.Select(static (item, _) => item.Diagnostcs);
+        IncrementalValuesProvider<D2D1ShaderInfo> outputInfo = shaderInfo.Select(static (item, _) => item with { Diagnostcs = default });
+
         // Output the diagnostics, if any
-        context.ReportDiagnostics(
-            shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs));
+        context.ReportDiagnostics(diagnosticInfo);
 
-        // Get the EffectId info (hierarchy and effect id info)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<byte> EffectId)> effectIdInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.EffectId));
-
-        // Generate the EffectId properties
-        context.RegisterSourceOutput(effectIdInfo, static (context, item) =>
+        // Generate the source files, if any
+        context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectId.GetSyntax(item.EffectId);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(EffectId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the EffectDisplayName info (hierarchy and effect display name)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string? EffectDisplayName)> effectDisplayNameInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.EffectDisplayName));
-
-        // Generate the EffectDisplayName properties
-        context.RegisterSourceOutput(effectDisplayNameInfo, static (context, item) =>
-        {
+            PropertyDeclarationSyntax effectIdProperty = EffectId.GetSyntax(item.EffectId);
             PropertyDeclarationSyntax effectDisplayNameProperty = EffectMetadata.GetEffectDisplayNameSyntax(item.EffectDisplayName);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDisplayNameProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectDisplayName.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the EffectDescription info (hierarchy and effect description)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string? EffectDescription)> effectDescriptionInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.EffectDescription));
-
-        // Generate the EffectDescription properties
-        context.RegisterSourceOutput(effectDescriptionInfo, static (context, item) =>
-        {
             PropertyDeclarationSyntax effectDescriptionProperty = EffectMetadata.GetEffectDescriptionSyntax(item.EffectDescription);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectDescriptionProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectDescription.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the EffectCategory info (hierarchy and effect description)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string? EffectCategory)> effectCategoryInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.EffectCategory));
-
-        // Generate the EffectCategory properties
-        context.RegisterSourceOutput(effectCategoryInfo, static (context, item) =>
-        {
             PropertyDeclarationSyntax effectCategoryProperty = EffectMetadata.GetEffectCategorySyntax(item.EffectCategory);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectCategoryProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectCategory.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the EffectAuthor info (hierarchy and effect description)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string? EffectAuthor)> effectAuthorInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.EffectAuthor));
-
-        // Generate the EffectAuthor properties
-        context.RegisterSourceOutput(effectAuthorInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax effectCategoryProperty = EffectMetadata.GetEffectAuthorSyntax(item.EffectAuthor);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, effectCategoryProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.EffectAuthor.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the InputCount info (hierarchy and input count)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, int InputCount)> inputCountInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.InputTypes.Length));
-
-        // Generate the InputCount properties
-        context.RegisterSourceOutput(inputCountInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax inputCountProperty = InputCount.GetSyntax(item.InputCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputCountProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputCount)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the InputTypes info (hierarchy and input types)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<uint> InputTypes)> inputTypesInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.InputTypes));
-
-        // Generate the InputTypes properties
-        context.RegisterSourceOutput(inputTypesInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputTypesProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputTypes)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the ResourceTextureDescriptions info (hierarchy and resource texture descriptions)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<ResourceTextureDescription> ResourceTextureDescriptions)> resourceTextureDescriptionsInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.ResourceTextureDescriptions));
-
-        // Generate the ResourceTextureDescriptions properties
-        context.RegisterSourceOutput(resourceTextureDescriptionsInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, resourceTextureDescriptionsProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(ResourceTextureDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the info for InitializeFromDispatchData() and LoadDispatchData() (hierarchy and dispatch data)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<FieldInfo> Fields, int ConstantBufferSizeInBytes)> dispatchDataInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes));
-
-        // Generate the InitializeFromDispatchData() and LoadDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
-        {
-            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Fields);
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMembers(
-                item.Hierarchy,
-                memberDeclarations: new (MemberDeclarationSyntax, bool)[] { (initializeFromDispatchDataMethod, false), (loadDispatchDataMethod, true) },
-                additionalMemberDeclarations: additionalTypes);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the HlslSource info (hierarchy, HLSL source and parsing options)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string HlslSource)> hlslSourceInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource.HlslSource));
-
-        // Generate the HlslSource properties
-        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax hlslStringProperty = HlslSource.GetSyntax(item.HlslSource, item.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, hlslStringProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(HlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get a filtered sequence to enable caching for the HLSL source info, before the shader compilation step
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo Source)> shaderBytecodeInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
-
-        // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
-            shaderBytecodeInfo
-            .Select(static (item, token) =>
-            {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetInfo(
-                    item.Source,
-                    token,
-                    out D2D1ShaderProfile shaderProfile,
-                    out D2D1CompileOptions compileOptions,
-                    out DeferredDiagnosticInfo? diagnostic);
-
-                token.ThrowIfCancellationRequested();
-
-                EmbeddedBytecodeInfo bytecodeInfo = new(
-                    item.Source.HlslSource,
-                    shaderProfile,
-                    compileOptions,
-                    bytecode);
-
-                return (item.Hierarchy, bytecodeInfo, diagnostic);
-            });
-
-        // Gather the diagnostics
-        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
-            embeddedBytecodeWithErrors
-            .Select(static (item, _) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
-            .Where(static item => item.Diagnostic is not null)
-            .Combine(context.CompilationProvider)
-            .Select(static (item, _) =>
-            {
-                INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-
-                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(embeddedBytecodeDiagnostics);
-
-        // Get the LoadBytecode() info (hierarchy and compiled bytecode)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
-            embeddedBytecodeWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.BytecodeInfo));
-
-        // Generate the LoadBytecode() methods
-        context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
-        {
-            PropertyDeclarationSyntax hlslBytecodeProperty = LoadBytecode.GetHlslBytecodeSyntax(item.BytecodeInfo, out Func<SyntaxNode, SourceText> fixup, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax hlslBytecodeCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, hlslBytecodeProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
-            SourceText text = fixup(hlslBytecodeCompilationUnit);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.HlslBytecode.g.cs", text);
-
-            PropertyDeclarationSyntax shaderProfileProperty = LoadBytecode.GetShaderProfileSyntax(item.BytecodeInfo);
-            CompilationUnitSyntax shaderProfileCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, shaderProfileProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ShaderProfile.g.cs", shaderProfileCompilationUnit.GetText(Encoding.UTF8));
-
-            PropertyDeclarationSyntax compileOptionsProperty = LoadBytecode.GetCompileOptionsSyntax(item.BytecodeInfo);
-            CompilationUnitSyntax compileOptionsCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, compileOptionsProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.CompileOptions.g.cs", compileOptionsCompilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the output buffer info (hierarchy and output buffers)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1BufferPrecision BufferPrecision, D2D1ChannelDepth ChannelDepth)> outputBufferInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.BufferPrecision, item.ChannelDepth));
-
-        // Generate the output buffer properties
-        context.RegisterSourceOutput(outputBufferInfo, static (context, item) =>
-        {
+            PropertyDeclarationSyntax effectAuthorProperty = EffectMetadata.GetEffectAuthorSyntax(item.EffectAuthor);
+            PropertyDeclarationSyntax inputCountProperty = InputCount.GetSyntax(item.InputTypes.Length);
+            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes, out TypeDeclarationSyntax[] inputTypesAdditionalTypes);
+            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.InputDescriptions, out TypeDeclarationSyntax[] inputDescriptionsAdditionalTypes);
+            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out TypeDeclarationSyntax[] resourceTexturesAditionalTypes);
+            PropertyDeclarationSyntax hlslStringProperty = HlslSource.GetSyntax(item.HlslInfoKey.HlslSource, item.Hierarchy.Hierarchy.Length);
+            PropertyDeclarationSyntax hlslBytecodeProperty = LoadBytecode.GetHlslBytecodeSyntax(item.HlslInfo, out Func<SyntaxNode, SourceText> fixup, out TypeDeclarationSyntax[] hlslBytecodeAdditionalTypes);
+            PropertyDeclarationSyntax shaderProfileProperty = LoadBytecode.GetShaderProfileSyntax(item.HlslInfoKey.EffectiveShaderProfile);
+            PropertyDeclarationSyntax compileOptionsProperty = LoadBytecode.GetCompileOptionsSyntax(item.HlslInfoKey.EffectiveCompileOptions);
             PropertyDeclarationSyntax bufferPrecisionProperty = OutputBuffer.GetBufferPrecisionSyntax(item.BufferPrecision);
-            CompilationUnitSyntax bufferPrecisionCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, bufferPrecisionProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.BufferPrecision.g.cs", bufferPrecisionCompilationUnit.GetText(Encoding.UTF8));
-
             PropertyDeclarationSyntax channelDepthProperty = OutputBuffer.GetChannelDepthSyntax(item.ChannelDepth);
-            CompilationUnitSyntax channelDepthCompilationUnit = GetCompilationUnitFromMember(item.Hierarchy, channelDepthProperty, skipLocalsInit: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.ChannelDepth.g.cs", channelDepthCompilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the InputDescriptions info (hierarchy and input descriptions)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EquatableArray<InputDescription> InputDescriptions)> inputDescriptionsInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.InputDescriptions));
-
-        // Generate the InputDescriptions properties
-        context.RegisterSourceOutput(inputDescriptionsInfo, static (context, item) =>
-        {
-            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.InputDescriptions, out TypeDeclarationSyntax[] additionalTypes);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, inputDescriptionsProperty, skipLocalsInit: false, additionalMemberDeclarations: additionalTypes);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(InputDescriptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
-
-        // Get the PixelOptions info (hierarchy and pixel options)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, D2D1PixelOptions PixelOptions)> pixelOptionsInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.PixelOptions));
-
-        // Generate the PixelOptions properties
-        context.RegisterSourceOutput(pixelOptionsInfo, static (context, item) =>
-        {
             PropertyDeclarationSyntax pixelOptionsProperty = PixelOptions.GetSyntax(item.PixelOptions);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMember(item.Hierarchy, pixelOptionsProperty, skipLocalsInit: false);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(PixelOptions)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Fields);
+            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes, out TypeDeclarationSyntax[] loadDispatchDataAditionalTypes);
+
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMembers(
+                hierarchyInfo: item.Hierarchy,
+                memberDeclarations: new (MemberDeclarationSyntax, bool)[]
+                {
+                    (effectIdProperty, false), (effectDisplayNameProperty, false), (effectDescriptionProperty, false), (effectCategoryProperty, false), (effectAuthorProperty, false),
+                    (inputCountProperty, false), (inputTypesProperty, false), (inputDescriptionsProperty, false), (resourceTextureDescriptionsProperty, false), (hlslStringProperty, false),
+                    (hlslBytecodeProperty, false), (shaderProfileProperty, false), (compileOptionsProperty, false), (bufferPrecisionProperty, false), (channelDepthProperty, false),
+                    (pixelOptionsProperty, false), (initializeFromDispatchDataMethod, true), (loadDispatchDataMethod, true)
+                },
+                additionalMemberDeclarations: new TypeDeclarationSyntax[][]
+                {
+                    inputTypesAdditionalTypes, inputDescriptionsAdditionalTypes, resourceTexturesAditionalTypes, hlslBytecodeAdditionalTypes, loadDispatchDataAditionalTypes
+                }
+                .SelectMany(static types => types)
+                .Cast<MemberDeclarationSyntax>()
+                .ToArray());
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
     }
 }
