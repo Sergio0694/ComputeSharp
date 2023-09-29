@@ -26,6 +26,11 @@ partial class ID2D1ShaderGenerator
     internal static partial class LoadBytecode
     {
         /// <summary>
+        /// The shared cache of <see cref="HlslBytecodeInfo"/> values.
+        /// </summary>
+        private static readonly DynamicCache<HlslBytecodeInfoKey, HlslBytecodeInfo> HlslBytecodeCache = new();
+
+        /// <summary>
         /// Extracts the requested shader profile for the current shader.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
@@ -141,46 +146,54 @@ partial class ID2D1ShaderGenerator
         /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns></returns>
-        public static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
+        public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, CancellationToken token)
         {
-            // No embedded shader was requested, or there were some errors earlier in the pipeline.
-            // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
-            // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
-            // We also skip compilation if no shader profile has been requested (we never just assume one).
-            if (key.HasErrors || key.RequestedShaderProfile is null)
+            static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
             {
-                return HlslBytecodeInfo.Missing.Instance;
+                // No embedded shader was requested, or there were some errors earlier in the pipeline.
+                // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
+                // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
+                // We also skip compilation if no shader profile has been requested (we never just assume one).
+                if (key.HasErrors || key.RequestedShaderProfile is null)
+                {
+                    return HlslBytecodeInfo.Missing.Instance;
+                }
+
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    // Compile the shader bytecode using the effective parameters
+                    using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
+                        key.HlslSource.AsSpan(),
+                        key.EffectiveShaderProfile,
+                        key.EffectiveCompileOptions);
+
+                    token.ThrowIfCancellationRequested();
+
+                    byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
+                    int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
+
+                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
+
+                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+
+                    return new HlslBytecodeInfo.Success(bytecode);
+                }
+                catch (Win32Exception e)
+                {
+                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                }
+                catch (FxcCompilationException e)
+                {
+                    return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                }
             }
 
-            try
-            {
-                token.ThrowIfCancellationRequested();
-
-                // Compile the shader bytecode using the effective parameters
-                using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
-                    key.HlslSource.AsSpan(),
-                    key.EffectiveShaderProfile,
-                    key.EffectiveCompileOptions);
-
-                token.ThrowIfCancellationRequested();
-
-                byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-                int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-                byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
-
-                ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-
-                return new HlslBytecodeInfo.Success(bytecode);
-            }
-            catch (Win32Exception e)
-            {
-                return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, D3DCompiler.PrettifyFxcErrorMessage(e.Message));
-            }
-            catch (FxcCompilationException e)
-            {
-                return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
-            }
+            // Get or create the HLSL bytecode compilation result for the input key. The dynamic cache
+            // will take care of retrieving an existing cached value if the same shader has been compiled
+            // already with the same parameters. After this call, callers must use the updated key value.
+            return HlslBytecodeCache.GetOrCreate(ref key, GetInfo, token);
         }
 
         /// <summary>
