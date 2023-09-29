@@ -73,15 +73,7 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
         }
 
         // Generate all nested members
-        for (int i = 0; i < memberCallbacks.Length; i++)
-        {
-            if (i > 0)
-            {
-                writer.WriteLine();
-            }
-
-            memberCallbacks[i](state, writer);
-        }
+        writer.WriteLineSeparatedMembers(memberCallbacks, (callback, writer) => callback(state, writer));
 
         // Close all scopes and reduce the indentation
         for (int i = 0; i < Hierarchy.Length; i++)

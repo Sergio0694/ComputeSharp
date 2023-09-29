@@ -1,5 +1,8 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+
+#pragma warning disable IDE0053
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -52,17 +55,10 @@ partial class ID2D1ShaderGenerator
                 writer.IncreaseIndent();
 
                 // Initialize all resource texture descriptions
-                for (int i = 0; i < info.ResourceTextureDescriptions.Length; i++)
+                writer.WriteInitializationExpressions(info.ResourceTextureDescriptions.AsSpan(), static (description, writer) =>
                 {
-                    ResourceTextureDescription description = info.ResourceTextureDescriptions[i];
-
                     writer.Write($"new global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
-
-                    if (i < info.ResourceTextureDescriptions.Length - 1)
-                    {
-                        writer.WriteLine(",");
-                    }
-                }
+                });
 
                 writer.DecreaseIndent();
                 writer.WriteLine();

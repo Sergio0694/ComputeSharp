@@ -1,5 +1,8 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+
+#pragma warning disable IDE0053
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -99,17 +102,10 @@ partial class ID2D1ShaderGenerator
                 writer.IncreaseIndent();
 
                 // Initialize all input descriptions
-                for (int i = 0; i < info.InputDescriptions.Length; i++)
+                writer.WriteInitializationExpressions(info.InputDescriptions.AsSpan(), static (description, writer) =>
                 {
-                    InputDescription description = info.InputDescriptions[i];
-
                     writer.Write($$"""new global::ComputeSharp.D2D1.Interop.D2D1InputDescription({{description.Index}}, global::ComputeSharp.D2D1.D2D1Filter.{{description.Filter}}) { LevelOfDetailCount = {{description.LevelOfDetailCount}} }""");
-
-                    if (i < info.InputDescriptions.Length - 1)
-                    {
-                        writer.WriteLine(",");
-                    }
-                }
+                });
 
                 writer.DecreaseIndent();
                 writer.WriteLine();

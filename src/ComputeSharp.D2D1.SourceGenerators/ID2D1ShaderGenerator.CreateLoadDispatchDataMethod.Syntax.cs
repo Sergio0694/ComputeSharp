@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 
@@ -93,14 +94,9 @@ partial class ID2D1ShaderGenerator
                 using (writer.WriteBlock())
                 {
                     // Declare fields for every mapped item from the shader layout
-                    for (int i = 0; i < info.Fields.Length; i++)
+                    writer.WriteLineSeparatedMembers(info.Fields.AsSpan(), (field, writer) =>
                     {
-                        if (i > 0)
-                        {
-                            writer.WriteLine();
-                        }
-
-                        switch (info.Fields[i])
+                        switch (field)
                         {
                             case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
 
@@ -131,7 +127,7 @@ partial class ID2D1ShaderGenerator
 
                                 break;
                         }
-                    }
+                    });
                 }
             }
 

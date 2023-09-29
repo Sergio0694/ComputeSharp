@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -68,16 +69,11 @@ partial class ID2D1ShaderGenerator
                     writer.IncreaseIndent();
 
                     // Input types, one per line in the RVA field initializer
-                    for (int i = 0; i < info.InputTypes.Length; i++)
+                    writer.WriteInitializationExpressions(info.InputTypes.AsSpan(), static (type, writer) =>
                     {
                         writer.Write("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType.");
-                        writer.Write(info.InputTypes[i] == 0 ? "Simple" : "Complex");
-
-                        if (i < info.InputTypes.Length - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
-                    }
+                        writer.Write(type == 0 ? "Simple" : "Complex");
+                    });
 
                     writer.DecreaseIndent();
                     writer.WriteLine();
