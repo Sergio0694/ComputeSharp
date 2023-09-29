@@ -154,7 +154,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         hasErrors);
 
                     // TODO: cache this across transform runs
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetInfo(hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
