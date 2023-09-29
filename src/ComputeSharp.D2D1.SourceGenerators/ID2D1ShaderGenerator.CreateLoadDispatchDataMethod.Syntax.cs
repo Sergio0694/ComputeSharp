@@ -95,6 +95,11 @@ partial class ID2D1ShaderGenerator
                     // Declare fields for every mapped item from the shader layout
                     for (int i = 0; i < info.Fields.Length; i++)
                     {
+                        if (i > 0)
+                        {
+                            writer.WriteLine();
+                        }
+
                         switch (info.Fields[i])
                         {
                             case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:

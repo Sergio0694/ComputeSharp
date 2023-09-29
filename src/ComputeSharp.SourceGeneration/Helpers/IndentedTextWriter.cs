@@ -61,9 +61,8 @@ internal sealed class IndentedTextWriter : IDisposable
     {
         this.builder = builder;
         this.currentIndentationLevel = 0;
-        this.currentIndentation = DefaultIndentation;
+        this.currentIndentation = "";
         this.availableIndentations = new string[4];
-
         this.availableIndentations[0] = "";
 
         for (int i = 1, n = this.availableIndentations.Length; i < n; i++)
@@ -158,11 +157,14 @@ internal sealed class IndentedTextWriter : IDisposable
                 {
                     // There are no new lines left, so the content can be written as a single line
                     WriteRawText(content);
+
+                    break;
                 }
                 else
                 {
                     // Write the current line
                     WriteRawText(content[..newLineIndex]);
+                    WriteLine();
 
                     // Move past the new line character (the result could be an empty span)
                     content = content[(newLineIndex + 1)..];

@@ -17,9 +17,11 @@ partial class ID2D1ShaderGenerator
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("readonly string global::ComputeSharp.D2D1.__Internals.ID2D1Shader.HlslSource =>");
+            writer.IncreaseIndent();
             writer.WriteLine("\"\"\"");
-            writer.WriteLine(info.HlslInfoKey.HlslSource, isMultiline: true);
+            writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);
             writer.WriteLine("\"\"\";");
+            writer.DecreaseIndent();
         }
     }
 }

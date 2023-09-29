@@ -14,6 +14,21 @@ namespace ComputeSharp.SourceGeneration.Models;
 internal sealed record TypeInfo(string QualifiedName, TypeKind Kind, bool IsRecord)
 {
     /// <summary>
+    /// Gets the keyword for the current type kind.
+    /// </summary>
+    /// <returns>The keyword for the current type kind.</returns>
+    public string GetTypeKeyword()
+    {
+        return Kind switch
+        {
+            TypeKind.Struct => "struct",
+            TypeKind.Interface => "interface",
+            TypeKind.Class when IsRecord => "record",
+            _ => "class"
+        };
+    }
+
+    /// <summary>
     /// Creates a <see cref="TypeDeclarationSyntax"/> instance for the current info.
     /// </summary>
     /// <returns>A <see cref="TypeDeclarationSyntax"/> instance for the current info.</returns>

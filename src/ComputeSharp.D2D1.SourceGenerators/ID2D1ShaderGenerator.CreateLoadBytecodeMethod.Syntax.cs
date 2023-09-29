@@ -36,7 +36,7 @@ partial class ID2D1ShaderGenerator
                 .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
                 .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right);
 
-            writer.Write($"readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.CompileOptions => {compileOptionsExpression};");
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.CompileOptions => {compileOptionsExpression};");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteHlslBytecodeSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            writer.WriteLine("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => ");
+            writer.Write("readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.HlslBytecode => ");
 
             // If there is no bytecode, just return a default expression.
             // Otherwise, return the memory manager backed memory instance.
@@ -77,7 +77,7 @@ partial class ID2D1ShaderGenerator
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
             {
                 writer.WriteLine($$"""/// <summary>""");
-                writer.WriteLine($$"""<see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the HLSL bytecode.""");
+                writer.WriteLine($$"""/// <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the HLSL bytecode.""");
                 writer.WriteLine($$"""/// </summary>""");
                 writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{typeof(ID2D1ShaderGenerator).FullName}}", "{{typeof(ID2D1ShaderGenerator).Assembly.GetName().Version}}")]""");
                 writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
@@ -93,18 +93,19 @@ partial class ID2D1ShaderGenerator
                     // RVA field (with the compiled HLSL bytecode, on a single line)
                     writer.WriteLine();
                     writer.WriteLine("/// <summary>The RVA data with the HLSL bytecode.</summary>");
-                    writer.Write("private static global::System.ReadOnlySpan<byte> Data => new[] { ");
+                    writer.Write("private static global::System.ReadOnlySpan<byte> Data => new byte[] { ");
 
                     SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(((HlslBytecodeInfo.Success)info.HlslInfo).Bytecode.AsSpan(), writer);
 
                     writer.WriteLine(" };");
+                    writer.WriteLine();
 
                     // Add the remaining members for the memory manager
                     writer.WriteLine("""
                         /// <inheritdoc/>
-                        public override unsafe global::System.Span<byte> GetSpan
+                        public override unsafe global::System.Span<byte> GetSpan()
                         {
-                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), Data.Length);
+                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(Data)), Data.Length);
                         }
 
                         /// <inheritdoc/>
@@ -117,7 +118,7 @@ partial class ID2D1ShaderGenerator
                         /// <inheritdoc/>
                         public override unsafe global::System.Buffers.MemoryHandle Pin(int elementIndex)
                         {
-                            return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
+                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
                         }
 
                         /// <inheritdoc/>

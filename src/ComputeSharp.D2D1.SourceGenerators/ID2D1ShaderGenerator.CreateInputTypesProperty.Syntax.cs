@@ -16,7 +16,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            writer.WriteLine("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => ");
+            writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => ");
 
             // If there are no inputs, simply return a default expression. Otherwise, create
             // a ReadOnlyMemory<D2D1PixelShaderInputType> instance from the memory manager.
@@ -64,28 +64,32 @@ partial class ID2D1ShaderGenerator
                     writer.WriteLine();
                     writer.WriteLine("/// <summary>The RVA data with the input type info.</summary>");
                     writer.WriteLine("private static global::System.ReadOnlySpan<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> Data => new[]");
+                    writer.WriteLine("{");
+                    writer.IncreaseIndent();
 
                     // Input types, one per line in the RVA field initializer
-                    using (writer.WriteBlock())
+                    for (int i = 0; i < info.InputTypes.Length; i++)
                     {
-                        for (int i = 0; i < info.InputTypes.Length; i++)
-                        {
-                            writer.Write("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType.");
-                            writer.Write(info.InputTypes[i] == 0 ? "Simple" : "Complex");
+                        writer.Write("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType.");
+                        writer.Write(info.InputTypes[i] == 0 ? "Simple" : "Complex");
 
-                            if (i < info.InputTypes.Length - 1)
-                            {
-                                writer.WriteLine(",");
-                            }
+                        if (i < info.InputTypes.Length - 1)
+                        {
+                            writer.WriteLine(",");
                         }
                     }
+
+                    writer.DecreaseIndent();
+                    writer.WriteLine();
+                    writer.WriteLine("};");
+                    writer.WriteLine();
 
                     // Add the remaining members for the memory manager
                     writer.WriteLine("""
                         /// <inheritdoc/>
-                        public override unsafe global::System.Span<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> GetSpan
+                        public override unsafe global::System.Span<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> GetSpan()
                         {
-                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal(Data)), Data.Length);
+                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(Data)), Data.Length);
                         }
 
                         /// <inheritdoc/>
@@ -98,7 +102,7 @@ partial class ID2D1ShaderGenerator
                         /// <inheritdoc/>
                         public override unsafe global::System.Buffers.MemoryHandle Pin(int elementIndex)
                         {
-                            return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
+                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
                         }
 
                         /// <inheritdoc/>

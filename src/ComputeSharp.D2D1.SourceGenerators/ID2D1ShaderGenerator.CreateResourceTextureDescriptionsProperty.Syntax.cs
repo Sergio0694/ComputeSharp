@@ -16,7 +16,7 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            writer.WriteLine("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => ");
+            writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => ");
 
             // If there are no resource texture descriptions, just return a default expression.
             // Otherwise, return a memory instance from the generated static readonly array.
@@ -48,22 +48,25 @@ partial class ID2D1ShaderGenerator
             {
                 writer.WriteLine("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>""");
                 writer.WriteLine("""public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions =""");
+                writer.WriteLine("""{""");
+                writer.IncreaseIndent();
 
                 // Initialize all resource texture descriptions
-                using (writer.WriteBlock())
+                for (int i = 0; i < info.ResourceTextureDescriptions.Length; i++)
                 {
-                    for (int i = 0; i < info.ResourceTextureDescriptions.Length; i++)
+                    ResourceTextureDescription description = info.ResourceTextureDescriptions[i];
+
+                    writer.Write($"new global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
+
+                    if (i < info.ResourceTextureDescriptions.Length - 1)
                     {
-                        ResourceTextureDescription description = info.ResourceTextureDescriptions[i];
-
-                        writer.Write($"new global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
-
-                        if (i < info.ResourceTextureDescriptions.Length - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
+                        writer.WriteLine(",");
                     }
                 }
+
+                writer.DecreaseIndent();
+                writer.WriteLine();
+                writer.WriteLine("};");
             }
 
             callbacks.Add(Callback);

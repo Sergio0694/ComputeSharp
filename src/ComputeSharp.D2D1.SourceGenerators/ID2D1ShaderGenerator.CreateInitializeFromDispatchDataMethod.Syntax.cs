@@ -35,6 +35,7 @@ partial class ID2D1ShaderGenerator
                 }
 
                 // Get a reference to the data through the generated native layout type
+                writer.WriteLine();
                 writer.WriteLine("ref readonly ConstantBuffer buffer = ref global::System.Runtime.CompilerServices.Unsafe.As<byte, ConstantBuffer>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(data));");
 
                 // Generate loading statements for each captured field

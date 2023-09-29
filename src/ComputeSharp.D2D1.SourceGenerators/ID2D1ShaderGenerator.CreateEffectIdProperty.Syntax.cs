@@ -25,42 +25,39 @@ partial class ID2D1ShaderGenerator
 
                 using (writer.WriteBlock())
                 {
-                    writer.WriteLine($"global::System.ReadOnlySpan<byte> bytes = new byte[]");
+                    writer.WriteLine("global::System.ReadOnlySpan<byte> bytes = new byte[]");
+                    writer.WriteLine("{");
+                    writer.IncreaseIndent();
 
-                    using (writer.WriteBlock())
-                    {
-                        // Write the bytes like so:
-                        //
-                        // b[0], b[1], b[2], b[3],
-                        // b[4], b[5],
-                        // b[6], b[7],
-                        // b[8],
-                        // b[9],
-                        // b[10],
-                        // b[11],
-                        // b[12],
-                        // b[13],
-                        // b[14],
-                        // b[15],
-                        // b[16],
-                        // b[17]
-                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[..4], writer);
-                        writer.WriteLine(",");
-                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[4..6], writer);
-                        writer.WriteLine(",");
-                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[6..8], writer);
-                        writer.WriteLine(",");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[8])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[9])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[10])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[11])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[12])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[13])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[14])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[15])},");
-                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[16])},");
-                        writer.WriteLine(SyntaxFormattingHelper.GetByteExpression(info.EffectId[17]));
-                    }
+                    // Write the bytes like so:
+                    //
+                    // b[0], b[1], b[2], b[3],
+                    // b[4], b[5],
+                    // b[6], b[7],
+                    // b[8],
+                    // b[9],
+                    // b[10],
+                    // b[11],
+                    // b[12],
+                    // b[13],
+                    // b[14],
+                    // b[15]
+                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[..4], writer);
+                    writer.WriteLine(",");
+                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[4..6], writer);
+                    writer.WriteLine(",");
+                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[6..8], writer);
+                    writer.WriteLine(",");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[8])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[9])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[10])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[11])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[12])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[13])},");
+                    writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[14])},");
+                    writer.WriteLine(SyntaxFormattingHelper.GetByteExpression(info.EffectId[15]));
+                    writer.DecreaseIndent();
+                    writer.WriteLine("};");
 
                     writer.WriteLine();
                     writer.WriteLine("return ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));");
