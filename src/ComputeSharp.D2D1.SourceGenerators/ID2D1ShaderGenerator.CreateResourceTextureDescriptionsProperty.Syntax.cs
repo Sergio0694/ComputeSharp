@@ -21,9 +21,9 @@ partial class ID2D1ShaderGenerator
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
         /// </summary>
         /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
-        /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
+        /// <param name="additionalDataMembers">Any additional <see cref="MemberDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions, out TypeDeclarationSyntax[] additionalTypes)
+        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions, out MemberDeclarationSyntax[] additionalDataMembers)
         {
             ExpressionSyntax memoryExpression;
 
@@ -32,7 +32,7 @@ partial class ID2D1ShaderGenerator
             if (resourceTextureDescriptions.Length == 0)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
-                additionalTypes = Array.Empty<TypeDeclarationSyntax>();
+                additionalDataMembers = Array.Empty<MemberDeclarationSyntax>();
             }
             else
             {
@@ -41,7 +41,7 @@ partial class ID2D1ShaderGenerator
                     IdentifierName("Data"),
                     IdentifierName(nameof(ResourceTextureDescriptions)));
 
-                additionalTypes = new[] { GetArrayDeclaration(resourceTextureDescriptions) };
+                additionalDataMembers = new[] { GetArrayDeclaration(resourceTextureDescriptions) };
             }
 
             // This code produces a method declaration as follows:
@@ -63,7 +63,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
         /// <returns>The array declaration for the given resource texture descriptions.</returns>
-        private static TypeDeclarationSyntax GetArrayDeclaration(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions)
+        private static MemberDeclarationSyntax GetArrayDeclaration(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
             using ImmutableArrayBuilder<ExpressionSyntax> resourceTextureDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
 
@@ -87,7 +87,7 @@ partial class ID2D1ShaderGenerator
             //
             // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>
             // public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions = { <RESOURCE_TEXTURE_DESCRIPTIONS> };
-            FieldDeclarationSyntax fieldDeclaration =
+            return
                 FieldDeclaration(
                     VariableDeclaration(
                         ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"))
@@ -102,34 +102,6 @@ partial class ID2D1ShaderGenerator
                     Token(SyntaxKind.StaticKeyword),
                     Token(SyntaxKind.ReadOnlyKeyword))
                 .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>"""));
-
-            // Create the container type declaration:
-            //
-            // /// <summary>
-            // /// A container type for input descriptions.
-            // /// </summary>
-            // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
-            // [global::System.Diagnostics.DebuggerNonUserCode]
-            // [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-            // file static class Data
-            // {
-            //     <FIELD_DECLARATION>
-            // }
-            return
-                ClassDeclaration("Data")
-                .AddModifiers(Token(SyntaxKind.FileKeyword), Token(SyntaxKind.StaticKeyword))
-                .AddAttributeLists(
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).FullName))),
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
-                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
-                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))))
-                .AddMembers(fieldDeclaration)
-                .WithLeadingTrivia(
-                    Comment("/// <summary>"),
-                    Comment("/// A container type for resource texture descriptions."),
-                    Comment("/// </summary>"));
         }
     }
 }

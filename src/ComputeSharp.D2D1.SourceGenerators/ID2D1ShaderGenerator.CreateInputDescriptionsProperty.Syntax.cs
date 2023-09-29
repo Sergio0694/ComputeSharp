@@ -21,9 +21,9 @@ partial class ID2D1ShaderGenerator
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
         /// </summary>
         /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
-        /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
+        /// <param name="additionalDataMembers">Any additional <see cref="MemberDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<InputDescription> inputDescriptions, out TypeDeclarationSyntax[] additionalTypes)
+        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<InputDescription> inputDescriptions, out MemberDeclarationSyntax[] additionalDataMembers)
         {
             ExpressionSyntax memoryExpression;
 
@@ -32,7 +32,7 @@ partial class ID2D1ShaderGenerator
             if (inputDescriptions.Length == 0)
             {
                 memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
-                additionalTypes = Array.Empty<TypeDeclarationSyntax>();
+                additionalDataMembers = Array.Empty<MemberDeclarationSyntax>();
             }
             else
             {
@@ -41,7 +41,7 @@ partial class ID2D1ShaderGenerator
                     IdentifierName("Data"),
                     IdentifierName(nameof(InputDescriptions)));
 
-                additionalTypes = new[] { GetArrayDeclaration(inputDescriptions) };
+                additionalDataMembers = new[] { GetArrayDeclaration(inputDescriptions) };
             }
 
             // This code produces a method declaration as follows:
@@ -63,7 +63,7 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
         /// <returns>The array declaration for the given input descriptions.</returns>
-        private static TypeDeclarationSyntax GetArrayDeclaration(EquatableArray<InputDescription> inputDescriptions)
+        private static MemberDeclarationSyntax GetArrayDeclaration(EquatableArray<InputDescription> inputDescriptions)
         {
             using ImmutableArrayBuilder<ExpressionSyntax> inputDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
 
@@ -109,7 +109,7 @@ partial class ID2D1ShaderGenerator
             //
             // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>
             // public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = { <INPUT_DESCRIPTIONS> };
-            FieldDeclarationSyntax fieldDeclaration =
+            return
                 FieldDeclaration(
                     VariableDeclaration(
                         ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription"))
@@ -124,11 +124,24 @@ partial class ID2D1ShaderGenerator
                     Token(SyntaxKind.StaticKeyword),
                     Token(SyntaxKind.ReadOnlyKeyword))
                 .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>"""));
+        }
+
+        /// <summary>
+        /// Gets any type declarations for additional members.
+        /// </summary>
+        /// <param name="memberDeclarations">The additional members that are needed.</param>
+        /// <returns>Any type declarations for additional members.</returns>
+        public static TypeDeclarationSyntax[] GetDataTypeDeclarations(MemberDeclarationSyntax[] memberDeclarations)
+        {
+            if (memberDeclarations.Length == 0)
+            {
+                return Array.Empty<TypeDeclarationSyntax>();
+            }
 
             // Create the container type declaration:
             //
             // /// <summary>
-            // /// A container type for input descriptions.
+            // /// A container type for additional data needed by the shader.
             // /// </summary>
             // [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
             // [global::System.Diagnostics.DebuggerNonUserCode]
@@ -137,7 +150,7 @@ partial class ID2D1ShaderGenerator
             // {
             //     <FIELD_DECLARATION>
             // }
-            return
+            TypeDeclarationSyntax dataTypeDeclaration =
                 ClassDeclaration("Data")
                 .AddModifiers(Token(SyntaxKind.FileKeyword), Token(SyntaxKind.StaticKeyword))
                 .AddAttributeLists(
@@ -147,11 +160,13 @@ partial class ID2D1ShaderGenerator
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ID2D1ShaderGenerator).Assembly.GetName().Version.ToString())))))),
                     AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
                     AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))))
-                .AddMembers(fieldDeclaration)
+                .AddMembers(memberDeclarations)
                 .WithLeadingTrivia(
                     Comment("/// <summary>"),
                     Comment("/// A container type for input descriptions."),
                     Comment("/// </summary>"));
+
+            return new[] { dataTypeDeclaration };
         }
     }
 }

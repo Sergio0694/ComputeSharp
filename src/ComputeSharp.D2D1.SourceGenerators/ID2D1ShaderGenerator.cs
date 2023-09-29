@@ -204,8 +204,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             PropertyDeclarationSyntax effectAuthorProperty = EffectMetadata.GetEffectAuthorSyntax(item.EffectAuthor);
             PropertyDeclarationSyntax inputCountProperty = InputCount.GetSyntax(item.InputTypes.Length);
             PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes, out TypeDeclarationSyntax[] inputTypesAdditionalTypes);
-            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.InputDescriptions, out TypeDeclarationSyntax[] inputDescriptionsAdditionalTypes);
-            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out TypeDeclarationSyntax[] resourceTexturesAditionalTypes);
+            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.InputDescriptions, out MemberDeclarationSyntax[] inputDescriptionsAdditionalDataMembers);
+            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out MemberDeclarationSyntax[] resourceTexturesAditionalDataMembers);
             PropertyDeclarationSyntax hlslStringProperty = HlslSource.GetSyntax(item.HlslInfoKey.HlslSource, item.Hierarchy.Hierarchy.Length);
             PropertyDeclarationSyntax hlslBytecodeProperty = LoadBytecode.GetHlslBytecodeSyntax(item.HlslInfo, out Func<SyntaxNode, SourceText> fixup, out TypeDeclarationSyntax[] hlslBytecodeAdditionalTypes);
             PropertyDeclarationSyntax shaderProfileProperty = LoadBytecode.GetShaderProfileSyntax(item.HlslInfoKey.EffectiveShaderProfile);
@@ -228,7 +228,9 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 },
                 additionalMemberDeclarations: new TypeDeclarationSyntax[][]
                 {
-                    inputTypesAdditionalTypes, inputDescriptionsAdditionalTypes, resourceTexturesAditionalTypes, hlslBytecodeAdditionalTypes, loadDispatchDataAditionalTypes
+                    loadDispatchDataAditionalTypes,
+                    InputDescriptions.GetDataTypeDeclarations(new[] { inputDescriptionsAdditionalDataMembers, resourceTexturesAditionalDataMembers }.SelectMany(static members => members).ToArray()),
+                    inputTypesAdditionalTypes, hlslBytecodeAdditionalTypes
                 }
                 .SelectMany(static types => types)
                 .Cast<MemberDeclarationSyntax>()
