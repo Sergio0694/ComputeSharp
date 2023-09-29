@@ -1,6 +1,5 @@
 using System;
 using ComputeSharp.D2D1.__Internals;
-using ComputeSharp.D2D1.SourceGenerators.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -18,20 +17,20 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>BufferPrecision</c> property.
         /// </summary>
-        /// <param name="info">The input info for the shader output buffer.</param>
+        /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>BufferPrecision</c> property.</returns>
-        public static PropertyDeclarationSyntax GetBufferPrecisionSyntax(OutputBufferInfo info)
+        public static PropertyDeclarationSyntax GetBufferPrecisionSyntax(D2D1BufferPrecision bufferPrecision)
         {
             ExpressionSyntax bufferPrecisionExpression;
 
             // Set the right expression if the buffer options are valid
-            if (Enum.IsDefined(typeof(D2D1BufferPrecision), info.BufferPrecision))
+            if (Enum.IsDefined(typeof(D2D1BufferPrecision), bufferPrecision))
             {
                 bufferPrecisionExpression =
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName("ComputeSharp.D2D1.D2D1BufferPrecision"),
-                        IdentifierName(info.BufferPrecision.ToString()));
+                        IdentifierName(bufferPrecision.ToString()));
             }
             else
             {
@@ -53,20 +52,20 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ChannelDepth</c> property.
         /// </summary>
-        /// <param name="info">The input info for the shader output buffer.</param>
+        /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
         /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ChannelDepth</c> property.</returns>
-        public static PropertyDeclarationSyntax GetChannelDepthSyntax(OutputBufferInfo info)
+        public static PropertyDeclarationSyntax GetChannelDepthSyntax(D2D1ChannelDepth channelDepth)
         {
             ExpressionSyntax channelDepthExpression;
 
             // Set the right expression if the buffer options are valid
-            if (Enum.IsDefined(typeof(D2D1ChannelDepth), info.ChannelDepth))
+            if (Enum.IsDefined(typeof(D2D1ChannelDepth), channelDepth))
             {
                 channelDepthExpression =
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName("ComputeSharp.D2D1.D2D1ChannelDepth"),
-                        IdentifierName(info.ChannelDepth.ToString()));
+                        IdentifierName(channelDepth.ToString()));
             }
             else
             {

@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Shaders.Translation;
@@ -27,11 +26,11 @@ partial class ID2D1ShaderGenerator
     internal static partial class LoadBytecode
     {
         /// <summary>
-        /// Extracts the shader profile for the current shader.
+        /// Extracts the requested shader profile for the current shader.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <returns>The shader profile to use to compile the shader, if present.</returns>
-        public static D2D1ShaderProfile? GetShaderProfile(INamedTypeSymbol structDeclarationSymbol)
+        /// <returns>The requested shader profile to use to compile the shader, if present.</returns>
+        public static D2D1ShaderProfile? GetRequestedShaderProfile(INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DShaderProfileAttribute", out AttributeData? attributeData))
             {
@@ -47,12 +46,12 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Extracts the compile options for the current shader.
+        /// Extracts the requested compile options for the current shader.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <returns>The compile options to use to compile the shader, if present.</returns>
-        public static D2D1CompileOptions? GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        /// <returns>The requested compile options to use to compile the shader, if present.</returns>
+        public static D2D1CompileOptions? GetRequestedCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
         {
             if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.D2D1.D2DCompileOptionsAttribute", out AttributeData? attributeData))
             {
@@ -77,6 +76,30 @@ partial class ID2D1ShaderGenerator
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets the effective shader profile to use.
+        /// </summary>
+        /// <param name="shaderProfile">The requested shader profile.</param>
+        /// <returns>The effective shader profile.</returns>
+        public static D2D1ShaderProfile GetEffectiveShaderProfile(D2D1ShaderProfile? shaderProfile)
+        {
+            // The effective shader profile is either be the requested one, or the default value (which maps to PS5.0)
+            return shaderProfile ?? D2D1ShaderProfile.PixelShader50;
+        }
+
+        /// <summary>
+        /// Gets the effective compile options to use.
+        /// </summary>
+        /// <param name="compileOptions">The requested compile options.</param>
+        /// <param name="isLinkingSupported">Whether the input shader supports linking.</param>
+        /// <returns>The effective compile options.</returns>
+        public static D2D1CompileOptions GetEffectiveCompileOptions(D2D1CompileOptions? compileOptions, bool isLinkingSupported)
+        {
+            // If an explicit set of compile options is provided, use that directly. Otherwise, use the default
+            // options plus the option to enable linking only if the shader can potentially support it.
+            return compileOptions ?? (D2D1CompileOptions.Default | (isLinkingSupported ? D2D1CompileOptions.EnableLinking : 0));
         }
 
         /// <summary>
@@ -113,49 +136,31 @@ partial class ID2D1ShaderGenerator
         }
 
         /// <summary>
-        /// Gets an <see cref="ImmutableArray{T}"/> instance with the compiled bytecode for the current shader.
+        /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
         /// </summary>
-        /// <param name="sourceInfo">The source info for the shader to compile.</param>
+        /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <param name="shaderProfile">The effective shader profile used to create the shader bytecode, or the default profile to use.</param>
-        /// <param name="compileOptions">The effective compile options used to create the shader bytecode, or the default options to use.</param>
-        /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
-        /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        public static unsafe ImmutableArray<byte> GetBytecode(
-            HlslShaderSourceInfo sourceInfo,
-            CancellationToken token,
-            out D2D1ShaderProfile shaderProfile,
-            out D2D1CompileOptions compileOptions,
-            out DeferredDiagnosticInfo? diagnostic)
+        /// <returns></returns>
+        public static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
         {
-            // Set the shader profile to either be the requested one, or the default value (which maps to PS5.0)
-            shaderProfile = sourceInfo.ShaderProfile ?? D2D1ShaderProfile.PixelShader50;
-
-            // If an explicit set of compile options is provided, use that directly. Otherwise, use the default
-            // options plus the option to enable linking only if the shader can potentially support it.
-            compileOptions = sourceInfo.CompileOptions ?? (D2D1CompileOptions.Default | (sourceInfo.IsLinkingSupported ? D2D1CompileOptions.EnableLinking : 0));
-
-            ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
-
             // No embedded shader was requested, or there were some errors earlier in the pipeline.
             // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
             // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
-            if (sourceInfo is { HasErrors: true } or { ShaderProfile: null })
+            // We also skip compilation if no shader profile has been requested (we never just assume one).
+            if (key.HasErrors || key.RequestedShaderProfile is null)
             {
-                diagnostic = null;
-
-                goto End;
+                return HlslBytecodeInfo.Missing.Instance;
             }
 
             try
             {
                 token.ThrowIfCancellationRequested();
 
-                // Compile the shader bytecode using the requested parameters
+                // Compile the shader bytecode using the effective parameters
                 using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
-                    sourceInfo.HlslSource.AsSpan(),
-                    sourceInfo.ShaderProfile.Value,
-                    compileOptions);
+                    key.HlslSource.AsSpan(),
+                    key.EffectiveShaderProfile,
+                    key.EffectiveCompileOptions);
 
                 token.ThrowIfCancellationRequested();
 
@@ -164,35 +169,52 @@ partial class ID2D1ShaderGenerator
 
                 byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
 
-                bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-                diagnostic = null;
+                ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+
+                return new HlslBytecodeInfo.Success(bytecode);
             }
             catch (Win32Exception e)
             {
-                compileOptions = default;
-                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, FixupExceptionMessage(e.Message));
+                return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
-                compileOptions = default;
-                diagnostic = DeferredDiagnosticInfo.Create(EmbeddedBytecodeFailedWithFxcCompilationException, FixupExceptionMessage(e.Message));
+                return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
-
-            End:
-            return bytecode;
         }
 
         /// <summary>
-        /// Fixes up an exception message to improve the way it's displayed in VS.
+        /// Gets any diagnostics from a processed <see cref="HlslBytecodeInfo"/> instance.
         /// </summary>
-        /// <param name="message">The input exception message.</param>
-        /// <returns>The updated exception message.</returns>
-        internal static string FixupExceptionMessage(string message)
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        public static void GetInfoDiagnostics(
+            INamedTypeSymbol structDeclarationSymbol,
+            HlslBytecodeInfo info,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
         {
-            // Add square brackets around error headers
-            message = Regex.Replace(message, @"((?:error|warning) \w+):", static m => $"[{m.Groups[1].Value}]:");
+            DiagnosticInfo? diagnostic = null;
 
-            return message.NormalizeToSingleLine();
+            if (info is HlslBytecodeInfo.Win32Error win32Error)
+            {
+                diagnostic = DiagnosticInfo.Create(
+                    EmbeddedBytecodeFailedWithWin32Exception,
+                    structDeclarationSymbol,
+                    new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
+            }
+            else if (info is HlslBytecodeInfo.FxcError fxcError)
+            {
+                diagnostic = DiagnosticInfo.Create(
+                    EmbeddedBytecodeFailedWithFxcCompilationException,
+                    structDeclarationSymbol,
+                    new object[] { structDeclarationSymbol, fxcError.Message });
+            }
+
+            if (diagnostic is not null)
+            {
+                diagnostics.Add(diagnostic);
+            }
         }
     }
 }

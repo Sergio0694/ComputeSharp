@@ -174,14 +174,14 @@ partial class D2DPixelShaderSourceGenerator
                     D2DPixelShaderSourceCompilationFailedWithWin32Exception,
                     sourceInfo.MethodName,
                     e.HResult,
-                    ID2D1ShaderGenerator.LoadBytecode.FixupExceptionMessage(e.Message));
+                    D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
             catch (FxcCompilationException e)
             {
                 diagnostic = DeferredDiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
                     sourceInfo.MethodName,
-                    ID2D1ShaderGenerator.LoadBytecode.FixupExceptionMessage(e.Message));
+                    D3DCompiler.PrettifyFxcErrorMessage(e.Message));
             }
 
             End:

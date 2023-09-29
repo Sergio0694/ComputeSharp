@@ -19,9 +19,9 @@ partial class ID2D1ShaderGenerator
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>InitializeFromDispatchData</c> method.
         /// </summary>
-        /// <param name="dispatchInfo">The dispatch info gathered for the current shader.</param>
+        /// <param name="fields">The discovered fields of the current shader.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>InitializeFromDispatchData</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(DispatchDataInfo dispatchInfo)
+        public static MethodDeclarationSyntax GetSyntax(EquatableArray<FieldInfo> fields)
         {
             // This code produces a method declaration as follows:
             //
@@ -35,7 +35,7 @@ partial class ID2D1ShaderGenerator
                 .AddParameterListParameters(Parameter(Identifier("data")).WithType(
                     GenericName(Identifier("global::System.ReadOnlySpan"))
                     .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword)))))
-                .WithBody(Block(GetDispatchDataUnloadingStatements(dispatchInfo.FieldInfos)));
+                .WithBody(Block(GetDispatchDataUnloadingStatements(fields)));
         }
 
         /// <summary>

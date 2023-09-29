@@ -24,19 +24,24 @@ partial class ID2D1ShaderGenerator
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
         /// </summary>
         /// <param name="hierarchyInfo">The hiararchy info of the shader type.</param>
-        /// <param name="dispatchInfo">The dispatch info gathered for the current shader.</param>
+        /// <param name="fields">The description on shader instance fields.</param>
+        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="additionalTypes">Any additional <see cref="TypeDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HierarchyInfo hierarchyInfo, DispatchDataInfo dispatchInfo, out TypeDeclarationSyntax[] additionalTypes)
+        public static MethodDeclarationSyntax GetSyntax(
+            HierarchyInfo hierarchyInfo,
+            EquatableArray<FieldInfo> fields,
+            int constantBufferSizeInBytes,
+            out TypeDeclarationSyntax[] additionalTypes)
         {
             // Declare the mapping constant buffer type, if needed (ie. if the shader has at least one field)
-            if (dispatchInfo.FieldInfos.Length == 0)
+            if (fields.Length == 0)
             {
                 additionalTypes = Array.Empty<TypeDeclarationSyntax>();
             }
             else
             {
-                additionalTypes = new[] { GetConstantBufferDeclaration(hierarchyInfo, dispatchInfo.FieldInfos, dispatchInfo.ConstantBufferSizeInBytes) };
+                additionalTypes = new[] { GetConstantBufferDeclaration(hierarchyInfo, fields, constantBufferSizeInBytes) };
             }
 
             // This code produces a method declaration as follows:
@@ -51,7 +56,7 @@ partial class ID2D1ShaderGenerator
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword), Token(SyntaxKind.UnsafeKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(Parameter(Identifier("loader")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("TLoader")))
-                .WithBody(Block(GetDispatchDataLoadingStatements(dispatchInfo.FieldInfos, dispatchInfo.ConstantBufferSizeInBytes)));
+                .WithBody(Block(GetDispatchDataLoadingStatements(fields, constantBufferSizeInBytes)));
         }
 
         /// <summary>
