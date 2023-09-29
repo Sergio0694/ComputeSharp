@@ -249,6 +249,14 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
+    /// A delegate representing a callback to write data into an <see cref="IndentedTextWriter"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of data to use.</typeparam>
+    /// <param name="value">The input data to use to write into <paramref name="writer"/>.</param>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    public delegate void Callback<T>(T value, IndentedTextWriter writer);
+
+    /// <summary>
     /// Represents an indented block that needs to be closed.
     /// </summary>
     public struct Block : IDisposable

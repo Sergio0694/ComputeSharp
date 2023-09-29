@@ -1,13 +1,10 @@
 using System;
-using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -18,112 +15,63 @@ partial class ID2D1ShaderGenerator
     private static partial class InputDescriptions
     {
         /// <summary>
-        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.
+        /// Writes the <c>InputDescriptions</c> property.
         /// </summary>
-        /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
-        /// <param name="additionalDataMembers">Any additional <see cref="MemberDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
-        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>InputDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<InputDescription> inputDescriptions, out MemberDeclarationSyntax[] additionalDataMembers)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            ExpressionSyntax memoryExpression;
+            writer.WriteLine("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputDescriptions => ");
 
             // If there are no input descriptions, just return a default expression.
-            // Otherwise, declare the shared array and return it from the property.
-            if (inputDescriptions.Length == 0)
+            // Otherwise, return the shared array with cached input descriptions.
+            if (info.InputDescriptions.IsEmpty)
             {
-                memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
-                additionalDataMembers = Array.Empty<MemberDeclarationSyntax>();
+                writer.WriteLine("default;");
             }
             else
             {
-                memoryExpression = MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("Data"),
-                    IdentifierName(nameof(InputDescriptions)));
-
-                additionalDataMembers = new[] { GetArrayDeclaration(inputDescriptions) };
+                writer.WriteLine("Data.InputDescriptions;");
             }
-
-            // This code produces a method declaration as follows:
-            //
-            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputDescriptions => <EXPRESSION>;
-            return
-                PropertyDeclaration(
-                    GenericName(Identifier("global::System.ReadOnlyMemory"))
-                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription")),
-                    Identifier(nameof(InputDescriptions)))
-                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
-                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(memoryExpression))
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
-        /// Gets the array declaration for the given input descriptions.
+        /// Registers a callback to generate an additional data member, if needed.
         /// </summary>
-        /// <param name="inputDescriptions">The input descriptions info gathered for the current shader.</param>
-        /// <returns>The array declaration for the given input descriptions.</returns>
-        private static MemberDeclarationSyntax GetArrayDeclaration(EquatableArray<InputDescription> inputDescriptions)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="callbacks">The registered callbacks to generate additional data members.</param>
+        public static void RegisterAdditionalDataMemberSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
         {
-            using ImmutableArrayBuilder<ExpressionSyntax> inputDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
-
-            foreach (InputDescription inputDescription in inputDescriptions)
+            // If there are no input descriptions, there is nothing to di
+            if (info.ResourceTextureDescriptions.IsEmpty)
             {
-                // Create the description expression (excluding level of detail):
-                //
-                // new(<INDEX>, <FILTER>)
-                ImplicitObjectCreationExpressionSyntax inputDescriptionExpression =
-                    ImplicitObjectCreationExpression()
-                    .AddArgumentListArguments(
-                        Argument(LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            Literal(inputDescription.Index))),
-                        Argument(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("global::ComputeSharp.D2D1.D2D1Filter"),
-                                IdentifierName(inputDescription.Filter.ToString()))));
-
-                // Add the level of detail, if needed:
-                //
-                // { LevelOfDetailCount = <LEVEL_OF_DETAIL_COUNT> }
-                if (inputDescription.LevelOfDetailCount != 0)
-                {
-                    inputDescriptionExpression =
-                        inputDescriptionExpression
-                        .WithInitializer(
-                            InitializerExpression(SyntaxKind.ObjectInitializerExpression)
-                            .AddExpressions(
-                                AssignmentExpression(
-                                    SyntaxKind.SimpleAssignmentExpression,
-                                    IdentifierName("LevelOfDetailCount"),
-                                    LiteralExpression(
-                                        SyntaxKind.NumericLiteralExpression,
-                                        Literal(inputDescription.LevelOfDetailCount)))));
-                }
-
-                inputDescriptionExpressions.Add(inputDescriptionExpression);
+                return;
             }
 
-            // Declare the singleton property to get the memory instance:
-            //
-            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>
-            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = { <INPUT_DESCRIPTIONS> };
-            return
-                FieldDeclaration(
-                    VariableDeclaration(
-                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1InputDescription"))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier(nameof(InputDescriptions)))
-                        .WithInitializer(EqualsValueClause(
-                            InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                            .AddExpressions(inputDescriptionExpressions.ToArray())))))
-                .AddModifiers(
-                    Token(SyntaxKind.PublicKeyword),
-                    Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.ReadOnlyKeyword))
-                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>"""));
+            // Declare the shared array with input descriptions
+            static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            {
+                writer.WriteLine("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1InputDescription"/> array instance.</summary>""");
+                writer.WriteLine("""public static readonly global::ComputeSharp.D2D1.Interop.D2D1InputDescription[] InputDescriptions = """);
+
+                // Initialize all input descriptions
+                using (writer.WriteBlock())
+                {
+                    for (int i = 0; i < info.InputDescriptions.Length; i++)
+                    {
+                        InputDescription description = info.InputDescriptions[i];
+
+                        writer.Write($$"""new global::ComputeSharp.D2D1.Interop.D2D1InputDescription({description.Index}, {description.Filter}) { LevelOfDetailCount = {{description.LevelOfDetailCount}} }""");
+
+                        if (i < info.InputDescriptions.Length - 1)
+                        {
+                            writer.WriteLine(",");
+                        }
+                    }
+                }
+            }
+
+            callbacks.Add(Callback);
         }
 
         /// <summary>

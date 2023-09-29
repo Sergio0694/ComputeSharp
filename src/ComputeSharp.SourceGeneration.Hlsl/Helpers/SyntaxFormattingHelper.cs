@@ -31,6 +31,16 @@ internal static class SyntaxFormattingHelper
     };
 
     /// <summary>
+    /// Gets an expression representing a single byte.
+    /// </summary>
+    /// <param name="value">The byte to format.</param>
+    /// <returns>The expression for <paramref name="value"/>.</returns>
+    public static string GetByteExpression(byte value)
+    {
+        return FormattedBytes[value];
+    }
+
+    /// <summary>
     /// Writes a formatted expression to initialize a <see cref="ReadOnlySpan{T}"/> with a given content.
     /// </summary>
     /// <param name="bytecode">The input byte content to serialize.</param>
@@ -58,7 +68,7 @@ internal static class SyntaxFormattingHelper
         ReadOnlySpan<string> expressions = FormattedBytes.AsSpan();
 
         // First write the first item (which has no leading separator)
-        expressions[0].AsSpan().CopyTo(span);
+        expressions[bytecode[0]].AsSpan().CopyTo(span);
 
         // Special case: stop early if there's only one element
         if (bytecode.Length == 1)

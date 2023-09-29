@@ -1,10 +1,5 @@
-using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Helpers;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -15,85 +10,62 @@ partial class ID2D1ShaderGenerator
     partial class EffectId
     {
         /// <summary>
-        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectId</c> property.
+        /// Writes the <c>EffectId</c> property.
         /// </summary>
-        /// <param name="info">The input <see cref="EquatableArray{T}"/> instance with the effect GUID.</param>
-        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>EffectId</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<byte> info)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            // Prepare the initialization text
-            string effectIdLiterals = SyntaxFormattingHelper.BuildByteArrayInitializationExpressionString(info.AsSpan());
+            writer.WriteLine("readonly ref readonly global::System.Guid global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectId");
 
-            ExpressionSyntax effectIdExpression = ParseExpression($$"""new byte[] { {{effectIdLiterals}} }""");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine("[global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]");
+                writer.WriteLine("get");
 
-            // Create the local declaration:
-            //
-            // global::System.ReadOnlySpan<byte> bytes = new byte[] { <EMBEDDED_EFFECT_ID_BYTES> };
-            LocalDeclarationStatementSyntax guidBytesDeclaration =
-                LocalDeclarationStatement(
-                    VariableDeclaration(
-                        GenericName(Identifier("global::System.ReadOnlySpan"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier("bytes"))
-                        .WithInitializer(
-                            EqualsValueClause(effectIdExpression))));
+                using (writer.WriteBlock())
+                {
+                    writer.WriteLine($"global::System.ReadOnlySpan<byte> bytes = new byte[]");
 
-            // Prepare the return statement:
-            //
-            // return
-            //     ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(
-            //         ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
-            ReturnStatementSyntax returnStatement =
-                ReturnStatement(
-                    RefExpression(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("global::System.Runtime.CompilerServices.Unsafe"),
-                                GenericName(Identifier("As"))
-                                .AddTypeArgumentListArguments(
-                                    PredefinedType(Token(SyntaxKind.ByteKeyword)),
-                                    IdentifierName("global::System.Guid"))))
-                        .AddArgumentListArguments(
-                            Argument(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("global::System.Runtime.InteropServices.MemoryMarshal"),
-                                        IdentifierName("GetReference")))
-                                .AddArgumentListArguments(Argument(IdentifierName("bytes"))))
-                            .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)))));
+                    using (writer.WriteBlock())
+                    {
+                        // Write the bytes like so:
+                        //
+                        // b[0], b[1], b[2], b[3],
+                        // b[4], b[5],
+                        // b[6], b[7],
+                        // b[8],
+                        // b[9],
+                        // b[10],
+                        // b[11],
+                        // b[12],
+                        // b[13],
+                        // b[14],
+                        // b[15],
+                        // b[16],
+                        // b[17]
+                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[..4], writer);
+                        writer.WriteLine(",");
+                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[4..6], writer);
+                        writer.WriteLine(",");
+                        SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EffectId.AsSpan()[6..8], writer);
+                        writer.WriteLine(",");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[8])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[9])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[10])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[11])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[12])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[13])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[14])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[15])},");
+                        writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[16])},");
+                        writer.WriteLine(SyntaxFormattingHelper.GetByteExpression(info.EffectId[17]));
+                    }
 
-            // This code produces a property declaration as follows:
-            //
-            // readonly ref readonly global::System.Guid global::ComputeSharp.D2D1.__Internals.ID2D1Shader.EffectId
-            // {
-            //     [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-            //     get
-            //     {
-            //         <BYTES_DECLARATION>
-            //         <RETURN_STATEMENT>
-            //     }
-            // }
-            return
-                PropertyDeclaration(
-                    RefType(IdentifierName("global::System.Guid")).WithReadOnlyKeyword(Token(SyntaxKind.ReadOnlyKeyword)),
-                    Identifier(nameof(EffectId)))
-                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
-                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddAccessorListAccessors(
-                    AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                    .AddAttributeLists(
-                        AttributeList(SingletonSeparatedList(
-                            Attribute(IdentifierName("global::System.Runtime.CompilerServices.MethodImpl"))
-                            .AddArgumentListArguments(
-                                AttributeArgument(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("global::System.Runtime.CompilerServices.MethodImplOptions"),
-                                        IdentifierName("AggressiveInlining")))))))
-                    .AddBodyStatements(guidBytesDeclaration, returnStatement));
+                    writer.WriteLine();
+                    writer.WriteLine("return ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));");
+                }
+            }
         }
     }
 }
