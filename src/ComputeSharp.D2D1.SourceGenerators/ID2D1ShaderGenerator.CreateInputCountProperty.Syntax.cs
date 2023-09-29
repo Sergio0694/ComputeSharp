@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -18,6 +19,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputCount => {info.InputTypes.Length};");
         }
     }

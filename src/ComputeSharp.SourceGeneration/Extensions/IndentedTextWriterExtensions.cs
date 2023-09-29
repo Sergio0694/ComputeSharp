@@ -9,6 +9,23 @@ namespace ComputeSharp.SourceGeneration.Extensions;
 internal static class IndentedTextWriterExtensions
 {
     /// <summary>
+    /// Writes the following attributes into a target writer:
+    /// <code>
+    /// [global::System.CodeDom.Compiler.GeneratedCode("...", "...")]
+    /// [global::System.Diagnostics.DebuggerNonUserCode]
+    /// [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    /// </code>
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="generatorType">The type of the running generator.</param>
+    public static void WriteGeneratedAttributes(this IndentedTextWriter writer, Type generatorType)
+    {
+        writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{generatorType.FullName}}", "{{generatorType.Assembly.GetName().Version}}")]""");
+        writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
+        writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+    }
+
+    /// <summary>
     /// Writes a series of members separated by one line between each of them.
     /// </summary>
     /// <typeparam name="T">The type of input items to process.</typeparam>

@@ -1,5 +1,6 @@
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 
@@ -18,6 +19,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteShaderProfileSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.EffectiveShaderProfile};");
         }
 
@@ -36,6 +39,8 @@ partial class ID2D1ShaderGenerator
                 .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
                 .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right);
 
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.CompileOptions => {compileOptionsExpression};");
         }
 
@@ -46,6 +51,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteHlslBytecodeSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.Write("readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.HlslBytecode => ");
 
             // If there is no bytecode, just return a default expression.
@@ -79,9 +86,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the HLSL bytecode.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{typeof(ID2D1ShaderGenerator).FullName}}", "{{typeof(ID2D1ShaderGenerator).Assembly.GetName().Version}}")]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
                 writer.WriteLine($$"""file sealed class HlslBytecodeMemoryManager : global::System.Buffers.MemoryManager<byte>""");
 
                 using (writer.WriteBlock())

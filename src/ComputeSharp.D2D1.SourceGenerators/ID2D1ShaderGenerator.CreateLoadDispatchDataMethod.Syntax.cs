@@ -18,6 +18,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine("readonly unsafe void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadDispatchData<TLoader>(ref TLoader loader)");
 
             using (writer.WriteBlock())
@@ -85,9 +87,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A type representing the constant buffer native layout for <see cref="{{fullyQualifiedTypeName}}"/>.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{typeof(ID2D1ShaderGenerator).FullName}}", "{{typeof(ID2D1ShaderGenerator).Assembly.GetName().Version}}")]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
                 writer.WriteLine($$"""[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit, Size = {{info.ConstantBufferSizeInBytes}})]""");
                 writer.WriteLine($$"""file struct ConstantBuffer""");
 

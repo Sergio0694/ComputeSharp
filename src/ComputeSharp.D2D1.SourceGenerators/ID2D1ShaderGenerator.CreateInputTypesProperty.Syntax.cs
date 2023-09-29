@@ -17,6 +17,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => ");
 
             // If there are no inputs, simply return a default expression. Otherwise, create
@@ -50,9 +52,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the input types.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{typeof(ID2D1ShaderGenerator).FullName}}", "{{typeof(ID2D1ShaderGenerator).Assembly.GetName().Version}}")]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
                 writer.WriteLine($$"""file sealed class InputTypesMemoryManager : global::System.Buffers.MemoryManager<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType>""");
 
                 using (writer.WriteBlock())

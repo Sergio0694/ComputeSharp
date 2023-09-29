@@ -19,6 +19,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputDescriptions => ");
 
             // If there are no input descriptions, just return a default expression.
@@ -53,9 +55,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A container type for additional data needed by the shader.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{typeof(ID2D1ShaderGenerator).FullName}}", "{{typeof(ID2D1ShaderGenerator).Assembly.GetName().Version}}")]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
-                writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
                 writer.WriteLine($$"""file static class Data""");
 
                 using (writer.WriteBlock())

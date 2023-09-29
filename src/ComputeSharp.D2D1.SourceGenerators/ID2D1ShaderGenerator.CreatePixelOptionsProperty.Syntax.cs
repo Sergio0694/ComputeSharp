@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -23,6 +24,8 @@ partial class ID2D1ShaderGenerator
                 false => "default"
             };
 
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1PixelOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.PixelOptions => {pixelOptionsExpression};");
         }
     }

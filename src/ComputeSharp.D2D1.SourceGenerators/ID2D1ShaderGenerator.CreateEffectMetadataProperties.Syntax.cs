@@ -1,4 +1,5 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -57,6 +58,8 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         private static void WriteEffectMetadataSyntax(string propertyName, string? metadataValue, IndentedTextWriter writer)
         {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.Write($"readonly string? global::ComputeSharp.D2D1.__Internals.ID2D1Shader.{propertyName} => ");
 
             // Append null or the metadata value as a string literal
