@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -236,7 +235,9 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                 .Cast<MemberDeclarationSyntax>()
                 .ToArray());
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            SourceText sourceText = fixup(compilationUnit);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", sourceText);
         });
     }
 }
