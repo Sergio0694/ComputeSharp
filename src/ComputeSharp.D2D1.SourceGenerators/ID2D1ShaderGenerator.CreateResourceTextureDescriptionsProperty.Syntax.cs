@@ -31,8 +31,23 @@ partial class ID2D1ShaderGenerator
             }
             else
             {
-                writer.WriteLine("Data.ResourceTextureDescriptions;");
+                writer.WriteLine("global::ComputeSharp.D2D1.Generated.Data.ResourceTextureDescriptions;");
             }
+        }
+
+        /// <summary>
+        /// Adds any using directives for the additional data member, if needed.
+        /// </summary>
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="usingDirectives">The using directives needed by the generated code.</param>
+        public static void AddAdditionalDataMemberUsingDirectives(D2D1ShaderInfo info, ImmutableHashSetBuilder<string> usingDirectives)
+        {
+            if (info.ResourceTextureDescriptions.IsEmpty)
+            {
+                return;
+            }
+
+            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
         }
 
         /// <summary>
@@ -51,15 +66,15 @@ partial class ID2D1ShaderGenerator
             // Declare the shared array with resource texture descriptions
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
             {
-                writer.WriteLine("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>""");
-                writer.WriteLine("""public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions =""");
+                writer.WriteLine("""/// <summary>The singleton <see cref="D2D1ResourceTextureDescription"/> array instance.</summary>""");
+                writer.WriteLine("""public static readonly D2D1ResourceTextureDescription[] ResourceTextureDescriptions =""");
                 writer.WriteLine("""{""");
                 writer.IncreaseIndent();
 
                 // Initialize all resource texture descriptions
                 writer.WriteInitializationExpressions(info.ResourceTextureDescriptions.AsSpan(), static (description, writer) =>
                 {
-                    writer.Write($"new global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
+                    writer.Write($"new D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
                 });
 
                 writer.DecreaseIndent();

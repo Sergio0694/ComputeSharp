@@ -29,7 +29,7 @@ partial class ID2D1ShaderGenerator
             }
             else
             {
-                writer.WriteLine("InputTypesMemoryManager.Instance.Memory;");
+                writer.WriteLine("global::ComputeSharp.D2D1.Generated.InputTypesMemoryManager.Instance.Memory;");
             }
         }
 
@@ -38,7 +38,11 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional types.</param>
-        public static void RegisterAdditionalTypeSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
+        /// <param name="usingDirectives">The using directives needed by the generated code.</param>
+        public static void RegisterAdditionalTypeSyntax(
+            D2D1ShaderInfo info,
+            ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks,
+            ImmutableHashSetBuilder<string> usingDirectives)
         {
             // If there are no inputs, no memory manager is needed
             if (info.InputTypes.IsEmpty)
@@ -46,14 +50,23 @@ partial class ID2D1ShaderGenerator
                 return;
             }
 
+            usingDirectives.Add("global::System");
+            usingDirectives.Add("global::System.Buffers");
+            usingDirectives.Add("global::System.CodeDom.Compiler");
+            usingDirectives.Add("global::System.Diagnostics");
+            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            usingDirectives.Add("global::System.Runtime.CompilerServices");
+            usingDirectives.Add("global::System.Runtime.InteropServices");
+            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
+
             // Declare the InputTypesMemoryManager custom memory manager type
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
             {
                 writer.WriteLine($$"""/// <summary>""");
-                writer.WriteLine($$"""/// A <see cref="global::System.Buffers.MemoryManager{T}"/> implementation to get the input types.""");
+                writer.WriteLine($$"""/// A <see cref="MemoryManager{T}"/> implementation to get the input types.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-                writer.WriteLine($$"""file sealed class InputTypesMemoryManager : global::System.Buffers.MemoryManager<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType>""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteLine($$"""file sealed class InputTypesMemoryManager : MemoryManager<D2D1PixelShaderInputType>""");
 
                 using (writer.WriteBlock())
                 {
@@ -64,14 +77,14 @@ partial class ID2D1ShaderGenerator
                     // RVA field
                     writer.WriteLine();
                     writer.WriteLine("/// <summary>The RVA data with the input type info.</summary>");
-                    writer.WriteLine("private static global::System.ReadOnlySpan<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> Data => new[]");
+                    writer.WriteLine("private static global::System.ReadOnlySpan<D2D1PixelShaderInputType> Data => new[]");
                     writer.WriteLine("{");
                     writer.IncreaseIndent();
 
                     // Input types, one per line in the RVA field initializer
                     writer.WriteInitializationExpressions(info.InputTypes.AsSpan(), static (type, writer) =>
                     {
-                        writer.Write("global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType.");
+                        writer.Write("D2D1PixelShaderInputType.");
                         writer.Write(type == 0 ? "Simple" : "Complex");
                     });
 
@@ -83,22 +96,22 @@ partial class ID2D1ShaderGenerator
                     // Add the remaining members for the memory manager
                     writer.WriteLine("""
                         /// <inheritdoc/>
-                        public override unsafe global::System.Span<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> GetSpan()
+                        public override unsafe Span<D2D1PixelShaderInputType> GetSpan()
                         {
-                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(Data)), Data.Length);
+                            return new(Unsafe.AsPointer(ref MemoryMarshal.GetReference(Data)), Data.Length);
                         }
 
                         /// <inheritdoc/>
-                        public override global::System.Memory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> Memory
+                        public override Memory<D2D1PixelShaderInputType> Memory
                         {
-                            [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                            [MethodImpl(MethodImplOptions.AggressiveInlining)]
                             get => CreateMemory(Data.Length);
                         }
 
                         /// <inheritdoc/>
-                        public override unsafe global::System.Buffers.MemoryHandle Pin(int elementIndex)
+                        public override unsafe MemoryHandle Pin(int elementIndex)
                         {
-                            return new(global::System.Runtime.CompilerServices.Unsafe.AsPointer(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
+                            return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
                         }
 
                         /// <inheritdoc/>

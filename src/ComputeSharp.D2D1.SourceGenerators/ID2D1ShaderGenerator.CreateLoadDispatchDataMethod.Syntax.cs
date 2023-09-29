@@ -31,7 +31,7 @@ partial class ID2D1ShaderGenerator
                 }
                 else
                 {
-                    writer.WriteLine("ConstantBuffer buffer;");
+                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer;");
 
                     // Generate loading statements for each captured field
                     foreach (FieldInfo fieldInfo in info.Fields)
@@ -71,13 +71,22 @@ partial class ID2D1ShaderGenerator
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional types.</param>
-        public static void RegisterAdditionalTypeSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
+        /// <param name="usingDirectives">The using directives needed by the generated code.</param>
+        public static void RegisterAdditionalTypeSyntax(
+            D2D1ShaderInfo info,
+            ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks,
+            ImmutableHashSetBuilder<string> usingDirectives)
         {
             // If there are no fields, there is no need for a constant buffer type
             if (info.Fields.IsEmpty)
             {
                 return;
             }
+
+            usingDirectives.Add("global::System.CodeDom.Compiler");
+            usingDirectives.Add("global::System.Diagnostics");
+            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            usingDirectives.Add("global::System.Runtime.InteropServices");
 
             // Declare the ConstantBuffer type
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
@@ -87,8 +96,8 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A type representing the constant buffer native layout for <see cref="{{fullyQualifiedTypeName}}"/>.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-                writer.WriteLine($$"""[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Explicit, Size = {{info.ConstantBufferSizeInBytes}})]""");
+                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteLine($$"""[StructLayout(LayoutKind.Explicit, Size = {{info.ConstantBufferSizeInBytes}})]""");
                 writer.WriteLine($$"""file struct ConstantBuffer""");
 
                 using (writer.WriteBlock())
@@ -102,14 +111,14 @@ partial class ID2D1ShaderGenerator
 
                                 // Append a field as a global::ComputeSharp.Bool value (will use the implicit conversion from bool values)
                                 writer.WriteLine($$"""/// <inheritdoc cref="{{fullyQualifiedTypeName}}.{{string.Join(".", primitive.FieldPath)}}"/>""");
-                                writer.WriteLine($$"""[global::System.Runtime.InteropServices.FieldOffset({{primitive.Offset}})]""");
+                                writer.WriteLine($$"""[FieldOffset({{primitive.Offset}})]""");
                                 writer.WriteLine($$"""public global::ComputeSharp.Bool {{string.Join("_", primitive.FieldPath)}};""");
                                 break;
                             case FieldInfo.Primitive primitive:
 
                                 // Append primitive fields of other types with their mapped names
                                 writer.WriteLine($$"""/// <inheritdoc cref="{{fullyQualifiedTypeName}}.{{string.Join(".", primitive.FieldPath)}}"/>""");
-                                writer.WriteLine($$"""[global::System.Runtime.InteropServices.FieldOffset({{primitive.Offset}})]""");
+                                writer.WriteLine($$"""[FieldOffset({{primitive.Offset}})]""");
                                 writer.WriteLine($$"""public {{HlslKnownTypes.GetMappedName(primitive.TypeName)}} {{string.Join("_", primitive.FieldPath)}};""");
                                 break;
 
@@ -120,8 +129,9 @@ partial class ID2D1ShaderGenerator
                                 // Declare a field for every row of the matrix type
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
+                                    writer.WriteLineIf(j > 0);
                                     writer.WriteLine($$"""/// <summary>Row {j} of <see cref="{{fullyQualifiedTypeName}}.{{string.Join(".", matrix.FieldPath)}}"/>.</summary>""");
-                                    writer.WriteLine($$"""[global::System.Runtime.InteropServices.FieldOffset({{matrix.Offsets[j]}})]""");
+                                    writer.WriteLine($$"""[FieldOffset({{matrix.Offsets[j]}})]""");
                                     writer.WriteLine($$"""public {{rowTypeName}} {{fieldNamePrefix}}_{{j}};""");
                                 }
 

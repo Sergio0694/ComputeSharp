@@ -18,11 +18,34 @@ internal static class IndentedTextWriterExtensions
     /// </summary>
     /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
     /// <param name="generatorType">The type of the running generator.</param>
-    public static void WriteGeneratedAttributes(this IndentedTextWriter writer, Type generatorType)
+    /// <param name="useFullyQualifiedTypeNames">Whether to use fully qualified type names or not.</param>
+    public static void WriteGeneratedAttributes(this IndentedTextWriter writer, Type generatorType, bool useFullyQualifiedTypeNames = true)
     {
-        writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{generatorType.FullName}}", "{{generatorType.Assembly.GetName().Version}}")]""");
-        writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
-        writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+        if (useFullyQualifiedTypeNames)
+        {
+            writer.WriteLine($$"""[global::System.CodeDom.Compiler.GeneratedCode("{{generatorType.FullName}}", "{{generatorType.Assembly.GetName().Version}}")]""");
+            writer.WriteLine($$"""[global::System.Diagnostics.DebuggerNonUserCode]""");
+            writer.WriteLine($$"""[global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]""");
+        }
+        else
+        {
+            writer.WriteLine($$"""[GeneratedCode("{{generatorType.FullName}}", "{{generatorType.Assembly.GetName().Version}}")]""");
+            writer.WriteLine($$"""[DebuggerNonUserCode]""");
+            writer.WriteLine($$"""[ExcludeFromCodeCoverage]""");
+        }
+    }
+
+    /// <summary>
+    /// Writes a new line into the target writer depending on an input condition.
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="condition">The condition to use to decide whether or not to write a new line.</param>
+    public static void WriteLineIf(this IndentedTextWriter writer, bool condition)
+    {
+        if (condition)
+        {
+            writer.WriteLine();
+        }
     }
 
     /// <summary>

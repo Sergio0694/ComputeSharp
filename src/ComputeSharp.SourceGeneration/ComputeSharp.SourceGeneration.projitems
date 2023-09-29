@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)helpers\DynamicCache{TKey,TValue}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\EquatableArray{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\HashCode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImmutableHashSetBuilder{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImmutableArrayBuilder{T}.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IndentedTextWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObjectPool{T}.cs" />

@@ -216,21 +216,45 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
+            using ImmutableHashSetBuilder<string> usingDirectives = ImmutableHashSetBuilder<string>.Rent();
 
-            LoadDispatchData.RegisterAdditionalTypeSyntax(item, additionalTypes);
-            InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes);
-            InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes);
-            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes);
+            LoadDispatchData.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = IndentedTextWriter.Rent();
 
             item.Hierarchy.WriteSyntax(item, writer, declaredMembers.WrittenSpan);
 
-            foreach (IndentedTextWriter.Callback<D2D1ShaderInfo> additionalType in additionalTypes.WrittenSpan)
+            // If any generated types are needed, they go into a separate namespace
+            // This allows the code to use using directives without any conflicts.
+            if (additionalTypes.Count > 0)
             {
                 writer.WriteLine();
+                writer.WriteLine("namespace ComputeSharp.D2D1.Generated");
 
-                additionalType(item, writer);
+                using (writer.WriteBlock())
+                {
+                    // Add the System directives first, in the correct order
+                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => name.StartsWith("global::System")).OrderBy(static name => name))
+                    {
+                        writer.WriteLine($"using {usingDirective};");
+                    }
+
+                    // Add the other directives, also sorted in the correct order
+                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => !name.StartsWith("global::System")).OrderBy(static name => name))
+                    {
+                        writer.WriteLine($"using {usingDirective};");
+                    }
+
+                    foreach (IndentedTextWriter.Callback<D2D1ShaderInfo> callback in additionalTypes.WrittenSpan)
+                    {
+                        writer.WriteLine();
+
+                        callback(item, writer);
+                    }
+                }
             }
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", writer.ToString());

@@ -56,11 +56,12 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
         writer.WriteLine("#pragma warning disable");
         writer.WriteLine();
 
-        // Declare the file scoped namespace, if needed
+        // Declare the namespace, if needed
         if (Namespace.Length > 0)
         {
-            writer.WriteLine($"namespace {Namespace};");
-            writer.WriteLine();
+            writer.WriteLine($"namespace {Namespace}");
+            writer.WriteLine("{");
+            writer.IncreaseIndent();
         }
 
         // Declare all the opening types until the inner-most one
@@ -77,6 +78,13 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
 
         // Close all scopes and reduce the indentation
         for (int i = 0; i < Hierarchy.Length; i++)
+        {
+            writer.DecreaseIndent();
+            writer.WriteLine("}");
+        }
+
+        // Close the namespace scope as well, if needed
+        if (Namespace.Length > 0)
         {
             writer.DecreaseIndent();
             writer.WriteLine("}");
