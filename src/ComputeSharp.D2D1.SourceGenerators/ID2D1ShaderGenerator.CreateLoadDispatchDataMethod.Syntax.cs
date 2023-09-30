@@ -18,9 +18,11 @@ partial class ID2D1ShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine("readonly unsafe void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadDispatchData<TLoader>(ref TLoader loader)");
+            writer.WriteLine($"readonly unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
 
             using (writer.WriteBlock())
             {

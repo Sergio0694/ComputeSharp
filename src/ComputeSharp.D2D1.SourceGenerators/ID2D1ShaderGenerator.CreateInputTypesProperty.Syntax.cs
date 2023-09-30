@@ -19,7 +19,7 @@ partial class ID2D1ShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputTypes => ");
+            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.InputTypes => ");
 
             // If there are no inputs, simply return a default expression. Otherwise, create
             // a ReadOnlyMemory<D2D1PixelShaderInputType> instance from the memory manager.

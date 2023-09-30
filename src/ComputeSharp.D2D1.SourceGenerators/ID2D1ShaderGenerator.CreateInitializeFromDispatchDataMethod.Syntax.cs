@@ -11,15 +11,17 @@ partial class ID2D1ShaderGenerator
     partial class InitializeFromDispatchData
     {
         /// <summary>
-        /// Writes the <c>InitializeFromDispatchData</c> method.
+        /// Writes the <c>CreateFromConstantBuffer</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine("readonly void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InitializeFromDispatchData(global::System.ReadOnlySpan<byte> data)");
+            writer.WriteLine($"readonly {typeName} global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)");
 
             using (writer.WriteBlock())
             {

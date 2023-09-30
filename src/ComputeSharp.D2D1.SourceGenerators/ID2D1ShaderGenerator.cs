@@ -227,7 +227,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
 
             using IndentedTextWriter writer = IndentedTextWriter.Rent();
 
-            item.Hierarchy.WriteSyntax(item, writer, declaredMembers.WrittenSpan);
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: new[] { $"global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>" },
+                memberCallbacks: declaredMembers.WrittenSpan);
 
             // If any generated types are needed, they go into a separate namespace
             // This allows the code to use using directives without any conflicts.
