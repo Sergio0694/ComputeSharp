@@ -14,7 +14,7 @@ namespace ComputeSharp.D2D1.Tests;
 public partial class D2D1PixelShaderTests
 {
     [TestMethod]
-    public unsafe void GetInputCount()
+    public void GetInputCount()
     {
         Assert.AreEqual(D2D1PixelShader.GetInputCount<InvertEffect>(), 1);
         Assert.AreEqual(D2D1PixelShader.GetInputCount<PixelateEffect>(), 1);
@@ -23,7 +23,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputTypes_NoInputs()
+    public void GetInputTypes_NoInputs()
     {
         ReadOnlyMemory<D2D1PixelShaderInputType> inputTypes = D2D1PixelShader.GetInputTypes<ZonePlateEffect>();
 
@@ -32,7 +32,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputTypes_MultipleInputs()
+    public void GetInputTypes_MultipleInputs()
     {
         CollectionAssert.AreEqual(new[]
         {
@@ -47,7 +47,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputTypes_SameManager()
+    public void GetInputTypes_SameManager()
     {
         ReadOnlyMemory<D2D1PixelShaderInputType> inputTypes1 = D2D1PixelShader.GetInputTypes<ShaderWithMultipleInputs>();
 
@@ -75,7 +75,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetOutputBufferPrecision()
+    public void GetOutputBufferPrecision()
     {
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<ShaderWithMultipleInputs>(), D2D1BufferPrecision.Unknown);
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferPrecision<OnlyBufferPrecisionShader>(), D2D1BufferPrecision.UInt16Normalized);
@@ -84,7 +84,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetOutputBufferChannelDepth()
+    public void GetOutputBufferChannelDepth()
     {
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferChannelDepth<ShaderWithMultipleInputs>(), D2D1ChannelDepth.Default);
         Assert.AreEqual(D2D1PixelShader.GetOutputBufferChannelDepth<OnlyBufferPrecisionShader>(), D2D1ChannelDepth.Default);
@@ -132,7 +132,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputDescriptions_Empty()
+    public void GetInputDescriptions_Empty()
     {
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<CheckerboardClipEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetInputDescriptions<InvertEffect>().Length, 0);
@@ -148,7 +148,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetInputDescriptions_Custom()
+    public void GetInputDescriptions_Custom()
     {
         ReadOnlyMemory<D2D1InputDescription> inputDescriptions = D2D1PixelShader.GetInputDescriptions<ShaderWithInputDescriptions>();
 
@@ -198,7 +198,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetResourceTextureDescriptions_Empty()
+    public void GetResourceTextureDescriptions_Empty()
     {
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<CheckerboardClipEffect>().Length, 0);
         Assert.AreEqual(D2D1PixelShader.GetResourceTextureDescriptions<InvertEffect>().Length, 0);
@@ -214,7 +214,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetResourceTextureDescriptions_Custom()
+    public void GetResourceTextureDescriptions_Custom()
     {
         ReadOnlyMemory<D2D1ResourceTextureDescription> resourceTextureDescriptions = D2D1PixelShader.GetResourceTextureDescriptions<ShaderWithResourceTextures>();
 
@@ -236,7 +236,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetResourceTextureCount_IsCorrect()
+    public void GetResourceTextureCount_IsCorrect()
     {
         Assert.AreEqual(0, D2D1PixelShader.GetResourceTextureCount<ShaderWithoutResourceTextures>());
         Assert.AreEqual(1, D2D1PixelShader.GetResourceTextureCount<ShaderWithJustOneResourceTextures>());
@@ -311,7 +311,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetBytecode_FromDynamicBytecode()
+    public void GetBytecode_FromDynamicBytecode()
     {
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithoutEmbeddedBytecode>();
 
@@ -331,7 +331,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetBytecode_FromEmbeddedBytecode()
+    public void GetBytecode_FromEmbeddedBytecode()
     {
         // Bytecode with no parameters
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>();
@@ -376,14 +376,14 @@ public partial class D2D1PixelShaderTests
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public unsafe void GetBytecode_FromEmbeddedBytecode_WithPackMatrixColumnMajor()
+    public void GetBytecode_FromEmbeddedBytecode_WithPackMatrixColumnMajor()
     {
         _ = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixColumnMajor);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public unsafe void GetBytecode_FromEmbeddedBytecode_WithTargetProfileAndPackMatrixColumnMajor()
+    public void GetBytecode_FromEmbeddedBytecode_WithTargetProfileAndPackMatrixColumnMajor()
     {
         _ = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecode>(D2D1ShaderProfile.PixelShader40Level91, D2D1CompileOptions.Default | D2D1CompileOptions.PackMatrixColumnMajor);
     }
@@ -407,7 +407,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetBytecode_FromEmbeddedBytecode_WithCompileOptions()
+    public void GetBytecode_FromEmbeddedBytecode_WithCompileOptions()
     {
         // Bytecode with no parameters
         ReadOnlyMemory<byte> bytecode = D2D1PixelShader.LoadBytecode<ShaderWithEmbeddedBytecodeAndCompileOptions>();
@@ -518,7 +518,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBufferSize_Empty()
+    public void GetConstantBufferSize_Empty()
     {
         int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithNoCapturedValues>();
 
@@ -531,7 +531,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBuffer_Empty_ReadOnlyMemory()
+    public void GetConstantBuffer_Empty_ReadOnlyMemory()
     {
         ShaderWithNoCapturedValues shader = default;
 
@@ -542,7 +542,7 @@ public partial class D2D1PixelShaderTests
 
     // See https://github.com/Sergio0694/ComputeSharp/issues/323
     [TestMethod]
-    public unsafe void GetConstantBuffer_Empty_Span()
+    public void GetConstantBuffer_Empty_Span()
     {
         ShaderWithNoCapturedValues shader = default;
 
@@ -568,7 +568,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBufferSize()
+    public void GetConstantBufferSize()
     {
         int size = D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypes>();
 
@@ -581,7 +581,80 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBuffer_ReadOnlyMemory()
+    public void GetConstantBuffer_RoundTrip()
+    {
+        GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
+
+        ReadOnlyMemory<byte> constantBuffer = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        ShaderWithScalarVectorAndMatrixTypes copy = D2D1PixelShader.CreateFromConstantBuffer<ShaderWithScalarVectorAndMatrixTypes>(constantBuffer.Span);
+
+        ValidateShadersAreEqual(in shader, in copy);
+    }
+
+    [TestMethod]
+    public void GetConstantBuffer_WithNestedStructs_RoundTrip()
+    {
+        GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypesInNestedStructs shader);
+
+        ReadOnlyMemory<byte> constantBuffer = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        ShaderWithScalarVectorAndMatrixTypesInNestedStructs copy = D2D1PixelShader.CreateFromConstantBuffer<ShaderWithScalarVectorAndMatrixTypesInNestedStructs>(constantBuffer.Span);
+
+        ValidateShadersAreEqual(in shader, in copy);
+    }
+
+    [TestMethod]
+    public void GetConstantBuffer_TryCreate_RoundTrip()
+    {
+        GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
+
+        ReadOnlyMemory<byte> constantBuffer = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        Assert.IsTrue(D2D1PixelShader.TryCreateFromConstantBuffer(constantBuffer.Span, out ShaderWithScalarVectorAndMatrixTypes copy));
+
+        ValidateShadersAreEqual(in shader, in copy);
+    }
+
+    [TestMethod]
+    public void GetConstantBuffer_WithNestedStructs_TryCreate_RoundTrip()
+    {
+        GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypesInNestedStructs shader);
+
+        ReadOnlyMemory<byte> constantBuffer = D2D1PixelShader.GetConstantBuffer(in shader);
+
+        Assert.IsTrue(D2D1PixelShader.TryCreateFromConstantBuffer(constantBuffer.Span, out ShaderWithScalarVectorAndMatrixTypesInNestedStructs copy));
+
+        ValidateShadersAreEqual(in shader, in copy);
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(4)]
+    [DataRow(27)]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetConstantBuffer_BufferTooShort(int size)
+    {
+        byte[] buffer = new byte[size];
+
+        _ = D2D1PixelShader.CreateFromConstantBuffer<ShaderWithScalarVectorAndMatrixTypes>(buffer);
+
+        Assert.Fail();
+    }
+
+    [TestMethod]
+    [DataRow(0)]
+    [DataRow(4)]
+    [DataRow(27)]
+    public void GetConstantBuffer_TryCreate_BufferTooShort(int size)
+    {
+        byte[] buffer = new byte[size];
+
+        Assert.IsFalse(D2D1PixelShader.TryCreateFromConstantBuffer(buffer, out ShaderWithScalarVectorAndMatrixTypes _));
+    }
+
+    [TestMethod]
+    public void GetConstantBuffer_ReadOnlyMemory()
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
 
@@ -591,7 +664,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBuffer_Span()
+    public void GetConstantBuffer_Span()
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
 
@@ -610,7 +683,7 @@ public partial class D2D1PixelShaderTests
     [DataRow(4)]
     [DataRow(27)]
     [ExpectedException(typeof(ArgumentException))]
-    public unsafe void GetConstantBuffer_Span_DestinationTooShort(int size)
+    public void GetConstantBuffer_Span_DestinationTooShort(int size)
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
 
@@ -622,7 +695,7 @@ public partial class D2D1PixelShaderTests
     }
 
     [TestMethod]
-    public unsafe void GetConstantBuffer_TryGetSpan()
+    public void GetConstantBuffer_TryGetSpan()
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
 
@@ -641,7 +714,7 @@ public partial class D2D1PixelShaderTests
     [DataRow(0)]
     [DataRow(4)]
     [DataRow(27)]
-    public unsafe void GetConstantBuffer_TryGetSpan_DestinationTooShort(int size)
+    public void GetConstantBuffer_TryGetSpan_DestinationTooShort(int size)
     {
         GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader);
 
@@ -654,7 +727,7 @@ public partial class D2D1PixelShaderTests
     }
 
     // Gets a ShaderWithScalarVectorAndMatrixTypes instance with test values
-    private void GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader)
+    private static void GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypes shader)
     {
         shader = new ShaderWithScalarVectorAndMatrixTypes(
             x: 111,
@@ -703,6 +776,33 @@ public partial class D2D1PixelShaderTests
         }
     }
 
+    // Validates the constant buffer for the test ShaderWithScalarVectorAndMatrixTypes instance
+    private static void ValidateShadersAreEqual(in ShaderWithScalarVectorAndMatrixTypes left, in ShaderWithScalarVectorAndMatrixTypes right)
+    {
+        Assert.AreEqual(left.x, right.x);
+        Assert.AreEqual(left.y, right.y);
+        Assert.AreEqual(left.z, right.z);
+        Assert.AreEqual(left.f2x3.M11, right.f2x3.M11);
+        Assert.AreEqual(left.f2x3.M12, right.f2x3.M12);
+        Assert.AreEqual(left.f2x3.M13, right.f2x3.M13);
+        Assert.AreEqual(left.f2x3.M21, right.f2x3.M21);
+        Assert.AreEqual(left.f2x3.M22, right.f2x3.M22);
+        Assert.AreEqual(left.f2x3.M23, right.f2x3.M23);
+        Assert.AreEqual(left.i1x3.M11, right.i1x3.M11);
+        Assert.AreEqual(left.i1x3.M12, right.i1x3.M12);
+        Assert.AreEqual(left.i1x3.M13, right.i1x3.M13);
+        Assert.AreEqual(left.d2.X, right.d2.X);
+        Assert.AreEqual(left.d2.Y, right.d2.Y);
+        Assert.AreEqual(left.c, right.c);
+        Assert.AreEqual(left.i1x2.M11, right.i1x2.M11);
+        Assert.AreEqual(left.i1x2.M12, right.i1x2.M12);
+        Assert.AreEqual(left.i2x2.M11, right.i2x2.M11);
+        Assert.AreEqual(left.i2x2.M12, right.i2x2.M12);
+        Assert.AreEqual(left.i2x2.M21, right.i2x2.M21);
+        Assert.AreEqual(left.i2x2.M22, right.i2x2.M22);
+        Assert.AreEqual(left.d, right.d);
+    }
+
     [D2DInputCount(0)]
     [AutoConstructor]
     private readonly partial struct ShaderWithScalarVectorAndMatrixTypes : ID2D1PixelShader
@@ -737,21 +837,9 @@ public partial class D2D1PixelShaderTests
     {
         Assert.AreEqual(156, D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypesInNestedStructs>());
 
-        ReadOnlyMemory<byte> memory = D2D1PixelShader.GetConstantBuffer(new ShaderWithScalarVectorAndMatrixTypesInNestedStructs(
-            x: 111,
-            y: 222,
-            container2: new FieldsContainer2(
-                z: 333,
-                f2x3: new(55, 44, 888, 111, 222, 333),
-                a: 22,
-                container3: new FieldsContainer3(
-                    i1x3: new(1, 2, 3),
-                    d2: new(3.14, 6.28))),
-            c: 42,
-            container1: new FieldsContainer1(
-                i1x2: new(111, 222),
-                i2x2: new(11, 22, 33, 44),
-                d: 9999)));
+        GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypesInNestedStructs shader);
+
+        ReadOnlyMemory<byte> memory = D2D1PixelShader.GetConstantBuffer(in shader);
 
         Assert.AreEqual(156, memory.Length);
 
@@ -821,5 +909,52 @@ public partial class D2D1PixelShaderTests
         {
             return 0;
         }
+    }
+
+    // Gets a ShaderWithScalarVectorAndMatrixTypesInNestedStructs instance with test values
+    private static void GetShaderWithScalarVectorAndMatrixTypes(out ShaderWithScalarVectorAndMatrixTypesInNestedStructs shader)
+    {
+        shader = new ShaderWithScalarVectorAndMatrixTypesInNestedStructs(
+            x: 111,
+            y: 222,
+            container2: new FieldsContainer2(
+                z: 333,
+                f2x3: new(55, 44, 888, 111, 222, 333),
+                a: 22,
+                container3: new FieldsContainer3(
+                    i1x3: new(1, 2, 3),
+                    d2: new(3.14, 6.28))),
+            c: 42,
+            container1: new FieldsContainer1(
+                i1x2: new(111, 222),
+                i2x2: new(11, 22, 33, 44),
+                d: 9999));
+    }
+
+    // Validates the constant buffer for the test ShaderWithScalarVectorAndMatrixTypesInNestedStructs instance
+    private static void ValidateShadersAreEqual(in ShaderWithScalarVectorAndMatrixTypesInNestedStructs left, in ShaderWithScalarVectorAndMatrixTypesInNestedStructs right)
+    {
+        Assert.AreEqual(left.x, right.x);
+        Assert.AreEqual(left.y, right.y);
+        Assert.AreEqual(left.container2.z, right.container2.z);
+        Assert.AreEqual(left.container2.f2x3.M11, right.container2.f2x3.M11);
+        Assert.AreEqual(left.container2.f2x3.M12, right.container2.f2x3.M12);
+        Assert.AreEqual(left.container2.f2x3.M13, right.container2.f2x3.M13);
+        Assert.AreEqual(left.container2.f2x3.M21, right.container2.f2x3.M21);
+        Assert.AreEqual(left.container2.f2x3.M22, right.container2.f2x3.M22);
+        Assert.AreEqual(left.container2.f2x3.M23, right.container2.f2x3.M23);
+        Assert.AreEqual(left.container2.container3.i1x3.M11, right.container2.container3.i1x3.M11);
+        Assert.AreEqual(left.container2.container3.i1x3.M12, right.container2.container3.i1x3.M12);
+        Assert.AreEqual(left.container2.container3.i1x3.M13, right.container2.container3.i1x3.M13);
+        Assert.AreEqual(left.container2.container3.d2.X, right.container2.container3.d2.X);
+        Assert.AreEqual(left.container2.container3.d2.Y, right.container2.container3.d2.Y);
+        Assert.AreEqual(left.c, right.c);
+        Assert.AreEqual(left.container1.i1x2.M11, right.container1.i1x2.M11);
+        Assert.AreEqual(left.container1.i1x2.M12, right.container1.i1x2.M12);
+        Assert.AreEqual(left.container1.i2x2.M11, right.container1.i2x2.M11);
+        Assert.AreEqual(left.container1.i2x2.M12, right.container1.i2x2.M12);
+        Assert.AreEqual(left.container1.i2x2.M21, right.container1.i2x2.M21);
+        Assert.AreEqual(left.container1.i2x2.M22, right.container1.i2x2.M22);
+        Assert.AreEqual(left.container1.d, right.container1.d);
     }
 }
