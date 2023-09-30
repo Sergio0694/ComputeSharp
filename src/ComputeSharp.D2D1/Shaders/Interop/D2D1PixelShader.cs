@@ -461,4 +461,47 @@ public static class D2D1PixelShader
 
         Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
     }
+
+    /// <summary>
+    /// Creates a new <typeparamref name="T"/> value from constant buffer data.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader value to create.</typeparam>
+    /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the constant buffer data.</param>
+    /// <returns>The resulting <typeparamref name="T"/> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="span"/> is not large enough to contain the constant buffer.</exception>
+    public static T CreateFromConstantBuffer<T>(ReadOnlySpan<byte> span)
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        if (!TryCreateFromConstantBuffer(span, out T shader))
+        {
+            default(ArgumentException).Throw(nameof(span));
+        }
+
+        return shader;
+
+    }
+
+    /// <summary>
+    /// Tries to create a <typeparamref name="T"/> value from constant buffer data.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader value to create.</typeparam>
+    /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the constant buffer data.</param>
+    /// <param name="shader">The resulting <typeparamref name="T"/> value, if successful.</param>
+    /// <returns>Whether or not the <typeparamref name="T"/> value was retrieved successfully.</returns>
+    public static bool TryCreateFromConstantBuffer<T>(ReadOnlySpan<byte> span, out T shader)
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out shader);
+
+        if (span.Length >= shader.ConstantBufferSize)
+        {
+            shader = shader.CreateFromConstantBuffer(span);
+
+            return true;
+        }
+
+        shader = default;
+
+        return false;
+    }
 }

@@ -52,9 +52,7 @@ internal static unsafe class ID2D1EffectExtensions
                 dataSize: (uint)constantBufferSize).Assert();
         }
 
-        Unsafe.SkipInit(out T shader);
-
-        shader = shader.CreateFromConstantBuffer(buffer.AsSpan(0, constantBufferSize));
+        T shader = D2D1PixelShader.CreateFromConstantBuffer<T>(buffer);
 
         ArrayPool<byte>.Shared.Return(buffer);
 
