@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.UI.Tests.Helpers;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
@@ -79,7 +80,7 @@ public class ShadersTests
     }
 
     private static async Task RunTestAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(WrapperType wrapperType, float threshold = 0.00001f)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
 
@@ -118,7 +119,7 @@ public class ShadersTests
     }
 
     private sealed class TestCanvasEffect<T> : CanvasEffect
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         private static readonly EffectNode<PixelShaderEffect<T>> Effect = new();
 

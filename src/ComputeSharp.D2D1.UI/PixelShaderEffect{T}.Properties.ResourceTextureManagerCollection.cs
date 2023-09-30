@@ -13,7 +13,7 @@ using ComputeSharp.D2D1.WinUI.Buffers;
 using ComputeSharp.D2D1.WinUI.Collections;
 #endif
 
-#pragma warning disable CS0618, CS8767
+#pragma warning disable CS8767
 
 #if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp;
