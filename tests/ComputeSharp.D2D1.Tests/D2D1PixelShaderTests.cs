@@ -731,4 +731,95 @@ public partial class D2D1PixelShaderTests
     {
         D2D1PixelShader.SetConstantBufferForD2D1DrawInfo<InvertEffect>(null, default);
     }
+
+    [TestMethod]
+    public unsafe void GetConstantBufferSize_WithNestedStructs()
+    {
+        Assert.AreEqual(156, D2D1PixelShader.GetConstantBufferSize<ShaderWithScalarVectorAndMatrixTypesInNestedStructs>());
+
+        ReadOnlyMemory<byte> memory = D2D1PixelShader.GetConstantBuffer(new ShaderWithScalarVectorAndMatrixTypesInNestedStructs(
+            x: 111,
+            y: 222,
+            container2: new FieldsContainer2(
+                z: 333,
+                f2x3: new(55, 44, 888, 111, 222, 333),
+                a: 22,
+                container3: new FieldsContainer3(
+                    i1x3: new(1, 2, 3),
+                    d2: new(3.14, 6.28))),
+            c: 42,
+            container1: new FieldsContainer1(
+                i1x2: new(111, 222),
+                i2x2: new(11, 22, 33, 44),
+                d: 9999)));
+
+        Assert.AreEqual(156, memory.Length);
+
+        fixed (byte* buffer = memory.Span)
+        {
+            Assert.AreEqual(111, *(int*)&buffer[0]);
+            Assert.AreEqual(222, *(int*)&buffer[4]);
+            Assert.AreEqual(333, *(int*)&buffer[16]);
+            Assert.AreEqual(55, *(float*)&buffer[32]);
+            Assert.AreEqual(44, *(float*)&buffer[36]);
+            Assert.AreEqual(888, *(float*)&buffer[40]);
+            Assert.AreEqual(111, *(float*)&buffer[48]);
+            Assert.AreEqual(222, *(float*)&buffer[52]);
+            Assert.AreEqual(333, *(float*)&buffer[56]);
+            Assert.AreEqual(22, *(int*)&buffer[60]);
+            Assert.AreEqual(1, *(int*)&buffer[64]);
+            Assert.AreEqual(2, *(int*)&buffer[68]);
+            Assert.AreEqual(3, *(int*)&buffer[72]);
+            Assert.AreEqual(3.14, *(double*)&buffer[80]);
+            Assert.AreEqual(6.28, *(double*)&buffer[88]);
+            Assert.AreEqual(42, *(int*)&buffer[96]);
+            Assert.AreEqual(111, *(int*)&buffer[112]);
+            Assert.AreEqual(222, *(int*)&buffer[116]);
+            Assert.AreEqual(11, *(int*)&buffer[128]);
+            Assert.AreEqual(22, *(int*)&buffer[132]);
+            Assert.AreEqual(33, *(int*)&buffer[144]);
+            Assert.AreEqual(44, *(int*)&buffer[148]);
+            Assert.AreEqual(9999, *(int*)&buffer[152]);
+        }
+    }
+
+    [AutoConstructor]
+    public readonly partial struct FieldsContainer1
+    {
+        public readonly Int1x2 i1x2;
+        public readonly int2x2 i2x2;
+        public readonly int d;
+    }
+
+    [AutoConstructor]
+    public readonly partial struct FieldsContainer2
+    {
+        public readonly int z;
+        public readonly float2x3 f2x3;
+        public readonly int a;
+        public readonly FieldsContainer3 container3;
+    }
+
+    [AutoConstructor]
+    public readonly partial struct FieldsContainer3
+    {
+        public readonly Int1x3 i1x3;
+        public readonly double2 d2;
+    }
+
+    [D2DInputCount(0)]
+    [AutoConstructor]
+    private readonly partial struct ShaderWithScalarVectorAndMatrixTypesInNestedStructs : ID2D1PixelShader
+    {
+        public readonly int x;
+        public readonly int y;
+        public readonly FieldsContainer2 container2;
+        public readonly int c;
+        public readonly FieldsContainer1 container1;
+
+        public float4 Execute()
+        {
+            return 0;
+        }
+    }
 }
