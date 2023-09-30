@@ -60,6 +60,20 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         get => this.writer!.WrittenSpan.Length;
     }
 
+    /// <summary>
+    /// Advances the current writer and gets a <see cref="Span{T}"/> to the requested memory area.
+    /// </summary>
+    /// <param name="requestedSize">The requested size to advance by.</param>
+    /// <returns>A <see cref="Span{T}"/> to the requested memory area.</returns>
+    /// <remarks>
+    /// No other data should be written to the builder while the returned <see cref="Span{T}"/>
+    /// is in use, as it could invalidate the memory area wrapped by it, if resizing occurs.
+    /// </remarks>
+    public readonly Span<T> Advance(int requestedSize)
+    {
+        return this.writer!.Advance(requestedSize);
+    }
+
     /// <inheritdoc cref="ImmutableArray{T}.Builder.Add(T)"/>
     public readonly void Add(T item)
     {
@@ -157,6 +171,18 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new(this.array, 0, this.index);
+        }
+
+        /// <inheritdoc cref="ImmutableArrayBuilder{T}.Advance"/>
+        public Span<T> Advance(int requestedSize)
+        {
+            EnsureCapacity(requestedSize);
+
+            Span<T> span = this.array.AsSpan(this.index, requestedSize);
+
+            this.index += requestedSize;
+
+            return span;
         }
 
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.Add"/>

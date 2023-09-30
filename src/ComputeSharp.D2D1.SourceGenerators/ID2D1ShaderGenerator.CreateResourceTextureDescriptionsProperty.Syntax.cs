@@ -1,13 +1,8 @@
-using System;
-using ComputeSharp.D2D1.__Internals;
 using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
+#pragma warning disable IDE0053
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -18,90 +13,76 @@ partial class ID2D1ShaderGenerator
     private static partial class ResourceTextureDescriptions
     {
         /// <summary>
-        /// Creates a <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.
+        /// Writes the <c>ResourceTextureDescriptions</c> property.
         /// </summary>
-        /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
-        /// <param name="additionalDataMembers">Any additional <see cref="MemberDeclarationSyntax"/> instances needed by the generated code, if needed.</param>
-        /// <returns>The resulting <see cref="PropertyDeclarationSyntax"/> instance for the <c>ResourceTextureDescriptions</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions, out MemberDeclarationSyntax[] additionalDataMembers)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            ExpressionSyntax memoryExpression;
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.Write("readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => ");
 
             // If there are no resource texture descriptions, just return a default expression.
-            // Otherwise, declare the shared array and return it from the property.
-            if (resourceTextureDescriptions.Length == 0)
+            // Otherwise, return a memory instance from the generated static readonly array.
+            if (info.ResourceTextureDescriptions.IsEmpty)
             {
-                memoryExpression = LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword));
-                additionalDataMembers = Array.Empty<MemberDeclarationSyntax>();
+                writer.WriteLine("default;");
             }
             else
             {
-                memoryExpression = MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("Data"),
-                    IdentifierName(nameof(ResourceTextureDescriptions)));
-
-                additionalDataMembers = new[] { GetArrayDeclaration(resourceTextureDescriptions) };
+                writer.WriteLine("global::ComputeSharp.D2D1.Generated.Data.ResourceTextureDescriptions;");
             }
-
-            // This code produces a method declaration as follows:
-            //
-            // readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription> global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureDescriptions => <EXPRESSION>;
-            return
-                PropertyDeclaration(
-                    GenericName(Identifier("global::System.ReadOnlyMemory"))
-                    .AddTypeArgumentListArguments(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription")),
-                    Identifier(nameof(ResourceTextureDescriptions)))
-                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
-                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(memoryExpression))
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>
-        /// Gets the array declaration for the given resource texture descriptions.
+        /// Adds any using directives for the additional data member, if needed.
         /// </summary>
-        /// <param name="resourceTextureDescriptions">The resource texture descriptions info gathered for the current shader.</param>
-        /// <returns>The array declaration for the given resource texture descriptions.</returns>
-        private static MemberDeclarationSyntax GetArrayDeclaration(EquatableArray<ResourceTextureDescription> resourceTextureDescriptions)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="usingDirectives">The using directives needed by the generated code.</param>
+        public static void AddAdditionalDataMemberUsingDirectives(D2D1ShaderInfo info, ImmutableHashSetBuilder<string> usingDirectives)
         {
-            using ImmutableArrayBuilder<ExpressionSyntax> resourceTextureDescriptionExpressions = ImmutableArrayBuilder<ExpressionSyntax>.Rent();
-
-            foreach (ResourceTextureDescription resourceTextureDescription in resourceTextureDescriptions)
+            if (info.ResourceTextureDescriptions.IsEmpty)
             {
-                // Create the description expression:
-                //
-                // new(<INDEX>, <RANK>)
-                resourceTextureDescriptionExpressions.Add(
-                    ImplicitObjectCreationExpression()
-                    .AddArgumentListArguments(
-                        Argument(LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            Literal(resourceTextureDescription.Index))),
-                        Argument(LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            Literal(resourceTextureDescription.Rank)))));
+                return;
             }
 
-            // Declare the singleton property to get the memory instance:
-            //
-            // /// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>
-            // public static readonly global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription[] ResourceTextureDescriptions = { <RESOURCE_TEXTURE_DESCRIPTIONS> };
-            return
-                FieldDeclaration(
-                    VariableDeclaration(
-                        ArrayType(IdentifierName("global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                    .AddVariables(
-                        VariableDeclarator(Identifier(nameof(ResourceTextureDescriptions)))
-                        .WithInitializer(EqualsValueClause(
-                            InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                            .AddExpressions(resourceTextureDescriptionExpressions.ToArray())))))
-                .AddModifiers(
-                    Token(SyntaxKind.PublicKeyword),
-                    Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.ReadOnlyKeyword))
-                .WithLeadingTrivia(Comment("""/// <summary>The singleton <see cref="global::ComputeSharp.D2D1.Interop.D2D1ResourceTextureDescription"/> array instance.</summary>"""));
+            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
+        }
+
+        /// <summary>
+        /// Registers a callback to generate an additional data member, if needed.
+        /// </summary>
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="callbacks">The registered callbacks to generate additional data members.</param>
+        public static void RegisterAdditionalDataMemberSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
+        {
+            // If there are no resource texture descriptions, there is nothing to di
+            if (info.ResourceTextureDescriptions.IsEmpty)
+            {
+                return;
+            }
+
+            // Declare the shared array with resource texture descriptions
+            static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            {
+                writer.WriteLine("""/// <summary>The singleton <see cref="D2D1ResourceTextureDescription"/> array instance.</summary>""");
+                writer.WriteLine("""public static readonly D2D1ResourceTextureDescription[] ResourceTextureDescriptions =""");
+                writer.WriteLine("""{""");
+                writer.IncreaseIndent();
+
+                // Initialize all resource texture descriptions
+                writer.WriteInitializationExpressions(info.ResourceTextureDescriptions.AsSpan(), static (description, writer) =>
+                {
+                    writer.Write($"new D2D1ResourceTextureDescription({description.Index}, {description.Rank})");
+                });
+
+                writer.DecreaseIndent();
+                writer.WriteLine();
+                writer.WriteLine("};");
+            }
+
+            callbacks.Add(Callback);
         }
     }
 }

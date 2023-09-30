@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -8,7 +7,6 @@ using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -196,48 +194,70 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         // Generate the source files, if any
         context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
-            PropertyDeclarationSyntax effectIdProperty = EffectId.GetSyntax(item.EffectId);
-            PropertyDeclarationSyntax effectDisplayNameProperty = EffectMetadata.GetEffectDisplayNameSyntax(item.EffectDisplayName);
-            PropertyDeclarationSyntax effectDescriptionProperty = EffectMetadata.GetEffectDescriptionSyntax(item.EffectDescription);
-            PropertyDeclarationSyntax effectCategoryProperty = EffectMetadata.GetEffectCategorySyntax(item.EffectCategory);
-            PropertyDeclarationSyntax effectAuthorProperty = EffectMetadata.GetEffectAuthorSyntax(item.EffectAuthor);
-            PropertyDeclarationSyntax inputCountProperty = InputCount.GetSyntax(item.InputTypes.Length);
-            PropertyDeclarationSyntax inputTypesProperty = InputTypes.GetSyntax(item.InputTypes, out TypeDeclarationSyntax[] inputTypesAdditionalTypes);
-            PropertyDeclarationSyntax inputDescriptionsProperty = InputDescriptions.GetSyntax(item.InputDescriptions, out MemberDeclarationSyntax[] inputDescriptionsAdditionalDataMembers);
-            PropertyDeclarationSyntax resourceTextureDescriptionsProperty = ResourceTextureDescriptions.GetSyntax(item.ResourceTextureDescriptions, out MemberDeclarationSyntax[] resourceTexturesAditionalDataMembers);
-            PropertyDeclarationSyntax hlslStringProperty = HlslSource.GetSyntax(item.HlslInfoKey.HlslSource, item.Hierarchy.Hierarchy.Length);
-            PropertyDeclarationSyntax hlslBytecodeProperty = LoadBytecode.GetHlslBytecodeSyntax(item.HlslInfo, out Func<SyntaxNode, SourceText> fixup, out TypeDeclarationSyntax[] hlslBytecodeAdditionalTypes);
-            PropertyDeclarationSyntax shaderProfileProperty = LoadBytecode.GetShaderProfileSyntax(item.HlslInfoKey.EffectiveShaderProfile);
-            PropertyDeclarationSyntax compileOptionsProperty = LoadBytecode.GetCompileOptionsSyntax(item.HlslInfoKey.EffectiveCompileOptions);
-            PropertyDeclarationSyntax bufferPrecisionProperty = OutputBuffer.GetBufferPrecisionSyntax(item.BufferPrecision);
-            PropertyDeclarationSyntax channelDepthProperty = OutputBuffer.GetChannelDepthSyntax(item.ChannelDepth);
-            PropertyDeclarationSyntax pixelOptionsProperty = PixelOptions.GetSyntax(item.PixelOptions);
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> declaredMembers = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
 
-            MethodDeclarationSyntax initializeFromDispatchDataMethod = InitializeFromDispatchData.GetSyntax(item.Fields);
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(item.Hierarchy, item.Fields, item.ConstantBufferSizeInBytes, out TypeDeclarationSyntax[] loadDispatchDataAditionalTypes);
+            declaredMembers.Add(EffectId.WriteSyntax);
+            declaredMembers.Add(EffectMetadata.WriteEffectDisplayNameSyntax);
+            declaredMembers.Add(EffectMetadata.WriteEffectDescriptionSyntax);
+            declaredMembers.Add(EffectMetadata.WriteEffectCategorySyntax);
+            declaredMembers.Add(EffectMetadata.WriteEffectAuthorSyntax);
+            declaredMembers.Add(InputCount.WriteSyntax);
+            declaredMembers.Add(InputTypes.WriteSyntax);
+            declaredMembers.Add(InputDescriptions.WriteSyntax);
+            declaredMembers.Add(ResourceTextureDescriptions.WriteSyntax);
+            declaredMembers.Add(PixelOptions.WriteSyntax);
+            declaredMembers.Add(OutputBuffer.WriteBufferPrecisionSyntax);
+            declaredMembers.Add(OutputBuffer.WriteChannelDepthSyntax);
+            declaredMembers.Add(LoadBytecode.WriteShaderProfileSyntax);
+            declaredMembers.Add(LoadBytecode.WriteCompileOptionsSyntax);
+            declaredMembers.Add(HlslSource.WriteSyntax);
+            declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
+            declaredMembers.Add(InitializeFromDispatchData.WriteSyntax);
+            declaredMembers.Add(LoadDispatchData.WriteSyntax);
 
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMembers(
-                hierarchyInfo: item.Hierarchy,
-                memberDeclarations: new (MemberDeclarationSyntax, bool)[]
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
+            using ImmutableHashSetBuilder<string> usingDirectives = ImmutableHashSetBuilder<string>.Rent();
+
+            LoadDispatchData.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+
+            using IndentedTextWriter writer = IndentedTextWriter.Rent();
+
+            item.Hierarchy.WriteSyntax(item, writer, declaredMembers.WrittenSpan);
+
+            // If any generated types are needed, they go into a separate namespace
+            // This allows the code to use using directives without any conflicts.
+            if (additionalTypes.Count > 0)
+            {
+                writer.WriteLine();
+                writer.WriteLine("namespace ComputeSharp.D2D1.Generated");
+
+                using (writer.WriteBlock())
                 {
-                    (effectIdProperty, false), (effectDisplayNameProperty, false), (effectDescriptionProperty, false), (effectCategoryProperty, false), (effectAuthorProperty, false),
-                    (inputCountProperty, false), (inputTypesProperty, false), (inputDescriptionsProperty, false), (resourceTextureDescriptionsProperty, false), (hlslStringProperty, false),
-                    (hlslBytecodeProperty, false), (shaderProfileProperty, false), (compileOptionsProperty, false), (bufferPrecisionProperty, false), (channelDepthProperty, false),
-                    (pixelOptionsProperty, false), (initializeFromDispatchDataMethod, true), (loadDispatchDataMethod, true)
-                },
-                additionalMemberDeclarations: new TypeDeclarationSyntax[][]
-                {
-                    loadDispatchDataAditionalTypes,
-                    InputDescriptions.GetDataTypeDeclarations(new[] { inputDescriptionsAdditionalDataMembers, resourceTexturesAditionalDataMembers }.SelectMany(static members => members).ToArray()),
-                    inputTypesAdditionalTypes, hlslBytecodeAdditionalTypes
+                    // Add the System directives first, in the correct order
+                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => name.StartsWith("global::System")).OrderBy(static name => name))
+                    {
+                        writer.WriteLine($"using {usingDirective};");
+                    }
+
+                    // Add the other directives, also sorted in the correct order
+                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => !name.StartsWith("global::System")).OrderBy(static name => name))
+                    {
+                        writer.WriteLine($"using {usingDirective};");
+                    }
+
+                    foreach (IndentedTextWriter.Callback<D2D1ShaderInfo> callback in additionalTypes.WrittenSpan)
+                    {
+                        writer.WriteLine();
+
+                        callback(item, writer);
+                    }
                 }
-                .SelectMany(static types => types)
-                .Cast<MemberDeclarationSyntax>()
-                .ToArray());
+            }
 
-            SourceText sourceText = fixup(compilationUnit);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", sourceText);
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", writer.ToString());
         });
     }
 }

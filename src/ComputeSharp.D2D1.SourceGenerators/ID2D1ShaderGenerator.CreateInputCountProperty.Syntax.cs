@@ -1,9 +1,6 @@
-using ComputeSharp.D2D1.__Internals;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
-#pragma warning disable CS0618
+using ComputeSharp.D2D1.SourceGenerators.Models;
+using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -16,21 +13,15 @@ partial class ID2D1ShaderGenerator
     private static partial class InputCount
     {
         /// <summary>
-        /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>InputCount</c> property.
+        /// Writes the <c>InputCount</c> property.
         /// </summary>
-        /// <param name="inputCount">The number of inputs for the shader.</param>
-        /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>InputCount</c> property.</returns>
-        public static PropertyDeclarationSyntax GetSyntax(int inputCount)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            // This code produces a property declaration as follows:
-            //
-            // readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputCount => <INPUT_COUNT>;
-            return
-                PropertyDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier(nameof(InputCount)))
-                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.D2D1.__Internals.{nameof(ID2D1Shader)}")))
-                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .WithExpressionBody(ArrowExpressionClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(inputCount))))
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputCount => {info.InputTypes.Length};");
         }
     }
 }
