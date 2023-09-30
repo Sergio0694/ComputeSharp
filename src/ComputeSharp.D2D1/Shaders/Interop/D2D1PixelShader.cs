@@ -387,7 +387,9 @@ public static class D2D1PixelShader
     public static int GetConstantBufferSize<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return D2D1BufferSizeDispatchDataLoader.For<T>.ConstantBufferSize;
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ConstantBufferSize;
     }
 
     /// <summary>
