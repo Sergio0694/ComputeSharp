@@ -62,6 +62,9 @@ partial class ID2D1ShaderGenerator
                                 break;
                         }
                     }
+
+                    writer.WriteLine();
+                    writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));");
                 }
             }
         }

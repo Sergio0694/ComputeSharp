@@ -64,7 +64,7 @@ partial class ID2D1ShaderGenerator
                             // global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.<FIELD_PATH>)[N] = buffer.<CONSTANT_BUFFER_ROW_N_PATH>;
                             for (int j = 0; j < matrix.Rows; j++)
                             {
-                                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.{fieldPath})[0] = buffer.{fieldNamePrefix}_{j};");
+                                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.AsRef(in this.{fieldPath})[{j}] = buffer.{fieldNamePrefix}_{j};");
                             }
 
                             break;
