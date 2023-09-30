@@ -22,6 +22,7 @@ partial class ID2D1ShaderGenerator
 
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
             writer.WriteLine($"readonly unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
 
             using (writer.WriteBlock())
@@ -34,6 +35,7 @@ partial class ID2D1ShaderGenerator
                 else
                 {
                     writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer;");
+                    writer.WriteLine();
 
                     // Generate loading statements for each captured field
                     foreach (FieldInfo fieldInfo in info.Fields)
