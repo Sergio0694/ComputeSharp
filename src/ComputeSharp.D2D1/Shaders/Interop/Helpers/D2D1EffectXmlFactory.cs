@@ -1,6 +1,6 @@
 using System;
+using System.Buffers;
 using System.Text;
-using System.Threading;
 using ComputeSharp.D2D1.Descriptors;
 
 #pragma warning disable CS0618
@@ -27,18 +27,13 @@ internal static unsafe class D2D1EffectXmlFactory
     {
         StringBuilder builder = XmlBuilder;
 
-        // We assume that the typical use of these APIs is not to ever try to concurrently register multiple
-        // effects, also because D2D factories are not even thread-safe anyway. So we can just serialize calls
-        // to the registration APIs and get away with a very simple and fast caching scheme, where we simply
-        // use a single StringBuilder instance as temporary buffer to write the XML text to. The builder is
-        // initialized with a size of 4096, which should be more than enough to hold pretty much all XML values.
-        // When the returned Buffer value is disposed, the lock will be released.
-        Monitor.Enter(builder);
-
-        // Guard the XML building logic in a try/finally to avoid hanging
-        try
+        // We use a simple caching schema here with a single StringBuilder instance shared across all threads.
+        // It is only used to write the effect XML blob and copy it, which is extremely fast. The lock itself
+        // is not taken during the actual effect registration, but only to build the effect XML text. The builder
+        // is initialized with a size of 4096, which should be more than enough to hold pretty much all XML values.
+        lock (builder)
         {
-            _ = XmlBuilder.Clear();
+            _ = builder.Clear();
 
             // Write the metadata properties for the effect
             _ = builder.Append($"""
@@ -121,14 +116,9 @@ internal static unsafe class D2D1EffectXmlFactory
 
             // Null terminator for the text
             _ = builder.Append('\0');
-        }
-        catch
-        {
-            // Something went wrong building the XML, so we have to release the lock early
-            Monitor.Exit(builder);
-        }
 
-        return new(builder);
+            return new(builder);
+        }
     }
 
     /// <summary>
@@ -137,9 +127,14 @@ internal static unsafe class D2D1EffectXmlFactory
     public readonly ref struct EffectXml
     {
         /// <summary>
-        /// The <see cref="StringBuilder"/> instance holding the registration blob.
+        /// The <see cref="char"/> buffer with the effect XML blob.
         /// </summary>
-        private readonly StringBuilder builder;
+        private readonly char[] buffer;
+
+        /// <summary>
+        /// The length of the effect XML blob.
+        /// </summary>
+        private readonly int length;
 
         /// <summary>
         /// Creates a new <see cref="EffectXml"/> value with the specified parameters.
@@ -148,36 +143,28 @@ internal static unsafe class D2D1EffectXmlFactory
         [Obsolete($"This should only be used by {nameof(D2D1EffectXmlFactory)}.")]
         public EffectXml(StringBuilder builder)
         {
-            this.builder = builder;
+            // Rent a buffer from the pool with the current builder size
+            this.buffer = ArrayPool<char>.Shared.Rent(builder.Length);
+            this.length = builder.Length;
+
+            // Copy the current builder content with the effect XML blob into the
+            // rented buffer. This allows the builder to be reused for other effects.
+            builder.CopyTo(0, this.buffer, 0, builder.Length);
         }
 
         /// <summary>
-        /// Gets a <see cref="ReadOnlySpan{T}"/> for the buffer (pretty much always with no allocation).
+        /// Gets a <see cref="ReadOnlySpan{T}"/> for the effect XML blob.
         /// </summary>
         /// <returns>The <see cref="ReadOnlySpan{T}"/> value with the effect XML blob.</returns>
-        public ReadOnlySpan<char> GetOrAllocateBuffer()
+        public ReadOnlySpan<char> GetBuffer()
         {
-#if NET6_0_OR_GREATER
-            StringBuilder.ChunkEnumerator enumerator = this.builder.GetChunks();
-
-            if (enumerator.MoveNext())
-            {
-                ReadOnlyMemory<char> segment = enumerator.Current;
-
-                if (!enumerator.MoveNext())
-                {
-                    return segment.Span;
-                }
-            }
-#endif
-
-            return this.builder.ToString().AsSpan();
+            return this.buffer.AsSpan(0, this.length);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            Monitor.Exit(this.builder);
+            ArrayPool<char>.Shared.Return(this.buffer);
         }
     }
 }

@@ -105,7 +105,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         using D2D1EffectXmlFactory.EffectXml effectXml = D2D1EffectXmlFactory.GetXmlBuffer<T>();
 
-        fixed (char* pXml = effectXml.GetOrAllocateBuffer())
+        fixed (char* pXml = effectXml.GetBuffer())
         fixed (char* pBufferPropertyName = nameof(D2D1PixelShaderEffectProperty.ConstantBuffer))
         fixed (char* pResourceTextureManager0PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager0))
         fixed (char* pResourceTextureManager1PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager1))
@@ -256,7 +256,7 @@ public static unsafe class D2D1PixelShaderEffect
         // Retrieve the effect XML and include it into the registration blob
         using (D2D1EffectXmlFactory.EffectXml effectXml = D2D1EffectXmlFactory.GetXmlBuffer<T>())
         {
-            ReadOnlySpan<char> registrationText = effectXml.GetOrAllocateBuffer();
+            ReadOnlySpan<char> registrationText = effectXml.GetBuffer();
             int maxRegistrationTextByteCount = Encoding.UTF8.GetMaxByteCount(registrationText.Length);
             byte[] registrationTextUtf8 = ArrayPool<byte>.Shared.Rent(maxRegistrationTextByteCount);
 
