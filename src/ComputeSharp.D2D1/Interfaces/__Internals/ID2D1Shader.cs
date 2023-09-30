@@ -68,11 +68,25 @@ public interface ID2D1Shader
     D2D1PixelOptions PixelOptions { get; }
 
     /// <summary>
+    /// Gets the size in bytes of the constant buffer for the current shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    int ConstantBufferSize { get; }
+
+    /// <summary>
     /// Gets the number of inputs for the current shader.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     int InputCount { get; }
+
+    /// <summary>
+    /// Gets the number of resource textures for the current shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    int ResourceTextureCount { get; }
 
     /// <summary>
     /// Gets the input types for the current shader.

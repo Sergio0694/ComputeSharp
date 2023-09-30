@@ -201,7 +201,9 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(EffectMetadata.WriteEffectDescriptionSyntax);
             declaredMembers.Add(EffectMetadata.WriteEffectCategorySyntax);
             declaredMembers.Add(EffectMetadata.WriteEffectAuthorSyntax);
-            declaredMembers.Add(InputCount.WriteSyntax);
+            declaredMembers.Add(NumericProperties.WriteConstantBufferSizeSyntax);
+            declaredMembers.Add(NumericProperties.WriteInputCountSyntax);
+            declaredMembers.Add(NumericProperties.WriteResourceTextureCountSyntax);
             declaredMembers.Add(InputTypes.WriteSyntax);
             declaredMembers.Add(InputDescriptions.WriteSyntax);
             declaredMembers.Add(ResourceTextureDescriptions.WriteSyntax);

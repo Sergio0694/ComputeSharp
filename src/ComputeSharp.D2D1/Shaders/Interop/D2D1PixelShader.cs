@@ -296,6 +296,19 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
+    /// Gets the number of resource textures for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture count for.</typeparam>
+    /// <returns>The number of resource texture for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static int GetResourceTextureCount<T>()
+        where T : unmanaged, ID2D1PixelShader
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ResourceTextureCount;
+    }
+
+    /// <summary>
     /// Gets the input types for a D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input types for.</typeparam>
@@ -387,7 +400,9 @@ public static class D2D1PixelShader
     public static int GetConstantBufferSize<T>()
         where T : unmanaged, ID2D1PixelShader
     {
-        return D2D1BufferSizeDispatchDataLoader.For<T>.ConstantBufferSize;
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ConstantBufferSize;
     }
 
     /// <summary>

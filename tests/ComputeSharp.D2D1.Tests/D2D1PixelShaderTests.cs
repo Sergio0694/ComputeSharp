@@ -235,6 +235,43 @@ public partial class D2D1PixelShaderTests
         Assert.AreEqual(span[3].Dimensions, 2);
     }
 
+    [TestMethod]
+    public unsafe void GetResourceTextureCount_IsCorrect()
+    {
+        Assert.AreEqual(0, D2D1PixelShader.GetResourceTextureCount<ShaderWithoutResourceTextures>());
+        Assert.AreEqual(1, D2D1PixelShader.GetResourceTextureCount<ShaderWithJustOneResourceTextures>());
+        Assert.AreEqual(4, D2D1PixelShader.GetResourceTextureCount<ShaderWithResourceTextures>());
+    }
+
+    [D2DInputCount(4)]
+    [D2DInputSimple(0)]
+    [D2DInputSimple(2)]
+    [D2DInputComplex(1)]
+    [D2DInputComplex(3)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [AutoConstructor]
+    partial struct ShaderWithoutResourceTextures : ID2D1PixelShader
+    {
+        public Float4 Execute()
+        {
+            return 0;
+        }
+    }
+
+    [D2DInputCount(0)]
+    [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [AutoConstructor]
+    partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
+    {
+        [D2DResourceTextureIndex(0)]
+        D2D1ResourceTexture1D<float> myTexture;
+
+        public Float4 Execute()
+        {
+            return this.myTexture.Sample(0);
+        }
+    }
+
     [D2DInputCount(4)]
     [D2DInputSimple(0)]
     [D2DInputSimple(2)]
