@@ -82,6 +82,13 @@ public interface ID2D1Shader
     int InputCount { get; }
 
     /// <summary>
+    /// Gets the number of resource textures for the current shader.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    int ResourceTextureCount { get; }
+
+    /// <summary>
     /// Gets the input types for the current shader.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]

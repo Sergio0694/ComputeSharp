@@ -35,5 +35,17 @@ partial class ID2D1ShaderGenerator
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
             writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputCount => {info.InputTypes.Length};");
         }
+
+        /// <summary>
+        /// Writes the <c>ResourceTextureCount</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteResourceTextureCountSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureCount => {info.ResourceTextureDescriptions.Length};");
+        }
     }
 }
