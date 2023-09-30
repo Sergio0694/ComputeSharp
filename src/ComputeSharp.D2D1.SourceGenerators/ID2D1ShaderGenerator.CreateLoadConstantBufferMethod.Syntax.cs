@@ -9,10 +9,10 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class LoadDispatchData
+    partial class LoadConstantBuffer
     {
         /// <summary>
-        /// Writes the <c>LoadDispatchData</c> method.
+        /// Writes the <c>LoadConstantBuffer</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>

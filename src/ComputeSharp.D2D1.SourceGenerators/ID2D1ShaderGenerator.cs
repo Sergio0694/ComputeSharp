@@ -74,7 +74,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
                     // LoadDispatchData() info
-                    ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
+                    ImmutableArray<FieldInfo> fieldInfos = LoadConstantBuffer.GetInfo(
                         diagnostics,
                         typeSymbol,
                         out int constantBufferSizeInBytes);
@@ -132,11 +132,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Get the shader profile and linking info for LoadBytecode()
-                    bool isLinkingSupported = LoadBytecode.IsSimpleInputShader(typeSymbol, inputCount);
-                    D2D1ShaderProfile? requestedShaderProfile = LoadBytecode.GetRequestedShaderProfile(typeSymbol);
-                    D2D1CompileOptions? requestedCompileOptions = LoadBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
-                    D2D1ShaderProfile effectiveShaderProfile = LoadBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
-                    D2D1CompileOptions effectiveCompileOptions = LoadBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
+                    bool isLinkingSupported = HlslBytecode.IsSimpleInputShader(typeSymbol, inputCount);
+                    D2D1ShaderProfile? requestedShaderProfile = HlslBytecode.GetRequestedShaderProfile(typeSymbol);
+                    D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
+                    D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
+                    D2D1CompileOptions effectiveCompileOptions = HlslBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
                     bool hasErrors = diagnostics.Count > 0;
 
                     token.ThrowIfCancellationRequested();
@@ -152,12 +152,12 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         hasErrors);
 
                     // TODO: cache this across transform runs
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetInfo(ref hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
                     // Append any diagnostic for the shader compilation
-                    LoadBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 
@@ -210,20 +210,20 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(PixelOptions.WriteSyntax);
             declaredMembers.Add(OutputBuffer.WriteBufferPrecisionSyntax);
             declaredMembers.Add(OutputBuffer.WriteChannelDepthSyntax);
-            declaredMembers.Add(LoadBytecode.WriteShaderProfileSyntax);
-            declaredMembers.Add(LoadBytecode.WriteCompileOptionsSyntax);
+            declaredMembers.Add(HlslBytecode.WriteShaderProfileSyntax);
+            declaredMembers.Add(HlslBytecode.WriteCompileOptionsSyntax);
             declaredMembers.Add(HlslSource.WriteSyntax);
-            declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
-            declaredMembers.Add(InitializeFromDispatchData.WriteSyntax);
-            declaredMembers.Add(LoadDispatchData.WriteSyntax);
+            declaredMembers.Add(HlslBytecode.WriteHlslBytecodeSyntax);
+            declaredMembers.Add(CreateFromConstantBuffer.WriteSyntax);
+            declaredMembers.Add(LoadConstantBuffer.WriteSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
             using ImmutableHashSetBuilder<string> usingDirectives = ImmutableHashSetBuilder<string>.Rent();
 
-            LoadDispatchData.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            LoadConstantBuffer.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
-            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = IndentedTextWriter.Rent();
 

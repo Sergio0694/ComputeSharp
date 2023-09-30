@@ -10,7 +10,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class LoadBytecode
+    partial class HlslBytecode
     {
         /// <summary>
         /// Writes the <c>ShaderProfile</c> property.

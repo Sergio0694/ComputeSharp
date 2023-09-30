@@ -18,9 +18,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadDispatchData</c> method.
+    /// A helper with all logic to generate the <c>LoadConstantBuffer</c> method.
     /// </summary>
-    private static partial class LoadDispatchData
+    private static partial class LoadConstantBuffer
     {
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.

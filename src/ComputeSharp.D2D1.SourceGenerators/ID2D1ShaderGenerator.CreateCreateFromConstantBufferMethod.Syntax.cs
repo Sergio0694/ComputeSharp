@@ -8,7 +8,7 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class InitializeFromDispatchData
+    partial class CreateFromConstantBuffer
     {
         /// <summary>
         /// Writes the <c>CreateFromConstantBuffer</c> method.
