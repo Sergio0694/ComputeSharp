@@ -1,6 +1,7 @@
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+using ComputeSharp.SourceGeneration.Mappings;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -52,18 +53,20 @@ partial class ID2D1ShaderGenerator
                             break;
 
                         case FieldInfo.NonLinearMatrix matrix:
+                            string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
+                            string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
                             string fieldPath = string.Join(".", matrix.FieldPath);
                             string fieldNamePrefix = string.Join("_", matrix.FieldPath);
 
                             // Read all rows of a given matrix type:
                             //
-                            // (*&shader.<FIELD_PATH>)[0] = buffer.<CONSTANT_BUFFER_ROW_0_PATH>;
-                            // (*&shader.<FIELD_PATH>)[1] = buffer.<CONSTANT_BUFFER_ROW_1_PATH>;
+                            // Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref (*&shader.<FIELD_PATH>).M11) = buffer.<CONSTANT_BUFFER_ROW_0_PATH>;
+                            // Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref (*&shader.<FIELD_PATH>).M21) = buffer.<CONSTANT_BUFFER_ROW_1_PATH>;
                             // ...
-                            // (*&shader.<FIELD_PATH>)[N] = buffer.<CONSTANT_BUFFER_ROW_N_PATH>;
+                            // Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref (*&shader.<FIELD_PATH>).MN1) = buffer.<CONSTANT_BUFFER_ROW_N_PATH>;
                             for (int j = 0; j < matrix.Rows; j++)
                             {
-                                writer.WriteLine($"(*&shader.{fieldPath})[{j}] = buffer.{fieldNamePrefix}_{j};");
+                                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref (*&shader.{fieldPath}).M{j + 1}1) = buffer.{fieldNamePrefix}_{j};");
                             }
 
                             break;

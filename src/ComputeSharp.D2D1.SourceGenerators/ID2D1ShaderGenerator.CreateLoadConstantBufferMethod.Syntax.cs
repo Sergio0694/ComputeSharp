@@ -45,22 +45,24 @@ partial class ID2D1ShaderGenerator
                             case FieldInfo.Primitive primitive:
 
                                 // Assign a primitive value
-                                writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath)} = this.{string.Join(".", primitive.FieldPath)};");
+                                writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath)} = shader.{string.Join(".", primitive.FieldPath)};");
                                 break;
 
                             case FieldInfo.NonLinearMatrix matrix:
+                                string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
+                                string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
                                 string fieldPath = string.Join(".", matrix.FieldPath);
                                 string fieldNamePrefix = string.Join("_", matrix.FieldPath);
 
                                 // Assign all rows of a given matrix type:
                                 //
-                                // buffer.<CONSTANT_BUFFER_ROW_0_PATH> = this.<FIELD_PATH>[0];
-                                // buffer.<CONSTANT_BUFFER_ROW_1_PATH> = this.<FIELD_PATH>[1];
+                                // buffer.<CONSTANT_BUFFER_ROW_0_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).M11);
+                                // buffer.<CONSTANT_BUFFER_ROW_1_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).M21);
                                 // ...
-                                // buffer.<CONSTANT_BUFFER_ROW_N_PATH> = this.<FIELD_PATH>[N];
+                                // buffer.<CONSTANT_BUFFER_ROW_N_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).MN1);
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
-                                    writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = this.{fieldPath}[{j}];");
+                                    writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = global::System.Runtime.CompilerServices.Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in shader.{fieldPath}).M{j + 1}1);");
                                 }
 
                                 break;
