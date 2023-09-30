@@ -1,16 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.__Internals;
+using ComputeSharp.D2D1.Descriptors;
 using TerraFX.Interop.DirectX;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 
 /// <summary>
 /// A data loader for D2D1 pixel shaders dispatched via <see cref="ID2D1DrawInfo"/>.
 /// </summary>
-internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoader
+internal unsafe struct D2D1ByteBufferConstantBufferLoader : ID2D1ConstantBufferLoader
 {
     /// <summary>
     /// The target buffer to write data to.
@@ -28,12 +26,12 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     private int writtenBytes;
 
     /// <summary>
-    /// Creates a new <see cref="D2D1ByteBufferDispatchDataLoader"/> instance.
+    /// Creates a new <see cref="D2D1ByteBufferConstantBufferLoader"/> instance.
     /// </summary>
     /// <param name="buffer">The target buffer to write data to.</param>
     /// <param name="length">The length of the buffer pointed to by <see cref="buffer"/>.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal D2D1ByteBufferDispatchDataLoader(byte* buffer, int length)
+    internal D2D1ByteBufferConstantBufferLoader(byte* buffer, int length)
     {
         this.buffer = buffer;
         this.length = length;
@@ -65,7 +63,7 @@ internal unsafe struct D2D1ByteBufferDispatchDataLoader : ID2D1DispatchDataLoade
     }
 
     /// <inheritdoc/>
-    void ID2D1DispatchDataLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
+    void ID2D1ConstantBufferLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
     {
         if (data.TryCopyTo(new Span<byte>(this.buffer, this.length)))
         {

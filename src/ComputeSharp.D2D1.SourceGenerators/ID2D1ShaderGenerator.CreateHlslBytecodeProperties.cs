@@ -21,9 +21,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadBytecode</c> method.
+    /// A helper with all logic to generate the HLSL bytecode properties.
     /// </summary>
-    internal static partial class LoadBytecode
+    internal static partial class HlslBytecode
     {
         /// <summary>
         /// The shared cache of <see cref="HlslBytecodeInfo"/> values.

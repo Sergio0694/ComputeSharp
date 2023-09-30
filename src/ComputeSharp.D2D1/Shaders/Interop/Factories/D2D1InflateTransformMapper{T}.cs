@@ -1,3 +1,4 @@
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
@@ -9,7 +10,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Factories;
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
 internal abstract class D2D1InflateTransformMapper<T> : D2D1TransformMapper<T, (int Left, int Top, int Right, int Bottom)>
-    where T : unmanaged, ID2D1PixelShader
+    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <inheritdoc/>
     protected sealed override void TransformInputToOutput(in (int Left, int Top, int Right, int Bottom) parameters, ref Rectangle64 rectangle)

@@ -2,14 +2,13 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 #if WINDOWS_UWP
 namespace ComputeSharp.D2D1.Uwp.Extensions;
@@ -29,7 +28,7 @@ internal static unsafe class ID2D1EffectExtensions
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
     /// <returns>The constant buffer of type <typeparamref name="T"/> for <paramref name="d2D1Effect"/>.</returns>
     public static T GetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
 
@@ -55,7 +54,7 @@ internal static unsafe class ID2D1EffectExtensions
 
         Unsafe.SkipInit(out T shader);
 
-        shader.InitializeFromDispatchData(buffer.AsSpan(0, constantBufferSize));
+        shader = shader.CreateFromConstantBuffer(buffer.AsSpan(0, constantBufferSize));
 
         ArrayPool<byte>.Shared.Return(buffer);
 
@@ -69,7 +68,7 @@ internal static unsafe class ID2D1EffectExtensions
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
     /// <param name="value">The constant buffer value to set.</param>
     public static void SetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect, in T value)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         // Same as above, simply do nothing for empty types. This case is still handled to
         // avoid crashing when someone's just setting an empty constant buffer, which is
@@ -90,7 +89,7 @@ internal static unsafe class ID2D1EffectExtensions
     /// <param name="d2D1Effect">The input <see cref="ID2D1Effect"/> instance.</param>
     /// <returns>The <see cref="D2D1TransformMapper{T}"/> instance for <paramref name="d2D1Effect"/>.</returns>
     public static D2D1TransformMapper<T>? GetTransformMapper<T>(this ref ID2D1Effect d2D1Effect)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         using ComPtr<ID2D1TransformMapper> d2D1TransformMapper = default;
 

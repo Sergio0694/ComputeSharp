@@ -9,18 +9,21 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class ID2D1ShaderGenerator
 {
     /// <inheritdoc/>
-    partial class LoadDispatchData
+    partial class LoadConstantBuffer
     {
         /// <summary>
-        /// Writes the <c>LoadDispatchData</c> method.
+        /// Writes the <c>LoadConstantBuffer</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine("readonly unsafe void global::ComputeSharp.D2D1.__Internals.ID2D1Shader.LoadDispatchData<TLoader>(ref TLoader loader)");
+            writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
+            writer.WriteLine($"readonly unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
 
             using (writer.WriteBlock())
             {
@@ -32,6 +35,7 @@ partial class ID2D1ShaderGenerator
                 else
                 {
                     writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer;");
+                    writer.WriteLine();
 
                     // Generate loading statements for each captured field
                     foreach (FieldInfo fieldInfo in info.Fields)

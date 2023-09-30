@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.SwapChain.Shaders.D2D1;
@@ -114,7 +115,7 @@ public class ShadersTests
     }
 
     private static void RunTest<T>(float threshold = 0.00001f)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         T shader = (T)Activator.CreateInstance(typeof(T), 0f, new int2(1280, 720))!;
 

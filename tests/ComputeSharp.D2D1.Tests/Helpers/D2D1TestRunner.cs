@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Tests.Helpers;
 using Win32;
@@ -32,7 +33,7 @@ internal static class D2D1TestRunner
         string expectedFileName,
         [CallerMemberName] string destinationFileName = "",
         float threshold = 0.00001f)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string temporaryPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "temp");
@@ -73,7 +74,7 @@ internal static class D2D1TestRunner
         [CallerMemberName] string destinationFileName = "",
         float threshold = 0.00001f,
         params (int Index, D2D1ResourceTextureManager ResourceTextureManager)[] resourceTextures)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
         string temporaryPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "temp");
@@ -109,7 +110,7 @@ internal static class D2D1TestRunner
         D2D1TransformMapper<T>? transformMapper,
         string sourcePath,
         string destinationPath)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
@@ -158,7 +159,7 @@ internal static class D2D1TestRunner
         int height,
         string destinationPath,
         params (int Index, D2D1ResourceTextureManager ResourceTextureManager)[] resourceTextures)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
         using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());

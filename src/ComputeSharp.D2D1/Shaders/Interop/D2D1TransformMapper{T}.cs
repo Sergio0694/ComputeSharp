@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.Windows;
@@ -94,7 +95,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// </para>
 /// </remarks>
 public abstract unsafe class D2D1TransformMapper<T> : ICustomQueryInterface, ID2D1TransformMapperInterop
-    where T : unmanaged, ID2D1PixelShader
+    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <summary>
     /// The <see cref="D2D1TransformMapperImpl"/> object wrapped by the current instance.

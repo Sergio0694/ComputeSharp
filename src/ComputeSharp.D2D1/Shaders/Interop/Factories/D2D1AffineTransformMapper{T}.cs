@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Shaders.Interop.Factories.Abstract;
 using ComputeSharp.D2D1.Shaders.Interop.Helpers;
@@ -80,7 +81,7 @@ file static class D2D1AffineTransformMapper
 /// </summary>
 /// <typeparam name="T">The type of D2D1 pixel shader associated to the transform mapper.</typeparam>
 internal abstract class D2D1AffineTransformMapper<T> : D2D1TransformMapper<T, Matrix3x2>
-    where T : unmanaged, ID2D1PixelShader
+    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <inheritdoc/>
     protected sealed override void TransformInputToOutput(in Matrix3x2 parameters, ref Rectangle64 rectangle)

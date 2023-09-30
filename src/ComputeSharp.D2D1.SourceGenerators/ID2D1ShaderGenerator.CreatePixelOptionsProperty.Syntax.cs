@@ -26,7 +26,7 @@ partial class ID2D1ShaderGenerator
 
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1PixelOptions global::ComputeSharp.D2D1.__Internals.ID2D1Shader.PixelOptions => {pixelOptionsExpression};");
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1PixelOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.PixelOptions => {pixelOptionsExpression};");
         }
     }
 }

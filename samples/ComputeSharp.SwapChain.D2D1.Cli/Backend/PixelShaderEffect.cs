@@ -1,5 +1,6 @@
 using System;
 using ComputeSharp.D2D1;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.WinUI;
 
 namespace ComputeSharp.SwapChain.D2D1.Backend;
@@ -56,7 +57,7 @@ internal abstract class PixelShaderEffect : CanvasEffect
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to render.</typeparam>
     public sealed class For<T> : PixelShaderEffect
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         /// <summary>
         /// The <see cref="PixelShaderEffect{T}"/> node in use.

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop.Effects;
 using ComputeSharp.D2D1.Shaders.Interop.Buffers;
@@ -8,8 +9,6 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -24,7 +23,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect id for.</typeparam>
     /// <returns>The effect id of the D2D effect using <typeparamref name="T"/> shaders.</returns>
     public static ref readonly Guid GetEffectId<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -37,7 +36,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect display name for.</typeparam>
     /// <returns>The effect display name of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
     public static string? GetEffectDisplayName<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -50,7 +49,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect description for.</typeparam>
     /// <returns>The effect description of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
     public static string? GetEffectDescription<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -63,7 +62,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect category for.</typeparam>
     /// <returns>The effect category of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
     public static string? GetEffectCategory<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -76,7 +75,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <typeparam name="T">The type of D2D1 pixel shader to get the effect author for.</typeparam>
     /// <returns>The effect author of the D2D effect using <typeparamref name="T"/> shaders, if available.</returns>
     public static string? GetEffectAuthor<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -96,7 +95,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</para>
     /// </remarks>
     public static void RegisterForD2D1Factory1<T>(void* d2D1Factory1, out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Factory1);
 
@@ -345,7 +344,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1factory1-registereffectfromstring"/>.</para>
     /// </remarks>
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         ArrayPoolBufferWriter<byte> writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
@@ -560,7 +559,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// </exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1devicecontext-createeffect"/>.</remarks>
     public static void CreateFromD2D1DeviceContext<T>(void* d2D1DeviceContext, void** d2D1Effect)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentNullException).ThrowIfNull(d2D1DeviceContext);
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
@@ -582,13 +581,13 @@ public static unsafe class D2D1PixelShaderEffect
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> is <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetConstantBufferForD2D1Effect<T>(void* d2D1Effect, in T shader)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
-        D2D1EffectDispatchDataLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
+        D2D1EffectConstantBufferLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
 
-        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
     }
 
     /// <summary>
@@ -662,7 +661,7 @@ public static unsafe class D2D1PixelShaderEffect
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="transformMapper"/> are <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
     public static void SetTransformMapperForD2D1Effect<T>(void* d2D1Effect, D2D1TransformMapper<T> transformMapper)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(transformMapper);

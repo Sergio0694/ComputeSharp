@@ -21,7 +21,7 @@ partial class ID2D1ShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
+            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ partial class ID2D1ShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.InputCount => {info.InputTypes.Length};");
+            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.InputCount => {info.InputTypes.Length};");
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ partial class ID2D1ShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ResourceTextureCount => {info.ResourceTextureDescriptions.Length};");
+            writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceTextureCount => {info.ResourceTextureDescriptions.Length};");
         }
     }
 }

@@ -1,11 +1,10 @@
 using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -28,7 +27,7 @@ public static class D2D1ReflectionServices
     /// </para>
     /// </remarks>
     public static unsafe D2D1ShaderInfo GetShaderInfo<T>()
-        where T : struct, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 

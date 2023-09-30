@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 #endif
 using ABI.Microsoft.Graphics.Canvas;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Graphics.Canvas;
@@ -20,7 +21,7 @@ namespace ComputeSharp.D2D1.WinUI;
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
 public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICanvasEffect, ICanvasImageInterop.Interface
-    where T : unmanaged, ID2D1PixelShader
+    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <summary>
     /// The <see cref="ReferenceTracker"/> value for the current instance.

@@ -28,7 +28,7 @@ partial class ID2D1ShaderGenerator
 
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1BufferPrecision global::ComputeSharp.D2D1.__Internals.ID2D1Shader.BufferPrecision => {bufferPrecisionExpression};");
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1BufferPrecision global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.BufferPrecision => {bufferPrecisionExpression};");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ partial class ID2D1ShaderGenerator
 
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ChannelDepth global::ComputeSharp.D2D1.__Internals.ID2D1Shader.ChannelDepth => {channelDepthExpression};");
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ChannelDepth global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ChannelDepth => {channelDepthExpression};");
         }
     }
 }
