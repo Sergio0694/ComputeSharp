@@ -1,10 +1,9 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.D2D1.Shaders.Loaders;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -13,7 +12,7 @@ namespace ComputeSharp.D2D1.Interop;
 /// </summary>
 /// <typeparam name="T">The type of shader the transform will interact with.</typeparam>
 public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
-    where T : unmanaged, ID2D1PixelShader
+    where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
 {
     /// <summary>
     /// The <see cref="ID2D1DrawInfoUpdateContext"/> instance associated with the current object.
@@ -48,7 +47,7 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
 
         Unsafe.SkipInit(out T shader);
 
-        shader.InitializeFromDispatchData(buffer);
+        shader = shader.CreateFromConstantBuffer(buffer);
 
         ArrayPool<byte>.Shared.Return(buffer);
 
@@ -61,8 +60,8 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
     /// <param name="shader">The <typeparamref name="T"/> instance to be used in the associated effect.</param>
     public void SetConstantBuffer(in T shader)
     {
-        D2D1DrawInfoUpdateContextDispatchDataLoader dataLoader = new(this.d2D1DrawInfoUpdateContext);
+        D2D1DrawInfoUpdateContextConstantBufferLoader dataLoader = new(this.d2D1DrawInfoUpdateContext);
 
-        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
     }
 }

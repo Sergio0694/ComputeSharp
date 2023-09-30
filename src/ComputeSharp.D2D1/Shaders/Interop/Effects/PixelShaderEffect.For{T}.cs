@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Descriptors;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -27,7 +28,7 @@ internal unsafe partial struct PixelShaderEffect
     /// </summary>
     /// <typeparam name="T">The type of shader.</typeparam>
     public sealed class For<T>
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         /// <summary>
         /// The <see cref="FactoryDelegate"/> wrapper for the shader factory.

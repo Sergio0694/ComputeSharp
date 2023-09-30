@@ -1,11 +1,10 @@
 using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.D2D1.Interop;
 
@@ -27,7 +26,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -58,7 +57,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(out D2D1ShaderProfile shaderProfile, out D2D1CompileOptions compileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         return LoadOrCompileBytecode<T>(null, null, out shaderProfile, out compileOptions);
     }
@@ -84,7 +83,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         return LoadOrCompileBytecode<T>(shaderProfile, null, out _, out _);
     }
@@ -111,7 +110,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile, out D2D1CompileOptions compileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         return LoadOrCompileBytecode<T>(shaderProfile, null, out _, out compileOptions);
     }
@@ -140,7 +139,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions compileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
@@ -172,7 +171,7 @@ public static class D2D1PixelShader
     /// </para>
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1CompileOptions compileOptions, out D2D1ShaderProfile shaderProfile)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
@@ -195,7 +194,7 @@ public static class D2D1PixelShader
     /// If the shader was compiled at runtime, the returned <see cref="ReadOnlyMemory{T}"/> instance will wrap a <see cref="byte"/> array with the bytecode.
     /// </remarks>
     public static ReadOnlyMemory<byte> LoadBytecode<T>(D2D1ShaderProfile shaderProfile, D2D1CompileOptions compileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentException).ThrowIf((compileOptions & D2D1CompileOptions.PackMatrixColumnMajor) != 0, nameof(compileOptions));
 
@@ -217,7 +216,7 @@ public static class D2D1PixelShader
         D2D1CompileOptions? requestedCompileOptions,
         out D2D1ShaderProfile effectiveShaderProfile,
         out D2D1CompileOptions effectiveCompileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -250,7 +249,7 @@ public static class D2D1PixelShader
         D2D1CompileOptions? requestedCompileOptions,
         out D2D1ShaderProfile effectiveShaderProfile,
         out D2D1CompileOptions effectiveCompileOptions)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -275,7 +274,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the pixel options for.</typeparam>
     /// <returns>The pixel options for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static D2D1PixelOptions GetPixelOptions<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -288,7 +287,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
     /// <returns>The number of inputs for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static int GetInputCount<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -301,7 +300,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture count for.</typeparam>
     /// <returns>The number of resource texture for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static int GetResourceTextureCount<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -314,7 +313,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input types for.</typeparam>
     /// <returns>The input types of the target D2D1 pixel shader.</returns>
     public static ReadOnlyMemory<D2D1PixelShaderInputType> GetInputTypes<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -327,7 +326,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the input descriptions for.</typeparam>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available input descriptions for the shader.</returns>
     public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -340,7 +339,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture descriptions for.</typeparam>
     /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available resource texture descriptions for the shader.</returns>
     public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -353,7 +352,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer precision for.</typeparam>
     /// <returns>The output buffer precision for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static D2D1BufferPrecision GetOutputBufferPrecision<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -366,7 +365,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer channel depth for.</typeparam>
     /// <returns>The output buffer channel depth for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static D2D1ChannelDepth GetOutputBufferChannelDepth<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -383,11 +382,11 @@ public static class D2D1PixelShader
     /// This method will allocate a buffer every time it is invoked.
     /// For a zero-allocation alternative, use <see cref="SetConstantBufferForD2D1DrawInfo"/>.</remarks>
     public static ReadOnlyMemory<byte> GetConstantBuffer<T>(in T shader)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        D2D1ByteArrayDispatchDataLoader dataLoader = default;
+        D2D1ByteArrayConstantBufferLoader dataLoader = default;
 
-        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
 
         return dataLoader.GetResultingDispatchData();
     }
@@ -398,7 +397,7 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
     /// <returns>The size of the constant buffer for a D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
     public static int GetConstantBufferSize<T>()
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         Unsafe.SkipInit(out T shader);
 
@@ -414,7 +413,7 @@ public static class D2D1PixelShader
     /// <returns>The number of bytes written into <paramref name="span"/>.</returns>
     /// <exception cref="ArgumentException">Thrown if <paramref name="span"/> is not large enough to contain the constant buffer.</exception>
     public static int GetConstantBuffer<T>(in T shader, Span<byte> span)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         if (!TryGetConstantBuffer(in shader, span, out int writtenBytes))
         {
@@ -433,13 +432,13 @@ public static class D2D1PixelShader
     /// <param name="bytesWritten">The number of bytes written into <paramref name="span"/>.</param>
     /// <returns>Whether or not the constant buffer was retrieved successfully.</returns>
     public static unsafe bool TryGetConstantBuffer<T>(in T shader, Span<byte> span, out int bytesWritten)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         fixed (byte* buffer = span)
         {
-            D2D1ByteBufferDispatchDataLoader dataLoader = new(buffer, span.Length);
+            D2D1ByteBufferConstantBufferLoader dataLoader = new(buffer, span.Length);
 
-            Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+            Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
 
             return dataLoader.TryGetWrittenBytes(out bytesWritten);
         }
@@ -454,12 +453,12 @@ public static class D2D1PixelShader
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1DrawInfo"/> is <see langword="null"/>.</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setpixelshaderconstantbuffer"/>.</remarks>
     public static unsafe void SetConstantBufferForD2D1DrawInfo<T>(void* d2D1DrawInfo, in T shader)
-        where T : unmanaged, ID2D1PixelShader
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         default(ArgumentNullException).ThrowIfNull(d2D1DrawInfo);
 
-        D2D1DrawInfoDispatchDataLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
+        D2D1DrawInfoConstantBufferLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
 
-        Unsafe.AsRef(in shader).LoadDispatchData(ref dataLoader);
+        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
     }
 }
