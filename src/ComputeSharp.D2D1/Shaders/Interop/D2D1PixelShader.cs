@@ -14,6 +14,123 @@ namespace ComputeSharp.D2D1.Interop;
 public static class D2D1PixelShader
 {
     /// <summary>
+    /// Gets the size of the constant buffer for a D2D1 pixel shader of a specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
+    /// <returns>The size of the constant buffer for a D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static int GetConstantBufferSize<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ConstantBufferSize;
+    }
+
+    /// <summary>
+    /// Gets the number of inputs from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
+    /// <returns>The number of inputs for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static int GetInputCount<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.InputCount;
+    }
+
+    /// <summary>
+    /// Gets the number of resource textures for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture count for.</typeparam>
+    /// <returns>The number of resource texture for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static int GetResourceTextureCount<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ResourceTextureCount;
+    }
+
+    /// <summary>
+    /// Gets the input types for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input types for.</typeparam>
+    /// <returns>The input types of the target D2D1 pixel shader.</returns>
+    public static ReadOnlyMemory<D2D1PixelShaderInputType> GetInputTypes<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.InputTypes;
+    }
+
+    /// <summary>
+    /// Gets the available input descriptions for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the input descriptions for.</typeparam>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available input descriptions for the shader.</returns>
+    public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.InputDescriptions;
+    }
+
+    /// <summary>
+    /// Gets the available resource texture descriptions for a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture descriptions for.</typeparam>
+    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available resource texture descriptions for the shader.</returns>
+    public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ResourceTextureDescriptions;
+    }
+
+    /// <summary>
+    /// Gets the pixel options from an input D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the pixel options for.</typeparam>
+    /// <returns>The pixel options for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1PixelOptions GetPixelOptions<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.PixelOptions;
+    }
+
+    /// <summary>
+    /// Gets the buffer precision for the output buffer of a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer precision for.</typeparam>
+    /// <returns>The output buffer precision for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1BufferPrecision GetOutputBufferPrecision<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.BufferPrecision;
+    }
+
+    /// <summary>
+    /// Gets the channel depth for the output buffer of a D2D1 pixel shader.
+    /// </summary>
+    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer channel depth for.</typeparam>
+    /// <returns>The output buffer channel depth for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
+    public static D2D1ChannelDepth GetOutputBufferChannelDepth<T>()
+        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
+    {
+        Unsafe.SkipInit(out T shader);
+
+        return shader.ChannelDepth;
+    }
+
+    /// <summary>
     /// Loads the bytecode from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to load the bytecode for.</typeparam>
@@ -269,110 +386,6 @@ public static class D2D1PixelShader
     }
 
     /// <summary>
-    /// Gets the pixel options from an input D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the pixel options for.</typeparam>
-    /// <returns>The pixel options for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static D2D1PixelOptions GetPixelOptions<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.PixelOptions;
-    }
-
-    /// <summary>
-    /// Gets the number of inputs from an input D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the input count for.</typeparam>
-    /// <returns>The number of inputs for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static int GetInputCount<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputCount;
-    }
-
-    /// <summary>
-    /// Gets the number of resource textures for a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture count for.</typeparam>
-    /// <returns>The number of resource texture for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static int GetResourceTextureCount<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ResourceTextureCount;
-    }
-
-    /// <summary>
-    /// Gets the input types for a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the input types for.</typeparam>
-    /// <returns>The input types of the target D2D1 pixel shader.</returns>
-    public static ReadOnlyMemory<D2D1PixelShaderInputType> GetInputTypes<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputTypes;
-    }
-
-    /// <summary>
-    /// Gets the available input descriptions for a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the input descriptions for.</typeparam>
-    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available input descriptions for the shader.</returns>
-    public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputDescriptions;
-    }
-
-    /// <summary>
-    /// Gets the available resource texture descriptions for a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the resource texture descriptions for.</typeparam>
-    /// <returns>A <see cref="ReadOnlyMemory{T}"/> with the available resource texture descriptions for the shader.</returns>
-    public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ResourceTextureDescriptions;
-    }
-
-    /// <summary>
-    /// Gets the buffer precision for the output buffer of a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer precision for.</typeparam>
-    /// <returns>The output buffer precision for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static D2D1BufferPrecision GetOutputBufferPrecision<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.BufferPrecision;
-    }
-
-    /// <summary>
-    /// Gets the channel depth for the output buffer of a D2D1 pixel shader.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to get the output buffer channel depth for.</typeparam>
-    /// <returns>The output buffer channel depth for the D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static D2D1ChannelDepth GetOutputBufferChannelDepth<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ChannelDepth;
-    }
-
-    /// <summary>
     /// Gets the constant buffer from an input D2D1 pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
@@ -389,19 +402,6 @@ public static class D2D1PixelShader
         Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
 
         return dataLoader.GetResultingDispatchData();
-    }
-
-    /// <summary>
-    /// Gets the size of the constant buffer for a D2D1 pixel shader of a specified type.
-    /// </summary>
-    /// <typeparam name="T">The type of D2D1 pixel shader to retrieve info for.</typeparam>
-    /// <returns>The size of the constant buffer for a D2D1 pixel shader of type <typeparamref name="T"/>.</returns>
-    public static int GetConstantBufferSize<T>()
-        where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
-    {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ConstantBufferSize;
     }
 
     /// <summary>
