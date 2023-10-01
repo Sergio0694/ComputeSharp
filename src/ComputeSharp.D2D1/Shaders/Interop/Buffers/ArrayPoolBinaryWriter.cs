@@ -5,32 +5,27 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 #endif
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 #if !NET6_0_OR_GREATER
 using BitOperations = ComputeSharp.NetStandard.BitOperations;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;
 
-/// <inheritdoc cref="ArrayPoolBufferWriter{T}"/>
-internal static class ArrayPoolBinaryWriter
+/// <summary>
+/// Represents a heap-based, array-backed output sink into which binary data can be written.
+/// </summary>
+internal ref struct ArrayPoolBinaryWriter
 {
     /// <summary>
     /// The default buffer size to use to expand empty arrays.
     /// </summary>
     public const int DefaultInitialBufferSize = 256;
-}
 
-/// <summary>
-/// Represents a heap-based, array-backed output sink into which data can be written.
-/// </summary>
-/// <typeparam name="T">The type of values to write.</typeparam>
-internal ref struct ArrayPoolBufferWriter<T>
-    where T : unmanaged
-{
     /// <summary>
-    /// The underlying <typeparamref name="T"/> array.
+    /// The underlying <see cref="byte"/> array.
     /// </summary>
-    private T[]? array;
+    private byte[]? array;
 
     /// <summary>
     /// The starting offset within <see cref="array"/>.
@@ -38,11 +33,11 @@ internal ref struct ArrayPoolBufferWriter<T>
     private int index;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ArrayPoolBufferWriter{T}"/> class.
+    /// Initializes a new instance of the <see cref="ArrayPoolBinaryWriter"/> type.
     /// </summary>
-    public ArrayPoolBufferWriter(int capacity)
+    public ArrayPoolBinaryWriter(int capacity)
     {
-        this.array = ArrayPool<T>.Shared.Rent(capacity);
+        this.array = ArrayPool<byte>.Shared.Rent(capacity);
         this.index = 0;
     }
 
@@ -50,12 +45,12 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// Gets the data written to the underlying buffer so far, as a <see cref="ReadOnlySpan{T}"/>.
     /// </summary>
     [UnscopedRef]
-    public readonly ReadOnlySpan<T> WrittenSpan
+    public readonly ReadOnlySpan<byte> WrittenSpan
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            T[]? array = this.array;
+            byte[]? array = this.array;
 
             default(ObjectDisposedException).ThrowIfNull(array);
 
@@ -64,16 +59,58 @@ internal ref struct ArrayPoolBufferWriter<T>
     }
 
     /// <summary>
+    /// Writes the raw value of type <typeparamref name="T"/> into the buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of value to write.</typeparam>
+    /// <param name="value">The value to write.</param>
+    /// <remarks>This method will just blit the data of <paramref name="value"/> into the target buffer.</remarks>
+    public unsafe void Write<T>(scoped in T value)
+    {
+        Span<byte> span = GetSpan(sizeof(T));
+
+        Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(span), value);
+
+        Advance(sizeof(T));
+    }
+
+    /// <summary>
+    /// Writes the raw data from the input <see cref="ReadOnlySpan{T}"/> into the buffer.
+    /// </summary>
+    /// <param name="data">The data to write.</param>
+    public void Write(scoped ReadOnlySpan<byte> data)
+    {
+        Span<byte> span = GetSpan(data.Length);
+
+        data.CopyTo(span);
+
+        Advance(data.Length);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        byte[]? array = this.array;
+
+        if (array is null)
+        {
+            return;
+        }
+
+        this.array = null;
+
+        ArrayPool<byte>.Shared.Return(array);
+    }
+
+    /// <summary>
     /// Advances the current writer.
     /// </summary>
     /// <param name="count">The amount to advance.</param>
     /// <remarks>Must be called after <see cref="GetSpan"/>.</remarks>
-    internal void Advance(int count)
+    private void Advance(int count)
     {
-        T[]? array = this.array;
+        byte[]? array = this.array;
 
         default(ObjectDisposedException).ThrowIfNull(array);
-        default(ArgumentOutOfRangeException).ThrowIfNegative(count);
         default(ArgumentException).ThrowIf(this.index > array.Length - count);
 
         this.index += count;
@@ -85,7 +122,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     /// <param name="sizeHint">The capacity to request.</param>
     /// <returns>A <see cref="Span{T}"/> to write data to.</returns>
     [UnscopedRef]
-    internal Span<T> GetSpan(int sizeHint = 0)
+    private Span<byte> GetSpan(int sizeHint = 0)
     {
         CheckBufferAndEnsureCapacity(sizeHint);
 
@@ -99,7 +136,7 @@ internal ref struct ArrayPoolBufferWriter<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void CheckBufferAndEnsureCapacity(int sizeHint)
     {
-        T[]? array = this.array;
+        byte[]? array = this.array;
 
         default(ObjectDisposedException).ThrowIfNull(array);
         default(ArgumentOutOfRangeException).ThrowIfNegative(sizeHint);
@@ -134,27 +171,12 @@ internal ref struct ArrayPoolBufferWriter<T>
             minimumSize = BitOperations.RoundUpToPowerOf2(minimumSize);
         }
 
-        T[] newArray = ArrayPool<T>.Shared.Rent((int)minimumSize);
+        byte[] newArray = ArrayPool<byte>.Shared.Rent((int)minimumSize);
 
-        Buffer.BlockCopy(this.array!, 0, newArray, 0, this.index * sizeof(T));
+        Buffer.BlockCopy(this.array!, 0, newArray, 0, this.index);
 
-        ArrayPool<T>.Shared.Return(this.array!);
+        ArrayPool<byte>.Shared.Return(this.array!);
 
         this.array = newArray;
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        T[]? array = this.array;
-
-        if (array is null)
-        {
-            return;
-        }
-
-        this.array = null;
-
-        ArrayPool<T>.Shared.Return(array);
     }
 }
