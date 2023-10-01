@@ -2,11 +2,18 @@
 <Project>
   <Import Project="..\build\Directory.Build.targets" />
 
-  <!-- Check whether there is a source generator that should be packed with the project -->
+  <!-- Check whether any analyzers are available for packing -->
   <PropertyGroup Condition="$(IsPackagedProject)">
+
+    <!-- Source generator project, if available -->
     <IsSourceGeneratorAvailableForPacking>false</IsSourceGeneratorAvailableForPacking>
     <IsSourceGeneratorAvailableForPacking Condition="Exists('..\$(MSBuildProjectName).SourceGenerators')">true</IsSourceGeneratorAvailableForPacking>
     <SourceGeneratorReferenceTargetFramework Condition="$(IsSourceGeneratorAvailableForPacking)">$(TargetFrameworks.Split(';')[0].Trim())</SourceGeneratorReferenceTargetFramework>
+
+    <!-- Code fixers project, if available -->
+    <IsCodeFixersAvailableForPacking>false</IsCodeFixersAvailableForPacking>
+    <IsCodeFixersAvailableForPacking Condition="Exists('..\$(MSBuildProjectName).CodeFixers')">true</IsCodeFixersAvailableForPacking>
+    <CodeFixersReferenceTargetFramework Condition="$(IsCodeFixersAvailableForPacking)">$(TargetFrameworks.Split(';')[0].Trim())</CodeFixersReferenceTargetFramework>
   </PropertyGroup>
 
   <!-- Pack the source generator, if present -->
@@ -19,6 +26,21 @@
 
     <!-- Pack the source generator from its output directory -->
     <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\$(SourceGeneratorReferenceTargetFramework)\$(MSBuildProjectName).SourceGenerators.dll"
+          PackagePath="analyzers\dotnet\cs"
+          Pack="true"
+          Visible="false" />
+  </ItemGroup>
+
+  <!-- Pack the code fixers, if present -->
+  <ItemGroup Condition="'$(IsCodeFixersAvailableForPacking)' == 'true'" Label="Package">
+    
+    <!-- Code fixers reference (to trigger building the project) -->
+    <ProjectReference Condition="'$(TargetFramework)' == '$(CodeFixersReferenceTargetFramework)'"
+                      Include="..\$(MSBuildProjectName).CodeFixers\$(MSBuildProjectName).CodeFixers.csproj"
+                      ReferenceOutputAssembly="false" />
+
+    <!-- Pack the code fixers project from its output directory -->
+    <None Include="..\$(MSBuildProjectName).CodeFixers\bin\$(Configuration)\$(CodeFixersReferenceTargetFramework)\$(MSBuildProjectName).CodeFixers.dll"
           PackagePath="analyzers\dotnet\cs"
           Pack="true"
           Visible="false" />
