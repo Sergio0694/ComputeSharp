@@ -60,11 +60,42 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
     /// <returns>An updated document with the applied code fix, and the return type of the method being <see cref="Task"/>.</returns>
     private static Task<Document> ChangeReturnType(Document document, SyntaxNode root, StructDeclarationSyntax structDeclaration, CancellationToken cancellationToken)
     {
-        // Create the attribute syntax
-        AttributeListSyntax attributeList = AttributeList(SingletonSeparatedList(Attribute(IdentifierName("D2DGeneratedPixelShaderDescriptor"))));
+        int index = 0;
+
+        // Find the index to use to insert the attribute. We want to make it so that if the struct declaration
+        // has a bunch of D2D attributes, the new one will be inserted right after that. This way the final list
+        // will be nicely sorted, instead of having D2D attributes interleaving other unrelated attributes, if any.
+        foreach (AttributeListSyntax attributeList in structDeclaration.AttributeLists)
+        {
+            // Make sure we have an attribute to check
+            if (attributeList.Attributes is not [AttributeSyntax attribute, ..])
+            {
+                continue;
+            }
+
+            // Make sure we find a readable identifier for the attribute
+            if (attribute.Name is not IdentifierNameSyntax { Identifier.Value: string identifier })
+            {
+                break;
+            }
+
+            // If the attribute is D2D one, increment the index and continue
+            if (identifier.Contains("D2D"))
+            {
+                index++;
+            }
+            else
+            {
+                // Otherwise, stop here, we reached the end of the sequence
+                break;
+            }
+        }
+
+        // Create the attribute syntax for the new attribute
+        AttributeListSyntax newAttributeList = AttributeList(SingletonSeparatedList(Attribute(IdentifierName("D2DGeneratedPixelShaderDescriptor"))));
 
         // Create a new syntax node with the new attribute
-        SyntaxNode typeSyntax = SyntaxGenerator.GetGenerator(document).AddAttributes(structDeclaration, attributeList);
+        SyntaxNode typeSyntax = SyntaxGenerator.GetGenerator(document).InsertAttributes(structDeclaration, index, newAttributeList);
 
         // Replace the node in the document tree
         Document updatedDocument = document.WithSyntaxRoot(root.ReplaceNode(structDeclaration, typeSyntax));
