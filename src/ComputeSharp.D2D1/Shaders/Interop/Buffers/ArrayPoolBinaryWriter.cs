@@ -15,7 +15,7 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;
 /// <summary>
 /// Represents a heap-based, array-backed output sink into which binary data can be written.
 /// </summary>
-internal ref struct ArrayPoolBufferWriter
+internal ref struct ArrayPoolBinaryWriter
 {
     /// <summary>
     /// The default buffer size to use to expand empty arrays.
@@ -33,9 +33,9 @@ internal ref struct ArrayPoolBufferWriter
     private int index;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ArrayPoolBufferWriter"/> type.
+    /// Initializes a new instance of the <see cref="ArrayPoolBinaryWriter"/> type.
     /// </summary>
-    public ArrayPoolBufferWriter(int capacity)
+    public ArrayPoolBinaryWriter(int capacity)
     {
         this.array = ArrayPool<byte>.Shared.Rent(capacity);
         this.index = 0;
@@ -111,7 +111,6 @@ internal ref struct ArrayPoolBufferWriter
         byte[]? array = this.array;
 
         default(ObjectDisposedException).ThrowIfNull(array);
-        default(ArgumentOutOfRangeException).ThrowIfNegative(count);
         default(ArgumentException).ThrowIf(this.index > array.Length - count);
 
         this.index += count;

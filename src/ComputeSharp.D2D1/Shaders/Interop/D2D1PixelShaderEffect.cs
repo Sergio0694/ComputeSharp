@@ -244,7 +244,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static ReadOnlyMemory<byte> GetRegistrationBlob<T>(out Guid effectId)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        ArrayPoolBufferWriter writer = new(ArrayPoolBufferWriter.DefaultInitialBufferSize);
+        ArrayPoolBinaryWriter writer = new(ArrayPoolBinaryWriter.DefaultInitialBufferSize);
 
         // Blob id
         writer.Write(D2D1EffectRegistrationData.V1.BlobId);
