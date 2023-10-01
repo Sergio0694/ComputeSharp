@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Composition;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -44,7 +43,7 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: "Add [D2DGeneratedPixelShaderDescriptor] attribute",
-                    createChangedDocument: token => ChangeReturnType(context.Document, root, structDeclaration, token),
+                    createChangedDocument: token => ChangeReturnType(context.Document, root, structDeclaration),
                     equivalenceKey: "Add [D2DGeneratedPixelShaderDescriptor] attribute"),
                 diagnostic);
         }
@@ -56,9 +55,8 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
     /// <param name="document">The original document being fixed.</param>
     /// <param name="root">The original tree root belonging to the current document.</param>
     /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> to update.</param>
-    /// <param name="cancellationToken">The cancellation token for the operation.</param>
     /// <returns>An updated document with the applied code fix, and the return type of the method being <see cref="Task"/>.</returns>
-    private static Task<Document> ChangeReturnType(Document document, SyntaxNode root, StructDeclarationSyntax structDeclaration, CancellationToken cancellationToken)
+    private static Task<Document> ChangeReturnType(Document document, SyntaxNode root, StructDeclarationSyntax structDeclaration)
     {
         int index = 0;
 
