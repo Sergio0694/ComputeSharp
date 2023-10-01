@@ -414,10 +414,10 @@ public sealed partial class BokehBlurEffect
             // Assign the resource textures
             for (int i = 0; i < numberOfComponents; i++)
             {
-                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForReals[i].Get(), kernels[i].Reals, 1);
-                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForImaginaries[i].Get(), kernels[i].Imaginaries, 1);
-                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Reals, 2);
-                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Imaginaries, 3);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForReals[i].Get(), kernels[i].Reals, 0);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(verticalConvolutionEffectsForImaginaries[i].Get(), kernels[i].Imaginaries, 0);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Reals, 0);
+                D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(horizontalConvolutionEffects[i].Get(), kernels[i].Imaginaries, 1);
             }
 
             // Set the constant buffers
