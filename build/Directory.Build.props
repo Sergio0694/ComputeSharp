@@ -141,7 +141,7 @@
     <ProjectDirectoryPathFromSourceRoot>$([MSBuild]::MakeRelative('$(MSBuildThisFileDirectory)..\', $(MSBuildProjectDirectory)))</ProjectDirectoryPathFromSourceRoot>
     <IsPublishedProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('src\'))</IsPublishedProject>
     <IsSourceGeneratorProject>false</IsSourceGeneratorProject>
-    <IsSourceGeneratorProject Condition="$(IsPublishedProject) AND $(MSBuildProjectName.EndsWith('.SourceGenerators'))">true</IsSourceGeneratorProject>
+    <IsSourceGeneratorProject Condition="$(IsPublishedProject) AND ($(MSBuildProjectName.EndsWith('.SourceGenerators')) OR $(MSBuildProjectName.EndsWith('.CodeFixers')))">true</IsSourceGeneratorProject>
     <IsPackagedProject>false</IsPackagedProject>
     <IsPackagedProject Condition="$(IsPublishedProject) AND !$(IsSourceGeneratorProject)">true</IsPackagedProject>
     <IsTestProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('tests\'))</IsTestProject>    
