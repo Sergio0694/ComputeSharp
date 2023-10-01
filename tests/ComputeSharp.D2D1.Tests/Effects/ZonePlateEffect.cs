@@ -12,7 +12,7 @@ internal static class MathF
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
-[D2DGeneratedShaderMarshaller]
+[D2DGeneratedPixelShaderDescriptor]
 [AutoConstructor]
 public readonly partial struct ZonePlateEffect : ID2D1PixelShader
 {

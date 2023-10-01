@@ -171,7 +171,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct DummyShaderWithResourceTexture : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
@@ -460,7 +460,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct IndexFrom2DResourceTextureShader : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
@@ -535,7 +535,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct IndexFrom3DResourceTextureShader : ID2D1PixelShader
     {
@@ -623,7 +623,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct CopyFromResourceTexture1DShader : ID2D1PixelShader
     {
@@ -721,7 +721,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct CopyFromResourceTexture2DShader : ID2D1PixelShader
     {
@@ -828,7 +828,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
     {
@@ -874,7 +874,7 @@ public partial class D2D1ResourceTextureManagerTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct NullResourceTextureShader : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]

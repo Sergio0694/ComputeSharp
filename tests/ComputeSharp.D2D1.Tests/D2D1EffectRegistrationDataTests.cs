@@ -51,7 +51,7 @@ public partial class D2D1EffectRegistrationDataTests
 
     [D2DInputCount(2)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private readonly partial struct TestRegistrationBlobShader : ID2D1PixelShader
     {
@@ -97,7 +97,7 @@ public partial class D2D1EffectRegistrationDataTests
     [D2DEffectDescription("A test effect with some custom metadata")]
     [D2DEffectCategory("Test effects")]
     [D2DEffectAuthor("Bob Ross")]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private readonly partial struct TestRegistrationBlobWithCustomMetadataShader : ID2D1PixelShader
     {
@@ -194,7 +194,7 @@ public partial class D2D1EffectRegistrationDataTests
     }
 
     [D2DInputCount(0)]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private readonly partial struct TestRegistrationBlobWithResourceTextures : ID2D1PixelShader
     {

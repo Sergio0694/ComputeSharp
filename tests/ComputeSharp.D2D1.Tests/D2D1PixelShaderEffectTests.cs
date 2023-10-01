@@ -120,7 +120,7 @@ public partial class D2D1PixelShaderEffectTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct NullConstantBufferShader : ID2D1PixelShader
     {
@@ -152,7 +152,7 @@ public partial class D2D1PixelShaderEffectTests
 
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct ConstantBufferSizeTestShader : ID2D1PixelShader
     {
@@ -187,7 +187,7 @@ public partial class D2D1PixelShaderEffectTests
     }
 
     [D2DInputCount(0)]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithDefaultEffectId : ID2D1PixelShader
     {
         public float4 Execute()
@@ -197,7 +197,7 @@ public partial class D2D1PixelShaderEffectTests
     }
 
     [D2DInputCount(0)]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithDefaultEffectId2 : ID2D1PixelShader
     {
         public float4 Execute()
@@ -221,7 +221,7 @@ public partial class D2D1PixelShaderEffectTests
 
     [D2DInputCount(0)]
     [D2DEffectId("8E1F7F49-EF0D-4242-8912-08ADA36AB4EC")]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithExplicitEffectId : ID2D1PixelShader
     {
         public float4 Execute()
@@ -240,7 +240,7 @@ public partial class D2D1PixelShaderEffectTests
     }
 
     [D2DInputCount(0)]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithDefaultEffectDisplayName : ID2D1PixelShader
     {
         public float4 Execute()
@@ -260,7 +260,7 @@ public partial class D2D1PixelShaderEffectTests
 
     [D2DInputCount(0)]
     [D2DEffectDisplayName("Fancy blur")]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithExplicitEffectDisplayName1 : ID2D1PixelShader
     {
         public float4 Execute()
@@ -283,7 +283,7 @@ public partial class D2D1PixelShaderEffectTests
     [D2DEffectDescription("A test effect with \nsome custom metadata")]
     [D2DEffectCategory("Test effects!")]
     [D2DEffectAuthor("Bob \r\nRoss")]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     private partial struct ShaderWithExplicitEffectDisplayName2 : ID2D1PixelShader
     {
         public float4 Execute()

@@ -22,7 +22,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
         IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                "ComputeSharp.D2D1.D2DGeneratedShaderMarshallerAttribute",
+                "ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute",
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {

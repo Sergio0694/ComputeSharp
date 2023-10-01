@@ -698,7 +698,7 @@ public partial class CanvasEffectTests
     }
 
     [D2DInputCount(0)]
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     private partial struct ShaderWithNoInputs : ID2D1PixelShader
     {

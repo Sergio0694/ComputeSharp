@@ -4,11 +4,11 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DInputComplex(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader40)]
-[D2DGeneratedShaderMarshaller]
+[D2DGeneratedPixelShaderDescriptor]
 [AutoConstructor]
 public readonly partial struct PixelateEffect : ID2D1PixelShader
 {
-    [D2DGeneratedShaderMarshaller]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     public readonly partial struct Constants
     {
