@@ -107,6 +107,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         fixed (char* pXml = effectXml.GetBuffer())
         fixed (char* pBufferPropertyName = nameof(D2D1PixelShaderEffectProperty.ConstantBuffer))
+        fixed (char* pTransformMapperPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapper))
         fixed (char* pResourceTextureManager0PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager0))
         fixed (char* pResourceTextureManager1PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager1))
         fixed (char* pResourceTextureManager2PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager2))
@@ -123,70 +124,69 @@ public static unsafe class D2D1PixelShaderEffect
         fixed (char* pResourceTextureManager13PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager13))
         fixed (char* pResourceTextureManager14PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager14))
         fixed (char* pResourceTextureManager15PropertyName = nameof(D2D1PixelShaderEffectProperty.ResourceTextureManager15))
-        fixed (char* pTransformMapperPropertyName = nameof(D2D1PixelShaderEffectProperty.TransformMapper))
         {
             // Prepare the effect binding functions
-            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[(int)D2D1PixelShaderEffectProperty.NumberOfProperties];
+            D2D1_PROPERTY_BINDING* d2D1PropertyBinding = stackalloc D2D1_PROPERTY_BINDING[D2D1PixelShaderEffectProperty.MaximumNumberOfAvailableProperties];
 
             // Property names
-            d2D1PropertyBinding[0].propertyName = (ushort*)pBufferPropertyName;
-            d2D1PropertyBinding[1].propertyName = (ushort*)pResourceTextureManager0PropertyName;
-            d2D1PropertyBinding[2].propertyName = (ushort*)pResourceTextureManager1PropertyName;
-            d2D1PropertyBinding[3].propertyName = (ushort*)pResourceTextureManager2PropertyName;
-            d2D1PropertyBinding[4].propertyName = (ushort*)pResourceTextureManager3PropertyName;
-            d2D1PropertyBinding[5].propertyName = (ushort*)pResourceTextureManager4PropertyName;
-            d2D1PropertyBinding[6].propertyName = (ushort*)pResourceTextureManager5PropertyName;
-            d2D1PropertyBinding[7].propertyName = (ushort*)pResourceTextureManager6PropertyName;
-            d2D1PropertyBinding[8].propertyName = (ushort*)pResourceTextureManager7PropertyName;
-            d2D1PropertyBinding[9].propertyName = (ushort*)pResourceTextureManager8PropertyName;
-            d2D1PropertyBinding[10].propertyName = (ushort*)pResourceTextureManager9PropertyName;
-            d2D1PropertyBinding[11].propertyName = (ushort*)pResourceTextureManager10PropertyName;
-            d2D1PropertyBinding[12].propertyName = (ushort*)pResourceTextureManager11PropertyName;
-            d2D1PropertyBinding[13].propertyName = (ushort*)pResourceTextureManager12PropertyName;
-            d2D1PropertyBinding[14].propertyName = (ushort*)pResourceTextureManager13PropertyName;
-            d2D1PropertyBinding[15].propertyName = (ushort*)pResourceTextureManager14PropertyName;
-            d2D1PropertyBinding[16].propertyName = (ushort*)pResourceTextureManager15PropertyName;
-            d2D1PropertyBinding[17].propertyName = (ushort*)pTransformMapperPropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ConstantBuffer].propertyName = (ushort*)pBufferPropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.TransformMapper].propertyName = (ushort*)pTransformMapperPropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager0].propertyName = (ushort*)pResourceTextureManager0PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager1].propertyName = (ushort*)pResourceTextureManager1PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager2].propertyName = (ushort*)pResourceTextureManager2PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager3].propertyName = (ushort*)pResourceTextureManager3PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager4].propertyName = (ushort*)pResourceTextureManager4PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager5].propertyName = (ushort*)pResourceTextureManager5PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager6].propertyName = (ushort*)pResourceTextureManager6PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager7].propertyName = (ushort*)pResourceTextureManager7PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager8].propertyName = (ushort*)pResourceTextureManager8PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager9].propertyName = (ushort*)pResourceTextureManager9PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager10].propertyName = (ushort*)pResourceTextureManager10PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager11].propertyName = (ushort*)pResourceTextureManager11PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager12].propertyName = (ushort*)pResourceTextureManager12PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager13].propertyName = (ushort*)pResourceTextureManager13PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager14].propertyName = (ushort*)pResourceTextureManager14PropertyName;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager15].propertyName = (ushort*)pResourceTextureManager15PropertyName;
 
             // Property getters
-            d2D1PropertyBinding[0].getFunction = PixelShaderEffect.GetConstantBuffer;
-            d2D1PropertyBinding[1].getFunction = PixelShaderEffect.GetResourceTextureManager0;
-            d2D1PropertyBinding[2].getFunction = PixelShaderEffect.GetResourceTextureManager1;
-            d2D1PropertyBinding[3].getFunction = PixelShaderEffect.GetResourceTextureManager2;
-            d2D1PropertyBinding[4].getFunction = PixelShaderEffect.GetResourceTextureManager3;
-            d2D1PropertyBinding[5].getFunction = PixelShaderEffect.GetResourceTextureManager4;
-            d2D1PropertyBinding[6].getFunction = PixelShaderEffect.GetResourceTextureManager5;
-            d2D1PropertyBinding[7].getFunction = PixelShaderEffect.GetResourceTextureManager6;
-            d2D1PropertyBinding[8].getFunction = PixelShaderEffect.GetResourceTextureManager7;
-            d2D1PropertyBinding[9].getFunction = PixelShaderEffect.GetResourceTextureManager8;
-            d2D1PropertyBinding[10].getFunction = PixelShaderEffect.GetResourceTextureManager9;
-            d2D1PropertyBinding[11].getFunction = PixelShaderEffect.GetResourceTextureManager10;
-            d2D1PropertyBinding[12].getFunction = PixelShaderEffect.GetResourceTextureManager11;
-            d2D1PropertyBinding[13].getFunction = PixelShaderEffect.GetResourceTextureManager12;
-            d2D1PropertyBinding[14].getFunction = PixelShaderEffect.GetResourceTextureManager13;
-            d2D1PropertyBinding[15].getFunction = PixelShaderEffect.GetResourceTextureManager14;
-            d2D1PropertyBinding[16].getFunction = PixelShaderEffect.GetResourceTextureManager15;
-            d2D1PropertyBinding[17].getFunction = PixelShaderEffect.GetTransformMapper;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ConstantBuffer].getFunction = PixelShaderEffect.GetConstantBuffer;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.TransformMapper].getFunction = PixelShaderEffect.GetTransformMapper;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager0].getFunction = PixelShaderEffect.GetResourceTextureManager0;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager1].getFunction = PixelShaderEffect.GetResourceTextureManager1;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager2].getFunction = PixelShaderEffect.GetResourceTextureManager2;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager3].getFunction = PixelShaderEffect.GetResourceTextureManager3;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager4].getFunction = PixelShaderEffect.GetResourceTextureManager4;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager5].getFunction = PixelShaderEffect.GetResourceTextureManager5;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager6].getFunction = PixelShaderEffect.GetResourceTextureManager6;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager7].getFunction = PixelShaderEffect.GetResourceTextureManager7;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager8].getFunction = PixelShaderEffect.GetResourceTextureManager8;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager9].getFunction = PixelShaderEffect.GetResourceTextureManager9;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager10].getFunction = PixelShaderEffect.GetResourceTextureManager10;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager11].getFunction = PixelShaderEffect.GetResourceTextureManager11;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager12].getFunction = PixelShaderEffect.GetResourceTextureManager12;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager13].getFunction = PixelShaderEffect.GetResourceTextureManager13;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager14].getFunction = PixelShaderEffect.GetResourceTextureManager14;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager15].getFunction = PixelShaderEffect.GetResourceTextureManager15;
 
             // Property setters
-            d2D1PropertyBinding[0].setFunction = PixelShaderEffect.SetConstantBuffer;
-            d2D1PropertyBinding[1].setFunction = PixelShaderEffect.SetResourceTextureManager0;
-            d2D1PropertyBinding[2].setFunction = PixelShaderEffect.SetResourceTextureManager1;
-            d2D1PropertyBinding[3].setFunction = PixelShaderEffect.SetResourceTextureManager2;
-            d2D1PropertyBinding[4].setFunction = PixelShaderEffect.SetResourceTextureManager3;
-            d2D1PropertyBinding[5].setFunction = PixelShaderEffect.SetResourceTextureManager4;
-            d2D1PropertyBinding[6].setFunction = PixelShaderEffect.SetResourceTextureManager5;
-            d2D1PropertyBinding[7].setFunction = PixelShaderEffect.SetResourceTextureManager6;
-            d2D1PropertyBinding[8].setFunction = PixelShaderEffect.SetResourceTextureManager7;
-            d2D1PropertyBinding[9].setFunction = PixelShaderEffect.SetResourceTextureManager8;
-            d2D1PropertyBinding[10].setFunction = PixelShaderEffect.SetResourceTextureManager9;
-            d2D1PropertyBinding[11].setFunction = PixelShaderEffect.SetResourceTextureManager10;
-            d2D1PropertyBinding[12].setFunction = PixelShaderEffect.SetResourceTextureManager11;
-            d2D1PropertyBinding[13].setFunction = PixelShaderEffect.SetResourceTextureManager12;
-            d2D1PropertyBinding[14].setFunction = PixelShaderEffect.SetResourceTextureManager13;
-            d2D1PropertyBinding[15].setFunction = PixelShaderEffect.SetResourceTextureManager14;
-            d2D1PropertyBinding[16].setFunction = PixelShaderEffect.SetResourceTextureManager15;
-            d2D1PropertyBinding[17].setFunction = PixelShaderEffect.SetTransformMapper;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ConstantBuffer].setFunction = PixelShaderEffect.SetConstantBuffer;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.TransformMapper].setFunction = PixelShaderEffect.SetTransformMapper;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager0].setFunction = PixelShaderEffect.SetResourceTextureManager0;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager1].setFunction = PixelShaderEffect.SetResourceTextureManager1;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager2].setFunction = PixelShaderEffect.SetResourceTextureManager2;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager3].setFunction = PixelShaderEffect.SetResourceTextureManager3;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager4].setFunction = PixelShaderEffect.SetResourceTextureManager4;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager5].setFunction = PixelShaderEffect.SetResourceTextureManager5;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager6].setFunction = PixelShaderEffect.SetResourceTextureManager6;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager7].setFunction = PixelShaderEffect.SetResourceTextureManager7;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager8].setFunction = PixelShaderEffect.SetResourceTextureManager8;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager9].setFunction = PixelShaderEffect.SetResourceTextureManager9;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager10].setFunction = PixelShaderEffect.SetResourceTextureManager10;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager11].setFunction = PixelShaderEffect.SetResourceTextureManager11;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager12].setFunction = PixelShaderEffect.SetResourceTextureManager12;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager13].setFunction = PixelShaderEffect.SetResourceTextureManager13;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager14].setFunction = PixelShaderEffect.SetResourceTextureManager14;
+            d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager15].setFunction = PixelShaderEffect.SetResourceTextureManager15;
 
             fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
             {
@@ -195,7 +195,7 @@ public static unsafe class D2D1PixelShaderEffect
                     classId: pGuid,
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
-                    bindingsCount: D2D1PixelShaderEffectProperty.NumberOfProperties,
+                    bindingsCount: (uint)(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + D2D1PixelShader.GetResourceTextureCount<T>()),
                     effectFactory: PixelShaderEffect.For<T>.Instance.Factory).Assert();
             }
 
@@ -273,79 +273,119 @@ public static unsafe class D2D1PixelShaderEffect
         }
 
         // Bindings
-        writer.Write(D2D1PixelShaderEffectProperty.NumberOfProperties);
+        writer.Write(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + D2D1PixelShader.GetResourceTextureCount<T>());
         writer.Write("ConstantBuffer"u8);
         writer.Write((byte)'\0');
         writer.Write((nint)PixelShaderEffect.GetConstantBuffer);
         writer.Write((nint)PixelShaderEffect.SetConstantBuffer);
-        writer.Write("ResourceTextureManager0"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager0);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager0);
-        writer.Write("ResourceTextureManager1"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager1);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager1);
-        writer.Write("ResourceTextureManager2"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager2);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager2);
-        writer.Write("ResourceTextureManager3"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager3);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager3);
-        writer.Write("ResourceTextureManager4"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager4);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager4);
-        writer.Write("ResourceTextureManager5"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager5);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager5);
-        writer.Write("ResourceTextureManager6"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager6);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager6);
-        writer.Write("ResourceTextureManager7"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager7);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager7);
-        writer.Write("ResourceTextureManager8"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager8);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager8);
-        writer.Write("ResourceTextureManager9"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager9);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager9);
-        writer.Write("ResourceTextureManager10"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager10);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager10);
-        writer.Write("ResourceTextureManager11"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager11);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager11);
-        writer.Write("ResourceTextureManager12"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager12);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager12);
-        writer.Write("ResourceTextureManager13"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager13);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager13);
-        writer.Write("ResourceTextureManager14"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager14);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager14);
-        writer.Write("ResourceTextureManager15"u8);
-        writer.Write((byte)'\0');
-        writer.Write((nint)PixelShaderEffect.GetResourceTextureManager15);
-        writer.Write((nint)PixelShaderEffect.SetResourceTextureManager15);
         writer.Write("TransformMapper"u8);
         writer.Write((byte)'\0');
         writer.Write((nint)PixelShaderEffect.GetTransformMapper);
         writer.Write((nint)PixelShaderEffect.SetTransformMapper);
+
+        // Add all resource texture manager property bindings
+        for (int i = 0; i < D2D1PixelShader.GetResourceTextureCount<T>(); i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    writer.Write("ResourceTextureManager0"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager0);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager0);
+                    break;
+                case 1:
+                    writer.Write("ResourceTextureManager1"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager1);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager1);
+                    break;
+                case 2:
+                    writer.Write("ResourceTextureManager2"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager2);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager2);
+                    break;
+                case 3:
+                    writer.Write("ResourceTextureManager3"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager3);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager3);
+                    break;
+                case 4:
+                    writer.Write("ResourceTextureManager4"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager4);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager4);
+                    break;
+                case 5:
+                    writer.Write("ResourceTextureManager5"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager5);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager5);
+                    break;
+                case 6:
+                    writer.Write("ResourceTextureManager6"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager6);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager6);
+                    break;
+                case 7:
+                    writer.Write("ResourceTextureManager7"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager7);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager7);
+                    break;
+                case 8:
+                    writer.Write("ResourceTextureManager8"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager8);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager8);
+                    break;
+                case 9:
+                    writer.Write("ResourceTextureManager9"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager9);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager9);
+                    break;
+                case 10:
+                    writer.Write("ResourceTextureManager10"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager10);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager10);
+                    break;
+                case 11:
+                    writer.Write("ResourceTextureManager11"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager11);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager11);
+                    break;
+                case 12:
+                    writer.Write("ResourceTextureManager12"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager12);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager12);
+                    break;
+                case 13:
+                    writer.Write("ResourceTextureManager13"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager13);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager13);
+                    break;
+                case 14:
+                    writer.Write("ResourceTextureManager14"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager14);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager14);
+                    break;
+                case 15:
+                    writer.Write("ResourceTextureManager15"u8);
+                    writer.Write((byte)'\0');
+                    writer.Write((nint)PixelShaderEffect.GetResourceTextureManager15);
+                    writer.Write((nint)PixelShaderEffect.SetResourceTextureManager15);
+                    break;
+            }
+        }
 
         // Effect factory
         writer.Write((nint)PixelShaderEffect.For<T>.Instance.Factory);
@@ -410,16 +450,18 @@ public static unsafe class D2D1PixelShaderEffect
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <c>ID2D1ResourceTextureManager</c> object (see <see cref="D2D1ResourceTextureManager"/>).</param>
-    /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <param name="index">The index of the resource texture manager to assign the resource texture manager to (note: this might not match the resource texture index).</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is outside of the allowed range (ie. [0, 16]).</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int resourceTextureIndex)
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, void* resourceTextureManager, int index)
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16);
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)&resourceTextureManager,
             dataSize: (uint)sizeof(void*)).Assert();
@@ -430,20 +472,22 @@ public static unsafe class D2D1PixelShaderEffect
     /// </summary>
     /// <param name="d2D1Effect">A pointer to the <c>ID2D1Effect</c> instance to use.</param>
     /// <param name="resourceTextureManager">The input <see cref="D2D1ResourceTextureManager"/> instance.</param>
-    /// <param name="resourceTextureIndex">The index of the resource texture to assign the resource texture manager to.</param>
+    /// <param name="index">The index of the resource texture manager to assign the resource texture manager to (note: this might not match the resource texture index)</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="d2D1Effect"/> or <paramref name="resourceTextureManager"/> are <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="index"/> is outside of the allowed range (ie. [0, 16]).</exception>
     /// <remarks>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</remarks>
-    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int resourceTextureIndex)
+    public static void SetResourceTextureManagerForD2D1Effect(void* d2D1Effect, D2D1ResourceTextureManager resourceTextureManager, int index)
     {
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
         default(ArgumentNullException).ThrowIfNull(resourceTextureManager);
+        default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, 16);
 
         using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager2 = default;
 
         resourceTextureManager.GetD2D1ResourceTextureManager(resourceTextureManager2.GetAddressOf());
 
         ((ID2D1Effect*)d2D1Effect)->SetValue(
-            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)resourceTextureIndex,
+            index: D2D1PixelShaderEffectProperty.ResourceTextureManager0 + (uint)index,
             type: D2D1_PROPERTY_TYPE.D2D1_PROPERTY_TYPE_IUNKNOWN,
             data: (byte*)resourceTextureManager2.GetAddressOf(),
             dataSize: (uint)sizeof(void*)).Assert();

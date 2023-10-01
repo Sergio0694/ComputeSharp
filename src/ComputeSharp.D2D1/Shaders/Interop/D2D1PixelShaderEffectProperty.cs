@@ -18,102 +18,6 @@ public static class D2D1PixelShaderEffectProperty
     public const uint ConstantBuffer = 0;
 
     /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 0.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager0 = 1;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 1.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager1 = 2;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 2.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager2 = 3;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 3.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager3 = 4;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 4.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager4 = 5;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 5.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager5 = 6;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 6.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager6 = 7;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 7.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager7 = 8;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 8.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager8 = 9;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 9.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager9 = 10;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 10.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager10 = 11;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 11.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager11 = 12;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 12.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager12 = 13;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 13.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager13 = 14;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 14.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager14 = 15;
-
-    /// <summary>
-    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 15.
-    /// </summary>
-    /// <remarks>For more info, see <see cref="D2D1ResourceTextureManager"/>.</remarks>
-    public const uint ResourceTextureManager15 = 16;
-
-    /// <summary>
     /// The index for the <c>ID2D1TransformMapper</c> property of a <see cref="D2D1PixelShaderEffect"/> object.
     /// </summary>
     /// <remarks>
@@ -121,11 +25,116 @@ public static class D2D1PixelShaderEffectProperty
     /// <para>This value can be passed when calling <c>ID2D1Effect::SetValue</c>.</para>
     /// <para>For more info, see <see href="https://learn.microsoft.com/en-us/windows/win32/api/d2d1_1/nf-d2d1_1-id2d1properties-setvalue(uint32_d2d1_property_type_constbyte_uint32)"/>.</para>
     /// </remarks>
-    public const uint TransformMapper = 17;
+    public const uint TransformMapper = 1;
 
     /// <summary>
-    /// The total number of properties.
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 0.
+    /// </summary>
+    /// <remarks>
+    /// <para>For more info, see <see cref="D2D1ResourceTextureManager"/>.</para>
+    /// <para>This property is only available if a shader declares at least N + 1 resource textures.</para>
+    /// </remarks>
+    public const uint ResourceTextureManager0 = 2;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 1.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager1 = 3;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 2.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager2 = 4;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 3.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager3 = 5;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 4.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager4 = 6;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 5.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager5 = 7;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 6.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager6 = 8;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 7.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager7 = 9;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 8.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager8 = 10;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 9.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager9 = 11;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 10.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager10 = 12;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 11.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager11 = 13;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 12.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager12 = 14;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 13.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager13 = 15;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 14.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager14 = 16;
+
+    /// <summary>
+    /// The index for the <c>ID2D1ResourceTextureManager</c> instance for the resource texture at index 15.
+    /// </summary>
+    /// <remarks><inheritdoc cref="ResourceTextureManager0" path="/remarks/node()"/></remarks>
+    public const uint ResourceTextureManager15 = 17;
+
+    /// <summary>
+    /// The maximum total number of properties.
     /// </summary>
     /// <remarks>This should always be the value of the last property above, plus 1.</remarks>
-    internal const uint NumberOfProperties = 18;
+    internal const int MaximumNumberOfAvailableProperties = 18;
+
+    /// <summary>
+    /// The number of always available properties.
+    /// </summary>
+    /// <remarks>These are <see cref="ConstantBuffer"/> and <see cref="TransformMapper"/>.</remarks>
+    internal const int NumberOfAlwaysAvailableProperties = 2;
 }

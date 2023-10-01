@@ -351,11 +351,10 @@ internal unsafe partial struct PixelShaderEffect
                 _ = this.d2D1EffectContext->Release();
             }
 
-            // Use the list of resource texture descriptions to see the indices that might have accepted a resource texture manager.
-            // Then, retrieve all of them and release the ones that had been assigned (from one of the property bindings).
-            foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(this.resourceTextureDescriptions, this.resourceTextureDescriptionCount))
+            // Retrieve all possible resource texture managers in use and release the ones that had been assigned (from one of the property bindings)
+            for (int i = 0; i < this.resourceTextureDescriptionCount; i++)
             {
-                ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[i];
 
                 if (resourceTextureManager is not null)
                 {
