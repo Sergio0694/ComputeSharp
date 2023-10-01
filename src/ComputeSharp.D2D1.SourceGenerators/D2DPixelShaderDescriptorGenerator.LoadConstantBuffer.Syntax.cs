@@ -6,7 +6,7 @@ using ComputeSharp.SourceGeneration.Mappings;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class LoadConstantBuffer
@@ -21,7 +21,7 @@ partial class ID2D1ShaderGenerator
             string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
 
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
             writer.WriteLine($"readonly unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
 
@@ -105,7 +105,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A type representing the constant buffer native layout for <see cref="{{fullyQualifiedTypeName}}"/>.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
                 writer.WriteLine($$"""[StructLayout(LayoutKind.Explicit, Size = {{info.ConstantBufferSizeInBytes}})]""");
                 writer.WriteLine($$"""file struct ConstantBuffer""");
 

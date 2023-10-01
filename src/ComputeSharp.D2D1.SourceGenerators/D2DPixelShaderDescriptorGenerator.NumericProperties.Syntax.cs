@@ -5,7 +5,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the available numeric properties.
@@ -20,7 +20,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteConstantBufferSizeSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
         }
 
@@ -32,7 +32,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteInputCountSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.InputCount => {info.InputTypes.Length};");
         }
 
@@ -44,7 +44,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteResourceTextureCountSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly int global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceTextureCount => {info.ResourceTextureDescriptions.Length};");
         }
     }

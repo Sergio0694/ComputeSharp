@@ -5,7 +5,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class EffectId
@@ -18,7 +18,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly ref readonly global::System.Guid global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.EffectId");
 
             using (writer.WriteBlock())

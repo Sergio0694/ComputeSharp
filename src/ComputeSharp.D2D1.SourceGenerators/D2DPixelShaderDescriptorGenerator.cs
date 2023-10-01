@@ -10,11 +10,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A source generator creating data loaders for the <see cref="ID2D1PixelShader"/> type.
+/// A source generator creating pixel shader descriptors for annotated D2D1 pixel shader types.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
-public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
+public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// The name of generator to include in the generated code.
+    /// </summary>
+    private const string GeneratorName = "ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator";
+
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -41,7 +46,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.TargetNode;
 
                     // Check that the shader implements the ID2D1PixelShader interface
-                    if (!IsD2D1PixelShaderType(typeSymbol, context.SemanticModel.Compilation))
+                    if (!typeSymbol.HasInterfaceWithType(context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!))
                     {
                         return default;
                     }
@@ -151,7 +156,7 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         effectiveCompileOptions,
                         hasErrors);
 
-                    // TODO: cache this across transform runs
+                    // Get the existing compiled shader, or compile the processed HLSL code
                     HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();

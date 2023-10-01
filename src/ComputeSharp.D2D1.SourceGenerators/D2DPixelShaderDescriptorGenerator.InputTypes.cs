@@ -9,7 +9,7 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>InputTypes</c> properties.
