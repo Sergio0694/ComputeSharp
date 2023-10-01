@@ -8,7 +8,6 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [AutoConstructor]
 public readonly partial struct PixelateEffect : ID2D1PixelShader
 {
-    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     public readonly partial struct Constants
     {
