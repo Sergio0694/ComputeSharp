@@ -53,66 +53,32 @@ internal static unsafe class D2D1EffectXmlFactory
                 _ = builder.Append($"        <Input name='Source{i}'/>");
             }
 
-            // Close the inputs tag and add all effect properties
+            // Close the inputs tag and add the always available properties
             _ = builder.Append('\n');
             _ = builder.Append("""
                     </Inputs>
                     <Property name='ConstantBuffer' type='blob'>
                         <Property name='DisplayName' type='string' value='ConstantBuffer'/>
                     </Property>
-                    <Property name='ResourceTextureManager0' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager0'/>
-                    </Property>
-                    <Property name='ResourceTextureManager1' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager1'/>
-                    </Property>
-                    <Property name='ResourceTextureManager2' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager2'/>
-                    </Property>
-                    <Property name='ResourceTextureManager3' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager3'/>
-                    </Property>
-                    <Property name='ResourceTextureManager4' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager4'/>
-                    </Property>
-                    <Property name='ResourceTextureManager5' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager5'/>
-                    </Property>
-                    <Property name='ResourceTextureManager6' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager6'/>
-                    </Property>
-                    <Property name='ResourceTextureManager7' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager7'/>
-                    </Property>
-                    <Property name='ResourceTextureManager8' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager8'/>
-                    </Property>
-                    <Property name='ResourceTextureManager9' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager9'/>
-                    </Property>
-                    <Property name='ResourceTextureManager10' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager10'/>
-                    </Property>
-                    <Property name='ResourceTextureManager11' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager11'/>
-                    </Property>
-                    <Property name='ResourceTextureManager12' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager12'/>
-                    </Property>
-                    <Property name='ResourceTextureManager13' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager13'/>
-                    </Property>
-                    <Property name='ResourceTextureManager14' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager14'/>
-                    </Property>
-                    <Property name='ResourceTextureManager15' type='iunknown'>
-                        <Property name='DisplayName' type='string' value='ResourceTextureManager15'/>
-                    </Property>
                     <Property name='TransformMapper' type='iunknown'>
                         <Property name='DisplayName' type='string' value='TransformMapper'/>
                     </Property>
-                </Effect>
                 """);
+
+            // Add the resource texture manager nodes, if any
+            for (int i = 0; i < D2D1PixelShader.GetResourceTextureCount<T>(); i++)
+            {
+                _ = builder.Append('\n');
+                _ = builder.Append($"""
+                    <Property name='ResourceTextureManager{i}' type='iunknown'>
+                        <Property name='DisplayName' type='string' value='ResourceTextureManager{i}'/>
+                    </Property>
+                """);
+            }
+
+            // Close the effect tag
+            _ = builder.Append('\n');
+            _ = builder.Append("</Effect>");
 
             // Null terminator for the text
             _ = builder.Append('\0');

@@ -146,9 +146,9 @@ internal unsafe partial struct PixelShaderEffect
 
             if (Windows.SUCCEEDED(hresult))
             {
-                foreach (ref readonly D2D1ResourceTextureDescription resourceTextureDescription in new ReadOnlySpan<D2D1ResourceTextureDescription>(@this->resourceTextureDescriptions, @this->resourceTextureDescriptionCount))
+                for (int i = 0; i < @this->resourceTextureDescriptionCount; i++)
                 {
-                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[resourceTextureDescription.Index];
+                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[i];
 
                     // If the current resource texture manager is not set, we cannot render, as there's an unbound resource texture
                     if (resourceTextureManager.Get() is null)
@@ -179,6 +179,8 @@ internal unsafe partial struct PixelShaderEffect
                     {
                         break;
                     }
+
+                    ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref @this->resourceTextureDescriptions[i];
 
                     // Set the ID2D1ResourceTexture object to the current index in the ID2D1DrawInfo object in use
                     hresult = @this->d2D1DrawInfo->SetResourceTexture(
