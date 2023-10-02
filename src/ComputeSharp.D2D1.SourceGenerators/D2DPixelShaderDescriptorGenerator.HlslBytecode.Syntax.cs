@@ -21,7 +21,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.EffectiveShaderProfile};");
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.ShaderProfile};");
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             // Get a formatted representation of the compile options being used
             string compileOptionsExpression =
-                info.HlslInfoKey.EffectiveCompileOptions
+                info.HlslInfoKey.CompileOptions
                 .ToString()
                 .Split(',')
                 .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")

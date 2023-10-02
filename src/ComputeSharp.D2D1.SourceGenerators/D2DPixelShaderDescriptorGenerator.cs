@@ -140,9 +140,8 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     bool isLinkingSupported = HlslBytecode.IsSimpleInputShader(typeSymbol, inputCount);
                     D2D1ShaderProfile? requestedShaderProfile = HlslBytecode.GetRequestedShaderProfile(typeSymbol);
                     D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
-                    D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
+                    D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile, out bool isCompilationEnabled);
                     D2D1CompileOptions effectiveCompileOptions = HlslBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
-                    bool hasErrors = diagnostics.Count > 0;
 
                     token.ThrowIfCancellationRequested();
 
@@ -150,11 +149,9 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     // This is done last so that it can be skipped if any errors happened before.
                     HlslBytecodeInfoKey hlslInfoKey = new(
                         hlslSource,
-                        requestedShaderProfile,
-                        requestedCompileOptions,
                         effectiveShaderProfile,
                         effectiveCompileOptions,
-                        hasErrors);
+                        isCompilationEnabled);
 
                     // Get the existing compiled shader, or compile the processed HLSL code
                     HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
