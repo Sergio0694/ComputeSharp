@@ -25,6 +25,14 @@ internal static unsafe class D2D1EffectXmlFactory
     public static EffectXml GetXmlBuffer<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
+        // Compute all necessary values first, outside of the lock
+        string? displayName = D2D1PixelShaderEffect.GetEffectDisplayName<T>();
+        string? description = D2D1PixelShaderEffect.GetEffectDescription<T>();
+        string? category = D2D1PixelShaderEffect.GetEffectCategory<T>();
+        string? author = D2D1PixelShaderEffect.GetEffectAuthor<T>();
+        int inputCount = D2D1PixelShader.GetInputCount<T>();
+        int resourceTextureCount = D2D1PixelShader.GetResourceTextureCount<T>();
+
         StringBuilder builder = XmlBuilder;
 
         // We use a simple caching schema here with a single StringBuilder instance shared across all threads.
@@ -39,15 +47,15 @@ internal static unsafe class D2D1EffectXmlFactory
             _ = builder.Append($"""
                 <?xml version='1.0'?>
                 <Effect>
-                    <Property name='DisplayName' type='string' value='{D2D1PixelShaderEffect.GetEffectDisplayName<T>()}'/>
-                    <Property name='Description' type='string' value='{D2D1PixelShaderEffect.GetEffectDescription<T>()}'/>
-                    <Property name='Category' type='string' value='{D2D1PixelShaderEffect.GetEffectCategory<T>()}'/>
-                    <Property name='Author' type='string' value='{D2D1PixelShaderEffect.GetEffectAuthor<T>()}'/>
+                    <Property name='DisplayName' type='string' value='{displayName}'/>
+                    <Property name='Description' type='string' value='{description}'/>
+                    <Property name='Category' type='string' value='{category}'/>
+                    <Property name='Author' type='string' value='{author}'/>
                     <Inputs>
                 """);
 
             // Add the input nodes, if any
-            for (int i = 0; i < D2D1PixelShader.GetInputCount<T>(); i++)
+            for (int i = 0; i < inputCount; i++)
             {
                 _ = builder.Append('\n');
                 _ = builder.Append($"        <Input name='Source{i}'/>");
@@ -66,7 +74,7 @@ internal static unsafe class D2D1EffectXmlFactory
                 """);
 
             // Add the resource texture manager nodes, if any
-            for (int i = 0; i < D2D1PixelShader.GetResourceTextureCount<T>(); i++)
+            for (int i = 0; i < resourceTextureCount; i++)
             {
                 _ = builder.Append('\n');
                 _ = builder.Append($"""
