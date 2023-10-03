@@ -1,17 +1,10 @@
 using System;
-using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using ComputeSharp.D2D1.Exceptions;
-using ComputeSharp.D2D1.Shaders.Translation;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Microsoft.CodeAnalysis.CSharp;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
@@ -130,62 +123,85 @@ partial class D2DPixelShaderSourceGenerator
         }
 
         /// <summary>
-        /// Gets an <see cref="ImmutableArray{T}"/> instance with the compiled bytecode for the current shader.
+        /// Gets any diagnostics from a processed <see cref="HlslBytecodeInfo"/> instance.
         /// </summary>
-        /// <param name="sourceInfo">The source info for the shader to compile.</param>
-        /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
-        /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        public static unsafe ImmutableArray<byte> GetBytecode(HlslShaderMethodSourceInfo sourceInfo, CancellationToken token, out DeferredDiagnosticInfo? diagnostic)
+        /// <param name="methodSymbol">The input <see cref="IMethodSymbol"/> instance to process.</param>
+        /// <param name="info">The source <see cref="HlslBytecodeInfo"/> instance.</param>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        public static void GetInfoDiagnostics(
+            IMethodSymbol methodSymbol,
+            HlslBytecodeInfo info,
+            ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
         {
-            ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
+            DiagnosticInfo? diagnostic = null;
 
-            // Skip compilation if there are any errors
-            if (sourceInfo is { HasErrors: true })
+            if (info is HlslBytecodeInfo.Win32Error win32Error)
             {
-                diagnostic = null;
-
-                goto End;
-            }
-
-            try
-            {
-                token.ThrowIfCancellationRequested();
-
-                // Compile the shader bytecode using the requested parameters
-                using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
-                    sourceInfo.HlslSource.AsSpan(),
-                    sourceInfo.ShaderProfile,
-                    sourceInfo.CompileOptions);
-
-                token.ThrowIfCancellationRequested();
-
-                byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-                int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-                byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
-
-                bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-                diagnostic = null;
-            }
-            catch (Win32Exception e)
-            {
-                diagnostic = DeferredDiagnosticInfo.Create(
+                diagnostic = DiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithWin32Exception,
-                    sourceInfo.MethodName,
-                    e.HResult,
-                    D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                    methodSymbol,
+                    new object[] { methodSymbol, methodSymbol.ContainingType, win32Error.HResult, win32Error.Message });
             }
-            catch (FxcCompilationException e)
+            else if (info is HlslBytecodeInfo.FxcError fxcError)
             {
-                diagnostic = DeferredDiagnosticInfo.Create(
+                diagnostic = DiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
-                    sourceInfo.MethodName,
-                    D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                    methodSymbol,
+                    new object[] { methodSymbol, methodSymbol.ContainingType, fxcError.Message });
             }
 
-            End:
-            return bytecode;
+            if (diagnostic is not null)
+            {
+                diagnostics.Add(diagnostic);
+            }
+        }
+
+        /// <summary>
+        /// Writes the generated method for the compiled HLSL bytecode.
+        /// </summary>
+        /// <param name="info">The input <see cref="D2D1PixelShaderSourceInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteSyntax(D2D1PixelShaderSourceInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+
+            // Write the modifiers, if any
+            foreach (uint modifier in info.Modifiers)
+            {
+                writer.Write(SyntaxFacts.GetText((SyntaxKind)modifier));
+                writer.Write(" ");
+            }
+
+            // Write the return type
+            if (info.InvalidReturnType is string invalidReturnType)
+            {
+                writer.Write(invalidReturnType);
+                writer.Write(" ");
+            }
+            else
+            {
+                writer.Write("global::System.ReadOnlySpan<byte> ");
+            }
+
+            writer.WriteLine($"{info.MethodName}()");
+
+            // Write the bytecode expression
+            using (writer.WriteBlock())
+            {
+                if (info.HlslInfo is HlslBytecodeInfo.Success success)
+                {
+                    writer.Write("return new byte[] { ");
+
+                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(success.Bytecode.AsSpan(), writer);
+
+                    writer.WriteLine(" };");
+                }
+                else
+                {
+                    writer.Write("return default;");
+                }
+            }
         }
     }
 }

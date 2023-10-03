@@ -8,7 +8,7 @@ using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
+using static ComputeSharp.D2D1.SourceGenerators.D2DPixelShaderDescriptorGenerator;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
@@ -18,14 +18,17 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 [Generator(LanguageNames.CSharp)]
 public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerator
 {
+    /// <inheritdoc cref="D2DPixelShaderDescriptorGenerator.GeneratorName"/>
+    private const string GeneratorName = "ComputeSharp.D2D1.D2DPixelShaderSourceGenerator";
+
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Get all method declarations with the [D2DPixelShaderSource] attribute and gather all necessary info
-        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> shaderInfoWithErrors =
+        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> methodInfo =
             context.SyntaxProvider
             .ForAttributeWithMetadataName(
-                typeof(D2DPixelShaderSourceAttribute).FullName,
+                "ComputeSharp.D2D1.D2DPixelShaderSourceAttribute",
                 static (node, _) => node is MethodDeclarationSyntax,
                 static (context, token) =>
                 {
@@ -34,87 +37,67 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
 
-                    // Get the processed HLSL first and check for cancellation
-                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
-
-                    token.ThrowIfCancellationRequested();
-
                     // Get the remaining info for the current shader
                     ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
                     string methodName = methodSymbol.Name;
                     string? invalidReturnType = Execute.GetInvalidReturnType(diagnostics, methodSymbol);
+                    string hlslSource = Execute.GetHlslSource(diagnostics, methodSymbol);
                     D2D1ShaderProfile shaderProfile = Execute.GetShaderProfile(diagnostics, methodSymbol);
                     D2D1CompileOptions compileOptions = Execute.GetCompileOptions(diagnostics, methodSymbol);
+                    bool isCompilationEnabled = diagnostics.Count == 0;
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Prepare the key to cache the bytecode (just like the main D2D1 generator)
+                    HlslBytecodeInfoKey hlslInfoKey = new(
+                        hlslSource,
+                        shaderProfile,
+                        compileOptions,
+                        isCompilationEnabled);
+
+                    // Get the existing compiled shader, or compile the processed HLSL code
+                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Append any diagnostic for the shader compilation
+                    Execute.GetInfoDiagnostics(methodSymbol, hlslInfo, diagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Finally, get the hierarchy too
+                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(methodSymbol.ContainingType!);
+
+                    token.ThrowIfCancellationRequested();
 
                     return new D2D1PixelShaderSourceInfo(
-                        Hierarchy: HierarchyInfo.From(methodSymbol.ContainingType!),
-                        HlslShaderMethodSource: new HlslShaderMethodSourceInfo(
-                            modifiers,
-                            methodName,
-                            invalidReturnType,
-                            hlslSource,
-                            shaderProfile,
-                            compileOptions,
-                            HasErrors: diagnostics.Count > 0),
+                        Hierarchy: hierarchyInfo,
+                        Modifiers: modifiers,
+                        MethodName: methodName,
+                        InvalidReturnType: invalidReturnType,
+                        HlslInfoKey: hlslInfoKey,
+                        HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 });
 
-        // Output the diagnostics
-        context.ReportDiagnostics(
-            shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs));
+        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo = methodInfo.Select(static (item, _) => item.Diagnostcs);
+        IncrementalValuesProvider<D2D1PixelShaderSourceInfo> outputInfo = methodInfo.Select(static (item, _) => item with { Diagnostcs = default });
 
-        // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
-            shaderInfoWithErrors
-            .Select(static (item, token) =>
-            {
-                ImmutableArray<byte> bytecode = Execute.GetBytecode(
-                    item.HlslShaderMethodSource,
-                    token,
-                    out DeferredDiagnosticInfo? diagnostic);
-
-                token.ThrowIfCancellationRequested();
-
-                EmbeddedBytecodeMethodInfo bytecodeInfo = new(
-                    item.HlslShaderMethodSource.Modifiers,
-                    item.HlslShaderMethodSource.MethodName,
-                    item.HlslShaderMethodSource.InvalidReturnType,
-                    item.HlslShaderMethodSource.HlslSource,
-                    bytecode);
-
-                return (item.Hierarchy, bytecodeInfo, diagnostic);
-            });
-
-        // Gather the diagnostics
-        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
-            embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
-            .Where(static item => item.Diagnostic is not null)
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-
-                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(embeddedBytecodeDiagnostics);
-
-        // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeMethodInfo BytecodeInfo)> embeddedBytecode =
-            embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo));
+        // Output the diagnostics, if any
+        context.ReportDiagnostics(diagnosticInfo);
 
         // Generate the shader bytecode methods
-        context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
+        context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax loadBytecodeMethod = Execute.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = item.Hierarchy.GetSyntax(loadBytecodeMethod);
-            SourceText text = fixup(compilationUnit);
+            using IndentedTextWriter writer = IndentedTextWriter.Rent();
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{item.BytecodeInfo.MethodName}.g.cs", text);
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: new IndentedTextWriter.Callback<D2D1PixelShaderSourceInfo>[] { Execute.WriteSyntax });
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{item.MethodName}.g.cs", writer.ToString());
         });
     }
 }

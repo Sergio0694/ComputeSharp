@@ -227,7 +227,7 @@ internal sealed class IndentedTextWriter : IDisposable
     /// <inheritdoc/>
     public override string ToString()
     {
-        return this.builder.ToString();
+        return this.builder.WrittenSpan.Trim().ToString();
     }
 
     /// <inheritdoc/>

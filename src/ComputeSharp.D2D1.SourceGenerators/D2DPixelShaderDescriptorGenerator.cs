@@ -163,8 +163,13 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
+                    // Finally, get the hierarchy too
+                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
                     return new D2D1ShaderInfo(
-                        Hierarchy: HierarchyInfo.From(typeSymbol),
+                        Hierarchy: hierarchyInfo,
                         EffectId: effectId,
                         EffectDisplayName: effectDisplayName,
                         EffectDescription: effectDescription,
