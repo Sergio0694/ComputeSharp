@@ -10,9 +10,9 @@ public sealed class InvalidExecutionContextException : InvalidOperationException
     /// <summary>
     /// Creates a new <see cref="InvalidExecutionContextException"/> instance.
     /// </summary>
-    /// <param name="memberName">The member name of the caller API.</param>
+    /// <param name="memberName">The member name of the invoked API.</param>
     internal InvalidExecutionContextException(string memberName)
-        : base($"The API {memberName} can only be used from within an HLSL shader.")
+        : base("The invoked API can only be used from within an HLSL shader.")
     {
         MemberName = memberName;
     }
