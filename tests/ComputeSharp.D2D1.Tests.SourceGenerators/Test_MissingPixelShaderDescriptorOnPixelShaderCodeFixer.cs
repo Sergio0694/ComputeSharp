@@ -51,6 +51,67 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
+    public async Task FileContainsComputeSharpD2D1UsingDirective_MultipleOccurrences()
+    {
+        string original = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            partial struct {|CMPSD2D0065:MyShader1|} : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            [D2DInputCount(0)]
+            [TestAttribute]
+            partial struct {|CMPSD2D0065:MyShader2|} : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
+            }
+            """;
+
+        string @fixed = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            [D2DGeneratedPixelShaderDescriptor]
+            partial struct MyShader1 : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            [D2DInputCount(0)]
+            [D2DGeneratedPixelShaderDescriptor]
+            [TestAttribute]
+            partial struct MyShader2 : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
+            }
+            """;
+
+        CSharpCodeFixTest test = new()
+        {
+            TestCode = original,
+            FixedCode = @fixed,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+        };
+
+        test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
+        test.TestState.AdditionalReferences.Add(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly);
+        test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", "[*]\nend_of_line = lf"));
+
+        await test.RunAsync();
+    }
+
+    [TestMethod]
     public async Task FileDoesNotContainComputeSharpD2D1UsingDirective()
     {
         string original = """
@@ -67,6 +128,64 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
             partial struct MyShader : ComputeSharp.D2D1.ID2D1PixelShader
             {
                 public ComputeSharp.Float4 Execute() => 0;
+            }
+            """;
+
+        CSharpCodeFixTest test = new()
+        {
+            TestCode = original,
+            FixedCode = @fixed,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+        };
+
+        test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
+        test.TestState.AdditionalReferences.Add(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly);
+        test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", "[*]\nend_of_line = lf"));
+
+        await test.RunAsync();
+    }
+
+    [TestMethod]
+    public async Task FileDoesNotContainComputeSharpD2D1UsingDirective_MultipleOccurrences()
+    {
+        string original = """
+            using System;
+
+            partial struct {|CMPSD2D0065:MyShader1|} : ComputeSharp.D2D1.ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            [TestAttribute]
+            partial struct {|CMPSD2D0065:MyShader2|} : ComputeSharp.D2D1.ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
+            }
+            """;
+
+        string @fixed = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            [D2DGeneratedPixelShaderDescriptor]
+            partial struct MyShader1 : ComputeSharp.D2D1.ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            [D2DGeneratedPixelShaderDescriptor]
+            [TestAttribute]
+            partial struct MyShader2 : ComputeSharp.D2D1.ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
             }
             """;
 

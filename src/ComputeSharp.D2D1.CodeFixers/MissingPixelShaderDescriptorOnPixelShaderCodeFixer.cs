@@ -24,9 +24,9 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
     public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(MissingPixelShaderDescriptorOnPixelShaderTypeId);
 
     /// <inheritdoc/>
-    public override FixAllProvider? GetFixAllProvider()
+    public override Microsoft.CodeAnalysis.CodeFixes.FixAllProvider? GetFixAllProvider()
     {
-        return WellKnownFixAllProviders.BatchFixer;
+        return new FixAllProvider();
     }
 
     /// <inheritdoc/>
@@ -38,13 +38,13 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
         SyntaxNode? root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
         // Get the struct declaration from the target diagnostic
-        if (root!.FindNode(diagnosticSpan) is StructDeclarationSyntax structDeclaration)
+        if (root?.FindNode(diagnosticSpan) is StructDeclarationSyntax structDeclaration)
         {
             // Register the code fix to update the return type to be Task instead
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: "Add [D2DGeneratedPixelShaderDescriptor] attribute",
-                    createChangedDocument: token => ChangeReturnType(context.Document, root, structDeclaration, token),
+                    createChangedDocument: token => AddMissingD2DGeneratedPixelShaderDescriptorAttribute(context.Document, root, structDeclaration, token),
                     equivalenceKey: "Add [D2DGeneratedPixelShaderDescriptor] attribute"),
                 diagnostic);
         }
@@ -58,18 +58,44 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
     /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> to update.</param>
     /// <param name="cancellationToken">The cancellation token for the operation.</param>
     /// <returns>An updated document with the applied code fix, and the return type of the method being <see cref="Task"/>.</returns>
-    private static async Task<Document> ChangeReturnType(Document document, SyntaxNode root, StructDeclarationSyntax structDeclaration, CancellationToken cancellationToken)
+    private static async Task<Document> AddMissingD2DGeneratedPixelShaderDescriptorAttribute(
+        Document document,
+        SyntaxNode root,
+        StructDeclarationSyntax structDeclaration,
+        CancellationToken cancellationToken)
+    {
+        // Get the new struct declaration
+        SyntaxNode updatedStructDeclaration = await AddMissingD2DGeneratedPixelShaderDescriptorAttribute(
+            document,
+            structDeclaration,
+            cancellationToken);
+
+        // Replace the node in the document tree
+        return document.WithSyntaxRoot(root.ReplaceNode(structDeclaration, updatedStructDeclaration));
+    }
+
+    /// <summary>
+    /// Applies the code fix to add the [D2DGeneratedPixelShaderDescriptor] attribute to a target type.
+    /// </summary>
+    /// <param name="document">The original document being fixed.</param>
+    /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> to update.</param>
+    /// <param name="cancellationToken">The cancellation token for the operation.</param>
+    /// <returns>An updated document with the applied code fix, and the return type of the method being <see cref="Task"/>.</returns>
+    private static async Task<SyntaxNode> AddMissingD2DGeneratedPixelShaderDescriptorAttribute(
+        Document document,
+        StructDeclarationSyntax structDeclaration,
+        CancellationToken cancellationToken)
     {
         // Get the semantic model (bail if it's not available)
         if (await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false) is not SemanticModel semanticModel)
         {
-            return document;
+            return structDeclaration;
         }
 
         // Also bail if we can't resolve the [D2DGeneratedPixelShaderDescriptor] attribute symbol (this should really never happen)
         if (semanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute") is not INamedTypeSymbol attributeSymbol)
         {
-            return document;
+            return structDeclaration;
         }
 
         int index = 0;
@@ -112,7 +138,45 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
         SyntaxNode attributeSyntax = syntaxGenerator.Attribute(attributeTypeSyntax);
         SyntaxNode updatedStructDeclarationSyntax = syntaxGenerator.InsertAttributes(structDeclaration, index, attributeSyntax);
 
-        // Replace the node in the document tree
-        return document.WithSyntaxRoot(root.ReplaceNode(structDeclaration, updatedStructDeclarationSyntax));
+        // Replace the node in the syntax tree
+        return updatedStructDeclarationSyntax;
+    }
+
+    /// <summary>
+    /// A custom <see cref="FixAllProvider"/> with the logic from <see cref="MissingPixelShaderDescriptorOnPixelShaderCodeFixer"/>.
+    /// </summary>
+    private sealed class FixAllProvider : DocumentBasedFixAllProvider
+    {
+        /// <inheritdoc/>
+        protected override async Task<Document?> FixAllAsync(FixAllContext fixAllContext, Document document, ImmutableArray<Diagnostic> diagnostics)
+        {
+            // Get the document root (this should always succeed)
+            if (await document.GetSyntaxRootAsync(fixAllContext.CancellationToken).ConfigureAwait(false) is not SyntaxNode root)
+            {
+                return document;
+            }
+
+            SyntaxEditor syntaxEditor = new(root, fixAllContext.Solution.Services);
+
+            foreach (Diagnostic diagnostic in diagnostics)
+            {
+                // Get the current struct declaration for the diagnostic
+                if (root.FindNode(diagnostic.Location.SourceSpan) is not StructDeclarationSyntax structDeclaration)
+                {
+                    continue;
+                }
+
+                // Get the syntax node with the updated declaration
+                SyntaxNode updatedStructDeclaration = await AddMissingD2DGeneratedPixelShaderDescriptorAttribute(
+                    document,
+                    structDeclaration,
+                    fixAllContext.CancellationToken);
+
+                // Replace the node via the editor
+                syntaxEditor.ReplaceNode(structDeclaration, updatedStructDeclaration);
+            }
+
+            return document.WithSyntaxRoot(syntaxEditor.GetChangedRoot());
+        }
     }
 }
