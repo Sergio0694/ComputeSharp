@@ -51,7 +51,6 @@ void GenerateVectorProperties(string typeName, int elementSize)
     bool isBoolType = hlslElementTypeName == "bool";
     string fieldElementTypeName = isBoolType ? "int" : hlslElementTypeName;
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
-    string formattable = elementTypeName == "Bool" ? "" : "ISpanFormattable";
 
     List<string> namespaces = new List<string>
     {
@@ -88,16 +87,6 @@ namespace ComputeSharp;
 /// <inheritdoc cref="<#=typeName#>"/>
 [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
 public unsafe partial struct <#=typeName#>
-<#
-    if (formattable != "")
-    {
-#>
-#if NET6_0_OR_GREATER
-    : <#=formattable#>
-#endif
-<#
-    }
-#>
 {
     /// <summary>
     /// A private buffer to which the undefined properties will point to.
@@ -258,11 +247,7 @@ public unsafe partial struct <#=typeName#>
     /// <inheritdoc/>
     public override readonly string ToString()
     {
-#if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[32], $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c} != 0}}"))#>>");
-#else
         return $"<<#=string.Join(", ", "xyzw".Take(i).Select(c => $"{{this.{c} != 0}}"))#>>";
-#endif
     }
 <#
     }
@@ -274,36 +259,7 @@ public unsafe partial struct <#=typeName#>
     {
         string separator = NumberFormatInfo.CurrentInfo.NumberGroupSeparator;
 
-#if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[64], $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>");
-#else
         return $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>";
-#endif
-    }
-
-    /// <inheritdoc/>
-    public readonly string ToString(string? format, IFormatProvider? formatProvider)
-    {
-        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
-
-        return FormatInterpolatedStringHandler.Create(
-            format,
-            formatProvider,
-            stackalloc char[64],
-            $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>");
-    }
-
-    /// <inheritdoc/>
-    public readonly bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
-    {
-        string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
-
-        return TryWriteFormatInterpolatedStringHandler.TryWrite(
-            destination,
-            format,
-            provider,
-            $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>",
-            out charsWritten);
     }
 <#
     }

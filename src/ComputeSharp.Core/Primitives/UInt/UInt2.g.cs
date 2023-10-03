@@ -15,9 +15,6 @@ namespace ComputeSharp;
 /// <inheritdoc cref="UInt2"/>
 [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
 public unsafe partial struct UInt2
-#if NET6_0_OR_GREATER
-    : ISpanFormattable
-#endif
 {
     /// <summary>
     /// A private buffer to which the undefined properties will point to.
@@ -481,36 +478,7 @@ public unsafe partial struct UInt2
     {
         string separator = NumberFormatInfo.CurrentInfo.NumberGroupSeparator;
 
-#if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[64], $"<{this.x}{separator} {this.y}>");
-#else
         return $"<{this.x}{separator} {this.y}>";
-#endif
-    }
-
-    /// <inheritdoc/>
-    public readonly string ToString(string? format, IFormatProvider? formatProvider)
-    {
-        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
-
-        return FormatInterpolatedStringHandler.Create(
-            format,
-            formatProvider,
-            stackalloc char[64],
-            $"<{this.x}{separator} {this.y}>");
-    }
-
-    /// <inheritdoc/>
-    public readonly bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
-    {
-        string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
-
-        return TryWriteFormatInterpolatedStringHandler.TryWrite(
-            destination,
-            format,
-            provider,
-            $"<{this.x}{separator} {this.y}>",
-            out charsWritten);
     }
 
 #endif
