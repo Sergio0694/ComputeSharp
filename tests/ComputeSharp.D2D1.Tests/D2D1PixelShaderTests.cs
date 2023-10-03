@@ -975,4 +975,37 @@ public partial class D2D1PixelShaderTests
         Assert.AreEqual(left.container1.i2x2.M22, right.container1.i2x2.M22);
         Assert.AreEqual(left.container1.d, right.container1.d);
     }
+
+    public partial class ContainingClass
+    {
+        public partial record ContainingRecord
+        {
+            public partial struct ContainingStruct
+            {
+                public partial record struct ContainingRecordStruct
+                {
+                    public partial interface IContainingInterface
+                    {
+                        [D2DInputCount(0)]
+                        [D2DGeneratedPixelShaderDescriptor]
+                        [AutoConstructor]
+                        public readonly partial struct DeeplyNestedShader : ID2D1PixelShader
+                        {
+                            public float4 Execute()
+                            {
+                                return 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    public void DeeplyNestedShaderType_VerifyGenerator()
+    {
+        // Just a sanity check that the generated code is present
+        Assert.AreEqual(0, D2D1PixelShader.GetInputCount<ContainingClass.ContainingRecord.ContainingStruct.ContainingRecordStruct.IContainingInterface.DeeplyNestedShader>());
+    }
 }

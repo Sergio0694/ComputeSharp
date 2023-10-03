@@ -21,6 +21,7 @@ internal sealed record TypeInfo(string QualifiedName, TypeKind Kind, bool IsReco
     {
         return Kind switch
         {
+            TypeKind.Struct when IsRecord => "record struct",
             TypeKind.Struct => "struct",
             TypeKind.Interface => "interface",
             TypeKind.Class when IsRecord => "record",
