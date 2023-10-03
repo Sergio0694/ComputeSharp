@@ -4,6 +4,7 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DInputSimple(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+[D2DGeneratedPixelShaderDescriptor]
 [AutoConstructor]
 public partial struct CheckerboardClipEffect : ID2D1PixelShader
 {

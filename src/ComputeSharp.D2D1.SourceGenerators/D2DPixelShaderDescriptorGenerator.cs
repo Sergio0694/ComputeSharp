@@ -5,24 +5,29 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <summary>
-/// A source generator creating data loaders for the <see cref="ID2D1PixelShader"/> type.
+/// A source generator creating pixel shader descriptors for annotated D2D1 pixel shader types.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
-public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
+public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// The name of generator to include in the generated code.
+    /// </summary>
+    private const string GeneratorName = "ComputeSharp.D2D1.D2DPixelShaderDescriptorGenerator";
+
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<D2D1ShaderInfo> shaderInfo =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                "ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute",
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {
@@ -32,16 +37,16 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
-
                     // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
-                    if (context.SemanticModel.GetDeclaredSymbol(typeDeclaration, token) is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    if (context.TargetSymbol is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
                     {
                         return default;
                     }
 
+                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.TargetNode;
+
                     // Check that the shader implements the ID2D1PixelShader interface
-                    if (!IsD2D1PixelShaderType(typeSymbol, context.SemanticModel.Compilation))
+                    if (!typeSymbol.HasInterfaceWithType(context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!))
                     {
                         return default;
                     }
@@ -135,9 +140,8 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     bool isLinkingSupported = HlslBytecode.IsSimpleInputShader(typeSymbol, inputCount);
                     D2D1ShaderProfile? requestedShaderProfile = HlslBytecode.GetRequestedShaderProfile(typeSymbol);
                     D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
-                    D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile);
+                    D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile, out bool isCompilationEnabled);
                     D2D1CompileOptions effectiveCompileOptions = HlslBytecode.GetEffectiveCompileOptions(requestedCompileOptions, isLinkingSupported);
-                    bool hasErrors = diagnostics.Count > 0;
 
                     token.ThrowIfCancellationRequested();
 
@@ -145,13 +149,11 @@ public sealed partial class ID2D1ShaderGenerator : IIncrementalGenerator
                     // This is done last so that it can be skipped if any errors happened before.
                     HlslBytecodeInfoKey hlslInfoKey = new(
                         hlslSource,
-                        requestedShaderProfile,
-                        requestedCompileOptions,
                         effectiveShaderProfile,
                         effectiveCompileOptions,
-                        hasErrors);
+                        isCompilationEnabled);
 
-                    // TODO: cache this across transform runs
+                    // Get the existing compiled shader, or compile the processed HLSL code
                     HlslBytecodeInfo hlslInfo = HlslBytecode.GetInfo(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();

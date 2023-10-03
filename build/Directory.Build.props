@@ -142,8 +142,12 @@
     <IsPublishedProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('src\'))</IsPublishedProject>
     <IsSourceGeneratorProject>false</IsSourceGeneratorProject>
     <IsSourceGeneratorProject Condition="$(IsPublishedProject) AND $(MSBuildProjectName.EndsWith('.SourceGenerators'))">true</IsSourceGeneratorProject>
+    <IsCodeFixersProject>false</IsCodeFixersProject>
+    <IsCodeFixersProject Condition="$(IsPublishedProject) AND $(MSBuildProjectName.EndsWith('.CodeFixers'))">true</IsCodeFixersProject>
+    <IsAnalyzersProject>false</IsAnalyzersProject>
+    <IsAnalyzersProject Condition="$(IsSourceGeneratorProject) OR $(IsCodeFixersProject)">true</IsAnalyzersProject>
     <IsPackagedProject>false</IsPackagedProject>
-    <IsPackagedProject Condition="$(IsPublishedProject) AND !$(IsSourceGeneratorProject)">true</IsPackagedProject>
+    <IsPackagedProject Condition="$(IsPublishedProject) AND !$(IsAnalyzersProject)">true</IsPackagedProject>
     <IsTestProject>$(ProjectDirectoryPathFromSourceRoot.StartsWith('tests\'))</IsTestProject>    
     <IsInternalsTestProject>false</IsInternalsTestProject>
     <IsInternalsTestProject Condition="$(IsTestProject) AND $(MSBuildProjectName.EndsWith('.Internals'))">true</IsInternalsTestProject>

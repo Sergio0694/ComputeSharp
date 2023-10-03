@@ -6,7 +6,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class OutputBuffer
@@ -27,7 +27,7 @@ partial class ID2D1ShaderGenerator
             };
 
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1BufferPrecision global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.BufferPrecision => {bufferPrecisionExpression};");
         }
 
@@ -46,7 +46,7 @@ partial class ID2D1ShaderGenerator
             };
 
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ChannelDepth global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ChannelDepth => {channelDepthExpression};");
         }
     }

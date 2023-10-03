@@ -5,7 +5,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class InputTypes
@@ -18,7 +18,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1PixelShaderInputType> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.InputTypes => ");
 
             // If there are no inputs, simply return a default expression. Otherwise, create
@@ -65,7 +65,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A <see cref="MemoryManager{T}"/> implementation to get the input types.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
                 writer.WriteLine($$"""file sealed class InputTypesMemoryManager : MemoryManager<D2D1PixelShaderInputType>""");
 
                 using (writer.WriteBlock())

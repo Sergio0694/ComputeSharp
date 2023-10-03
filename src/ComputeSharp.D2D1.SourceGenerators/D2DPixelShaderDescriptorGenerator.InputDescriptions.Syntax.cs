@@ -7,7 +7,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritoc/>
     private static partial class InputDescriptions
@@ -20,7 +20,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.D2D1.Interop.D2D1InputDescription> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.InputDescriptions => ");
 
             // If there are no input descriptions, just return a default expression.
@@ -66,7 +66,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// A container type for additional data needed by the shader.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
                 writer.WriteLine($$"""file static class Data""");
 
                 using (writer.WriteBlock())

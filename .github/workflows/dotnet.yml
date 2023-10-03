@@ -118,6 +118,11 @@ jobs:
     - name: Run ComputeSharp.D2D1.Tests.AssemblyLevelAttributes
       run: dotnet test tests\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes\ComputeSharp.D2D1.Tests.AssemblyLevelAttributes.csproj -c Release -f ${{matrix.framework}} -v n -l "console;verbosity=detailed"
 
+      # Run the D2D1 source generators tests as well (only on .NET 6, like for the DX12 ones)
+    - if: matrix.framework == 'net6.0'
+      name: Run ComputeSharp.D2D1.Tests.SourceGenerators
+      run: dotnet test tests\ComputeSharp.D2D1.Tests.SourceGenerators\ComputeSharp.D2D1.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
+
   # Run all unit tests using D3D12MA
   run-tests-d3d12ma:
     needs: [build-solution]

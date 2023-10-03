@@ -25,6 +25,25 @@ internal static class ITypeSymbolExtensions
     }
 
     /// <summary>
+    /// Checks whether or not a given <see cref="ITypeSymbol"/> implements an interface of a specified type.
+    /// </summary>
+    /// <param name="typeSymbol">The target <see cref="ITypeSymbol"/> instance to check.</param>
+    /// <param name="interfaceSymbol">The <see cref="ITypeSymbol"/> instane to check for inheritance from.</param>
+    /// <returns>Whether or not <paramref name="typeSymbol"/> has an interface of type <paramref name="interfaceSymbol"/>.</returns>
+    public static bool HasInterfaceWithType(this ITypeSymbol typeSymbol, ITypeSymbol interfaceSymbol)
+    {
+        foreach (INamedTypeSymbol interfaceType in typeSymbol.AllInterfaces)
+        {
+            if (SymbolEqualityComparer.Default.Equals(interfaceType, interfaceSymbol))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Gets the fully qualified metadata name for a given <see cref="ITypeSymbol"/> instance.
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>

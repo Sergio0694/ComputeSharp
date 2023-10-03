@@ -5,7 +5,7 @@ using ComputeSharp.SourceGeneration.Helpers;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class EffectMetadata
@@ -60,7 +60,7 @@ partial class ID2D1ShaderGenerator
         private static void WriteEffectMetadataSyntax(string qualifiedName, string propertyName, string? metadataValue, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.Write($"readonly string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{qualifiedName}>.{propertyName} => ");
 
             // Append null or the metadata value as a string literal

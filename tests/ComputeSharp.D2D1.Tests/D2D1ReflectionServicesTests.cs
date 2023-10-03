@@ -60,6 +60,7 @@ public partial class D2D1ReflectionServicesTests
     [D2DInputComplex(2)]
     [D2DRequiresScenePosition]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader41)]
+    [D2DGeneratedPixelShaderDescriptor]
     private readonly partial struct ReflectedShader : ID2D1PixelShader
     {
         private readonly float2 offset;
@@ -119,6 +120,7 @@ public partial class D2D1ReflectionServicesTests
 
     [D2DInputCount(1)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
     private readonly partial struct ReflectedShaderWithDoubleOperations : ID2D1PixelShader
     {
         private readonly double amount;

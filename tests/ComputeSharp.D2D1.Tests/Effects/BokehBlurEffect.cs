@@ -509,6 +509,7 @@ public sealed partial class BokehBlurEffect
         [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
+        [D2DGeneratedPixelShaderDescriptor]
         [AutoConstructor]
         public readonly partial struct Shader : ID2D1PixelShader
         {
@@ -558,6 +559,7 @@ public sealed partial class BokehBlurEffect
         [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DRequiresScenePosition]
+        [D2DGeneratedPixelShaderDescriptor]
         [AutoConstructor]
         public readonly partial struct Shader : ID2D1PixelShader
         {
@@ -602,6 +604,7 @@ public sealed partial class BokehBlurEffect
     [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
     [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     internal readonly partial struct GammaHighlight : ID2D1PixelShader
     {
@@ -624,6 +627,7 @@ public sealed partial class BokehBlurEffect
     [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
     [D2DOutputBuffer(D2D1BufferPrecision.Float32, D2D1ChannelDepth.Four)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+    [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
     internal readonly partial struct InverseGammaHighlight : ID2D1PixelShader
     {

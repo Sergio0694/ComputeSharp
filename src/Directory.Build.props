@@ -45,11 +45,11 @@
   <!-- Additional properties for all source projects-->
   <PropertyGroup>
 
-    <!-- Disable packing symbols for source generators -->
-    <PackSymbols Condition="$(IsSourceGeneratorProject)">false</PackSymbols>
+    <!-- Disable packing symbols for all analyzers -->
+    <PackSymbols Condition="$(IsAnalyzersProject)">false</PackSymbols>
 
-    <!-- Enable extended analyzer rules for all source generators -->
-    <EnforceExtendedAnalyzerRules Condition="$(IsSourceGeneratorProject)">true</EnforceExtendedAnalyzerRules>
+    <!-- Enable extended analyzer rules for all analyzers -->
+    <EnforceExtendedAnalyzerRules Condition="$(IsAnalyzersProject)">true</EnforceExtendedAnalyzerRules>
 
     <!-- Check whether the project has a .targets file to bundle -->
     <IsTargetsFileAvailableForPacking>false</IsTargetsFileAvailableForPacking>
@@ -76,7 +76,7 @@
 
   <!--
     Reference PolySharp for all .NET Standard 2.0 polyfills.
-    Only needed for the .Core project and all source generators.
+    Only needed for the .Core project and all analyzers.
   -->
   <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(MSBuildProjectName.EndsWith('.SourceGenerators'))">
     <PackageReference Include="PolySharp" Version="1.13.2">

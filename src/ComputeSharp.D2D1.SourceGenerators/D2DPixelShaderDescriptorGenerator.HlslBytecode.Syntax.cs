@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class HlslBytecode
@@ -20,8 +20,8 @@ partial class ID2D1ShaderGenerator
         public static void WriteShaderProfileSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.EffectiveShaderProfile};");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.ShaderProfile};");
         }
 
         /// <summary>
@@ -33,14 +33,14 @@ partial class ID2D1ShaderGenerator
         {
             // Get a formatted representation of the compile options being used
             string compileOptionsExpression =
-                info.HlslInfoKey.EffectiveCompileOptions
+                info.HlslInfoKey.CompileOptions
                 .ToString()
                 .Split(',')
                 .Select(static name => $"global::ComputeSharp.D2D1.D2D1CompileOptions.{name.Trim()}")
                 .Aggregate("", static (left, right) => left.Length > 0 ? $"{left} | {right}" : right);
 
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.CompileOptions => {compileOptionsExpression};");
         }
 
@@ -52,7 +52,7 @@ partial class ID2D1ShaderGenerator
         public static void WriteHlslBytecodeSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.Write($"readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslBytecode => ");
 
             // If there is no bytecode, just return a default expression.
@@ -98,7 +98,7 @@ partial class ID2D1ShaderGenerator
                 writer.WriteLine($$"""/// <summary>""");
                 writer.WriteLine($$"""/// <see cref="MemoryManager{T}"/> implementation to get the HLSL bytecode.""");
                 writer.WriteLine($$"""/// </summary>""");
-                writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator), useFullyQualifiedTypeNames: false);
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
                 writer.WriteLine($$"""file sealed class HlslBytecodeMemoryManager : MemoryManager<byte>""");
 
                 using (writer.WriteBlock())

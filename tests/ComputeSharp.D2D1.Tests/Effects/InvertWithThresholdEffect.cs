@@ -3,6 +3,7 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DInputCount(1)]
 [D2DInputSimple(0)]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+[D2DGeneratedPixelShaderDescriptor]
 [AutoConstructor]
 public partial struct InvertWithThresholdEffect : ID2D1PixelShader
 {

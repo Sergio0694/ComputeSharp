@@ -52,15 +52,13 @@ public sealed class D2D1ResourceTextureUninitializedFieldDiagnosticSuppressor : 
                     HlslKnownTypes.IsResourceTextureType(fieldSymbol.Type.GetFullyQualifiedMetadataName()))
                 {
                     // Get the ID2D1PixelShader interface symbol to the check the containing type of the field
-                    INamedTypeSymbol? pixelShaderInterfaceSymbol = semanticModel.Compilation.GetTypeByMetadataName(typeof(ID2D1PixelShader).FullName)!;
-
-                    if (pixelShaderInterfaceSymbol is null)
+                    if (semanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader") is not { } d2D1PixelShaderSymbol)
                     {
                         continue;
                     }
 
                     // Also check if the containing type is in fact a D2D1 pixel shader type
-                    if (ID2D1ShaderGenerator.IsD2D1PixelShaderType(structSymbol, semanticModel.Compilation))
+                    if (structSymbol.HasInterfaceWithType(d2D1PixelShaderSymbol))
                     {
                         context.ReportSuppression(Suppression.Create(UninitializedD2D1ResourceTextureField, diagnostic));
                     }

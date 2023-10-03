@@ -6,7 +6,7 @@ using ComputeSharp.SourceGeneration.Mappings;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class CreateFromConstantBuffer
@@ -21,7 +21,7 @@ partial class ID2D1ShaderGenerator
             string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
 
             writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(typeof(ID2D1ShaderGenerator));
+            writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
             writer.WriteLine($"readonly unsafe {typeName} global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)");
 

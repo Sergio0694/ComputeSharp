@@ -18,7 +18,7 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
-partial class ID2D1ShaderGenerator
+partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the HLSL bytecode properties.
@@ -87,9 +87,13 @@ partial class ID2D1ShaderGenerator
         /// Gets the effective shader profile to use.
         /// </summary>
         /// <param name="shaderProfile">The requested shader profile.</param>
+        /// <param name="isCompilationEnabled">Whether compilation should be performed with the input profile.</param>
         /// <returns>The effective shader profile.</returns>
-        public static D2D1ShaderProfile GetEffectiveShaderProfile(D2D1ShaderProfile? shaderProfile)
+        public static D2D1ShaderProfile GetEffectiveShaderProfile(D2D1ShaderProfile? shaderProfile, out bool isCompilationEnabled)
         {
+            // Compilation is only enabled if the user explicitly selected a shader profile
+            isCompilationEnabled = shaderProfile is not null;
+
             // The effective shader profile is either be the requested one, or the default value (which maps to PS5.0)
             return shaderProfile ?? D2D1ShaderProfile.PixelShader50;
         }
@@ -150,11 +154,10 @@ partial class ID2D1ShaderGenerator
         {
             static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
             {
-                // No embedded shader was requested, or there were some errors earlier in the pipeline.
+                // Check if the compilation is not enabled (eg. if there's been errors earlier in the pipeline).
                 // In this case, skip the compilation, as diagnostic will be emitted for those anyway.
                 // Compiling would just add overhead and result in more errors, as the HLSL would be invalid.
-                // We also skip compilation if no shader profile has been requested (we never just assume one).
-                if (key.HasErrors || key.RequestedShaderProfile is null)
+                if (!key.IsCompilationEnabled)
                 {
                     return HlslBytecodeInfo.Missing.Instance;
                 }
@@ -166,8 +169,8 @@ partial class ID2D1ShaderGenerator
                     // Compile the shader bytecode using the effective parameters
                     using ComPtr<ID3DBlob> dxcBlobBytecode = D3DCompiler.Compile(
                         key.HlslSource.AsSpan(),
-                        key.EffectiveShaderProfile,
-                        key.EffectiveCompileOptions);
+                        key.ShaderProfile,
+                        key.CompileOptions);
 
                     token.ThrowIfCancellationRequested();
 
