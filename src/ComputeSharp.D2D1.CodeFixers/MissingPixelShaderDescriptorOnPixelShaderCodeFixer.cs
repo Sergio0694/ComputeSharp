@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
+using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -20,6 +21,25 @@ namespace ComputeSharp.D2D1.CodeFixers;
 [Shared]
 public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFixProvider
 {
+    /// <summary>
+    /// The set of type names for all D2D attributes that can be over shader types.
+    /// </summary>
+    private static readonly ImmutableArray<string> D2DAttributeTypeNames = ImmutableArray.Create(
+        "ComputeSharp.D2D1.D2DCompileOptionsAttribute",
+        "ComputeSharp.D2D1.D2DEffectAuthorAttribute",
+        "ComputeSharp.D2D1.D2DEffectCategoryAttribute",
+        "ComputeSharp.D2D1.D2DEffectDescriptionAttribute",
+        "ComputeSharp.D2D1.D2DEffectDisplayNameAttribute",
+        "ComputeSharp.D2D1.D2DEffectIdAttribute",
+        "ComputeSharp.D2D1.D2DInputComplexAttribute",
+        "ComputeSharp.D2D1.D2DInputCountAttribute",
+        "ComputeSharp.D2D1.D2DInputDescriptionAttribute",
+        "ComputeSharp.D2D1.D2DInputSimpleAttribute",
+        "ComputeSharp.D2D1.D2DOutputBufferAttribute",
+        "ComputeSharp.D2D1.D2DPixelOptionsAttribute",
+        "ComputeSharp.D2D1.D2DRequiresScenePositionAttribute",
+        "ComputeSharp.D2D1.D2DShaderProfileAttribute");
+
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(MissingPixelShaderDescriptorOnPixelShaderTypeId);
 
@@ -92,6 +112,12 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
             return structDeclaration;
         }
 
+        // Build the map of D2D attributes to look for
+        if (!semanticModel.Compilation.TryBuildNamedTypeSymbolSet(D2DAttributeTypeNames, out ImmutableHashSet<INamedTypeSymbol>? d2DAttributeTypeSymbols))
+        {
+            return structDeclaration;
+        }
+
         // Also bail if we can't resolve the [D2DGeneratedPixelShaderDescriptor] attribute symbol (this should really never happen)
         if (semanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute") is not INamedTypeSymbol attributeSymbol)
         {
@@ -111,14 +137,14 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : CodeFix
                 continue;
             }
 
-            // Make sure we find a readable identifier for the attribute
-            if (attribute.Name is not IdentifierNameSyntax { Identifier.Value: string identifier })
+            // Resolve the symbol for the attribute (stop here if this failed for whatever reason)
+            if (!semanticModel.GetSymbolInfo(attribute, cancellationToken).TryGetAttributeTypeSymbol(out INamedTypeSymbol? attributeTypeSymbol))
             {
                 break;
             }
 
             // If the attribute is D2D one, increment the index and continue
-            if (identifier.Contains("D2D"))
+            if (d2DAttributeTypeSymbols.Contains(attributeTypeSymbol))
             {
                 index++;
             }

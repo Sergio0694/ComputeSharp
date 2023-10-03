@@ -294,4 +294,68 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
 
         await test.RunAsync();
     }
+
+    [TestMethod]
+    public async Task InsertsAttributeAfterAllOtherD2DAttributes_WithFakeAttributes()
+    {
+        string original = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(2)]
+            [D2DInputSimple(0)]
+            [ComputeSharp.D2D1.D2DInputSimple(1)]
+            [D2DFake]
+            [Test]
+            partial struct {|CMPSD2D0065:MyShader|} : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
+            }
+
+            public class D2DFakeAttribute : Attribute
+            {
+            }
+            """;
+
+        string @fixed = """
+            using System;
+            using ComputeSharp.D2D1;
+
+            [D2DInputCount(2)]
+            [D2DInputSimple(0)]
+            [ComputeSharp.D2D1.D2DInputSimple(1)]
+            [D2DGeneratedPixelShaderDescriptor]
+            [D2DFake]
+            [Test]
+            partial struct {|CMPSD2D0065:MyShader|} : ID2D1PixelShader
+            {
+                public ComputeSharp.Float4 Execute() => 0;
+            }
+
+            public class TestAttribute : Attribute
+            {
+            }
+
+            public class D2DFakeAttribute : Attribute
+            {
+            }
+            """;
+
+        CSharpCodeFixTest test = new()
+        {
+            TestCode = original,
+            FixedCode = @fixed,
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+        };
+
+        test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
+        test.TestState.AdditionalReferences.Add(typeof(D2D1::ComputeSharp.D2D1.ID2D1PixelShader).Assembly);
+        test.TestState.AnalyzerConfigFiles.Add(("/.editorconfig", "[*]\nend_of_line = lf"));
+
+        await test.RunAsync();
+    }
 }
