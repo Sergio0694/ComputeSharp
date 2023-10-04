@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.D2D1.Exceptions;
+namespace ComputeSharp.D2D1;
 
 /// <summary>
 /// A custom <see cref="Exception"/> type that indicates when a shader compilation with the FXC compiler has failed.

@@ -1,5 +1,4 @@
 using System;
-using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

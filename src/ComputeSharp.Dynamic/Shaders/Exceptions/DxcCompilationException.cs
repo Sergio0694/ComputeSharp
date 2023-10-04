@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.Exceptions;
+namespace ComputeSharp;
 
 /// <summary>
 /// A custom <see cref="Exception"/> type that indicates when a shader compilation with the DXC compiler has failed.

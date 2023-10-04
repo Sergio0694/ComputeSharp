@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.Exceptions;
+namespace ComputeSharp;
 
 /// <summary>
 /// A custom <see cref="InvalidOperationException"/> that indicates when an HLSL-only API is called from C#.

@@ -1,5 +1,3 @@
-using ComputeSharp.Exceptions;
-
 namespace ComputeSharp;
 
 /// <summary>

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using ComputeSharp.Exceptions;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;

@@ -1,5 +1,4 @@
 using ComputeSharp.Core.Intrinsics.Attributes;
-using ComputeSharp.Exceptions;
 
 #pragma warning disable IDE0022
 

@@ -2,7 +2,7 @@ using System;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
 
-namespace ComputeSharp.Exceptions;
+namespace ComputeSharp;
 
 /// <summary>
 /// A custom <see cref="InvalidOperationException"/> that indicates when mismatched devices are being used.

@@ -1,6 +1,5 @@
-﻿<#@include file="Hlsl.Void.ttinclude" #>
+<#@include file="Hlsl.Void.ttinclude" #>
 using ComputeSharp.Core.Intrinsics.Attributes;
-using ComputeSharp.Exceptions;
 
 #pragma warning disable IDE0022
 

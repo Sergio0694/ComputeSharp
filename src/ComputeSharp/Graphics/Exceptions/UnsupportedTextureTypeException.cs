@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.Exceptions;
+namespace ComputeSharp;
 
 /// <summary>
 /// A custom <see cref="NotSupportedException"/> that indicates when a texture was attempted to be created with an unsupported type.
