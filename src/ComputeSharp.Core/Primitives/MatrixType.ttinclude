@@ -18,9 +18,6 @@ using System.Runtime.InteropServices;
         WriteLine("using ComputeSharp.Core.Intrinsics.Attributes;");
     }
 #>
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 #pragma warning disable CS0660, CS0661
 
@@ -50,12 +47,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
 [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>, Pack = <#=elementSize#>)]
 public unsafe partial struct <#=fullTypeName#>
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=fullTypeName#>), sizeof(<#=typeName#>4));
 <#
-    WriteLine("");
     PushIndent("    ");
 
     // Generate the private fields
@@ -155,7 +147,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
+    public ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -167,7 +159,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
+    public ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -180,7 +172,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
+    public ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -194,7 +186,7 @@ public unsafe partial struct <#=fullTypeName#>
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
+    public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData.Memory;
 <#
     for (int i = 1; i <= rows; i++)
     for (int j = 1; j <= columns; j++)

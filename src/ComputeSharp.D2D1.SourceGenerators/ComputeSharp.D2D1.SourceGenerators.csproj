@@ -49,6 +49,7 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int3.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int4.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" Link="ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Internals\UndefinedData.cs" Link="ComputeSharp.Core\Primitives\Internals\UndefinedData.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt4.cs" />
