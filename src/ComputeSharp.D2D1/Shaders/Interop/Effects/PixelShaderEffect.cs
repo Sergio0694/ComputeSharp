@@ -6,9 +6,6 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 
@@ -47,7 +44,7 @@ internal unsafe partial struct PixelShaderEffect
     /// <returns>The combined vtable for <see cref="ID2D1EffectImpl"/> and <see cref="ID2D1DrawTransform"/>.</returns>
     private static void** InitVtblForID2D1EffectImplAndID2D1DrawTransform()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(PixelShaderEffect), sizeof(void*) * 14);
+        void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 14);
 
         // ID2D1EffectImpl
 #if NET6_0_OR_GREATER
