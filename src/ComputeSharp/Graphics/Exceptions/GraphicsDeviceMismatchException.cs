@@ -1,9 +1,8 @@
 using System;
-using System.Text;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
 
-namespace ComputeSharp.Exceptions;
+namespace ComputeSharp;
 
 /// <summary>
 /// A custom <see cref="InvalidOperationException"/> that indicates when mismatched devices are being used.
@@ -32,15 +31,13 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     /// </remarks>
     private static GraphicsDeviceMismatchException Create(IReferenceTrackedObject resource, GraphicsDevice sourceDevice, GraphicsDevice destinationDevice)
     {
-        StringBuilder builder = new(512);
+        string message =
+            $"""Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers. """ +
+            $"""The target device to run the compute shader is "{destinationDevice}". """ +
+            $"""The buffer of type {resource.GetType()} was allocated on device "{sourceDevice}". """ +
+            $"""Make sure to always allocate buffers on the same device used to actually run the code that accesses them.""";
 
-        _ = builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
-        _ = builder.AppendLine($"The target device to run the compute shader is \"{destinationDevice}\".");
-        _ = builder.AppendLine($"The buffer of type {resource.GetType()} was allocated on device \"{sourceDevice}\".");
-        _ = builder.Append("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
-        _ = builder.ToString();
-
-        return new(builder.ToString());
+        return new(message);
     }
 
     /// <summary>

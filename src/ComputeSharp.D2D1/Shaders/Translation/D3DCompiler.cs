@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using ComputeSharp.D2D1.Exceptions;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

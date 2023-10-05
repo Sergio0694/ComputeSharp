@@ -474,11 +474,7 @@ public unsafe partial struct Bool2
     /// <inheritdoc/>
     public override readonly string ToString()
     {
-#if NET6_0_OR_GREATER
-        return string.Create(null, stackalloc char[32], $"<{this.x != 0}, {this.y != 0}>");
-#else
         return $"<{this.x != 0}, {this.y != 0}>";
-#endif
     }
 
 #endif

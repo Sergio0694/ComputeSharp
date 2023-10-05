@@ -1,5 +1,3 @@
-using ComputeSharp.Exceptions;
-
 #pragma warning disable IDE0022
 
 namespace ComputeSharp.D2D1;

@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Exceptions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
