@@ -4,7 +4,6 @@ using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.Interop.Effects;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.D2D1.Uwp.Helpers;
@@ -262,7 +261,7 @@ unsafe partial class PixelShaderEffect<T>
     {
         fixed (ID2D1Effect** d2D1Effect = this.d2D1Effect)
         {
-            Guid effectId = PixelShaderEffect.For<T>.Instance.Id;
+            Guid effectId = D2D1PixelShaderEffect.GetEffectId<T>();
 
             using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
             using ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default;

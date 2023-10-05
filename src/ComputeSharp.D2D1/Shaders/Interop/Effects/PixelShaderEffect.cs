@@ -106,85 +106,14 @@ internal unsafe partial struct PixelShaderEffect
     private volatile int referenceCount;
 
     /// <summary>
-    /// The <see cref="Guid"/> for the shader.
+    /// The <see cref="GCHandle"/> for the <see cref="Globals"/> instance in use.
     /// </summary>
-    private Guid shaderId;
+    private GCHandle globalsHandle;
 
     /// <summary>
     /// The constant buffer data, if set.
     /// </summary>
     private byte* constantBuffer;
-
-    /// <summary>
-    /// The size of <see cref="constantBuffer"/>.
-    /// </summary>
-    private int constantBufferSize;
-
-    /// <summary>
-    /// The number of inputs for the shader.
-    /// </summary>
-    private int inputCount;
-
-    /// <summary>
-    /// The buffer with the types of inputs for the shader.
-    /// </summary>
-    /// <remarks>
-    /// This buffer is shared among effect instances, so it should not be released. It is
-    /// owned by <see cref="For{T}"/>, which will release it when the target type is unloaded.
-    /// </remarks>
-    private D2D1PixelShaderInputType* inputTypes;
-
-    /// <summary>
-    /// The number of available input descriptions.
-    /// </summary>
-    private int inputDescriptionCount;
-
-    /// <summary>
-    /// The buffer with the available input descriptions for the shader.
-    /// </summary>
-    /// <remarks>
-    /// This buffer is also shared among effect instances, so it should not be released. It is
-    /// owned by <see cref="For{T}"/>, which will release it when the target type is unloaded.
-    /// </remarks>
-    private D2D1InputDescription* inputDescriptions;
-
-    /// <summary>
-    /// The pixel options for the shader.
-    /// </summary>
-    private D2D1PixelOptions pixelOptions;
-
-    /// <summary>
-    /// The shader bytecode.
-    /// </summary>
-    private byte* bytecode;
-
-    /// <summary>
-    /// The size of <see cref="bytecode"/>.
-    /// </summary>
-    private int bytecodeSize;
-
-    /// <summary>
-    /// The buffer precision for the resulting output buffer.
-    /// </summary>
-    private D2D1BufferPrecision bufferPrecision;
-
-    /// <summary>
-    /// The channel depth for the resulting output buffer.
-    /// </summary>
-    private D2D1ChannelDepth channelDepth;
-
-    /// <summary>
-    /// The number of available resource texture descriptions.
-    /// </summary>
-    private int resourceTextureDescriptionCount;
-
-    /// <summary>
-    /// The buffer with the available resource texture descriptions for the shader.
-    /// </summary>
-    /// <remarks>
-    /// This buffer is also shared among effect instances, like <see cref="inputDescriptions"/>.
-    /// </remarks>
-    private D2D1ResourceTextureDescription* resourceTextureDescriptions;
 
     /// <summary>
     /// The <see cref="ID2D1TransformMapper"/> instance to use, if any.
@@ -209,45 +138,33 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The factory method for <see cref="ID2D1Factory1.RegisterEffectFromString"/>.
     /// </summary>
-    /// <param name="shaderId">The <see cref="Guid"/> for the shader.</param>
-    /// <param name="constantBufferSize">The size of the constant buffer for the shader.</param>
-    /// <param name="inputCount">The number of inputs for the shader.</param>
-    /// <param name="inputTypes">The buffer with the types of inputs for the shader.</param>
-    /// <param name="inputDescriptionCount">The number of available input descriptions.</param>
-    /// <param name="inputDescriptions">The buffer with the available input descriptions for the shader.</param>
-    /// <param name="pixelOptions">The pixel options for the shader.</param>
-    /// <param name="bytecode">The shader bytecode.</param>
-    /// <param name="bytecodeSize">The size of <paramref name="bytecode"/>.</param>
-    /// <param name="bufferPrecision">The buffer precision for the resulting output buffer.</param>
-    /// <param name="channelDepth">The channel depth for the resulting output buffer.</param>
-    /// <param name="resourceTextureDescriptionCount">The number of available resource texture descriptions.</param>
-    /// <param name="resourceTextureDescriptions">The buffer with the available resource texture descriptions for the shader.</param>
+    /// <param name="globals">The <see cref="Globals"/> instance to use.</param>
     /// <param name="effectImpl">The resulting effect instance.</param>
-    /// <returns>This always returns <c>0</c>.</returns>
-    private static int Factory(
-        Guid shaderId,
-        int constantBufferSize,
-        int inputCount,
-        D2D1PixelShaderInputType* inputTypes,
-        int inputDescriptionCount,
-        D2D1InputDescription* inputDescriptions,
-        D2D1PixelOptions pixelOptions,
-        byte* bytecode,
-        int bytecodeSize,
-        D2D1BufferPrecision bufferPrecision,
-        D2D1ChannelDepth channelDepth,
-        int resourceTextureDescriptionCount,
-        D2D1ResourceTextureDescription* resourceTextureDescriptions,
-        IUnknown** effectImpl)
+    /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
+    private static int Factory(Globals globals, IUnknown** effectImpl)
     {
-        PixelShaderEffect* @this;
+        PixelShaderEffect* @this = null;
+        GCHandle globalsHandle = default;
 
         try
         {
             @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
+            globalsHandle = GCHandle.Alloc(globals);
         }
-        catch (OutOfMemoryException)
+        catch (Exception)
         {
+            // Free the effect, if we have one
+            if (@this is not null)
+            {
+                NativeMemory.Free(@this);
+            }
+
+            // Free the handle, if we have one
+            if (globalsHandle.IsAllocated)
+            {
+                globalsHandle.Free();
+            }
+
             *effectImpl = null;
 
             return E.E_OUTOFMEMORY;
@@ -258,20 +175,8 @@ internal unsafe partial struct PixelShaderEffect
         @this->lpVtblForID2D1EffectImpl = VtblForID2D1EffectImpl;
         @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
         @this->referenceCount = 1;
-        @this->shaderId = shaderId;
+        @this->globalsHandle = globalsHandle;
         @this->constantBuffer = null;
-        @this->constantBufferSize = constantBufferSize;
-        @this->inputCount = inputCount;
-        @this->inputTypes = inputTypes;
-        @this->inputDescriptionCount = inputDescriptionCount;
-        @this->inputDescriptions = inputDescriptions;
-        @this->pixelOptions = pixelOptions;
-        @this->bytecode = bytecode;
-        @this->bytecodeSize = bytecodeSize;
-        @this->bufferPrecision = bufferPrecision;
-        @this->channelDepth = channelDepth;
-        @this->resourceTextureDescriptionCount = resourceTextureDescriptionCount;
-        @this->resourceTextureDescriptions = resourceTextureDescriptions;
         @this->d2D1TransformMapper = null;
         @this->d2D1DrawInfo = null;
         @this->d2D1EffectContext = null;
@@ -331,6 +236,14 @@ internal unsafe partial struct PixelShaderEffect
 
         if (referenceCount == 0)
         {
+            // Retrieve the number of resource textures before freeing the globals handle
+            int resourceTextureDescriptionCount = GetGlobals().ResourceTextureCount;
+
+            if (this.globalsHandle.IsAllocated)
+            {
+                this.globalsHandle.Free();
+            }
+
             if (this.constantBuffer is not null)
             {
                 NativeMemory.Free(this.constantBuffer);
@@ -352,7 +265,7 @@ internal unsafe partial struct PixelShaderEffect
             }
 
             // Retrieve all possible resource texture managers in use and release the ones that had been assigned (from one of the property bindings)
-            for (int i = 0; i < this.resourceTextureDescriptionCount; i++)
+            for (int i = 0; i < resourceTextureDescriptionCount; i++)
             {
                 ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[i];
 
@@ -366,5 +279,15 @@ internal unsafe partial struct PixelShaderEffect
         }
 
         return referenceCount;
+    }
+
+    /// <summary>
+    /// Gets the <see cref="Globals"/> instance for the current effect.
+    /// </summary>
+    /// <returns>The <see cref="Globals"/> instance for the current effect.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private Globals GetGlobals()
+    {
+        return Unsafe.As<Globals>(this.globalsHandle.Target!);
     }
 }

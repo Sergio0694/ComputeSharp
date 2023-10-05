@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Interop.Effects;
+using ComputeSharp.D2D1.Interop;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp.Extensions;
 using ComputeSharp.D2D1.Uwp.Helpers;
@@ -74,7 +74,7 @@ unsafe partial class PixelShaderEffect<T>
                 if (!this.isEffectFactoryRegistered)
                 {
                     ResourceManager.RegisterEffectFactory(
-                        effectId: PixelShaderEffect.For<T>.Instance.Id,
+                        effectId: D2D1PixelShaderEffect.GetEffectId<T>(),
                         factory: new EffectFactory());
 
                     this.isEffectFactoryRegistered = true;

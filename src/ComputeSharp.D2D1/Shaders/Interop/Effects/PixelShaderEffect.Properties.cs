@@ -120,7 +120,7 @@ unsafe partial struct PixelShaderEffect
             dataSize == 0 &&
             actualSize is not null)
         {
-            *actualSize = (uint)@this->constantBufferSize;
+            *actualSize = (uint)@this->GetGlobals().ConstantBufferSize;
 
             return S.S_FALSE;
         }
@@ -130,7 +130,7 @@ unsafe partial struct PixelShaderEffect
             return E.E_POINTER;
         }
 
-        if (dataSize < @this->constantBufferSize)
+        if (dataSize < @this->GetGlobals().ConstantBufferSize)
         {
             return E.E_NOT_SUFFICIENT_BUFFER;
         }
@@ -142,11 +142,11 @@ unsafe partial struct PixelShaderEffect
 
         uint writtenBytes = 0;
 
-        if (@this->constantBufferSize > 0)
+        if (@this->GetGlobals().ConstantBufferSize > 0)
         {
-            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->constantBufferSize);
+            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->GetGlobals().ConstantBufferSize);
 
-            writtenBytes = (uint)@this->constantBufferSize;
+            writtenBytes = (uint)@this->GetGlobals().ConstantBufferSize;
         }
 
         if (actualSize is not null)
@@ -168,7 +168,7 @@ unsafe partial struct PixelShaderEffect
             return E.E_POINTER;
         }
 
-        if (dataSize != (uint)@this->constantBufferSize)
+        if (dataSize != (uint)@this->GetGlobals().ConstantBufferSize)
         {
             return E.E_INVALIDARG;
         }
@@ -284,7 +284,7 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
-        if (index >= this.resourceTextureDescriptionCount)
+        if (index >= GetGlobals().ResourceTextureCount)
         {
             return E.E_INVALIDARG;
         }
@@ -325,7 +325,7 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int SetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize)
     {
-        if (index >= this.resourceTextureDescriptionCount)
+        if (index >= GetGlobals().ResourceTextureCount)
         {
             return E.E_INVALIDARG;
         }
@@ -371,7 +371,7 @@ unsafe partial struct PixelShaderEffect
         // Initialize the resource texture manager, if an effect context is available
         if (this.d2D1EffectContext is not null)
         {
-            uint dimensions = (uint)this.resourceTextureDescriptions[index].Dimensions;
+            uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
 
             result = resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
 

@@ -110,7 +110,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            return (uint)@this->inputCount;
+            return (uint)@this->GetGlobals().InputCount;
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapOutputRectToInputRects"/>
@@ -119,7 +119,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectsCount != @this->inputCount)
+            if (inputRectsCount != @this->GetGlobals().InputCount)
             {
                 return E.E_INVALIDARG;
             }
@@ -136,6 +136,8 @@ partial struct PixelShaderEffect
             }
             else
             {
+                ReadOnlySpan<D2D1PixelShaderInputType> inputTypes = @this->GetGlobals().InputTypes.Span;
+
                 // If no custom transform is used, apply the default mapping. In this case, the loop will
                 // automatically handle cases where no inputs are defined. If inputs are present instead,
                 // the default mapping will set the input rect for a simple input to be the same as the
@@ -143,7 +145,7 @@ partial struct PixelShaderEffect
                 // will handle clipping the inputs to the actual output rect area, if needed.
                 for (uint i = 0; i < inputRectsCount; i++)
                 {
-                    switch (@this->inputTypes[i])
+                    switch (inputTypes[(int)i])
                     {
                         case D2D1PixelShaderInputType.Simple:
                             inputRects[i] = *outputRect;
@@ -166,7 +168,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputRectCount != @this->inputCount)
+            if (inputRectCount != @this->GetGlobals().InputCount)
             {
                 return E.E_INVALIDARG;
             }
@@ -179,7 +181,7 @@ partial struct PixelShaderEffect
                 HRESULT hresult = D2D1DrawInfoUpdateContextImpl.Factory(
                     drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
                     constantBuffer: @this->constantBuffer,
-                    constantBufferSize: @this->constantBufferSize,
+                    constantBufferSize: @this->GetGlobals().ConstantBufferSize,
                     d2D1DrawInfo: @this->d2D1DrawInfo);
 
                 if (!Windows.SUCCEEDED(hresult))
@@ -215,6 +217,8 @@ partial struct PixelShaderEffect
             }
             else
             {
+                ReadOnlySpan<D2D1PixelShaderInputType> inputTypes = @this->GetGlobals().InputTypes.Span;
+
                 // If at least one input is present and no custom mapper is available, apply the default
                 // mapping. In this case, the output rect should be the union of the input rects for all
                 // the simple shader inputs, or infinite if there are no simple inputs. The input rects
@@ -224,7 +228,7 @@ partial struct PixelShaderEffect
 
                 for (uint i = 0; i < inputRectCount; i++)
                 {
-                    if (@this->inputTypes[i] == D2D1PixelShaderInputType.Simple)
+                    if (inputTypes[(int)i] == D2D1PixelShaderInputType.Simple)
                     {
                         if (isUnionOfSimpleRectsEmpty)
                         {
@@ -259,7 +263,7 @@ partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
-            if (inputIndex >= (uint)@this->inputCount)
+            if (inputIndex >= (uint)@this->GetGlobals().InputCount)
             {
                 return E.E_INVALIDARG;
             }
@@ -278,7 +282,7 @@ partial struct PixelShaderEffect
             {
                 // The default mapping in this scenario just needs to set the invalid output rect for simple inputs to
                 // be the invalid input rect, and to set the invalid output rect for complex inputs to an infinite rect.
-                switch (@this->inputTypes[inputIndex])
+                switch (@this->GetGlobals().InputTypes.Span[(int)inputIndex])
                 {
                     case D2D1PixelShaderInputType.Simple:
                         *invalidOutputRect = invalidInputRect;
@@ -311,8 +315,11 @@ partial struct PixelShaderEffect
 
             @this->d2D1DrawInfo = drawInfo;
 
+            Guid shaderId = @this->GetGlobals().EffectId;
+            D2D1PixelOptions pixelOptions = @this->GetGlobals().PixelOptions;
+
             // Set the pixel shader for the effect
-            HRESULT hresult = drawInfo->SetPixelShader(&@this->shaderId, (D2D1_PIXEL_OPTIONS)@this->pixelOptions);
+            HRESULT hresult = drawInfo->SetPixelShader(&shaderId, (D2D1_PIXEL_OPTIONS)pixelOptions);
 
             if (hresult != S.S_OK)
             {
@@ -320,32 +327,30 @@ partial struct PixelShaderEffect
             }
 
             // If any input descriptions are present, set them
-            if (@this->inputDescriptionCount > 0)
+            foreach (ref readonly D2D1InputDescription inputDescription in @this->GetGlobals().InputDescriptions.Span)
             {
-                for (int i = 0; i < @this->inputDescriptionCount; i++)
+                D2D1_INPUT_DESCRIPTION d2D1InputDescription;
+                d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
+                d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
+
+                hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
+
+                if (hresult != S.S_OK)
                 {
-                    ref D2D1InputDescription inputDescription = ref @this->inputDescriptions[i];
-
-                    D2D1_INPUT_DESCRIPTION d2D1InputDescription;
-                    d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
-                    d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
-
-                    hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
-
-                    if (hresult != S.S_OK)
-                    {
-                        return hresult;
-                    }
+                    return hresult;
                 }
             }
 
+            D2D1BufferPrecision bufferPrecision = @this->GetGlobals().BufferPrecision;
+            D2D1ChannelDepth channelDepth = @this->GetGlobals().ChannelDepth;
+
             // If a custom buffer precision or channel depth is requested, set it
-            if (@this->bufferPrecision != D2D1BufferPrecision.Unknown ||
-                @this->channelDepth != D2D1ChannelDepth.Default)
+            if (bufferPrecision != D2D1BufferPrecision.Unknown ||
+                channelDepth != D2D1ChannelDepth.Default)
             {
                 hresult = drawInfo->SetOutputBuffer(
-                    (D2D1_BUFFER_PRECISION)@this->bufferPrecision,
-                    (D2D1_CHANNEL_DEPTH)@this->channelDepth);
+                    (D2D1_BUFFER_PRECISION)bufferPrecision,
+                    (D2D1_CHANNEL_DEPTH)channelDepth);
 
                 if (hresult != S.S_OK)
                 {

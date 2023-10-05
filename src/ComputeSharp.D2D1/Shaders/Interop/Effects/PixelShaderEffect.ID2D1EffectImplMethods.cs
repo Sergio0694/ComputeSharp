@@ -86,17 +86,24 @@ internal unsafe partial struct PixelShaderEffect
         [UnmanagedCallersOnly]
         public static int Initialize(PixelShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph)
         {
-            int hresult = effectContext->LoadPixelShader(
-                shaderId: &@this->shaderId,
-                shaderBuffer: @this->bytecode,
-                shaderBufferCount: (uint)@this->bytecodeSize);
+            ReadOnlySpan<byte> bytecode = @this->GetGlobals().HlslBytecode.Span;
+            int hresult;
 
-            // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
-            // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
-            // If any error is detected while trying to check for shader support, ignore the value and propagate the current HRESULT.
-            if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(@this->bytecode, @this->bytecodeSize) == S.S_FALSE)
+            fixed (Guid* pShaderId = &@this->GetGlobals().EffectId)
+            fixed (byte* pBytecode = bytecode)
             {
-                hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+                hresult = effectContext->LoadPixelShader(
+                    shaderId: pShaderId,
+                    shaderBuffer: pBytecode,
+                    shaderBufferCount: (uint)bytecode.Length);
+
+                // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
+                // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
+                // If any error is detected while trying to check for shader support, ignore the value and propagate the current HRESULT.
+                if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(pBytecode, bytecode.Length) == S.S_FALSE)
+                {
+                    hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+                }
             }
 
             // If loading the bytecode succeeded, set the transform node
@@ -130,7 +137,7 @@ internal unsafe partial struct PixelShaderEffect
             int hresult = S.S_OK;
 
             // Validate the constant buffer
-            if (@this->constantBufferSize > 0 &&
+            if (@this->GetGlobals().ConstantBufferSize > 0 &&
                 @this->constantBuffer is null)
             {
                 return E.E_NOT_VALID_STATE;
@@ -141,12 +148,14 @@ internal unsafe partial struct PixelShaderEffect
             {
                 hresult = @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(
                     buffer: @this->constantBuffer,
-                    bufferCount: (uint)@this->constantBufferSize);
+                    bufferCount: (uint)@this->GetGlobals().ConstantBufferSize);
             }
 
             if (Windows.SUCCEEDED(hresult))
             {
-                for (int i = 0; i < @this->resourceTextureDescriptionCount; i++)
+                ReadOnlySpan<D2D1ResourceTextureDescription> resourceTextureDescriptions = @this->GetGlobals().ResourceTextureDescriptions.Span;
+
+                for (int i = 0; i < resourceTextureDescriptions.Length; i++)
                 {
                     using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[i];
 
@@ -180,7 +189,7 @@ internal unsafe partial struct PixelShaderEffect
                         break;
                     }
 
-                    ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref @this->resourceTextureDescriptions[i];
+                    ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref resourceTextureDescriptions[i];
 
                     // Set the ID2D1ResourceTexture object to the current index in the ID2D1DrawInfo object in use
                     hresult = @this->d2D1DrawInfo->SetResourceTexture(
