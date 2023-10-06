@@ -154,10 +154,7 @@ internal unsafe partial struct PixelShaderEffect
         catch (Exception)
         {
             // Free the effect, if we have one
-            if (@this is not null)
-            {
-                NativeMemory.Free(@this);
-            }
+            NativeMemory.Free(@this);
 
             // Free the handle, if we have one
             if (globalsHandle.IsAllocated)
@@ -244,10 +241,7 @@ internal unsafe partial struct PixelShaderEffect
                 this.globalsHandle.Free();
             }
 
-            if (this.constantBuffer is not null)
-            {
-                NativeMemory.Free(this.constantBuffer);
-            }
+            NativeMemory.Free(this.constantBuffer);
 
             if (this.d2D1TransformMapper is not null)
             {

@@ -263,30 +263,11 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     _ = this.d2D1Multithread->Release();
                 }
 
-                if (this.resourceId is not null)
-                {
-                    NativeMemory.Free(this.resourceId);
-                }
-
-                if (this.resourceTextureProperties.extents is not null)
-                {
-                    NativeMemory.Free(this.resourceTextureProperties.extents);
-                }
-
-                if (this.resourceTextureProperties.extendModes is not null)
-                {
-                    NativeMemory.Free(this.resourceTextureProperties.extendModes);
-                }
-
-                if (this.data is not null)
-                {
-                    NativeMemory.Free(this.data);
-                }
-
-                if (this.strides is not null)
-                {
-                    NativeMemory.Free(this.strides);
-                }
+                NativeMemory.Free(this.resourceId);
+                NativeMemory.Free(this.resourceTextureProperties.extents);
+                NativeMemory.Free(this.resourceTextureProperties.extendModes);
+                NativeMemory.Free(this.data);
+                NativeMemory.Free(this.strides);
             }
 
             this.lockHandle.Free();
