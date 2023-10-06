@@ -38,6 +38,19 @@ internal unsafe struct ComPtr<T> : IDisposable
         InternalAddRef();
     }
 
+    /// <summary>
+    /// Releases a target COM object, if it's not <see langword="null"/>.
+    /// </summary>
+    /// <param name="other">The COM object to potentially release.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Release(T* other)
+    {
+        if (other is not null)
+        {
+            _ = ((IUnknown*)other)->Release();
+        }
+    }
+
     /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>
     /// <param name="other">The raw pointer to wrap.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

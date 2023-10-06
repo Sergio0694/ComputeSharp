@@ -116,10 +116,7 @@ internal unsafe partial struct PixelShaderEffect
             if (Windows.SUCCEEDED(hresult))
             {
                 // Free the previous ID2D1EffectContext object, if present
-                if (@this->d2D1EffectContext is not null)
-                {
-                    _ = @this->d2D1EffectContext->Release();
-                }
+                ComPtr<ID2D1EffectContext>.Release(@this->d2D1EffectContext);
 
                 // Store the new ID2D1EffectContext object
                 _ = effectContext->AddRef();

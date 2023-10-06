@@ -305,10 +305,7 @@ partial struct PixelShaderEffect
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
 
             // Free the previous ID2D1DrawInfo object, if present
-            if (@this->d2D1DrawInfo is not null)
-            {
-                _ = @this->d2D1DrawInfo->Release();
-            }
+            ComPtr<ID2D1DrawInfo>.Release(@this->d2D1DrawInfo);
 
             // Store the new ID2D1DrawInfo object
             _ = drawInfo->AddRef();

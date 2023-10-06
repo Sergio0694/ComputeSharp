@@ -243,30 +243,14 @@ internal unsafe partial struct PixelShaderEffect
 
             NativeMemory.Free(this.constantBuffer);
 
-            if (this.d2D1TransformMapper is not null)
-            {
-                _ = ((IUnknown*)this.d2D1TransformMapper)->Release();
-            }
-
-            if (this.d2D1DrawInfo is not null)
-            {
-                _ = this.d2D1DrawInfo->Release();
-            }
-
-            if (this.d2D1EffectContext is not null)
-            {
-                _ = this.d2D1EffectContext->Release();
-            }
+            ComPtr<ID2D1TransformMapper>.Release(this.d2D1TransformMapper);
+            ComPtr<ID2D1DrawInfo>.Release(this.d2D1DrawInfo);
+            ComPtr<ID2D1EffectContext>.Release(this.d2D1EffectContext);
 
             // Retrieve all possible resource texture managers in use and release the ones that had been assigned (from one of the property bindings)
             for (int i = 0; i < resourceTextureDescriptionCount; i++)
             {
-                ID2D1ResourceTextureManager* resourceTextureManager = this.resourceTextureManagerBuffer[i];
-
-                if (resourceTextureManager is not null)
-                {
-                    _ = ((IUnknown*)resourceTextureManager)->Release();
-                }
+                ComPtr<ID2D1ResourceTextureManager>.Release(this.resourceTextureManagerBuffer[i]);
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
