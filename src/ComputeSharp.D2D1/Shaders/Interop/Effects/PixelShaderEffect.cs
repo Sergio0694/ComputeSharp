@@ -150,8 +150,22 @@ internal unsafe partial struct PixelShaderEffect
         {
             @this = (PixelShaderEffect*)NativeMemory.Alloc((nuint)sizeof(PixelShaderEffect));
             globalsHandle = GCHandle.Alloc(globals);
+
+            @this->lpVtblForID2D1EffectImpl = VtblForID2D1EffectImpl;
+            @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
+            @this->referenceCount = 1;
+            @this->globalsHandle = globalsHandle;
+            @this->constantBuffer = null;
+            @this->d2D1TransformMapper = null;
+            @this->d2D1DrawInfo = null;
+            @this->d2D1EffectContext = null;
+            @this->resourceTextureManagerBuffer = default;
+
+            *effectImpl = (IUnknown*)@this;
+
+            return S.S_OK;
         }
-        catch (Exception)
+        catch (Exception e)
         {
             // Free the effect, if we have one
             NativeMemory.Free(@this);
@@ -164,24 +178,8 @@ internal unsafe partial struct PixelShaderEffect
 
             *effectImpl = null;
 
-            return E.E_OUTOFMEMORY;
+            return Marshal.GetHRForException(e);
         }
-
-        *@this = default;
-
-        @this->lpVtblForID2D1EffectImpl = VtblForID2D1EffectImpl;
-        @this->lpVtblForID2D1DrawTransform = VtblForID2D1DrawTransform;
-        @this->referenceCount = 1;
-        @this->globalsHandle = globalsHandle;
-        @this->constantBuffer = null;
-        @this->d2D1TransformMapper = null;
-        @this->d2D1DrawInfo = null;
-        @this->d2D1EffectContext = null;
-        @this->resourceTextureManagerBuffer = default;
-
-        *effectImpl = (IUnknown*)@this;
-
-        return S.S_OK;
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
