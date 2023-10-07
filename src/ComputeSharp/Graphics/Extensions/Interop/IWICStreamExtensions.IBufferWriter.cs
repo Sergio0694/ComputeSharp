@@ -373,7 +373,7 @@ unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -454,7 +454,7 @@ unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 

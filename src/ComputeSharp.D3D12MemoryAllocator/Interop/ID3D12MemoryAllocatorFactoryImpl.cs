@@ -165,7 +165,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
         }
         catch (Exception e)
         {
-            return e.HResult;
+            return Marshal.GetHRForException(e);
         }
     }
 }

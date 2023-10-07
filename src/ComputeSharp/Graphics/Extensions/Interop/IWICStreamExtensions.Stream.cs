@@ -380,7 +380,7 @@ internal static unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -416,7 +416,7 @@ internal static unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -454,7 +454,7 @@ internal static unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -475,7 +475,7 @@ internal static unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -498,7 +498,7 @@ internal static unsafe partial class IWICStreamExtensions
             }
             catch (Exception ex)
             {
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
@@ -587,7 +587,7 @@ internal static unsafe partial class IWICStreamExtensions
                     pstatstg->pwcsName = null;
                 }
 
-                return ex.HResult;
+                return Marshal.GetHRForException(ex);
             }
         }
 
