@@ -115,46 +115,53 @@ unsafe partial struct PixelShaderEffect
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
-        // This is a call likely from ID2D1Effect::GetValueSize, to query the property size
-        if (data is null &&
-            dataSize == 0 &&
-            actualSize is not null)
+        try
         {
-            *actualSize = (uint)@this->GetGlobals().ConstantBufferSize;
+            // This is a call likely from ID2D1Effect::GetValueSize, to query the property size
+            if (data is null &&
+                dataSize == 0 &&
+                actualSize is not null)
+            {
+                *actualSize = (uint)@this->GetGlobals().ConstantBufferSize;
 
-            return S.S_FALSE;
+                return S.S_FALSE;
+            }
+
+            if (data is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (dataSize < @this->GetGlobals().ConstantBufferSize)
+            {
+                return E.E_NOT_SUFFICIENT_BUFFER;
+            }
+
+            if (@this->constantBuffer is null)
+            {
+                return E.E_NOT_VALID_STATE;
+            }
+
+            uint writtenBytes = 0;
+
+            if (@this->GetGlobals().ConstantBufferSize > 0)
+            {
+                Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->GetGlobals().ConstantBufferSize);
+
+                writtenBytes = (uint)@this->GetGlobals().ConstantBufferSize;
+            }
+
+            if (actualSize is not null)
+            {
+                *actualSize = writtenBytes;
+            }
+
+            return S.S_OK;
         }
-
-        if (data is null)
+        catch (Exception e)
         {
-            return E.E_POINTER;
+            return Marshal.GetHRForException(e);
         }
-
-        if (dataSize < @this->GetGlobals().ConstantBufferSize)
-        {
-            return E.E_NOT_SUFFICIENT_BUFFER;
-        }
-
-        if (@this->constantBuffer is null)
-        {
-            return E.E_NOT_VALID_STATE;
-        }
-
-        uint writtenBytes = 0;
-
-        if (@this->GetGlobals().ConstantBufferSize > 0)
-        {
-            Buffer.MemoryCopy(@this->constantBuffer, data, dataSize, @this->GetGlobals().ConstantBufferSize);
-
-            writtenBytes = (uint)@this->GetGlobals().ConstantBufferSize;
-        }
-
-        if (actualSize is not null)
-        {
-            *actualSize = writtenBytes;
-        }
-
-        return S.S_OK;
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
@@ -163,31 +170,38 @@ unsafe partial struct PixelShaderEffect
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
-        if (data is null)
+        try
         {
-            return E.E_POINTER;
-        }
+            if (data is null)
+            {
+                return E.E_POINTER;
+            }
 
-        if (dataSize != (uint)@this->GetGlobals().ConstantBufferSize)
+            if (dataSize != (uint)@this->GetGlobals().ConstantBufferSize)
+            {
+                return E.E_INVALIDARG;
+            }
+
+            // Reuse the existing buffer if there is one, otherwise allocate a new one
+            if (@this->constantBuffer is not null)
+            {
+                Buffer.MemoryCopy(data, @this->constantBuffer, dataSize, dataSize);
+            }
+            else
+            {
+                void* buffer = NativeMemory.Alloc(dataSize);
+
+                Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
+
+                @this->constantBuffer = (byte*)buffer;
+            }
+
+            return S.S_OK;
+        }
+        catch (Exception e)
         {
-            return E.E_INVALIDARG;
+            return Marshal.GetHRForException(e);
         }
-
-        // Reuse the existing buffer if there is one, otherwise allocate a new one
-        if (@this->constantBuffer is not null)
-        {
-            Buffer.MemoryCopy(data, @this->constantBuffer, dataSize, dataSize);
-        }
-        else
-        {
-            void* buffer = NativeMemory.Alloc(dataSize);
-
-            Buffer.MemoryCopy(data, buffer, dataSize, dataSize);
-
-            @this->constantBuffer = (byte*)buffer;
-        }
-
-        return S.S_OK;
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
@@ -196,36 +210,43 @@ unsafe partial struct PixelShaderEffect
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
-        if (data is null)
+        try
         {
-            return E.E_POINTER;
-        }
-
-        if (dataSize < sizeof(void*))
-        {
-            return E.E_INVALIDARG;
-        }
-
-        if (@this->d2D1TransformMapper is null)
-        {
-            *(void**)data = null;
-        }
-        else
-        {
-            HRESULT hresult = ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data);
-
-            if (!Windows.SUCCEEDED(hresult))
+            if (data is null)
             {
-                return hresult;
+                return E.E_POINTER;
             }
-        }
 
-        if (actualSize is not null)
+            if (dataSize < sizeof(void*))
+            {
+                return E.E_INVALIDARG;
+            }
+
+            if (@this->d2D1TransformMapper is null)
+            {
+                *(void**)data = null;
+            }
+            else
+            {
+                HRESULT hresult = ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data);
+
+                if (!Windows.SUCCEEDED(hresult))
+                {
+                    return hresult;
+                }
+            }
+
+            if (actualSize is not null)
+            {
+                *actualSize = (uint)sizeof(void*);
+            }
+
+            return S.S_OK;
+        }
+        catch (Exception e)
         {
-            *actualSize = (uint)sizeof(void*);
+            return Marshal.GetHRForException(e);
         }
-
-        return S.S_OK;
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
@@ -234,41 +255,48 @@ unsafe partial struct PixelShaderEffect
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
-        if (data is null)
+        try
         {
-            return E.E_POINTER;
+            if (data is null)
+            {
+                return E.E_POINTER;
+            }
+
+            void* value = *(void**)data;
+
+            if (value is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (dataSize != (uint)sizeof(void*))
+            {
+                return E.E_INVALIDARG;
+            }
+
+            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<ID2D1TransformMapper> transformMapper = default;
+
+            // Check that the input object implements ID2D1TransformMapper
+            int result = unknown.CopyTo(transformMapper.GetAddressOf());
+
+            if (result != S.S_OK)
+            {
+                return result;
+            }
+
+            // If there's already an existing manager, release it
+            ComPtr<ID2D1TransformMapper>.Release(@this->d2D1TransformMapper);
+
+            // Store the transform mapper manager into the effect
+            @this->d2D1TransformMapper = transformMapper.Detach();
+
+            return S.S_OK;
         }
-
-        void* value = *(void**)data;
-
-        if (value is null)
+        catch (Exception e)
         {
-            return E.E_POINTER;
+            return Marshal.GetHRForException(e);
         }
-
-        if (dataSize != (uint)sizeof(void*))
-        {
-            return E.E_INVALIDARG;
-        }
-
-        using ComPtr<IUnknown> unknown = (IUnknown*)value;
-        using ComPtr<ID2D1TransformMapper> transformMapper = default;
-
-        // Check that the input object implements ID2D1TransformMapper
-        int result = unknown.CopyTo(transformMapper.GetAddressOf());
-
-        if (result != S.S_OK)
-        {
-            return result;
-        }
-
-        // If there's already an existing manager, release it
-        ComPtr<ID2D1TransformMapper>.Release(@this->d2D1TransformMapper);
-
-        // Store the transform mapper manager into the effect
-        @this->d2D1TransformMapper = transformMapper.Detach();
-
-        return S.S_OK;
     }
 
     /// <summary>
@@ -281,36 +309,43 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int GetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize, uint* actualSize)
     {
-        if (index >= GetGlobals().ResourceTextureCount)
+        try
         {
-            return E.E_INVALIDARG;
-        }
+            if (index >= GetGlobals().ResourceTextureCount)
+            {
+                return E.E_INVALIDARG;
+            }
 
-        if (data is null)
+            if (data is null)
+            {
+                return E.E_POINTER;
+            }
+
+            if (dataSize < sizeof(void*))
+            {
+                return E.E_INVALIDARG;
+            }
+
+            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
+
+            HRESULT hresult = resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
+
+            if (!Windows.SUCCEEDED(hresult))
+            {
+                return hresult;
+            }
+
+            if (actualSize is not null)
+            {
+                *actualSize = (uint)sizeof(void*);
+            }
+
+            return S.S_OK;
+        }
+        catch (Exception e)
         {
-            return E.E_POINTER;
+            return Marshal.GetHRForException(e);
         }
-
-        if (dataSize < sizeof(void*))
-        {
-            return E.E_INVALIDARG;
-        }
-
-        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
-
-        HRESULT hresult = resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data);
-
-        if (!Windows.SUCCEEDED(hresult))
-        {
-            return hresult;
-        }
-
-        if (actualSize is not null)
-        {
-            *actualSize = (uint)sizeof(void*);
-        }
-
-        return S.S_OK;
     }
 
     /// <summary>
@@ -322,75 +357,82 @@ unsafe partial struct PixelShaderEffect
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     private int SetResourceTextureManagerAtIndex(int index, byte* data, uint dataSize)
     {
-        if (index >= GetGlobals().ResourceTextureCount)
+        try
         {
-            return E.E_INVALIDARG;
-        }
+            if (index >= GetGlobals().ResourceTextureCount)
+            {
+                return E.E_INVALIDARG;
+            }
 
-        if (data is null)
-        {
-            return E.E_POINTER;
-        }
+            if (data is null)
+            {
+                return E.E_POINTER;
+            }
 
-        void* value = *(void**)data;
+            void* value = *(void**)data;
 
-        if (value is null)
-        {
-            return E.E_POINTER;
-        }
+            if (value is null)
+            {
+                return E.E_POINTER;
+            }
 
-        if (dataSize != (uint)sizeof(void*))
-        {
-            return E.E_INVALIDARG;
-        }
+            if (dataSize != (uint)sizeof(void*))
+            {
+                return E.E_INVALIDARG;
+            }
 
-        using ComPtr<IUnknown> unknown = (IUnknown*)value;
-        using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
+            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
-        // Check that the input object implements ID2D1ResourceTextureManager
-        int result = unknown.CopyTo(resourceTextureManager.GetAddressOf());
+            // Check that the input object implements ID2D1ResourceTextureManager
+            int result = unknown.CopyTo(resourceTextureManager.GetAddressOf());
 
-        if (result != S.S_OK)
-        {
-            return result;
-        }
-
-        using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
-
-        // Then, also check that it implements ID2D1ResourceTextureManagerInternal
-        result = unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf());
-
-        if (result != S.S_OK)
-        {
-            return result;
-        }
-
-        // Initialize the resource texture manager, if an effect context is available
-        if (this.d2D1EffectContext is not null)
-        {
-            uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
-
-            result = resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
-
-            // ID2D1ResourceTextureManager::Initialize should generally return either S_OK for first
-            // initialization, S_FALSE if an ID2D1EffectContext is already present (which is allowed, to
-            // enable sharing resource texture managers across different source textures and effects), or
-            // E_INVALIDARG if the manager has already been initialized through the public interface,
-            // and the stored dimensions for that don't match the ones for this resource texture index.
-            if (!Windows.SUCCEEDED(result))
+            if (result != S.S_OK)
             {
                 return result;
             }
+
+            using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
+
+            // Then, also check that it implements ID2D1ResourceTextureManagerInternal
+            result = unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf());
+
+            if (result != S.S_OK)
+            {
+                return result;
+            }
+
+            // Initialize the resource texture manager, if an effect context is available
+            if (this.d2D1EffectContext is not null)
+            {
+                uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
+
+                result = resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions);
+
+                // ID2D1ResourceTextureManager::Initialize should generally return either S_OK for first
+                // initialization, S_FALSE if an ID2D1EffectContext is already present (which is allowed, to
+                // enable sharing resource texture managers across different source textures and effects), or
+                // E_INVALIDARG if the manager has already been initialized through the public interface,
+                // and the stored dimensions for that don't match the ones for this resource texture index.
+                if (!Windows.SUCCEEDED(result))
+                {
+                    return result;
+                }
+            }
+
+            ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[index];
+
+            // If there's already an existing manager at this index, release it
+            ComPtr<ID2D1ResourceTextureManager>.Release(currentResourceTextureManager);
+
+            // Store the resource texture manager into the buffer
+            currentResourceTextureManager = resourceTextureManager.Detach();
+
+            return S.S_OK;
         }
-
-        ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[index];
-
-        // If there's already an existing manager at this index, release it
-        ComPtr<ID2D1ResourceTextureManager>.Release(currentResourceTextureManager);
-
-        // Store the resource texture manager into the buffer
-        currentResourceTextureManager = resourceTextureManager.Detach();
-
-        return S.S_OK;
+        catch (Exception e)
+        {
+            return Marshal.GetHRForException(e);
+        }
     }
 }

@@ -233,13 +233,7 @@ internal unsafe partial struct PixelShaderEffect
 
         if (referenceCount == 0)
         {
-            // Retrieve the number of resource textures before freeing the globals handle
-            int resourceTextureDescriptionCount = GetGlobals().ResourceTextureCount;
-
-            if (this.globalsHandle.IsAllocated)
-            {
-                this.globalsHandle.Free();
-            }
+            this.globalsHandle.Free();
 
             NativeMemory.Free(this.constantBuffer);
 
@@ -247,8 +241,10 @@ internal unsafe partial struct PixelShaderEffect
             ComPtr<ID2D1DrawInfo>.Release(this.d2D1DrawInfo);
             ComPtr<ID2D1EffectContext>.Release(this.d2D1EffectContext);
 
-            // Retrieve all possible resource texture managers in use and release the ones that had been assigned (from one of the property bindings)
-            for (int i = 0; i < resourceTextureDescriptionCount; i++)
+            // Retrieve all possible resource texture managers in use and release the ones that had been
+            // assigned (from one of the property bindings). We just hardcode 16 here and dont access
+            // the globals, as technically invoking APIs on it might throw an exception.
+            for (int i = 0; i < 16; i++)
             {
                 ComPtr<ID2D1ResourceTextureManager>.Release(this.resourceTextureManagerBuffer[i]);
             }
