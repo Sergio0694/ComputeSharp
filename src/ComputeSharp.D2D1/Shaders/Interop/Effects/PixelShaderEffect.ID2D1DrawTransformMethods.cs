@@ -130,20 +130,12 @@ partial struct PixelShaderEffect
 
             try
             {
-                if (inputRectsCount != @this->GetGlobals().InputCount)
-                {
-                    return E.E_INVALIDARG;
-                }
+                default(ArgumentOutOfRangeException).ThrowIfNotEqual((int)inputRectsCount, @this->GetGlobals().InputCount, nameof(inputRectsCount));
 
                 if (@this->d2D1TransformMapper is not null)
                 {
                     // Forward to the current ID2D1TransformMapper instance
-                    HRESULT hresult = @this->d2D1TransformMapper->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount);
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        return hresult;
-                    }
+                    @this->d2D1TransformMapper->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount).Assert();
                 }
                 else
                 {
@@ -186,29 +178,21 @@ partial struct PixelShaderEffect
 
             try
             {
-                if (inputRectCount != @this->GetGlobals().InputCount)
-                {
-                    return E.E_INVALIDARG;
-                }
+                default(ArgumentOutOfRangeException).ThrowIfNotEqual((int)inputRectCount, @this->GetGlobals().InputCount, nameof(inputRectCount));
 
                 if (@this->d2D1TransformMapper is not null)
                 {
                     using ComPtr<D2D1DrawInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
 
                     // Create an ID2D1DrawInfoUpdateContext instance
-                    HRESULT hresult = D2D1DrawInfoUpdateContextImpl.Factory(
+                    D2D1DrawInfoUpdateContextImpl.Factory(
                         drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
                         constantBuffer: @this->constantBuffer,
                         constantBufferSize: @this->GetGlobals().ConstantBufferSize,
-                        d2D1DrawInfo: @this->d2D1DrawInfo);
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        return hresult;
-                    }
+                        d2D1DrawInfo: @this->d2D1DrawInfo).Assert();
 
                     // Forward the call to the input ID2D1TransformMapper instance
-                    hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
+                    HRESULT hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
                         updateContext: (ID2D1DrawInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
                         inputRects: inputRects,
                         inputOpaqueSubRects: inputOpaqueSubRects,
@@ -217,12 +201,10 @@ partial struct PixelShaderEffect
                         outputOpaqueSubRect: outputOpaqueSubRect);
 
                     // Regardless of the operation result, always invalidate the context
-                    _ = d2D1DrawInfoUpdateContext.Get()->Close();
+                    d2D1DrawInfoUpdateContext.Get()->Close().Assert();
 
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        return hresult;
-                    }
+                    // Now we can validate that the call was in fact successful
+                    hresult.Assert();
                 }
                 else if (inputRectCount == 0)
                 {
@@ -288,20 +270,12 @@ partial struct PixelShaderEffect
 
             try
             {
-                if (inputIndex >= (uint)@this->GetGlobals().InputCount)
-                {
-                    return E.E_INVALIDARG;
-                }
+                default(ArgumentOutOfRangeException).ThrowIfGreaterThanOrEqual((int)inputIndex, @this->GetGlobals().InputCount, nameof(inputIndex));
 
                 if (@this->d2D1TransformMapper is not null)
                 {
                     // Forward to the current ID2D1TransformMapper instance
-                    HRESULT hresult = @this->d2D1TransformMapper->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect);
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        return hresult;
-                    }
+                    @this->d2D1TransformMapper->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect).Assert();
                 }
                 else
                 {
@@ -348,12 +322,7 @@ partial struct PixelShaderEffect
                 D2D1PixelOptions pixelOptions = @this->GetGlobals().PixelOptions;
 
                 // Set the pixel shader for the effect
-                HRESULT hresult = drawInfo->SetPixelShader(&shaderId, (D2D1_PIXEL_OPTIONS)pixelOptions);
-
-                if (hresult != S.S_OK)
-                {
-                    return hresult;
-                }
+                drawInfo->SetPixelShader(&shaderId, (D2D1_PIXEL_OPTIONS)pixelOptions).Assert();
 
                 // If any input descriptions are present, set them
                 foreach (ref readonly D2D1InputDescription inputDescription in @this->GetGlobals().InputDescriptions.Span)
@@ -362,12 +331,7 @@ partial struct PixelShaderEffect
                     d2D1InputDescription.filter = (D2D1_FILTER)inputDescription.Filter;
                     d2D1InputDescription.levelOfDetailCount = (uint)inputDescription.LevelOfDetailCount;
 
-                    hresult = drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription);
-
-                    if (hresult != S.S_OK)
-                    {
-                        return hresult;
-                    }
+                    drawInfo->SetInputDescription((uint)inputDescription.Index, d2D1InputDescription).Assert();
                 }
 
                 D2D1BufferPrecision bufferPrecision = @this->GetGlobals().BufferPrecision;
@@ -377,14 +341,9 @@ partial struct PixelShaderEffect
                 if (bufferPrecision != D2D1BufferPrecision.Unknown ||
                     channelDepth != D2D1ChannelDepth.Default)
                 {
-                    hresult = drawInfo->SetOutputBuffer(
+                    drawInfo->SetOutputBuffer(
                         (D2D1_BUFFER_PRECISION)bufferPrecision,
-                        (D2D1_CHANNEL_DEPTH)channelDepth);
-
-                    if (hresult != S.S_OK)
-                    {
-                        return hresult;
-                    }
+                        (D2D1_CHANNEL_DEPTH)channelDepth).Assert();
                 }
 
                 return S.S_OK;

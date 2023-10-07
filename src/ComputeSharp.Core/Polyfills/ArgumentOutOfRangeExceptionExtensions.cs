@@ -70,6 +70,22 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     }
 
     /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal to <paramref name="other"/>.
+    /// </summary>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+    /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+    /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ThrowIfGreaterThanOrEqual(this ArgumentOutOfRangeException? _, int value, int other, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    {
+        if (value >= other)
+        {
+            Throw(parameterName, value);
+        }
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.
     /// </summary>
     /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
@@ -113,6 +129,22 @@ internal static class ArgumentOutOfRangeExceptionExtensions
     public static void ThrowIfNotInRange(this ArgumentOutOfRangeException? _, int value, int minimum, int maximum, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value < minimum || value >= maximum)
+        {
+            Throw(parameterName, value);
+        }
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is not equal to a given other value.
+    /// </summary>
+    /// <param name="_">Dummy value to invoke the extension upon (always pass <see langword="null"/>.</param>
+    /// <param name="value">The argument to validate.</param>
+    /// <param name="other">The value to compare against.</param>
+    /// <param name="parameterName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ThrowIfNotEqual(this ArgumentOutOfRangeException? _, int value, int other, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
+    {
+        if (value != other)
         {
             Throw(parameterName, value);
         }
