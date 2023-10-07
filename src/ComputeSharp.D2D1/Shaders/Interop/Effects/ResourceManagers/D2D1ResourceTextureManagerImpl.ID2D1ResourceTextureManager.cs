@@ -83,35 +83,41 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
                 return E.E_NOT_VALID_STATE;
             }
 
-            // If a resource texture already exists, just forward the call
-            if (@this->d2D1ResourceTexture is not null)
+            // If no resource texture already exists, update the staging buffer
+            if (@this->d2D1ResourceTexture is null)
             {
-                @this->d2D1Multithread->Enter();
-
-                // Take a D2D lock here too to ensure thread safety
-                int hresult = @this->d2D1ResourceTexture->Update(
+                return ID2D1ResourceTextureManagerMethods.UpdateWithStagingBuffer(
+                    @this: @this,
                     minimumExtents: minimumExtents,
                     maximimumExtents: maximimumExtents,
                     strides: strides,
                     dimensions: dimensions,
                     data: data,
                     dataCount: dataCount);
-
-                @this->d2D1Multithread->Leave();
-
-                return hresult;
             }
-
-            // Otherwise update the staging buffer
-            return ID2D1ResourceTextureManagerMethods.UpdateWithStagingBuffer(
-                @this: @this,
-                minimumExtents: minimumExtents,
-                maximimumExtents: maximimumExtents,
-                strides: strides,
-                dimensions: dimensions,
-                data: data,
-                dataCount: dataCount);
         }
+
+        // If we got to this point, it means we have a D2D1 resource texture already
+        // initialized. This means we can be sure no other thread is concurrently
+        // touching any other local state, as the initialization (potentially from the
+        // staging buffer has already been completely if this is the case, since we also
+        // checked for this while taking the instance lock). So we can now take the D2D
+        // lock and update the texture directly. We need to take this when we're not also
+        // taking the instance lock, or we might trigger an AB/BA deadlock across threads.
+        @this->d2D1Multithread->Enter();
+
+        // Take a D2D lock here too to ensure thread safety
+        int hresult = @this->d2D1ResourceTexture->Update(
+            minimumExtents: minimumExtents,
+            maximimumExtents: maximimumExtents,
+            strides: strides,
+            dimensions: dimensions,
+            data: data,
+            dataCount: dataCount);
+
+        @this->d2D1Multithread->Leave();
+
+        return hresult;
     }
 
     /// <summary>
