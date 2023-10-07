@@ -51,6 +51,39 @@ internal unsafe struct ComPtr<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Copies a given COM object into a target destination.
+    /// </summary>
+    /// <param name="obj">The input COM object to copy.</param>
+    /// <param name="other">The target destination for the COM object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void CopyTo(T* obj, ref T* other)
+    {
+        T* pointer = other;
+
+        if (pointer is not null)
+        {
+            _ = ((IUnknown*)pointer)->Release();
+        }
+
+        _ = ((IUnknown*)obj)->AddRef();
+
+        other = obj;
+    }
+
+    /// <summary>
+    /// Writes a given COM object into a target (assumed uninitialized) destination.
+    /// </summary>
+    /// <param name="obj">The input COM object to copy.</param>
+    /// <param name="other">The target destination for the COM object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteTo(T* obj, out T* other)
+    {
+        _ = ((IUnknown*)obj)->AddRef();
+
+        other = obj;
+    }
+
     /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>
     /// <param name="other">The raw pointer to wrap.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

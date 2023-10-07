@@ -114,13 +114,8 @@ internal unsafe partial struct PixelShaderEffect
                 // If loading the bytecode succeeded, set the transform node
                 transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1DrawTransform).Assert();
 
-                // Free the previous ID2D1EffectContext object, if present
-                ComPtr<ID2D1EffectContext>.Release(@this->d2D1EffectContext);
-
                 // Store the new ID2D1EffectContext object
-                _ = effectContext->AddRef();
-
-                @this->d2D1EffectContext = effectContext;
+                ComPtr<ID2D1EffectContext>.CopyTo(effectContext, ref @this->d2D1EffectContext);
 
                 return S.S_OK;
             }
