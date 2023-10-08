@@ -98,26 +98,6 @@ internal unsafe struct ComPtr<T> : IDisposable
         InternalAddRef();
     }
 
-    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a second one and increments the ref count.</summary>
-    /// <param name="other">The other <see cref="ComPtr{T}"/> instance to copy.</param>
-    public ComPtr(ComPtr<T> other)
-    {
-        ptr_ = other.ptr_;
-        InternalAddRef();
-    }
-
-    /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>
-    /// <param name="other">The raw pointer to wrap.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator ComPtr<T>(T* other)
-        => new ComPtr<T>(other);
-
-    /// <summary>Unwraps a <see cref="ComPtr{T}"/> instance and returns the internal raw pointer.</summary>
-    /// <param name="other">The <see cref="ComPtr{T}"/> instance to unwrap.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator T*(ComPtr<T> other)
-        => other.Get();
-
     /// <summary>Converts the current object reference to type <typeparamref name="U"/> and assigns that to a target <see cref="ComPtr{T}"/> value.</summary>
     /// <typeparam name="U">The interface type to use to try casting the current COM object.</typeparam>
     /// <param name="p">A raw pointer to the target <see cref="ComPtr{T}"/> value to write to.</param>

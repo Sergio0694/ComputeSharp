@@ -95,7 +95,7 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
     /// <summary>
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
-    internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+    internal ID3D12Resource* D3D12Resource => this.d3D12Resource.Get();
 
     /// <summary>
     /// Gets the pointer to the start of the mapped buffer data.

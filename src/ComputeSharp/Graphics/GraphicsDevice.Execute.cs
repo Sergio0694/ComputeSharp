@@ -49,14 +49,14 @@ unsafe partial class GraphicsDevice
         {
             case D3D12_COMMAND_LIST_TYPE_COMPUTE:
                 commandListPool = ref this.computeCommandListPool;
-                d3D12CommandQueue = this.d3D12ComputeCommandQueue;
-                d3D12Fence = this.d3D12ComputeFence;
+                d3D12CommandQueue = this.d3D12ComputeCommandQueue.Get();
+                d3D12Fence = this.d3D12ComputeFence.Get();
                 d3D12FenceValue = ref this.nextD3D12ComputeFenceValue;
                 break;
             case D3D12_COMMAND_LIST_TYPE_COPY:
                 commandListPool = ref this.copyCommandListPool;
-                d3D12CommandQueue = this.d3D12CopyCommandQueue;
-                d3D12Fence = this.d3D12CopyFence;
+                d3D12CommandQueue = this.d3D12CopyCommandQueue.Get();
+                d3D12Fence = this.d3D12CopyFence.Get();
                 d3D12FenceValue = ref this.nextD3D12CopyFenceValue;
                 break;
             default: default(ArgumentException).Throw(nameof(commandList)); return;

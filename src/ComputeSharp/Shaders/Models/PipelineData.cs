@@ -35,12 +35,12 @@ internal sealed unsafe class PipelineData : ReferenceTrackedObject
     /// <summary>
     /// Gets the <see cref="ID3D12RootSignature"/> instance for the current <see cref="PipelineData"/> object.
     /// </summary>
-    public ID3D12RootSignature* D3D12RootSignature => this.d3D12RootSignature;
+    public ID3D12RootSignature* D3D12RootSignature => this.d3D12RootSignature.Get();
 
     /// <summary>
     /// Gets the <see cref="ID3D12PipelineState"/> instance for the current <see cref="PipelineData"/> object.
     /// </summary>
-    public ID3D12PipelineState* D3D12PipelineState => this.d3D12PipelineState;
+    public ID3D12PipelineState* D3D12PipelineState => this.d3D12PipelineState.Get();
 
     /// <inheritdoc/>
     protected override void DangerousOnDispose()

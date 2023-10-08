@@ -31,7 +31,7 @@ unsafe partial class GraphicsDevice
         }
         else
         {
-            allocation = null;
+            allocation = default;
             d3D12Resource = this.d3D12Device.Get()->CreateCommittedResource(resourceType, sizeInBytes, IsCacheCoherentUMA);
         }
     }
@@ -68,7 +68,7 @@ unsafe partial class GraphicsDevice
         }
         else
         {
-            allocation = null;
+            allocation = default;
 
             d3D12Resource = this.d3D12Device.Get()->CreateCommittedResource(
                 resourceType,
@@ -114,7 +114,7 @@ unsafe partial class GraphicsDevice
         }
         else
         {
-            allocation = null;
+            allocation = default;
 
             d3D12Resource = this.d3D12Device.Get()->CreateCommittedResource(
                 resourceType,
@@ -164,7 +164,7 @@ unsafe partial class GraphicsDevice
         }
         else
         {
-            allocation = null;
+            allocation = default;
 
             d3D12Resource = this.d3D12Device.Get()->CreateCommittedResource(
                 resourceType,

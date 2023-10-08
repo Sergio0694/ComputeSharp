@@ -134,7 +134,7 @@ internal sealed unsafe partial class ShaderCompiler
             return dxcBlobBytecode.Move();
         }
 
-        return ThrowHslsCompilationException(dxcOperationResult);
+        return ThrowHslsCompilationException(dxcOperationResult.Get());
     }
 
     /// <summary>

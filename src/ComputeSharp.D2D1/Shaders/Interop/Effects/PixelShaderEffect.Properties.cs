@@ -244,7 +244,7 @@ unsafe partial struct PixelShaderEffect
 
             default(ArgumentNullException).ThrowIfNull(value);
 
-            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<IUnknown> unknown = new((IUnknown*)value);
             using ComPtr<ID2D1TransformMapper> transformMapper = default;
 
             // Check that the input object implements ID2D1TransformMapper
@@ -280,7 +280,7 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentOutOfRangeException).ThrowIfLessThan((int)dataSize, sizeof(void*), nameof(dataSize));
             default(ArgumentOutOfRangeException).ThrowIfGreaterThanOrEqual(index, GetGlobals().ResourceTextureCount);
 
-            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
+            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = new(this.resourceTextureManagerBuffer[index]);
 
             resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data).Assert();
 
@@ -316,7 +316,7 @@ unsafe partial struct PixelShaderEffect
 
             default(ArgumentNullException).ThrowIfNull(value);
 
-            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<IUnknown> unknown = new((IUnknown*)value);
             using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
             // Check that the input object implements ID2D1ResourceTextureManager
