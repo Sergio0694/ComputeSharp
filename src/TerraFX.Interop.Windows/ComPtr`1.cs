@@ -38,6 +38,62 @@ internal unsafe struct ComPtr<T> : IDisposable
         InternalAddRef();
     }
 
+    /// <summary>
+    /// Releases a target COM object, if it's not <see langword="null"/>.
+    /// </summary>
+    /// <param name="other">The COM object to potentially release.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Release(T* other)
+    {
+        if (other is not null)
+        {
+            _ = ((IUnknown*)other)->Release();
+        }
+    }
+
+    /// <summary>
+    /// Copies a given COM object into a target destination, incrementing reference counts where needed.
+    /// </summary>
+    /// <param name="obj">The input COM object to copy.</param>
+    /// <param name="other">The target destination for the COM object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void CopyTo(T* obj, ref T* other)
+    {
+        // We specifically need to increment the reference count on the source object before releasing the
+        // target object, to avoid issues in case source and destination were pointers to the same object
+        // (which can be the case even if the two pointers are not identical). To double check, a full check
+        // through an IUnknown* cast would be needed, but to avoid the extra QueryInterface call on both objects,
+        // we can just always do one AddRef call which avoids issues in all cases as well. The situation we need
+        // to avoid is that without a temporary copy, releasing the target object might actually destroy the
+        // object, causing the following AddRef call to AV.
+        if (obj is not null)
+        {
+            _ = ((IUnknown*)obj)->AddRef();
+        }
+
+        T* pointer = other;
+
+        if (pointer is not null)
+        {
+            _ = ((IUnknown*)pointer)->Release();
+        }
+
+        other = obj;
+    }
+
+    /// <summary>
+    /// Writes a given COM object into a target (assumed uninitialized) destination, incrementing reference counts where needed.
+    /// </summary>
+    /// <param name="obj">The input COM object to copy.</param>
+    /// <param name="other">The target destination for the COM object.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteTo(T* obj, out T* other)
+    {
+        _ = ((IUnknown*)obj)->AddRef();
+
+        other = obj;
+    }
+
     /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>
     /// <param name="other">The raw pointer to wrap.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

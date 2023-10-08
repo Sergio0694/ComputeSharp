@@ -8,52 +8,6 @@ namespace ComputeSharp.Core.Extensions;
 /// </summary>
 internal static class ComPtrExtensions
 {
-#if NET6_0_OR_GREATER
-    /// <summary>
-    /// Invokes <see cref="IUnknown.AddRef"/> on the wrapped object for an input <see cref="ComPtr{T}"/> value.
-    /// </summary>
-    /// <typeparam name="T">The type of the current <see cref="ComPtr{T}"/> instance.</typeparam>
-    /// <param name="ptr">The input <see cref="ComPtr{T}"/> instance to increment the reference count for.</param>
-    /// <returns>A <see cref="ComPtr{T}"/> instance of type <see cref="IUnknown"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe uint AddRef<T>(this ComPtr<T> ptr)
-        where T : unmanaged, IUnknown.Interface
-    {
-        if (ptr.Get() is not null)
-        {
-            return ptr.Get()->AddRef();
-        }
-
-        return 0;
-    }
-
-    /// <summary>
-    /// Invokes <see cref="IUnknown.Release"/> on the wrapped object for an input <see cref="ComPtr{T}"/> value.
-    /// If the object has been deleted, it also resets <paramref name="ptr"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the current <see cref="ComPtr{T}"/> instance.</typeparam>
-    /// <param name="ptr">The input <see cref="ComPtr{T}"/> instance to release.</param>
-    /// <returns>A <see cref="ComPtr{T}"/> instance of type <see cref="IUnknown"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe uint Release<T>(this ref ComPtr<T> ptr)
-        where T : unmanaged, IUnknown.Interface
-    {
-        if (ptr.Get() is not null)
-        {
-            uint count = ptr.Get()->Release();
-
-            if (count == 0)
-            {
-                ptr = default;
-            }
-
-            return count;
-        }
-
-        return 0;
-    }
-#endif
-
     /// <summary>
     /// Reinterprets the current <see cref="ComPtr{T}"/> instance as one of type <see cref="IUnknown"/>.
     /// </summary>

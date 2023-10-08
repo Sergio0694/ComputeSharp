@@ -247,10 +247,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     this.d2D1Multithread->Enter();
 
                     // Release the resource too if it has been created
-                    if (this.d2D1ResourceTexture is not null)
-                    {
-                        _ = this.d2D1ResourceTexture->Release();
-                    }
+                    ComPtr<ID2D1ResourceTexture>.Release(this.d2D1ResourceTexture);
 
                     // Now that the resource, if any, has been released, the effect context can also
                     // be released. This must be done only after any associated resource textures have
@@ -263,30 +260,11 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
                     _ = this.d2D1Multithread->Release();
                 }
 
-                if (this.resourceId is not null)
-                {
-                    NativeMemory.Free(this.resourceId);
-                }
-
-                if (this.resourceTextureProperties.extents is not null)
-                {
-                    NativeMemory.Free(this.resourceTextureProperties.extents);
-                }
-
-                if (this.resourceTextureProperties.extendModes is not null)
-                {
-                    NativeMemory.Free(this.resourceTextureProperties.extendModes);
-                }
-
-                if (this.data is not null)
-                {
-                    NativeMemory.Free(this.data);
-                }
-
-                if (this.strides is not null)
-                {
-                    NativeMemory.Free(this.strides);
-                }
+                NativeMemory.Free(this.resourceId);
+                NativeMemory.Free(this.resourceTextureProperties.extents);
+                NativeMemory.Free(this.resourceTextureProperties.extendModes);
+                NativeMemory.Free(this.data);
+                NativeMemory.Free(this.strides);
             }
 
             this.lockHandle.Free();

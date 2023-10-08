@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using TerraFX.Interop.DirectX;
@@ -86,115 +87,106 @@ internal unsafe partial struct PixelShaderEffect
         [UnmanagedCallersOnly]
         public static int Initialize(PixelShaderEffect* @this, ID2D1EffectContext* effectContext, ID2D1TransformGraph* transformGraph)
         {
-            int hresult = effectContext->LoadPixelShader(
-                shaderId: &@this->shaderId,
-                shaderBuffer: @this->bytecode,
-                shaderBufferCount: (uint)@this->bytecodeSize);
-
-            // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
-            // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
-            // If any error is detected while trying to check for shader support, ignore the value and propagate the current HRESULT.
-            if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(@this->bytecode, @this->bytecodeSize) == S.S_FALSE)
+            try
             {
-                hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
-            }
+                ReadOnlySpan<byte> bytecode = @this->GetGlobals().HlslBytecode.Span;
 
-            // If loading the bytecode succeeded, set the transform node
-            if (Windows.SUCCEEDED(hresult))
-            {
-                hresult = transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1DrawTransform);
-            }
-
-            // If the transform node was set, also store the effect context
-            if (Windows.SUCCEEDED(hresult))
-            {
-                // Free the previous ID2D1EffectContext object, if present
-                if (@this->d2D1EffectContext is not null)
+                fixed (Guid* pShaderId = &@this->GetGlobals().EffectId)
+                fixed (byte* pBytecode = bytecode)
                 {
-                    _ = @this->d2D1EffectContext->Release();
+                    HRESULT hresult = effectContext->LoadPixelShader(
+                        shaderId: pShaderId,
+                        shaderBuffer: pBytecode,
+                        shaderBufferCount: (uint)bytecode.Length);
+
+                    // If E_INVALIDARG was returned, try to check whether double precision support was requested when not available. This
+                    // is only done to provide a more helpful error message to callers. If no error was returned, the behavior is the same.
+                    // If any error is detected while trying to check for shader support, ignore the value and propagate the current HRESULT.
+                    if (hresult == E.E_INVALIDARG && effectContext->IsShaderSupported(pBytecode, bytecode.Length) == S.S_FALSE)
+                    {
+                        hresult = D2DERR.D2DERR_INSUFFICIENT_DEVICE_CAPABILITIES;
+                    }
+
+                    // Finally, assert that we did load the pixel shader correctly
+                    hresult.Assert();
                 }
 
+                // If loading the bytecode succeeded, set the transform node
+                transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1DrawTransform).Assert();
+
                 // Store the new ID2D1EffectContext object
-                _ = effectContext->AddRef();
+                ComPtr<ID2D1EffectContext>.CopyTo(effectContext, ref @this->d2D1EffectContext);
 
-                @this->d2D1EffectContext = effectContext;
+                return S.S_OK;
             }
-
-            return hresult;
+            catch (Exception e)
+            {
+                return Marshal.GetHRForException(e);
+            }
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.PrepareForRender"/>
         [UnmanagedCallersOnly]
         public static int PrepareForRender(PixelShaderEffect* @this, D2D1_CHANGE_TYPE changeType)
         {
-            int hresult = S.S_OK;
-
-            // Validate the constant buffer
-            if (@this->constantBufferSize > 0 &&
-                @this->constantBuffer is null)
+            try
             {
-                return E.E_NOT_VALID_STATE;
-            }
+                // Validate the constant buffer. We either must have a stateless shader, in which case
+                // the constant buffer might either be null or empty (both cases are allowed), or we
+                // must have a shader with some state and a constant buffer being set. In that case
+                // the code setting the constant buffer will have already validated its length.
+                if (@this->GetGlobals().ConstantBufferSize > 0 &&
+                    @this->constantBuffer is null)
+                {
+                    return E.E_NOT_VALID_STATE;
+                }
 
-            // First, set the constant buffer, if available
-            if (@this->constantBuffer is not null)
-            {
-                hresult = @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(
-                    buffer: @this->constantBuffer,
-                    bufferCount: (uint)@this->constantBufferSize);
-            }
+                // First, set the constant buffer, if available
+                if (@this->constantBuffer is not null)
+                {
+                    @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(
+                        buffer: @this->constantBuffer,
+                        bufferCount: (uint)@this->GetGlobals().ConstantBufferSize).Assert();
+                }
 
-            if (Windows.SUCCEEDED(hresult))
-            {
-                for (int i = 0; i < @this->resourceTextureDescriptionCount; i++)
+                ReadOnlySpan<D2D1ResourceTextureDescription> resourceTextureDescriptions = @this->GetGlobals().ResourceTextureDescriptions.Span;
+
+                for (int i = 0; i < resourceTextureDescriptions.Length; i++)
                 {
                     using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = @this->resourceTextureManagerBuffer[i];
 
                     // If the current resource texture manager is not set, we cannot render, as there's an unbound resource texture
                     if (resourceTextureManager.Get() is null)
                     {
-                        hresult = E.E_NOT_VALID_STATE;
-
-                        break;
+                        return E.E_NOT_VALID_STATE;
                     }
 
                     using ComPtr<ID2D1ResourceTextureManagerInternal> resourceTextureManagerInternal = default;
 
-                    // Get the ID2D1ResourceTextureManagerInternal object
-                    hresult = resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf());
-
-                    // This cast should always succeed, as when an input resource texture managers is set it's
-                    // also checked for ID2D1ResourceTextureManagerInternal, but still validate for good measure.
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
+                    // Get the ID2D1ResourceTextureManagerInternal object. This cast should always succeed, as when
+                    // an input resource texture managers is set it's also checked for ID2D1ResourceTextureManagerInternal,
+                    // but still validate for good measure.
+                    resourceTextureManager.CopyTo(resourceTextureManagerInternal.GetAddressOf()).Assert();
 
                     using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
 
                     // Try to get the ID2D1ResourceTexture from the manager
-                    hresult = resourceTextureManagerInternal.Get()->GetResourceTexture(d2D1ResourceTexture.GetAddressOf());
+                    resourceTextureManagerInternal.Get()->GetResourceTexture(d2D1ResourceTexture.GetAddressOf()).Assert();
 
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
-
-                    ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref @this->resourceTextureDescriptions[i];
+                    ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref resourceTextureDescriptions[i];
 
                     // Set the ID2D1ResourceTexture object to the current index in the ID2D1DrawInfo object in use
-                    hresult = @this->d2D1DrawInfo->SetResourceTexture(
+                    @this->d2D1DrawInfo->SetResourceTexture(
                         textureIndex: (uint)resourceTextureDescription.Index,
-                        resourceTexture: d2D1ResourceTexture.Get());
-
-                    if (!Windows.SUCCEEDED(hresult))
-                    {
-                        break;
-                    }
+                        resourceTexture: d2D1ResourceTexture.Get()).Assert();
                 }
-            }
 
-            return hresult;
+                return S.S_OK;
+            }
+            catch (Exception e)
+            {
+                return Marshal.GetHRForException(e);
+            }
         }
 
         /// <inheritdoc cref="ID2D1EffectImpl.SetGraph"/>

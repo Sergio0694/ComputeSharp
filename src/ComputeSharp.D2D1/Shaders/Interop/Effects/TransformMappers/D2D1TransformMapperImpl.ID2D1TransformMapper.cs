@@ -131,7 +131,7 @@ unsafe partial struct D2D1TransformMapperImpl
             }
             catch (Exception e)
             {
-                return e.HResult;
+                return Marshal.GetHRForException(e);
             }
 
             *outputRect = output.ToRECT();
@@ -163,7 +163,7 @@ unsafe partial struct D2D1TransformMapperImpl
             }
             catch (Exception e)
             {
-                return e.HResult;
+                return Marshal.GetHRForException(e);
             }
 
             for (int i = 0; i < (int)inputRectsCount; i++)
@@ -192,7 +192,7 @@ unsafe partial struct D2D1TransformMapperImpl
             }
             catch (Exception e)
             {
-                return e.HResult;
+                return Marshal.GetHRForException(e);
             }
 
             *invalidOutputRect = invalidOutput.ToRECT();

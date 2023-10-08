@@ -188,7 +188,7 @@ public static unsafe class D2D1PixelShaderEffect
             d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager14].setFunction = PixelShaderEffect.SetResourceTextureManager14;
             d2D1PropertyBinding[D2D1PixelShaderEffectProperty.ResourceTextureManager15].setFunction = PixelShaderEffect.SetResourceTextureManager15;
 
-            fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
+            fixed (Guid* pGuid = &GetEffectId<T>())
             {
                 // Register the effect
                 ((ID2D1Factory1*)d2D1Factory1)->RegisterEffectFromString(
@@ -196,10 +196,10 @@ public static unsafe class D2D1PixelShaderEffect
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
                     bindingsCount: (uint)(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + D2D1PixelShader.GetResourceTextureCount<T>()),
-                    effectFactory: PixelShaderEffect.For<T>.Instance.Factory).Assert();
+                    effectFactory: PixelShaderEffect.Globals<T>.Instance.Factory).Assert();
             }
 
-            effectId = PixelShaderEffect.For<T>.Instance.Id;
+            effectId = GetEffectId<T>();
         }
     }
 
@@ -250,8 +250,8 @@ public static unsafe class D2D1PixelShaderEffect
         writer.Write(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
-        writer.Write(PixelShaderEffect.For<T>.Instance.Id);
-        writer.Write(PixelShaderEffect.For<T>.Instance.InputCount);
+        writer.Write(GetEffectId<T>());
+        writer.Write(D2D1PixelShader.GetInputCount<T>());
 
         // Retrieve the effect XML and include it into the registration blob
         using (D2D1EffectXmlFactory.EffectXml effectXml = D2D1EffectXmlFactory.GetXmlBuffer<T>())
@@ -388,14 +388,14 @@ public static unsafe class D2D1PixelShaderEffect
         }
 
         // Effect factory
-        writer.Write((nint)PixelShaderEffect.For<T>.Instance.Factory);
+        writer.Write((nint)PixelShaderEffect.Globals<T>.Instance.Factory);
 
         byte[] registrationBlob = writer.WrittenSpan.ToArray();
 
         writer.Dispose();
 
         // Extract the effect id (the same that was encoded in the registration blob)
-        effectId = PixelShaderEffect.For<T>.Instance.Id;
+        effectId = GetEffectId<T>();
 
         return registrationBlob;
     }
@@ -419,7 +419,7 @@ public static unsafe class D2D1PixelShaderEffect
         default(ArgumentNullException).ThrowIfNull(d2D1DeviceContext);
         default(ArgumentNullException).ThrowIfNull(d2D1Effect);
 
-        fixed (Guid* pGuid = &PixelShaderEffect.For<T>.Instance.Id)
+        fixed (Guid* pGuid = &GetEffectId<T>())
         {
             ((ID2D1DeviceContext*)d2D1DeviceContext)->CreateEffect(
                 effectId: pGuid,
