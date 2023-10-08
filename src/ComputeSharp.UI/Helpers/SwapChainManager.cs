@@ -348,7 +348,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
 
         using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
         {
-            this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
+            this.dxgiSwapChain3.CopyTo(idxgiSwapChain.GetAddressOf()).Assert();
 
             this.swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
         }
