@@ -6,10 +6,10 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using static TerraFX.Interop.Windows.Windows;
 using static TerraFX.Interop.Windows.S;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TerraFX.Interop.Windows;
 
@@ -19,12 +19,12 @@ namespace TerraFX.Interop.Windows;
 internal static unsafe class ComPtr
 {
     /// <summary>
-    /// Releases a target COM object, if it's not <see langword="null"/>.
+    /// Disposes a target COM object, if it's not <see langword="null"/>.
     /// </summary>
     /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="other">The COM object to potentially release.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Release<T>(T* other)
+    public static void Dispose<T>(T* other)
         where T : unmanaged
     {
         if (other is not null)

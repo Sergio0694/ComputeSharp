@@ -231,16 +231,16 @@ internal unsafe partial struct PixelShaderEffect
 
             NativeMemory.Free(this.constantBuffer);
 
-            ComPtr.Release(this.d2D1TransformMapper);
-            ComPtr.Release(this.d2D1DrawInfo);
-            ComPtr.Release(this.d2D1EffectContext);
+            ComPtr.Dispose(this.d2D1TransformMapper);
+            ComPtr.Dispose(this.d2D1DrawInfo);
+            ComPtr.Dispose(this.d2D1EffectContext);
 
             // Retrieve all possible resource texture managers in use and release the ones that had been
             // assigned (from one of the property bindings). We just hardcode 16 here and dont access
             // the globals, as technically invoking APIs on it might throw an exception.
             for (int i = 0; i < 16; i++)
             {
-                ComPtr.Release(this.resourceTextureManagerBuffer[i]);
+                ComPtr.Dispose(this.resourceTextureManagerBuffer[i]);
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));

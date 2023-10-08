@@ -251,7 +251,7 @@ unsafe partial struct PixelShaderEffect
             unknown.CopyTo(transformMapper.GetAddressOf()).Assert();
 
             // If there's already an existing manager, release it
-            ComPtr.Release(@this->d2D1TransformMapper);
+            ComPtr.Dispose(@this->d2D1TransformMapper);
 
             // Store the transform mapper manager into the effect
             @this->d2D1TransformMapper = transformMapper.Detach();
@@ -343,7 +343,7 @@ unsafe partial struct PixelShaderEffect
             ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[index];
 
             // If there's already an existing manager at this index, release it
-            ComPtr.Release(currentResourceTextureManager);
+            ComPtr.Dispose(currentResourceTextureManager);
 
             // Store the resource texture manager into the buffer
             currentResourceTextureManager = resourceTextureManager.Detach();
