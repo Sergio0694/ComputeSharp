@@ -6,44 +6,26 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using static TerraFX.Interop.Windows.Windows;
 using static TerraFX.Interop.Windows.S;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TerraFX.Interop.Windows;
 
-/// <summary>A type that allows working with pointers to COM objects more securely.</summary>
-/// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
-/// <remarks>While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.</remarks>
-internal unsafe struct ComPtr<T> : IDisposable
-    where T : unmanaged
+/// <summary>
+/// Extensions for <see cref="ComPtr{T}"/> to operate on raw pointers as well.
+/// </summary>
+internal static unsafe class ComPtr
 {
-    /// <summary>The raw pointer to a COM object, if existing.</summary>
-    private T* ptr_;
-
-    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a raw pointer and increments the ref count.</summary>
-    /// <param name="other">The raw pointer to wrap.</param>
-    public ComPtr(T* other)
-    {
-        ptr_ = other;
-        InternalAddRef();
-    }
-
-    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a second one and increments the ref count.</summary>
-    /// <param name="other">The other <see cref="ComPtr{T}"/> instance to copy.</param>
-    public ComPtr(ComPtr<T> other)
-    {
-        ptr_ = other.ptr_;
-        InternalAddRef();
-    }
-
     /// <summary>
-    /// Releases a target COM object, if it's not <see langword="null"/>.
+    /// Disposes a target COM object, if it's not <see langword="null"/>.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="other">The COM object to potentially release.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Release(T* other)
+    public static void Dispose<T>(T* other)
+        where T : unmanaged
     {
         if (other is not null)
         {
@@ -54,10 +36,12 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <summary>
     /// Copies a given COM object into a target destination, incrementing reference counts where needed.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="obj">The input COM object to copy.</param>
     /// <param name="other">The target destination for the COM object.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CopyTo(T* obj, ref T* other)
+    public static void CopyTo<T>(T* obj, ref T* other)
+        where T : unmanaged
     {
         // We specifically need to increment the reference count on the source object before releasing the
         // target object, to avoid issues in case source and destination were pointers to the same object
@@ -84,76 +68,34 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <summary>
     /// Writes a given COM object into a target (assumed uninitialized) destination, incrementing reference counts where needed.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="obj">The input COM object to copy.</param>
     /// <param name="other">The target destination for the COM object.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void WriteTo(T* obj, out T* other)
+    public static void WriteTo<T>(T* obj, out T* other)
+        where T : unmanaged
     {
         _ = ((IUnknown*)obj)->AddRef();
 
         other = obj;
     }
+}
 
-    /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>
+/// <summary>A type that allows working with pointers to COM objects more securely.</summary>
+/// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
+/// <remarks>While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.</remarks>
+internal unsafe struct ComPtr<T> : IDisposable
+    where T : unmanaged
+{
+    /// <summary>The raw pointer to a COM object, if existing.</summary>
+    private T* ptr_;
+
+    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a raw pointer and increments the ref count.</summary>
     /// <param name="other">The raw pointer to wrap.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator ComPtr<T>(T* other)
-        => new ComPtr<T>(other);
-
-    /// <summary>Unwraps a <see cref="ComPtr{T}"/> instance and returns the internal raw pointer.</summary>
-    /// <param name="other">The <see cref="ComPtr{T}"/> instance to unwrap.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator T*(ComPtr<T> other)
-        => other.Get();
-
-    /// <summary>Converts the current object reference to type <typeparamref name="U"/> and assigns that to a target <see cref="ComPtr{T}"/> value.</summary>
-    /// <typeparam name="U">The interface type to use to try casting the current COM object.</typeparam>
-    /// <param name="p">A raw pointer to the target <see cref="ComPtr{T}"/> value to write to.</param>
-    /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target type <typeparamref name="U"/>.</returns>
-    /// <remarks>This method will automatically release the target COM object pointed to by <paramref name="p"/>, if any.</remarks>
-    public readonly HRESULT As<U>(ComPtr<U>* p)
-        where U : unmanaged
+    public ComPtr(T* other)
     {
-        return ((IUnknown*)ptr_)->QueryInterface(__uuidof<U>(), (void**)p->ReleaseAndGetAddressOf());
-    }
-
-    /// <summary>Converts the current object reference to type <typeparamref name="U"/> and assigns that to a target <see cref="ComPtr{T}"/> value.</summary>
-    /// <typeparam name="U">The interface type to use to try casting the current COM object.</typeparam>
-    /// <param name="other">A reference to the target <see cref="ComPtr{T}"/> value to write to.</param>
-    /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target type <typeparamref name="U"/>.</returns>
-    /// <remarks>This method will automatically release the target COM object pointed to by <paramref name="other"/>, if any.</remarks>
-    public readonly HRESULT As<U>(ref ComPtr<U> other)
-        where U : unmanaged
-    {
-        U* ptr;
-        HRESULT result = ((IUnknown*)ptr_)->QueryInterface(__uuidof<U>(), (void**)&ptr);
-
-        other.Attach(ptr);
-        return result;
-    }
-
-    /// <summary>Converts the current object reference to a type indicated by the given IID and assigns that to a target <see cref="ComPtr{T}"/> value.</summary>
-    /// <param name="riid">The IID indicating the interface type to convert the COM object reference to.</param>
-    /// <param name="other">A raw pointer to the target <see cref="ComPtr{T}"/> value to write to.</param>
-    /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target IID.</returns>
-    /// <remarks>This method will automatically release the target COM object pointed to by <paramref name="other"/>, if any.</remarks>
-    public readonly HRESULT AsIID(Guid* riid, ComPtr<IUnknown>* other)
-    {
-        return ((IUnknown*)ptr_)->QueryInterface(riid, (void**)other->ReleaseAndGetAddressOf());
-    }
-
-    /// <summary>Converts the current object reference to a type indicated by the given IID and assigns that to a target <see cref="ComPtr{T}"/> value.</summary>
-    /// <param name="riid">The IID indicating the interface type to convert the COM object reference to.</param>
-    /// <param name="other">A reference to the target <see cref="ComPtr{T}"/> value to write to.</param>
-    /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target IID.</returns>
-    /// <remarks>This method will automatically release the target COM object pointed to by <paramref name="other"/>, if any.</remarks>
-    public readonly HRESULT AsIID(Guid* riid, ref ComPtr<IUnknown> other)
-    {
-        IUnknown* ptr;
-        HRESULT result = ((IUnknown*)ptr_)->QueryInterface(riid, (void**)&ptr);
-
-        other.Attach(ptr);
-        return result;
+        ptr_ = other;
+        InternalAddRef();
     }
 
     /// <summary>Releases the current COM object, if any, and replaces the internal pointer with an input raw pointer.</summary>
@@ -316,16 +258,9 @@ internal unsafe struct ComPtr<T> : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T** ReleaseAndGetAddressOf()
     {
-        _ = InternalRelease();
-        return GetAddressOf();
-    }
+        Dispose();
 
-    /// <summary>Resets the current instance by decrementing the reference count for the target COM object and setting the internal raw pointer to <see langword="null"/>.</summary>
-    /// <returns>The updated reference count for the COM object that was in use, if any.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public uint Reset()
-    {
-        return InternalRelease();
+        return GetAddressOf();
     }
 
     /// <summary>Swaps the current COM object reference with that of a given <see cref="ComPtr{T}"/> instance.</summary>
@@ -357,20 +292,5 @@ internal unsafe struct ComPtr<T> : IDisposable
         {
             _ = ((IUnknown*)temp)->AddRef();
         }
-    }
-
-    // Decrements the reference count for the current COM object, if any
-    private uint InternalRelease()
-    {
-        uint @ref = 0;
-        T* temp = ptr_;
-
-        if (temp != null)
-        {
-            ptr_ = null;
-            @ref = ((IUnknown*)temp)->Release();
-        }
-
-        return @ref;
     }
 }

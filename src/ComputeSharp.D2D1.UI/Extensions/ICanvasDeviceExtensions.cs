@@ -77,7 +77,7 @@ internal static unsafe class ICanvasDeviceExtensions
         else
         {
             // Otherwise, just use the input device context
-            *d2D1DeviceContextEffective = new ComPtr<ID2D1DeviceContext>(d2D1DeviceContext);
+            ComPtr.WriteTo(d2D1DeviceContext, out *d2D1DeviceContextEffective);
         }
     }
 }

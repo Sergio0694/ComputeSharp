@@ -55,7 +55,7 @@ internal unsafe struct CommandList : IDisposable
         // Set the heap descriptor if the command list is not for copy operations
         if (d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
         {
-            device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
+            device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList.Get());
         }
     }
 
@@ -78,7 +78,7 @@ internal unsafe struct CommandList : IDisposable
             out this.d3D12CommandAllocator.GetPinnableReference());
 
         // Set the heap descriptor for the command list
-        device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
+        device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList.Get());
     }
 
     /// <summary>

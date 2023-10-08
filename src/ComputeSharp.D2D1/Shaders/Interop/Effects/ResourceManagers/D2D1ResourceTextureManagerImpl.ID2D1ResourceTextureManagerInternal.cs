@@ -124,7 +124,7 @@ partial struct D2D1ResourceTextureManagerImpl
                         // Now, the effect context can actually be stored safely while holding the lock.
                         // This is guaranteed to be the case here, as this method is only called (as per
                         // contact of the COM interface) from ID2D1EffectImpl, which holds the D2D lock.
-                        ComPtr<ID2D1EffectContext>.WriteTo(effectContext, out @this->d2D1EffectContext);
+                        ComPtr.WriteTo(effectContext, out @this->d2D1EffectContext);
 
                         @this->d2D1Multithread = d2D1Multithread.Detach();
                     }
@@ -161,7 +161,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 // If the texture has already been created, just return it
                 if (@this->d2D1ResourceTexture is not null)
                 {
-                    ComPtr<ID2D1ResourceTexture>.WriteTo(@this->d2D1ResourceTexture, out *resourceTexture);
+                    ComPtr.WriteTo(@this->d2D1ResourceTexture, out *resourceTexture);
 
                     return S.S_OK;
                 }

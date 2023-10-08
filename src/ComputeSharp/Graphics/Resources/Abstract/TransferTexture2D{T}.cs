@@ -107,7 +107,7 @@ public abstract unsafe partial class TransferTexture2D<T> : IReferenceTrackedObj
     /// <summary>
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
-    internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+    internal ID3D12Resource* D3D12Resource => this.d3D12Resource.Get();
 
     /// <summary>
     /// Gets the <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> value for the current resource.

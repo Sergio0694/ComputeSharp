@@ -244,14 +244,14 @@ unsafe partial struct PixelShaderEffect
 
             default(ArgumentNullException).ThrowIfNull(value);
 
-            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<IUnknown> unknown = new((IUnknown*)value);
             using ComPtr<ID2D1TransformMapper> transformMapper = default;
 
             // Check that the input object implements ID2D1TransformMapper
             unknown.CopyTo(transformMapper.GetAddressOf()).Assert();
 
             // If there's already an existing manager, release it
-            ComPtr<ID2D1TransformMapper>.Release(@this->d2D1TransformMapper);
+            ComPtr.Dispose(@this->d2D1TransformMapper);
 
             // Store the transform mapper manager into the effect
             @this->d2D1TransformMapper = transformMapper.Detach();
@@ -280,7 +280,7 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentOutOfRangeException).ThrowIfLessThan((int)dataSize, sizeof(void*), nameof(dataSize));
             default(ArgumentOutOfRangeException).ThrowIfGreaterThanOrEqual(index, GetGlobals().ResourceTextureCount);
 
-            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = this.resourceTextureManagerBuffer[index];
+            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = new(this.resourceTextureManagerBuffer[index]);
 
             resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data).Assert();
 
@@ -316,7 +316,7 @@ unsafe partial struct PixelShaderEffect
 
             default(ArgumentNullException).ThrowIfNull(value);
 
-            using ComPtr<IUnknown> unknown = (IUnknown*)value;
+            using ComPtr<IUnknown> unknown = new((IUnknown*)value);
             using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = default;
 
             // Check that the input object implements ID2D1ResourceTextureManager
@@ -343,7 +343,7 @@ unsafe partial struct PixelShaderEffect
             ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[index];
 
             // If there's already an existing manager at this index, release it
-            ComPtr<ID2D1ResourceTextureManager>.Release(currentResourceTextureManager);
+            ComPtr.Dispose(currentResourceTextureManager);
 
             // Store the resource texture manager into the buffer
             currentResourceTextureManager = resourceTextureManager.Detach();

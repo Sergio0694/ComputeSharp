@@ -337,7 +337,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
             this.d3D12Device.Get()->CreateCommandList(
                 0,
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                this.d3D12CommandAllocator,
+                this.d3D12CommandAllocator.Get(),
                 null,
                 Win32.__uuidof<ID3D12GraphicsCommandList>(),
                 (void**)d3D12GraphicsCommandList).Assert();
@@ -348,7 +348,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
 
         using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
         {
-            this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
+            this.dxgiSwapChain3.CopyTo(idxgiSwapChain.GetAddressOf()).Assert();
 
             this.swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
         }

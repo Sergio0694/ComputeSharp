@@ -144,7 +144,7 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     /// <summary>
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
-    internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+    internal ID3D12Resource* D3D12Resource => this.d3D12Resource.Get();
 
     /// <summary>
     /// Gets the <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
