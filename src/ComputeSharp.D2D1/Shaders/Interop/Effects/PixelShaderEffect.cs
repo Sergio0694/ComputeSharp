@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -232,16 +231,16 @@ internal unsafe partial struct PixelShaderEffect
 
             NativeMemory.Free(this.constantBuffer);
 
-            ComPtr<ID2D1TransformMapper>.Release(this.d2D1TransformMapper);
-            ComPtr<ID2D1DrawInfo>.Release(this.d2D1DrawInfo);
-            ComPtr<ID2D1EffectContext>.Release(this.d2D1EffectContext);
+            ComPtr.Release(this.d2D1TransformMapper);
+            ComPtr.Release(this.d2D1DrawInfo);
+            ComPtr.Release(this.d2D1EffectContext);
 
             // Retrieve all possible resource texture managers in use and release the ones that had been
             // assigned (from one of the property bindings). We just hardcode 16 here and dont access
             // the globals, as technically invoking APIs on it might throw an exception.
             for (int i = 0; i < 16; i++)
             {
-                ComPtr<ID2D1ResourceTextureManager>.Release(this.resourceTextureManagerBuffer[i]);
+                ComPtr.Release(this.resourceTextureManagerBuffer[i]);
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));

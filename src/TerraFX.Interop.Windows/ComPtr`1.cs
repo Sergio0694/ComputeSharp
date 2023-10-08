@@ -13,37 +13,19 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace TerraFX.Interop.Windows;
 
-/// <summary>A type that allows working with pointers to COM objects more securely.</summary>
-/// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
-/// <remarks>While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.</remarks>
-internal unsafe struct ComPtr<T> : IDisposable
-    where T : unmanaged
+/// <summary>
+/// Extensions for <see cref="ComPtr{T}"/> to operate on raw pointers as well.
+/// </summary>
+internal static unsafe class ComPtr
 {
-    /// <summary>The raw pointer to a COM object, if existing.</summary>
-    private T* ptr_;
-
-    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a raw pointer and increments the ref count.</summary>
-    /// <param name="other">The raw pointer to wrap.</param>
-    public ComPtr(T* other)
-    {
-        ptr_ = other;
-        InternalAddRef();
-    }
-
-    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a second one and increments the ref count.</summary>
-    /// <param name="other">The other <see cref="ComPtr{T}"/> instance to copy.</param>
-    public ComPtr(ComPtr<T> other)
-    {
-        ptr_ = other.ptr_;
-        InternalAddRef();
-    }
-
     /// <summary>
     /// Releases a target COM object, if it's not <see langword="null"/>.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="other">The COM object to potentially release.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Release(T* other)
+    public static void Release<T>(T* other)
+        where T : unmanaged
     {
         if (other is not null)
         {
@@ -54,10 +36,12 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <summary>
     /// Copies a given COM object into a target destination, incrementing reference counts where needed.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="obj">The input COM object to copy.</param>
     /// <param name="other">The target destination for the COM object.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CopyTo(T* obj, ref T* other)
+    public static void CopyTo<T>(T* obj, ref T* other)
+        where T : unmanaged
     {
         // We specifically need to increment the reference count on the source object before releasing the
         // target object, to avoid issues in case source and destination were pointers to the same object
@@ -84,14 +68,42 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <summary>
     /// Writes a given COM object into a target (assumed uninitialized) destination, incrementing reference counts where needed.
     /// </summary>
+    /// <typeparam name="T">The type of COM objects to work with.</typeparam>
     /// <param name="obj">The input COM object to copy.</param>
     /// <param name="other">The target destination for the COM object.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void WriteTo(T* obj, out T* other)
+    public static void WriteTo<T>(T* obj, out T* other)
+        where T : unmanaged
     {
         _ = ((IUnknown*)obj)->AddRef();
 
         other = obj;
+    }
+}
+
+/// <summary>A type that allows working with pointers to COM objects more securely.</summary>
+/// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
+/// <remarks>While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.</remarks>
+internal unsafe struct ComPtr<T> : IDisposable
+    where T : unmanaged
+{
+    /// <summary>The raw pointer to a COM object, if existing.</summary>
+    private T* ptr_;
+
+    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a raw pointer and increments the ref count.</summary>
+    /// <param name="other">The raw pointer to wrap.</param>
+    public ComPtr(T* other)
+    {
+        ptr_ = other;
+        InternalAddRef();
+    }
+
+    /// <summary>Creates a new <see cref="ComPtr{T}"/> instance from a second one and increments the ref count.</summary>
+    /// <param name="other">The other <see cref="ComPtr{T}"/> instance to copy.</param>
+    public ComPtr(ComPtr<T> other)
+    {
+        ptr_ = other.ptr_;
+        InternalAddRef();
     }
 
     /// <summary>Converts a raw pointer to a new <see cref="ComPtr{T}"/> instance and increments the ref count.</summary>

@@ -311,7 +311,7 @@ partial struct PixelShaderEffect
             try
             {
                 // Store the new ID2D1DrawInfo object
-                ComPtr<ID2D1DrawInfo>.CopyTo(drawInfo, ref @this->d2D1DrawInfo);
+                ComPtr.CopyTo(drawInfo, ref @this->d2D1DrawInfo);
 
                 Guid shaderId = @this->GetGlobals().EffectId;
                 D2D1PixelOptions pixelOptions = @this->GetGlobals().PixelOptions;
