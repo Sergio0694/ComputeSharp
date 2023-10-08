@@ -1,9 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 #pragma warning disable CS0660, CS0661
 
@@ -13,11 +10,6 @@ namespace ComputeSharp;
 [StructLayout(LayoutKind.Explicit, Size = 4, Pack = 4)]
 public unsafe partial struct Bool1x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool1x1), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -39,7 +31,7 @@ public unsafe partial struct Bool1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref bool this[int row] => ref *(bool*)UndefinedData;
+    public ref bool this[int row] => ref *(bool*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -51,7 +43,7 @@ public unsafe partial struct Bool1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -64,7 +56,7 @@ public unsafe partial struct Bool1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -78,7 +70,7 @@ public unsafe partial struct Bool1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -156,11 +148,6 @@ public unsafe partial struct Bool1x1
 [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
 public unsafe partial struct Bool1x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool1x2), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -187,7 +174,7 @@ public unsafe partial struct Bool1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -199,7 +186,7 @@ public unsafe partial struct Bool1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -212,7 +199,7 @@ public unsafe partial struct Bool1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -226,7 +213,7 @@ public unsafe partial struct Bool1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -317,11 +304,6 @@ public unsafe partial struct Bool1x2
 [StructLayout(LayoutKind.Explicit, Size = 12, Pack = 4)]
 public unsafe partial struct Bool1x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool1x3), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -353,7 +335,7 @@ public unsafe partial struct Bool1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -365,7 +347,7 @@ public unsafe partial struct Bool1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -378,7 +360,7 @@ public unsafe partial struct Bool1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -392,7 +374,7 @@ public unsafe partial struct Bool1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -490,11 +472,6 @@ public unsafe partial struct Bool1x3
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
 public unsafe partial struct Bool1x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool1x4), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -531,7 +508,7 @@ public unsafe partial struct Bool1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -543,7 +520,7 @@ public unsafe partial struct Bool1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -556,7 +533,7 @@ public unsafe partial struct Bool1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -570,7 +547,7 @@ public unsafe partial struct Bool1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -675,11 +652,6 @@ public unsafe partial struct Bool1x4
 [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
 public unsafe partial struct Bool2x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool2x1), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -706,7 +678,7 @@ public unsafe partial struct Bool2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref bool this[int row] => ref *(bool*)UndefinedData;
+    public ref bool this[int row] => ref *(bool*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -718,7 +690,7 @@ public unsafe partial struct Bool2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -731,7 +703,7 @@ public unsafe partial struct Bool2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -745,7 +717,7 @@ public unsafe partial struct Bool2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -836,11 +808,6 @@ public unsafe partial struct Bool2x1
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
 public unsafe partial struct Bool2x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool2x2), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -890,7 +857,7 @@ public unsafe partial struct Bool2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -902,7 +869,7 @@ public unsafe partial struct Bool2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -915,7 +882,7 @@ public unsafe partial struct Bool2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -929,7 +896,7 @@ public unsafe partial struct Bool2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1028,11 +995,6 @@ public unsafe partial struct Bool2x2
 [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 4)]
 public unsafe partial struct Bool2x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool2x3), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -1094,7 +1056,7 @@ public unsafe partial struct Bool2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -1106,7 +1068,7 @@ public unsafe partial struct Bool2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -1119,7 +1081,7 @@ public unsafe partial struct Bool2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -1133,7 +1095,7 @@ public unsafe partial struct Bool2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1246,11 +1208,6 @@ public unsafe partial struct Bool2x3
 [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 4)]
 public unsafe partial struct Bool2x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool2x4), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -1324,7 +1281,7 @@ public unsafe partial struct Bool2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1336,7 +1293,7 @@ public unsafe partial struct Bool2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1349,7 +1306,7 @@ public unsafe partial struct Bool2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1363,7 +1320,7 @@ public unsafe partial struct Bool2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1490,11 +1447,6 @@ public unsafe partial struct Bool2x4
 [StructLayout(LayoutKind.Explicit, Size = 12, Pack = 4)]
 public unsafe partial struct Bool3x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3x1), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -1526,7 +1478,7 @@ public unsafe partial struct Bool3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref bool this[int row] => ref *(bool*)UndefinedData;
+    public ref bool this[int row] => ref *(bool*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1538,7 +1490,7 @@ public unsafe partial struct Bool3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1551,7 +1503,7 @@ public unsafe partial struct Bool3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1565,7 +1517,7 @@ public unsafe partial struct Bool3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1663,11 +1615,6 @@ public unsafe partial struct Bool3x1
 [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 4)]
 public unsafe partial struct Bool3x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3x2), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -1730,7 +1677,7 @@ public unsafe partial struct Bool3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1742,7 +1689,7 @@ public unsafe partial struct Bool3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1755,7 +1702,7 @@ public unsafe partial struct Bool3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1769,7 +1716,7 @@ public unsafe partial struct Bool3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1882,11 +1829,6 @@ public unsafe partial struct Bool3x2
 [StructLayout(LayoutKind.Explicit, Size = 36, Pack = 4)]
 public unsafe partial struct Bool3x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3x3), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -1967,7 +1909,7 @@ public unsafe partial struct Bool3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1979,7 +1921,7 @@ public unsafe partial struct Bool3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1992,7 +1934,7 @@ public unsafe partial struct Bool3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -2006,7 +1948,7 @@ public unsafe partial struct Bool3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2140,11 +2082,6 @@ public unsafe partial struct Bool3x3
 [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 4)]
 public unsafe partial struct Bool3x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3x4), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -2243,7 +2180,7 @@ public unsafe partial struct Bool3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -2255,7 +2192,7 @@ public unsafe partial struct Bool3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -2268,7 +2205,7 @@ public unsafe partial struct Bool3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -2282,7 +2219,7 @@ public unsafe partial struct Bool3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2437,11 +2374,6 @@ public unsafe partial struct Bool3x4
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
 public unsafe partial struct Bool4x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4x1), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -2478,7 +2410,7 @@ public unsafe partial struct Bool4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref bool this[int row] => ref *(bool*)UndefinedData;
+    public ref bool this[int row] => ref *(bool*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -2490,7 +2422,7 @@ public unsafe partial struct Bool4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -2503,7 +2435,7 @@ public unsafe partial struct Bool4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -2517,7 +2449,7 @@ public unsafe partial struct Bool4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2622,11 +2554,6 @@ public unsafe partial struct Bool4x1
 [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 4)]
 public unsafe partial struct Bool4x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4x2), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -2702,7 +2629,7 @@ public unsafe partial struct Bool4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[int row] => ref *(Bool2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2714,7 +2641,7 @@ public unsafe partial struct Bool4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2727,7 +2654,7 @@ public unsafe partial struct Bool4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2741,7 +2668,7 @@ public unsafe partial struct Bool4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2868,11 +2795,6 @@ public unsafe partial struct Bool4x2
 [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 4)]
 public unsafe partial struct Bool4x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4x3), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -2972,7 +2894,7 @@ public unsafe partial struct Bool4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[int row] => ref *(Bool3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2984,7 +2906,7 @@ public unsafe partial struct Bool4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2997,7 +2919,7 @@ public unsafe partial struct Bool4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -3011,7 +2933,7 @@ public unsafe partial struct Bool4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -3166,11 +3088,6 @@ public unsafe partial struct Bool4x3
 [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 4)]
 public unsafe partial struct Bool4x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4x4), sizeof(Bool4));
-
     [FieldOffset(0)]
     private int m11;
 
@@ -3294,7 +3211,7 @@ public unsafe partial struct Bool4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[int row] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -3306,7 +3223,7 @@ public unsafe partial struct Bool4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData;
+    public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Bool2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -3319,7 +3236,7 @@ public unsafe partial struct Bool4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData;
+    public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Bool3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -3333,7 +3250,7 @@ public unsafe partial struct Bool4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData;
+    public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Bool4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].

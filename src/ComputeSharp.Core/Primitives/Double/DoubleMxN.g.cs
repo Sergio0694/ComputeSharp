@@ -1,9 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 #pragma warning disable CS0660, CS0661
 
@@ -13,11 +10,6 @@ namespace ComputeSharp;
 [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 8)]
 public unsafe partial struct Double1x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x1), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -39,7 +31,7 @@ public unsafe partial struct Double1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref double this[int row] => ref *(double*)UndefinedData;
+    public ref double this[int row] => ref *(double*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -51,7 +43,7 @@ public unsafe partial struct Double1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -64,7 +56,7 @@ public unsafe partial struct Double1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -78,7 +70,7 @@ public unsafe partial struct Double1x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -210,11 +202,6 @@ public unsafe partial struct Double1x1
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 8)]
 public unsafe partial struct Double1x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x2), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -241,7 +228,7 @@ public unsafe partial struct Double1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[int row] => ref *(Double2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -253,7 +240,7 @@ public unsafe partial struct Double1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -266,7 +253,7 @@ public unsafe partial struct Double1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -280,7 +267,7 @@ public unsafe partial struct Double1x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -425,11 +412,6 @@ public unsafe partial struct Double1x2
 [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 8)]
 public unsafe partial struct Double1x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x3), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -461,7 +443,7 @@ public unsafe partial struct Double1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[int row] => ref *(Double3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -473,7 +455,7 @@ public unsafe partial struct Double1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -486,7 +468,7 @@ public unsafe partial struct Double1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -500,7 +482,7 @@ public unsafe partial struct Double1x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -652,11 +634,6 @@ public unsafe partial struct Double1x3
 [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
 public unsafe partial struct Double1x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x4), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -693,7 +670,7 @@ public unsafe partial struct Double1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[int row] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -705,7 +682,7 @@ public unsafe partial struct Double1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -718,7 +695,7 @@ public unsafe partial struct Double1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -732,7 +709,7 @@ public unsafe partial struct Double1x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -891,11 +868,6 @@ public unsafe partial struct Double1x4
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 8)]
 public unsafe partial struct Double2x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x1), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -922,7 +894,7 @@ public unsafe partial struct Double2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref double this[int row] => ref *(double*)UndefinedData;
+    public ref double this[int row] => ref *(double*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -934,7 +906,7 @@ public unsafe partial struct Double2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -947,7 +919,7 @@ public unsafe partial struct Double2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -961,7 +933,7 @@ public unsafe partial struct Double2x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -1106,11 +1078,6 @@ public unsafe partial struct Double2x1
 [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
 public unsafe partial struct Double2x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x2), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -1160,7 +1127,7 @@ public unsafe partial struct Double2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[int row] => ref *(Double2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -1172,7 +1139,7 @@ public unsafe partial struct Double2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -1185,7 +1152,7 @@ public unsafe partial struct Double2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -1199,7 +1166,7 @@ public unsafe partial struct Double2x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -1352,11 +1319,6 @@ public unsafe partial struct Double2x2
 [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 8)]
 public unsafe partial struct Double2x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x3), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -1418,7 +1380,7 @@ public unsafe partial struct Double2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[int row] => ref *(Double3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -1430,7 +1392,7 @@ public unsafe partial struct Double2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -1443,7 +1405,7 @@ public unsafe partial struct Double2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -1457,7 +1419,7 @@ public unsafe partial struct Double2x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -1624,11 +1586,6 @@ public unsafe partial struct Double2x3
 [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 8)]
 public unsafe partial struct Double2x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x4), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -1702,7 +1659,7 @@ public unsafe partial struct Double2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[int row] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1714,7 +1671,7 @@ public unsafe partial struct Double2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1727,7 +1684,7 @@ public unsafe partial struct Double2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1741,7 +1698,7 @@ public unsafe partial struct Double2x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -1922,11 +1879,6 @@ public unsafe partial struct Double2x4
 [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 8)]
 public unsafe partial struct Double3x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x1), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -1958,7 +1910,7 @@ public unsafe partial struct Double3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref double this[int row] => ref *(double*)UndefinedData;
+    public ref double this[int row] => ref *(double*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1970,7 +1922,7 @@ public unsafe partial struct Double3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1983,7 +1935,7 @@ public unsafe partial struct Double3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1997,7 +1949,7 @@ public unsafe partial struct Double3x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -2149,11 +2101,6 @@ public unsafe partial struct Double3x1
 [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 8)]
 public unsafe partial struct Double3x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x2), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -2216,7 +2163,7 @@ public unsafe partial struct Double3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[int row] => ref *(Double2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -2228,7 +2175,7 @@ public unsafe partial struct Double3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -2241,7 +2188,7 @@ public unsafe partial struct Double3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -2255,7 +2202,7 @@ public unsafe partial struct Double3x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -2422,11 +2369,6 @@ public unsafe partial struct Double3x2
 [StructLayout(LayoutKind.Explicit, Size = 72, Pack = 8)]
 public unsafe partial struct Double3x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x3), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -2507,7 +2449,7 @@ public unsafe partial struct Double3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[int row] => ref *(Double3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -2519,7 +2461,7 @@ public unsafe partial struct Double3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -2532,7 +2474,7 @@ public unsafe partial struct Double3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -2546,7 +2488,7 @@ public unsafe partial struct Double3x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -2734,11 +2676,6 @@ public unsafe partial struct Double3x3
 [StructLayout(LayoutKind.Explicit, Size = 96, Pack = 8)]
 public unsafe partial struct Double3x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x4), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -2837,7 +2774,7 @@ public unsafe partial struct Double3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[int row] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -2849,7 +2786,7 @@ public unsafe partial struct Double3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -2862,7 +2799,7 @@ public unsafe partial struct Double3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -2876,7 +2813,7 @@ public unsafe partial struct Double3x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -3085,11 +3022,6 @@ public unsafe partial struct Double3x4
 [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
 public unsafe partial struct Double4x1
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x1), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -3126,7 +3058,7 @@ public unsafe partial struct Double4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref double this[int row] => ref *(double*)UndefinedData;
+    public ref double this[int row] => ref *(double*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -3138,7 +3070,7 @@ public unsafe partial struct Double4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -3151,7 +3083,7 @@ public unsafe partial struct Double4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -3165,7 +3097,7 @@ public unsafe partial struct Double4x1
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -3324,11 +3256,6 @@ public unsafe partial struct Double4x1
 [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 8)]
 public unsafe partial struct Double4x2
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x2), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -3404,7 +3331,7 @@ public unsafe partial struct Double4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[int row] => ref *(Double2*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -3416,7 +3343,7 @@ public unsafe partial struct Double4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -3429,7 +3356,7 @@ public unsafe partial struct Double4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -3443,7 +3370,7 @@ public unsafe partial struct Double4x2
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -3624,11 +3551,6 @@ public unsafe partial struct Double4x2
 [StructLayout(LayoutKind.Explicit, Size = 96, Pack = 8)]
 public unsafe partial struct Double4x3
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x3), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -3728,7 +3650,7 @@ public unsafe partial struct Double4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[int row] => ref *(Double3*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -3740,7 +3662,7 @@ public unsafe partial struct Double4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -3753,7 +3675,7 @@ public unsafe partial struct Double4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -3767,7 +3689,7 @@ public unsafe partial struct Double4x3
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
@@ -3976,11 +3898,6 @@ public unsafe partial struct Double4x3
 [StructLayout(LayoutKind.Explicit, Size = 128, Pack = 8)]
 public unsafe partial struct Double4x4
 {
-    /// <summary>
-    /// A private buffer to which the undefined properties will point to.
-    /// </summary>
-    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x4), sizeof(Double4));
-
     [FieldOffset(0)]
     private double m11;
 
@@ -4104,7 +4021,7 @@ public unsafe partial struct Double4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[int row] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -4116,7 +4033,7 @@ public unsafe partial struct Double4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+    public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -4129,7 +4046,7 @@ public unsafe partial struct Double4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>
     [UnscopedRef]
-    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+    public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData.Memory;
         
     /// <summary>
     /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -4143,7 +4060,7 @@ public unsafe partial struct Double4x4
     /// <para>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</para>
     /// </remarks>s
     [UnscopedRef]
-    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+    public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData.Memory;
 
     /// <summary>
     /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].

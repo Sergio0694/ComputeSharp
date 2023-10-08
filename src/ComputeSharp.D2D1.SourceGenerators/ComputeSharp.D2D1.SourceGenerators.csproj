@@ -49,6 +49,7 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int3.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.g.cs" Link="ComputeSharp.Core\Primitives\Int\Int4.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" Link="ComputeSharp.Core\Primitives\Int\IntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp.Core\Primitives\Internals\UndefinedData.cs" Link="ComputeSharp.Core\Primitives\Internals\UndefinedData.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.cs" Link="ComputeSharp.Core\Primitives\UInt\UInt4.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1PixelShaderDescriptor{T}.cs" Link="ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1PixelShaderDescriptor{T}.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\D2D.cs" Link="ComputeSharp.D2D1\Intrinsics\D2D.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" Link="ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1ResourceTextureDescription.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1ResourceTextureDescription.cs" />

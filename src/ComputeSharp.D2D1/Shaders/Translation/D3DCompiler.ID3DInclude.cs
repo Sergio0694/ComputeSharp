@@ -1,13 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using MemoryMarshal2 = System.Runtime.InteropServices.MemoryMarshal;
 #else
 using MemoryMarshal2 = ComputeSharp.NetStandard.MemoryMarshal;
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;
@@ -51,7 +51,7 @@ partial class D3DCompiler
         /// <returns>The method table pointer for <see cref="ID3DIncludeForD2DHelpers"/>.</returns>
         private static void** InitVtbl()
         {
-            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3DIncludeForD2DHelpers), sizeof(void*) * 2);
+            void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 2);
 
 #if NET6_0_OR_GREATER
             lpVtbl[0] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, D3D_INCLUDE_TYPE, sbyte*, void*, void**, uint*, int>)&Open;

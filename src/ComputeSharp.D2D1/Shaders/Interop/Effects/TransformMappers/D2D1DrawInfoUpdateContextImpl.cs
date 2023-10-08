@@ -2,11 +2,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.D2D1.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
@@ -45,7 +43,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// <returns>The combined vtable for <see cref="ID2D1DrawInfoUpdateContext"/> and <see cref="ID2D1DrawInfoUpdateContextInternal"/>.</returns>
     private static void** InitVtblForID2D1DrawInfoUpdateContextAndID2D1DrawInfoUpdateContextInternal()
     {
-        void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(D2D1DrawInfoUpdateContextImpl), sizeof(void*) * 10);
+        void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
 
         // ID2D1ResourceTextureManager
 #if NET6_0_OR_GREATER
