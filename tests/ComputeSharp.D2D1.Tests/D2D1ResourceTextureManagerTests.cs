@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Threading;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.Tests.Helpers;
@@ -717,6 +718,78 @@ public partial class D2D1ResourceTextureManagerTests
         }
 
         Assert.IsTrue(texture.AsSpan().SequenceEqual(resultingBytes));
+    }
+
+    [TestMethod]
+    public unsafe void UpdateResourceTexture2D_ConcurrentAccess_DoesNotDeadlock()
+    {
+        const int width = 4096;
+        const int height = 4096;
+
+        using ComPtr<ID2D1Factory2> d2D1Factory2 = D2D1Helper.CreateD2D1Factory2();
+        using ComPtr<ID2D1Device> d2D1Device = D2D1Helper.CreateD2D1Device(d2D1Factory2.Get());
+        using ComPtr<ID2D1DeviceContext> d2D1DeviceContext = D2D1Helper.CreateD2D1DeviceContext(d2D1Device.Get());
+        using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), width, height);
+
+        D2D1PixelShaderEffect.RegisterForD2D1Factory1<CopyFromResourceTexture2DShader>(d2D1Factory2.Get(), out _);
+
+        using ComPtr<ID2D1Effect> d2D1Effect = default;
+
+        D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture2DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
+
+        CopyFromResourceTexture2DShader shader = new(width, height);
+
+        D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
+
+        byte[] texture = new byte[width * height];
+
+        D2D1ResourceTextureManager resourceTextureManager = new(
+            extents: stackalloc[] { (uint)width, (uint)height },
+            bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
+            channelDepth: D2D1ChannelDepth.One,
+            filter: D2D1Filter.MinMagMipPoint,
+            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            data: texture,
+            strides: stackalloc uint[] { width });
+
+        D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, 0);
+
+        CancellationTokenSource cancellationTokenSource = new(TimeSpan.FromSeconds(20));
+
+        // Thread As are constantly updating the resource texture
+        void UpdateResourceTexture()
+        {
+            ReadOnlySpan<uint> minimumExtents = stackalloc uint[] { 0, 0 };
+            ReadOnlySpan<uint> maximumExtents = stackalloc uint[] { width, height };
+            ReadOnlySpan<uint> strides = stackalloc uint[] { width };
+
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                resourceTextureManager.Update(
+                    minimumExtents: minimumExtents,
+                    maximimumExtents: maximumExtents,
+                    strides: strides,
+                    data: texture);
+            }
+        }
+
+        // Thread Bs are constantly drawing on the target bitmap
+        void Draw()
+        {
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                D2D1Helper.DrawEffect(d2D1DeviceContext.Get(), d2D1Effect.Get());
+            }
+        }
+
+        Thread threadA = new(UpdateResourceTexture);
+        Thread threadB = new(Draw);
+
+        threadA.Start();
+        threadB.Start();
+
+        threadA.Join();
+        threadB.Join();
     }
 
     [D2DInputCount(0)]
