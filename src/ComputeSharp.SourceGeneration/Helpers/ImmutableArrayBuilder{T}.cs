@@ -89,6 +89,12 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         this.writer!.AddRange(items);
     }
 
+    /// <inheritdoc cref="ImmutableArray{T}.Builder.Clear"/>
+    public readonly void Clear()
+    {
+        this.writer!.Clear();
+    }
+
     /// <summary>
     /// Inserts an item to the builder at the specified index.
     /// </summary>
@@ -203,6 +209,12 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             this.index += items.Length;
         }
 
+        /// <inheritdoc cref="ImmutableArrayBuilder{T}.Clear"/>
+        public void Clear(ReadOnlySpan<T> items)
+        {
+            this.index = 0;
+        }
+
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.Insert"/>
         public void Insert(int index, T item)
         {
@@ -227,7 +239,9 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         /// </summary>
         public void Clear()
         {
-            if (typeof(T) != typeof(char))
+            if (typeof(T) != typeof(byte) &&
+                typeof(T) != typeof(char) &&
+                typeof(T) != typeof(int))
             {
                 this.array.AsSpan(0, this.index).Clear();
             }

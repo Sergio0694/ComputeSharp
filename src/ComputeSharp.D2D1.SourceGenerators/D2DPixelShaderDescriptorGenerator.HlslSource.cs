@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -527,17 +526,17 @@ partial class D2DPixelShaderDescriptorGenerator
             ImmutableArray<int> inputComplexIndices,
             bool requiresScenePosition)
         {
-            StringBuilder hlslBuilder = new();
+            using ImmutableArrayBuilder<char> hlslBuilder = ImmutableArrayBuilder<char>.Rent();
 
             void AppendLF()
             {
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add('\n');
             }
 
             void AppendLineAndLF(string text)
             {
-                _ = hlslBuilder.Append(text);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.AddRange(text.AsSpan());
+                hlslBuilder.Add('\n');
             }
 
             // Header

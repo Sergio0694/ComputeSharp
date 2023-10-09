@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -566,38 +565,37 @@ partial class IShaderGenerator
             bool isComputeShader,
             string? implicitTextureType,
             bool isSamplerUsed,
-
             string executeMethod)
         {
-            StringBuilder hlslBuilder = new();
+            using ImmutableArrayBuilder<char> hlslBuilder = ImmutableArrayBuilder<char>.Rent();
 
             void AppendLF()
             {
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add('\n');
             }
 
             void AppendLine(string text)
             {
-                _ = hlslBuilder.Append(text);
+                hlslBuilder.AddRange(text.AsSpan());
             }
 
             void AppendLineAndLF(string text)
             {
-                _ = hlslBuilder.Append(text);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.AddRange(text.AsSpan());
+                hlslBuilder.Add('\n');
             }
 
             void AppendCharacterAndLF(char c)
             {
-                _ = hlslBuilder.Append(c);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add(c);
+                hlslBuilder.Add('\n');
             }
 
             string FlushText()
             {
                 string text = hlslBuilder.ToString();
 
-                _ = hlslBuilder.Clear();
+                hlslBuilder.Clear();
 
                 return text;
             }
