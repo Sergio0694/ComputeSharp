@@ -27,7 +27,7 @@ partial class IShaderGenerator
             bool isSamplerUsed,
             ImmutableArray<FieldInfo> capturedFields)
         {
-            using ImmutableArrayBuilder<ResourceDescriptor> descriptors = ImmutableArrayBuilder<ResourceDescriptor>.Rent();
+            using ImmutableArrayBuilder<ResourceDescriptor> descriptors = new();
 
             int constantBufferOffset = 1;
             int readOnlyResourceOffset = 0;

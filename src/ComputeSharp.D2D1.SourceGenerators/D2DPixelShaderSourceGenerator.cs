@@ -35,7 +35,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
                     MethodDeclarationSyntax methodDeclaration = (MethodDeclarationSyntax)context.TargetNode;
                     IMethodSymbol methodSymbol = (IMethodSymbol)context.TargetSymbol;
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
                     // Get the remaining info for the current shader
                     ImmutableArray<ushort> modifiers = methodDeclaration.Modifiers.Select(token => (ushort)token.Kind()).ToImmutableArray();
@@ -89,7 +89,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
         // Generate the shader bytecode methods
         context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
-            using IndentedTextWriter writer = IndentedTextWriter.Rent();
+            using IndentedTextWriter writer = new();
 
             item.Hierarchy.WriteSyntax(
                 state: item,

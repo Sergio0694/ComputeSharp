@@ -25,21 +25,11 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     private Writer? writer;
 
     /// <summary>
-    /// Creates a <see cref="ImmutableArrayBuilder{T}"/> value with a pooled underlying data writer.
+    /// Creates a new <see cref="ImmutableArrayBuilder{T}"/> object.
     /// </summary>
-    /// <returns>A <see cref="ImmutableArrayBuilder{T}"/> instance to write data to.</returns>
-    public static ImmutableArrayBuilder<T> Rent()
+    public ImmutableArrayBuilder()
     {
-        return new(SharedObjectPool.Allocate());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ImmutableArrayBuilder{T}"/> object with the specified parameters.
-    /// </summary>
-    /// <param name="writer">The target data writer to use.</param>
-    private ImmutableArrayBuilder(Writer writer)
-    {
-        this.writer = writer;
+        this.writer = SharedObjectPool.Allocate();
     }
 
     /// <summary>

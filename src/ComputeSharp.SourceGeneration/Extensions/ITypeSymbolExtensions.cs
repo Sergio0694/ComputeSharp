@@ -17,7 +17,7 @@ internal static class ITypeSymbolExtensions
     /// <returns>Whether <paramref name="symbol"/> has a full name equals to <paramref name="name"/>.</returns>
     public static bool HasFullyQualifiedMetadataName(this ITypeSymbol symbol, string name)
     {
-        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+        using ImmutableArrayBuilder<char> builder = new();
 
         symbol.AppendFullyQualifiedMetadataName(in builder);
 
@@ -50,7 +50,7 @@ internal static class ITypeSymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this ITypeSymbol symbol)
     {
-        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+        using ImmutableArrayBuilder<char> builder = new();
 
         symbol.AppendFullyQualifiedMetadataName(in builder);
 

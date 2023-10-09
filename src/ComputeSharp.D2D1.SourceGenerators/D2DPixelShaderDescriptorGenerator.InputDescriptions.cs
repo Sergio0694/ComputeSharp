@@ -30,7 +30,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             int inputCount = 0;
 
-            using ImmutableArrayBuilder<InputDescription> inputDescriptionsBuilder = ImmutableArrayBuilder<InputDescription>.Rent();
+            using ImmutableArrayBuilder<InputDescription> inputDescriptionsBuilder = new();
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {

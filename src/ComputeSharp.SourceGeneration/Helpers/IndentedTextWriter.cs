@@ -45,21 +45,11 @@ internal sealed class IndentedTextWriter : IDisposable
     private string[] availableIndentations;
 
     /// <summary>
-    /// Creates an <see cref="IndentedTextWriter"/> instance with a pooled underlying data writer.
+    /// Creates a new <see cref="IndentedTextWriter"/> object.
     /// </summary>
-    /// <returns>An <see cref="IndentedTextWriter"/> instance to write data to.</returns>
-    public static IndentedTextWriter Rent()
+    public IndentedTextWriter()
     {
-        return new(ImmutableArrayBuilder<char>.Rent());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="IndentedTextWriter"/> object with the specified parameters.
-    /// </summary>
-    /// <param name="builder">The target <see cref="ImmutableArrayBuilder{T}"/> instance to use.</param>
-    private IndentedTextWriter(ImmutableArrayBuilder<char> builder)
-    {
-        this.builder = builder;
+        this.builder = new ImmutableArrayBuilder<char>();
         this.currentIndentationLevel = 0;
         this.currentIndentation = "";
         this.availableIndentations = new string[4];

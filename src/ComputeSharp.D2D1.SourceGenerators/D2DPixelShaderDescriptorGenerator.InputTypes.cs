@@ -41,8 +41,8 @@ partial class D2DPixelShaderDescriptorGenerator
 
             inputCount = 0;
 
-            using ImmutableArrayBuilder<int> inputSimpleIndicesBuilder = ImmutableArrayBuilder<int>.Rent();
-            using ImmutableArrayBuilder<int> inputComplexIndicesBuilder = ImmutableArrayBuilder<int>.Rent();
+            using ImmutableArrayBuilder<int> inputSimpleIndicesBuilder = new();
+            using ImmutableArrayBuilder<int> inputComplexIndicesBuilder = new();
 
             foreach (AttributeData attributeData in structDeclarationSymbol.GetAttributes())
             {
@@ -154,7 +154,7 @@ partial class D2DPixelShaderDescriptorGenerator
             }
 
             // Build the combined input types list now that inputs have been validated
-            using ImmutableArrayBuilder<uint> combinedBuilder = ImmutableArrayBuilder<uint>.Rent();
+            using ImmutableArrayBuilder<uint> combinedBuilder = new();
 
             for (int i = 0; i < inputCount; i++)
             {

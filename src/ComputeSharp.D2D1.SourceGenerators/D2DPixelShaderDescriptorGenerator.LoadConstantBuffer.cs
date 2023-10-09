@@ -124,7 +124,7 @@ partial class D2DPixelShaderDescriptorGenerator
             // each row needs to be at a multiple of 16 bytes (a float4 register).
             if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
             {
-                using ImmutableArrayBuilder<int> builder = ImmutableArrayBuilder<int>.Rent();
+                using ImmutableArrayBuilder<int> builder = new();
 
                 for (int j = 0; j < rows; j++)
                 {

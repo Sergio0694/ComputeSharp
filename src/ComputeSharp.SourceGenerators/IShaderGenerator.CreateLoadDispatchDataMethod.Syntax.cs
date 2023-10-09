@@ -68,7 +68,7 @@ partial class IShaderGenerator
             int resourceCount,
             int root32BitConstantsCount)
         {
-            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
+            using ImmutableArrayBuilder<StatementSyntax> statements = new();
 
             // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];
             statements.Add(

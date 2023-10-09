@@ -87,7 +87,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 string assemblyName = typeSymbol.ContainingAssembly?.Name ?? string.Empty;
 
-                using ImmutableArrayBuilder<char> charBuffer = ImmutableArrayBuilder<char>.Rent();
+                using ImmutableArrayBuilder<char> charBuffer = new();
 
                 // Format the fully qualified name into a pooled builder to avoid the string allocation
                 typeSymbol.AppendFullyQualifiedMetadataName(in charBuffer);

@@ -16,7 +16,7 @@ internal static class IPropertySymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this IPropertySymbol symbol)
     {
-        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+        using ImmutableArrayBuilder<char> builder = new();
 
         symbol.ContainingType!.AppendFullyQualifiedMetadataName(in builder);
 

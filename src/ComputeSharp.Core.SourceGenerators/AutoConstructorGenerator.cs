@@ -68,8 +68,8 @@ public sealed class AutoConstructorGenerator : IIncrementalGenerator
         /// <returns>The <see cref="ConstructorInfo"/> instance for <paramref name="structDeclarationSymbol"/>.</returns>
         public static ConstructorInfo GetData(INamedTypeSymbol structDeclarationSymbol)
         {
-            using ImmutableArrayBuilder<ParameterInfo> parameters = ImmutableArrayBuilder<ParameterInfo>.Rent();
-            using ImmutableArrayBuilder<string> defaulted = ImmutableArrayBuilder<string>.Rent();
+            using ImmutableArrayBuilder<ParameterInfo> parameters = new();
+            using ImmutableArrayBuilder<string> defaulted = new();
 
             foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
