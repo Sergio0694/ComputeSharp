@@ -76,8 +76,8 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     // RVA field
                     writer.WriteLine();
-                    writer.WriteLine("/// <summary>The RVA data with the input type info.</summary>");
-                    writer.WriteLine("private static global::System.ReadOnlySpan<D2D1PixelShaderInputType> Data => new[]");
+                    writer.WriteLine("/// <summary>The data with the input type info.</summary>");
+                    writer.WriteLine("private static D2D1PixelShaderInputType[] Data = new[]");
                     writer.WriteLine("{");
                     writer.IncreaseIndent();
 
@@ -98,7 +98,7 @@ partial class D2DPixelShaderDescriptorGenerator
                         /// <inheritdoc/>
                         public override unsafe Span<D2D1PixelShaderInputType> GetSpan()
                         {
-                            return new(Unsafe.AsPointer(ref MemoryMarshal.GetReference(Data)), Data.Length);
+                            return Data;
                         }
 
                         /// <inheritdoc/>
@@ -111,7 +111,9 @@ partial class D2DPixelShaderDescriptorGenerator
                         /// <inheritdoc/>
                         public override unsafe MemoryHandle Pin(int elementIndex)
                         {
-                            return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
+                            GCHandle handle = GCHandle.Alloc(Data, GCHandleType.Pinned);
+
+                            return new(Unsafe.AsPointer(ref Data[elementIndex]), handle);
                         }
 
                         /// <inheritdoc/>
