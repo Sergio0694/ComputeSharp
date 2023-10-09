@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 namespace ComputeSharp;
 
@@ -10,6 +11,11 @@ namespace ComputeSharp;
 /// Methods also need to be static, though this can only be tested at runtime.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+[EditorBrowsable(EditorBrowsableState.Never)]
+[Obsolete(
+    "This API (and shader metaprogramming in general) is being removed in a future version of ComputeSharp. " +
+    "If you're relying on this functionality, consider manually implementing different shader variants. " +
+    "It is possible to still reuse code by moving it to helper methods that are used by multiple shaders.")]
 public sealed class ShaderMethodAttribute : Attribute
 {
 }
