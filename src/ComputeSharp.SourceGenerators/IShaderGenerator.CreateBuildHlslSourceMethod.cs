@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -106,8 +105,8 @@ partial class IShaderGenerator
                 ICollection<INamedTypeSymbol> types,
                 bool isComputeShader)
         {
-            using ImmutableArrayBuilder<(string, string, string)> resources = ImmutableArrayBuilder<(string, string, string)>.Rent();
-            using ImmutableArrayBuilder<(string, string)> values = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string, string)> resources = new();
+            using ImmutableArrayBuilder<(string, string)> values = new();
 
             bool hlslResourceFound = false;
 
@@ -200,7 +199,7 @@ partial class IShaderGenerator
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            using ImmutableArrayBuilder<(string, string, string?)> builder = ImmutableArrayBuilder<(string, string, string?)>.Rent();
+            using ImmutableArrayBuilder<(string, string, string?)> builder = new();
 
             foreach (FieldDeclarationSyntax fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>())
             {
@@ -264,7 +263,7 @@ partial class IShaderGenerator
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
         {
-            using ImmutableArrayBuilder<(string, string, int?)> builder = ImmutableArrayBuilder<(string, string, int?)>.Rent();
+            using ImmutableArrayBuilder<(string, string, int?)> builder = new();
 
             foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -338,7 +337,7 @@ partial class IShaderGenerator
                 where syntaxNode.IsKind(SyntaxKind.MethodDeclaration)
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
-            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> methods = new();
 
             string? entryPoint = null;
             bool isSamplerUsed = false;
@@ -426,7 +425,7 @@ partial class IShaderGenerator
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         internal static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> builder = new();
 
             foreach (KeyValuePair<IFieldSymbol, string> constant in constantDefinitions)
             {
@@ -453,7 +452,7 @@ partial class IShaderGenerator
             IEnumerable<INamedTypeSymbol> types,
             IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
-            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> builder = new();
 
             IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
@@ -566,38 +565,37 @@ partial class IShaderGenerator
             bool isComputeShader,
             string? implicitTextureType,
             bool isSamplerUsed,
-
             string executeMethod)
         {
-            StringBuilder hlslBuilder = new();
+            using ImmutableArrayBuilder<char> hlslBuilder = new();
 
             void AppendLF()
             {
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add('\n');
             }
 
             void AppendLine(string text)
             {
-                _ = hlslBuilder.Append(text);
+                hlslBuilder.AddRange(text.AsSpan());
             }
 
             void AppendLineAndLF(string text)
             {
-                _ = hlslBuilder.Append(text);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.AddRange(text.AsSpan());
+                hlslBuilder.Add('\n');
             }
 
             void AppendCharacterAndLF(char c)
             {
-                _ = hlslBuilder.Append(c);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add(c);
+                hlslBuilder.Add('\n');
             }
 
             string FlushText()
             {
                 string text = hlslBuilder.ToString();
 
-                _ = hlslBuilder.Clear();
+                hlslBuilder.Clear();
 
                 return text;
             }

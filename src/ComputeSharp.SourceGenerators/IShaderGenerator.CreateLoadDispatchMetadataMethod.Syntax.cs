@@ -55,7 +55,7 @@ partial class IShaderGenerator
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchMetadataLoadingStatements(DispatchMetadataInfo metadataInfo)
         {
-            using ImmutableArrayBuilder<StatementSyntax> statements = ImmutableArrayBuilder<StatementSyntax>.Rent();
+            using ImmutableArrayBuilder<StatementSyntax> statements = new();
 
             // global::System.Span<byte> span0 = stackalloc byte[5];
             statements.Add(

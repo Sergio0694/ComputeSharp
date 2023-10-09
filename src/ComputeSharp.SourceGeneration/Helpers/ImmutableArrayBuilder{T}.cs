@@ -25,21 +25,11 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     private Writer? writer;
 
     /// <summary>
-    /// Creates a <see cref="ImmutableArrayBuilder{T}"/> value with a pooled underlying data writer.
+    /// Creates a new <see cref="ImmutableArrayBuilder{T}"/> object.
     /// </summary>
-    /// <returns>A <see cref="ImmutableArrayBuilder{T}"/> instance to write data to.</returns>
-    public static ImmutableArrayBuilder<T> Rent()
+    public ImmutableArrayBuilder()
     {
-        return new(SharedObjectPool.Allocate());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ImmutableArrayBuilder{T}"/> object with the specified parameters.
-    /// </summary>
-    /// <param name="writer">The target data writer to use.</param>
-    private ImmutableArrayBuilder(Writer writer)
-    {
-        this.writer = writer;
+        this.writer = SharedObjectPool.Allocate();
     }
 
     /// <summary>
@@ -87,6 +77,12 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
     public readonly void AddRange(ReadOnlySpan<T> items)
     {
         this.writer!.AddRange(items);
+    }
+
+    /// <inheritdoc cref="ImmutableArray{T}.Builder.Clear"/>
+    public readonly void Clear()
+    {
+        this.writer!.Clear();
     }
 
     /// <summary>
@@ -203,6 +199,12 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
             this.index += items.Length;
         }
 
+        /// <inheritdoc cref="ImmutableArrayBuilder{T}.Clear"/>
+        public void Clear(ReadOnlySpan<T> items)
+        {
+            this.index = 0;
+        }
+
         /// <inheritdoc cref="ImmutableArrayBuilder{T}.Insert"/>
         public void Insert(int index, T item)
         {
@@ -227,7 +229,9 @@ internal struct ImmutableArrayBuilder<T> : IDisposable
         /// </summary>
         public void Clear()
         {
-            if (typeof(T) != typeof(char))
+            if (typeof(T) != typeof(byte) &&
+                typeof(T) != typeof(char) &&
+                typeof(T) != typeof(int))
             {
                 this.array.AsSpan(0, this.index).Clear();
             }

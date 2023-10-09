@@ -17,7 +17,7 @@ internal static class IMethodSymbolExtensions
     /// <returns>The fully qualified metadata name for <paramref name="symbol"/>.</returns>
     public static string GetFullyQualifiedMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
     {
-        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+        using ImmutableArrayBuilder<char> builder = new();
 
         symbol.ContainingType!.AppendFullyQualifiedMetadataName(in builder);
 

@@ -103,7 +103,7 @@ internal static class SyntaxFormattingHelper
     /// </remarks>
     public static string BuildByteArrayInitializationExpressionString(ReadOnlySpan<byte> bytecode)
     {
-        using ImmutableArrayBuilder<char> builder = ImmutableArrayBuilder<char>.Rent();
+        using ImmutableArrayBuilder<char> builder = new();
 
         builder.AddRange(FormattedBytes[bytecode[0]].AsSpan());
 

@@ -76,7 +76,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                     token.ThrowIfCancellationRequested();
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadConstantBuffer.GetInfo(
@@ -201,7 +201,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
         // Generate the source files, if any
         context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
-            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> declaredMembers = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> declaredMembers = new();
 
             declaredMembers.Add(EffectId.WriteSyntax);
             declaredMembers.Add(EffectMetadata.WriteEffectDisplayNameSyntax);
@@ -224,15 +224,15 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             declaredMembers.Add(CreateFromConstantBuffer.WriteSyntax);
             declaredMembers.Add(LoadConstantBuffer.WriteSyntax);
 
-            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
-            using ImmutableHashSetBuilder<string> usingDirectives = ImmutableHashSetBuilder<string>.Rent();
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = new();
+            using ImmutableHashSetBuilder<string> usingDirectives = new();
 
             LoadConstantBuffer.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
-            using IndentedTextWriter writer = IndentedTextWriter.Rent();
+            using IndentedTextWriter writer = new();
 
             item.Hierarchy.WriteSyntax(
                 state: item,

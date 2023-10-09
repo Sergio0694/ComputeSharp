@@ -55,7 +55,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
+                    using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
                     // GetDispatchId() info
                     ImmutableArray<string> dispatchIdInfo = GetDispatchId.GetInfo(typeSymbol);

@@ -27,21 +27,11 @@ internal struct ImmutableHashSetBuilder<T> : IDisposable
     private HashSet<T>? set;
 
     /// <summary>
-    /// Creates a <see cref="ImmutableHashSetBuilder{T}"/> value with a pooled underlying data writer.
+    /// Creates a new <see cref="ImmutableHashSetBuilder{T}"/> object.
     /// </summary>
-    /// <returns>A <see cref="ImmutableHashSetBuilder{T}"/> instance to write data to.</returns>
-    public static ImmutableHashSetBuilder<T> Rent()
+    public ImmutableHashSetBuilder()
     {
-        return new(SharedObjectPool.Allocate());
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ImmutableHashSetBuilder{T}"/> object with the specified parameters.
-    /// </summary>
-    /// <param name="set">The target <see cref="HashSet{T}"/> instance to use.</param>
-    private ImmutableHashSetBuilder(HashSet<T> set)
-    {
-        this.set = set;
+        this.set = SharedObjectPool.Allocate();
     }
 
     /// <summary>

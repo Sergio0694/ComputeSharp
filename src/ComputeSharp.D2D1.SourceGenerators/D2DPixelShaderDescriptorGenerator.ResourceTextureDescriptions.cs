@@ -31,7 +31,7 @@ partial class D2DPixelShaderDescriptorGenerator
             int inputCount,
             out ImmutableArray<ResourceTextureDescription> resourceTextureDescriptions)
         {
-            using ImmutableArrayBuilder<(int? Index, int Rank)> resourceTextureInfos = ImmutableArrayBuilder<(int? Index, int Rank)>.Rent();
+            using ImmutableArrayBuilder<(int? Index, int Rank)> resourceTextureInfos = new();
 
             foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -72,7 +72,7 @@ partial class D2DPixelShaderDescriptorGenerator
             }
 
             // Extract the resource texture descriptions for the rest of the pipeline
-            using (ImmutableArrayBuilder<ResourceTextureDescription> resourceTextureDescriptionsBuilder = ImmutableArrayBuilder<ResourceTextureDescription>.Rent())
+            using (ImmutableArrayBuilder<ResourceTextureDescription> resourceTextureDescriptionsBuilder = new())
             {
                 foreach ((int? index, int rank) in resourceTextureInfos.WrittenSpan)
                 {

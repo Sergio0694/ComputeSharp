@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
@@ -106,8 +105,8 @@ partial class D2DPixelShaderDescriptorGenerator
             out ImmutableArray<(string Name, string HlslType)> valueFields,
             out ImmutableArray<(string Name, string HlslType, int Index)> resourceTextureFields)
         {
-            using ImmutableArrayBuilder<(string, string)> values = ImmutableArrayBuilder<(string, string)>.Rent();
-            using ImmutableArrayBuilder<(string, string, int)> resourceTextures = ImmutableArrayBuilder<(string, string, int)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> values = new();
+            using ImmutableArrayBuilder<(string, string, int)> resourceTextures = new();
 
             foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -199,7 +198,7 @@ partial class D2DPixelShaderDescriptorGenerator
             IDictionary<IFieldSymbol, string> constantDefinitions,
             out bool needsD2D1RequiresScenePosition)
         {
-            using ImmutableArrayBuilder<(string, string, string?)> builder = ImmutableArrayBuilder<(string, string, string?)>.Rent();
+            using ImmutableArrayBuilder<(string, string, string?)> builder = new();
 
             needsD2D1RequiresScenePosition = false;
 
@@ -280,7 +279,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
             string? entryPoint = null;
 
-            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> methods = new();
 
             needsD2D1RequiresScenePosition = false;
 
@@ -358,7 +357,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         private static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> builder = new();
 
             foreach (KeyValuePair<IFieldSymbol, string> constant in constantDefinitions)
             {
@@ -385,7 +384,7 @@ partial class D2DPixelShaderDescriptorGenerator
             IEnumerable<INamedTypeSymbol> types,
             IReadOnlyDictionary<IMethodSymbol, MethodDeclarationSyntax> instanceMethods)
         {
-            using ImmutableArrayBuilder<(string, string)> builder = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> builder = new();
 
             IReadOnlyCollection<INamedTypeSymbol> invalidTypes;
 
@@ -527,17 +526,17 @@ partial class D2DPixelShaderDescriptorGenerator
             ImmutableArray<int> inputComplexIndices,
             bool requiresScenePosition)
         {
-            StringBuilder hlslBuilder = new();
+            using ImmutableArrayBuilder<char> hlslBuilder = new();
 
             void AppendLF()
             {
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.Add('\n');
             }
 
             void AppendLineAndLF(string text)
             {
-                _ = hlslBuilder.Append(text);
-                _ = hlslBuilder.Append('\n');
+                hlslBuilder.AddRange(text.AsSpan());
+                hlslBuilder.Add('\n');
             }
 
             // Header

@@ -71,7 +71,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 using (writer.WriteBlock())
                 {
-                    using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> dataMembers = ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>>.Rent();
+                    using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> dataMembers = new();
 
                     RegisterAdditionalDataMemberSyntax(info, dataMembers);
                     ResourceTextureDescriptions.RegisterAdditionalDataMemberSyntax(info, dataMembers);

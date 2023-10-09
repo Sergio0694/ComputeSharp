@@ -78,7 +78,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
             IMethodSymbol methodSymbol,
             out ImmutableArray<DiagnosticInfo> diagnostics)
         {
-            using ImmutableArrayBuilder<DiagnosticInfo> builder = ImmutableArrayBuilder<DiagnosticInfo>.Rent();
+            using ImmutableArrayBuilder<DiagnosticInfo> builder = new();
 
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -136,7 +136,7 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
                 .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
-            using ImmutableArrayBuilder<(string, string)> methods = ImmutableArrayBuilder<(string, string)>.Rent();
+            using ImmutableArrayBuilder<(string, string)> methods = new();
 
             // Emit the extracted local functions
             foreach (KeyValuePair<string, LocalFunctionStatementSyntax> localFunction in shaderSourceRewriter.LocalFunctions)
