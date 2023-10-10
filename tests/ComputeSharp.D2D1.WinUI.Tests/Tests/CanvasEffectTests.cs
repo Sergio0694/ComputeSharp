@@ -13,8 +13,6 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
 
-#nullable enable
-
 namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]

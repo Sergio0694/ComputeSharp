@@ -37,9 +37,9 @@ The sample app is available in the Microsoft Store, showcasing several pixel sha
 | **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming |
 | **ComputeSharp.D3D12MemoryAllocator** | An extension for **ComputeSharp**, adding D3D12MA as the memory allocator for graphics resources. |
 | **ComputeSharp.Pix** | An extension library for **ComputeSharp**, enabling PIX support to produce debugging information |
-| **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** |
-| **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** |
+| **ComputeSharp.WinUI** | A WinUI 3 library with controls to render DX12 shaders powered by **ComputeSharp** |
 | **ComputeSharp.D2D1** | A library to write D2D1 pixel shaders entirely with C# code, and to easily register and create ID2D1Effect-s from them |
+| **ComputeSharp.D2D1.WinUI** | A WinUI 3 library with custom effects for Win2D powered by **ComputeSharp.D2D1** |
 
 Preview builds are available at https://pkgs.computesharp.dev/index.json (as well as GitHub Packages).
 

@@ -6,8 +6,6 @@ using TerraFX.Interop.Windows;
 using WinRT;
 using WinRT.Interop;
 
-#nullable enable
-
 namespace ComputeSharp.D2D1.WinUI.Tests.Helpers;
 
 /// <summary>

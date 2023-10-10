@@ -18,9 +18,6 @@
     <!-- Ignore warnings for usings outside of a namespace (needed for some Vortice.Win32 type aliases) -->
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
 
-    <!-- Unnecessary #nullable enable directives (for shared projects across UWP) -->
-    <NoWarn>$(NoWarn);IDE0240</NoWarn>
-
     <!-- Missing readonly modifier for readonly struct members (not needed in tests) -->
     <NoWarn>$(NoWarn);IDE0251</NoWarn>
 
