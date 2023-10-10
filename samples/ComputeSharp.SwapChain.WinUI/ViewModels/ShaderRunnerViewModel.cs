@@ -1,10 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using ComputeSharp.SwapChain.Core.Shaders;
-#if WINDOWS_UWP
-using ComputeSharp.Uwp;
-#else
 using ComputeSharp.WinUI;
-#endif
 
 namespace ComputeSharp.SwapChain.Core.ViewModels;
 

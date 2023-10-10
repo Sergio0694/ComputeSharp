@@ -8,13 +8,7 @@ using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.Shaders;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
 using ComputeSharp.SwapChain.Shaders;
-#if WINDOWS_UWP
-using ComputeSharp.Uwp;
-#else
 using ComputeSharp.WinUI;
-#endif
-
-#nullable enable
 
 namespace ComputeSharp.SwapChain.Core.ViewModels;
 

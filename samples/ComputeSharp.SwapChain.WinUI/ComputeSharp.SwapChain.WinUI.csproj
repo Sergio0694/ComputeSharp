@@ -11,7 +11,6 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
-    <NoWarn>$(NoWarn);IDE0240</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-#nullable enable
-
 namespace ComputeSharp.SwapChain.Core.Services;
 
 /// <summary>

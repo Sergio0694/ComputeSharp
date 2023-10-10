@@ -1,7 +1,5 @@
 using System;
 
-#nullable enable
-
 namespace ComputeSharp.SwapChain.Core.Services;
 
 /// <summary>

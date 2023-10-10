@@ -1,13 +1,7 @@
 using System;
 using ComputeSharp.D2D1;
 using ComputeSharp.D2D1.Descriptors;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp;
-#else
 using ComputeSharp.D2D1.WinUI;
-#endif
-
-#nullable enable
 
 namespace ComputeSharp.SwapChain.Core.Shaders;
 
