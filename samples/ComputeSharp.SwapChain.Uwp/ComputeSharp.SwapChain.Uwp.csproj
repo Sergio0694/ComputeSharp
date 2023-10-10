@@ -165,6 +165,12 @@
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.2.1</Version>
     </PackageReference>
+    <PackageReference Include="ComputeSharp.D2D1.Uwp">
+      <Version>2.2.0-preview1</Version>
+    </PackageReference>
+    <PackageReference Include="ComputeSharp.Uwp">
+      <Version>2.2.0-preview1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.2</Version>
     </PackageReference>
@@ -186,16 +192,6 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.5</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\D2D1AnimatedPixelShaderPanel.xaml">
