@@ -13,6 +13,4 @@
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
-
-  <Import Project="..\ComputeSharp.UI\ComputeSharp.UI.projitems" Label="Shared" />
 </Project>

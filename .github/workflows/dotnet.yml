@@ -50,10 +50,6 @@ jobs:
       run: dotnet pack src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj -c Release
     - name: Build ComputeSharp.Pix package
       run: dotnet pack src\ComputeSharp.Pix\ComputeSharp.Pix.csproj -c Release
-    - name: Build ComputeSharp.Uwp package
-      run: msbuild src\ComputeSharp.Uwp\ComputeSharp.Uwp.csproj /restore -t:pack /p:Configuration=Release
-    - name: Build ComputeSharp.D2D1.Uwp package
-      run: msbuild src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.WinUI package
       run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj /restore -t:pack /p:Configuration=Release
     - name: Build ComputeSharp.D2D1.WinUI package
@@ -152,35 +148,19 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
-        framework: [uwp, wasdk]
     runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
-
-      # Build the D2D1 UWP unit tests
-    - if: matrix.framework == 'uwp'
-      name: Build ComputeSharp.D2D1.Uwp.Tests
-      run: msbuild tests\ComputeSharp.D2D1.Uwp.Tests\ComputeSharp.D2D1.Uwp.Tests.csproj /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
-
-      # Run the D2D1 UWP unit tests with VS Test (need to use vswhere to find the VS Test runner)
-    - if: matrix.framework == 'uwp'
-      name: Run ComputeSharp.D2D1.Uwp.Tests
-      run: >
-        $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
-        $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
-        & $vstest_path /Platform:x64 /framework:frameworkuap10 tests\ComputeSharp.D2D1.Uwp.Tests\bin\x64\${{matrix.configuration}}\ComputeSharp.D2D1.Uwp.Tests.build.appxrecipe
     
       # Build the D2D1 WinAppSDK unit tests
-    - if: matrix.framework == 'wasdk'
-      name: Build ComputeSharp.D2D1.WinUI.Tests
+    - name: Build ComputeSharp.D2D1.WinUI.Tests
       run: msbuild tests\ComputeSharp.D2D1.WinUI.Tests\ComputeSharp.D2D1.WinUI.Tests.csproj /restore -t:build /p:Configuration=${{matrix.configuration}} /p:Platform=x64
 
       # Run the D2D1 WinAppSDK unit tests with VS Test again
-    - if: matrix.framework == 'wasdk'
-      name: Run ComputeSharp.D2D1.WinUI.Tests
+    - name: Run ComputeSharp.D2D1.WinUI.Tests
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';

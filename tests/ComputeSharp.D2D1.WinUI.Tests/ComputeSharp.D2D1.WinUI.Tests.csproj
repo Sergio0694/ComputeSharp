@@ -95,7 +95,5 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
-
-  <Import Project="..\ComputeSharp.D2D1.UI.Tests\ComputeSharp.D2D1.UI.Tests.projitems" Label="Shared" />
   <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
 </Project>
