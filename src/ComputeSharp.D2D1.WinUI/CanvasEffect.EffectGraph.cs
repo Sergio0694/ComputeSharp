@@ -2,11 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Graphics.Canvas;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp;
-#else
 namespace ComputeSharp.D2D1.WinUI;
-#endif
 
 /// <inheritdoc/>
 partial class CanvasEffect

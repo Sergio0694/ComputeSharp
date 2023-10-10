@@ -1,6 +1,4 @@
-#if !WINDOWS_UWP
 using System.Diagnostics.CodeAnalysis;
-#endif
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
@@ -10,11 +8,7 @@ using Microsoft.Graphics.Canvas.Effects;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp;
-#else
 namespace ComputeSharp.D2D1.WinUI;
-#endif
 
 /// <summary>
 /// A custom <see cref="ICanvasEffect"/> implementation powered by a supplied shader type.
@@ -76,7 +70,6 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     /// <summary>
     /// Creates a new <see cref="PixelShaderEffect{T}"/> instance.
     /// </summary>
-#if !WINDOWS_UWP
     // Workaround for trimming bug in custom COM/WinRT components with CsWinRT. Without manually preserving metadata for
     // these types, using them will throw an InvalidCastException (see https://github.com/microsoft/CsWinRT/issues/1319).
     [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasImageInterop.Interface))]
@@ -85,7 +78,6 @@ public sealed partial class PixelShaderEffect<T> : IReferenceTrackedObject, ICan
     [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasFactoryNative.Interface.Vftbl))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasEffectFactoryNative.Interface))]
     [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(ICanvasEffectFactoryNative.Interface.Vftbl))]
-#endif
     public PixelShaderEffect()
     {
         using ReferenceTracker.Lease _0 = ReferenceTracker.Create(this, out this.referenceTracker);

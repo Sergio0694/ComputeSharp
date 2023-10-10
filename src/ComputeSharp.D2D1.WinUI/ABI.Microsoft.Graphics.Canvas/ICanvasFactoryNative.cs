@@ -3,13 +3,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.Windows;
-#if WINDOWS_UWP
-using TerraFX.Interop.WinRT;
-#else
 using WinRT;
 using WinRT.Interop;
 using IInspectable = TerraFX.Interop.WinRT.IInspectable;
-#endif
 
 #pragma warning disable CS0649, IDE1006
 
@@ -151,7 +147,6 @@ internal unsafe struct ICanvasFactoryNative
             effectId);
     }
 
-#if !WINDOWS_UWP
     /// <summary>
     /// The managed interface for <see cref="ICanvasFactoryNative"/>.
     /// </summary>
@@ -172,5 +167,4 @@ internal unsafe struct ICanvasFactoryNative
             public static readonly IntPtr AbiToProjectionVftablePtr = IUnknownVftbl.AbiToProjectionVftblPtr;
         }
     }
-#endif
 }

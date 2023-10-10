@@ -4,10 +4,6 @@ using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
 using ComputeSharp.D2D1.WinUI.Tests.Helpers;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp;
-#else
-#endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;

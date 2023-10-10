@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Collections;
-#else
 namespace ComputeSharp.D2D1.WinUI.Collections;
-#endif
 
 /// <summary>
 /// Shared helpers for all types implementing <see cref="IFixedCountList{T}"/>.

@@ -75,7 +75,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\RO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WinRT\winrt\hstring\HSTRING_HEADER.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinRT\winrt\roapi\WinRT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinRT\winrt\winstring\WinRT.cs" />
   </ItemGroup>
 </Project>

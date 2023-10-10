@@ -1,20 +1,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-#if WINDOWS_UWP
-using System.Runtime.InteropServices;
-using ComputeSharp.D2D1.Extensions;
-#endif
 using TerraFX.Interop.Windows;
-#if !WINDOWS_UWP
 using WinRT;
-#endif
 using IInspectable = TerraFX.Interop.WinRT.IInspectable;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Helpers;
-#else
 namespace ComputeSharp.D2D1.WinUI.Helpers;
-#endif
 
 /// <summary>
 /// A helper type to handle marshalling of RCW instances.
@@ -31,12 +21,7 @@ internal static unsafe class RcwMarshaller
     public static T GetOrCreateManagedInterface<T>(IUnknown* nativeObject)
         where T : class
     {
-#if WINDOWS_UWP
-        // On UWP, Marshal.GetObjectForIUnknown handles all the marshalling/wrapping logic
-        return (T)Marshal.GetObjectForIUnknown((IntPtr)nativeObject);
-#else
         return MarshalInterface<T>.FromAbi((IntPtr)nativeObject);
-#endif
     }
 
     /// <summary>
@@ -49,18 +34,7 @@ internal static unsafe class RcwMarshaller
     public static void GetNativeObject<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.Interfaces)] T>(T managedObject, IInspectable** nativeObject)
         where T : class
     {
-#if WINDOWS_UWP
-        using ComPtr<IUnknown> unknownObject = default;
-
-        // On UWP, due to built-in COM/WinRT support, Marshal.GetIUnknownForObject can handle all the logic.
-        // We get back an IUnknown* pointer, so we need to QueryInterface for IInspectable* ourselves.
-        unknownObject.Attach((IUnknown*)Marshal.GetIUnknownForObject(managedObject));
-
-        unknownObject.CopyTo(nativeObject).Assert();
-#else
-        // On WinUI 3, delegate the RCW unwrapping or CCW creation logic to CsWinRT's APIs
         *nativeObject = (IInspectable*)MarshalInspectable<T>.FromManaged(managedObject);
-#endif
     }
 
     /// <summary>
@@ -78,15 +52,9 @@ internal static unsafe class RcwMarshaller
     {
         using ComPtr<IUnknown> unknownObject = default;
 
-#if WINDOWS_UWP
-        unknownObject.Attach((IUnknown*)Marshal.GetIUnknownForObject(managedObject));
-
-        unknownObject.CopyTo(nativeObject).Assert();
-#else
         // Here we only want to get an IUnknown* pointer for a given interface, and then we'll do
         // QueryInterface ourselves to get the target COM type. So MarshalInterface<TFrom> is fine.
         unknownObject.Attach((IUnknown*)MarshalInterface<TFrom>.FromManaged(managedObject));
-#endif
 
         return unknownObject.CopyTo(nativeObject);
     }

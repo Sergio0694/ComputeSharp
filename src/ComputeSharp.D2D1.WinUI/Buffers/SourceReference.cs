@@ -1,22 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp.Extensions;
-using ComputeSharp.D2D1.Uwp.Helpers;
-#else
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Windows.Graphics.Effects;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Buffers;
-#else
 namespace ComputeSharp.D2D1.WinUI.Buffers;
-#endif
 
 /// <summary>
 /// A wrapper type for an input <see cref="IGraphicsEffectSource"/> and its underlying native D2D images.

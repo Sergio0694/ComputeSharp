@@ -4,11 +4,7 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Extensions;
-#else
 namespace ComputeSharp.D2D1.WinUI.Extensions;
-#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ICanvasDevice"/> type.

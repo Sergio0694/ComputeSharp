@@ -3,11 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Windows.Graphics.Effects;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Buffers;
-#else
 namespace ComputeSharp.D2D1.WinUI.Buffers;
-#endif
 
 /// <summary>
 /// A fixed buffer type containing 16 <see cref="IGraphicsEffectSource"/> fields.

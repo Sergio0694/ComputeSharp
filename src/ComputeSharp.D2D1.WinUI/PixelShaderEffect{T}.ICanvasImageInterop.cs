@@ -4,13 +4,8 @@ using System.Threading;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp.Extensions;
-using ComputeSharp.D2D1.Uwp.Helpers;
-#else
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
-#endif
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -19,11 +14,7 @@ using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_DEVICE_ASSOCIATION_TYPE;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp;
-#else
 namespace ComputeSharp.D2D1.WinUI;
-#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

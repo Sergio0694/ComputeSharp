@@ -4,10 +4,8 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop;
-#if !WINDOWS_UWP
 using WinRT;
 using WinRT.Interop;
-#endif
 
 #pragma warning disable CS0649, IDE1006
 
@@ -86,26 +84,15 @@ internal unsafe struct ICanvasImageInterop
     /// The managed implementation of <see cref="ICanvasImageInterop"/>.
     /// </summary>
     [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
-#if WINDOWS_UWP
-    [ComImport]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-#else
     [WindowsRuntimeType]
     [WindowsRuntimeHelperType(typeof(Interface))]
-#endif
     public interface Interface
     {
         /// <inheritdoc cref="ICanvasImageInterop.GetDevice"/>
-#if WINDOWS_UWP
-        [PreserveSig]
-#endif
         [return: NativeTypeName("HRESULT")]
         int GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type);
 
         /// <inheritdoc cref="ICanvasImageInterop.GetD2DImage"/>
-#if WINDOWS_UWP
-        [PreserveSig]
-#endif
         [return: NativeTypeName("HRESULT")]
         int GetD2DImage(
             ICanvasDevice* device,
@@ -115,7 +102,6 @@ internal unsafe struct ICanvasImageInterop
             float* realizeDpi,
             ID2D1Image** ppImage);
 
-#if !WINDOWS_UWP
         /// <summary>
         /// The vtable type for <see cref="Interface"/>.
         /// </summary>
@@ -198,6 +184,5 @@ internal unsafe struct ICanvasImageInterop
                 }
             }
         }
-#endif
     }
 }

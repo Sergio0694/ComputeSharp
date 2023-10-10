@@ -1,15 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
-#if WINDOWS_UWP
-using System.Runtime.InteropServices.WindowsRuntime;
-#endif
 using Microsoft.Graphics.Canvas;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !WINDOWS_UWP
 using WinRT;
 using WinRT.Interop;
-#endif
 
 #nullable enable
 
@@ -30,15 +25,9 @@ internal static class Win2DHelper
     {
         using ComPtr<IUnknown> activationFactoryUnknown = default;
 
-#if WINDOWS_UWP
-        IActivationFactory activationFactory = WindowsRuntimeMarshal.GetActivationFactory(typeof(CanvasDevice));
-
-        activationFactoryUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(activationFactory));
-#else
         ICanvasFactoryNative activationFactory = CanvasDevice.As<ICanvasFactoryNative>();
 
         activationFactoryUnknown.Attach((IUnknown*)MarshalInterface<ICanvasFactoryNative>.FromManaged(activationFactory));
-#endif
 
         using ComPtr<IUnknown> canvasFactoryNativeUnknown = default;
 
@@ -53,11 +42,7 @@ internal static class Win2DHelper
 
         if (canvasDevice is not null)
         {
-#if WINDOWS_UWP
-            canvasDeviceUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(canvasDevice));
-#else
             canvasDeviceUnknown.Attach((IUnknown*)MarshalInspectable<CanvasDevice>.FromManaged(canvasDevice));
-#endif
         }
 
         using ComPtr<IUnknown> canvasDeviceInterfaceUnknown = default;
@@ -83,11 +68,7 @@ internal static class Win2DHelper
         Marshal.ThrowExceptionForHR(hresult);
 
         // Get or create a managed object for the native object
-#if WINDOWS_UWP
-        return Marshal.GetObjectForIUnknown((IntPtr)wrapperUnknown.Get());
-#else
         return MarshalInspectable<object>.FromAbi((IntPtr)wrapperUnknown.Get());
-#endif
     }
 
     /// <summary>
@@ -100,11 +81,7 @@ internal static class Win2DHelper
     {
         using ComPtr<IUnknown> effectUnknown = default;
 
-#if WINDOWS_UWP
-        effectUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(canvasImage));
-#else
         effectUnknown.Attach((IUnknown*)MarshalInterface<ICanvasImage>.FromManaged(canvasImage));
-#endif
 
         using ComPtr<IUnknown> canvasImageInteropUnknown = default;
 
@@ -117,11 +94,7 @@ internal static class Win2DHelper
 
         using ComPtr<IUnknown> canvasDeviceUnknown = default;
 
-#if WINDOWS_UWP
-        canvasDeviceUnknown.Attach((IUnknown*)Marshal.GetIUnknownForObject(canvasDevice));
-#else
         canvasDeviceUnknown.Attach((IUnknown*)MarshalInspectable<CanvasDevice>.FromManaged(canvasDevice));
-#endif
 
         using ComPtr<IUnknown> canvasDeviceInterfaceUnknown = default;
 
@@ -145,7 +118,6 @@ internal static class Win2DHelper
         Marshal.ThrowExceptionForHR(hresult);
     }
 
-#if !WINDOWS_UWP
     /// <summary>
     /// The managed interface for <see cref="ICanvasFactoryNative"/>.
     /// </summary>
@@ -166,5 +138,4 @@ internal static class Win2DHelper
             public static readonly IntPtr AbiToProjectionVftablePtr = IUnknownVftbl.AbiToProjectionVftblPtr;
         }
     }
-#endif
 }

@@ -3,22 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.Windows;
-#if WINDOWS_UWP
-using TerraFX.Interop.WinRT;
-#endif
 using Windows.Graphics.Effects;
-#if !WINDOWS_UWP
 using WinRT;
-#endif
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Helpers;
-#else
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
 using IInspectable = TerraFX.Interop.WinRT.IInspectable;
-#endif
 
 /// <summary>
 /// A helper type to replicate Win2D's <c>ResourceManager</c> type.
@@ -115,32 +106,6 @@ internal static unsafe class ResourceManager
     /// <param name="factoryNative">A pointer to the resulting activation factory.</param>
     private static void GetActivationFactory(ICanvasFactoryNative** factoryNative)
     {
-#if WINDOWS_UWP
-        const string activatableClassId = "Microsoft.Graphics.Canvas.CanvasDevice";
-
-        // On UWP, the WinRT types from Win2D are automatically registered for activation.
-        // This means we can simply use RoGetActivationFactory to retrieve the factory.
-        fixed (char* pActivatableClassId = activatableClassId)
-        {
-            HSTRING_HEADER hStringHeaderActivatableClassId;
-            HSTRING hStringActivatableClass;
-
-            // Create a fast-pass HSTRING for "Microsoft.Graphics.Canvas.CanvasDevice"
-            WinRT.WindowsCreateStringReference(
-                sourceString: (ushort*)pActivatableClassId,
-                length: (uint)activatableClassId.Length,
-                hstringHeader: &hStringHeaderActivatableClassId,
-                @string: &hStringActivatableClass).Assert();
-
-            Guid canvasFactoryNativeId = typeof(ICanvasFactoryNative).GUID;
-
-            // Get the activation factory for CanvasDevice
-            WinRT.RoGetActivationFactory(
-                activatableClassId: hStringActivatableClass,
-                iid: &canvasFactoryNativeId,
-                factory: (void**)factoryNative).Assert();
-        }
-#else
         // On WinUI 3, the types are not guaranteed to be registered for activation. Additionally,
         // for concistency with other types, we just use the built-in T.As<I>() method, which will
         // automatically handle fallback logic to resolve types to activate if they're not registered.
@@ -148,6 +113,5 @@ internal static unsafe class ResourceManager
         ICanvasFactoryNative.Interface canvasDeviceActivationFactory = CanvasDevice.As<ICanvasFactoryNative.Interface>();
 
         *factoryNative = (ICanvasFactoryNative*)MarshalInterface<ICanvasFactoryNative.Interface>.FromManaged(canvasDeviceActivationFactory);
-#endif
     }
 }

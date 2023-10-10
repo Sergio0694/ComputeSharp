@@ -3,22 +3,13 @@ using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp.Extensions;
-using ComputeSharp.D2D1.Uwp.Helpers;
-#else
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp;
-#else
 namespace ComputeSharp.D2D1.WinUI;
-#endif
 
 /// <inheritdoc/>
 unsafe partial class PixelShaderEffect<T>

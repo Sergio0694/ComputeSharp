@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Collections;
-#else
 namespace ComputeSharp.D2D1.WinUI.Collections;
-#endif
 
 /// <summary>
 /// An interface for a list with a fixed collection.

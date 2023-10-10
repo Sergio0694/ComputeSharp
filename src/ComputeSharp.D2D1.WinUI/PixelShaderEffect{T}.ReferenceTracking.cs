@@ -1,18 +1,10 @@
 using System;
 using ComputeSharp.Interop;
 using System.Runtime.CompilerServices;
-#if WINDOWS_UWP
-using ComputeSharp.D2D1.Uwp.Helpers;
-#else
 using ComputeSharp.D2D1.WinUI.Helpers;
-#endif
 using TerraFX.Interop.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp;
-#else
 namespace ComputeSharp.D2D1.WinUI;
-#endif
 
 /// <inheritdoc/>
 partial class PixelShaderEffect<T>

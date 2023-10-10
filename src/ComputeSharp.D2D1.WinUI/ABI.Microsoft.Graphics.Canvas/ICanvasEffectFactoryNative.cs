@@ -4,10 +4,8 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !WINDOWS_UWP
 using WinRT;
 using WinRT.Interop;
-#endif
 using IInspectable = TerraFX.Interop.WinRT.IInspectable;
 
 #pragma warning disable CS0649, IDE1006
@@ -78,23 +76,14 @@ internal unsafe struct ICanvasEffectFactoryNative
     /// The managed implementation of <see cref="ICanvasEffectFactoryNative"/>.
     /// </summary>
     [Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
-#if WINDOWS_UWP
-    [ComImport]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-#else
     [WindowsRuntimeType]
     [WindowsRuntimeHelperType(typeof(Interface))]
-#endif
     public interface Interface
     {
         /// <inheritdoc cref="ICanvasEffectFactoryNative.CreateWrapper"/>
-#if WINDOWS_UWP
-        [PreserveSig]
-#endif
         [return: NativeTypeName("HRESULT")]
         int CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper);
 
-#if !WINDOWS_UWP
         /// <summary>
         /// The vtable type for <see cref="Interface"/>.
         /// </summary>
@@ -147,6 +136,5 @@ internal unsafe struct ICanvasEffectFactoryNative
                 }
             }
         }
-#endif
     }
 }

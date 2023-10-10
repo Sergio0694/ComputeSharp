@@ -10,11 +10,7 @@ using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.D2D1.Uwp.Extensions;
-#else
 namespace ComputeSharp.D2D1.WinUI.Extensions;
-#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ID2D1Effect"/> type.
