@@ -5,11 +5,7 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using Win32 = TerraFX.Interop.Windows.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.Uwp.Extensions;
-#else
 namespace ComputeSharp.WinUI.Extensions;
-#endif
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="IDXGIAdapter"/> type.

@@ -1,10 +1,6 @@
 using System;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.Uwp;
-#else
 namespace ComputeSharp.WinUI;
-#endif
 
 /// <summary>
 /// A simple <see cref="IShaderRunner"/> implementation powered by a supplied shader type.

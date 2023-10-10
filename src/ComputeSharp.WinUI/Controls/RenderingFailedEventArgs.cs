@@ -1,10 +1,6 @@
 using System;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.Uwp;
-#else
 namespace ComputeSharp.WinUI;
-#endif
 
 /// <summary>
 /// The arguments for the <see cref="AnimatedComputeShaderPanel.RenderingFailed"/> and <see cref="ComputeShaderPanel.RenderingFailed"/> events.

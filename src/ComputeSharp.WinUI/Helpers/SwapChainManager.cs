@@ -1,40 +1,21 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-#if WINDOWS_UWP
-using System.Runtime.InteropServices;
-#endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
-#if WINDOWS_UWP
-using ComputeSharp.Uwp.Extensions;
-#else
 using ComputeSharp.WinUI.Extensions;
-#endif
-#if !WINDOWS_UWP
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
-#if WINDOWS_UWP
-using Windows.Foundation;
-using Windows.UI.Xaml.Controls;
-using Windows.System;
-#else
 using Windows.Foundation;
 using WinRT;
-#endif
 using Win32 = TerraFX.Interop.Windows.Windows;
 
-#if WINDOWS_UWP
-namespace ComputeSharp.Uwp.Helpers;
-#else
 namespace ComputeSharp.WinUI.Helpers;
-#endif
 
 /// <summary>
 /// A type managing rendering on a target swap chain object.
@@ -243,17 +224,11 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         {
             using ComPtr<IUnknown> swapChainPanel = default;
 
-#if WINDOWS_UWP
-            swapChainPanel.Attach((IUnknown*)Marshal.GetIUnknownForObject(owner));
-
-            swapChainPanel.CopyTo(swapChainPanelNative).Assert();
-#else
             swapChainPanel.Attach((IUnknown*)((IWinRTObject)owner).NativeObject.GetRef());
 
             swapChainPanel.CopyTo(
                 (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(new Guid(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25))),
                 (void**)swapChainPanelNative).Assert();
-#endif
         }
 
         // Get the underlying ID3D12Device in use
