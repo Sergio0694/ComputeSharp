@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <SupportedOSVersion>windows6.1</SupportedOSVersion>
   </PropertyGroup>
 
@@ -10,11 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
-  </ItemGroup>
-
-  <!-- Explicitly reference System.Runtime.CompilerServices.Unsafe on .NET Standard 2.0 to get Unsafe.SkipInit  -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
   <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
