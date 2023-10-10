@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,16 +13,8 @@
     <InternalsVisibleTo Include="ComputeSharp.D2D1.WinUI, PublicKey=$(AssemblySignPublicKey)" />
   </ItemGroup>
 
-  <!-- .NET Standard 2.0 polyfill packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-  </ItemGroup>
-
   <!-- T4 template generation service (the .tt/.g.cs files are resolved in the .targets file) -->
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
-
-  <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 </Project>
