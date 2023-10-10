@@ -143,7 +143,6 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
-    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.Uwp\ComputeSharp.D2D1.Uwp.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
   </ItemGroup>
   <Import Project="..\ComputeSharp.D2D1.UI.Tests\ComputeSharp.D2D1.UI.Tests.projitems" Label="Shared" />
