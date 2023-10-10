@@ -11,7 +11,6 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
-    <NoWarn>$(NoWarn);IDE0240</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -63,15 +62,7 @@
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
-  <!-- Resource dictionary for D2D1AnimatedPixelShaderPanel -->
-  <ItemGroup>
-    <None Remove="Controls\D2D1AnimatedPixelShaderPanel.xaml" />
-    <Page Update="Controls\D2D1AnimatedPixelShaderPanel.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-
-  <Import Project="..\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems" Label="Shared" />
+  <!-- Shared projects for the DX12/D2D1 shaders -->
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems" Label="Shared" />
 </Project>
