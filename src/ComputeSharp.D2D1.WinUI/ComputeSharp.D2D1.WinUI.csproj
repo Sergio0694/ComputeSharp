@@ -20,6 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\ComputeSharp\Graphics\Interop\IReferenceTrackedObject.cs" Link="Interop\IReferenceTrackedObject.cs" />
+    <Compile Include="..\ComputeSharp\Graphics\Interop\ReferenceTracker.cs" Link="Interop\ReferenceTracker.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
   </ItemGroup>
 
