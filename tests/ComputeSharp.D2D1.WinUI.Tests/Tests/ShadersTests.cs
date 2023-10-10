@@ -3,11 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using ComputeSharp.D2D1.Descriptors;
-using ComputeSharp.D2D1.UI.Tests.Helpers;
+using ComputeSharp.D2D1.WinUI.Tests.Helpers;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
 #else
-using ComputeSharp.D2D1.WinUI;
 #endif
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using Microsoft.Graphics.Canvas;
@@ -17,7 +16,7 @@ using Windows.UI;
 
 #nullable enable
 
-namespace ComputeSharp.D2D1.UI.Tests;
+namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]
 [TestCategory("Shaders")]

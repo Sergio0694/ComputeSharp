@@ -2,18 +2,17 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
-using ComputeSharp.D2D1.UI.Tests.Helpers;
+using ComputeSharp.D2D1.WinUI.Tests.Helpers;
 #if WINDOWS_UWP
 using ComputeSharp.D2D1.Uwp;
 #else
-using ComputeSharp.D2D1.WinUI;
 #endif
 using Microsoft.Graphics.Canvas;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.D2D1.UI.Tests;
+namespace ComputeSharp.D2D1.WinUI.Tests;
 
 [TestClass]
 [TestCategory("PixelShaderEffect<T>")]

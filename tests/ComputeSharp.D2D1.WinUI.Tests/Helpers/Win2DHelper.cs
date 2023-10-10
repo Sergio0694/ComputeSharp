@@ -13,7 +13,7 @@ using WinRT.Interop;
 
 #nullable enable
 
-namespace ComputeSharp.D2D1.UI.Tests.Helpers;
+namespace ComputeSharp.D2D1.WinUI.Tests.Helpers;
 
 /// <summary>
 /// A helper type to marshal managed objects in unit tests.

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Graphics.Canvas;
 using Color = Windows.UI.Color;
 
-namespace ComputeSharp.D2D1.UI.Tests.Helpers;
+namespace ComputeSharp.D2D1.WinUI.Tests.Helpers;
 
 /// <summary>
 /// An tolerant image comparer type, inspired from <see href="https://github.com/SixLabors/ImageSharp">ImageSharp</see>.
