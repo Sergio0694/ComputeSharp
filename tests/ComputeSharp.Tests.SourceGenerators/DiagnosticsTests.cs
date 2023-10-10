@@ -1804,7 +1804,11 @@ public class DiagnosticsTests
             let reference = MetadataReference.CreateFromFile(assembly.Location)
             select reference;
 
-        CSharpCompilation compilation = CSharpCompilation.Create("original", new SyntaxTree[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        CSharpCompilation compilation = CSharpCompilation.Create(
+            "original",
+            new SyntaxTree[] { syntaxTree },
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
 
         IIncrementalGenerator generator = new TGenerator();
 

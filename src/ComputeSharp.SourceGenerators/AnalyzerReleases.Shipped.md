@@ -1,4 +1,4 @@
-﻿; Shipped analyzer releases
+; Shipped analyzer releases
 ; https://github.com/dotnet/roslyn-analyzers/blob/master/src/Microsoft.CodeAnalysis.Analyzers/ReleaseTrackingAnalyzers.Help.md
 
 ## Release 1.0
@@ -58,3 +58,4 @@ CMPS0048 | ComputeSharp.Shaders | Error | [Documentation](https://github.com/Ser
 CMPS0049 | ComputeSharp.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0050 | ComputeSharp.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0051 | ComputeSharp | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0052 | ComputeSharp.Shaders | Error | [Documentation](https://github.com/Sergio0694/ComputeSharp)

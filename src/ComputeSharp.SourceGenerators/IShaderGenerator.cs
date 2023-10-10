@@ -22,13 +22,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Check whether [SkipLocalsInit] can be used
-        IncrementalValueProvider<bool> canUseSkipLocalsInit =
-            context.CompilationProvider
-            .Select(static (compilation, _) =>
-                compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
-                compilation.HasAccessibleTypeWithMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute"));
-
         // Check whether or not dynamic shaders are supported
         IncrementalValueProvider<bool> supportsDynamicShaders =
             context.CompilationProvider
@@ -41,6 +34,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {
+                    // The source generator requires unsafe blocks to be enabled (eg. for pointers, [SkipLocalsInit], etc.)
+                    if (!context.SemanticModel.Compilation.IsAllowUnsafeBlocksEnabled())
+                    {
+                        return default;
+                    }
+
                     StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
 
                     // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
@@ -128,59 +127,56 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(dispatchIdInfo, static (context, item) =>
         {
             MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.DispatchId.Delegates);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, addSkipLocalsInitAttribute: false);
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetDispatchId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the LoadDispatchData() info (hierarchy and dispatch data info)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchDataInfo DispatchData) Info, bool CanUseSkipLocalsInit)> dispatchDataInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo DispatchData)> dispatchDataInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchData))
-            .Combine(canUseSkipLocalsInit);
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
 
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(
-                item.Info.DispatchData.Type,
-                item.Info.DispatchData.FieldInfos,
-                item.Info.DispatchData.ResourceCount,
-                item.Info.DispatchData.Root32BitConstantCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, loadDispatchDataMethod, item.CanUseSkipLocalsInit);
+                item.DispatchData.Type,
+                item.DispatchData.FieldInfos,
+                item.DispatchData.ResourceCount,
+                item.DispatchData.Root32BitConstantCount);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadDispatchDataMethod, addSkipLocalsInitAttribute: true);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the BuildHlslSource info (hierarchy, HLSL source and parsing options)
-        IncrementalValuesProvider<(((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Left, bool CanUseSkipLocalsInit) Left, bool SupportsDynamicShaders)> hlslSourceInfo =
+        IncrementalValuesProvider<((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Left, bool SupportsDynamicShaders)> hlslSourceInfo =
             shaderInfoWithErrors
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource))
-            .Combine(canUseSkipLocalsInit)
             .Combine(supportsDynamicShaders);
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.Left.HlslShaderSource, item.SupportsDynamicShaders, item.Left.Left.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Left.Hierarchy, buildHlslStringMethod, item.Left.CanUseSkipLocalsInit);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.HlslShaderSource, item.SupportsDynamicShaders, item.Left.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
 
-            context.AddSource($"{item.Left.Left.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, DispatchMetadataInfo DispatchMetadata) Info, bool CanUseSkipLocalsInit)> dispatchMetadataInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo DispatchMetadata)> dispatchMetadataInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchMetadata))
-            .Combine(canUseSkipLocalsInit);
+            .Select(static (item, _) => (item.Hierarchy, item.DispatchMetadata));
 
         // Generate the LoadDispatchMetadata() methods
         context.RegisterSourceOutput(dispatchMetadataInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Info.DispatchMetadata);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, buildHlslStringMethod, item.CanUseSkipLocalsInit);
+            MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.DispatchMetadata);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Transform the raw HLSL source to compile (this step aggregates the HLSL source to ensure compilation is only done for actual HLSL changes)
@@ -232,7 +228,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(embeddedBytecodeInfo, static (context, item) =>
         {
             MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Info.EmbeddedBytecode, item.SupportsDynamicShaders, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, tryGetBytecodeMethod, canUseSkipLocalsInit: false);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, tryGetBytecodeMethod, addSkipLocalsInitAttribute: false);
             SourceText text = fixup(compilationUnit);
 
             context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);

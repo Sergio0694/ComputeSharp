@@ -60,12 +60,12 @@ partial class IShaderGenerator
     /// </summary>
     /// <param name="hierarchyInfo">The <see cref="HierarchyInfo"/> instance for the current type.</param>
     /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> item to insert.</param>
-    /// <param name="canUseSkipLocalsInit">Whether <c>[SkipLocalsInit]</c> can be used.</param>
+    /// <param name="addSkipLocalsInitAttribute">Whether <c>[SkipLocalsInit]</c> should be used.</param>
     /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="methodDeclaration"/>.</returns>
     private static CompilationUnitSyntax GetCompilationUnitFromMethod(
         HierarchyInfo hierarchyInfo,
         MethodDeclarationSyntax methodDeclaration,
-        bool canUseSkipLocalsInit)
+        bool addSkipLocalsInitAttribute)
     {
         // Method attributes
         List<AttributeListSyntax> attributes = new()
@@ -86,8 +86,8 @@ partial class IShaderGenerator
                     Literal("This method is not intended to be used directly by user code"))))))
         };
 
-        // Add [SkipLocalsInit] if the target project allows it
-        if (canUseSkipLocalsInit)
+        // Add [SkipLocalsInit] if needed
+        if (addSkipLocalsInitAttribute)
         {
             attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
         }
