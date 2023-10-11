@@ -161,15 +161,15 @@ jobs:
     - name: Build and run ComputeSharp.Sample
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.exe
+        samples\ComputeSharp.Sample\bin\x64\Release\net6.0\win-x64\ComputeSharp.Sample.exe
     - name: Build and run ComputeSharp.Sample.FSharp
       run: >
         dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.Sample.FSharp.exe
+        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\net6.0\win-x64\ComputeSharp.Sample.FSharp.exe
     - name: Build and run ComputeSharp.ImageProcessing.csproj
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.ImageProcessing\bin\x64\Release\${{matrix.framework}}\win-x64\ComputeSharp.ImageProcessing.exe
+        samples\ComputeSharp.ImageProcessing\bin\x64\Release\net6.0\win-x64\ComputeSharp.ImageProcessing.exe
 
   # Run the NativeAOT samples as well
   run-samples-aot:

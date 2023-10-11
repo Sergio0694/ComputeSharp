@@ -42,7 +42,7 @@ public abstract class NativeLibrariesResolverTestsBase
     {
         CleanSampleProject(configuration, rid);
 
-        Assert.AreEqual(0, Exec(SampleProjectDirectory, "dotnet", $"run -c {configuration} -f net6.0 {ToOption(rid)}"));
+        Assert.AreEqual(0, Exec(SampleProjectDirectory, "dotnet", $"run -c {configuration} {ToOption(rid)}"));
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public abstract class NativeLibrariesResolverTestsBase
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string realtivePathToDll = Path.Combine("bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}", $"{SampleProjectName}.dll");
+        string realtivePathToDll = Path.Combine("bin", $"{configuration}", "net7.0", $"{ToDirectory(rid)}", $"{SampleProjectName}.dll");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory, "dotnet", realtivePathToDll));
     }
@@ -70,7 +70,7 @@ public abstract class NativeLibrariesResolverTestsBase
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string pathToDllDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}");
+        string pathToDllDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net7.0", $"{ToDirectory(rid)}");
 
         Assert.AreEqual(0, Exec(pathToDllDirectory, "dotnet", $"{SampleProjectName}.dll"));
     }
@@ -85,7 +85,7 @@ public abstract class NativeLibrariesResolverTestsBase
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string relativePathToAppHost = Path.Combine("bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}", $"{SampleProjectName}.exe");
+        string relativePathToAppHost = Path.Combine("bin", $"{configuration}", "net7.0", $"{ToDirectory(rid)}", $"{SampleProjectName}.exe");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory, relativePathToAppHost, ""));
     }
@@ -100,7 +100,7 @@ public abstract class NativeLibrariesResolverTestsBase
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string pathToAppHostDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}");
+        string pathToAppHostDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net7.0", $"{ToDirectory(rid)}");
 
         Assert.AreEqual(0, Exec(pathToAppHostDirectory, $"{SampleProjectName}.exe", ""));
     }
@@ -118,9 +118,9 @@ public abstract class NativeLibrariesResolverTestsBase
         // Furthermore, only publishing in Release mode is tested.
         CleanSampleProject(Configuration.Release, RID.Win_x64);
 
-        _ = Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -f net6.0 -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
+        _ = Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
 
-        string pathToAppHost = Path.Combine("bin", $"Release", "net6.0", "win-x64", "publish", $"{SampleProjectName}.exe");
+        string pathToAppHost = Path.Combine("bin", $"Release", "net7.0", "win-x64", "publish", $"{SampleProjectName}.exe");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory, pathToAppHost, ""));
     }
