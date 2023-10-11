@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
@@ -13,9 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
-
-  <!-- Shared project with .NET Standard 2.0 polyfills for Dxc -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems" Label="Shared" />
 
   <Choose>
 

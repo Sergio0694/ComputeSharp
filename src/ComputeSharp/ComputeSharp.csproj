@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <SupportedOSVersion>windows6.2</SupportedOSVersion>
   </PropertyGroup>
 
@@ -16,20 +16,12 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <!-- .NET 6 uses the NuGet package for TerraFX -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
   </ItemGroup>
 
-  <!-- .NET Standard 2.0 is missing some necessary APIs from the BCL -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-  </ItemGroup>
-
-  <!-- Include the ILLink file on the .NET 6 target (to properly trim configuration switches in publish builds) -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <!-- Include the ILLink file (to properly trim configuration switches in publish builds) -->
+  <ItemGroup>
     <EmbeddedResource Include="Properties\ILLink.Substitutions.xml" LogicalName="ILLink.Substitutions.xml" />
   </ItemGroup>
 
@@ -37,7 +29,4 @@
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
-
-  <!-- Shared project with TerraFX.Interop.Windows fork -->
-  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'" Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
 </Project>

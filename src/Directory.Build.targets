@@ -8,24 +8,21 @@
     <!-- Source generator project, if available -->
     <IsSourceGeneratorAvailableForPacking>false</IsSourceGeneratorAvailableForPacking>
     <IsSourceGeneratorAvailableForPacking Condition="Exists('..\$(MSBuildProjectName).SourceGenerators')">true</IsSourceGeneratorAvailableForPacking>
-    <SourceGeneratorReferenceTargetFramework Condition="$(IsSourceGeneratorAvailableForPacking)">$(TargetFrameworks.Split(';')[0].Trim())</SourceGeneratorReferenceTargetFramework>
 
     <!-- Code fixers project, if available -->
     <IsCodeFixersAvailableForPacking>false</IsCodeFixersAvailableForPacking>
     <IsCodeFixersAvailableForPacking Condition="Exists('..\$(MSBuildProjectName).CodeFixers')">true</IsCodeFixersAvailableForPacking>
-    <CodeFixersReferenceTargetFramework Condition="$(IsCodeFixersAvailableForPacking)">$(TargetFrameworks.Split(';')[0].Trim())</CodeFixersReferenceTargetFramework>
   </PropertyGroup>
 
   <!-- Pack the source generator, if present -->
   <ItemGroup Condition="'$(IsSourceGeneratorAvailableForPacking)' == 'true'" Label="Package">
     
     <!-- Source generator reference (to trigger building the generator) -->
-    <ProjectReference Condition="'$(TargetFramework)' == '$(SourceGeneratorReferenceTargetFramework)'"
-                      Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj"
+    <ProjectReference Include="..\$(MSBuildProjectName).SourceGenerators\$(MSBuildProjectName).SourceGenerators.csproj"
                       ReferenceOutputAssembly="false" />
 
-    <!-- Pack the source generator from its output directory -->
-    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\$(SourceGeneratorReferenceTargetFramework)\$(MSBuildProjectName).SourceGenerators.dll"
+    <!-- Pack the source generator from its output directory (source generators always use .NET Standard 2.0) -->
+    <None Include="..\$(MSBuildProjectName).SourceGenerators\bin\$(Configuration)\netstandard2.0\$(MSBuildProjectName).SourceGenerators.dll"
           PackagePath="analyzers\dotnet\cs"
           Pack="true"
           Visible="false" />
@@ -35,12 +32,11 @@
   <ItemGroup Condition="'$(IsCodeFixersAvailableForPacking)' == 'true'" Label="Package">
     
     <!-- Code fixers reference (to trigger building the project) -->
-    <ProjectReference Condition="'$(TargetFramework)' == '$(CodeFixersReferenceTargetFramework)'"
-                      Include="..\$(MSBuildProjectName).CodeFixers\$(MSBuildProjectName).CodeFixers.csproj"
+    <ProjectReference Include="..\$(MSBuildProjectName).CodeFixers\$(MSBuildProjectName).CodeFixers.csproj"
                       ReferenceOutputAssembly="false" />
 
     <!-- Pack the code fixers project from its output directory -->
-    <None Include="..\$(MSBuildProjectName).CodeFixers\bin\$(Configuration)\$(CodeFixersReferenceTargetFramework)\$(MSBuildProjectName).CodeFixers.dll"
+    <None Include="..\$(MSBuildProjectName).CodeFixers\bin\$(Configuration)\netstandard2.0\$(MSBuildProjectName).CodeFixers.dll"
           PackagePath="analyzers\dotnet\cs"
           Pack="true"
           Visible="false" />
