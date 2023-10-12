@@ -171,7 +171,7 @@ public sealed class DynamicCache<TKey, TValue>
         private bool isPerformingLookup;
 
         /// <summary>
-        /// Creates a new <see cref="Entry{T}"/> instance with the specified parameters.
+        /// Creates a new <see cref="Entry"/> instance with the specified parameters.
         /// </summary>
         /// <param name="key">The key to use for the entry.</param>
         public Entry(TKey key)
