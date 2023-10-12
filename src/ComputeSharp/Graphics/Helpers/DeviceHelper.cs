@@ -98,7 +98,7 @@ internal static partial class DeviceHelper
             //   3) The call fails for other reasons. In this case the adapter is simply skipped.
             //      This might be the case if an adapter doesn't support the requested feature level.
             HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-                dxgiAdapter1.AsIUnknown().Get(),
+                (IUnknown*)dxgiAdapter1.Get(),
                 D3D_FEATURE_LEVEL_11_0,
                 Windows.__uuidof<ID3D12Device>(),
                 (void**)d3D12DeviceCandidate.GetAddressOf());
@@ -142,7 +142,7 @@ internal static partial class DeviceHelper
         using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
 
         HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-            dxgiAdapter1.AsIUnknown().Get(),
+            (IUnknown*)dxgiAdapter1.Get(),
             D3D_FEATURE_LEVEL_11_0,
             Windows.__uuidof<ID3D12Device>(),
             (void**)d3D12DeviceCandidate.GetAddressOf());

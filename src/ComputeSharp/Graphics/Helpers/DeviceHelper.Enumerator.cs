@@ -137,7 +137,7 @@ partial class DeviceHelper
                         dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
 
                         HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-                            dxgiAdapter1.AsIUnknown().Get(),
+                            (IUnknown*)dxgiAdapter1.Get(),
                             D3D_FEATURE_LEVEL_11_0,
                             Windows.__uuidof<ID3D12Device>(),
                             null);
@@ -148,7 +148,7 @@ partial class DeviceHelper
                             using ComPtr<ID3D12Device> d3D12Device = default;
 
                             DirectX.D3D12CreateDevice(
-                                dxgiAdapter1.AsIUnknown().Get(),
+                                (IUnknown*)dxgiAdapter1.Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),
                                 (void**)d3D12Device.GetAddressOf()).Assert();
@@ -178,7 +178,7 @@ partial class DeviceHelper
                         }
 
                         HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
-                            dxgiAdapter1.AsIUnknown().Get(),
+                            (IUnknown*)dxgiAdapter1.Get(),
                             D3D_FEATURE_LEVEL_11_0,
                             Windows.__uuidof<ID3D12Device>(),
                             null);
@@ -189,7 +189,7 @@ partial class DeviceHelper
                             using ComPtr<ID3D12Device> d3D12Device = default;
 
                             DirectX.D3D12CreateDevice(
-                                dxgiAdapter1.AsIUnknown().Get(),
+                                (IUnknown*)dxgiAdapter1.Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),
                                 (void**)d3D12Device.GetAddressOf()).Assert();
