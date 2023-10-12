@@ -38,6 +38,9 @@
   <!-- Additional properties for all source projects-->
   <PropertyGroup>
 
+    <!-- Define SOURCE_GENERATOR as well for source generators -->
+    <DefineConstants Condition="$(IsSourceGeneratorProject)">$(DefineConstants);SOURCE_GENERATOR</DefineConstants>
+
     <!-- Disable packing symbols for all analyzers -->
     <PackSymbols Condition="$(IsAnalyzersProject)">false</PackSymbols>
 
@@ -69,9 +72,9 @@
 
   <!--
     Reference PolySharp for all .NET Standard 2.0 polyfills.
-    Only needed for the .Core project and all analyzers.
+    Only needed for the .Core project and all source generators.
   -->
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(MSBuildProjectName.EndsWith('.SourceGenerators'))">
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'ComputeSharp.Core' OR $(IsSourceGeneratorProject)">
     <PackageReference Include="PolySharp" Version="1.13.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build;analyzers</IncludeAssets>
