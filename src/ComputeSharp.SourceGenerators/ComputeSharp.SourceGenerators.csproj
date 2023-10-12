@@ -97,7 +97,6 @@
 
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
-  <Import Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems" Label="Shared" />
 
   <!-- Shared projects with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
