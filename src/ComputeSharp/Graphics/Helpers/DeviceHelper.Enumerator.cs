@@ -126,11 +126,11 @@ partial class DeviceHelper
                         this.index,
                         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
                         Windows.__uuidof<IDXGIAdapter1>(),
-                        dxgiAdapter1.GetVoidAddressOf());
+                        (void**)dxgiAdapter1.GetAddressOf());
 
                     if (enumAdapters1Result == DXGI.DXGI_ERROR_NOT_FOUND)
                     {
-                        this.dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+                        this.dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), (void**)dxgiAdapter1.GetAddressOf()).Assert();
 
                         DXGI_ADAPTER_DESC1 dxgiDescription1;
 
@@ -151,7 +151,7 @@ partial class DeviceHelper
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),
-                                d3D12Device.GetVoidAddressOf()).Assert();
+                                (void**)d3D12Device.GetAddressOf()).Assert();
 
                             this.graphicsDevice = GetOrCreateDevice(d3D12Device.Get(), (IDXGIAdapter*)dxgiAdapter1.Get(), &dxgiDescription1);
                             this.isCompleted = true;
@@ -192,7 +192,7 @@ partial class DeviceHelper
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),
-                                d3D12Device.GetVoidAddressOf()).Assert();
+                                (void**)d3D12Device.GetAddressOf()).Assert();
 
                             if (d3D12Device.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
                             {

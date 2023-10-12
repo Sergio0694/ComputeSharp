@@ -83,7 +83,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D3Blob.Get()->GetBufferPointer(),
             d3D3Blob.Get()->GetBufferSize(),
             Windows.__uuidof<ID3D12RootSignature>(),
-            d3D12RootSignature.GetVoidAddressOf()).Assert();
+            (void**)d3D12RootSignature.GetAddressOf()).Assert();
 
         return d3D12RootSignature.Move();
     }
@@ -113,7 +113,7 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateComputePipelineState(
             &d3D12ComputePipelineStateDescription,
             Windows.__uuidof<ID3D12PipelineState>(),
-            d3D12PipelineState.GetVoidAddressOf()).Assert();
+            (void**)d3D12PipelineState.GetAddressOf()).Assert();
 
         return d3D12PipelineState.Move();
     }

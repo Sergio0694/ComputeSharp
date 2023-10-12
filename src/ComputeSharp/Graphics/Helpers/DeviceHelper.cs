@@ -71,7 +71,7 @@ internal static partial class DeviceHelper
                 i++,
                 DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
                 Windows.__uuidof<IDXGIAdapter1>(),
-                dxgiAdapter1.GetVoidAddressOf());
+                (void**)dxgiAdapter1.GetAddressOf());
 
             if (enumAdapters1Result == DXGI.DXGI_ERROR_NOT_FOUND)
             {
@@ -101,7 +101,7 @@ internal static partial class DeviceHelper
                 dxgiAdapter1.AsIUnknown().Get(),
                 D3D_FEATURE_LEVEL_11_0,
                 Windows.__uuidof<ID3D12Device>(),
-                d3D12DeviceCandidate.GetVoidAddressOf());
+                (void**)d3D12DeviceCandidate.GetAddressOf());
 
             // Check and throw if the device is a device lost state and not disposed properly
             default(InvalidOperationException).ThrowIf(createDeviceResult.IsDeviceLostReason());
@@ -135,7 +135,7 @@ internal static partial class DeviceHelper
 
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-        dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+        dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), (void**)dxgiAdapter1.GetAddressOf()).Assert();
 
         dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
@@ -145,7 +145,7 @@ internal static partial class DeviceHelper
             dxgiAdapter1.AsIUnknown().Get(),
             D3D_FEATURE_LEVEL_11_0,
             Windows.__uuidof<ID3D12Device>(),
-            d3D12DeviceCandidate.GetVoidAddressOf());
+            (void**)d3D12DeviceCandidate.GetAddressOf());
 
         default(InvalidOperationException).ThrowIf(createDeviceResult.IsDeviceLostReason());
 

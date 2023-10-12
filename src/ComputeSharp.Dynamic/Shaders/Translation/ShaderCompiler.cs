@@ -46,12 +46,12 @@ internal sealed unsafe partial class ShaderCompiler
         DirectX.DxcCreateInstance(
             (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcCompiler)),
             Windows.__uuidof<IDxcCompiler>(),
-            dxcCompiler.GetVoidAddressOf()).Assert();
+            (void**)dxcCompiler.GetAddressOf()).Assert();
 
         DirectX.DxcCreateInstance(
             (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcLibrary)),
             Windows.__uuidof<IDxcLibrary>(),
-            dxcLibrary.GetVoidAddressOf()).Assert();
+            (void**)dxcLibrary.GetAddressOf()).Assert();
 
         dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 

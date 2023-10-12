@@ -30,7 +30,7 @@ internal sealed unsafe class WICHelper
             null,
             (uint)CLSCTX.CLSCTX_INPROC_SERVER,
             Windows.__uuidof<IWICImagingFactory2>(),
-            wicImagingFactory2.GetVoidAddressOf()).Assert();
+            (void**)wicImagingFactory2.GetAddressOf()).Assert();
 
         this.wicImagingFactory2 = wicImagingFactory2.Move();
     }
