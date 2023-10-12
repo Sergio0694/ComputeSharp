@@ -17,7 +17,7 @@ internal static class ComPtrExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe ComPtr<T> Move<T>(this in ComPtr<T> ptr)
 #if NET6_0_OR_GREATER
-        where T : unmanaged, IUnknown.Interface
+        where T : unmanaged//, IUnknown.Interface
 #else
         where T : unmanaged
 #endif

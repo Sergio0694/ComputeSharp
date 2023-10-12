@@ -16,10 +16,6 @@
     <ProjectReference Include="..\ComputeSharp.Core\ComputeSharp.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
-  </ItemGroup>
-
   <!-- Include the ILLink file (to properly trim configuration switches in publish builds) -->
   <ItemGroup>
     <EmbeddedResource Include="Properties\ILLink.Substitutions.xml" LogicalName="ILLink.Substitutions.xml" />
@@ -29,4 +25,7 @@
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
+
+  <!-- Shared ComputeSharp.Win32.D3D12 with D3D12 bindings -->
+  <Import Project="..\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems" Label="Shared" />
 </Project>

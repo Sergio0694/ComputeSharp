@@ -1,9 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if NET6_0_OR_GREATER
-using TerraFX.Interop;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -17,7 +14,7 @@ namespace ComputeSharp.Interop.Allocation;
 [Guid("2D5E55D2-9244-431F-868E-0D90AAB6E575")]
 internal unsafe struct ID3D12MemoryAllocator
 #if NET6_0_OR_GREATER
-    : IUnknown.Interface
+//: IUnknown.Interface
 #endif
 {
     /// <summary>
@@ -45,8 +42,8 @@ internal unsafe struct ID3D12MemoryAllocator
     }
 
 #if NET6_0_OR_GREATER
-    /// <inheritdoc/>
-    static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
+    ///// <inheritdoc/>
+    //static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
 #endif
 
     /// <summary>
