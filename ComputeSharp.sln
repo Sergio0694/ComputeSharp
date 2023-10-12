@@ -50,7 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Polyfills", "Polyfills", "{
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.NetStandard", "src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.shproj", "{A5997814-D8D2-4541-87AC-C3E53CAA67C0}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Win32.D3D12", "src\TerraFX.Interop.Windows\ComputeSharp.Win32.D3D12.shproj", "{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Win32.D3D12", "src\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.shproj", "{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.WinUI", "src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj", "{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}"
 EndProject
@@ -464,7 +464,6 @@ Global
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{209c95a3-fa53-431b-b688-3299ca6c29d2}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems*{4d7d9ba8-a821-4b1c-9ee2-cbcf5849906e}*SharedItemsImports = 5
-		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{51d5a422-d3a5-4c4d-8a6d-a048940bf279}*SharedItemsImports = 13
 		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{73c32d0f-64db-4674-84e9-8fcc41228474}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{9ac496a3-bbf0-4c8f-a50d-a20bf01c5e05}*SharedItemsImports = 13
@@ -483,7 +482,6 @@ Global
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
-		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.D2D1.Shared\ComputeSharp.SwapChain.Shaders.D2D1.Shared.projitems*{f8bf7666-7ccf-4fe4-b055-2eba4bcd4564}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

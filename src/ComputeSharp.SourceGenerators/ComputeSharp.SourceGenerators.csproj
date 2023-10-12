@@ -95,8 +95,8 @@
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
 
-  <!-- Shared project with TerraFX.Interop.Windows fork -->
-  <Import Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
+  <!-- Shared ComputeSharp.Win32.D3D12 with D3D12 bindings -->
+  <Import Project="..\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems" Label="Shared" />
 
   <!-- Shared projects with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
