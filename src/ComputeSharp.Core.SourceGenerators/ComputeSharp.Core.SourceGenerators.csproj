@@ -2,10 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <DefineConstants>$(DefineConstants);SOURCE_GENERATOR</DefineConstants>
-  </PropertyGroup>
     
   <!--The source generator cannot contain package references or project references, so instead we're just
       manually linking the source files from ComputeSharp\Core in here. We only need them to extract metadata
