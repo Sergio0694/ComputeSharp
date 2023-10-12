@@ -44,7 +44,7 @@ partial class DeviceHelper
 
         using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
-        DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+        DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), (void**)dxgiFactory4.GetAddressOf()).Assert();
 
         HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
 
@@ -73,7 +73,7 @@ partial class DeviceHelper
         using ComPtr<ID3D12Debug> d3D12Debug = default;
         using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
 
-        DirectX.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
+        DirectX.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), (void**)d3D12Debug.GetAddressOf()).Assert();
 
         d3D12Debug.Get()->EnableDebugLayer();
 
@@ -93,7 +93,7 @@ partial class DeviceHelper
 
         DirectX.D3D12GetDebugInterface(
             riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedDataSettings1>(),
-            ppvDebug: d3D12DeviceRemovedExtendedDataSettings.GetVoidAddressOf()).Assert();
+            ppvDebug: (void**)d3D12DeviceRemovedExtendedDataSettings.GetAddressOf()).Assert();
 
         // Enable the auto-breadcrumbs and page faults reporting
         d3D12DeviceRemovedExtendedDataSettings.Get()->SetAutoBreadcrumbsEnablement(D3D12_DRED_ENABLEMENT.D3D12_DRED_ENABLEMENT_FORCED_ON);

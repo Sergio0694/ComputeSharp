@@ -22,7 +22,7 @@ internal static unsafe class IDXGIAdapterExtensions
     {
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-        dxgiAdapter.QueryInterface(Win32.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+        dxgiAdapter.QueryInterface(Win32.__uuidof<IDXGIAdapter1>(), (void**)dxgiAdapter1.GetAddressOf()).Assert();
 
         using ComPtr<IDXGIOutput> dxgiOutput = default;
 

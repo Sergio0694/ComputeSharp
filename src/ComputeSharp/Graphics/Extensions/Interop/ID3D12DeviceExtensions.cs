@@ -80,7 +80,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12ResourceStates,
             null,
             Windows.__uuidof<ID3D12Resource>(),
-            d3D12Resource.GetVoidAddressOf()).Assert();
+            (void**)d3D12Resource.GetAddressOf()).Assert();
 
         return d3D12Resource.Move();
     }
@@ -140,7 +140,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12ResourceStates,
             null,
             Windows.__uuidof<ID3D12Resource>(),
-            d3D12Resource.GetVoidAddressOf()).Assert();
+            (void**)d3D12Resource.GetAddressOf()).Assert();
 
         return d3D12Resource.Move();
     }
@@ -202,7 +202,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12ResourceStates,
             null,
             Windows.__uuidof<ID3D12Resource>(),
-            d3D12Resource.GetVoidAddressOf()).Assert();
+            (void**)d3D12Resource.GetAddressOf()).Assert();
 
         return d3D12Resource.Move();
     }
@@ -266,7 +266,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12ResourceStates,
             null,
             Windows.__uuidof<ID3D12Resource>(),
-            d3D12Resource.GetVoidAddressOf()).Assert();
+            (void**)d3D12Resource.GetAddressOf()).Assert();
 
         return d3D12Resource.Move();
     }
@@ -281,7 +281,7 @@ internal static unsafe class ID3D12DeviceExtensions
     {
         ComPtr<ID3D12InfoQueue> d3D12InfoQueue = default;
 
-        d3D12Device.QueryInterface(Windows.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
+        d3D12Device.QueryInterface(Windows.__uuidof<ID3D12InfoQueue>(), (void**)d3D12InfoQueue.GetAddressOf()).Assert();
 
         D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[3]
         {
@@ -332,7 +332,7 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateCommandQueue(
             &d3D12CommandQueueDesc,
             Windows.__uuidof<ID3D12CommandQueue>(),
-            d3D12CommandQueue.GetVoidAddressOf()).Assert();
+            (void**)d3D12CommandQueue.GetAddressOf()).Assert();
 
         return d3D12CommandQueue.Move();
     }
@@ -351,7 +351,7 @@ internal static unsafe class ID3D12DeviceExtensions
             0,
             D3D12_FENCE_FLAG_NONE,
             Windows.__uuidof<ID3D12Fence>(),
-            d3D12Fence.GetVoidAddressOf()).Assert();
+            (void**)d3D12Fence.GetAddressOf()).Assert();
 
         return d3D12Fence.Move();
     }
@@ -377,7 +377,7 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateDescriptorHeap(
             &d3D12DescriptorHeapDesc,
             Windows.__uuidof<ID3D12DescriptorHeap>(),
-            d3D12DescriptorHeap.GetVoidAddressOf()).Assert();
+            (void**)d3D12DescriptorHeap.GetAddressOf()).Assert();
 
         return d3D12DescriptorHeap.Move();
     }
@@ -545,7 +545,7 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateCommandAllocator(
             d3D12CommandListType,
             Windows.__uuidof<ID3D12CommandAllocator>(),
-            d3D12CommandAllocator.GetVoidAddressOf()).Assert();
+            (void**)d3D12CommandAllocator.GetAddressOf()).Assert();
 
         return d3D12CommandAllocator.Move();
     }
@@ -573,7 +573,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12CommandAllocator,
             d3D12PipelineState,
             Windows.__uuidof<ID3D12GraphicsCommandList>(),
-            d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
+            (void**)d3D12GraphicsCommandList.GetAddressOf()).Assert();
 
         return d3D12GraphicsCommandList.Move();
     }

@@ -35,8 +35,8 @@ internal static unsafe class IUnknownExtensions
         using ComPtr<IUnknown> leftUnknown = default;
         using ComPtr<IUnknown> rightUnknown = default;
 
-        ((IUnknown*)Unsafe.AsPointer(ref left))->QueryInterface(Win32.__uuidof<IUnknown>(), leftUnknown.GetVoidAddressOf()).Assert();
-        ((IUnknown*)right)->QueryInterface(Win32.__uuidof<IUnknown>(), rightUnknown.GetVoidAddressOf()).Assert();
+        ((IUnknown*)Unsafe.AsPointer(ref left))->QueryInterface(Win32.__uuidof<IUnknown>(), (void**)leftUnknown.GetAddressOf()).Assert();
+        ((IUnknown*)right)->QueryInterface(Win32.__uuidof<IUnknown>(), (void**)rightUnknown.GetAddressOf()).Assert();
 
         return leftUnknown.Get() == rightUnknown.Get();
     }

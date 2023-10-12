@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop.Allocation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -199,7 +198,7 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
             pOptimizedClearValue: null,
             ppAllocation: d3D12MA_allocation.GetAddressOf(),
             riidResource: Windows.__uuidof<ID3D12Resource>(),
-            ppvResource: d3D12Resource.GetVoidAddressOf());
+            ppvResource: (void**)d3D12Resource.GetAddressOf());
 
         if (!Windows.SUCCEEDED(hresult))
         {

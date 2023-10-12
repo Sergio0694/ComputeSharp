@@ -24,7 +24,7 @@ internal static unsafe class ICanvasDeviceExtensions
         // Get the ICanvasResourceWrapperNative wrapper around the input device
         canvasDevice.QueryInterface(
             riid: Win32.__uuidof<ICanvasResourceWrapperNative>(),
-            ppvObject: canvasDeviceResourceWrapperNative.GetVoidAddressOf()).Assert();
+            ppvObject: (void**)canvasDeviceResourceWrapperNative.GetAddressOf()).Assert();
 
         // Get the underlying ID2D1Device1 instance in use
         HRESULT hresult = canvasDeviceResourceWrapperNative.Get()->GetNativeResource(
@@ -61,7 +61,7 @@ internal static unsafe class ICanvasDeviceExtensions
                 // Get the ID2D1DeviceContextPool interface reference
                 canvasDevice.QueryInterface(
                     riid: Win32.__uuidof<ID2D1DeviceContextPool>(),
-                    ppvObject: d2D1DeviceContextPool.GetVoidAddressOf()).Assert();
+                    ppvObject: (void**)d2D1DeviceContextPool.GetAddressOf()).Assert();
 
                 // Get a new ID2D1DeviceContextLease object from the retrieved pool
                 d2D1DeviceContextPool.Get()->GetDeviceContextLease(d2D1DeviceContextLease).Assert();

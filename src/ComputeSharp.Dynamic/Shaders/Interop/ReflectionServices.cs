@@ -115,7 +115,7 @@ public static class ReflectionServices
         DirectX.DxcCreateInstance(
             (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcLibrary)),
             Windows.__uuidof<IDxcUtils>(),
-            dxcUtils.GetVoidAddressOf()).Assert();
+            (void**)dxcUtils.GetAddressOf()).Assert();
 
         using ComPtr<ID3D12ShaderReflection> d3D12ShaderReflection = default;
 
@@ -126,7 +126,7 @@ public static class ReflectionServices
         dxcUtils.Get()->CreateReflection(
             &dxcBuffer,
             Windows.__uuidof<ID3D12ShaderReflection>(),
-            d3D12ShaderReflection.GetVoidAddressOf()).Assert();
+            (void**)d3D12ShaderReflection.GetAddressOf()).Assert();
 
         D3D12_SHADER_DESC d3D12ShaderDescription;
 

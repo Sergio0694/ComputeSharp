@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
@@ -105,7 +104,7 @@ partial class DeviceHelper
                             // Get the DRED data
                             int hresult = device.D3D12Device->QueryInterface(
                                 riid: Windows.__uuidof<ID3D12DeviceRemovedExtendedData1>(),
-                                ppvObject: d3D12DeviceRemovedExtendedData.GetVoidAddressOf());
+                                ppvObject: (void**)d3D12DeviceRemovedExtendedData.GetAddressOf());
 
                             default(Win32Exception).ThrowIfFailed(hresult);
 
