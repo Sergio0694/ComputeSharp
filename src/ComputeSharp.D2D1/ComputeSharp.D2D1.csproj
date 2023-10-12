@@ -17,6 +17,6 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <!-- Shared project with the trimmed down fork of TerraFX.Interop.Windows with just the D3D bindings -->
-  <Import Project="..\TerraFX.Interop.Windows.D2D1\TerraFX.Interop.Windows.D2D1.projitems" Label="Shared" />
+  <!-- Shared ComputeSharp.Win32.D2D1 with D2D1 bindings -->
+  <Import Project="..\ComputeSharp.Win32.D2D1\ComputeSharp.Win32.D2D1.projitems" Label="Shared" />
 </Project>
