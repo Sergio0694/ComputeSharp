@@ -1,18 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFramework>net7.0</TargetFramework>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <NoWarn>$(NoWarn);IL2026</NoWarn>
+    <PublishAot Condition="'$(COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT)' == 'true'">true</PublishAot>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
       ..\..\artifacts;
     </RestoreSources>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PublishAot>true</PublishAot>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <NoWarn>$(NoWarn);IL2026</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

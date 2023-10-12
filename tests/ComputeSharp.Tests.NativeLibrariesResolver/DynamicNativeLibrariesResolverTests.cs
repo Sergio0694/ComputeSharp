@@ -25,13 +25,12 @@ public class DynamicNativeLibrariesResolverTests : NativeLibrariesResolverTestsB
             path = Path.GetDirectoryName(path)!;
         }
 
-        string corePackagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.msbuildproj");
-        string packagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.msbuildproj");
-        string dynamicPackagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Dynamic.Package", "ComputeSharp.Dynamic.Package.msbuildproj");
+        string coreProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.csproj");
+        string projectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.csproj");
+        string dynamicProjectPath = Path.Combine(path, "src", "ComputeSharp.Dynamic", "ComputeSharp.Dynamic.csproj");
 
-        // Run dotnet pack and on the packaging projects, to ensure the local NuGet packages are available
-        Process.Start("dotnet", $"pack {corePackagingProjectPath} -c Release").WaitForExit();
-        Process.Start("dotnet", $"pack {packagingProjectPath} -c Release").WaitForExit();
-        Process.Start("dotnet", $"pack {dynamicPackagingProjectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {coreProjectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {projectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {dynamicProjectPath} -c Release").WaitForExit();
     }
 }

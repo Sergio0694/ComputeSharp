@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
     <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>

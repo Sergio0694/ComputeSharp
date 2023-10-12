@@ -25,13 +25,13 @@ public class PixNativeLibrariesResolverTests : NativeLibrariesResolverTestsBase
             path = Path.GetDirectoryName(path)!;
         }
 
-        string corePackagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.msbuildproj");
-        string packagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.msbuildproj");
-        string pixPackagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Pix.Package", "ComputeSharp.Pix.Package.msbuildproj");
+        string coreProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.csproj");
+        string projectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.csproj");
+        string pixProjectPath = Path.Combine(path, "src", "ComputeSharp.Pix", "ComputeSharp.Pix.csproj");
 
         // Run dotnet pack and on the packaging projects, to ensure the local NuGet packages are available
-        Process.Start("dotnet", $"pack {corePackagingProjectPath} -c Release").WaitForExit();
-        Process.Start("dotnet", $"pack {packagingProjectPath} -c Release").WaitForExit();
-        Process.Start("dotnet", $"pack {pixPackagingProjectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {coreProjectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {projectPath} -c Release").WaitForExit();
+        Process.Start("dotnet", $"pack {pixProjectPath} -c Release").WaitForExit();
     }
 }
