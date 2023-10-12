@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
-using Win32;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Tests.Extensions;
 
@@ -17,7 +17,7 @@ internal static class ComPtrExtensions
     /// <returns>The moved <see cref="ComPtr{T}"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ComPtr<T> Move<T>(this in ComPtr<T> ptr)
-        where T : unmanaged
+        where T : unmanaged, IUnknown.Interface
     {
         ComPtr<T> copy = default;
 

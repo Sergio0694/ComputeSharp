@@ -4,8 +4,8 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using ComputeSharp.D2D1.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win32;
-using Win32.Graphics.Direct2D;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 #pragma warning disable IDE0022, IDE0044
 

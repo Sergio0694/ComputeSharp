@@ -2,10 +2,8 @@ using System;
 using System.Threading.Tasks;
 using ComputeSharp.Tests.DeviceLost.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win32;
-using Win32.Graphics.Direct3D12;
-using DXGI = Win32.Graphics.Dxgi.Apis;
-using HRESULT = Win32.HResult;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests.DeviceLost;
 
@@ -77,7 +75,7 @@ public class GetDefaultDeviceTests
                 HRESULT removalReason = d3D12Device.Get()->GetDeviceRemovedReason();
 
                 // Sanity check that the device is in fact removed
-                Assert.AreEqual(DXGI.DXGI_ERROR_DEVICE_REMOVED, removalReason);
+                Assert.AreEqual(DXGI.DXGI_ERROR_DEVICE_REMOVED, (int)removalReason);
             }
 
             // Calling GraphicsDevice.GetDefault() will now throw, because the native device has not been disposed properly

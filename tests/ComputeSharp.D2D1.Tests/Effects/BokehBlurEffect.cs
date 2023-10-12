@@ -9,21 +9,10 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Extensions;
 using ComputeSharp.D2D1.Tests.Helpers;
 using SixLabors.ImageSharp;
-using Win32;
-using Win32.Graphics.Direct2D;
-using D2D1_BORDER_EDGE_MODE = Win32.Graphics.Direct2D.BorderEdgeMode;
-using D2D1_BORDER_PROP = Win32.Graphics.Direct2D.BorderProp;
-using D2D1_BUFFER_PRECISION = Win32.Graphics.Direct2D.BufferPrecision;
-using D2D1_COMPOSITE_MODE = Win32.Graphics.Direct2D.Common.CompositeMode;
-using D2D1_COMPOSITE_PROP = Win32.Graphics.Direct2D.CompositeProp;
-using D2D1_INTERPOLATION_MODE = Win32.Graphics.Direct2D.InterpolationMode;
-using D2D1_PROPERTY = Win32.Graphics.Direct2D.Property;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
-using D2D1_RENDERING_CONTROLS = Win32.Graphics.Direct2D.RenderingControls;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Tests.Effects;
-
-using D2D1 = Win32.Graphics.Direct2D.Apis;
 
 /// <summary>
 /// A bokeh blur effect, using linearly separable convolutions in the complex space for better efficiency.
@@ -310,7 +299,7 @@ public sealed partial class BokehBlurEffect
 
         // Set the buffer precision for the whole context to 32 bits per channel. This avoids
         // color banding issues due to intermediate buffers clamping to just 8 bits per channel.
-        d2D1RenderingControls.bufferPrecision = D2D1_BUFFER_PRECISION.Precision32BitFloat;
+        d2D1RenderingControls.bufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
 
         d2D1DeviceContext.Get()->SetRenderingControls(&d2D1RenderingControls);
 
@@ -350,31 +339,31 @@ public sealed partial class BokehBlurEffect
 
             // Create the border effect to clamp the input image
             d2D1DeviceContext.Get()->CreateEffect(
-                effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in D2D1.CLSID_D2D1Border)),
+                effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Border)),
                 effect: borderEffect.GetAddressOf()).Assert();
 
-            D2D1_BORDER_EDGE_MODE d2D1BorderEdgeMode = D2D1_BORDER_EDGE_MODE.Clamp;
+            D2D1_BORDER_EDGE_MODE d2D1BorderEdgeMode = D2D1_BORDER_EDGE_MODE.D2D1_BORDER_EDGE_MODE_CLAMP;
 
             // Set the border mode to clamp on both axes
-            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.EdgeModeX, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
-            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.EdgeModeY, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
+            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.D2D1_BORDER_PROP_EDGE_MODE_X, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
+            borderEffect.Get()->SetValue((uint)D2D1_BORDER_PROP.D2D1_BORDER_PROP_EDGE_MODE_Y, (byte*)&d2D1BorderEdgeMode, sizeof(D2D1_BORDER_EDGE_MODE)).Assert();
 
             // If partials need to be summed, also create the composite effect
             if (numberOfComponents > 1)
             {
                 d2D1DeviceContext.Get()->CreateEffect(
-                    effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in D2D1.CLSID_D2D1Composite)),
+                    effectId: (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_D2D1Composite)),
                     effect: compositeEffect.GetAddressOf()).Assert();
 
-                D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.Precision32BitFloat;
+                D2D1_BUFFER_PRECISION d2D1BufferPrecision = D2D1_BUFFER_PRECISION.D2D1_BUFFER_PRECISION_32BPC_FLOAT;
 
                 // Set the channel precision to 32 bits manually to avoid banding
-                compositeEffect.Get()->SetValue((uint)D2D1_PROPERTY.Precision, (byte*)&d2D1BufferPrecision, sizeof(D2D1_BUFFER_PRECISION)).Assert();
+                compositeEffect.Get()->SetValue(unchecked((uint)D2D1_PROPERTY.D2D1_PROPERTY_PRECISION), (byte*)&d2D1BufferPrecision, sizeof(D2D1_BUFFER_PRECISION)).Assert();
 
-                D2D1_COMPOSITE_MODE d2D1CompositeMode = D2D1_COMPOSITE_MODE.Plus;
+                D2D1_COMPOSITE_MODE d2D1CompositeMode = D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_PLUS;
 
                 // Set the mode to plus
-                compositeEffect.Get()->SetValue((uint)D2D1_COMPOSITE_PROP.Mode, (byte*)&d2D1CompositeMode, sizeof(D2D1_COMPOSITE_MODE)).Assert();
+                compositeEffect.Get()->SetValue((uint)D2D1_COMPOSITE_PROP.D2D1_COMPOSITE_PROP_MODE, (byte*)&d2D1CompositeMode, sizeof(D2D1_COMPOSITE_MODE)).Assert();
             }
 
             ReadOnlyMemory<byte> pixels = ImageHelper.LoadBitmapFromFile(sourcePath, out uint width, out uint height);
@@ -468,8 +457,8 @@ public sealed partial class BokehBlurEffect
                 effect: inverseGammaExposureEffect.Get(),
                 targetOffset: null,
                 imageRectangle: null,
-                interpolationMode: D2D1_INTERPOLATION_MODE.NearestNeighbor,
-                compositeMode: D2D1_COMPOSITE_MODE.SourceCopy);
+                interpolationMode: D2D1_INTERPOLATION_MODE.D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR,
+                compositeMode: D2D1_COMPOSITE_MODE.D2D1_COMPOSITE_MODE_SOURCE_COPY);
 
             d2D1DeviceContext.Get()->EndDraw().Assert();
 
