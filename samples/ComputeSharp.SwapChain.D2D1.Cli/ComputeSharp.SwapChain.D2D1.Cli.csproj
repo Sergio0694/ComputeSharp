@@ -22,7 +22,8 @@
     <PublishAot>true</PublishAot>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <StackTraceSupport>false</StackTraceSupport>
+    <OptimizationPreference>Speed</OptimizationPreference>
 
     <!-- Workaround for WinRT.Runtime and System.Linq.Expressions producing trim warnings -->
     <NoWarn>$(NoWarn);IL3053</NoWarn>

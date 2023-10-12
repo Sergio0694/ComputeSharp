@@ -26,14 +26,13 @@
   -->
   <PropertyGroup Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT)' == 'true'">
     <PublishAot>true</PublishAot>
-    <DebuggerSupport>false</DebuggerSupport>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <StackTraceSupport>false</StackTraceSupport>
+    <OptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' == 'true'">Size</OptimizationPreference>
+    <OptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' != 'true'">Speed</OptimizationPreference>
     <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
-    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
     <IlcDisableReflection Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_DISABLE_REFLECTION)' == 'true'">true</IlcDisableReflection>
-    <IlcOptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' == 'true'">Size</IlcOptimizationPreference>
-    <IlcOptimizationPreference Condition="'$(COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED)' != 'true'">Speed</IlcOptimizationPreference>
   </PropertyGroup>
 
   <!--
@@ -49,7 +48,7 @@
 
   <!-- If requested, also reference the UPX compression package -->
   <ItemGroup Condition="'$(PUBLISH_AOT_COMPRESSED)' == 'true'">
-    <PackageReference Include="PublishAotCompressed" Version="1.0.0" />
+    <PackageReference Include="PublishAotCompressed" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
