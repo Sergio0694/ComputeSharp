@@ -9,8 +9,7 @@ using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win32;
-using HRESULT = Win32.HResult;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests;
 
@@ -155,14 +154,14 @@ public unsafe class AllocationServicesTests
             allocationPtr.Get(),
             wrappedD3D12ResourcePtr.GetAddressOf());
 
-        Assert.IsTrue(hresult.Success);
+        Assert.IsTrue(hresult.SUCCEEDED);
 
         using ComPtr<IUnknown> d3D12ResourceUnknown = default;
         using ComPtr<IUnknown> wrappedD3D12ResourceUnknown = default;
 
         // Compare the identity of the D3D12 resource from the managed resource, and the one from the allocation
-        Assert.IsTrue(d3D12ResourcePtr.CopyTo<IUnknown>(d3D12ResourceUnknown.GetAddressOf()).Success);
-        Assert.IsTrue(wrappedD3D12ResourcePtr.CopyTo<IUnknown>(wrappedD3D12ResourceUnknown.GetAddressOf()).Success);
+        Assert.IsTrue(d3D12ResourcePtr.CopyTo<IUnknown>(d3D12ResourceUnknown.GetAddressOf()).SUCCEEDED);
+        Assert.IsTrue(wrappedD3D12ResourcePtr.CopyTo<IUnknown>(wrappedD3D12ResourceUnknown.GetAddressOf()).SUCCEEDED);
         Assert.AreEqual((nint)d3D12ResourceUnknown.Get(), (nint)wrappedD3D12ResourceUnknown.Get());
 
         // The allocation is kept alive by the resource at this point

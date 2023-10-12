@@ -2,12 +2,10 @@ using System;
 using System.Threading.Tasks;
 using ComputeSharp.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win32;
-using Win32.Graphics.Direct3D12;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests.DeviceLost.Helpers;
-
-using Win32 = Win32.Apis;
 
 /// <summary>
 /// A helper to do common checks on native device objects.
@@ -23,7 +21,7 @@ internal static class GraphicsDeviceHelper
     {
         fixed (ID3D12Device** ppvObject = d3D12Device)
         {
-            InteropServices.GetID3D12Device(graphicsDevice, Win32.__uuidof<ID3D12Device>(), (void**)ppvObject);
+            InteropServices.GetID3D12Device(graphicsDevice, Windows.__uuidof<ID3D12Device>(), (void**)ppvObject);
         }
     }
 

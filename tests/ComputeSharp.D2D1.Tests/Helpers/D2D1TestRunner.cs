@@ -5,9 +5,8 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Tests.Helpers;
-using Win32;
-using Win32.Graphics.Direct2D;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.Tests.Helpers;
 

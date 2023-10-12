@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Win32;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests.Extensions;
 
@@ -17,7 +17,7 @@ internal static class ComPtrExtensions
     /// <returns>The reference count value for <paramref name="ptr"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe uint GetReferenceCount<T>(this in ComPtr<T> ptr)
-        where T : unmanaged
+        where T : unmanaged, IUnknown.Interface
     {
         if (ptr.Get() is null)
         {

@@ -8,13 +8,9 @@ using ComputeSharp.D2D1.Tests.Helpers;
 using ComputeSharp.SwapChain.Shaders.D2D1;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Win32;
-using Win32.Graphics.Direct2D;
-using HRESULT = Win32.HResult;
-using D2D1_MAPPED_RECT = Win32.Graphics.Direct2D.MappedRect;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 using Rectangle = System.Drawing.Rectangle;
-
-#pragma warning disable CS0649, IDE0044
 
 namespace ComputeSharp.D2D1.Tests;
 
@@ -118,7 +114,7 @@ public partial class D2D1TransformMapperTests
 
         HRESULT hresult = unknown.CopyTo(&uuidOfTransformMapperInternal, (void**)transformMapperInternal.GetAddressOf());
 
-        Assert.AreEqual(hresult, HRESULT.Ok);
+        Assert.AreEqual((int)hresult, S.S_OK);
         Assert.IsTrue(transformMapperInternal.Get() is not null);
 
         IntPtr handlePtr;
@@ -128,7 +124,7 @@ public partial class D2D1TransformMapperTests
             transformMapperInternal.Get(),
             (void**)&handlePtr);
 
-        Assert.AreEqual(hresult, HRESULT.Ok);
+        Assert.AreEqual((int)hresult, S.S_OK);
 
         GCHandle handle = GCHandle.FromIntPtr(handlePtr);
 
