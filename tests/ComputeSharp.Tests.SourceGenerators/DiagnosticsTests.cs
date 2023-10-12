@@ -1433,7 +1433,7 @@ public class DiagnosticsTests
         };
 
         // Get all assembly references for the loaded assemblies (easy way to pull in all necessary dependencies)
-        IEnumerable<MetadataReference> metadataReferences = Net70.References.All.Concat(additionalReferences);
+        IEnumerable<MetadataReference> metadataReferences = Net80.References.All.Concat(additionalReferences);
 
         // Parse the source text (C# 11)
         SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(

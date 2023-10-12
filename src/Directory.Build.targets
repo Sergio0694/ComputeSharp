@@ -48,15 +48,15 @@
     properties set below, because if that is the case the trimmable attribute
     will be set but the analyzers will not run, so warnings will be skipped.
   -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net7.0'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
     <IsTrimmable>true</IsTrimmable>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <EnableAotAnalyzer>true</EnableAotAnalyzer>
     <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
   </PropertyGroup>
 
-  <!-- Emit the [DisableRuntimeMarshalling] attribute for all .NET 7 projects -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0'))">
+  <!-- Emit the [DisableRuntimeMarshalling] attribute for all .NET 8 projects -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.DisableRuntimeMarshallingAttribute" />
   </ItemGroup>
 
@@ -71,7 +71,7 @@
   </Target>
 
   <!-- Emit the [ComVisible(false)] attribute for WinUI targets -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-windows'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-windows'))">
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
       <_Parameter1>false</_Parameter1>
     </AssemblyAttribute>

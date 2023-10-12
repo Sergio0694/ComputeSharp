@@ -80,7 +80,9 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(texture, ref Unsafe.AsRef(default(T)));
+        Unsafe.SkipInit(out T shader);
+
+        context.Run(texture, ref shader);
     }
 
     /// <summary>
