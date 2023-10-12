@@ -62,7 +62,6 @@ partial class IShaderGenerator
             bool isComputeShader = pixelShaderSymbol is null;
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
-            ImmutableArray<string> delegateInstanceFields = GetDispatchId.GetInfo(structDeclarationSymbol);
             ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
             (string entryPoint, ImmutableArray<(string Signature, string Definition)> processedMethods, bool isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, instanceMethods, constantDefinitions, isComputeShader);
             (string, string)? implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
@@ -78,7 +77,6 @@ partial class IShaderGenerator
                 declaredTypes,
                 resourceFields,
                 valueFields,
-                delegateInstanceFields,
                 staticFields,
                 sharedBuffers,
                 processedMethods,
@@ -544,7 +542,6 @@ partial class IShaderGenerator
         /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
         /// <param name="resourceFields">The sequence of resource instance fields for the current shader.</param>
         /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
-        /// <param name="delegateInstanceFields">The sequence of delegate fields for the current shader.</param>
         /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
         /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
@@ -558,7 +555,6 @@ partial class IShaderGenerator
             ImmutableArray<(string Name, string Definition)> declaredTypes,
             ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields,
             ImmutableArray<(string Name, string HlslType)> valueFields,
-            ImmutableArray<string> delegateInstanceFields,
             ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
             ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers,
             ImmutableArray<(string Signature, string Definition)> processedMethods,
@@ -768,8 +764,7 @@ partial class IShaderGenerator
                 isSamplerUsed,
                 declaredTypes.Select(static t => t.Name).ToImmutableArray(),
                 definedConstants.Select(static c => c.Name).ToImmutableArray(),
-                processedMethods.Select(static m => m.Signature).ToImmutableArray(),
-                delegateInstanceFields);
+                processedMethods.Select(static m => m.Signature).ToImmutableArray());
         }
 
         /// <summary>

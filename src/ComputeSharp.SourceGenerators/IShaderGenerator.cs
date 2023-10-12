@@ -56,11 +56,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
-                    // GetDispatchId() info
-                    ImmutableArray<string> dispatchIdInfo = GetDispatchId.GetInfo(typeSymbol);
-
-                    token.ThrowIfCancellationRequested();
-
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
                         diagnostics,
@@ -93,14 +88,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
                         diagnostics,
                         typeSymbol,
-                        !hlslSourceInfo.Delegates.IsEmpty,
                         IsDynamicCompilationSupported(context.SemanticModel.Compilation));
 
                     token.ThrowIfCancellationRequested();
 
                     return new ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
-                        DispatchId: new DispatchIdInfo(dispatchIdInfo),
                         DispatchData: new DispatchDataInfo(
                             shaderType,
                             fieldInfos,
@@ -117,20 +110,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.ReportDiagnostics(
             shaderInfoWithErrors
             .Select(static (item, _) => item.Diagnostcs));
-
-        // Get the GetDispatchId() info (hierarchy and dispatch id info)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo DispatchId)> dispatchIdInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchId));
-
-        // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(dispatchIdInfo, static (context, item) =>
-        {
-            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.DispatchId.Delegates);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, addSkipLocalsInitAttribute: false);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(GetDispatchId)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
-        });
 
         // Get the LoadDispatchData() info (hierarchy and dispatch data info)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo DispatchData)> dispatchDataInfo =

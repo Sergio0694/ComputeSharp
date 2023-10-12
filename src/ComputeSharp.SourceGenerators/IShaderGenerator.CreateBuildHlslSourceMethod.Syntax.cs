@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 using ComputeSharp.__Internals;
@@ -88,14 +87,8 @@ partial class IShaderGenerator
             using ImmutableArrayBuilder<StatementSyntax> statements = new();
 
             StringBuilder textBuilder = new();
-            int capturedDelegates = 0;
             int prologueStatements = 0;
             int sizeHint = 64;
-
-            void AppendLF()
-            {
-                _ = textBuilder.Append('\n');
-            }
 
             void AppendLine(string text)
             {
@@ -132,67 +125,6 @@ partial class IShaderGenerator
                 }
             }
 
-            // Declare the hashsets to track imported members and types from delegates, if needed
-            if (!hlslSourceInfo.Delegates.IsEmpty)
-            {
-                void DeclareMapping(int index, string name, IEnumerable<string> items)
-                {
-                    // global::System.Collections.Generic.HashSet<string> <NAME> = new();
-                    statements.Insert(index,
-                        LocalDeclarationStatement(VariableDeclaration(
-                        GenericName(Identifier("global::System.Collections.Generic.HashSet"))
-                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.StringKeyword))))
-                        .AddVariables(
-                            VariableDeclarator(Identifier(name))
-                            .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression())))));
-
-                    prologueStatements++;
-
-                    // <NAME>.Add("<ITEM>");
-                    foreach (string item in items)
-                    {
-                        statements.Add(
-                            ExpressionStatement(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName(name),
-                                        IdentifierName("Add")))
-                                .AddArgumentListArguments(Argument(
-                                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))))));
-
-                        prologueStatements++;
-                    }
-                }
-
-                DeclareMapping(0, "__typeNames", hlslSourceInfo.DefinedTypes);
-                DeclareMapping(1, "__constantNames", hlslSourceInfo.DefinedConstants);
-                DeclareMapping(2, "__methodNames", hlslSourceInfo.MethodSignatures);
-
-                // Go through all existing delegate fields, if any
-                foreach (string fieldName in hlslSourceInfo.Delegates)
-                {
-                    // global::ComputeSharp.__Internals.ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = global::ComputeSharp.__Internals.ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
-                    statements.Add(
-                        LocalDeclarationStatement(VariableDeclaration(IdentifierName($"global::ComputeSharp.__Internals.{nameof(ShaderMethodSourceAttribute)}"))
-                        .AddVariables(
-                            VariableDeclarator(Identifier($"__{fieldName}Attribute"))
-                            .WithInitializer(
-                                EqualsValueClause(
-                                    InvocationExpression(
-                                        MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName($"global::ComputeSharp.__Internals.{nameof(ShaderMethodSourceAttribute)}"),
-                                            IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
-                                    .AddArgumentListArguments(
-                                        Argument(IdentifierName(fieldName)),
-                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
-
-                    capturedDelegates++;
-                    prologueStatements++;
-                }
-            }
-
             // Header and thread ids
             AppendLine(hlslSourceInfo.HeaderAndThreadsX);
             AppendParsedStatement("builder.Append(threadsX);");
@@ -204,67 +136,14 @@ partial class IShaderGenerator
             // Define declarations
             AppendLine(hlslSourceInfo.Defines);
 
-            // Defines from captured delegates
-            foreach (string fieldName in hlslSourceInfo.Delegates)
-            {
-                AppendParsedStatement($"__{fieldName}Attribute.AppendConstants(ref builder, __constantNames);");
-            }
-
             // Static fields and declared types
             AppendLine(hlslSourceInfo.StaticFieldsAndDeclaredTypes);
-
-            // Declared types from captured delegates
-            foreach (string fieldName in hlslSourceInfo.Delegates)
-            {
-                AppendParsedStatement($"__{fieldName}Attribute.AppendTypes(ref builder, __typeNames);");
-            }
 
             // Captured variables
             AppendLine(hlslSourceInfo.CapturedFieldsAndResourcesAndForwardDeclarations);
 
-            // Forward declarations from captured delegates
-            foreach (string fieldName in hlslSourceInfo.Delegates)
-            {
-                AppendParsedStatement($"__{fieldName}Attribute.AppendForwardDeclarations(ref builder, __methodNames);");
-            }
-
-            // Remove all forward declarations from methods that are embedded into the shader.
-            // This is necessary to avoid duplicate definitions from methods from delegates.
-            if (capturedDelegates > 0)
-            {
-                // <NAME>.Add("<ITEM>");
-                foreach (string forwardDeclaration in hlslSourceInfo.MethodSignatures)
-                {
-                    FlushText();
-
-                    statements.Add(
-                        ExpressionStatement(
-                            InvocationExpression(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("__methodNames"),
-                                    IdentifierName("Remove")))
-                            .AddArgumentListArguments(Argument(
-                                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(forwardDeclaration))))));
-                }
-            }
-
             // Captured methods
             AppendLine(hlslSourceInfo.CapturedMethods);
-
-            // Captured methods from captured delegates
-            foreach (string fieldName in hlslSourceInfo.Delegates)
-            {
-                AppendParsedStatement($"__{fieldName}Attribute.AppendMethods(ref builder, __methodNames);");
-            }
-
-            // Captured delegate methods
-            foreach (string fieldName in hlslSourceInfo.Delegates)
-            {
-                AppendLF();
-                AppendParsedStatement($"__{fieldName}Attribute.AppendMappedInvokeMethod(ref builder, \"{fieldName}\");");
-                AppendLF();
-            }
 
             // Entry point
             AppendLine(hlslSourceInfo.EntryPoint);

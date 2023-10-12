@@ -18,7 +18,6 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="DefinedTypes">The names of declared types.</param>
 /// <param name="DefinedConstants">The names of defined constants.</param>
 /// <param name="MethodSignatures">The signatures for captured methods.</param>
-/// <param name="Delegates">The list of delegate fields.</param>
 internal sealed record HlslShaderSourceInfo(
     string HeaderAndThreadsX,
     string ThreadsY,
@@ -32,5 +31,4 @@ internal sealed record HlslShaderSourceInfo(
     bool IsSamplerUsed,
     EquatableArray<string> DefinedTypes,
     EquatableArray<string> DefinedConstants,
-    EquatableArray<string> MethodSignatures,
-    EquatableArray<string> Delegates);
+    EquatableArray<string> MethodSignatures);

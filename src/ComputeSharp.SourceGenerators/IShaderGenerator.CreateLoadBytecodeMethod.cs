@@ -36,13 +36,11 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <returns>The thread ids for the precompiled shader, if available.</returns>
         public static ThreadIdsInfo GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
-            bool isDynamicShader,
             bool supportsDynamicShaders)
         {
             // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
@@ -105,14 +103,6 @@ partial class IShaderGenerator
                 threadsX = explicitThreadsX;
                 threadsY = explicitThreadsY;
                 threadsZ = explicitThreadsZ;
-            }
-
-            // If the current shader is dynamic, emit a diagnostic error
-            if (isDynamicShader)
-            {
-                diagnostics.Add(EmbeddedBytecodeWithDynamicShader, structDeclarationSymbol, structDeclarationSymbol);
-
-                return new(true, 0, 0, 0);
             }
 
             // Ensure the bytecode generation is disabled if any errors are present. This step is done last to ensure that

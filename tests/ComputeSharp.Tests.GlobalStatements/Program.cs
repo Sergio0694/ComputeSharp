@@ -5,11 +5,11 @@ float[] numbers = Enumerable.Range(0, 128).Select(i => (float)i).ToArray();
 using GraphicsDevice device = GraphicsDevice.GetDefault();
 using ReadWriteBuffer<float> buffer = device.AllocateReadWriteBuffer(numbers);
 
-device.For(buffer.Length, new ApplyFunctionShader(buffer, AddHalf));
+device.For(buffer.Length, new ApplyFunctionShader(buffer));
 
 foreach (ref float number in numbers.AsSpan())
 {
-    number = AddHalf(number);
+    number = ApplyFunctionShader.AddHalf(number);
 }
 
 float[] result = buffer.ToArray();
@@ -21,18 +21,19 @@ if (!numbers.SequenceEqual(result))
 
 Console.WriteLine("Test passed successfully!");
 
-// See https://github.com/Sergio0694/ComputeSharp/issues/374
-[ShaderMethod]
-static float AddHalf(float input) => input + 0.5f;
-
 [AutoConstructor]
+[EmbeddedBytecode(DispatchAxis.X)]
 public readonly partial struct ApplyFunctionShader : IComputeShader
 {
     private readonly ReadWriteBuffer<float> sourceTexture;
-    private readonly Func<float, float> func;
+
+    public static float AddHalf(float input)
+    {
+        return input + 0.5f;
+    }
 
     public void Execute()
     {
-        this.sourceTexture[ThreadIds.X] = this.func(this.sourceTexture[ThreadIds.X]);
+        this.sourceTexture[ThreadIds.X] = AddHalf(this.sourceTexture[ThreadIds.X]);
     }
 }

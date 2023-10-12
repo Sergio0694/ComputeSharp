@@ -11,14 +11,6 @@ namespace ComputeSharp.__Internals;
 public interface IShader
 {
     /// <summary>
-    /// Gets a unique dispatch identifier for the shader.
-    /// </summary>
-    /// <returns>The unique dispatch identifier for the shader.</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be used directly by user code")]
-    int GetDispatchId();
-
-    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
