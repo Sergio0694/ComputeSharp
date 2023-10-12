@@ -4,9 +4,6 @@ using System.Text.RegularExpressions;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using DirectX = TerraFX.Interop.DirectX.DirectX2;
-#endif
 
 namespace ComputeSharp.Shaders.Translation;
 
