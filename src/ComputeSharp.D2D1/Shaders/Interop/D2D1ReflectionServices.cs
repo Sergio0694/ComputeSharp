@@ -44,7 +44,7 @@ public static class D2D1ReflectionServices
                     pSrcData: hlslBytecodePtr,
                     SrcDataSize: (nuint)hlslBytecode.Length,
                     pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-                    ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
+                    ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
             }
         }
         else
@@ -59,7 +59,7 @@ public static class D2D1ReflectionServices
                 pSrcData: (byte*)dynamicBytecode.Get()->GetBufferPointer(),
                 SrcDataSize: dynamicBytecode.Get()->GetBufferSize(),
                 pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-                ppReflector: d3D11ShaderReflection.GetVoidAddressOf()).Assert();
+                ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
         }
 
         D3D11_SHADER_DESC d3D11ShaderDescription;

@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -89,7 +88,7 @@ internal static unsafe class ID2D1EffectContextExtensions
             pSrcData: bytecode,
             SrcDataSize: (uint)bytecodeSize,
             pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-            ppReflector: d3D11ShaderReflection.GetVoidAddressOf());
+            ppReflector: (void**)d3D11ShaderReflection.GetAddressOf());
 
         if (!Windows.SUCCEEDED(hresult))
         {
