@@ -8,7 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>TerraFX.Interop.Windows.Dynamic</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX.cs" />
-  </ItemGroup>
 </Project>
