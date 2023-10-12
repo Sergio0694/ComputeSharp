@@ -77,9 +77,10 @@
     <Compile Include="..\ComputeSharp.D2D1\Intrinsics\D2D.cs" Link="ComputeSharp.D2D1\Intrinsics\D2D.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" Link="ComputeSharp.D2D1\Shaders\Exceptions\FxcCompilationException.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" Link="ComputeSharp.D2D1\Shaders\Interop\Helpers\D2D1AssemblyAssociatedMemory.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="Fxc\D3DCompiler.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="Fxc\D3DCompiler.ID3DInclude.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" Link="Fxc\Headers\d2d1effecthelpers.hlsli.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" Link="ComputeSharp.D2D1\Shaders\Translation\ASCII.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\D2D1EffectHelpers.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Headers\D2D1EffectHelpers.cs" />
 
     <!-- ComPtr<T> and HRESULT extension from D3D12 generator -->
     <Compile Include="..\ComputeSharp.SourceGenerators\Dxc\Windows.Win32\ComPtr{T}.cs" Link="Fxc\Windows.Win32\ComPtr{T}.cs" />

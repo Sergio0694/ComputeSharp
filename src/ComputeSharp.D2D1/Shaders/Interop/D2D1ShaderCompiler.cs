@@ -74,10 +74,10 @@ public static class D2D1ShaderCompiler
         // Compile the standalone D2D1 full shader
         using ComPtr<ID3DBlob> d3DBlobFullShader = D3DCompiler.Compile(
             source: hlslSourceAscii,
-            macro: D3DCompiler.ASCII.D2D_FULL_SHADER,
+            macro: ASCII.D2D_FULL_SHADER,
             d2DEntry: entryPointAscii,
             entryPoint: entryPointAscii,
-            target: D3DCompiler.ASCII.GetPixelShaderProfile(shaderProfile),
+            target: ASCII.GetPixelShaderProfile(shaderProfile),
             flags: (uint)options);
 
         if (!enableLinking)
@@ -91,10 +91,10 @@ public static class D2D1ShaderCompiler
         // Compile the export function
         using ComPtr<ID3DBlob> d3DBlobFunction = D3DCompiler.Compile(
             source: hlslSourceAscii,
-            macro: D3DCompiler.ASCII.D2D_FUNCTION,
+            macro: ASCII.D2D_FUNCTION,
             d2DEntry: entryPointAscii,
             entryPoint: default,
-            target: D3DCompiler.ASCII.GetLibraryProfile(shaderProfile),
+            target: ASCII.GetLibraryProfile(shaderProfile),
             flags: (uint)options);
 
         // Embed it as private data if requested
