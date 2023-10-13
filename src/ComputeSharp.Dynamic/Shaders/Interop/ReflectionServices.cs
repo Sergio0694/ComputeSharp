@@ -104,11 +104,9 @@ public static class ReflectionServices
     private static unsafe ShaderInfo GetNonGenericShaderInfo<T>(in T shader)
         where T : struct, IShader
     {
-        Unsafe.AsRef(in shader).BuildHlslSource(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
+        Unsafe.AsRef(in shader).BuildHlslSource(out string hlslSource);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(shaderSource.WrittenSpan);
-
-        shaderSource.Dispose();
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(hlslSource);
 
         using ComPtr<IDxcUtils> dxcUtils = default;
 
@@ -134,7 +132,7 @@ public static class ReflectionServices
 
         return new(
             CompilerVersion: new string(d3D12ShaderDescription.Creator),
-            HlslSource: shaderSource.WrittenSpan.ToString(),
+            HlslSource: hlslSource,
             ConstantBufferCount: d3D12ShaderDescription.ConstantBuffers,
             BoundResourceCount: d3D12ShaderDescription.BoundResources,
             InstructionCount: d3D12ShaderDescription.InstructionCount,

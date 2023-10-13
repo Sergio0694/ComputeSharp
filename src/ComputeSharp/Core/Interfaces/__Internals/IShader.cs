@@ -38,13 +38,10 @@ public interface IShader
     /// <summary>
     /// Builds the HLSL source code for the current shader instance.
     /// </summary>
-    /// <param name="builder">The resulting <see cref="ArrayPoolStringBuilder"/> instance containing the HLSL source.</param>
-    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <param name="hlslSource">The resulting HLSL source.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ);
+    void BuildHlslSource(out string hlslSource);
 
     /// <summary>
     /// Loads the bytecode for the current shader.
