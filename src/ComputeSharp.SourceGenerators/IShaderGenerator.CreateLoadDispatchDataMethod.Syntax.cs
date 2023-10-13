@@ -24,9 +24,9 @@ partial class IShaderGenerator
 
             using (writer.WriteBlock())
             {
-                int numberOfResources = info.DispatchMetadata.ResourceDescriptors.Length;
+                int numberOfResources = info.ResourceDescriptors.Length;
 
-                writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.DispatchData.Root32BitConstantCount}];");
+                writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.Root32BitConstantCount}];");
                 writer.WriteLineIf($"global::System.Span<ulong> span1 = stackalloc ulong[{numberOfResources}];", numberOfResources > 0);
                 writer.WriteLine("ref uint r0 = ref span0[0];");
                 writer.WriteLineIf("ref ulong r1 = ref span1[0];", numberOfResources > 0);
@@ -34,10 +34,10 @@ partial class IShaderGenerator
                 // Append the statements for the dispatch ranges
                 writer.WriteLine("span0[0] = (uint)x;");
                 writer.WriteLine("span0[1] = (uint)y;");
-                writer.WriteLineIf("span0[2] = (uint)z;", !info.DispatchData.IsPixelShaderLike);
+                writer.WriteLineIf("span0[2] = (uint)z;", !info.IsPixelShaderLike);
 
                 // Generate loading statements for each captured field
-                foreach (FieldInfo fieldInfo in info.DispatchData.FieldInfos)
+                foreach (FieldInfo fieldInfo in info.Fields)
                 {
                     switch (fieldInfo)
                     {

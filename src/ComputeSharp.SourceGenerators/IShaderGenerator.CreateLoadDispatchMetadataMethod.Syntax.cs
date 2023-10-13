@@ -26,7 +26,7 @@ partial class IShaderGenerator
             using (writer.WriteBlock())
             {
                 // Compute the total number of resources
-                int totalResourcesCount = info.DispatchMetadata.ResourceDescriptors.Length;
+                int totalResourcesCount = info.ResourceDescriptors.Length;
 
                 writer.WriteLine("global::System.Span<byte> span0 = stackalloc byte[5];");
                 writer.WriteLine($"global::System.Span<global::ComputeSharp.__Internals.ResourceDescriptor> span1 = stackalloc global::ComputeSharp.__Internals.ResourceDescriptor[{totalResourcesCount}];");
@@ -34,11 +34,11 @@ partial class IShaderGenerator
                 writer.WriteLine("ref global::ComputeSharp.__Internals.ResourceDescriptor r1 = ref span1[0];");
 
                 // Write the serialized shader metadata
-                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {info.DispatchMetadata.Root32BitConstantCount});");
-                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {info.DispatchMetadata.IsSamplerUsed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()});");
+                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {info.Root32BitConstantCount});");
+                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {info.IsSamplerUsed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()});");
 
                 // Populate the sequence of resource descriptors
-                foreach (ResourceDescriptor descriptor in info.DispatchMetadata.ResourceDescriptors)
+                foreach (ResourceDescriptor descriptor in info.ResourceDescriptors)
                 {
                     writer.WriteLine($"global::ComputeSharp.__Internals.ResourceDescriptor.Create({descriptor.TypeId}, {descriptor.RegisterOffset}, out global::System.Runtime.CompilerServices.Unsafe.Add(ref r1, {descriptor.Offset}));");
                 }

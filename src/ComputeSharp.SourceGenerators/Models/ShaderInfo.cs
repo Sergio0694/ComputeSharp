@@ -7,17 +7,27 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// A model representing all necessary info for a full generation pass for a shader.
 /// </summary>
 /// <param name="Hierarchy">The hierarchy info for the shader type.</param>
-/// <param name="DispatchData">The gathered shader dispatch data.</param>
-/// <param name="DispatchMetadata">The gathered shader dispatch metadata.</param>
-/// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
+/// <param name="ThreadsX">The thread ids value for the X axis.</param>
+/// <param name="ThreadsY">The thread ids value for the Y axis.</param>
+/// <param name="ThreadsZ">The thread ids value for the Z axis.</param>
+/// <param name="IsPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
+/// <param name="IsSamplerUsed">Whether or not the static sampler is used.</param>
+/// <param name="Fields">The description on shader instance fields.</param>
+/// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
+/// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
+/// <param name="HlslSource">The HLSL source for the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
-/// <param name="ThreadIds">The thread ids for the shader, if compilation is requested.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record ShaderInfo(
     HierarchyInfo Hierarchy,
-    DispatchDataInfo DispatchData,
-    DispatchMetadataInfo DispatchMetadata,
-    HlslShaderSourceInfo HlslShaderSource,
+    int ThreadsX,
+    int ThreadsY,
+    int ThreadsZ,
+    bool IsPixelShaderLike,
+    bool IsSamplerUsed,
+    EquatableArray<FieldInfo> Fields,
+    EquatableArray<ResourceDescriptor> ResourceDescriptors,
+    int Root32BitConstantCount,
+    string HlslSource,
     HlslBytecodeInfo HlslInfo,
-    ThreadIdsInfo ThreadIds,
     EquatableArray<DiagnosticInfo> Diagnostcs);

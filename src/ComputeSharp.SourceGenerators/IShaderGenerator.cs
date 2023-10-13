@@ -65,34 +65,43 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     token.ThrowIfCancellationRequested();
 
                     // TryGetBytecode() info
-                    ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
+                    LoadBytecode.GetInfo(
                         diagnostics,
                         typeSymbol,
-                        false);
+                        out int threadsX,
+                        out int threadsY,
+                        out int threadsZ);
 
                     token.ThrowIfCancellationRequested();
 
                     // BuildHlslSource() info
-                    HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
+                    BuildHlslSource.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeDeclaration,
                         typeSymbol,
-                        threadIds,
-                        out bool isImplicitTextureUsed);
+                        threadsX,
+                        threadsY,
+                        threadsZ,
+                        out bool isImplicitTextureUsed,
+                        out bool isSamplerUsed,
+                        out string hlslSource);
 
                     token.ThrowIfCancellationRequested();
 
                     // GetDispatchMetadata() info
-                    DispatchMetadataInfo dispatchMetadataInfo = LoadDispatchMetadata.GetInfo(
+                    ImmutableArray<ResourceDescriptor> resourceDescriptors = LoadDispatchMetadata.GetInfo(
                         root32BitConstantCount,
                         isImplicitTextureUsed,
-                        hlslSourceInfo.IsSamplerUsed,
+                        isSamplerUsed,
                         fieldInfos);
 
                     token.ThrowIfCancellationRequested();
 
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(threadIds, hlslSourceInfo.HlslSource, token);
+                    // Like for D2D1 shaders, disable compilation if any errors are present
+                    bool isCompilationEnabled = diagnostics.WrittenSpan.IsEmpty;
+
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(hlslSource, isCompilationEnabled, token);
 
                     token.ThrowIfCancellationRequested();
 
@@ -107,15 +116,16 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     return new ShaderInfo(
                         Hierarchy: hierarchyInfo,
-                        DispatchData: new DispatchDataInfo(
-                            isPixelShaderLike,
-                            fieldInfos,
-                            resourceCount,
-                            root32BitConstantCount),
-                        DispatchMetadata: dispatchMetadataInfo,
-                        HlslShaderSource: hlslSourceInfo,
+                        ThreadsX: threadsX,
+                        ThreadsY: threadsY,
+                        ThreadsZ: threadsZ,
+                        IsPixelShaderLike: isPixelShaderLike,
+                        IsSamplerUsed: isSamplerUsed,
+                        Fields: fieldInfos,
+                        ResourceDescriptors: resourceDescriptors,
+                        Root32BitConstantCount: root32BitConstantCount,
+                        HlslSource: hlslSource,
                         HlslInfo: hlslInfo,
-                        ThreadIds: threadIds,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
             .Where(static item => item is not null)!;

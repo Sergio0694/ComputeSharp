@@ -11,7 +11,6 @@ using ComputeSharp.Shaders.Translation;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
-using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -39,12 +38,15 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
-        /// <returns>The thread ids for the precompiled shader, if available.</returns>
-        public static ThreadIdsInfo GetInfo(
+        /// <param name="threadsX">The thread ids value for the X axis.</param>
+        /// <param name="threadsY">The thread ids value for the Y axis.</param>
+        /// <param name="threadsZ">The thread ids value for the Z axis.</param>
+        public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
-            bool supportsDynamicShaders)
+            out int threadsX,
+            out int threadsY,
+            out int threadsZ)
         {
             // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
             if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
@@ -52,12 +54,10 @@ partial class IShaderGenerator
                 // Emit the diagnostics if dynamic shaders are not supported
                 diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
 
-                return new(true, 0, 0, 0);
-            }
+                threadsX = threadsY = threadsZ = 0;
 
-            int threadsX;
-            int threadsY;
-            int threadsZ;
+                return;
+            }
 
             // Check for a dispatch axis argument first
             if (attribute.ConstructorArguments.Length == 1)
@@ -81,7 +81,9 @@ partial class IShaderGenerator
                 {
                     diagnostics.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
 
-                    return new(true, 0, 0, 0);
+                    threadsX = threadsY = threadsZ = 0;
+
+                    return;
                 }
             }
             else if (
@@ -96,7 +98,9 @@ partial class IShaderGenerator
                 // Failed to validate the thread number arguments
                 diagnostics.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
 
-                return new(true, 0, 0, 0);
+                threadsX = threadsY = threadsZ = 0;
+
+                return;
             }
             else
             {
@@ -104,31 +108,19 @@ partial class IShaderGenerator
                 threadsY = explicitThreadsY;
                 threadsZ = explicitThreadsZ;
             }
-
-            // Ensure the bytecode generation is disabled if any errors are present. This step is done last to ensure that
-            // all available diagnostics are still emitted correctly before reaching this point, instead of being disabled.
-            if (diagnostics.Count > 0)
-            {
-                return new(true, 0, 0, 0);
-            }
-
-            return new(false, threadsX, threadsY, threadsZ);
         }
 
         /// <summary>
         /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
         /// </summary>
-        /// <param name="threadIds">The input <see cref="ThreadIdsInfo"/> instance to process.</param>
         /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
+        /// <param name="isCompilationEnabled">Whether compilation is enabled.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
-        public static unsafe HlslBytecodeInfo GetBytecode(
-            ThreadIdsInfo threadIds,
-            string hlslSource,
-            CancellationToken token)
+        public static unsafe HlslBytecodeInfo GetBytecode(string hlslSource, bool isCompilationEnabled, CancellationToken token)
         {
             // Skip even attempting to compile if compilation is disabled (see comments in D2D1 generator)
-            if (threadIds.IsDefault)
+            if (!isCompilationEnabled)
             {
                 return HlslBytecodeInfo.Missing.Instance;
             }

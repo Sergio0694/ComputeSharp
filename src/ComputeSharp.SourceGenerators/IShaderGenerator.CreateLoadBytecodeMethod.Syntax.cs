@@ -31,7 +31,7 @@ partial class IShaderGenerator
                 }
 
                 // Check that the [numthreads] values match
-                writer.WriteLine($"if (threadsX == {info.ThreadIds.X} && threadsY == {info.ThreadIds.Y} && threadsZ == {info.ThreadIds.Z})");
+                writer.WriteLine($"if (threadsX == {info.ThreadsX} && threadsY == {info.ThreadsY} && threadsZ == {info.ThreadsZ})");
 
                 using (writer.WriteBlock())
                 {
