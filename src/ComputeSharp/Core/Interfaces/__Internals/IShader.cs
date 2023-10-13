@@ -11,6 +11,21 @@ namespace ComputeSharp.__Internals;
 public interface IShader
 {
     /// <summary>
+    /// The number of threads in each thread group for the X axis.
+    /// </summary>
+    int ThreadsX { get; }
+
+    /// <summary>
+    /// The number of threads in each thread group for the Y axis.
+    /// </summary>
+    int ThreadsY { get; }
+
+    /// <summary>
+    /// The number of threads in each thread group for the Z axis.
+    /// </summary>
+    int ThreadsZ { get; }
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>

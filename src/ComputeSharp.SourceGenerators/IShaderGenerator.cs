@@ -145,6 +145,9 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         {
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
+            declaredMembers.Add(LoadBytecode.WriteThreadsXSyntax);
+            declaredMembers.Add(LoadBytecode.WriteThreadsYSyntax);
+            declaredMembers.Add(LoadBytecode.WriteThreadsZSyntax);
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
             declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
             declaredMembers.Add(BuildHlslSource.WriteSyntax);

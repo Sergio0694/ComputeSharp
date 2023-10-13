@@ -45,5 +45,41 @@ partial class IShaderGenerator
                 }
             }
         }
+
+        /// <summary>
+        /// Writes the <c>ThreadsX</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteThreadsXSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsX => {info.ThreadsX};");
+        }
+
+        /// <summary>
+        /// Writes the <c>ThreadsY</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteThreadsYSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsY => {info.ThreadsY};");
+        }
+
+        /// <summary>
+        /// Writes the <c>ThreadsZ</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteThreadsZSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsZ => {info.ThreadsZ};");
+        }
     }
 }
