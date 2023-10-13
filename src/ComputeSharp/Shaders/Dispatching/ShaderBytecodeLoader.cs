@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Models;
-using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
@@ -22,22 +21,13 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     /// Gets the current cached shader instance.
     /// </summary>
     /// <returns>The current <see cref="ICachedShader"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the shader has not been initialized.</exception>
+    /// <exception cref="NotSupportedException">Thrown if the HLSL bytecode is not available.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ICachedShader GetCachedShader()
     {
-        default(InvalidOperationException).ThrowIf(this.cachedShader is null);
+        default(NotSupportedException).ThrowIf(this.cachedShader is null);
 
         return this.cachedShader;
-    }
-
-    /// <inheritdoc/>
-    public unsafe void LoadDynamicBytecode(IntPtr handle)
-    {
-        default(InvalidOperationException).ThrowIf(this.cachedShader is not null);
-        default(NotSupportedException).ThrowIf(handle == IntPtr.Zero);
-
-        this.cachedShader = new ICachedShader.Dynamic((IDxcBlob*)handle);
     }
 
     /// <inheritdoc/>

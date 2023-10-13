@@ -11,14 +11,6 @@ namespace ComputeSharp.__Internals;
 public interface IBytecodeLoader
 {
     /// <summary>
-    /// Loads a dynamic shader bytecode.
-    /// </summary>
-    /// <param name="handle">An opaque handle to the shader bytecode.</param>
-    /// <exception cref="InvalidOperationException">Thrown if the shader has already been initialized.</exception>
-    /// <exception cref="NotSupportedException">Thrown if <paramref name="handle"/> is <see langword="null"/> (indicating an unsupported configuration).</exception>
-    void LoadDynamicBytecode(IntPtr handle);
-
-    /// <summary>
     /// Loads the embedded shader bytecode for the shader being dispatched.
     /// </summary>
     /// <param name="bytecode">The shader bytecode.</param>

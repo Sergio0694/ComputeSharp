@@ -22,11 +22,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Check whether or not dynamic shaders are supported
-        IncrementalValueProvider<bool> supportsDynamicShaders =
-            context.CompilationProvider
-            .Select(static (compilation, _) => false);
-
         // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<ShaderInfo> shaderInfoWithErrors =
             context.SyntaxProvider
@@ -130,18 +125,17 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         });
 
         // Get the BuildHlslSource info (hierarchy, HLSL source and parsing options)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource) Left, bool SupportsDynamicShaders)> hlslSourceInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource)> hlslSourceInfo =
             shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource))
-            .Combine(supportsDynamicShaders);
+            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.Left.HlslShaderSource, item.SupportsDynamicShaders, item.Left.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslShaderSource, item.Hierarchy.Hierarchy.Length);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
 
-            context.AddSource($"{item.Left.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
         // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
@@ -198,19 +192,18 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.ReportDiagnostics(embeddedBytecodeDiagnostics);
 
         // Get the TryGetBytecode() info (hierarchy and compiled bytecode)
-        IncrementalValuesProvider<((HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode) Info, bool SupportsDynamicShaders)> embeddedBytecodeInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode)> embeddedBytecodeInfo =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.EmbeddedBytecode))
-            .Combine(supportsDynamicShaders);
+            .Select(static (item, token) => (item.Hierarchy, item.EmbeddedBytecode));
 
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(embeddedBytecodeInfo, static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Info.EmbeddedBytecode, item.SupportsDynamicShaders, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Info.Hierarchy, tryGetBytecodeMethod, addSkipLocalsInitAttribute: false);
+            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.EmbeddedBytecode, out Func<SyntaxNode, SourceText> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, tryGetBytecodeMethod, addSkipLocalsInitAttribute: false);
             SourceText text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Info.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);
         });
     }
 }

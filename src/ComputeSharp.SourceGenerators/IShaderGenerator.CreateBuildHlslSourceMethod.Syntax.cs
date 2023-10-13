@@ -22,10 +22,9 @@ partial class IShaderGenerator
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
-        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="hierarchyDepth">The depth of the hierarchy for this type (used to calculate the right indentation).</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslSource</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, int hierarchyDepth)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
             ImmutableArray<StatementSyntax> bodyStatements = GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth);
