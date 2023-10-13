@@ -70,7 +70,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         typeSymbol,
                         out int threadsX,
                         out int threadsY,
-                        out int threadsZ);
+                        out int threadsZ,
+                        out bool isCompilationEnabled);
 
                     token.ThrowIfCancellationRequested();
 
@@ -98,10 +99,11 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
-                    // Like for D2D1 shaders, disable compilation if any errors are present
-                    bool isCompilationEnabled = diagnostics.WrittenSpan.IsEmpty;
+                    // Prepare the lookup key for the HLSL shader bytecode
+                    HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, isCompilationEnabled);
 
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(hlslSource, isCompilationEnabled, token);
+                    // Try to get the HLSL bytecode
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
@@ -124,7 +126,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         Fields: fieldInfos,
                         ResourceDescriptors: resourceDescriptors,
                         Root32BitConstantCount: root32BitConstantCount,
-                        HlslSource: hlslSource,
+                        HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
                 })

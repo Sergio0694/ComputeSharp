@@ -26,7 +26,7 @@ partial class IShaderGenerator
                 writer.WriteLine("hlslSource =");
                 writer.IncreaseIndent();
                 writer.WriteLine("\"\"\"");
-                writer.Write(info.HlslSource, isMultiline: true);
+                writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);
                 writer.WriteLine("\"\"\";");
                 writer.DecreaseIndent();
             }

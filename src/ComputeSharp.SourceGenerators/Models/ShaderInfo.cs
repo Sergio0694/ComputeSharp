@@ -15,7 +15,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
 /// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
-/// <param name="HlslSource">The HLSL source for the shader.</param>
+/// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record ShaderInfo(
@@ -28,6 +28,6 @@ internal sealed record ShaderInfo(
     EquatableArray<FieldInfo> Fields,
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
     int Root32BitConstantCount,
-    string HlslSource,
+    HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
     EquatableArray<DiagnosticInfo> Diagnostcs);

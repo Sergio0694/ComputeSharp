@@ -11,6 +11,7 @@ using ComputeSharp.Shaders.Translation;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -41,12 +42,14 @@ partial class IShaderGenerator
         /// <param name="threadsX">The thread ids value for the X axis.</param>
         /// <param name="threadsY">The thread ids value for the Y axis.</param>
         /// <param name="threadsZ">The thread ids value for the Z axis.</param>
+        /// <param name="isCompilationEnabled">Whether compilation should be attempted for the current info.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
             out int threadsX,
             out int threadsY,
-            out int threadsZ)
+            out int threadsZ,
+            out bool isCompilationEnabled)
         {
             // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
             if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
@@ -55,6 +58,7 @@ partial class IShaderGenerator
                 diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
+                isCompilationEnabled = false;
 
                 return;
             }
@@ -82,9 +86,12 @@ partial class IShaderGenerator
                     diagnostics.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
 
                     threadsX = threadsY = threadsZ = 0;
+                    isCompilationEnabled = false;
 
                     return;
                 }
+
+                isCompilationEnabled = true;
             }
             else if (
                 attribute.ConstructorArguments.Length != 3 ||
@@ -99,6 +106,7 @@ partial class IShaderGenerator
                 diagnostics.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
+                isCompilationEnabled = false;
 
                 return;
             }
@@ -107,20 +115,20 @@ partial class IShaderGenerator
                 threadsX = explicitThreadsX;
                 threadsY = explicitThreadsY;
                 threadsZ = explicitThreadsZ;
+                isCompilationEnabled = true;
             }
         }
 
         /// <summary>
         /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
         /// </summary>
-        /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
-        /// <param name="isCompilationEnabled">Whether compilation is enabled.</param>
+        /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
-        public static unsafe HlslBytecodeInfo GetBytecode(string hlslSource, bool isCompilationEnabled, CancellationToken token)
+        public static unsafe HlslBytecodeInfo GetBytecode(HlslBytecodeInfoKey key, CancellationToken token)
         {
             // Skip even attempting to compile if compilation is disabled (see comments in D2D1 generator)
-            if (!isCompilationEnabled)
+            if (!key.IsCompilationEnabled)
             {
                 return HlslBytecodeInfo.Missing.Instance;
             }
@@ -133,7 +141,7 @@ partial class IShaderGenerator
                 token.ThrowIfCancellationRequested();
 
                 // Compile the shader bytecode
-                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(hlslSource.AsSpan());
+                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
 
                 token.ThrowIfCancellationRequested();
 
