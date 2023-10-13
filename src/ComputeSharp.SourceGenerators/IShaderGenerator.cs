@@ -125,14 +125,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
-            MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(
-                item.DispatchData.IsPixelShaderLike,
-                item.DispatchData.FieldInfos,
-                item.DispatchData.ResourceCount,
-                item.DispatchData.Root32BitConstantCount);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, loadDispatchDataMethod, addSkipLocalsInitAttribute: true);
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            declaredMembers.Add(LoadDispatchData.WriteSyntax);
+
+            using IndentedTextWriter writer = new();
+
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: declaredMembers.WrittenSpan);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", writer.ToString());
         });
 
         // Generate the BuildHlslSource() methods

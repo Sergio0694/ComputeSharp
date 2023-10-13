@@ -13,13 +13,13 @@ partial class IShaderGenerator
         /// <summary>
         /// Writes the <c>BuildHlslSource</c> method.
         /// </summary>
-        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly void global::ComputeSharp.__Internals.IShader.BuildHlslSource(out string hlslSource)");
+            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.BuildHlslSource(out string hlslSource)");
 
             using (writer.WriteBlock())
             {
