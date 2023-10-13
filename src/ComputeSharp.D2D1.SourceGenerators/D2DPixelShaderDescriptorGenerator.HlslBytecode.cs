@@ -148,7 +148,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
         public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, CancellationToken token)
         {
             static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)

@@ -24,7 +24,7 @@ partial class IShaderGenerator
             using (writer.WriteBlock())
             {
                 // If there is no HLSL bytecode, there's nothing left to do
-                if (info.EmbeddedBytecode.Bytecode.IsEmpty)
+                if (info.HlslInfo is not HlslBytecodeInfo.Success success)
                 {
                     return;
                 }
@@ -36,7 +36,7 @@ partial class IShaderGenerator
                 {
                     writer.Write("global::System.ReadOnlySpan<byte> bytecode = new byte[] { ");
 
-                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(info.EmbeddedBytecode.Bytecode.AsSpan(), writer);
+                    SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(success.Bytecode.AsSpan(), writer);
 
                     writer.WriteLine(" };");
                     writer.WriteLine();

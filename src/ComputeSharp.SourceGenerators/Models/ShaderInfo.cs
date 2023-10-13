@@ -10,7 +10,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="DispatchData">The gathered shader dispatch data.</param>
 /// <param name="DispatchMetadata">The gathered shader dispatch metadata.</param>
 /// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
-/// <param name="EmbeddedBytecode">The info on the compiled bytecode, if available.</param>
+/// <param name="HlslInfo">The value with processed info on the shader.</param>
 /// <param name="ThreadIds">The thread ids for the shader, if compilation is requested.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record ShaderInfo(
@@ -18,6 +18,6 @@ internal sealed record ShaderInfo(
     DispatchDataInfo DispatchData,
     DispatchMetadataInfo DispatchMetadata,
     HlslShaderSourceInfo HlslShaderSource,
-    EmbeddedBytecodeInfo EmbeddedBytecode,
+    HlslBytecodeInfo HlslInfo,
     ThreadIdsInfo ThreadIds,
     EquatableArray<DiagnosticInfo> Diagnostcs);

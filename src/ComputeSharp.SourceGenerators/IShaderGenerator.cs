@@ -92,18 +92,21 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
-                    ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(threadIds, hlslSourceInfo.HlslSource, token, out DeferredDiagnosticInfo? diagnostic);
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(threadIds, hlslSourceInfo.HlslSource, token);
 
                     token.ThrowIfCancellationRequested();
 
-                    EmbeddedBytecodeInfo bytecodeInfo = new(
-                        threadIds.X,
-                        threadIds.Y,
-                        threadIds.Z,
-                        bytecode);
+                    LoadBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Also get the hierarchy too
+                    HierarchyInfo hierarchyInfo = HierarchyInfo.From(typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
 
                     return new ShaderInfo(
-                        Hierarchy: HierarchyInfo.From(typeSymbol),
+                        Hierarchy: hierarchyInfo,
                         DispatchData: new DispatchDataInfo(
                             isPixelShaderLike,
                             fieldInfos,
@@ -111,7 +114,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                             root32BitConstantCount),
                         DispatchMetadata: dispatchMetadataInfo,
                         HlslShaderSource: hlslSourceInfo,
-                        EmbeddedBytecode: bytecodeInfo,
+                        HlslInfo: hlslInfo,
                         ThreadIds: threadIds,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
