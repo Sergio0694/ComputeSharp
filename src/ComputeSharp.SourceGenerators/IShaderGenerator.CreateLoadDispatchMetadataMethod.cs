@@ -21,7 +21,7 @@ partial class IShaderGenerator
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
         /// <param name="capturedFields">The sequence of captured fields for the shader.</param>
         /// <returns>The metadata info for the shader.</returns>
-        public static DispatchMetadataInfo GetInfo(
+        public static ImmutableArray<ResourceDescriptor> GetInfo(
             int root32BitConstantCount,
             bool isImplicitTextureUsed,
             bool isSamplerUsed,
@@ -57,10 +57,7 @@ partial class IShaderGenerator
                 }
             }
 
-            return new(
-                root32BitConstantCount,
-                isSamplerUsed,
-                descriptors.ToImmutable());
+            return descriptors.ToImmutable();
         }
     }
 }

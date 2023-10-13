@@ -14,7 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\SyntaxNodeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SemanticModelProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SyntaxFormattingHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SyntaxTokenHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownFields.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownKeywords.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownMethods.cs" />
@@ -22,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HlslBytecodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\ShaderSourceRewriter.cs" />

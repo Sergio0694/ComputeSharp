@@ -91,28 +91,4 @@ internal static class SyntaxFormattingHelper
             span = span.Slice(6);
         }
     }
-
-    /// <summary>
-    /// Creates a formatted expression to initialize a <see cref="ReadOnlySpan{T}"/> with a given content.
-    /// </summary>
-    /// <param name="bytecode">The input byte content to serialize.</param>
-    /// <returns>A formatted <see cref="string"/> with the specified data.</returns>
-    /// <remarks>
-    /// This function will produce raw byte initialization expressions, such as:
-    /// <c>[1, 2, 3, 4, 5]</c> => <c>0x01, 0x02, 0x03, 0x04, 0x05</c>.
-    /// </remarks>
-    public static string BuildByteArrayInitializationExpressionString(ReadOnlySpan<byte> bytecode)
-    {
-        using ImmutableArrayBuilder<char> builder = new();
-
-        builder.AddRange(FormattedBytes[bytecode[0]].AsSpan());
-
-        foreach (byte b in bytecode.Slice(1))
-        {
-            builder.AddRange(", ".AsSpan());
-            builder.AddRange(FormattedBytes[b].AsSpan());
-        }
-
-        return builder.ToString();
-    }
 }

@@ -148,7 +148,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
         public static HlslBytecodeInfo GetInfo(ref HlslBytecodeInfoKey key, CancellationToken token)
         {
             static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
@@ -188,7 +188,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
                 catch (FxcCompilationException e)
                 {
-                    return new HlslBytecodeInfo.FxcError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
+                    return new HlslBytecodeInfo.CompilerError(D3DCompiler.PrettifyFxcErrorMessage(e.Message));
                 }
             }
 
@@ -218,7 +218,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     structDeclarationSymbol,
                     new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
             }
-            else if (info is HlslBytecodeInfo.FxcError fxcError)
+            else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithFxcCompilationException,

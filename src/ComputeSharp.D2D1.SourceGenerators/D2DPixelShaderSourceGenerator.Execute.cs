@@ -142,7 +142,7 @@ partial class D2DPixelShaderSourceGenerator
                     methodSymbol,
                     new object[] { methodSymbol, methodSymbol.ContainingType, win32Error.HResult, win32Error.Message });
             }
-            else if (info is HlslBytecodeInfo.FxcError fxcError)
+            else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     D2DPixelShaderSourceCompilationFailedWithFxcCompilationException,
