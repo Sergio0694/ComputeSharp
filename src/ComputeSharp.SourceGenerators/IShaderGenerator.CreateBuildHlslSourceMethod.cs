@@ -421,7 +421,7 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
-        internal static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        private static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
             using ImmutableArrayBuilder<(string, string)> builder = new();
 
@@ -444,7 +444,7 @@ partial class IShaderGenerator
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <param name="instanceMethods">The collection of discovered instance methods for custom struct types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-        internal static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
+        private static ImmutableArray<(string Name, string Definition)> GetDeclaredTypes(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             ISymbol sourceSymbol,
             IEnumerable<INamedTypeSymbol> types,
