@@ -94,6 +94,16 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
+                    ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(threadIds, hlslSourceInfo.HlslSource, token, out DeferredDiagnosticInfo? diagnostic);
+
+                    token.ThrowIfCancellationRequested();
+
+                    EmbeddedBytecodeInfo bytecodeInfo = new(
+                        threadIds.X,
+                        threadIds.Y,
+                        threadIds.Z,
+                        bytecode);
+
                     return new ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
                         DispatchData: new DispatchDataInfo(
@@ -103,6 +113,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                             root32BitConstantCount),
                         DispatchMetadata: dispatchMetadataInfo,
                         HlslShaderSource: hlslSourceInfo,
+                        EmbeddedBytecode: bytecodeInfo,
                         ThreadIds: threadIds,
                         Diagnostcs: diagnostics.ToImmutable());
                 })
@@ -151,47 +162,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
-            shaderInfoWithErrors
-            .Select(static (item, token) =>
-            {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.HlslShaderSource.HlslSource, token, out DeferredDiagnosticInfo? diagnostic);
-
-                token.ThrowIfCancellationRequested();
-
-                EmbeddedBytecodeInfo bytecodeInfo = new(
-                    item.ThreadIds.X,
-                    item.ThreadIds.Y,
-                    item.ThreadIds.Z,
-                    bytecode);
-
-                return (item.Hierarchy, bytecodeInfo, diagnostic);
-            });
-
-        // Gather the diagnostics
-        IncrementalValuesProvider<DiagnosticInfo> embeddedBytecodeDiagnostics =
-            embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy.FullyQualifiedMetadataName, item.Diagnostic))
-            .Where(static item => item.Diagnostic is not null)
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                INamedTypeSymbol typeSymbol = item.Right.GetTypeByMetadataName(item.Left.FullyQualifiedMetadataName)!;
-
-                return DiagnosticInfo.Create(item.Left.Diagnostic!.Descriptor, typeSymbol, new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Arguments).ToArray());
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(embeddedBytecodeDiagnostics);
-
-        // Get the TryGetBytecode() info (hierarchy and compiled bytecode)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode)> embeddedBytecodeInfo =
-            embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.EmbeddedBytecode));
-
         // Generate the TryGetBytecode() methods
-        context.RegisterSourceOutput(embeddedBytecodeInfo, static (context, item) =>
+        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
             MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.EmbeddedBytecode, out Func<SyntaxNode, SourceText> fixup);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, tryGetBytecodeMethod, addSkipLocalsInitAttribute: false);
