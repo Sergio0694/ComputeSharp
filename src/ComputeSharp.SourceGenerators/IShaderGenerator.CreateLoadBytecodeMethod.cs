@@ -160,7 +160,7 @@ partial class IShaderGenerator
             }
             catch (DxcCompilationException e)
             {
-                return new HlslBytecodeInfo.DxcError(FixupExceptionMessage(e.Message));
+                return new HlslBytecodeInfo.CompilerError(FixupExceptionMessage(e.Message));
             }
         }
 
@@ -184,7 +184,7 @@ partial class IShaderGenerator
                     structDeclarationSymbol,
                     new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
             }
-            else if (info is HlslBytecodeInfo.DxcError dxcError)
+            else if (info is HlslBytecodeInfo.CompilerError dxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithDxcCompilationException,

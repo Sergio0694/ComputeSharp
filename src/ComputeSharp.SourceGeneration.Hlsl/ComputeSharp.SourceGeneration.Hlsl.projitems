@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownSizes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mappings\HlslKnownTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HlslBytecodeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\ShaderSourceRewriter.cs" />

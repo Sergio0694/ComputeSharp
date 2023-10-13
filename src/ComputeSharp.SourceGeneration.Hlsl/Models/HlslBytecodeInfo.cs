@@ -1,6 +1,6 @@
 using ComputeSharp.SourceGeneration.Helpers;
 
-namespace ComputeSharp.SourceGenerators.Models;
+namespace ComputeSharp.SourceGeneration.Models;
 
 /// <summary>
 /// A model representing info on compiled HLSL bytecode, if available.
@@ -21,10 +21,10 @@ internal abstract record HlslBytecodeInfo
     public sealed record Win32Error(int HResult, string Message) : HlslBytecodeInfo;
 
     /// <summary>
-    /// An HLSL shader that failed to compile due to an DXC compiler error.
+    /// An HLSL shader that failed to compile due to a compiler error.
     /// </summary>
     /// <param name="Message">The error message from compiling the shader.</param>
-    public sealed record DxcError(string Message) : HlslBytecodeInfo;
+    public sealed record CompilerError(string Message) : HlslBytecodeInfo;
 
     /// <summary>
     /// No HLSL bytecode is available (ie. compilation was not requested or some other error was detected).
