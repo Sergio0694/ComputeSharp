@@ -73,6 +73,7 @@ public partial class InitializationTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct SampleShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;

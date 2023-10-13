@@ -28,9 +28,7 @@ partial class IShaderGenerator
         public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders, int hierarchyDepth)
         {
             // Generate the necessary body statements depending on whether dynamic shaders are supported
-            ImmutableArray<StatementSyntax> bodyStatements = supportsDynamicShaders
-                ? GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth)
-                : GenerateEmptyMethodBody();
+            ImmutableArray<StatementSyntax> bodyStatements = GenerateRenderMethodBody(hlslSourceInfo, hierarchyDepth);
 
             // This code produces a method declaration as follows:
             //

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -43,16 +42,6 @@ partial class IShaderGenerator
         }
 
         return null;
-    }
-
-    /// <summary>
-    /// Checks whether dynamic shaders are supported in a given compilation.
-    /// </summary>
-    /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
-    /// <returns>Whether dynamic shaders are supported in the input compilation.</returns>
-    private static bool IsDynamicCompilationSupported(Compilation compilation)
-    {
-        return compilation.ReferencedAssemblyNames.Any(static identity => identity.Name is "ComputeSharp.Dynamic");
     }
 
     /// <summary>

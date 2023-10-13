@@ -8,6 +8,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// <para>Created by Shane.</para>
 /// </summary>
 [AutoConstructor]
+[EmbeddedBytecode(DispatchAxis.XY)]
 internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
 {
     /// <summary>

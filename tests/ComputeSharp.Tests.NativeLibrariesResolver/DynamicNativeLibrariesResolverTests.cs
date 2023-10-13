@@ -26,7 +26,7 @@ public class DynamicNativeLibrariesResolverTests : NativeLibrariesResolverTestsB
         }
 
         string coreProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.csproj");
-        string projectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.csproj");
+        string projectPath = Path.Combine(path, "src", "ComputeSharp", "ComputeSharp.csproj");
         string dynamicProjectPath = Path.Combine(path, "src", "ComputeSharp.Dynamic", "ComputeSharp.Dynamic.csproj");
 
         Process.Start("dotnet", $"pack {coreProjectPath} -c Release").WaitForExit();

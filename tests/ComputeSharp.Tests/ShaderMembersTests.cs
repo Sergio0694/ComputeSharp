@@ -31,6 +31,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct StaticConstantsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<float> buffer;
@@ -70,6 +71,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct GlobalVariableShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -104,6 +106,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct BoolInstanceFieldsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -167,6 +170,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct BoolInstanceFieldInCustomStructShader : IComputeShader
     {
         public readonly ReadWriteBuffer<Int2AndBoolField> buffer;

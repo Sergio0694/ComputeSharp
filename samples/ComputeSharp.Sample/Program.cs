@@ -24,6 +24,7 @@ Formatting.PrintMatrix(array, 10, 10, "AFTER");
 /// The sample kernel that multiples all items by two.
 /// </summary>
 [AutoConstructor]
+[EmbeddedBytecode(DispatchAxis.X)]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {
     private readonly ReadWriteBuffer<float> buffer;

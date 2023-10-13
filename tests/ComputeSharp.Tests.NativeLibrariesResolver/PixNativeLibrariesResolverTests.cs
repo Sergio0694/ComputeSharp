@@ -26,7 +26,7 @@ public class PixNativeLibrariesResolverTests : NativeLibrariesResolverTestsBase
         }
 
         string coreProjectPath = Path.Combine(path, "src", "ComputeSharp.Core", "ComputeSharp.Core.csproj");
-        string projectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.csproj");
+        string projectPath = Path.Combine(path, "src", "ComputeSharp", "ComputeSharp.csproj");
         string pixProjectPath = Path.Combine(path, "src", "ComputeSharp.Pix", "ComputeSharp.Pix.csproj");
 
         // Run dotnet pack and on the packaging projects, to ensure the local NuGet packages are available

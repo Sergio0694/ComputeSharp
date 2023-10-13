@@ -7,6 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// Ported from <see href="https://www.shadertoy.com/new"/>.
 /// </summary>
 [AutoConstructor]
+[EmbeddedBytecode(DispatchAxis.XY)]
 internal readonly partial struct HelloWorld : IPixelShader<float4>
 {
     /// <summary>

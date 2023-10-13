@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
@@ -65,6 +65,7 @@ foreach (var (t, tPixel) in EnumerateTypes())
 #>
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
     {
         public readonly ReadOnlyTexture1D<<#=t#>, <#=tPixel#>> source;

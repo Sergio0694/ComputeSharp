@@ -25,7 +25,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Check whether or not dynamic shaders are supported
         IncrementalValueProvider<bool> supportsDynamicShaders =
             context.CompilationProvider
-            .Select(static (compilation, _) => IsDynamicCompilationSupported(compilation));
+            .Select(static (compilation, _) => false);
 
         // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<ShaderInfo> shaderInfoWithErrors =
@@ -88,7 +88,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
                         diagnostics,
                         typeSymbol,
-                        IsDynamicCompilationSupported(context.SemanticModel.Compilation));
+                        false);
 
                     token.ThrowIfCancellationRequested();
 

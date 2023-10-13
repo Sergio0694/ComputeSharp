@@ -7,9 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
 [AutoConstructor]
-#if SAMPLE_APP
 [EmbeddedBytecode(DispatchAxis.XY)]
-#endif
 internal readonly partial struct FractalTiling : IPixelShader<float4>
 {
     /// <summary>

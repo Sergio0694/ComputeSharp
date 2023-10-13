@@ -81,6 +81,7 @@ internal static partial class BlasHelpers
     /// Kernel for <see cref="FullyConnectedForwardGpu"/>.
     /// </summary>
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     public readonly partial struct FullyConnectedForwardKernel : IComputeShader
     {
         private readonly int n;

@@ -10,7 +10,6 @@
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

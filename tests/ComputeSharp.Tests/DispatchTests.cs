@@ -57,6 +57,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct ThreadIdsShader : IComputeShader
     {
         public readonly ReadWriteTexture3D<int4> buffer;
@@ -111,6 +112,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct ThreadIdsNormalizedShader : IComputeShader
     {
         public readonly ReadWriteTexture3D<float4> buffer;
@@ -172,6 +174,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct GroupIdsShader : IComputeShader
     {
         public readonly ReadWriteTexture3D<int4> buffer;
@@ -202,6 +205,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(4, 15, 7)]
     internal readonly partial struct GroupSizeShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -234,6 +238,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(32, 1, 1)]
     internal readonly partial struct GridIdsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -265,6 +270,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct DispatchSizeShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -304,6 +310,7 @@ public partial class DispatchTests
         }
     }
 
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct DispatchPixelShader : IPixelShader<float4>
     {
         public float4 Execute()
@@ -333,6 +340,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct FixedGroupSharedPixelShader : IComputeShader
     {
         private readonly ReadWriteBuffer<int> buffer;
@@ -376,6 +384,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(32, 1, 1)]
     internal readonly partial struct DynamicGroupSharedPixelShader : IComputeShader
     {
         private readonly ReadWriteBuffer<int> buffer;

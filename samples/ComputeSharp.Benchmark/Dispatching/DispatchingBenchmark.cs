@@ -109,6 +109,7 @@ public partial class DispatchingBenchmark : IDisposable
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct TestShader : IComputeShader
     {
         private readonly ReadWriteBuffer<float> buffer;
