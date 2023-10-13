@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -161,10 +160,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Generate the LoadDispatchMetadata() methods
         context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.DispatchMetadata);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
+
+            using IndentedTextWriter writer = new();
+
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: declaredMembers.WrittenSpan);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", writer.ToString());
         });
 
         // Generate the TryGetBytecode() methods
