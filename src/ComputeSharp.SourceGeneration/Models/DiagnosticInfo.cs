@@ -13,7 +13,11 @@ namespace ComputeSharp.SourceGeneration.Models;
 /// <param name="SyntaxTree">The tree to use as location for the diagnostic, if available.</param>
 /// <param name="TextSpan">The span to use as location for the diagnostic.</param>
 /// <param name="Arguments">The diagnostic arguments.</param>
-internal sealed record DiagnosticInfo(DiagnosticDescriptor Descriptor, SyntaxTree? SyntaxTree, TextSpan TextSpan, EquatableArray<string> Arguments)
+internal sealed record DiagnosticInfo(
+    DiagnosticDescriptor Descriptor,
+    SyntaxTree? SyntaxTree,
+    TextSpan TextSpan,
+    EquatableArray<string> Arguments)
 {
     /// <summary>
     /// Creates a new <see cref="Diagnostic"/> instance with the state from this model.

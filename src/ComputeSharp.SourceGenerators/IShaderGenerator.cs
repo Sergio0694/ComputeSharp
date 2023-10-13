@@ -26,7 +26,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Discover all shader types and extract all the necessary info from each of them
-        IncrementalValuesProvider<ShaderInfo> shaderInfoWithErrors =
+        IncrementalValuesProvider<ShaderInfo> shaderInfo =
             context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
@@ -117,68 +117,21 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 })
             .Where(static item => item is not null)!;
 
-        // Output the diagnostics, if any
-        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostcs));
+        // Split the diagnostics, and drop them from the output provider (see more notes in the D2D1 generator)
+        IncrementalValuesProvider<EquatableArray<DiagnosticInfo>> diagnosticInfo = shaderInfo.Select(static (item, _) => item.Diagnostcs);
+        IncrementalValuesProvider<ShaderInfo> outputInfo = shaderInfo.Select(static (item, _) => item with { Diagnostcs = default });
 
-        // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
+        // Output the diagnostics, if any
+        context.ReportDiagnostics(diagnosticInfo);
+
+        // Generate the source files, if any
+        context.RegisterSourceOutput(outputInfo, static (context, item) =>
         {
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
-
-            using IndentedTextWriter writer = new();
-
-            item.Hierarchy.WriteSyntax(
-                state: item,
-                writer: writer,
-                baseTypes: ReadOnlySpan<string>.Empty,
-                memberCallbacks: declaredMembers.WrittenSpan);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", writer.ToString());
-        });
-
-        // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
-        {
-            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
-
-            declaredMembers.Add(BuildHlslSource.WriteSyntax);
-
-            using IndentedTextWriter writer = new();
-
-            item.Hierarchy.WriteSyntax(
-                state: item,
-                writer: writer,
-                baseTypes: ReadOnlySpan<string>.Empty,
-                memberCallbacks: declaredMembers.WrittenSpan);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", writer.ToString());
-        });
-
-        // Generate the LoadDispatchMetadata() methods
-        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
-        {
-            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
-
             declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
-
-            using IndentedTextWriter writer = new();
-
-            item.Hierarchy.WriteSyntax(
-                state: item,
-                writer: writer,
-                baseTypes: ReadOnlySpan<string>.Empty,
-                memberCallbacks: declaredMembers.WrittenSpan);
-
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", writer.ToString());
-        });
-
-        // Generate the TryGetBytecode() methods
-        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
-        {
-            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
-
+            declaredMembers.Add(BuildHlslSource.WriteSyntax);
             declaredMembers.Add(LoadBytecode.WriteSyntax);
 
             using IndentedTextWriter writer = new();
@@ -189,7 +142,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 baseTypes: ReadOnlySpan<string>.Empty,
                 memberCallbacks: declaredMembers.WrittenSpan);
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", writer.ToString());
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", writer.ToString());
         });
     }
 }
