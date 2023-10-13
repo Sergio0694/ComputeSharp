@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using ComputeSharp.SourceGeneration.Models;
-using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,36 +11,37 @@ namespace ComputeSharp.SourceGenerators;
 partial class IShaderGenerator
 {
     /// <summary>
-    /// Gets the shader type for a given shader, if any.
+    /// Gets whether a given type is a compute shader type (ie. implements any of the interfaces).
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to check.</param>
     /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
-    /// <returns>The shader type for <paramref name="typeSymbol"/>, or <see langword="null"/>.</returns>
-    private static ShaderType? GetShaderType(INamedTypeSymbol typeSymbol, Compilation compilation)
+    /// <param name="result">Whether <paramref name="typeSymbol"/> is a "pixel shader like" type.</param>
+    /// <returns>Whether <paramref name="typeSymbol"/> is a compute shader type at all.</returns>
+    private static bool TryGetIsPixelShaderLike(INamedTypeSymbol typeSymbol, Compilation compilation, out bool result)
     {
+        INamedTypeSymbol computeShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader")!;
+        INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IPixelShader`1")!;
+
         foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {
-            if (interfaceSymbol.Name == nameof(IComputeShader))
+            if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol))
             {
-                INamedTypeSymbol computeShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader")!;
+                result = false;
 
-                if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol))
-                {
-                    return ShaderType.ComputeShader;
-                }
+                return true;
             }
-            else if (interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) })
+            else if (interfaceSymbol is { IsGenericType: true } &&
+                     SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
             {
-                INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IPixelShader`1")!;
+                result = true;
 
-                if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
-                {
-                    return ShaderType.PixelShader;
-                }
+                return true;
             }
         }
 
-        return null;
+        result = false;
+
+        return false;
     }
 
     /// <summary>

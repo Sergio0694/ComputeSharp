@@ -48,8 +48,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         return default;
                     }
 
-                    // Get the shader type, or return if none is present
-                    if (GetShaderType(typeSymbol, context.SemanticModel.Compilation) is not ShaderType shaderType)
+                    // Check whether type is a compute shader, and if so, if it's pixel shader like
+                    if (!TryGetIsPixelShaderLike(typeSymbol, context.SemanticModel.Compilation, out bool isPixelShaderLike))
                     {
                         return default;
                     }
@@ -60,7 +60,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
                         diagnostics,
                         typeSymbol,
-                        shaderType,
+                        isPixelShaderLike,
                         out int resourceCount,
                         out int root32BitConstantCount);
 
@@ -97,7 +97,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     return new ShaderInfo(
                         Hierarchy: HierarchyInfo.From(typeSymbol),
                         DispatchData: new DispatchDataInfo(
-                            shaderType,
+                            isPixelShaderLike,
                             fieldInfos,
                             resourceCount,
                             root32BitConstantCount),
@@ -122,7 +122,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(
-                item.DispatchData.Type,
+                item.DispatchData.IsPixelShaderLike,
                 item.DispatchData.FieldInfos,
                 item.DispatchData.ResourceCount,
                 item.DispatchData.Root32BitConstantCount);

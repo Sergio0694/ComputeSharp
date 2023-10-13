@@ -19,13 +19,13 @@ partial class IShaderGenerator
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
         /// </summary>
-        /// <param name="shaderType">The type of shader interface currently being processed.</param>
+        /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
         /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>
         public static MethodDeclarationSyntax GetSyntax(
-            ShaderType shaderType,
+            bool isPixelShaderLike,
             ImmutableArray<FieldInfo> fieldInfos,
             int resourceCount,
             int root32BitConstantsCount)
@@ -51,19 +51,19 @@ partial class IShaderGenerator
                     Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("z")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
-                .WithBody(Block(GetDispatchDataLoadingStatements(shaderType, fieldInfos, resourceCount, root32BitConstantsCount)));
+                .WithBody(Block(GetDispatchDataLoadingStatements(isPixelShaderLike, fieldInfos, resourceCount, root32BitConstantsCount)));
         }
 
         /// <summary>
         /// Gets a sequence of statements to load the dispatch data for a given shader.
         /// </summary>
-        /// <param name="shaderType">The type of shader interface currently being processed.</param>
+        /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
         /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(
-            ShaderType shaderType,
+            bool isPixelShaderLike,
             ImmutableArray<FieldInfo> fieldInfos,
             int resourceCount,
             int root32BitConstantsCount)
@@ -157,7 +157,7 @@ partial class IShaderGenerator
             // If the shader is a compute shader, also track the bounds on the Z axis:
             //
             // span0[2] = (uint)z;
-            if (shaderType == ShaderType.ComputeShader)
+            if (!isPixelShaderLike)
             {
                 statements.Add(
                     ExpressionStatement(
