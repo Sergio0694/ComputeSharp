@@ -30,6 +30,11 @@ partial class IShaderGenerator
     private static partial class LoadBytecode
     {
         /// <summary>
+        /// The shared cache of <see cref="HlslBytecodeInfo"/> values.
+        /// </summary>
+        private static readonly DynamicCache<HlslBytecodeInfoKey, HlslBytecodeInfo> HlslBytecodeCache = new();
+
+        /// <summary>
         /// Indicates whether the required <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries have been loaded.
         /// </summary>
         private static volatile bool areDxcLibrariesLoaded;
@@ -125,43 +130,48 @@ partial class IShaderGenerator
         /// <param name="key">The <see cref="HlslBytecodeInfoKey"/> instance for the shader to compile.</param>
         /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
         /// <returns>The <see cref="HlslBytecodeInfo"/> instance for the current shader.</returns>
-        public static unsafe HlslBytecodeInfo GetBytecode(HlslBytecodeInfoKey key, CancellationToken token)
+        public static unsafe HlslBytecodeInfo GetBytecode(ref HlslBytecodeInfoKey key, CancellationToken token)
         {
-            // Skip even attempting to compile if compilation is disabled (see comments in D2D1 generator)
-            if (!key.IsCompilationEnabled)
+            static unsafe HlslBytecodeInfo GetInfo(HlslBytecodeInfoKey key, CancellationToken token)
             {
-                return HlslBytecodeInfo.Missing.Instance;
+                // Skip even attempting to compile if compilation is disabled (see comments in D2D1 generator)
+                if (!key.IsCompilationEnabled)
+                {
+                    return HlslBytecodeInfo.Missing.Instance;
+                }
+
+                try
+                {
+                    // Try to load dxcompiler.dll and dxil.dll
+                    LoadNativeDxcLibraries();
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Compile the shader bytecode
+                    using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
+
+                    token.ThrowIfCancellationRequested();
+
+                    byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
+                    int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
+
+                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
+
+                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+
+                    return new HlslBytecodeInfo.Success(bytecode);
+                }
+                catch (Win32Exception e)
+                {
+                    return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, FixupExceptionMessage(e.Message));
+                }
+                catch (DxcCompilationException e)
+                {
+                    return new HlslBytecodeInfo.CompilerError(FixupExceptionMessage(e.Message));
+                }
             }
 
-            try
-            {
-                // Try to load dxcompiler.dll and dxil.dll
-                LoadNativeDxcLibraries();
-
-                token.ThrowIfCancellationRequested();
-
-                // Compile the shader bytecode
-                using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
-
-                token.ThrowIfCancellationRequested();
-
-                byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-                int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-                byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
-
-                ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-
-                return new HlslBytecodeInfo.Success(bytecode);
-            }
-            catch (Win32Exception e)
-            {
-                return new HlslBytecodeInfo.Win32Error(e.NativeErrorCode, FixupExceptionMessage(e.Message));
-            }
-            catch (DxcCompilationException e)
-            {
-                return new HlslBytecodeInfo.CompilerError(FixupExceptionMessage(e.Message));
-            }
+            return HlslBytecodeCache.GetOrCreate(ref key, GetInfo, token);
         }
 
         /// <summary>

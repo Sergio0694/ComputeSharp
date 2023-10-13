@@ -103,7 +103,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, isCompilationEnabled);
 
                     // Try to get the HLSL bytecode
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
