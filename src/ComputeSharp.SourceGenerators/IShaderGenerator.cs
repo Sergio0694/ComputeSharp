@@ -19,6 +19,11 @@ namespace ComputeSharp.SourceGenerators;
 [Generator(LanguageNames.CSharp)]
 public sealed partial class IShaderGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// The name of generator to include in the generated code.
+    /// </summary>
+    private const string GeneratorName = "ComputeSharp.IShaderGenerator";
+
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -132,12 +137,21 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
 
         // Generate the BuildHlslSource() methods
-        context.RegisterSourceOutput(hlslSourceInfo, static (context, item) =>
+        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslSource.GetSyntax(item.HlslShaderSource, item.Hierarchy.Hierarchy.Length);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
+            declaredMembers.Add(BuildHlslSource.WriteSyntax);
+
+            using IndentedTextWriter writer = new();
+
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: declaredMembers.WrittenSpan);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", writer.ToString());
         });
 
         // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
