@@ -8,7 +8,6 @@ using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -178,11 +177,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.EmbeddedBytecode, out Func<SyntaxNode, SourceText> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, tryGetBytecodeMethod, addSkipLocalsInitAttribute: false);
-            SourceText text = fixup(compilationUnit);
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", text);
+            declaredMembers.Add(LoadBytecode.WriteSyntax);
+
+            using IndentedTextWriter writer = new();
+
+            item.Hierarchy.WriteSyntax(
+                state: item,
+                writer: writer,
+                baseTypes: ReadOnlySpan<string>.Empty,
+                memberCallbacks: declaredMembers.WrittenSpan);
+
+            context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadBytecode)}.g.cs", writer.ToString());
         });
     }
 }
