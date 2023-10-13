@@ -61,29 +61,31 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     token.ThrowIfCancellationRequested();
 
+                    // TryGetBytecode() info
+                    ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
+                        diagnostics,
+                        typeSymbol,
+                        false);
+
+                    token.ThrowIfCancellationRequested();
+
                     // BuildHlslSource() info
                     HlslShaderSourceInfo hlslSourceInfo = BuildHlslSource.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeDeclaration,
-                        typeSymbol);
+                        typeSymbol,
+                        threadIds,
+                        out bool isImplicitTextureUsed);
 
                     token.ThrowIfCancellationRequested();
 
                     // GetDispatchMetadata() info
                     DispatchMetadataInfo dispatchMetadataInfo = LoadDispatchMetadata.GetInfo(
                         root32BitConstantCount,
-                        hlslSourceInfo.ImplicitTextureType is not null,
+                        isImplicitTextureUsed,
                         hlslSourceInfo.IsSamplerUsed,
                         fieldInfos);
-
-                    token.ThrowIfCancellationRequested();
-
-                    // TryGetBytecode() info
-                    ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
-                        diagnostics,
-                        typeSymbol,
-                        false);
 
                     token.ThrowIfCancellationRequested();
 
@@ -155,7 +157,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Transform the raw HLSL source to compile (this step aggregates the HLSL source to ensure compilation is only done for actual HLSL changes)
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
             shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, BuildHlslSource.GetNonDynamicHlslSource(item.HlslShaderSource), item.ThreadIds));
+            .Select(static (item, token) => (item.Hierarchy, item.HlslShaderSource.HlslSource, item.ThreadIds));
 
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =

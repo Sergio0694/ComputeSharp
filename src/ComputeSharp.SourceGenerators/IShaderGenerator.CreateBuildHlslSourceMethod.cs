@@ -15,8 +15,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
-
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
@@ -34,12 +32,16 @@ partial class IShaderGenerator
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="threadIds">The info on the shader thread count size to use.</param>
+        /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
         /// <returns>The resulting info on the processed shader.</returns>
         public static HlslShaderSourceInfo GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
-            INamedTypeSymbol structDeclarationSymbol)
+            INamedTypeSymbol structDeclarationSymbol,
+            ThreadIdsInfo threadIds,
+            out bool isImplicitTextureUsed)
         {
             // Detect invalid properties
             DetectAndReportInvalidPropertyDeclarations(diagnostics, structDeclarationSymbol);
@@ -71,8 +73,12 @@ partial class IShaderGenerator
             ImmutableArray<(string Name, string Definition)> declaredTypes = GetDeclaredTypes(diagnostics, structDeclarationSymbol, discoveredTypes, instanceMethods);
             ImmutableArray<(string Name, string Value)> definedConstants = GetDefinedConstants(constantDefinitions);
 
+            // Check whether an implicit texture is used in the shader
+            isImplicitTextureUsed = implicitTextureType is not null;
+
             // Get the HLSL source data with the intermediate info
             return GetHlslSourceInfo(
+                threadIds,
                 definedConstants,
                 declaredTypes,
                 resourceFields,
@@ -538,6 +544,7 @@ partial class IShaderGenerator
         /// <summary>
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
+        /// <param name="threadIds">The info on the shader thread count size to use.</param>
         /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
         /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
         /// <param name="resourceFields">The sequence of resource instance fields for the current shader.</param>
@@ -551,6 +558,7 @@ partial class IShaderGenerator
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static HlslShaderSourceInfo GetHlslSourceInfo(
+            ThreadIdsInfo threadIds,
             ImmutableArray<(string Name, string Value)> definedConstants,
             ImmutableArray<(string Name, string Definition)> declaredTypes,
             ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields,
@@ -606,28 +614,17 @@ partial class IShaderGenerator
             // Group size constants
             AppendLF();
             AppendLine("#define __GroupSize__get_X ");
-
-            string headerAndThreadsX = FlushText();
-
-            AppendLF();
+            AppendLineAndLF(threadIds.X.ToString());
             AppendLine("#define __GroupSize__get_Y ");
-
-            string threadsY = FlushText();
-
-            AppendLF();
+            AppendLineAndLF(threadIds.Y.ToString());
             AppendLine("#define __GroupSize__get_Z ");
-
-            string threadsZ = FlushText();
-
-            AppendLF();
+            AppendLineAndLF(threadIds.Z.ToString());
 
             // Define declarations
             foreach ((string name, string value) in definedConstants)
             {
                 AppendLineAndLF($"#define {name} {value}");
             }
-
-            string defines = FlushText();
 
             // Static fields
             if (staticFields.Any())
@@ -653,8 +650,6 @@ partial class IShaderGenerator
                 AppendLF();
                 AppendLineAndLF(typeDefinition);
             }
-
-            string staticFieldsAndDeclaredTypes = FlushText();
 
             // Captured variables
             AppendLF();
@@ -733,8 +728,6 @@ partial class IShaderGenerator
                 AppendLineAndLF(forwardDeclaration);
             }
 
-            string capturedFieldsAndResourcesAndForwardDeclarations = FlushText();
-
             // Captured methods
             foreach ((string _, string method) in processedMethods)
             {
@@ -742,47 +735,14 @@ partial class IShaderGenerator
                 AppendLineAndLF(method);
             }
 
-            string capturedMethods = FlushText();
-
             // Entry point
             AppendLF();
             AppendLineAndLF("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             AppendLineAndLF(executeMethod);
 
-            string entryPoint = FlushText();
+            string hlslSource = FlushText();
 
-            return new(
-                headerAndThreadsX,
-                threadsY,
-                threadsZ,
-                defines,
-                staticFieldsAndDeclaredTypes,
-                capturedFieldsAndResourcesAndForwardDeclarations,
-                capturedMethods,
-                entryPoint,
-                implicitTextureType,
-                isSamplerUsed,
-                declaredTypes.Select(static t => t.Name).ToImmutableArray(),
-                definedConstants.Select(static c => c.Name).ToImmutableArray(),
-                processedMethods.Select(static m => m.Signature).ToImmutableArray());
-        }
-
-        /// <summary>
-        /// Produces the non dynamic HLSL source (concatenating all generated HLSL source chunks).
-        /// </summary>
-        /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
-        /// <returns>The non dynamic HLSL source code.</returns>
-        public static string GetNonDynamicHlslSource(HlslShaderSourceInfo hlslSourceInfo)
-        {
-            return
-                hlslSourceInfo.HeaderAndThreadsX + "<THREADSX>" +
-                hlslSourceInfo.ThreadsY + "<THREADSY>" +
-                hlslSourceInfo.ThreadsZ + "<THREADSZ>" +
-                hlslSourceInfo.Defines +
-                hlslSourceInfo.StaticFieldsAndDeclaredTypes +
-                hlslSourceInfo.CapturedFieldsAndResourcesAndForwardDeclarations +
-                hlslSourceInfo.CapturedMethods +
-                hlslSourceInfo.EntryPoint;
+            return new(hlslSource, isSamplerUsed);
         }
     }
 }

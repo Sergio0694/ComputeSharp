@@ -47,10 +47,7 @@ partial class IShaderGenerator
             if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
             {
                 // Emit the diagnostics if dynamic shaders are not supported
-                if (!supportsDynamicShaders)
-                {
-                    diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
-                }
+                diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
 
                 return new(true, 0, 0, 0);
             }

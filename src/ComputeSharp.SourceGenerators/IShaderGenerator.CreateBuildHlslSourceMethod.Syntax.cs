@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
@@ -83,73 +82,8 @@ partial class IShaderGenerator
         {
             using ImmutableArrayBuilder<StatementSyntax> statements = new();
 
-            StringBuilder textBuilder = new();
-            int prologueStatements = 0;
-            int sizeHint = 64;
-
-            void AppendLine(string text)
-            {
-                _ = textBuilder.Append(text);
-            }
-
-            void AppendParsedStatement(string text)
-            {
-                FlushText();
-
-                statements.Add(ParseStatement(text));
-            }
-
-            void FlushText()
-            {
-                if (textBuilder.Length > 0)
-                {
-                    string hlslSource = textBuilder.ToString();
-
-                    _ = textBuilder.Append(hlslSource);
-
-                    sizeHint += textBuilder.Length;
-
-                    // The indentation level is the current depth + 2 (the method, and the return expression)
-                    SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSource, hierarchyDepth + 2);
-
-                    statements.Add(
-                        ExpressionStatement(
-                            InvocationExpression(
-                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralExpression)))));
-
-                    _ = textBuilder.Clear();
-                }
-            }
-
-            // Header and thread ids
-            AppendLine(hlslSourceInfo.HeaderAndThreadsX);
-            AppendParsedStatement("builder.Append(threadsX);");
-            AppendLine(hlslSourceInfo.ThreadsY);
-            AppendParsedStatement("builder.Append(threadsY);");
-            AppendLine(hlslSourceInfo.ThreadsZ);
-            AppendParsedStatement("builder.Append(threadsZ);");
-
-            // Define declarations
-            AppendLine(hlslSourceInfo.Defines);
-
-            // Static fields and declared types
-            AppendLine(hlslSourceInfo.StaticFieldsAndDeclaredTypes);
-
-            // Captured variables
-            AppendLine(hlslSourceInfo.CapturedFieldsAndResourcesAndForwardDeclarations);
-
-            // Captured methods
-            AppendLine(hlslSourceInfo.CapturedMethods);
-
-            // Entry point
-            AppendLine(hlslSourceInfo.EntryPoint);
-
-            FlushText();
-
             // builder = global::ComputeSharp.__Internals.ArrayPoolStringBuilder.Create(<SIZE_HINT>);
-            statements.Insert(
-                prologueStatements,
+            statements.Add(
                 ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
@@ -162,7 +96,16 @@ partial class IShaderGenerator
                         .AddArgumentListArguments(
                             Argument(LiteralExpression(
                                 SyntaxKind.NumericLiteralExpression,
-                                Literal(sizeHint)))))));
+                                Literal(hlslSourceInfo.HlslSource.Length)))))));
+
+            // The indentation level is the current depth + 2 (the method, and the return expression)
+            SyntaxToken hlslSourceLiteralExpression = SyntaxTokenHelper.CreateRawMultilineStringLiteral(hlslSourceInfo.HlslSource, hierarchyDepth + 2);
+
+            statements.Add(
+                ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
+                        .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, hlslSourceLiteralExpression)))));
 
             return statements.ToImmutable();
         }
