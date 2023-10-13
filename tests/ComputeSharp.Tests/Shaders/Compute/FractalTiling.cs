@@ -9,6 +9,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
 [AutoConstructor]
+[EmbeddedBytecode(DispatchAxis.XY)]
 internal readonly partial struct FractalTiling : IComputeShader
 {
     /// <summary>

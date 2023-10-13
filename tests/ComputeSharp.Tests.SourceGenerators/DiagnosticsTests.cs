@@ -1482,41 +1482,6 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void EmbeddedBytecodeWithDynamicShader()
-    {
-        const string source = """
-            using System;
-            using ComputeSharp;
-
-            namespace ComputeSharp
-            {
-                public interface IComputeShader { }
-                public class ReadWriteBuffer<T> { }
-                public class EmbeddedBytecodeAttribute : Attribute
-                {
-                    public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ) { }
-                }
-            }
-
-            namespace MyFancyApp.Sample
-            {
-                [EmbeddedBytecode(8, 8, 1)]
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-                    public Action action;
-
-                    public void Execute()
-                    {
-                    }
-                }
-            }
-            """;
-
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0043");
-    }
-
-    [TestMethod]
     [DataRow(-1, 1, 1)]
     [DataRow(1, -1, 1)]
     [DataRow(1, 1, -1)]

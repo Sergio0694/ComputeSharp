@@ -587,22 +587,6 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a dynamic shader annotated as an embedded bytecode.
-    /// <para>
-    /// Format: <c>"The shader of type {0} cannot be precompiled, as it is dynamic (it captures delegate fields)"</c>.
-    /// </para>
-    /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeWithDynamicShader = new DiagnosticDescriptor(
-        id: "CMPS0043",
-        title: "Embedded bytecode for dynamic shader",
-        messageFormat: "The shader of type {0} cannot be precompiled, as it is dynamic (it captures delegate fields)",
-        category: "ComputeSharp.Shaders",
-        defaultSeverity: DiagnosticSeverity.Error,
-        isEnabledByDefault: true,
-        description: "A shader type cannot be precompiled if it captures one or more delegate values.",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
-
-    /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with invalid thread ids values.
     /// <para>
     /// Format: <c>"The shader of type {0} is annotated with invalid thread ids values"</c>.

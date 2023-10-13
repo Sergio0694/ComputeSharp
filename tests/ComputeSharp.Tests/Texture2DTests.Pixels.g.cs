@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 
@@ -69,6 +69,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_Bgra32_Float4 : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Bgra32, Float4> source;
@@ -81,6 +82,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_R16_float : IComputeShader
     {
         public readonly ReadOnlyTexture2D<R16, float> source;
@@ -93,6 +95,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_R8_float : IComputeShader
     {
         public readonly ReadOnlyTexture2D<R8, float> source;
@@ -105,6 +108,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_Rg16_Float2 : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Rg16, Float2> source;
@@ -117,6 +121,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_Rg32_Float2 : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Rg32, Float2> source;
@@ -129,6 +134,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_Rgba32_Float4 : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Rgba32, Float4> source;
@@ -141,6 +147,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct Shader_Unorm_Rgba64_Float4 : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Rgba64, Float4> source;

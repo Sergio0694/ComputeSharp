@@ -118,6 +118,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// Kernel for the vertical convolution pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.XY)]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -150,6 +151,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// Kernel for the horizontal convolution pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.XY)]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;

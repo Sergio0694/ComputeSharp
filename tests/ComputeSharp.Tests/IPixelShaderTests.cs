@@ -35,6 +35,7 @@ public partial class IPixelShaderTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct EarlyReturnShader : IPixelShader<float4>
     {
         public float4 Execute()

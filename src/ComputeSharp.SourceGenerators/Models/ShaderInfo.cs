@@ -7,7 +7,6 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// A model representing all necessary info for a full generation pass for a shader.
 /// </summary>
 /// <param name="Hierarchy">The hierarchy info for the shader type.</param>
-/// <param name="DispatchId">The gathered dispatch id for the shader type.</param>
 /// <param name="DispatchData">The gathered shader dispatch data.</param>
 /// <param name="DispatchMetadata">The gathered shader dispatch metadata.</param>
 /// <param name="HlslShaderSource">The processed HLSL source for the shader.</param>
@@ -15,7 +14,6 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
 internal sealed record ShaderInfo(
     HierarchyInfo Hierarchy,
-    DispatchIdInfo DispatchId,
     DispatchDataInfo DispatchData,
     DispatchMetadataInfo DispatchMetadata,
     HlslShaderSourceInfo HlslShaderSource,

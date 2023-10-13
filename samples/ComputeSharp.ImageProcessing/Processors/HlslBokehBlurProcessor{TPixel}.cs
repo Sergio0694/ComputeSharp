@@ -314,6 +314,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the vertical convolution pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.XY)]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -351,6 +352,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the horizontal convolution pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.XY)]
         internal readonly partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
         {
             private readonly float z;
@@ -390,6 +392,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the gamma highlight pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.X)]
         internal readonly partial struct GammaHighlightProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -414,6 +417,7 @@ public sealed partial class HlslBokehBlurProcessor
         /// Kernel for the inverse gamma highlight pass.
         /// </summary>
         [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.X)]
         internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
         {
             private readonly ReadWriteTexture2D<float4> source;

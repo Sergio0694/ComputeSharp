@@ -35,7 +35,7 @@ internal static class PipelineDataLoader<T>
     /// <returns>The <see cref="PipelineData"/> instance for a given shader.</returns>
     public static unsafe PipelineData GetPipelineData(GraphicsDevice device, int threadsX, int threadsY, int threadsZ, ref T shader)
     {
-        ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
+        ShaderKey key = new(threadsX, threadsY, threadsZ);
 
         lock (ShadersCache)
         {

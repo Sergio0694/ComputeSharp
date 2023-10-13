@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
@@ -132,6 +132,7 @@ foreach (var pair in typesMap)
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.X)]
     internal readonly partial struct <#=testMethodName#>Shader : IComputeShader
     {
         public readonly <#=shaderResourceType#> source;

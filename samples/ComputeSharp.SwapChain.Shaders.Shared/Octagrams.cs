@@ -6,9 +6,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by whisky_shusuky.</para>
 /// </summary>
 [AutoConstructor]
-#if SAMPLE_APP
 [EmbeddedBytecode(DispatchAxis.XY)]
-#endif
 internal readonly partial struct Octagrams : IPixelShader<float4>
 {
     /// <summary>

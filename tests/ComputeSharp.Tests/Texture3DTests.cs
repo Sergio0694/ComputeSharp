@@ -533,6 +533,7 @@ public partial class Texture3DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct ReadOnlyTexture3DKernel : IComputeShader
     {
         public readonly ReadOnlyTexture3D<int> source;
@@ -563,6 +564,7 @@ public partial class Texture3DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct ReadWriteTexture3DKernel : IComputeShader
     {
         public readonly ReadWriteTexture3D<int> source;

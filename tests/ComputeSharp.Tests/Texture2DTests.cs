@@ -428,6 +428,7 @@ public partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct ReadOnlyTexture2DKernel : IComputeShader
     {
         public readonly ReadOnlyTexture2D<int> source;
@@ -458,6 +459,7 @@ public partial class Texture2DTests
     }
 
     [AutoConstructor]
+    [EmbeddedBytecode(DispatchAxis.XY)]
     internal readonly partial struct ReadWriteTexture2DKernel : IComputeShader
     {
         public readonly ReadWriteTexture2D<int> source;

@@ -6,9 +6,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by Syntopia.</para>
 /// </summary>
 [AutoConstructor]
-#if SAMPLE_APP
 [EmbeddedBytecode(DispatchAxis.XY)]
-#endif
 internal readonly partial struct MengerJourney : IPixelShader<float4>
 {
     /// <summary>
