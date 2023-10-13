@@ -14,6 +14,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="IsSamplerUsed">Whether or not the static sampler is used.</param>
 /// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
+/// <param name="ResourceCount">The total number of captured resources in the shader.</param>
 /// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
 /// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
@@ -27,6 +28,7 @@ internal sealed record ShaderInfo(
     bool IsSamplerUsed,
     EquatableArray<FieldInfo> Fields,
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
+    int ResourceCount,
     int Root32BitConstantCount,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,

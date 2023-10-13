@@ -24,12 +24,10 @@ partial class IShaderGenerator
 
             using (writer.WriteBlock())
             {
-                int numberOfResources = info.ResourceDescriptors.Length;
-
                 writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.Root32BitConstantCount}];");
-                writer.WriteLineIf($"global::System.Span<ulong> span1 = stackalloc ulong[{numberOfResources}];", numberOfResources > 0);
+                writer.WriteLineIf($"global::System.Span<ulong> span1 = stackalloc ulong[{info.ResourceCount}];", info.ResourceCount > 0);
                 writer.WriteLine("ref uint r0 = ref span0[0];");
-                writer.WriteLineIf("ref ulong r1 = ref span1[0];", numberOfResources > 0);
+                writer.WriteLineIf("ref ulong r1 = ref span1[0];", info.ResourceCount > 0);
 
                 // Append the statements for the dispatch ranges
                 writer.WriteLine("span0[0] = (uint)x;");
@@ -94,7 +92,7 @@ partial class IShaderGenerator
 
                 // Load the prepared buffers
                 writer.WriteLine("loader.LoadCapturedValues(span0);");
-                writer.WriteLineIf("loader.LoadCapturedResources(span1);", numberOfResources > 0);
+                writer.WriteLineIf("loader.LoadCapturedResources(span1);", info.ResourceCount > 0);
             }
         }
     }

@@ -125,6 +125,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         IsSamplerUsed: isSamplerUsed,
                         Fields: fieldInfos,
                         ResourceDescriptors: resourceDescriptors,
+                        ResourceCount: resourceCount,
                         Root32BitConstantCount: root32BitConstantCount,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
