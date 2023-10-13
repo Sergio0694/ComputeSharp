@@ -109,17 +109,10 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Where(static item => item is not null)!;
 
         // Output the diagnostics, if any
-        context.ReportDiagnostics(
-            shaderInfoWithErrors
-            .Select(static (item, _) => item.Diagnostcs));
-
-        // Get the LoadDispatchData() info (hierarchy and dispatch data info)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchDataInfo DispatchData)> dispatchDataInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchData));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, _) => item.Diagnostcs));
 
         // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(dispatchDataInfo, static (context, item) =>
+        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = LoadDispatchData.GetSyntax(
                 item.DispatchData.IsPixelShaderLike,
@@ -130,11 +123,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchData)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
-
-        // Get the BuildHlslSource info (hierarchy, HLSL source and parsing options)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo HlslShaderSource)> hlslSourceInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.HlslShaderSource));
 
         // Generate the BuildHlslSource() methods
         context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
@@ -154,13 +142,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(BuildHlslSource)}.g.cs", writer.ToString());
         });
 
-        // Get the LoadDispatchMetadata() info (hierarchy and dispatch metadata info)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo DispatchMetadata)> dispatchMetadataInfo =
-            shaderInfoWithErrors
-            .Select(static (item, _) => (item.Hierarchy, item.DispatchMetadata));
-
         // Generate the LoadDispatchMetadata() methods
-        context.RegisterSourceOutput(dispatchMetadataInfo, static (context, item) =>
+        context.RegisterSourceOutput(shaderInfoWithErrors, static (context, item) =>
         {
             MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.DispatchMetadata);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, buildHlslStringMethod, addSkipLocalsInitAttribute: true);
@@ -168,17 +151,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{nameof(LoadDispatchMetadata)}.g.cs", compilationUnit.GetText(Encoding.UTF8));
         });
 
-        // Transform the raw HLSL source to compile (this step aggregates the HLSL source to ensure compilation is only done for actual HLSL changes)
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, string Hlsl, ThreadIdsInfo ThreadIds)> shaderBytecodeInfo =
-            shaderInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.HlslShaderSource.HlslSource, item.ThreadIds));
-
         // Compile the requested shader bytecodes
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo EmbeddedBytecode, DeferredDiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
-            shaderBytecodeInfo
+            shaderInfoWithErrors
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, token, out DeferredDiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.HlslShaderSource.HlslSource, token, out DeferredDiagnosticInfo? diagnostic);
 
                 token.ThrowIfCancellationRequested();
 
