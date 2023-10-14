@@ -36,6 +36,14 @@ public interface IShader
     int ConstantBufferSize { get; }
 
     /// <summary>
+    /// Gets whether the shader requires a static sampler being declared and initialized.
+    /// </summary>
+    /// <remarks>
+    /// When requested, a static sampler with linear sampling and mirror addressing will be bound to <c>register(s)</c>.
+    /// </remarks>
+    bool IsStaticSamplerRequired { get; }
+
+    /// <summary>
     /// Gets the HLSL source code for the current shader instance.
     /// </summary>
     string HlslSource { get; }

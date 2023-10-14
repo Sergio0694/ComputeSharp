@@ -24,6 +24,18 @@ partial class IShaderGenerator
         }
 
         /// <summary>
+        /// Writes the <c>IsStaticSamplerRequired</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteIsStaticSamplerRequiredSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly bool global::ComputeSharp.__Internals.IShader.IsStaticSamplerRequired => {info.IsSamplerUsed.ToString().ToLowerInvariant()};");
+        }
+
+        /// <summary>
         /// Writes the <c>LoadDispatchMetadata</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
