@@ -72,15 +72,4 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader, GraphicsDevice device, int x, int y, int z)
         where TLoader : struct, IDispatchDataLoader;
-
-    /// <summary>
-    /// Loads an opaque metadata handle from the metadata of the current shader.
-    /// </summary>
-    /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
-    /// <param name="result">The resulting opaque metadata handle.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be called directly by user code")]
-    void LoadDispatchMetadata<TLoader>(ref TLoader loader, out IntPtr result)
-        where TLoader : struct, IDispatchMetadataLoader;
 }
