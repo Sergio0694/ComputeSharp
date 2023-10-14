@@ -31,7 +31,7 @@ internal readonly unsafe struct ShaderDispatchMetadataLoader : IDispatchMetadata
     }
 
     /// <inheritdoc/>
-    public unsafe void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result)
+    public unsafe void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptorRange> resourceDescriptors, out IntPtr result)
     {
         default(ArgumentException).ThrowIf(serializedMetadata.Length != 5, nameof(serializedMetadata));
 
@@ -39,7 +39,7 @@ internal readonly unsafe struct ShaderDispatchMetadataLoader : IDispatchMetadata
         {
             *(ComPtr<ID3D12RootSignature>*)p = this.d3D12Device->CreateRootSignature(
                 MemoryMarshal.Read<int>(serializedMetadata),
-                MemoryMarshal.Cast<ResourceDescriptor, D3D12_DESCRIPTOR_RANGE1>(resourceDescriptors),
+                MemoryMarshal.Cast<ResourceDescriptorRange, D3D12_DESCRIPTOR_RANGE1>(resourceDescriptors),
                 MemoryMarshal.Read<bool>(serializedMetadata.Slice(4)));
         }
     }

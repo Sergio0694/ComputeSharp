@@ -16,5 +16,5 @@ public interface IDispatchMetadataLoader
     /// <param name="serializedMetadata">The serialized metadata for the current shader.</param>
     /// <param name="resourceDescriptors">The sequence of resource descriptors for the current shader.</param>
     /// <param name="result">The resulting opaque metadata handle.</param>
-    void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result);
+    void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptorRange> resourceDescriptors, out IntPtr result);
 }
