@@ -104,7 +104,7 @@ public static class ReflectionServices
     private static unsafe ShaderInfo GetNonGenericShaderInfo<T>(in T shader)
         where T : struct, IShader
     {
-        Unsafe.AsRef(in shader).BuildHlslSource(out string hlslSource);
+        string hlslSource = Unsafe.AsRef(in shader).HlslSource;
 
         using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.Compile(hlslSource);
 

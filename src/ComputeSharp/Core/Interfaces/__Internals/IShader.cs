@@ -26,6 +26,11 @@ public interface IShader
     int ThreadsZ { get; }
 
     /// <summary>
+    /// Gets the HLSL source code for the current shader instance.
+    /// </summary>
+    string HlslSource { get; }
+
+    /// <summary>
     /// Gets the HLSL bytecode for the current shader.
     /// </summary>
     ReadOnlyMemory<byte> HlslBytecode { get; }
@@ -54,12 +59,4 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchMetadata<TLoader>(ref TLoader loader, out IntPtr result)
         where TLoader : struct, IDispatchMetadataLoader;
-
-    /// <summary>
-    /// Builds the HLSL source code for the current shader instance.
-    /// </summary>
-    /// <param name="hlslSource">The resulting HLSL source.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out string hlslSource);
 }
