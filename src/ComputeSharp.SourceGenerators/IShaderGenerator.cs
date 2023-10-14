@@ -148,10 +148,15 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(LoadBytecode.WriteThreadsXSyntax);
             declaredMembers.Add(LoadBytecode.WriteThreadsYSyntax);
             declaredMembers.Add(LoadBytecode.WriteThreadsZSyntax);
+            declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
             declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
             declaredMembers.Add(BuildHlslSource.WriteSyntax);
-            declaredMembers.Add(LoadBytecode.WriteSyntax);
+
+            using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
+            using ImmutableHashSetBuilder<string> usingDirectives = new();
+
+            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();
 
@@ -160,6 +165,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 writer: writer,
                 baseTypes: ReadOnlySpan<string>.Empty,
                 memberCallbacks: declaredMembers.WrittenSpan);
+
+            // Append any additional types as well
+            if (additionalTypes.Count > 0)
+            {
+                writer.WriteLine();
+                writer.WriteLine("namespace ComputeSharp.Generated");
+
+                using (writer.WriteBlock())
+                {
+                    writer.WriteSortedUsingDirectives(usingDirectives.AsEnumerable());
+                    writer.WriteLineSeparatedMembers(additionalTypes.WrittenSpan, (callback, writer) => callback(item, writer));
+                }
+            }
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.g.cs", writer.ToString());
         });

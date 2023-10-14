@@ -26,6 +26,11 @@ public interface IShader
     int ThreadsZ { get; }
 
     /// <summary>
+    /// Gets the HLSL bytecode for the current shader.
+    /// </summary>
+    ReadOnlyMemory<byte> HlslBytecode { get; }
+
+    /// <summary>
     /// Loads the dispatch data for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
@@ -57,18 +62,4 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void BuildHlslSource(out string hlslSource);
-
-    /// <summary>
-    /// Loads the bytecode for the current shader.
-    /// </summary>
-    /// <typeparam name="TLoader">The type of bytecode loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the bytecode.</param>
-    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-    /// <exception cref="NotSupportedException">Thrown if the bytecode required runtime compilation and it wasn't supported on the current configuration.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be used directly by user code")]
-    void LoadBytecode<TLoader>(ref TLoader loader, int threadsX, int threadsY, int threadsZ)
-        where TLoader : struct, IBytecodeLoader;
 }
