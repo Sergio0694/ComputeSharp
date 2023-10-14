@@ -18,7 +18,7 @@ public partial class DispatchTests
 
         using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer(array);
 
-        device.Get().For(128, 1, 1, 32, 1, 1, new ComputeShader(buffer, 2.0f));
+        device.Get().For(128, 1, 1, new ComputeShader(buffer, 2.0f));
 
         float[] result = buffer.ToArray();
 
@@ -28,16 +28,6 @@ public partial class DispatchTests
         }
 
         CollectionAssert.AreEqual(result, array);
-    }
-
-    [CombinatorialTestMethod]
-    [AllDevices]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void ComputeShader_Test_Fail(Device device)
-    {
-        using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(128);
-
-        device.Get().For(128, 1, 1, 64, 1, 1, new ComputeShader(buffer, 2.0f));
     }
 
     [AutoConstructor]
