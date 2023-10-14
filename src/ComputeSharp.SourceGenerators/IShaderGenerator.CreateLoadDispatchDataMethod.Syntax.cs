@@ -24,7 +24,7 @@ partial class IShaderGenerator
 
             using (writer.WriteBlock())
             {
-                writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.Root32BitConstantCount}];");
+                writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.ConstantBufferSizeInBytes}];");
                 writer.WriteLineIf($"global::System.Span<ulong> span1 = stackalloc ulong[{info.ResourceCount}];", info.ResourceCount > 0);
                 writer.WriteLine("ref uint r0 = ref span0[0];");
                 writer.WriteLineIf("ref ulong r1 = ref span1[0];", info.ResourceCount > 0);

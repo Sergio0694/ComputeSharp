@@ -12,6 +12,18 @@ partial class IShaderGenerator
     partial class LoadDispatchMetadata
     {
         /// <summary>
+        /// Writes the <c>ConstantBufferSize</c> property.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteConstantBufferSizeSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
+        }
+
+        /// <summary>
         /// Writes the <c>LoadDispatchMetadata</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
@@ -34,7 +46,7 @@ partial class IShaderGenerator
                 writer.WriteLine("ref global::ComputeSharp.__Internals.ResourceDescriptor r1 = ref span1[0];");
 
                 // Write the serialized shader metadata
-                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {info.Root32BitConstantCount});");
+                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {info.ConstantBufferSizeInBytes});");
                 writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {info.IsSamplerUsed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()});");
 
                 // Populate the sequence of resource descriptors

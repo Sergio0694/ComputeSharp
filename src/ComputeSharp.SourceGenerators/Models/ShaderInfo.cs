@@ -12,10 +12,10 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="ThreadsZ">The thread ids value for the Z axis.</param>
 /// <param name="IsPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
 /// <param name="IsSamplerUsed">Whether or not the static sampler is used.</param>
+/// /// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
+/// <param name="ResourceCount">The total number of captured resources in the shader.</param>
 /// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
-/// <param name="ResourceCount">The total number of captured resources in the shader.</param>
-/// <param name="Root32BitConstantCount">The size of the shader root signature, in 32 bit constants.</param>
 /// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
 /// <param name="Diagnostcs">The discovered diagnostics, if any.</param>
@@ -26,10 +26,10 @@ internal sealed record ShaderInfo(
     int ThreadsZ,
     bool IsPixelShaderLike,
     bool IsSamplerUsed,
+    int ConstantBufferSizeInBytes,
+    int ResourceCount,
     EquatableArray<FieldInfo> Fields,
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
-    int ResourceCount,
-    int Root32BitConstantCount,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
     EquatableArray<DiagnosticInfo> Diagnostcs);

@@ -26,6 +26,16 @@ public interface IShader
     int ThreadsZ { get; }
 
     /// <summary>
+    /// Gets the size in bytes of the constant buffer for the current shader.
+    /// </summary>
+    /// <remarks>
+    /// Constant buffer data is bound to shaders via 32 bit root constants, and loaded before dispatching via
+    /// <see href="https://learn.microsoft.com/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setcomputeroot32bitconstants"><c>ID3D12GraphicsCommandList::SetComputeRoot32BitConstants</c></see>,
+    /// so the size must be a multiple of 4.
+    /// </remarks>
+    int ConstantBufferSize { get; }
+
+    /// <summary>
     /// Gets the HLSL source code for the current shader instance.
     /// </summary>
     string HlslSource { get; }

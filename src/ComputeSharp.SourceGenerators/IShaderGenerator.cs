@@ -59,8 +59,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         diagnostics,
                         typeSymbol,
                         isPixelShaderLike,
-                        out int resourceCount,
-                        out int root32BitConstantCount);
+                        out int root32BitConstantCount,
+                        out int resourceCount);
 
                     token.ThrowIfCancellationRequested();
 
@@ -123,10 +123,10 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         ThreadsZ: threadsZ,
                         IsPixelShaderLike: isPixelShaderLike,
                         IsSamplerUsed: isSamplerUsed,
+                        ConstantBufferSizeInBytes: root32BitConstantCount,
+                        ResourceCount: resourceCount,
                         Fields: fieldInfos,
                         ResourceDescriptors: resourceDescriptors,
-                        ResourceCount: resourceCount,
-                        Root32BitConstantCount: root32BitConstantCount,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,
                         Diagnostcs: diagnostics.ToImmutable());
@@ -148,6 +148,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(LoadBytecode.WriteThreadsXSyntax);
             declaredMembers.Add(LoadBytecode.WriteThreadsYSyntax);
             declaredMembers.Add(LoadBytecode.WriteThreadsZSyntax);
+            declaredMembers.Add(LoadDispatchMetadata.WriteConstantBufferSizeSyntax);
             declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
             declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
