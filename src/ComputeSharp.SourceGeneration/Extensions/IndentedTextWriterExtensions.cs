@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.SourceGeneration.Helpers;
 
@@ -38,6 +40,30 @@ internal static class IndentedTextWriterExtensions
             writer.WriteLine($$"""[DebuggerNonUserCode]""");
             writer.WriteLine($$"""[ExcludeFromCodeCoverage]""");
         }
+    }
+
+    /// <summary>
+    /// Writes a sequence of using directives, sorted correctly.
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="usingDirectives">The sequence of using directives to write.</param>
+    public static void WriteSortedUsingDirectives(this IndentedTextWriter writer, IEnumerable<string> usingDirectives)
+    {
+        // Add the System directives first, in the correct order
+        foreach (string usingDirective in usingDirectives.Where(static name => name.StartsWith("global::System")).OrderBy(static name => name))
+        {
+            writer.WriteLine($"using {usingDirective};");
+        }
+
+        // Add the other directives, also sorted in the correct order
+        foreach (string usingDirective in usingDirectives.Where(static name => !name.StartsWith("global::System")).OrderBy(static name => name))
+        {
+            writer.WriteLine($"using {usingDirective};");
+        }
+
+        // Leave a trailing blank line if at least one using directive has been written.
+        // This is so that any members will correctly have a leading blank line before.
+        writer.WriteLineIf(usingDirectives.Any());
     }
 
     /// <summary>

@@ -249,24 +249,8 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
 
                 using (writer.WriteBlock())
                 {
-                    // Add the System directives first, in the correct order
-                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => name.StartsWith("global::System")).OrderBy(static name => name))
-                    {
-                        writer.WriteLine($"using {usingDirective};");
-                    }
-
-                    // Add the other directives, also sorted in the correct order
-                    foreach (string usingDirective in usingDirectives.AsEnumerable().Where(static name => !name.StartsWith("global::System")).OrderBy(static name => name))
-                    {
-                        writer.WriteLine($"using {usingDirective};");
-                    }
-
-                    foreach (IndentedTextWriter.Callback<D2D1ShaderInfo> callback in additionalTypes.WrittenSpan)
-                    {
-                        writer.WriteLine();
-
-                        callback(item, writer);
-                    }
+                    writer.WriteSortedUsingDirectives(usingDirectives.AsEnumerable());
+                    writer.WriteLineSeparatedMembers(additionalTypes.WrittenSpan, (callback, writer) => callback(item, writer));
                 }
             }
 
