@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using ComputeSharp.Interop;
 
 namespace ComputeSharp.__Internals;
 
@@ -42,6 +43,11 @@ public interface IShader
     /// When requested, a static sampler with linear sampling and mirror addressing will be bound to <c>register(s)</c>.
     /// </remarks>
     bool IsStaticSamplerRequired { get; }
+
+    /// <summary>
+    /// Gets the resource descriptor ranges for all resources that should be bound to this shader.
+    /// </summary>
+    ReadOnlyMemory<ResourceDescriptorRange> ResourceDescriptorRanges { get; }
 
     /// <summary>
     /// Gets the HLSL source code for the current shader instance.

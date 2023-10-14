@@ -150,14 +150,15 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(LoadBytecode.WriteThreadsZSyntax);
             declaredMembers.Add(LoadDispatchMetadata.WriteConstantBufferSizeSyntax);
             declaredMembers.Add(LoadDispatchMetadata.WriteIsStaticSamplerRequiredSyntax);
+            declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
             declaredMembers.Add(BuildHlslSource.WriteSyntax);
             declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
             declaredMembers.Add(LoadDispatchData.WriteSyntax);
-            declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
+            LoadDispatchMetadata.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
             LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();

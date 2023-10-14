@@ -1,4 +1,3 @@
-using System.Globalization;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGenerators.Models;
@@ -36,7 +35,7 @@ partial class IShaderGenerator
         }
 
         /// <summary>
-        /// Writes the <c>LoadDispatchMetadata</c> method.
+        /// Writes the <c>ResourceDescriptorRanges</c> property.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
@@ -44,32 +43,77 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchMetadata<TLoader>(ref TLoader loader, out global::System.IntPtr result)");
+            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.__Internals.IShader.ResourceDescriptorRanges => ");
 
-            using (writer.WriteBlock())
+            // If there are no declared resources, just return an empty collection
+            if (info.ResourceDescriptors.IsEmpty)
             {
-                // Compute the total number of resources
-                int totalResourcesCount = info.ResourceDescriptors.Length;
-
-                writer.WriteLine("global::System.Span<byte> span0 = stackalloc byte[5];");
-                writer.WriteLine($"global::System.Span<global::ComputeSharp.__Internals.ResourceDescriptor> span1 = stackalloc global::ComputeSharp.__Internals.ResourceDescriptor[{totalResourcesCount}];");
-                writer.WriteLine("ref byte r0 = ref span0[0];");
-                writer.WriteLine("ref global::ComputeSharp.__Internals.ResourceDescriptor r1 = ref span1[0];");
-
-                // Write the serialized shader metadata
-                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {info.ConstantBufferSizeInBytes});");
-                writer.WriteLine($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {info.IsSamplerUsed.ToString(CultureInfo.InvariantCulture).ToLowerInvariant()});");
-
-                // Populate the sequence of resource descriptors
-                foreach (ResourceDescriptor descriptor in info.ResourceDescriptors)
-                {
-                    writer.WriteLine($"global::ComputeSharp.__Internals.ResourceDescriptor.Create({descriptor.TypeId}, {descriptor.RegisterOffset}, out global::System.Runtime.CompilerServices.Unsafe.Add(ref r1, {descriptor.Offset}));");
-                }
-
-                // Invoke the value delegate to create the opaque root signature handle
-                writer.WriteLine("loader.LoadMetadataHandle(span0, span1, out result);");
+                writer.WriteLine("default;");
             }
+            else
+            {
+                writer.WriteLine("global::ComputeSharp.Generated.Data.ResourceDescriptorRanges;");
+            }
+        }
+
+        /// <summary>
+        /// Registers a callback to generate an additional data member, if needed.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="callbacks">The registered callbacks to generate additional data members.</param>
+        /// <param name="usingDirectives">The using directives needed by the generated code.</param>
+        public static void RegisterAdditionalDataMemberSyntax(
+            ShaderInfo info,
+            ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> callbacks,
+            ImmutableHashSetBuilder<string> usingDirectives)
+        {
+            // If there are no declared resources, there is nothing to di
+            if (info.ResourceDescriptors.IsEmpty)
+            {
+                return;
+            }
+
+            usingDirectives.Add("global::System.CodeDom.Compiler");
+            usingDirectives.Add("global::System.Diagnostics");
+            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            usingDirectives.Add("global::ComputeSharp.Interop");
+
+            // Declare the additional data type and the shared array with resource descriptor ranges
+            static void Callback(ShaderInfo info, IndentedTextWriter writer)
+            {
+                writer.WriteLine($$"""/// <summary>""");
+                writer.WriteLine($$"""/// A container type for additional data needed by the shader.""");
+                writer.WriteLine($$"""/// </summary>""");
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
+                writer.WriteLine($$"""file static class Data""");
+
+                using (writer.WriteBlock())
+                {
+                    writer.WriteLine("""/// <summary>The singleton <see cref="ResourceDescriptorRange"/> array instance.</summary>""");
+                    writer.WriteLine("""public static readonly ResourceDescriptorRange[] ResourceDescriptorRanges =""");
+                    writer.WriteLine("""{""");
+                    writer.IncreaseIndent();
+
+                    // Initialize all resource descriptor ranges
+                    writer.WriteInitializationExpressions(info.ResourceDescriptors.AsSpan(), static (description, writer) =>
+                    {
+                        string rangeTypeName = description.TypeId switch
+                        {
+                            0 => "ShaderResourceView",
+                            1 => "UnorderedAccessView",
+                            _ => "ConstantBufferView"
+                        };
+
+                        writer.Write($"new ResourceDescriptorRange(ResourceDescriptorRangeType.{rangeTypeName}, {description.Register})");
+                    });
+
+                    writer.DecreaseIndent();
+                    writer.WriteLine();
+                    writer.WriteLine("};");
+                }
+            }
+
+            callbacks.Add(Callback);
         }
     }
 }
