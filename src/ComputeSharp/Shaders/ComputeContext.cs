@@ -7,7 +7,6 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
-using ComputeSharp.Shaders.Models;
 using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
@@ -127,7 +126,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         where T : struct, IComputeShader
     {
 
-        Run(x, 1, 1, 64, 1, 1, ref shader);
+        Run(x, 1, 1, ref shader);
     }
 
     /// <summary>
@@ -140,21 +139,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         where T : struct, IComputeShader
     {
 
-        Run(x, y, 1, 8, 8, 1, ref shader);
-    }
-
-    /// <summary>
-    /// Runs the input shader with the specified parameters.
-    /// </summary>
-    /// <param name="x">The number of iterations to run on the X axis.</param>
-    /// <param name="y">The number of iterations to run on the Y axis.</param>
-    /// <param name="z">The number of iterations to run on the Z axis.</param>
-    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
-        where T : struct, IComputeShader
-    {
-
-        Run(x, y, z, 4, 4, 4, ref shader);
+        Run(x, y, 1, ref shader);
     }
 
     /// <summary>
@@ -164,38 +149,24 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
-    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(
-        int x,
-        int y,
-        int z,
-        int threadsX,
-        int threadsY,
-        int threadsZ,
-        ref T shader)
+    internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
         where T : struct, IComputeShader
     {
         default(InvalidOperationException).ThrowIf(this.device is null);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(x);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(y);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(z);
-        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsX, 1, 1024);
-        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsY, 1, 1024);
-        default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(threadsZ, 1, 64);
-        default(ArgumentOutOfRangeException).ThrowIfGreaterThan(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
 
-        int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
-        int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
-        int groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
+        int groupsX = Math.DivRem(x, shader.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, shader.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int groupsZ = Math.DivRem(z, shader.ThreadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
+        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device);
 
         ref CommandList commandList = ref GetCommandList(pipelineData.D3D12PipelineState);
 
@@ -223,16 +194,13 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         int x = texture.Width;
         int y = texture.Height;
-        const int threadsX = 8;
-        const int threadsY = 8;
-        const int threadsZ = 1;
-        int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
-        int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int groupsX = Math.DivRem(x, shader.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, shader.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
+        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device);
 
         ref CommandList commandList = ref GetCommandList(pipelineData.D3D12PipelineState);
 

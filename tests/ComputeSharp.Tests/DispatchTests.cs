@@ -131,7 +131,7 @@ public partial class DispatchTests
     {
         using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
 
-        device.Get().For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
+        device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new GroupIdsShader(buffer));
 
         int4[,,] data = buffer.ToArray();
         int* value = stackalloc int[4];
@@ -153,26 +153,6 @@ public partial class DispatchTests
         }
     }
 
-    [CombinatorialTestMethod]
-    [AllDevices]
-    [Data(0, 8, 8)]
-    [Data(8, 0, 8)]
-    [Data(8, 8, 0)]
-    [Data(1025, 8, 8)]
-    [Data(8, 2000, 8)]
-    [Data(8, 8, 70)]
-    [Data(8, -1, 8)]
-    [Data(8, 15, 16)]
-    [ExpectedException(typeof(ArgumentOutOfRangeException))]
-    public void Verify_GroupIds_OutOfRange(Device device, int x, int y, int z)
-    {
-        using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
-
-        device.Get().For(buffer.Width, buffer.Height, buffer.Depth, x, y, z, new GroupIdsShader(buffer));
-
-        Assert.Fail();
-    }
-
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XYZ)]
     internal readonly partial struct GroupIdsShader : IComputeShader
@@ -192,7 +172,7 @@ public partial class DispatchTests
     {
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
 
-        device.Get().For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
+        device.Get().For(1, 1, 1, new GroupSizeShader(buffer));
 
         int[] data = buffer.ToArray();
 
@@ -227,7 +207,7 @@ public partial class DispatchTests
     {
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(256);
 
-        device.Get().For(256, 1, 1, 32, 1, 1, new GridIdsShader(buffer));
+        device.Get().For(256, 1, 1, new GridIdsShader(buffer));
 
         int[] data = buffer.ToArray();
 
@@ -373,7 +353,7 @@ public partial class DispatchTests
     {
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
 
-        device.Get().For(64, 1, 1, 32, 1, 1, new DynamicGroupSharedPixelShader(buffer));
+        device.Get().For(64, 1, 1, new DynamicGroupSharedPixelShader(buffer));
 
         int[] result = buffer.ToArray();
 

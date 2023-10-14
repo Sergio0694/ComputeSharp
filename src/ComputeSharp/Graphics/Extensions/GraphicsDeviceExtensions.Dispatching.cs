@@ -66,28 +66,6 @@ public static partial class GraphicsDeviceExtensions
     /// <summary>
     /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
-    /// <typeparam name="T">The type of compute shader to run.</typeparam>
-    /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-    /// <param name="x">The number of iterations to run on the X axis.</param>
-    /// <param name="y">The number of iterations to run on the Y axis.</param>
-    /// <param name="z">The number of iterations to run on the Z axis.</param>
-    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
-        where T : struct, IComputeShader
-    {
-        default(ArgumentNullException).ThrowIfNull(device);
-
-        using ComputeContext context = device.CreateComputeContext();
-
-        context.Run(x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
-    }
-
-    /// <summary>
-    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
-    /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
