@@ -44,21 +44,12 @@ internal static unsafe class PipelineDataLoader<T>
         PipelineData pipelineData;
 
         using (ComPtr<ID3D12RootSignature> d3D12RootSignature = default)
+        using (ComPtr<ID3D12PipelineState> d3D12PipelineState = default)
         {
             CreateD3D12RootSignature(device.D3D12Device, d3D12RootSignature.GetAddressOf());
+            CreateD3D12PipelineState(device.D3D12Device, d3D12RootSignature.Get(), d3D12PipelineState.GetAddressOf());
 
-            Unsafe.SkipInit(out T shader);
-
-            ReadOnlyMemory<byte> hlslBytecode = shader.HlslBytecode;
-
-            fixed (byte* hlslBytecodePtr = hlslBytecode.Span)
-            {
-                D3D12_SHADER_BYTECODE d3D12ShaderBytecode = new(hlslBytecodePtr, (nuint)hlslBytecode.Length);
-
-                using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), d3D12ShaderBytecode);
-
-                pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
-            }
+            pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
         }
 
         // Add the pipeline to the cache for this type
@@ -115,6 +106,24 @@ internal static unsafe class PipelineDataLoader<T>
         if (d3D12DescriptorRangesArray is not null)
         {
             ArrayPool<D3D12_DESCRIPTOR_RANGE1>.Shared.Return(d3D12DescriptorRangesArray);
+        }
+    }
+
+    /// <summary>
+    /// Creates a D3D12 pipeline state for the current shader type.
+    /// </summary>
+    /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the root signature.</param>
+    /// <param name="d3D12RootSignature">The input <see cref="ID3D12RootSignature"/> value to use.</param>
+    /// <param name="d3D12PipelineState">The resulting <see cref="ID3D12PipelineState"/> instance.</param>
+    private static void CreateD3D12PipelineState(ID3D12Device* d3D12Device, ID3D12RootSignature* d3D12RootSignature, ID3D12PipelineState** d3D12PipelineState)
+    {
+        Unsafe.SkipInit(out T shader);
+
+        fixed (byte* hlslBytecodePtr = shader.HlslBytecode.Span)
+        {
+            D3D12_SHADER_BYTECODE d3D12ShaderBytecode = new(hlslBytecodePtr, (nuint)shader.HlslBytecode.Length);
+
+            *d3D12PipelineState = d3D12Device->CreateComputePipelineState(d3D12RootSignature, d3D12ShaderBytecode);
         }
     }
 }
