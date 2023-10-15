@@ -11,53 +11,43 @@ partial class IShaderGenerator
     partial class LoadDispatchData
     {
         /// <summary>
-        /// Writes the <c>LoadDispatchData</c> method.
+        /// Writes the <c>LoadConstantBuffer</c> method.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteSyntax(ShaderInfo info, IndentedTextWriter writer)
+        public static void WriteLoadConstantBufferSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchData<TLoader>(ref TLoader loader, global::ComputeSharp.GraphicsDevice device, int x, int y, int z)");
+            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadConstantBuffer<TLoader>(ref TLoader loader, int x, int y, int z)");
 
             using (writer.WriteBlock())
             {
-                writer.WriteLine($"global::System.Span<uint> span0 = stackalloc uint[{info.ConstantBufferSizeInBytes}];");
-                writer.WriteLineIf($"global::System.Span<ulong> span1 = stackalloc ulong[{info.ResourceCount}];", info.ResourceCount > 0);
-                writer.WriteLine("ref uint r0 = ref span0[0];");
-                writer.WriteLineIf("ref ulong r1 = ref span1[0];", info.ResourceCount > 0);
+                writer.WriteLine($"global::System.Span<byte> span = stackalloc byte[{info.ConstantBufferSizeInBytes}];");
 
                 // Append the statements for the dispatch ranges
-                writer.WriteLine("span0[0] = (uint)x;");
-                writer.WriteLine("span0[1] = (uint)y;");
-                writer.WriteLineIf("span0[2] = (uint)z;", !info.IsPixelShaderLike);
+                writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[0]) = (uint)x;");
+                writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[4]) = (uint)y;");
+                writer.WriteLineIf("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[8]) = (uint)z;", !info.IsPixelShaderLike);
 
                 // Generate loading statements for each captured field
                 foreach (FieldInfo fieldInfo in info.Fields)
                 {
                     switch (fieldInfo)
                     {
-                        case FieldInfo.Resource resource:
-
-                            // Validate the resource and get a handle for it
-                            writer.WriteLine(
-                                $"global::System.Runtime.CompilerServices.Unsafe.Add(ref r1, {resource.Offset}) = " +
-                                $"global::ComputeSharp.__Internals.GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({resource.FieldName}, device);");
-                            break;
                         case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
 
                             // Read a boolean value and cast it to Bool first, which will apply the correct size expansion
                             writer.WriteLine(
-                                $"global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Bool>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset})) = " +
+                                $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Bool>(ref span[{primitive.Offset}]) = " +
                                 $"(global::ComputeSharp.Bool){string.Join(".", primitive.FieldPath)};");
                             break;
                         case FieldInfo.Primitive primitive:
 
                             // Read a primitive value and serialize it into the target buffer
                             writer.WriteLine(
-                                $"global::System.Runtime.CompilerServices.Unsafe.As<uint, global::{primitive.TypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){primitive.Offset})) = " +
+                                $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::{primitive.TypeName}>(ref span[{primitive.Offset}]) = " +
                                 $"{string.Join(".", primitive.FieldPath)};");
                             break;
 
@@ -82,7 +72,7 @@ partial class IShaderGenerator
                             for (int j = 0; j < matrix.Rows; j++)
                             {
                                 writer.WriteLine(
-                                    $"global::System.Runtime.CompilerServices.Unsafe.As<uint, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){matrix.Offsets[j]})) = " +
+                                    $"global::System.Runtime.CompilerServices.Unsafe.As<byte, {rowTypeName}>(ref span[{matrix.Offsets[j]}]) = " +
                                     $"global::System.Runtime.CompilerServices.Unsafe.Add(ref {rowLocalName}, {j});");
                             }
 
@@ -90,9 +80,32 @@ partial class IShaderGenerator
                     }
                 }
 
-                // Load the prepared buffers
-                writer.WriteLine("loader.LoadCapturedValues(span0);");
-                writer.WriteLineIf("loader.LoadCapturedResources(span1);", info.ResourceCount > 0);
+                // Load the prepared buffer
+                writer.WriteLine("loader.LoadConstantBuffer(span);");
+            }
+        }
+
+        /// <summary>
+        /// Writes the <c>LoadGraphicsResources</c> method.
+        /// </summary>
+        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteLoadGraphicsResourcesSyntax(ShaderInfo info, IndentedTextWriter writer)
+        {
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadGraphicsResources<TLoader>(ref TLoader loader)");
+
+            using (writer.WriteBlock())
+            {
+                // Generate loading statements for each captured resource
+                foreach (FieldInfo fieldInfo in info.Fields)
+                {
+                    if (fieldInfo is FieldInfo.Resource resource)
+                    {
+                        writer.WriteLine($"loader.LoadGraphicsResource({resource.FieldName}, {resource.Offset});");
+                    }
+                }
             }
         }
     }

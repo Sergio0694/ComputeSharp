@@ -96,9 +96,12 @@ internal static unsafe class PipelineDataLoader<T>
             d3D12DescriptorRange.OffsetInDescriptorsFromTableStart = D3D12.D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
         }
 
+        // Calculate the actual size of the constant buffer in DWORD values
+        int root32BitConstantCount = shader.ConstantBufferSize / sizeof(int);
+
         // Create the D3D12 root signature
         *d3D12RootSignature = d3D12Device->CreateRootSignature(
-            shader.ConstantBufferSize,
+            root32BitConstantCount,
             d3D12DescriptorRanges,
             shader.IsStaticSamplerRequired).Get();
 

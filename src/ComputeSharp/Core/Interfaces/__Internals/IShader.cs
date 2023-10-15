@@ -32,7 +32,7 @@ public interface IShader
     /// <remarks>
     /// Constant buffer data is bound to shaders via 32 bit root constants, and loaded before dispatching via
     /// <see href="https://learn.microsoft.com/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setcomputeroot32bitconstants"><c>ID3D12GraphicsCommandList::SetComputeRoot32BitConstants</c></see>,
-    /// so the size must be a multiple of 4.
+    /// so the size must be a multiple of the size of a DWORD value (ie. 4 bytes).
     /// </remarks>
     int ConstantBufferSize { get; }
 

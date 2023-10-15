@@ -16,13 +16,11 @@ partial class IShaderGenerator
         /// <summary>
         /// Gets the data related to the shader metadata for a given shader type.
         /// </summary>
-        /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
         /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
         /// <param name="capturedFields">The sequence of captured fields for the shader.</param>
         /// <returns>The metadata info for the shader.</returns>
         public static ImmutableArray<ResourceDescriptor> GetInfo(
-            int root32BitConstantCount,
             bool isImplicitTextureUsed,
             bool isSamplerUsed,
             ImmutableArray<FieldInfo> capturedFields)
