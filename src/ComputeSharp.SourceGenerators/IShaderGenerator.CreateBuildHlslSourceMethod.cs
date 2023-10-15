@@ -59,14 +59,14 @@ partial class IShaderGenerator
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // A given type can only represent a single shader type
-            if (structDeclarationSymbol.AllInterfaces.Count(static interfaceSymbol => interfaceSymbol is { Name: nameof(IComputeShader) } or { IsGenericType: true, Name: nameof(IPixelShader<byte>) }) > 1)
+            if (structDeclarationSymbol.AllInterfaces.Count(static interfaceSymbol => interfaceSymbol is { Name: nameof(IComputeShader) } or { IsGenericType: true, Name: nameof(IComputeShader<byte>) }) > 1)
             {
                 diagnostics.Add(MultipleShaderTypesImplemented, structDeclarationSymbol, structDeclarationSymbol);
             }
 
             // Explore the syntax tree and extract the processed info
             SemanticModelProvider semanticModelProvider = new(compilation);
-            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
+            INamedTypeSymbol? pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IComputeShader<byte>) });
             bool isComputeShader = pixelShaderSymbol is null;
             string? implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             (ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields, ImmutableArray<(string Name, string HlslType)> valueFields) = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
@@ -364,7 +364,7 @@ partial class IShaderGenerator
                      methodDeclarationSymbol.TypeParameters.Length == 0 &&
                      methodDeclarationSymbol.Parameters.Length == 0) ||
                     (!isComputeShader &&
-                     methodDeclarationSymbol.Name == nameof(IPixelShader<byte>.Execute) &&
+                     methodDeclarationSymbol.Name == nameof(IComputeShader<byte>.Execute) &&
                      methodDeclarationSymbol.ReturnType is not null && // TODO: match for pixel type
                      methodDeclarationSymbol.TypeParameters.Length == 0 &&
                      methodDeclarationSymbol.Parameters.Length == 0);

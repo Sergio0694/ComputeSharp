@@ -7,7 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
-internal readonly partial struct TwoTiledTruchet : IPixelShader<float4>
+internal readonly partial struct TwoTiledTruchet : IComputeShader<float4>
 {
     /// <summary>
     /// The current time since the start of the application.

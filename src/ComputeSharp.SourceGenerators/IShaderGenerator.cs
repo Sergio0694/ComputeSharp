@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComputeSharp.SourceGenerators;
 
 /// <summary>
-/// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IPixelShader{TPixel}"/> types.
+/// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IComputeShader{TPixel}"/> types.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
 public sealed partial class IShaderGenerator : IIncrementalGenerator

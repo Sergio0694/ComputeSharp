@@ -526,7 +526,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -543,7 +543,7 @@ public static class ComputeContextExtensions
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
     public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);

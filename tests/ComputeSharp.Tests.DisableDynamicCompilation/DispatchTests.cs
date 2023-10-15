@@ -76,7 +76,7 @@ public partial class DispatchTests
 
     [AutoConstructor]
     [EmbeddedBytecode(8, 8, 1)]
-    internal readonly partial struct PixelShader : IPixelShader<float4>
+    internal readonly partial struct PixelShader : IComputeShader<float4>
     {
         private readonly float b;
         private readonly float a;

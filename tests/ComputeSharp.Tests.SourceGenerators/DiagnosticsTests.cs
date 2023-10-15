@@ -1464,12 +1464,12 @@ public class DiagnosticsTests
             namespace ComputeSharp
             {
                 public interface IComputeShader { }
-                public interface IPixelShader<TPixel> { }
+                public interface IComputeShader<TPixel> { }
             }
 
             namespace MyFancyApp.Sample
             {
-                public struct MyShader : IComputeShader, IPixelShader<float4>
+                public struct MyShader : IComputeShader, IComputeShader<float4>
                 {
                     public void Execute()
                     {

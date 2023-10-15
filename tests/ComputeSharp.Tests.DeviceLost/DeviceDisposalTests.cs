@@ -177,7 +177,7 @@ public partial class DeviceDisposalTests
     }
 
     [EmbeddedBytecode(DispatchAxis.XY)]
-    private partial struct HelloWorldShader : IPixelShader<float4>
+    private partial struct HelloWorldShader : IComputeShader<float4>
     {
         public float4 Execute()
         {

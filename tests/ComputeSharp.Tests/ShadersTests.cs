@@ -185,7 +185,7 @@ public class ShadersTests
             else
             {
                 static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
-                    where T : struct, IPixelShader<float4>
+                    where T : struct, IComputeShader<float4>
                 {
                     ShaderInfo info = ReflectionServices.GetShaderInfo<T, float4>();
 
@@ -230,7 +230,7 @@ public class ShadersTests
         Func<ReadWriteTexture2D<Rgba32, float4>, TPixel> pixelFactory,
         float delta)
         where TCompute : struct, IComputeShader
-        where TPixel : struct, IPixelShader<float4>
+        where TPixel : struct, IComputeShader<float4>
     {
         _ = device.Get();
 

@@ -1309,7 +1309,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct ClearPixelShader : IPixelShader<float4>
+    internal readonly partial struct ClearPixelShader : IComputeShader<float4>
     {
         /// <inheritdoc/>
         public float4 Execute()
@@ -1320,7 +1320,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct ColorPixelShader : IPixelShader<float4>
+    internal readonly partial struct ColorPixelShader : IComputeShader<float4>
     {
         public readonly float4 color;
 
@@ -1333,7 +1333,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct LinearSampling2DPixelShader : IPixelShader<float4>
+    internal readonly partial struct LinearSampling2DPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyTexture2D<float4> source;
 
@@ -1365,7 +1365,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct LinearSamplingFromNormalized2DPixelShader : IPixelShader<float4>
+    internal readonly partial struct LinearSamplingFromNormalized2DPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
 
@@ -1378,7 +1378,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct CopyToOutputPixelShader : IPixelShader<float4>
+    internal readonly partial struct CopyToOutputPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
 
@@ -1391,7 +1391,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct InvertPixelShader : IPixelShader<float4>
+    internal readonly partial struct InvertPixelShader : IComputeShader<float4>
     {
         public readonly IReadWriteNormalizedTexture2D<float4> source;
 

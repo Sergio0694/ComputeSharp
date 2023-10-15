@@ -291,7 +291,7 @@ public partial class DispatchTests
     }
 
     [EmbeddedBytecode(DispatchAxis.XY)]
-    internal readonly partial struct DispatchPixelShader : IPixelShader<float4>
+    internal readonly partial struct DispatchPixelShader : IComputeShader<float4>
     {
         public float4 Execute()
         {

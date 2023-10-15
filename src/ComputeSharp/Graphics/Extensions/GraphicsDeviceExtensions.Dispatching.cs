@@ -71,7 +71,7 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteNormalizedTexture2D<TPixel> texture)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(device);
@@ -91,7 +91,7 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
     public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(device);

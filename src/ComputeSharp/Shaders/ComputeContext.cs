@@ -191,7 +191,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
     internal readonly unsafe void Run<T, TPixel>(IReadWriteNormalizedTexture2D<TPixel> texture, ref T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         default(InvalidOperationException).ThrowIf(this.device is null);

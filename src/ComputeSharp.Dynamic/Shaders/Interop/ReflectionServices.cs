@@ -70,7 +70,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static ShaderInfo GetShaderInfo<T, TPixel>()
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         return GetNonGenericShaderInfo(default(T));
@@ -89,7 +89,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static unsafe ShaderInfo GetShaderInfo<T, TPixel>(in T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>
         where TPixel : unmanaged
     {
         return GetNonGenericShaderInfo(in shader);

@@ -18,7 +18,7 @@ namespace ComputeSharp;
 /// <code>
 /// // A pixel shader that is dispatched on a target texture
 /// [EmbeddedBytecode(DispatchAxis.XY)]
-/// struct MyShader : IPixelShader&lt;float4&gt;
+/// struct MyShader : IComputeShader&lt;float4&gt;
 /// {
 /// }
 /// </code>
