@@ -1,13 +1,13 @@
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Resources.Interop;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 
-#pragma warning disable CS0618, IDE0022
+#pragma warning disable IDE0022
 
 namespace ComputeSharp;
 
@@ -56,7 +56,7 @@ partial class ReadWriteTexture3D<T>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture3D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyTexture3D<T>, GraphicsResourceHelper.IReadOnlyResource
+    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyTexture3D<T>, ID3D12ReadOnlyResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture3D{T}"/> instance being wrapped.
@@ -110,7 +110,7 @@ partial class ReadWriteTexture3D<T>
         public GraphicsDevice GraphicsDevice => this.owner.GraphicsDevice;
 
         /// <inheritdoc/>
-        D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
+        D3D12_GPU_DESCRIPTOR_HANDLE ID3D12ReadOnlyResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
             using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
             using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetLease();
@@ -121,7 +121,7 @@ partial class ReadWriteTexture3D<T>
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+        ID3D12Resource* ID3D12ReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
         {
             lease = GetReferenceTracker().GetLease();
 

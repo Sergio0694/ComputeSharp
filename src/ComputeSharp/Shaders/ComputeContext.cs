@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Resources.Interop;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
 using TerraFX.Interop.DirectX;
@@ -213,7 +213,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         // Load the implicit output texture
         commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(
             1,
-            ((GraphicsResourceHelper.IReadOnlyResource)texture).ValidateAndGetGpuDescriptorHandle(this.device));
+            ((ID3D12ReadOnlyResource)texture).ValidateAndGetGpuDescriptorHandle(this.device));
 
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
     }
