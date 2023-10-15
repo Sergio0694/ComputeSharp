@@ -72,4 +72,12 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader, GraphicsDevice device, int x, int y, int z)
         where TLoader : struct, IDispatchDataLoader;
+
+    /// <summary>
+    /// Loads the graphics resources for the shader.
+    /// </summary>
+    /// <typeparam name="TLoader">The type of graphics resource loader being used.</typeparam>
+    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
+    void LoadGraphicsResources<TLoader>(ref TLoader loader)
+        where TLoader : struct, IGraphicsResourceLoader;
 }
