@@ -1,53 +1,50 @@
 using System;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests.Internals.Helpers;
 
 /// <summary>
 /// A debug data loader for generic shaders.
 /// </summary>
-internal readonly unsafe struct DebugDispatchDataLoader : IConstantBufferLoader
+internal struct DebugDispatchDataLoader : IConstantBufferLoader, IGraphicsResourceLoader
 {
     /// <summary>
-    /// The backing, mutable data for <see cref="Values"/> and <see cref="Resources"/>.
+    /// The constant buffer, if set.
     /// </summary>
-    private readonly StrongBox<(uint[] Values, ulong[] Resources)> data;
+    private byte[]? constantBuffer;
 
     /// <summary>
-    /// Gets the captured values.
+    /// The list of loaded resources.
     /// </summary>
-    public uint[] Values => this.data.Value.Values;
-
-    /// <summary>
-    /// Gets the captured resources.
-    /// </summary>
-    public ulong[] Resources => this.data.Value.Resources;
+    private readonly List<(IGraphicsResource Resource, uint Index)> graphicsResources = new();
 
     /// <summary>
     /// Creates a new <see cref="DebugDispatchDataLoader"/> instance.
     /// </summary>
-    /// <returns>A new <see cref="DebugDispatchDataLoader"/> instance to use.</returns>
-    public static DebugDispatchDataLoader Create()
+    public DebugDispatchDataLoader()
     {
-        DebugDispatchDataLoader @this = default;
+    }
 
-        Unsafe.AsRef(in @this.data) = new StrongBox<(uint[], ulong[])>((Array.Empty<uint>(), Array.Empty<ulong>()));
+    /// <summary>
+    /// Gets the constant buffer.
+    /// </summary>
+    public byte[]? ConstantBuffer => this.constantBuffer;
 
-        return @this;
+    /// <summary>
+    /// Gets the loaded resources.
+    /// </summary>
+    public IReadOnlyList<(IGraphicsResource Resource, uint Index)> GraphicsResources => this.graphicsResources;
+
+    /// <inheritdoc/>
+    void IConstantBufferLoader.LoadConstantBuffer(ReadOnlySpan<byte> data)
+    {
+        this.constantBuffer = data.ToArray();
     }
 
     /// <inheritdoc/>
-    public void LoadCapturedValues(ReadOnlySpan<uint> data)
+    readonly void IGraphicsResourceLoader.LoadGraphicsResource(IGraphicsResource resource, uint index)
     {
-        this.data.Value.Values = data.ToArray();
-    }
-
-    /// <inheritdoc/>
-    public void LoadCapturedResources(ReadOnlySpan<ulong> data)
-    {
-        this.data.Value.Resources = data.ToArray();
+        this.graphicsResources.Add((resource, index));
     }
 }
