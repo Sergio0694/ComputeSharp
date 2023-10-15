@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using ComputeSharp.Interop;
 
 namespace ComputeSharp.__Internals;
 
@@ -26,6 +27,34 @@ public interface IShader
     int ThreadsZ { get; }
 
     /// <summary>
+    /// Gets the size in bytes of the constant buffer for the current shader.
+    /// </summary>
+    /// <remarks>
+    /// Constant buffer data is bound to shaders via 32 bit root constants, and loaded before dispatching via
+    /// <see href="https://learn.microsoft.com/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setcomputeroot32bitconstants"><c>ID3D12GraphicsCommandList::SetComputeRoot32BitConstants</c></see>,
+    /// so the size must be a multiple of 4.
+    /// </remarks>
+    int ConstantBufferSize { get; }
+
+    /// <summary>
+    /// Gets whether the shader requires a static sampler being declared and initialized.
+    /// </summary>
+    /// <remarks>
+    /// When requested, a static sampler with linear sampling and mirror addressing will be bound to <c>register(s)</c>.
+    /// </remarks>
+    bool IsStaticSamplerRequired { get; }
+
+    /// <summary>
+    /// Gets the resource descriptor ranges for all resources that should be bound to this shader.
+    /// </summary>
+    ReadOnlyMemory<ResourceDescriptorRange> ResourceDescriptorRanges { get; }
+
+    /// <summary>
+    /// Gets the HLSL source code for the current shader instance.
+    /// </summary>
+    string HlslSource { get; }
+
+    /// <summary>
     /// Gets the HLSL bytecode for the current shader.
     /// </summary>
     ReadOnlyMemory<byte> HlslBytecode { get; }
@@ -43,23 +72,4 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TLoader>(ref TLoader loader, GraphicsDevice device, int x, int y, int z)
         where TLoader : struct, IDispatchDataLoader;
-
-    /// <summary>
-    /// Loads an opaque metadata handle from the metadata of the current shader.
-    /// </summary>
-    /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
-    /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
-    /// <param name="result">The resulting opaque metadata handle.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be called directly by user code")]
-    void LoadDispatchMetadata<TLoader>(ref TLoader loader, out IntPtr result)
-        where TLoader : struct, IDispatchMetadataLoader;
-
-    /// <summary>
-    /// Builds the HLSL source code for the current shader instance.
-    /// </summary>
-    /// <param name="hlslSource">The resulting HLSL source.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslSource(out string hlslSource);
 }

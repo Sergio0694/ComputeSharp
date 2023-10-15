@@ -13,47 +13,28 @@ namespace ComputeSharp.D2D1.Interop;
 public readonly struct D2D1InputDescription
 {
     /// <summary>
-    /// The index of the resource the description belongs to.
-    /// </summary>
-    private readonly int index;
-
-    /// <summary>
-    /// The type of filter to apply to the input texture.
-    /// </summary>
-    private readonly D2D1Filter filter;
-
-    /// <summary>
-    /// The mip level to retrieve from the upstream transform, if specified.
-    /// </summary>
-    private readonly int levelOfDetailCount;
-
-    /// <summary>
     /// Creates a new <see cref="D2D1InputDescription"/> instance with the specified parameters.
     /// </summary>
     /// <param name="index">The index of the resource the description belongs to.</param>
     /// <param name="filter">The type of filter to apply to the input texture.</param>
     public D2D1InputDescription(int index, D2D1Filter filter)
     {
-        this.index = index;
-        this.filter = filter;
+        Index = index;
+        Filter = filter;
     }
 
     /// <summary>
     /// Gets the index of the resource the description belongs to.
     /// </summary>
-    public int Index => this.index;
+    public int Index { get; }
 
     /// <summary>
     /// Gets the type of filter to apply to the input texture.
     /// </summary>
-    public D2D1Filter Filter => this.filter;
+    public D2D1Filter Filter { get; }
 
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.
     /// </summary>
-    public int LevelOfDetailCount
-    {
-        get => this.levelOfDetailCount;
-        init => this.levelOfDetailCount = value;
-    }
+    public int LevelOfDetailCount { get; init; }
 }

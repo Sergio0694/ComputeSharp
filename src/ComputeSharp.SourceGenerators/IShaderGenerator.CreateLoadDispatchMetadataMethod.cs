@@ -32,12 +32,11 @@ partial class IShaderGenerator
             int constantBufferOffset = 1;
             int readOnlyResourceOffset = 0;
             int readWriteResourceOffset = 0;
-            int resourceOffset = 0;
 
             // Add the implicit texture descriptor, if needed
             if (isImplicitTextureUsed)
             {
-                descriptors.Add(new ResourceDescriptor(1, readWriteResourceOffset++, resourceOffset++));
+                descriptors.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
             }
 
             // Populate the sequence of resource descriptors
@@ -45,15 +44,15 @@ partial class IShaderGenerator
             {
                 if (HlslKnownTypes.IsConstantBufferType(resource.TypeName))
                 {
-                    descriptors.Add(new ResourceDescriptor(2, constantBufferOffset++, resourceOffset++));
+                    descriptors.Add(new ResourceDescriptor(2, constantBufferOffset++));
                 }
                 else if (HlslKnownTypes.IsReadOnlyTypedResourceType(resource.TypeName))
                 {
-                    descriptors.Add(new ResourceDescriptor(0, readOnlyResourceOffset++, resourceOffset++));
+                    descriptors.Add(new ResourceDescriptor(0, readOnlyResourceOffset++));
                 }
                 else
                 {
-                    descriptors.Add(new ResourceDescriptor(1, readWriteResourceOffset++, resourceOffset++));
+                    descriptors.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
                 }
             }
 

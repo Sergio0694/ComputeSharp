@@ -96,7 +96,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="usingDirectives">The using directives needed by the generated code.</param>
-        public static void AddAdditionalDataMemberUsingDirectives(D2D1ShaderInfo info, ImmutableHashSetBuilder<string> usingDirectives)
+        private static void AddAdditionalDataMemberUsingDirectives(D2D1ShaderInfo info, ImmutableHashSetBuilder<string> usingDirectives)
         {
             if (info.InputDescriptions.IsEmpty)
             {
@@ -112,7 +112,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional data members.</param>
-        public static void RegisterAdditionalDataMemberSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
+        private static void RegisterAdditionalDataMemberSyntax(D2D1ShaderInfo info, ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks)
         {
             // If there are no input descriptions, there is nothing to di
             if (info.InputDescriptions.IsEmpty)

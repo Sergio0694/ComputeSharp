@@ -27,16 +27,16 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
+        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
-        /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             ITypeSymbol structDeclarationSymbol,
             bool isPixelShaderLike,
-            out int resourceCount,
-            out int root32BitConstantCount)
+            out int constantBufferSizeInBytes,
+            out int resourceCount)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -108,7 +108,7 @@ partial class IShaderGenerator
             // the local variables is padded to a multiple of a 32 bit value. This is necessary to
             // enable loading all the dispatch data after reinterpreting it to a sequence of values
             // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-            root32BitConstantCount = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
+            constantBufferSizeInBytes = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
             // Loaded values in the root signature have the following costs:
@@ -118,7 +118,7 @@ partial class IShaderGenerator
             // So here we check whether the current signature respects that constraint,
             // and emit a build error otherwise. For more info on this, see the docs here:
             // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-            int rootSignatureDwordSize = root32BitConstantCount + resourceCount;
+            int rootSignatureDwordSize = constantBufferSizeInBytes + resourceCount;
 
             if (rootSignatureDwordSize > 64)
             {

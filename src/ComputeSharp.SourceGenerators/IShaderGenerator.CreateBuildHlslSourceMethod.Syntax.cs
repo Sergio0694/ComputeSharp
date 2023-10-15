@@ -19,17 +19,12 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.BuildHlslSource(out string hlslSource)");
-
-            using (writer.WriteBlock())
-            {
-                writer.WriteLine("hlslSource =");
-                writer.IncreaseIndent();
-                writer.WriteLine("\"\"\"");
-                writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);
-                writer.WriteLine("\"\"\";");
-                writer.DecreaseIndent();
-            }
+            writer.WriteLine($"readonly string global::ComputeSharp.__Internals.IShader.HlslSource =>");
+            writer.IncreaseIndent();
+            writer.WriteLine("\"\"\"");
+            writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);
+            writer.WriteLine("\"\"\";");
+            writer.DecreaseIndent();
         }
     }
 }
