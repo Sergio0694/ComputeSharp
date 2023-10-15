@@ -2,22 +2,25 @@ using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Interop.Allocation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
-using ComputeSharp.Interop.Allocation;
 #if NET6_0_OR_GREATER
 using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
 #else
 using MemoryMarshal = ComputeSharp.NetStandard.MemoryMarshal;
 #endif
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Resources;
 
@@ -25,7 +28,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraphicsResource
+public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraphicsResource, GraphicsResourceHelper.IReadOnlyResource
     where T : unmanaged
 {
     /// <summary>
@@ -232,7 +235,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
         }
     }
 
-    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
+    /// <inheritdoc cref="GraphicsResourceHelper.IReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
@@ -244,7 +247,7 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
             this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
-    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
+    /// <inheritdoc cref="GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
     internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
         lease = GetReferenceTracker().GetLease();
@@ -252,5 +255,21 @@ public abstract unsafe partial class Buffer<T> : IReferenceTrackedObject, IGraph
         ThrowIfDeviceMismatch(device);
 
         return D3D12Resource;
+    }
+
+    /// <inheritdoc/>
+    D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
+    {
+        using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
+
+        ThrowIfDeviceMismatch(device);
+
+        return D3D12GpuDescriptorHandle;
+    }
+
+    /// <inheritdoc/>
+    ID3D12Resource* GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+    {
+        return ValidateAndGetID3D12Resource(device, out lease);
     }
 }

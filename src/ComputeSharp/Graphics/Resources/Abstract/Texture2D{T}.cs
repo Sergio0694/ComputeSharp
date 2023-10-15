@@ -611,15 +611,15 @@ public abstract unsafe partial class Texture2D<T> : IReferenceTrackedObject, IGr
     }
 
     /// <inheritdoc/>
-    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
-    {
-        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
-    }
-
-    /// <inheritdoc/>
     ID3D12Resource* GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
         return ValidateAndGetID3D12Resource(device, out lease);
+    }
+
+    /// <inheritdoc/>
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
+    {
+        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
     }
 
     /// <inheritdoc/>
