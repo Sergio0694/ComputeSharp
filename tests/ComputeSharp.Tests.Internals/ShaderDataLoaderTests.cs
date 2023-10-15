@@ -1,5 +1,5 @@
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Tests.Internals.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,18 +28,18 @@ public partial class ShaderDataLoaderTests
         CapturedResourceShader shader = new(buffer);
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<CapturedResourceShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(12, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(12, ((IComputeShaderDescriptor<CapturedResourceShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(12, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
         Assert.AreEqual(222, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[4]));
         Assert.AreEqual(333, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[8]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<CapturedResourceShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(1, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<CapturedResourceShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
     }
@@ -68,9 +68,9 @@ public partial class ShaderDataLoaderTests
         MultipleResourcesAndPrimitivesShader shader = new(buffer0, buffer1, 1, 22, 77);
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<MultipleResourcesAndPrimitivesShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(24, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(24, ((IComputeShaderDescriptor<MultipleResourcesAndPrimitivesShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(24, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -80,9 +80,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(22, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[16]));
         Assert.AreEqual(77, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[20]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<MultipleResourcesAndPrimitivesShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(2, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(2, ((IComputeShaderDescriptor<MultipleResourcesAndPrimitivesShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer0, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
         Assert.AreSame(buffer1, dataLoader.GraphicsResources[1].Resource);
@@ -114,9 +114,9 @@ public partial class ShaderDataLoaderTests
         ScalarAndVectorTypesShader shader = new(buffer, new(55, 44, 888), 22, 77, new(3.14, 6.28), 42, 9999);
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<ScalarAndVectorTypesShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(72, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(72, ((IComputeShaderDescriptor<ScalarAndVectorTypesShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(72, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -132,9 +132,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(42, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[64]));
         Assert.AreEqual(9999, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[68]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<ScalarAndVectorTypesShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(1, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<ScalarAndVectorTypesShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
     }
@@ -175,9 +175,9 @@ public partial class ShaderDataLoaderTests
             d: 9999);
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<ScalarVectorAndMatrixTypesShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(124, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(124, ((IComputeShaderDescriptor<ScalarVectorAndMatrixTypesShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(124, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -204,9 +204,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(44, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[116]));
         Assert.AreEqual(9999, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[120]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<ScalarVectorAndMatrixTypesShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(1, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<ScalarVectorAndMatrixTypesShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
     }
@@ -254,9 +254,9 @@ public partial class ShaderDataLoaderTests
                 d: 9999));
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<FlatCustomTypeShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(124, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(124, ((IComputeShaderDescriptor<FlatCustomTypeShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(124, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -283,9 +283,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(44, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[116]));
         Assert.AreEqual(9999, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[120]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<FlatCustomTypeShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(1, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<FlatCustomTypeShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
     }
@@ -357,9 +357,9 @@ public partial class ShaderDataLoaderTests
                     b: new(333.3f, 444.4f))));
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<NestedCustomTypesShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(188, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(188, ((IComputeShaderDescriptor<NestedCustomTypesShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(188, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -399,9 +399,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(333.3f, Unsafe.As<byte, float>(ref dataLoader.ConstantBuffer[180]));
         Assert.AreEqual(444.4f, Unsafe.As<byte, float>(ref dataLoader.ConstantBuffer[184]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<NestedCustomTypesShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(1, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<NestedCustomTypesShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(buffer, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
     }
@@ -438,9 +438,9 @@ public partial class ShaderDataLoaderTests
         AmbiguousNamesShader shader = new(a, b, c, x, y, z, 7777, 8888, 9999);
         DebugDispatchDataLoader dataLoader = new();
 
-        ((IShader)shader).LoadConstantBuffer(ref dataLoader, 111, 222, 333);
+        ((IComputeShaderDescriptor<AmbiguousNamesShader>)shader).LoadConstantBuffer(in shader, ref dataLoader, 111, 222, 333);
 
-        Assert.AreEqual(24, ((IShader)shader).ConstantBufferSize);
+        Assert.AreEqual(24, ((IComputeShaderDescriptor<AmbiguousNamesShader>)shader).ConstantBufferSize);
         Assert.IsNotNull(dataLoader.ConstantBuffer);
         Assert.AreEqual(24, dataLoader.ConstantBuffer.Length);
         Assert.AreEqual(111, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[0]));
@@ -450,9 +450,9 @@ public partial class ShaderDataLoaderTests
         Assert.AreEqual(8888, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[16]));
         Assert.AreEqual(9999, Unsafe.As<byte, int>(ref dataLoader.ConstantBuffer[20]));
 
-        ((IShader)shader).LoadGraphicsResources(ref dataLoader);
+        ((IComputeShaderDescriptor<AmbiguousNamesShader>)shader).LoadGraphicsResources(in shader, ref dataLoader);
 
-        Assert.AreEqual(6, ((IShader)shader).ResourceDescriptorRanges.Length);
+        Assert.AreEqual(6, ((IComputeShaderDescriptor<AmbiguousNamesShader>)shader).ResourceDescriptorRanges.Length);
         Assert.AreSame(a, dataLoader.GraphicsResources[0].Resource);
         Assert.AreEqual(0u, dataLoader.GraphicsResources[0].Index);
         Assert.AreSame(b, dataLoader.GraphicsResources[1].Resource);

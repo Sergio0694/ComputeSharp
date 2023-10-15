@@ -19,7 +19,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
+            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly bool global::ComputeSharp.__Internals.IShader.IsStaticSamplerRequired => {info.IsSamplerUsed.ToString().ToLowerInvariant()};");
+            writer.WriteLine($"readonly bool global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.IsStaticSamplerRequired => {info.IsSamplerUsed.ToString().ToLowerInvariant()};");
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.__Internals.IShader.ResourceDescriptorRanges => ");
+            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceDescriptorRanges => ");
 
             // If there are no declared resources, just return an empty collection
             if (info.ResourceDescriptors.IsEmpty)

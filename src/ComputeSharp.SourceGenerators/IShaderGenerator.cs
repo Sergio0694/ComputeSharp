@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -166,7 +165,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             item.Hierarchy.WriteSyntax(
                 state: item,
                 writer: writer,
-                baseTypes: ReadOnlySpan<string>.Empty,
+                baseTypes: new[] { $"global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{item.Hierarchy.Hierarchy[0].QualifiedName}>" },
                 memberCallbacks: declaredMembers.WrittenSpan);
 
             // Append any additional types as well
