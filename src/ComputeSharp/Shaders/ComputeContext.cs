@@ -213,7 +213,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         // Load the implicit output texture
         commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(
             1,
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuDescriptorHandle(this.device));
+            ((GraphicsResourceHelper.IReadOnlyResource)texture).ValidateAndGetGpuDescriptorHandle(this.device));
 
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
     }

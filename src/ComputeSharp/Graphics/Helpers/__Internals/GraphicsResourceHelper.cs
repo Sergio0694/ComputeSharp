@@ -15,9 +15,9 @@ namespace ComputeSharp.__Internals;
 public static class GraphicsResourceHelper
 {
     /// <summary>
-    /// An interface for non-generic graphics resource types.
+    /// An interface for a readonly, non-generic readonly graphics resource types.
     /// </summary>
-    internal unsafe interface IGraphicsResource
+    internal unsafe interface IReadOnlyResource
     {
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves its GPU descriptor handle.
@@ -27,20 +27,26 @@ public static class GraphicsResourceHelper
         D3D12_GPU_DESCRIPTOR_HANDLE ValidateAndGetGpuDescriptorHandle(GraphicsDevice device);
 
         /// <summary>
-        /// Validates the given resource for usage with a specified device, and retrieves its GPU and CPU descriptor handles for a clear operation.
-        /// </summary>
-        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
-        /// <param name="isNormalized">Indicates whether the current resource uses a normalized format.</param>
-        /// <returns>The GPU and CPU descriptor handles for the resource.</returns> 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized);
-
-        /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <param name="lease">The <see cref="ReferenceTracker.Lease"/> value for the returned <see cref="ID3D12Resource"/> object.</param>
         /// <returns>The the underlying <see cref="ID3D12Resource"/> object.</returns> 
         ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease);
+    }
+
+    /// <summary>
+    /// An interface for a writeable, non-generic graphics resource types.
+    /// </summary>
+    internal unsafe interface IReadWriteResource : IReadOnlyResource
+    {
+        /// <summary>
+        /// Validates the given resource for usage with a specified device, and retrieves its GPU and CPU descriptor handles for a clear operation.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="isNormalized">Indicates whether the current resource uses a normalized format.</param>
+        /// <returns>The GPU and CPU descriptor handles for the resource.</returns> 
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized);
 
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object, along with the transition states.
@@ -132,7 +138,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -155,7 +161,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -178,7 +184,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -245,7 +251,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -268,7 +274,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -291,7 +297,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -358,7 +364,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -381,7 +387,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 
@@ -404,7 +410,7 @@ public static class GraphicsResourceHelper
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        if (texture is IGraphicsResource resource)
+        if (texture is IReadOnlyResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
 

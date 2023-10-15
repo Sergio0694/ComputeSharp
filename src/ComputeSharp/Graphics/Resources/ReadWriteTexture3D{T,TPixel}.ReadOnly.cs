@@ -57,7 +57,7 @@ partial class ReadWriteTexture3D<T, TPixel>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture3D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyNormalizedTexture3D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : ReferenceTrackedObject, IReadOnlyNormalizedTexture3D<TPixel>, GraphicsResourceHelper.IReadWriteResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance being wrapped.
@@ -111,7 +111,7 @@ partial class ReadWriteTexture3D<T, TPixel>
         public GraphicsDevice GraphicsDevice => this.owner.GraphicsDevice;
 
         /// <inheritdoc/>
-        D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
+        D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
         {
             using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
             using ReferenceTracker.Lease _1 = this.owner.GetReferenceTracker().GetLease();
@@ -122,13 +122,13 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
+        (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
 
         /// <inheritdoc/>
-        ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+        ID3D12Resource* GraphicsResourceHelper.IReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
         {
             lease = GetReferenceTracker().GetLease();
 
@@ -140,7 +140,7 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
+        (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IReadWriteResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
         {
             throw new NotSupportedException("This operation cannot be performaned on a readonly wrapper.");
         }
