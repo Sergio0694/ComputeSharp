@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -8,13 +7,13 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <summary>
-/// A diagnostic analyzer that generates a warning whenever a compute shader type does not have an associated descriptor.
+/// A diagnostic analyzer that generates an error whenever the [GeneratedComputeShaderDescriptor] attribute is used on an invalid target type.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : DiagnosticAnalyzer
+public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(MissingComputeShaderDescriptorOnComputeShaderType);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -24,10 +23,9 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
 
         context.RegisterCompilationStartAction(static context =>
         {
-            // Get the IComputeShader, IComputeShader<TPixel>, IComputeShaderDescriptor<T> and [GeneratedComputeShaderDescriptor] symbols
+            // Get the IComputeShader, IComputeShader<TPixel> and [GeneratedComputeShaderDescriptor] symbols
             if (context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader") is not { } computeShaderSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader`1") is not { } pixelShaderSymbol ||
-                context.Compilation.GetTypeByMetadataName("ComputeSharp.Descriptors.IComputeShaderDescriptor`1") is not { } computeShaderDescriptorSymbol ||
                 context.Compilation.GetTypeByMetadataName("ComputeSharp.GeneratedComputeShaderDescriptorAttribute") is not { } generatedComputeShaderDescriptorAttributeSymbol)
             {
                 return;
@@ -41,20 +39,14 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
                     return;
                 }
 
-                // If the type is not a compute shader type, immediately bail out
-                if (!typeSymbol.HasInterfaceWithType(computeShaderSymbol) &&
+                // Emit a diagnostic if the target type is using [GeneratedComputeShaderDescriptor] but does not implement IComputeShader nor IComputeShader<TPixel>
+                if (typeSymbol.TryGetAttributeWithType(generatedComputeShaderDescriptorAttributeSymbol, out AttributeData? attribute) &&
+                    !typeSymbol.HasInterfaceWithType(computeShaderSymbol) &&
                     !typeSymbol.HasInterfaceWithType(pixelShaderSymbol))
                 {
-                    return;
-                }
-
-                // Emit a diagnostic if the descriptor is missing for the shader type
-                if (!typeSymbol.HasInterfaceWithType(computeShaderDescriptorSymbol) &&
-                    !typeSymbol.HasAttributeWithType(generatedComputeShaderDescriptorAttributeSymbol))
-                {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        MissingComputeShaderDescriptorOnComputeShaderType,
-                        typeSymbol.Locations.FirstOrDefault(),
+                        InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget,
+                        attribute.GetLocation(),
                         typeSymbol));
                 }
             }, SymbolKind.NamedType);
