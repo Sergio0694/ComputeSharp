@@ -2,13 +2,11 @@ using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Extensions;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
-using ComputeSharp.__Internals;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_RANGE_FLAGS;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Shaders.Loading;
 
@@ -17,7 +15,7 @@ namespace ComputeSharp.Shaders.Loading;
 /// </summary>
 /// <typeparam name="T">The type of compute shader to load.</typeparam>
 internal static unsafe class PipelineDataLoader<T>
-    where T : struct, IShader
+    where T : struct, IComputeShaderDescriptor<T>
 {
     /// <summary>
     /// The map of cached <see cref="PipelineData"/> instances for each GPU in use.

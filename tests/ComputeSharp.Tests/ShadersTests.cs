@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
 using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.Tests.Attributes;
@@ -169,7 +170,7 @@ public class ShadersTests
             if (typeof(IComputeShader).IsAssignableFrom(shaderType))
             {
                 static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
-                    where T : struct, IComputeShader
+                    where T : struct, IComputeShader, IComputeShaderDescriptor<T>
                 {
                     ShaderInfo info = ReflectionServices.GetShaderInfo<T>();
 
@@ -185,7 +186,7 @@ public class ShadersTests
             else
             {
                 static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
-                    where T : struct, IPixelShader<float4>
+                    where T : struct, IComputeShader<float4>, IComputeShaderDescriptor<T>
                 {
                     ShaderInfo info = ReflectionServices.GetShaderInfo<T, float4>();
 
@@ -229,8 +230,8 @@ public class ShadersTests
         Func<ReadWriteTexture2D<Rgba32, float4>, TCompute> computeFactory,
         Func<ReadWriteTexture2D<Rgba32, float4>, TPixel> pixelFactory,
         float delta)
-        where TCompute : struct, IComputeShader
-        where TPixel : struct, IPixelShader<float4>
+        where TCompute : struct, IComputeShader, IComputeShaderDescriptor<TCompute>
+        where TPixel : struct, IComputeShader<float4>, IComputeShaderDescriptor<TPixel>
     {
         _ = device.Get();
 

@@ -294,7 +294,7 @@ namespace ComputeSharp.Tests
         }
 
         [EmbeddedBytecode(DispatchAxis.XY)]
-        public readonly partial struct StatelessPixelShader : IPixelShader<float4>
+        public readonly partial struct StatelessPixelShader : IComputeShader<float4>
         {
             /// <inheritdoc/>
             public float4 Execute()
@@ -406,7 +406,7 @@ namespace ComputeSharp.Tests
             _ = ReflectionServices.GetShaderInfo<PixelShaderWithInheritedShaderInterfaceShader, float4>();
         }
 
-        public interface IMyBaseShader<T> : IPixelShader<T>
+        public interface IMyBaseShader<T> : IComputeShader<T>
             where T : unmanaged
         {
             public int A { get; }

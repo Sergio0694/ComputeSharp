@@ -66,7 +66,7 @@
     <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" />
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader.cs" />
-    <Compile Include="..\ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" />
+    <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" />
     <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
     <Compile Include="..\ComputeSharp.Dynamic\Shaders\Exceptions\DxcCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\DxcCompilationException.cs" />
     <Compile Include="..\ComputeSharp.Dynamic\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />

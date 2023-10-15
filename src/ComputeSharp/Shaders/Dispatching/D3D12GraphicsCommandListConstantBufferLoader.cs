@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.__Internals;
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Shaders.Dispatching;

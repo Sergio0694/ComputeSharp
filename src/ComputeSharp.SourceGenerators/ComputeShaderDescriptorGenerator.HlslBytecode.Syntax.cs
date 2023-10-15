@@ -6,10 +6,10 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class LoadBytecode
+    partial class HlslBytecode
     {
         /// <summary>
         /// Writes the <c>HlslBytecode</c> property.
@@ -20,7 +20,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.__Internals.IShader.HlslBytecode => ");
+            writer.Write($"readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslBytecode => ");
 
             // Just like with the D2D1 generator, only return the MemoryManager<T> if we do have HLSL bytecode
             if (info.HlslInfo is not HlslBytecodeInfo.Success)
@@ -129,7 +129,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsX => {info.ThreadsX};");
+            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsX => {info.ThreadsX};");
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsY => {info.ThreadsY};");
+            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsY => {info.ThreadsY};");
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ThreadsZ => {info.ThreadsZ};");
+            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsZ => {info.ThreadsZ};");
         }
     }
 }

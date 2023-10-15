@@ -1,14 +1,12 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Descriptors;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
 using DirectX = TerraFX.Interop.DirectX.DirectX2;
 #endif
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Interop;
 
@@ -32,7 +30,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static ShaderInfo GetShaderInfo<T>()
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         return GetNonGenericShaderInfo(default(T));
     }
@@ -49,7 +47,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static unsafe ShaderInfo GetShaderInfo<T>(in T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         return GetNonGenericShaderInfo(in shader);
     }
@@ -70,7 +68,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static ShaderInfo GetShaderInfo<T, TPixel>()
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
         return GetNonGenericShaderInfo(default(T));
@@ -89,7 +87,7 @@ public static class ReflectionServices
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
     public static unsafe ShaderInfo GetShaderInfo<T, TPixel>(in T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
         return GetNonGenericShaderInfo(in shader);
@@ -102,7 +100,7 @@ public static class ReflectionServices
     /// <param name="shader">The input shader to retrieve info for.</param>
     /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
     private static unsafe ShaderInfo GetNonGenericShaderInfo<T>(in T shader)
-        where T : struct, IShader
+        where T : struct, IComputeShaderDescriptor<T>
     {
         string hlslSource = Unsafe.AsRef(in shader).HlslSource;
 

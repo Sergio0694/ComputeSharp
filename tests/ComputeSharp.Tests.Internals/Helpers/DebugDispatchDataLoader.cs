@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ComputeSharp.__Internals;
+using ComputeSharp.Descriptors;
 
 namespace ComputeSharp.Tests.Internals.Helpers;
 

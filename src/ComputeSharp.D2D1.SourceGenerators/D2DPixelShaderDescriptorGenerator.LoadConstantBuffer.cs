@@ -51,12 +51,6 @@ partial class D2DPixelShaderDescriptorGenerator
                     string fieldName = fieldSymbol.Name;
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
 
-                    // Disambiguates the name of target fields against the current input parameters
-                    if (fieldName is "loader")
-                    {
-                        fieldName = $"this.{fieldName}";
-                    }
-
                     // The first item in each nested struct needs to be aligned to 16 bytes
                     if (isFirstField && fieldPath.Length > 0)
                     {

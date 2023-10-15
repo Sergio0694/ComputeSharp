@@ -1,4 +1,5 @@
 using System;
+using ComputeSharp.Descriptors;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
@@ -11,7 +12,7 @@ namespace ComputeSharp.SwapChain.Backend;
 /// The main point of this type is to hide the complexity of <see cref="Win32Application"/> from the non-NativeAOT sample.
 /// </remarks>
 internal static class Win32ApplicationFactory<T>
-    where T : struct, IPixelShader<float4>
+    where T : struct, IComputeShader<float4>, IComputeShaderDescriptor<T>
 {
     /// <summary>
     /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.

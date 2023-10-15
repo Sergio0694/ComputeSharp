@@ -5,13 +5,13 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class BuildHlslSource
+    partial class HlslSource
     {
         /// <summary>
-        /// Writes the <c>BuildHlslSource</c> method.
+        /// Writes the <c>HlslSource</c> property.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
@@ -19,7 +19,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly string global::ComputeSharp.__Internals.IShader.HlslSource =>");
+            writer.WriteLine($"readonly string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslSource =>");
             writer.IncreaseIndent();
             writer.WriteLine("\"\"\"");
             writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);

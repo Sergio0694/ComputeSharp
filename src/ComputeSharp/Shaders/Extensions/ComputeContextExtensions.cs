@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources.Interop;
@@ -484,7 +485,7 @@ public static class ComputeContextExtensions
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     public static void For<T>(this in ComputeContext context, int x, in T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, ref Unsafe.AsRef(in shader));
     }
@@ -498,7 +499,7 @@ public static class ComputeContextExtensions
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     public static void For<T>(this in ComputeContext context, int x, int y, in T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, y, ref Unsafe.AsRef(in shader));
     }
@@ -513,7 +514,7 @@ public static class ComputeContextExtensions
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     public static void For<T>(this in ComputeContext context, int x, int y, int z, in T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         context.Run(x, y, z, ref Unsafe.AsRef(in shader));
     }
@@ -526,7 +527,7 @@ public static class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);
@@ -543,7 +544,7 @@ public static class ComputeContextExtensions
     /// <param name="texture">The target texture to apply the pixel shader to.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
     public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
-        where T : struct, IPixelShader<TPixel>
+        where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
         default(ArgumentNullException).ThrowIfNull(texture);

@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
     /// Gets whether a given type is a compute shader type (ie. implements any of the interfaces).
@@ -15,7 +15,7 @@ partial class IShaderGenerator
     private static bool TryGetIsPixelShaderLike(INamedTypeSymbol typeSymbol, Compilation compilation, out bool result)
     {
         INamedTypeSymbol computeShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader")!;
-        INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IPixelShader`1")!;
+        INamedTypeSymbol pixelShaderSymbol = compilation.GetTypeByMetadataName("ComputeSharp.IComputeShader`1")!;
 
         foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
         {

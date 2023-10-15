@@ -7,7 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
-internal readonly partial struct ContouredLayers : IPixelShader<float4>
+internal readonly partial struct ContouredLayers : IComputeShader<float4>
 {
     /// <summary>
     /// The current time Hlsl.Since the start of the application.

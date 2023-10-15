@@ -5,10 +5,10 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class LoadDispatchData
+    partial class DispatchDataLoading
     {
         /// <summary>
         /// Writes the <c>LoadConstantBuffer</c> method.
@@ -17,10 +17,12 @@ partial class IShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteLoadConstantBufferSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadConstantBuffer<TLoader>(ref TLoader loader, int x, int y, int z)");
+            writer.WriteLine($"readonly void global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader, int x, int y, int z)");
 
             using (writer.WriteBlock())
             {
@@ -41,14 +43,14 @@ partial class IShaderGenerator
                             // Read a boolean value and cast it to Bool first, which will apply the correct size expansion
                             writer.WriteLine(
                                 $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Bool>(ref span[{primitive.Offset}]) = " +
-                                $"(global::ComputeSharp.Bool){string.Join(".", primitive.FieldPath)};");
+                                $"(global::ComputeSharp.Bool)shader.{string.Join(".", primitive.FieldPath)};");
                             break;
                         case FieldInfo.Primitive primitive:
 
                             // Read a primitive value and serialize it into the target buffer
                             writer.WriteLine(
                                 $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::{primitive.TypeName}>(ref span[{primitive.Offset}]) = " +
-                                $"{string.Join(".", primitive.FieldPath)};");
+                                $"shader.{string.Join(".", primitive.FieldPath)};");
                             break;
 
                         case FieldInfo.NonLinearMatrix matrix:
@@ -61,7 +63,7 @@ partial class IShaderGenerator
                             //     ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in <FIELD_PATH>));
                             writer.WriteLine(
                                 $"ref {rowTypeName} {rowLocalName} = ref global::System.Runtime.CompilerServices.Unsafe.As<global::{matrix.TypeName}, {rowTypeName}>(" +
-                                $"ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in {string.Join(".", matrix.FieldPath)}));");
+                                $"ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in shader.{string.Join(".", matrix.FieldPath)}));");
 
                             // Generate the loading code for each individual row, with proper alignment.
                             // This will result in the following (assuming Float2x3 m):
@@ -92,9 +94,11 @@ partial class IShaderGenerator
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
         public static void WriteLoadGraphicsResourcesSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine("readonly void global::ComputeSharp.__Internals.IShader.LoadGraphicsResources<TLoader>(ref TLoader loader)");
+            writer.WriteLine($"readonly void global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{typeName}>.LoadGraphicsResources<TLoader>(in {typeName} shader, ref TLoader loader)");
 
             using (writer.WriteBlock())
             {
@@ -103,7 +107,7 @@ partial class IShaderGenerator
                 {
                     if (fieldInfo is FieldInfo.Resource resource)
                     {
-                        writer.WriteLine($"loader.LoadGraphicsResource({resource.FieldName}, {resource.Offset});");
+                        writer.WriteLine($"loader.LoadGraphicsResource(shader.{resource.FieldName}, {resource.Offset});");
                     }
                 }
             }

@@ -107,7 +107,7 @@ partial class Texture2DTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
-    public readonly partial struct SamplingPixelShader : IPixelShader<float4>
+    public readonly partial struct SamplingPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> texture;
 

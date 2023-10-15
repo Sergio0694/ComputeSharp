@@ -5,35 +5,11 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class LoadDispatchMetadata
+    partial class ResourceDescriptorRanges
     {
-        /// <summary>
-        /// Writes the <c>ConstantBufferSize</c> property.
-        /// </summary>
-        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
-        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteConstantBufferSizeSyntax(ShaderInfo info, IndentedTextWriter writer)
-        {
-            writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.__Internals.IShader.ConstantBufferSize => {info.ConstantBufferSizeInBytes};");
-        }
-
-        /// <summary>
-        /// Writes the <c>IsStaticSamplerRequired</c> property.
-        /// </summary>
-        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
-        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteIsStaticSamplerRequiredSyntax(ShaderInfo info, IndentedTextWriter writer)
-        {
-            writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly bool global::ComputeSharp.__Internals.IShader.IsStaticSamplerRequired => {info.IsSamplerUsed.ToString().ToLowerInvariant()};");
-        }
-
         /// <summary>
         /// Writes the <c>ResourceDescriptorRanges</c> property.
         /// </summary>
@@ -43,7 +19,7 @@ partial class IShaderGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.__Internals.IShader.ResourceDescriptorRanges => ");
+            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceDescriptorRanges => ");
 
             // If there are no declared resources, just return an empty collection
             if (info.ResourceDescriptors.IsEmpty)

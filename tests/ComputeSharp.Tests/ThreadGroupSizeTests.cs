@@ -1,4 +1,4 @@
-using ComputeSharp.__Internals;
+using ComputeSharp.Descriptors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests;
@@ -10,21 +10,21 @@ public partial class ThreadGroupSizeTests
     [TestMethod]
     public unsafe void Verify_ThreadGroupSize()
     {
-        Assert.AreEqual(64, ((IShader)default(DispatchXShader)).ThreadsX);
-        Assert.AreEqual(1, ((IShader)default(DispatchXShader)).ThreadsY);
-        Assert.AreEqual(1, ((IShader)default(DispatchXShader)).ThreadsZ);
+        Assert.AreEqual(64, ((IComputeShaderDescriptor<DispatchXShader>)default(DispatchXShader)).ThreadsX);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<DispatchXShader>)default(DispatchXShader)).ThreadsY);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<DispatchXShader>)default(DispatchXShader)).ThreadsZ);
 
-        Assert.AreEqual(8, ((IShader)default(DispatchXYShader)).ThreadsX);
-        Assert.AreEqual(8, ((IShader)default(DispatchXYShader)).ThreadsY);
-        Assert.AreEqual(1, ((IShader)default(DispatchXYShader)).ThreadsZ);
+        Assert.AreEqual(8, ((IComputeShaderDescriptor<DispatchXYShader>)default(DispatchXYShader)).ThreadsX);
+        Assert.AreEqual(8, ((IComputeShaderDescriptor<DispatchXYShader>)default(DispatchXYShader)).ThreadsY);
+        Assert.AreEqual(1, ((IComputeShaderDescriptor<DispatchXYShader>)default(DispatchXYShader)).ThreadsZ);
 
-        Assert.AreEqual(4, ((IShader)default(DispatchXYZShader)).ThreadsX);
-        Assert.AreEqual(4, ((IShader)default(DispatchXYZShader)).ThreadsY);
-        Assert.AreEqual(4, ((IShader)default(DispatchXYZShader)).ThreadsZ);
+        Assert.AreEqual(4, ((IComputeShaderDescriptor<DispatchXYZShader>)default(DispatchXYZShader)).ThreadsX);
+        Assert.AreEqual(4, ((IComputeShaderDescriptor<DispatchXYZShader>)default(DispatchXYZShader)).ThreadsY);
+        Assert.AreEqual(4, ((IComputeShaderDescriptor<DispatchXYZShader>)default(DispatchXYZShader)).ThreadsZ);
 
-        Assert.AreEqual(11, ((IShader)default(DispatchCustomShader)).ThreadsX);
-        Assert.AreEqual(14, ((IShader)default(DispatchCustomShader)).ThreadsY);
-        Assert.AreEqual(6, ((IShader)default(DispatchCustomShader)).ThreadsZ);
+        Assert.AreEqual(11, ((IComputeShaderDescriptor<DispatchCustomShader>)default(DispatchCustomShader)).ThreadsX);
+        Assert.AreEqual(14, ((IComputeShaderDescriptor<DispatchCustomShader>)default(DispatchCustomShader)).ThreadsY);
+        Assert.AreEqual(6, ((IComputeShaderDescriptor<DispatchCustomShader>)default(DispatchCustomShader)).ThreadsZ);
     }
 
     [AutoConstructor]

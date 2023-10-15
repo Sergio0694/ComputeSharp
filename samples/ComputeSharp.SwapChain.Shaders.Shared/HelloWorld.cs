@@ -6,7 +6,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
-internal readonly partial struct HelloWorld : IPixelShader<float4>
+internal readonly partial struct HelloWorld : IComputeShader<float4>
 {
     /// <summary>
     /// The current time since the start of the application.

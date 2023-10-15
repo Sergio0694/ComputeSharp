@@ -15,12 +15,12 @@ using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadDispatchData</c> method.
+    /// A helper with all logic to generate the dispatch data loading methods.
     /// </summary>
-    private static partial class LoadDispatchData
+    private static partial class DispatchDataLoading
     {
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
@@ -55,12 +55,6 @@ partial class IShaderGenerator
                 {
                     string fieldName = fieldSymbol.Name;
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
-
-                    // Disambiguates the name of target fields against the current input parameters
-                    if (fieldName is "loader" or "device" or "x" or "y" or "z")
-                    {
-                        fieldName = $"this.{fieldName}";
-                    }
 
                     // The first item in each nested struct needs to be aligned to 16 bytes
                     if (isFirstField && fieldPath.Length > 0)
