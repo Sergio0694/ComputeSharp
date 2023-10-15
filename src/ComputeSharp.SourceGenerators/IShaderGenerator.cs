@@ -59,7 +59,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         diagnostics,
                         typeSymbol,
                         isPixelShaderLike,
-                        out int root32BitConstantCount,
+                        out int constantBufferSizeInBytes,
                         out int resourceCount);
 
                     token.ThrowIfCancellationRequested();
@@ -92,7 +92,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                     // GetDispatchMetadata() info
                     ImmutableArray<ResourceDescriptor> resourceDescriptors = LoadDispatchMetadata.GetInfo(
-                        root32BitConstantCount,
                         isImplicitTextureUsed,
                         isSamplerUsed,
                         fieldInfos);
@@ -123,7 +122,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                         ThreadsZ: threadsZ,
                         IsPixelShaderLike: isPixelShaderLike,
                         IsSamplerUsed: isSamplerUsed,
-                        ConstantBufferSizeInBytes: root32BitConstantCount,
+                        ConstantBufferSizeInBytes: constantBufferSizeInBytes,
                         ResourceCount: resourceCount,
                         Fields: fieldInfos,
                         ResourceDescriptors: resourceDescriptors,
@@ -153,7 +152,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
             declaredMembers.Add(BuildHlslSource.WriteSyntax);
             declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
-            declaredMembers.Add(LoadDispatchData.WriteSyntax);
+            declaredMembers.Add(LoadDispatchData.WriteLoadConstantBufferSyntax);
+            declaredMembers.Add(LoadDispatchData.WriteLoadGraphicsResourcesSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();

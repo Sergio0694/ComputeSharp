@@ -27,8 +27,8 @@ partial class IShaderGenerator
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
-        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
+        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
@@ -108,7 +108,7 @@ partial class IShaderGenerator
             // the local variables is padded to a multiple of a 32 bit value. This is necessary to
             // enable loading all the dispatch data after reinterpreting it to a sequence of values
             // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-            constantBufferSizeInBytes = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
+            constantBufferSizeInBytes = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int));
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
             // Loaded values in the root signature have the following costs:
@@ -118,9 +118,9 @@ partial class IShaderGenerator
             // So here we check whether the current signature respects that constraint,
             // and emit a build error otherwise. For more info on this, see the docs here:
             // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-            int rootSignatureDwordSize = constantBufferSizeInBytes + resourceCount;
+            int root32BitConstantCount = (constantBufferSizeInBytes / sizeof(int)) + resourceCount;
 
-            if (rootSignatureDwordSize > 64)
+            if (root32BitConstantCount > 64)
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }

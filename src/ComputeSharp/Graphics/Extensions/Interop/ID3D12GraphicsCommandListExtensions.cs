@@ -288,11 +288,11 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// </summary>
     /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
     /// <param name="data">The input buffer with the constant data to bind.</param>
-    public static void SetComputeRoot32BitConstants(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ReadOnlySpan<uint> data)
+    public static void SetComputeRoot32BitConstants(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ReadOnlySpan<byte> data)
     {
-        fixed (uint* p = data)
+        fixed (byte* p = data)
         {
-            d3D12GraphicsCommandList.SetComputeRoot32BitConstants(0, (uint)data.Length, p, 0);
+            d3D12GraphicsCommandList.SetComputeRoot32BitConstants(0, (uint)data.Length / sizeof(uint), p, 0);
         }
     }
 }

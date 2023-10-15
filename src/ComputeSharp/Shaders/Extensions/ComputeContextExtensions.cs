@@ -1,11 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+using ComputeSharp.Resources.Interop;
 using TerraFX.Interop.DirectX;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -145,7 +143,7 @@ public static class ComputeContextExtensions
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+        context.Barrier(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -161,7 +159,7 @@ public static class ComputeContextExtensions
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+        context.Barrier(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -177,7 +175,7 @@ public static class ComputeContextExtensions
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
+        context.Barrier(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)));
     }
 
     /// <summary>
@@ -309,11 +307,11 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
+        context.Clear(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -327,11 +325,11 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
+        context.Clear(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -345,11 +343,11 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
+        context.Clear(((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
@@ -421,12 +419,12 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
         context.Fill(
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
+            ((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
             handles.Gpu,
             handles.Cpu,
             DXGIFormatHelper.ExtendToNormalizedValue(value));
@@ -444,12 +442,12 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
         context.Fill(
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
+            ((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
             handles.Gpu,
             handles.Cpu,
             DXGIFormatHelper.ExtendToNormalizedValue(value));
@@ -467,12 +465,12 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) handles = ((ID3D12ReadWriteResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
         using ReferenceTracker.Lease lease = default;
 
         context.Fill(
-            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
+            ((ID3D12ReadOnlyResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice, out Unsafe.AsRef(in lease)),
             handles.Gpu,
             handles.Cpu,
             DXGIFormatHelper.ExtendToNormalizedValue(value));

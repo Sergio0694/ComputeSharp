@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
@@ -9,6 +8,7 @@ using ComputeSharp.Graphics.Resources.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using ComputeSharp.Interop.Allocation;
+using ComputeSharp.Resources.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -17,7 +17,7 @@ using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
-#pragma warning disable CS0618, CA1063
+#pragma warning disable CA1063
 
 namespace ComputeSharp.Resources;
 
@@ -25,7 +25,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
+public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGraphicsResource, ID3D12ReadWriteResource
     where T : unmanaged
 {
     /// <summary>
@@ -613,7 +613,17 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         }
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
+    /// <inheritdoc cref="ID3D12ReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
+    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+    {
+        lease = GetReferenceTracker().GetLease();
+
+        ThrowIfDeviceMismatch(device);
+
+        return D3D12Resource;
+    }
+
+    /// <inheritdoc cref="ID3D12ReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
     internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
@@ -625,17 +635,7 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
         return (this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice, out ReferenceTracker.Lease)"/>
-    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
-    {
-        lease = GetReferenceTracker().GetLease();
-
-        ThrowIfDeviceMismatch(device);
-
-        return D3D12Resource;
-    }
-
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*, out ReferenceTracker.Lease)"/>
+    /// <inheritdoc cref="ID3D12ReadWriteResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*, out ReferenceTracker.Lease)"/>
     internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
     {
         lease = GetReferenceTracker().GetLease();
@@ -653,7 +653,7 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     }
 
     /// <inheritdoc/>
-    D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
+    D3D12_GPU_DESCRIPTOR_HANDLE ID3D12ReadOnlyResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
         using ReferenceTracker.Lease _0 = GetReferenceTracker().GetLease();
 
@@ -663,19 +663,19 @@ public abstract unsafe partial class Texture3D<T> : IReferenceTrackedObject, IGr
     }
 
     /// <inheritdoc/>
-    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
-    {
-        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
-    }
-
-    /// <inheritdoc/>
-    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
+    ID3D12Resource* ID3D12ReadOnlyResource.ValidateAndGetID3D12Resource(GraphicsDevice device, out ReferenceTracker.Lease lease)
     {
         return ValidateAndGetID3D12Resource(device, out lease);
     }
 
     /// <inheritdoc/>
-    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) ID3D12ReadWriteResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
+    {
+        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
+    }
+
+    /// <inheritdoc/>
+    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) ID3D12ReadWriteResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource, out ReferenceTracker.Lease lease)
     {
         return ValidateAndGetID3D12ResourceAndTransitionStates(device, resourceState, out d3D12Resource, out lease);
     }
