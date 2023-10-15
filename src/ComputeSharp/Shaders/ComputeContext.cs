@@ -2,14 +2,13 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Resources.Interop;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
 using TerraFX.Interop.DirectX;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -123,7 +122,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     internal readonly unsafe void Run<T>(int x, ref T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
 
         Run(x, 1, 1, ref shader);
@@ -136,7 +135,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     internal readonly unsafe void Run<T>(int x, int y, ref T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
 
         Run(x, y, 1, ref shader);
@@ -151,7 +150,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
     internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
-        where T : struct, IComputeShader
+        where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         default(InvalidOperationException).ThrowIf(this.device is null);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(x);
@@ -174,11 +173,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         D3D12GraphicsCommandListConstantBufferLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-        shader.LoadConstantBuffer(ref dataLoader, x, y, z);
+        shader.LoadConstantBuffer(in shader, ref dataLoader, x, y, z);
 
         D3D12GraphicsCommandListGraphicsResourceLoader graphicsResourceLoader = new(commandList.D3D12GraphicsCommandList, this.device, rootParameterOffset: 1);
 
-        shader.LoadGraphicsResources(ref graphicsResourceLoader);
+        shader.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
 
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
     }
@@ -191,7 +190,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
     internal readonly unsafe void Run<T, TPixel>(IReadWriteNormalizedTexture2D<TPixel> texture, ref T shader)
-        where T : struct, IComputeShader<TPixel>
+        where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {
         default(InvalidOperationException).ThrowIf(this.device is null);
@@ -212,11 +211,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         D3D12GraphicsCommandListConstantBufferLoader constantBufferLoader = new(commandList.D3D12GraphicsCommandList);
 
-        shader.LoadConstantBuffer(ref constantBufferLoader, x, y, 1);
+        shader.LoadConstantBuffer(in shader, ref constantBufferLoader, x, y, 1);
 
         D3D12GraphicsCommandListGraphicsResourceLoader graphicsResourceLoader = new(commandList.D3D12GraphicsCommandList, this.device, rootParameterOffset: 2);
 
-        shader.LoadGraphicsResources(ref graphicsResourceLoader);
+        shader.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
 
         // Load the implicit output texture
         commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(

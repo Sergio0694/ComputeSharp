@@ -1,7 +1,3 @@
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
-
 namespace ComputeSharp;
 
 /// <summary>
@@ -11,7 +7,7 @@ namespace ComputeSharp;
 /// <remarks>
 /// This interface allows implementing logic analogous of pixel shaders, but via compute shaders.
 /// </remarks>
-public interface IComputeShader<TPixel> : IShader
+public interface IComputeShader<TPixel>
     where TPixel : unmanaged
 {
     /// <summary>

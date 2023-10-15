@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.__Internals;
+namespace ComputeSharp.Descriptors;
 
 /// <summary>
 /// A type representing a loader object for <see cref="IGraphicsResource"/> values used in compute shaders.

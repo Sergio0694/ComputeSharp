@@ -1,15 +1,16 @@
 using System;
-using System.ComponentModel;
 using ComputeSharp.Interop;
 
-namespace ComputeSharp.__Internals;
+namespace ComputeSharp.Descriptors;
 
 /// <summary>
-/// A base <see langword="interface"/> representing a given shader that can be dispatched.
+/// An interface for a descriptor for a given compute shader.
+/// Descriptors contain metadata associated to compute shaders,
+/// with all information needed to execute them at runtime.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
-[Obsolete("This interface is not intended to be used directly by user code")]
-public interface IShader
+/// <typeparam name="T">The type of compute shader being described.</typeparam>
+public interface IComputeShaderDescriptor<T>
+    where T : struct
 {
     /// <summary>
     /// The number of threads in each thread group for the X axis.
@@ -63,18 +64,20 @@ public interface IShader
     /// Loads the constant buffer of a given input shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
+    /// <param name="shader">The input shader to load the constant buffer for.</param>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
-    void LoadConstantBuffer<TLoader>(ref TLoader loader, int x, int y, int z)
+    void LoadConstantBuffer<TLoader>(in T shader, ref TLoader loader, int x, int y, int z)
         where TLoader : struct, IConstantBufferLoader;
 
     /// <summary>
     /// Loads the graphics resources for the shader.
     /// </summary>
     /// <typeparam name="TLoader">The type of graphics resource loader being used.</typeparam>
+    /// <param name="shader">The input shader to load the graphics resources for.</param>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
-    void LoadGraphicsResources<TLoader>(ref TLoader loader)
+    void LoadGraphicsResources<TLoader>(in T shader, ref TLoader loader)
         where TLoader : struct, IGraphicsResourceLoader;
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputeSharp.__Internals;
+namespace ComputeSharp.Descriptors;
 
 /// <summary>
 /// A type representing a data loader for the constant buffer of a compute shader.

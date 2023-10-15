@@ -1,4 +1,5 @@
 using System;
+using ComputeSharp.Descriptors;
 
 namespace ComputeSharp.WinUI;
 
@@ -8,7 +9,7 @@ namespace ComputeSharp.WinUI;
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
 public sealed class ShaderRunner<T> : IShaderRunner
-    where T : struct, IComputeShader<Float4>
+    where T : struct, IComputeShader<Float4>, IComputeShaderDescriptor<T>
 {
     /// <summary>
     /// The <see cref="Func{T1,TResult}"/> instance used to create shaders to run.
