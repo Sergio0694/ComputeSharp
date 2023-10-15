@@ -9,7 +9,7 @@ namespace ComputeSharp.Tests.Internals.Helpers;
 /// <summary>
 /// A debug data loader for generic shaders.
 /// </summary>
-internal readonly unsafe struct DebugDispatchDataLoader : IDispatchDataLoader
+internal readonly unsafe struct DebugDispatchDataLoader : IConstantBufferLoader
 {
     /// <summary>
     /// The backing, mutable data for <see cref="Values"/> and <see cref="Resources"/>.
