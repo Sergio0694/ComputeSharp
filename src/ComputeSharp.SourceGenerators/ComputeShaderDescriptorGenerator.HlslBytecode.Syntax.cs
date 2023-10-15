@@ -9,7 +9,7 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class LoadBytecode
+    partial class HlslBytecode
     {
         /// <summary>
         /// Writes the <c>HlslBytecode</c> property.

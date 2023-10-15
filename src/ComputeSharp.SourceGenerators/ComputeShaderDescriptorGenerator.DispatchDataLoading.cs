@@ -18,9 +18,9 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadDispatchData</c> method.
+    /// A helper with all logic to generate the dispatch data loading methods.
     /// </summary>
-    private static partial class LoadDispatchData
+    private static partial class DispatchDataLoading
     {
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.

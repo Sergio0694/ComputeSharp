@@ -53,8 +53,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
-                    // LoadDispatchData() info
-                    ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
+                    // Dispatch data loading info
+                    ImmutableArray<FieldInfo> fieldInfos = DispatchDataLoading.GetInfo(
                         diagnostics,
                         typeSymbol,
                         isPixelShaderLike,
@@ -63,8 +63,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // TryGetBytecode() info
-                    LoadBytecode.GetInfo(
+                    // Thread group size info
+                    NumThreads.GetInfo(
                         diagnostics,
                         typeSymbol,
                         out int threadsX,
@@ -74,8 +74,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // BuildHlslSource() info
-                    BuildHlslSource.GetInfo(
+                    // Transpiled HLSL source info
+                    HlslSource.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeDeclaration,
@@ -89,8 +89,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // GetDispatchMetadata() info
-                    ImmutableArray<ResourceDescriptor> resourceDescriptors = LoadDispatchMetadata.GetInfo(
+                    // Resource descriptor ranges info
+                    ImmutableArray<ResourceDescriptor> resourceDescriptors = ResourceDescriptorRanges.GetInfo(
                         isImplicitTextureUsed,
                         isSamplerUsed,
                         fieldInfos);
@@ -101,11 +101,11 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, isCompilationEnabled);
 
                     // Try to get the HLSL bytecode
-                    HlslBytecodeInfo hlslInfo = LoadBytecode.GetBytecode(ref hlslInfoKey, token);
+                    HlslBytecodeInfo hlslInfo = HlslBytecode.GetBytecode(ref hlslInfoKey, token);
 
                     token.ThrowIfCancellationRequested();
 
-                    LoadBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
+                    HlslBytecode.GetInfoDiagnostics(typeSymbol, hlslInfo, diagnostics);
 
                     token.ThrowIfCancellationRequested();
 
@@ -143,22 +143,22 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
         {
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            declaredMembers.Add(LoadBytecode.WriteThreadsXSyntax);
-            declaredMembers.Add(LoadBytecode.WriteThreadsYSyntax);
-            declaredMembers.Add(LoadBytecode.WriteThreadsZSyntax);
-            declaredMembers.Add(LoadDispatchMetadata.WriteConstantBufferSizeSyntax);
-            declaredMembers.Add(LoadDispatchMetadata.WriteIsStaticSamplerRequiredSyntax);
-            declaredMembers.Add(LoadDispatchMetadata.WriteSyntax);
-            declaredMembers.Add(BuildHlslSource.WriteSyntax);
-            declaredMembers.Add(LoadBytecode.WriteHlslBytecodeSyntax);
-            declaredMembers.Add(LoadDispatchData.WriteLoadConstantBufferSyntax);
-            declaredMembers.Add(LoadDispatchData.WriteLoadGraphicsResourcesSyntax);
+            declaredMembers.Add(HlslBytecode.WriteThreadsXSyntax);
+            declaredMembers.Add(HlslBytecode.WriteThreadsYSyntax);
+            declaredMembers.Add(HlslBytecode.WriteThreadsZSyntax);
+            declaredMembers.Add(MetadataProperties.WriteConstantBufferSizeSyntax);
+            declaredMembers.Add(MetadataProperties.WriteIsStaticSamplerRequiredSyntax);
+            declaredMembers.Add(ResourceDescriptorRanges.WriteSyntax);
+            declaredMembers.Add(HlslSource.WriteSyntax);
+            declaredMembers.Add(HlslBytecode.WriteHlslBytecodeSyntax);
+            declaredMembers.Add(DispatchDataLoading.WriteLoadConstantBufferSyntax);
+            declaredMembers.Add(DispatchDataLoading.WriteLoadGraphicsResourcesSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
-            LoadDispatchMetadata.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
-            LoadBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            ResourceDescriptorRanges.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
+            HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();
 

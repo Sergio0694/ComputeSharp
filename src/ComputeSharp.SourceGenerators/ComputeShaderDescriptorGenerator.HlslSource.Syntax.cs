@@ -8,10 +8,10 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class BuildHlslSource
+    partial class HlslSource
     {
         /// <summary>
-        /// Writes the <c>BuildHlslSource</c> method.
+        /// Writes the <c>HlslSource</c> property.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>

@@ -8,7 +8,7 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
-    partial class LoadDispatchData
+    partial class DispatchDataLoading
     {
         /// <summary>
         /// Writes the <c>LoadConstantBuffer</c> method.

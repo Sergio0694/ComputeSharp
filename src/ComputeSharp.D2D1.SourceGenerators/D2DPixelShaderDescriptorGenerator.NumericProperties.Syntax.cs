@@ -10,7 +10,7 @@ partial class D2DPixelShaderDescriptorGenerator
     /// <summary>
     /// A helper with all logic to generate the available numeric properties.
     /// </summary>
-    private static partial class NumericProperties
+    private static class NumericProperties
     {
         /// <summary>
         /// Writes the <c>ConstantBufferSize</c> property.

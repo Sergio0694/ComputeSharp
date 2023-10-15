@@ -20,9 +20,9 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>BuildHlslSource</c> method.
+    /// A helper with all logic to generate the <c>HlslSource</c> property.
     /// </summary>
-    internal static partial class BuildHlslSource
+    internal static partial class HlslSource
     {
         /// <summary>
         /// Gathers all necessary information on a transpiled HLSL source for a given shader type.

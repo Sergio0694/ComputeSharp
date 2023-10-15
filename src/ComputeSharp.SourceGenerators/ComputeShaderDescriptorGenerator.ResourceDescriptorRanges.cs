@@ -9,9 +9,9 @@ namespace ComputeSharp.SourceGenerators;
 partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadDispatchMetadata</c> method.
+    /// A helper with all logic to generate the <c>ResourceDescriptorRanges</c> property.
     /// </summary>
-    private static partial class LoadDispatchMetadata
+    private static partial class ResourceDescriptorRanges
     {
         /// <summary>
         /// Gets the data related to the shader metadata for a given shader type.
