@@ -36,7 +36,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -91,7 +91,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0002", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0002", "CMPS0047");
     }
 
     [TestMethod]
@@ -120,7 +120,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0003", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0003", "CMPS0047");
     }
 
     [TestMethod]
@@ -147,7 +147,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0004", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0004", "CMPS0047");
     }
 
     [TestMethod]
@@ -165,7 +165,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0005", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0005", "CMPS0047");
     }
 
     [TestMethod]
@@ -201,7 +201,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId, "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -234,7 +234,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId, "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -265,7 +265,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0006", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0006", "CMPS0047");
     }
 
     [TestMethod]
@@ -293,7 +293,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -321,7 +321,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -349,7 +349,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -379,7 +379,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -406,7 +406,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -434,7 +434,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0013", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0012", "CMPS0013", "CMPS0047");
     }
 
     [TestMethod]
@@ -464,7 +464,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0014", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0014", "CMPS0047");
     }
 
     [TestMethod]
@@ -497,7 +497,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0015", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0015", "CMPS0047");
     }
 
     [TestMethod]
@@ -530,7 +530,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0047");
     }
 
     [TestMethod]
@@ -563,7 +563,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0017", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0017", "CMPS0047");
     }
 
     [TestMethod]
@@ -593,7 +593,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0018", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0018", "CMPS0047");
     }
 
     [TestMethod]
@@ -624,7 +624,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0019", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0019", "CMPS0047");
     }
 
     [TestMethod]
@@ -655,7 +655,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0020", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0020", "CMPS0047");
     }
 
     [TestMethod]
@@ -688,7 +688,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0021", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0021", "CMPS0047");
     }
 
     [TestMethod]
@@ -719,7 +719,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0022", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0022", "CMPS0047");
     }
 
     [TestMethod]
@@ -752,7 +752,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0023", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0023", "CMPS0047");
     }
 
     [TestMethod]
@@ -780,7 +780,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0024", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0024", "CMPS0047");
     }
 
     [TestMethod]
@@ -808,7 +808,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0025", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0032", "CMPS0025", "CMPS0047");
     }
 
     [TestMethod]
@@ -836,7 +836,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0026", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0026", "CMPS0047");
     }
 
     [TestMethod]
@@ -869,7 +869,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0027", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0027", "CMPS0047");
     }
 
     [TestMethod]
@@ -897,7 +897,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0028", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -925,7 +925,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -955,7 +955,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -989,7 +989,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0030", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1017,7 +1017,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0031", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1045,7 +1045,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0032", "CMPS0047");
     }
 
     [TestMethod]
@@ -1073,7 +1073,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0033", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0033", "CMPS0047");
     }
 
     [TestMethod]
@@ -1103,7 +1103,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0034", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0034", "CMPS0047");
     }
 
     [TestMethod]
@@ -1133,7 +1133,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -1163,7 +1163,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -1191,7 +1191,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0036", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0036", "CMPS0047");
     }
 
     [TestMethod]
@@ -1235,7 +1235,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037", "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0037", "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1264,7 +1264,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0038", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0038", "CMPS0047");
     }
 
     [TestMethod]
@@ -1293,7 +1293,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1327,7 +1327,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1359,7 +1359,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1388,7 +1388,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1417,7 +1417,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1452,7 +1452,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0041", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0041", "CMPS0047");
     }
 
     [TestMethod]
@@ -1478,7 +1478,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0042", "CMPS0047");
     }
 
     [TestMethod]
@@ -1518,7 +1518,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0044");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0044");
     }
 
     [TestMethod]
@@ -1553,7 +1553,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1588,7 +1588,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1623,7 +1623,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0048");
     }
 
     [TestMethod]
@@ -1652,7 +1652,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0049", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0049", "CMPS0047");
     }
 
     [TestMethod]
@@ -1681,7 +1681,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1716,7 +1716,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
     [TestMethod]
@@ -1749,7 +1749,7 @@ public class DiagnosticsTests
             }
             """;
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047", "CMPS0050");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0047", "CMPS0050");
     }
 
     /// <summary>

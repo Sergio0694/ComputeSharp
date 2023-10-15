@@ -11,15 +11,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComputeSharp.SourceGenerators;
 
 /// <summary>
-/// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IComputeShader{TPixel}"/> types.
+/// A source generator creating descriptors for <see cref="IComputeShader"/> and <see cref="IComputeShader{TPixel}"/> types.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
-public sealed partial class IShaderGenerator : IIncrementalGenerator
+public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGenerator
 {
     /// <summary>
     /// The name of generator to include in the generated code.
     /// </summary>
-    private const string GeneratorName = "ComputeSharp.IShaderGenerator";
+    private const string GeneratorName = "ComputeSharp.ComputeShaderDescriptorGenerator";
 
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)

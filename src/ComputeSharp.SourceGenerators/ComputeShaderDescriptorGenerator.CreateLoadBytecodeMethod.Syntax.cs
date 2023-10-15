@@ -6,7 +6,7 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <inheritdoc/>
     partial class LoadBytecode

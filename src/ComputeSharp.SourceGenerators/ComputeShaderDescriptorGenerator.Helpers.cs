@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
     /// Gets whether a given type is a compute shader type (ie. implements any of the interfaces).

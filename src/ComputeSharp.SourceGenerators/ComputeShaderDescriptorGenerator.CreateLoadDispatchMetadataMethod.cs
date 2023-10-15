@@ -6,7 +6,7 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-partial class IShaderGenerator
+partial class ComputeShaderDescriptorGenerator
 {
     /// <summary>
     /// A helper with all logic to generate the <c>LoadDispatchMetadata</c> method.
