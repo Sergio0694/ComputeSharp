@@ -13,7 +13,7 @@ namespace ComputeSharp.Interop;
 /// <summary>
 /// Provides methods to extract reflection info on compute shaders generated using this library.
 /// </summary>
-public static class ReflectionServices
+public static partial class ReflectionServices
 {
     /// <summary>
     /// Gets the shader info associated with a given compute shader.

@@ -10,7 +10,7 @@ namespace ComputeSharp.Shaders.Translation;
 /// <summary>
 /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
 /// </summary>
-internal sealed unsafe partial class ShaderCompiler
+internal sealed unsafe class ShaderCompiler
 {
     /// <summary>
     /// The thread local <see cref="ShaderCompiler"/> instance.
@@ -158,8 +158,7 @@ internal sealed unsafe partial class ShaderCompiler
         message = Regex.Replace(message, @"^hlsl\.hlsl:\d+:\d+: (\w+:)", static m => m.Groups[1].Value, RegexOptions.Multiline);
 
         // Add a trailing '.' if not present
-        if (message is { Length: > 0 } &&
-            message[message.Length - 1] != '.')
+        if (message is [.., not '.'])
         {
             message += '.';
         }
