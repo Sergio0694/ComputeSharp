@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -16,8 +13,6 @@ using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
-
-#pragma warning disable RS1035
 
 namespace ComputeSharp.SourceGenerators;
 
@@ -33,11 +28,6 @@ partial class ComputeShaderDescriptorGenerator
         /// The shared cache of <see cref="HlslBytecodeInfo"/> values.
         /// </summary>
         private static readonly DynamicCache<HlslBytecodeInfoKey, HlslBytecodeInfo> HlslBytecodeCache = new();
-
-        /// <summary>
-        /// Indicates whether the required <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries have been loaded.
-        /// </summary>
-        private static volatile bool areDxcLibrariesLoaded;
 
         /// <summary>
         /// Gets the <see cref="HlslBytecodeInfo"/> instance for the input shader info.
@@ -58,7 +48,7 @@ partial class ComputeShaderDescriptorGenerator
                 try
                 {
                     // Try to load dxcompiler.dll and dxil.dll
-                    LoadNativeDxcLibraries();
+                    DxcLibraryLoader.LoadNativeDxcLibraries();
 
                     token.ThrowIfCancellationRequested();
 
@@ -140,71 +130,6 @@ partial class ComputeShaderDescriptorGenerator
             message = Regex.Replace(message, @"^ +\^", string.Empty, RegexOptions.Multiline);
 
             return message.NormalizeToSingleLine();
-        }
-
-        /// <summary>
-        /// Extracts and loads the <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries.
-        /// </summary>
-        /// <exception cref="NotSupportedException">Thrown if the CPU architecture is not supported.</exception>
-        /// <exception cref="Win32Exception">Thrown if a library fails to load.</exception>
-        private static void LoadNativeDxcLibraries()
-        {
-            // Extracts a specified native library for a given runtime identifier
-            static string ExtractLibrary(string folder, string rid, string name)
-            {
-                string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
-                string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
-
-                _ = Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
-
-                using Stream sourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceFilename);
-
-                try
-                {
-                    using Stream destinationStream = File.Open(targetFilename, FileMode.CreateNew, FileAccess.Write);
-
-                    sourceStream.CopyTo(destinationStream);
-                }
-                catch (IOException)
-                {
-                }
-
-                return targetFilename;
-            }
-
-            // Loads a target native library
-            static unsafe void LoadLibrary(string filename)
-            {
-                [DllImport("kernel32", ExactSpelling = true, SetLastError = true)]
-                static extern void* LoadLibraryW(ushort* lpLibFileName);
-
-                fixed (char* p = filename)
-                {
-                    if (LoadLibraryW((ushort*)p) is null)
-                    {
-                        int hresult = Marshal.GetLastWin32Error();
-
-                        throw new Win32Exception(hresult, $"Failed to load {Path.GetFileName(filename)}.");
-                    }
-                }
-            }
-
-            if (!areDxcLibrariesLoaded)
-            {
-                string rid = RuntimeInformation.ProcessArchitecture switch
-                {
-                    Architecture.X64 => "x64",
-                    Architecture.Arm64 => "arm64",
-                    _ => throw new NotSupportedException("Invalid process architecture")
-                };
-
-                string folder = Path.Combine(Path.GetTempPath(), "ComputeSharp.SourceGenerators", Path.GetRandomFileName());
-
-                LoadLibrary(ExtractLibrary(folder, rid, "dxil"));
-                LoadLibrary(ExtractLibrary(folder, rid, "dxcompiler"));
-
-                areDxcLibrariesLoaded = true;
-            }
         }
     }
 }
