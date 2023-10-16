@@ -18,6 +18,7 @@ public partial class D2D1ReflectionServicesTests
         Assert.IsFalse(shaderInfo.RequiresDoublePrecisionSupport);
         Assert.AreEqual(D3DFeatureLevel.FeatureLevel10_1, shaderInfo.MinimumFeatureLevel);
         Assert.IsNotNull(shaderInfo.CompilerVersion);
+
         Assert.AreEqual("""
             // ================================================
             //                  AUTO GENERATED
@@ -52,6 +53,8 @@ public partial class D2D1ReflectionServicesTests
                 return input0 + input1 + input2 + value3 + value4;
             }
             """.Replace("\r\n", "\n"), shaderInfo.HlslSource);
+
+        CollectionAssert.AreEqual(D2D1PixelShader.LoadBytecode<ReflectedShader>().ToArray(), shaderInfo.HlslBytecode.ToArray());
     }
 
     [D2DInputCount(3)]
@@ -98,6 +101,7 @@ public partial class D2D1ReflectionServicesTests
         Assert.IsTrue(shaderInfo.RequiresDoublePrecisionSupport);
         Assert.AreEqual(D3DFeatureLevel.FeatureLevel11_0, shaderInfo.MinimumFeatureLevel);
         Assert.IsNotNull(shaderInfo.CompilerVersion);
+
         Assert.AreEqual("""
             // ================================================
             //                  AUTO GENERATED
@@ -116,6 +120,8 @@ public partial class D2D1ReflectionServicesTests
                 return (float4)(D2DGetInput(0) + (double4)amount);
             }
             """.Replace("\r\n", "\n"), shaderInfo.HlslSource);
+
+        CollectionAssert.AreEqual(D2D1PixelShader.LoadBytecode<ReflectedShaderWithDoubleOperations>().ToArray(), shaderInfo.HlslBytecode.ToArray());
     }
 
     [D2DInputCount(1)]
