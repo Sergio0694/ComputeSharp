@@ -119,6 +119,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// </summary>
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.XY)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -152,6 +153,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// </summary>
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.XY)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
             private readonly IReadWriteNormalizedTexture2D<float4> source;

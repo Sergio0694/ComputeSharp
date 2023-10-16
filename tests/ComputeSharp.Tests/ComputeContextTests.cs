@@ -1295,6 +1295,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct OffsetComputeShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -1309,6 +1310,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ClearPixelShader : IComputeShader<float4>
     {
         /// <inheritdoc/>
@@ -1320,6 +1322,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ColorPixelShader : IComputeShader<float4>
     {
         public readonly float4 color;
@@ -1333,6 +1336,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSampling2DPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyTexture2D<float4> source;
@@ -1346,6 +1350,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSampling3DComputeShader : IComputeShader
     {
         public readonly IReadOnlyTexture3D<float4> source;
@@ -1365,6 +1370,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSamplingFromNormalized2DPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
@@ -1378,6 +1384,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct CopyToOutputPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
@@ -1391,6 +1398,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct InvertPixelShader : IComputeShader<float4>
     {
         public readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -1404,6 +1412,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSamplingFromNormalized3DComputeShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture3D<float4> source;
@@ -1423,6 +1432,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Dotted2DPixelShader : IComputeShader
     {
         public readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -1452,6 +1462,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Dotted3DPixelShader : IComputeShader
     {
         public readonly IReadWriteNormalizedTexture3D<float4> source;
@@ -1481,6 +1492,7 @@ public partial class ComputeContextTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ConvertToNonNormalized2DShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;

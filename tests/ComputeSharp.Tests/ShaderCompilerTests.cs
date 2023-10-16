@@ -19,6 +19,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct ReservedKeywordsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> row_major;
@@ -55,6 +56,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct ReservedKeywordsInCustomTypesShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> row_major;
@@ -83,6 +85,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct ReservedKeywordsFromHlslTypesAndBuiltInValuesShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> fragmentKeyword;
@@ -125,6 +128,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct ReservedKeywordsPrecompiledShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> row_major;
@@ -162,6 +166,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct SpecialTypeAsReturnTypeShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float2> buffer;
@@ -184,6 +189,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct LocalFunctionInExternalMethodsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float2> buffer;
@@ -216,6 +222,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct CapturedNestedStructTypeShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -236,6 +243,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct ExternalStructTypeShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -258,6 +266,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct OutOfOrderMethodsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -294,6 +303,7 @@ namespace ComputeSharp.Tests
         }
 
         [EmbeddedBytecode(DispatchAxis.XY)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct StatelessPixelShader : IComputeShader<float4>
         {
             /// <inheritdoc/>
@@ -305,6 +315,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct LoopWithVarCounterShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -335,6 +346,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct DoublePrecisionSupportShader : IComputeShader
         {
             public readonly ReadWriteBuffer<double> buffer;
@@ -355,6 +367,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct FieldAccessWithThisExpressionShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -382,6 +395,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct ComputeShaderWithInheritedShaderInterfaceShader : IMyBaseShader
         {
             int IMyBaseShader.A => 42;
@@ -416,6 +430,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct PixelShaderWithInheritedShaderInterfaceShader : IMyBaseShader<float4>
         {
             int IMyBaseShader<float4>.A => 42;
@@ -465,6 +480,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct StructInstanceMethodsShader : IComputeShader
         {
             public readonly MyStructTypeA a;
@@ -499,6 +515,7 @@ namespace ComputeSharp.Tests
 
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         internal readonly partial struct PixelShaderWithScopedParameterInMethodsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
@@ -537,6 +554,7 @@ namespace ExternalNamespace
     {
         [AutoConstructor]
         [EmbeddedBytecode(DispatchAxis.X)]
+        [GeneratedComputeShaderDescriptor]
         public readonly partial struct UserDefinedTypeShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;

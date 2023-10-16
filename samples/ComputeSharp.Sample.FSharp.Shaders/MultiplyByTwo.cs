@@ -5,6 +5,7 @@ namespace ComputeSharp.Sample.FSharp.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.X)]
+[GeneratedComputeShaderDescriptor]
 public readonly partial struct MultiplyByTwo : IComputeShader
 {
     private readonly ReadWriteBuffer<float> buffer;

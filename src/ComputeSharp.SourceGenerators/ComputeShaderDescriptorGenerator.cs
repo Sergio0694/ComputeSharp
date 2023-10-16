@@ -5,7 +5,6 @@ using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.SourceGenerators;
@@ -27,7 +26,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
         // Discover all shader types and extract all the necessary info from each of them
         IncrementalValuesProvider<ShaderInfo> shaderInfo =
             context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                "ComputeSharp.GeneratedComputeShaderDescriptorAttribute",
                 static (node, _) => node.IsTypeDeclarationWithOrPotentiallyWithBaseTypes<StructDeclarationSyntax>(),
                 static (context, token) =>
                 {
@@ -37,10 +37,8 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         return default;
                     }
 
-                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.Node;
-
                     // If the type symbol doesn't have at least one interface, it can't possibly be a shader type
-                    if (context.SemanticModel.GetDeclaredSymbol(typeDeclaration, token) is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
+                    if (context.TargetSymbol is not INamedTypeSymbol { AllInterfaces.Length: > 0 } typeSymbol)
                     {
                         return default;
                     }
@@ -78,7 +76,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     HlslSource.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
-                        typeDeclaration,
+                        (StructDeclarationSyntax)context.TargetNode,
                         typeSymbol,
                         threadsX,
                         threadsY,

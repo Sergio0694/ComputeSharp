@@ -15,13 +15,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader field.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}"</c>.
+    /// Format: <c>"The compute shader of type {0} contains a field "{1}" of an invalid type {2}"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderField = new DiagnosticDescriptor(
         id: "CMPSD2D0001",
         title: "Invalid shader field",
-        messageFormat: "The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}",
+        messageFormat: """The compute shader of type {0} contains a field "{1}" of an invalid type {2}""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -401,13 +401,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader static readonly field type.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a static readonly field \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+    /// Format: <c>"The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new DiagnosticDescriptor(
         id: "CMPSD2D0030",
         title: "Invalid shader static readonly field type",
-        messageFormat: "The compute shader of type {0} contains a static readonly field \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)",
+        messageFormat: """The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -417,13 +417,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
     /// <para>
-    /// Format: <c>"The D2D1 shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
+    /// Format: <c>"The D2D1 shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new DiagnosticDescriptor(
         id: "CMPSD2D0031",
         title: "Invalid property declaration",
-        messageFormat: "The D2D1 shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)",
+        messageFormat: """The D2D1 shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -455,7 +455,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new DiagnosticDescriptor(
         id: "CMPSD2D0033",
         title: "Embedded bytecode compilation failed due to Win32 exception",
-        messageFormat: "The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: \"{2}\")",
+        messageFormat: """The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -471,7 +471,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithFxcCompilationException = new DiagnosticDescriptor(
         id: "CMPSD2D0034",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
-        messageFormat: "The shader of type {0} failed to compile due to an HLSL compiler error (Message: \"{1}\")",
+        messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -706,13 +706,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DResourceTextureIndex]</c>.
     /// <para>
-    /// Format: <c>"The field \"{0}\" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
+    /// Format: <c>"The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeUse = new DiagnosticDescriptor(
         id: "CMPSD2D0049",
         title: "Invalid [D2DResourceTextureIndex] use",
-        messageFormat: "The field \"{0}\" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})",
+        messageFormat: """The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -722,13 +722,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a missing <c>[D2DResourceTextureIndex]</c>.
     /// <para>
-    /// Format: <c>"The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute"</c>.
+    /// Format: <c>"The field "{0}" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor MissingD2DResourceTextureIndexAttribute = new DiagnosticDescriptor(
         id: "CMPSD2D0050",
         title: "Missing [D2DResourceTextureIndex] attribute",
-        messageFormat: "The field \"{0}\" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute",
+        messageFormat: """The field "{0}" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -738,13 +738,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a resource texture using an invalid element type.
     /// <para>
-    /// Format: <c>"The field \"{0}\" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)"</c>.
+    /// Format: <c>"The field "{0}" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidResourceTextureElementType = new DiagnosticDescriptor(
         id: "CMPSD2D0051",
         title: "Invalid D2D1 resource texture element type",
-        messageFormat: "The field \"{0}\" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)",
+        messageFormat: """The field "{0}" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -754,13 +754,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid HLSL source in <c>[D2DPixelShaderSource]</c>.
     /// <para>
-    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument"</c>.
+    /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSource = new DiagnosticDescriptor(
         id: "CMPSD2D0052",
         title: "Invalid [D2DPixelShaderSource] HLSL source argument",
-        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument",
+        messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -770,13 +770,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader failed due to a Win32 exception.
     /// <para>
-    /// Format: <c>"Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: \"{3}\")"</c>.
+    /// Format: <c>"Compiling the HLSL source for method "{1}" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: "{3}")"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithWin32Exception = new DiagnosticDescriptor(
         id: "CMPSD2D0053",
         title: "D2D shader compilation failed due to Win32 exception",
-        messageFormat: "Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: \"{3}\")",
+        messageFormat: """Compiling the HLSL source for method "{1}" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: "{3}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -786,13 +786,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader failed due to an HLSL compilation exception.
     /// <para>
-    /// Format: <c>"Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to an HLSL compiler error (Message: \"{2}\")"</c>.
+    /// Format: <c>"Compiling the HLSL source for method "{1}" (in type {0}) failed due to an HLSL compiler error (Message: "{2}")"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithFxcCompilationException = new DiagnosticDescriptor(
         id: "CMPSD2D0054",
         title: "D2D shader compilation failed due to an HLSL compiler error",
-        messageFormat: "Compiling the HLSL source for method \"{1}\" (in type {0}) failed due to an HLSL compiler error (Message: \"{2}\")",
+        messageFormat: """Compiling the HLSL source for method "{1}" (in type {0}) failed due to an HLSL compiler error (Message: "{2}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -802,13 +802,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader with no shader profile set.
     /// <para>
-    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use"</c>.
+    /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor MissingShaderProfileForD2DPixelShaderSource = new DiagnosticDescriptor(
         id: "CMPSD2D0055",
         title: "Missing shader profile for D2D pixel shader source",
-        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use",
+        messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -818,13 +818,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode D2D shader with no compile options set.
     /// <para>
-    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use"</c>.
+    /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor MissingCompileOptionsForD2DPixelShaderSource = new DiagnosticDescriptor(
         id: "CMPSD2D0056",
         title: "Missing compile options for D2D pixel shader source",
-        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use",
+        messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -834,13 +834,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for when a method with [D2DPixelShaderSource] has an invalid return type.
     /// <para>
-    /// Format: <c>"The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan&lt;byte&gt;)"</c>.
+    /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan&lt;byte&gt;)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSourceMethodReturnType = new DiagnosticDescriptor(
         id: "CMPSD2D0057",
         title: "Missing compile options for D2D pixel shader source",
-        messageFormat: "The method \"{0}\" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan<byte>)",
+        messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan<byte>)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

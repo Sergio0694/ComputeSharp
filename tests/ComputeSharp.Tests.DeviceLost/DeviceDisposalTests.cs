@@ -144,6 +144,7 @@ public partial class DeviceDisposalTests
     }
 
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     [AutoConstructor]
     private readonly partial struct InitializeShader : IComputeShader
     {
@@ -177,6 +178,7 @@ public partial class DeviceDisposalTests
     }
 
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     private partial struct HelloWorldShader : IComputeShader<float4>
     {
         public float4 Execute()

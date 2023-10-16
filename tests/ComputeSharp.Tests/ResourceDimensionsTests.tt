@@ -133,6 +133,7 @@ foreach (var pair in typesMap)
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct <#=testMethodName#>Shader : IComputeShader
     {
         public readonly <#=shaderResourceType#> source;

@@ -1,7 +1,11 @@
+extern alias Core;
+extern alias D3D12;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Basic.Reference.Assemblies;
 using ComputeSharp.SourceGenerators;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,20 +23,15 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public class ReadWriteBuffer<T> { }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-                    public string text;
+                public ReadWriteBuffer<float> buffer;
+                public string text;
 
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -45,20 +44,15 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public unsafe partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
+                public fixed int text[16];
 
-            namespace MyFancyApp.Sample
-            {
-                public unsafe struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-                    public fixed int text[16];
-
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -71,23 +65,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public class GroupSharedAttribute : Attribute { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                [GroupShared]
+                public static string text;
 
-                    [GroupShared]
-                    public static string text;
-
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -100,23 +88,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public class GroupSharedAttribute : Attribute { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                [GroupShared]
+                public static string[] text;
 
-                    [GroupShared]
-                    public static string[] text;
-
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -129,21 +111,15 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public class GroupSharedAttribute : Attribute { }
-            }
+                [GroupShared]
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    [GroupShared]
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -156,12 +132,12 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace MyFancyApp.Sample
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public struct MyShader : IComputeShader
-                {
-                    public void Execute() { }
-                }
+                public void Execute() { }
             }
             """;
 
@@ -179,24 +155,18 @@ public class DiagnosticsTests
         string source = $$"""
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public static class {{typeName}} { public static int X => 0; }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
+                    static int Fail() => {{typeName}}.X;
 
-                    public void Execute()
-                    {
-                        static int Fail() => {{typeName}}.X;
-
-                        Fail();
-                    }
+                    Fail();
                 }
             }
             """;
@@ -215,22 +185,16 @@ public class DiagnosticsTests
         string source = $$"""
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public static class {{typeName}} { public static int X => 0; }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public static int Fail() => {{typeName}}.X;
 
-                    public static int Fail() => {{typeName}}.X;
-
-                    public void Execute() => Fail();
-                }
+                public void Execute() => Fail();
             }
             """;
 
@@ -243,24 +207,18 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public static class ThreadIds { public static class Normalized { public static int X => 0; } }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public static int Fail() => ThreadIds.Normalized.X;
+
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public static int Fail() => ThreadIds.Normalized.X;
-
-                    public void Execute()
-                    {
-                        buffer[0] = Fail();
-                    }
+                    buffer[0] = Fail();
                 }
             }
             """;
@@ -274,21 +232,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        object o = new object();
-                    }
+                    object o = new object();
                 }
             }
             """;
@@ -302,21 +255,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        object o = new();
-                    }
+                    object o = new();
                 }
             }
             """;
@@ -330,21 +278,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        var o = new { Age = 12 };
-                    }
+                    var o = new { Age = 12 };
                 }
             }
             """;
@@ -358,23 +301,18 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
+                    static async void Fail() { }
 
-                    public void Execute()
-                    {
-                        static async void Fail() { }
-
-                        Fail();
-                    }
+                    Fail();
                 }
             }
             """;
@@ -388,21 +326,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public static async void Fail() { }
 
-                    public static async void Fail() { }
-
-                    public void Execute() => Fail();
-                }
+                public void Execute() => Fail();
             }
             """;
 
@@ -415,21 +348,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public async void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public async void Execute()
-                    {
-                        await null;
-                    }
+                    await System.Threading.Tasks.Task.CompletedTask;
                 }
             }
             """;
@@ -445,21 +373,16 @@ public class DiagnosticsTests
         string source = $$"""
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        int a = {{text}}(1 + 1);
-                    }
+                    int a = {{text}}(1 + 1);
                 }
             }
             """;
@@ -475,23 +398,18 @@ public class DiagnosticsTests
         string source = $$"""
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
+                    {{text}}
                     {
-                        {{text}}
-                        {
-                            int a = 1 + 1;
-                        }
+                        int a = 1 + 1;
                     }
                 }
             }
@@ -506,31 +424,23 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public class ReadWriteBuffer<T>
-                {
-                    public int[] Data;
-                }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public ReadWriteBuffer<float> buffer;
 
-                    public void Execute()
-                    {                        
-                        fixed (void* p = buffer.Data)
-                        {
-                        }
+                public unsafe void Execute()
+                {                        
+                    fixed (void* p = buffer.Data)
+                    {
                     }
                 }
             }
             """;
 
-        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0047");
+        VerifyGeneratedDiagnostics<ComputeShaderDescriptorGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -539,25 +449,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public int[] Data;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {                        
-                        foreach (int i in buffer.Data)
-                        {
-                        }
+                public void Execute()
+                {                        
+                    foreach (int i in buffer.Data)
+                    {
                     }
                 }
             }
@@ -572,22 +474,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {                        
-                        lock (buffer)
-                        {
-                        }
+                public void Execute()
+                {                        
+                    lock (buffer)
+                    {
                     }
                 }
             }
@@ -602,24 +499,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public int[] Data;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        _ = from x in buffer.Data select x;
-                    }
+                public void Execute()
+                {               
+                    _ = from x in buffer.Data select x;
                 }
             }
             """;
@@ -633,24 +522,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public int[] Data;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        _ = buffer.Data[1..];
-                    }
+                public void Execute()
+                {               
+                    _ = buffer.Data[1..];
                 }
             }
             """;
@@ -664,25 +545,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public object Data;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        if (buffer.Data is int[] { Length: 50 } foo)
-                        {
-                        }
+                public void Execute()
+                {               
+                    if (buffer.Data is int[] { Length: 50 } foo)
+                    {
                     }
                 }
             }
@@ -697,24 +570,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public ref T this[int x] => throw null;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        ref float x = ref buffer[0];
-                    }
+                public void Execute()
+                {               
+                    ref float x = ref buffer[0];
                 }
             }
             """;
@@ -728,25 +593,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T>
-                {
-                    public int Data;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        if (buffer.Data is > 0 and < 10)
-                        {
-                        }
+                public void Execute()
+                {               
+                    if (buffer.Data is > 0 and < 10)
+                    {
                     }
                 }
             }
@@ -761,21 +618,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        _ = sizeof(float);
-                    }
+                public void Execute()
+                {               
+                    _ = sizeof(float);
                 }
             }
             """;
@@ -789,21 +641,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        int* p = stackalloc int[10];
-                    }
+                public void Execute()
+                {               
+                    int* p = stackalloc int[10];
                 }
             }
             """;
@@ -817,21 +664,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {               
-                        throw null;
-                    }
+                public void Execute()
+                {               
+                    throw null;
                 }
             }
             """;
@@ -845,25 +687,20 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
+                    try
                     {
-                        try
-                        {
-                        }
-                        catch
-                        {
-                        }
+                    }
+                    catch
+                    {
                     }
                 }
             }
@@ -878,21 +715,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        (int, float) foo;
-                    }
+                    (int, float) foo;
                 }
             }
             """;
@@ -906,21 +738,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        using IDisposable foo = null
-                    }
+                    using IDisposable foo = null
                 }
             }
             """;
@@ -934,22 +761,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
+                    using (IDisposable foo = null)
                     {
-                        using (IDisposable foo = null)
-                        {
-                        }
                     }
                 }
             }
@@ -965,26 +787,21 @@ public class DiagnosticsTests
             using System.Collections.Generic;
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public static IEnumerable<float> Fail()
                 {
-                    public ReadWriteBuffer<float> buffer;
+                    yield return 3.14f;
+                }
 
-                    public static IEnumerable<float> Fail()
-                    {
-                        yield return 3.14f;
-                    }
-
-                    public void Execute()
-                    {
-                        Fail();
-                    }
+                public void Execute()
+                {
+                    Fail();
                 }
             }
             """;
@@ -998,21 +815,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        string bar;
-                    }
+                    string bar;
                 }
             }
             """;
@@ -1026,21 +838,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        int* p;
-                    }
+                    int* p;
                 }
             }
             """;
@@ -1054,21 +861,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        delegate*<int, void> f;
-                    }
+                    delegate*<int, void> f;
                 }
             }
             """;
@@ -1082,22 +884,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
+                    unsafe
                     {
-                        unsafe
-                        {
-                        }
                     }
                 }
             }
@@ -1112,23 +909,18 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
+                    static unsafe void Fail() { }
 
-                    public void Execute()
-                    {
-                        static unsafe void Fail() { }
-
-                        Fail();
-                    }
+                    Fail();
                 }
             }
             """;
@@ -1142,23 +934,18 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public static unsafe void Fail() { }
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
                 {
-                    public static unsafe void Fail() { }
-
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        Fail();
-                    }
+                    Fail();
                 }
             }
             """;
@@ -1172,21 +959,16 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        _ = "Hello world";
-                    }
+                    _ = "Hello world";
                 }
             }
             """;
@@ -1203,34 +985,18 @@ public class DiagnosticsTests
             using float4 = ComputeSharp.Float4;
             using float4x4 = ComputeSharp.Float4x4;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public enum MatrixIndex
-                {
-                    M11,
-                    M12,
-                    M13
-                },
-                public struct Float4 { }
-                public struct Float4x4
-                {
-                    public Float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
-                }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        float4x4 m = default;
-                        MatrixIndex index = M12;
-                        float4 = m[M11, index, M13, M11];
-                    }
+                    float4x4 m = default;
+                    MatrixIndex index = M12;
+                    float4 = m[M11, index, M13, M11];
                 }
             }
             """;
@@ -1244,22 +1010,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                private static string Pi = ""Hello"";
+
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    private static string Pi = ""Hello"";
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1273,22 +1034,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                private static float Pi { get; } = 3.14f;
+
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    private static float Pi { get; } = 3.14f;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1302,27 +1058,22 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+
+            public interface IFoo
             {
-                public class ReadWriteBuffer<T> { }
+                float Pi { get; }
             }
-
-            namespace MyFancyApp.Sample
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader, IFoo
             {
-                public interface IFoo
+                public ReadWriteBuffer<float> buffer;
+
+                float IFoo.Pi { get; } = 3.14f;
+
+                public void Execute()
                 {
-                    float Pi { get; }
-                }
-
-                public struct MyShader : IComputeShader, IFoo
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    float IFoo.Pi { get; } = 3.14f;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1336,25 +1087,20 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                private static float Pi
                 {
-                    public ReadWriteBuffer<float> buffer;
+                    get => 3.14f;
+                }
 
-                    private static float Pi
-                    {
-                        get => 3.14f;
-                    }
-
-                    public void Execute()
-                    {
-                    }
+                public void Execute()
+                {
                 }
             }
             """;
@@ -1368,22 +1114,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                private static float Pi { get; set; } = 3.14f;
+
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    private static float Pi { get; set; } = 3.14f;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1397,22 +1138,17 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                private float Pi => 3.14f;
+
+                public void Execute()
                 {
-                    public ReadWriteBuffer<float> buffer;
-
-                    private float Pi => 3.14f;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1428,26 +1164,19 @@ public class DiagnosticsTests
             using double4x4 = ComputeSharp.Double4x4;
             using float4 = ComputeSharp.Float4;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-                public struct Double4x4 { }
-                public struct Float4 { }
-            }
+                public readonly ReadWriteBuffer<float> buffer;
+                public readonly double4x4 a;
+                public readonly double4x4 b;
+                public readonly int c;
+                public readonly float4 d;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public readonly ReadWriteBuffer<float> buffer;
-                    public readonly double4x4 a;
-                    public readonly double4x4 b;
-                    public readonly int c;
-                    public readonly float4 d;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1461,19 +1190,13 @@ public class DiagnosticsTests
         const string source = """
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader, IComputeShader<float4>
             {
-                public interface IComputeShader { }
-                public interface IComputeShader<TPixel> { }
-            }
-
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader, IComputeShader<float4>
+                public void Execute()
                 {
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1494,26 +1217,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public interface IComputeShader { }
-                public class ReadWriteBuffer<T> { }
-                public class EmbeddedBytecodeAttribute : Attribute
-                {
-                    public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ) { }
-                }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [EmbeddedBytecode({{threadsX}}, {{threadsY}}, {{threadsZ}})]
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                [EmbeddedBytecode({{threadsX}}, {{threadsY}}, {{threadsZ}})]
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public ReadWriteBuffer<float> buffer;
 
-                    public void Execute()
-                    {
-                    }
+                public void Execute()
+                {
                 }
             }
             """;
@@ -1528,27 +1241,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public interface IComputeShader { }
-                public class ReadWriteBuffer<T> { }
-                public enum DispatchAxis { X, Y, Z, XY, XZ, YZ, XYZ }
-                public class EmbeddedBytecodeAttribute : Attribute
-                {
-                    public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) { }
-                }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [EmbeddedBytecode(DispatchAxis.XYZ | DispatchAxis.Y)]
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                [EmbeddedBytecode(DispatchAxis.XYZ | DispatchAxis.Y)]
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public ReadWriteBuffer<float> buffer;
 
-                    public void Execute()
-                    {
-                    }
+                public void Execute()
+                {
                 }
             }
             """;
@@ -1563,27 +1265,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public interface IComputeShader { }
-                public class ReadWriteBuffer<T> { }
-                public enum DispatchAxis { X, Y, Z, XY, XZ, YZ, XYZ }
-                public class EmbeddedBytecodeAttribute : Attribute
-                {
-                    public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) { }
-                }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [EmbeddedBytecode((DispatchAxis)243712)]
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                [EmbeddedBytecode((DispatchAxis)243712)]
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public ReadWriteBuffer<float> buffer;
 
-                    public void Execute()
-                    {
-                    }
+                public void Execute()
+                {
                 }
             }
             """;
@@ -1598,27 +1289,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
-            {
-                public interface IComputeShader { }
-                public class ReadWriteBuffer<T> { }
-                public enum DispatchAxis { X, Y, Z, XY, XZ, YZ, XYZ }
-                public class EmbeddedBytecodeAttribute : Attribute
-                {
-                    public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) { }
-                }
-            }
+            namespace MyFancyApp.Sample;
 
-            namespace MyFancyApp.Sample
+            [EmbeddedBytecode((DispatchAxis)(-289))]
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                [EmbeddedBytecode((DispatchAxis)(-289))]
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
+                public ReadWriteBuffer<float> buffer;
 
-                    public void Execute()
-                    {
-                    }
+                public void Execute()
+                {
                 }
             }
             """;
@@ -1633,21 +1313,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public readonly ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public readonly ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        buffer[0] = Convert.ToSingle(42);
-                    }
+                    buffer[0] = Convert.ToSingle(42);
                 }
             }
             """;
@@ -1662,21 +1337,16 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public class ReadWriteBuffer<T> { }
-            }
+                public readonly ReadWriteBuffer<float> buffer;
 
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public readonly ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        buffer[0] = (byte)42;
-                    }
+                    buffer[0] = (byte)42;
                 }
             }
             """;
@@ -1691,27 +1361,22 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+
+            public struct Foo
             {
-                public class ReadWriteBuffer<T> { }
+                public DateTime bar;
             }
-
-            namespace MyFancyApp.Sample
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public struct Foo
-                {
-                    public DateTime bar;
-                }
+                public readonly ReadWriteBuffer<float> buffer;
 
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public readonly ReadWriteBuffer<float> buffer;
-
-                    public void Execute()
-                    {
-                        Foo foo = default;
-                        buffer[0] = 42;
-                    }
+                    Foo foo = default;
+                    buffer[0] = 42;
                 }
             }
             """;
@@ -1726,25 +1391,20 @@ public class DiagnosticsTests
             using System;
             using ComputeSharp;
 
-            namespace ComputeSharp
+            namespace MyFancyApp.Sample;
+
+            public struct Foo
             {
-                public class ReadWriteBuffer<T> { }
+                public bool bar;
             }
-
-            namespace MyFancyApp.Sample
+            
+            [GeneratedComputeShaderDescriptor]
+            public partial struct MyShader : IComputeShader
             {
-                public struct Foo
-                {
-                    public bool bar;
-                }
+                public readonly ReadWriteBuffer<Foo> buffer;
 
-                public struct MyShader : IComputeShader
+                public void Execute()
                 {
-                    public readonly ReadWriteBuffer<Foo> buffer;
-
-                    public void Execute()
-                    {
-                    }
                 }
             }
             """;
@@ -1761,28 +1421,53 @@ public class DiagnosticsTests
     private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
         where TGenerator : class, IIncrementalGenerator, new()
     {
-        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+        // Ensure ComputeSharp.Core and ComputeSharp are loaded
+        Type hlslType = typeof(Core::ComputeSharp.Hlsl);
+        Type computeShaderType = typeof(D3D12::ComputeSharp.IComputeShader);
 
-        IEnumerable<MetadataReference> references =
-            from assembly in AppDomain.CurrentDomain.GetAssemblies()
-            where !assembly.IsDynamic
-            let reference = MetadataReference.CreateFromFile(assembly.Location)
-            select reference;
+        // Prepare the two additional metadata references
+        IEnumerable<MetadataReference> additionalReferences = new[]
+        {
+            MetadataReference.CreateFromFile(hlslType.Assembly.Location),
+            MetadataReference.CreateFromFile(computeShaderType.Assembly.Location)
+        };
 
+        // Get all assembly references for the loaded assemblies (easy way to pull in all necessary dependencies)
+        IEnumerable<MetadataReference> metadataReferences = Net70.References.All.Concat(additionalReferences);
+
+        // Parse the source text (C# 11)
+        SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
+            source,
+            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp11));
+
+        // Create the original compilation
         CSharpCompilation compilation = CSharpCompilation.Create(
             "original",
-            new SyntaxTree[] { syntaxTree },
-            references,
+            new SyntaxTree[] { sourceTree },
+            metadataReferences,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true));
 
-        IIncrementalGenerator generator = new TGenerator();
+        // Run the generator on the source compilation, get the diagnostics
+        _ = CSharpGeneratorDriver.Create(new TGenerator()).RunGeneratorsAndUpdateCompilation(
+            compilation,
+            out Compilation outputCompilation,
+            out ImmutableArray<Diagnostic> diagnostics);
 
-        CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        Dictionary<string, Diagnostic> diagnosticMap = diagnostics.DistinctBy(diagnostic => diagnostic.Id).ToDictionary(diagnostic => diagnostic.Id);
 
-        _ = driver.RunGeneratorsAndUpdateCompilation(compilation, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics);
+        // Check that the diagnostics match
+        Assert.IsTrue(diagnosticMap.Keys.ToHashSet().SetEquals(diagnosticsIds), $"Diagnostics didn't match. {string.Join(", ", diagnosticMap.Values)}");
 
-        HashSet<string> resultingIds = diagnostics.Select(diagnostic => diagnostic.Id).ToHashSet();
+        // If the compilation was supposed to succeed, ensure that no further errors were generated
+        if (diagnosticsIds.Length == 0)
+        {
+            // Compute diagnostics for the final compiled output (just include errors)
+            List<Diagnostic> outputCompilationDiagnostics = outputCompilation.GetDiagnostics().Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error).ToList();
 
-        Assert.IsTrue(resultingIds.SetEquals(diagnosticsIds));
+            Assert.IsTrue(outputCompilationDiagnostics.Count == 0, $"resultingIds: {string.Join(", ", outputCompilationDiagnostics)}");
+        }
+
+        GC.KeepAlive(hlslType);
+        GC.KeepAlive(computeShaderType);
     }
 }

@@ -43,8 +43,6 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         return default;
                     }
 
-                    StructDeclarationSyntax typeDeclaration = (StructDeclarationSyntax)context.TargetNode;
-
                     // Check that the shader implements the ID2D1PixelShader interface
                     if (!typeSymbol.HasInterfaceWithType(context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!))
                     {
@@ -110,7 +108,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     string hlslSource = HlslSource.GetHlslSource(
                         diagnostics,
                         context.SemanticModel.Compilation,
-                        typeDeclaration,
+                        (StructDeclarationSyntax)context.TargetNode,
                         typeSymbol,
                         inputCount,
                         inputSimpleIndices,

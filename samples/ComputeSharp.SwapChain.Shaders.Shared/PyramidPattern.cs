@@ -8,6 +8,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
+[GeneratedComputeShaderDescriptor]
 internal readonly partial struct PyramidPattern : IComputeShader<float4>
 {
     /// <summary>

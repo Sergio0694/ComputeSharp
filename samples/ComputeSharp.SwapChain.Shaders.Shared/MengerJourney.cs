@@ -7,6 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
+[GeneratedComputeShaderDescriptor]
 internal readonly partial struct MengerJourney : IComputeShader<float4>
 {
     /// <summary>

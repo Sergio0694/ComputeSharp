@@ -11,6 +11,7 @@ public partial class ShaderDataLoaderTests
 {
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct CapturedResourceShader : IComputeShader
     {
         public ReadWriteBuffer<float> _;
@@ -46,6 +47,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct MultipleResourcesAndPrimitivesShader : IComputeShader
     {
         public ReadWriteBuffer<float> _0;
@@ -91,6 +93,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct ScalarAndVectorTypesShader : IComputeShader
     {
         public ReadWriteBuffer<float> _;
@@ -141,6 +144,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
     {
         public ReadWriteBuffer<float> _;
@@ -226,6 +230,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct FlatCustomTypeShader : IComputeShader
     {
         public ReadWriteBuffer<float> _0;
@@ -317,6 +322,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct NestedCustomTypesShader : IComputeShader
     {
         public ReadWriteBuffer<float> _0;
@@ -408,6 +414,7 @@ public partial class ShaderDataLoaderTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public partial struct AmbiguousNamesShader : IComputeShader
     {
         public ReadWriteBuffer<float> a;

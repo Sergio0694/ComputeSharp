@@ -8,6 +8,11 @@ namespace ComputeSharp.SourceGeneration.Diagnostics;
 partial class DiagnosticDescriptors
 {
     /// <summary>
+    /// The diagnostic id for <see cref="MissingComputeShaderDescriptorOnComputeShaderType"/>.
+    /// </summary>
+    public const string MissingComputeShaderDescriptorOnComputeShaderTypeId = "CMPS0053";
+
+    /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader field.
     /// <para>
     /// Format: <c>"The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}"</c>.
@@ -16,7 +21,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidShaderField = new DiagnosticDescriptor(
         id: "CMPS0001",
         title: "Invalid shader field",
-        messageFormat: "The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}",
+        messageFormat: """The compute shader of type {0} contains a field "{1}" of an invalid type {2}""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -32,7 +37,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidGroupSharedFieldType = new DiagnosticDescriptor(
         id: "CMPS0002",
         title: "Invalid group shared field type",
-        messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2} (it must be an array)",
+        messageFormat: """The compute shader of type {0} contains a group shared field "{1}" of an invalid type {2} (it must be an array)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -48,7 +53,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidGroupSharedFieldElementType = new DiagnosticDescriptor(
         id: "CMPS0003",
         title: "Invalid group shared field element type",
-        messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2} (it must be a primitive or unmanaged type)",
+        messageFormat: """The compute shader of type {0} contains a group shared field "{1}" of an invalid type {2} (it must be a primitive or unmanaged type)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -64,7 +69,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidGroupSharedFieldDeclaration = new DiagnosticDescriptor(
         id: "CMPS0004",
         title: "Invalid group shared field declaration",
-        messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" that is not static",
+        messageFormat: """The compute shader of type {0} contains a group shared field "{1}" that is not static""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -512,13 +517,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader static field type.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains a static field \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+    /// Format: <c>"The compute shader of type {0} contains a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new DiagnosticDescriptor(
         id: "CMPS0038",
         title: "Invalid shader static field type",
-        messageFormat: "The compute shader of type {0} contains a static field \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)",
+        messageFormat: """The compute shader of type {0} contains a static field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -541,13 +546,13 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
     /// <para>
-    /// Format: <c>"The compute shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
+    /// Format: <c>"The compute shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new DiagnosticDescriptor(
         id: "CMPS0040",
         title: "Invalid property declaration",
-        messageFormat: "The compute shader of type {0} contains an invalid property \"{1}\" declaration (only stateless properties explicitly implementing an interface property can be used)",
+        messageFormat: """The compute shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -611,7 +616,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new DiagnosticDescriptor(
         id: "CMPS0045",
         title: "Embedded bytecode compilation failed due to Win32 exception",
-        messageFormat: "The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: \"{2}\")",
+        messageFormat: """The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -627,7 +632,7 @@ partial class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithDxcCompilationException = new DiagnosticDescriptor(
         id: "CMPS0046",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
-        messageFormat: "The shader of type {0} failed to compile due to an HLSL compiler error (Message: \"{1}\")",
+        messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -730,4 +735,37 @@ partial class DiagnosticDescriptors
         description: "Unsafe blocks must be enabled for the source generators to emit valid code (the <AllowUnsafeBlocks>true</AllowUnsafeBlocks> option must be set in the .csproj/.props file).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp",
         customTags: WellKnownDiagnosticTags.CompilationEnd);
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a compute shader type doesn't have an associated descriptor.
+    /// <para>
+    /// Format: <c>"The compute shader of type {0} does not have an associated descriptor (it can be autogenerated via the [GeneratedComputeShaderDescriptor] attribute)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingComputeShaderDescriptorOnComputeShaderType = new DiagnosticDescriptor(
+        id: MissingComputeShaderDescriptorOnComputeShaderTypeId,
+        title: "Missing descriptor for compute pixel shader type",
+        messageFormat: "The compute shader of type {0} does not have an associated descriptor (it can be autogenerated via the [GeneratedComputeShaderDescriptor] attribute)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "All compute shader types must have an associated descriptor (it can be autogenerated via the [GeneratedComputeShaderDescriptor] attribute).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp",
+        customTags: WellKnownDiagnosticTags.CompilationEnd);
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when the <c>[GeneratedComputeShaderDescriptor]</c> attribute is being used on an invalid target type.
+    /// <para>
+    /// Format: <c>"The type {0} is not a valid target for the [GeneratedComputeShaderDescriptor] attribute (only types implementing the IComputeShader or IComputeShader&lt;TPixel&gt; interface are valid)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidGeneratedPixelShaderDescriptorAttributeTarget = new DiagnosticDescriptor(
+        id: "CMPS0054",
+        title: "Invalid [GeneratedComputeShaderDescriptor] attribute target",
+        messageFormat: "The type {0} is not a valid target for the [GeneratedComputeShaderDescriptor] attribute (only types implementing the IComputeShader or IComputeShader<TPixel> interface are valid)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [GeneratedComputeShaderDescriptor] attribute must be used on types that implement the IComputeShader or IComputeShader<TPixel> interfaces.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
