@@ -51,13 +51,15 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
-                    // Dispatch data loading info
-                    ImmutableArray<FieldInfo> fieldInfos = DispatchDataLoading.GetInfo(
+                    // Get the fields info
+                    DispatchDataLoading.GetInfo(
                         diagnostics,
                         typeSymbol,
                         isPixelShaderLike,
                         out int constantBufferSizeInBytes,
-                        out int resourceCount);
+                        out int resourceCount,
+                        out ImmutableArray<FieldInfo> fieldInfos,
+                        out ImmutableArray<ResourceInfo> resourceInfo);
 
                     token.ThrowIfCancellationRequested();
 
@@ -91,7 +93,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     ImmutableArray<ResourceDescriptor> resourceDescriptors = ResourceDescriptorRanges.GetInfo(
                         isImplicitTextureUsed,
                         isSamplerUsed,
-                        fieldInfos);
+                        resourceInfo);
 
                     token.ThrowIfCancellationRequested();
 
@@ -122,6 +124,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         ConstantBufferSizeInBytes: constantBufferSizeInBytes,
                         ResourceCount: resourceCount,
                         Fields: fieldInfos,
+                        Resources: resourceInfo,
                         ResourceDescriptors: resourceDescriptors,
                         HlslInfoKey: hlslInfoKey,
                         HlslInfo: hlslInfo,

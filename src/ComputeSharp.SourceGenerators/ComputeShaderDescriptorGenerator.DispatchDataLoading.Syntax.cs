@@ -103,12 +103,9 @@ partial class ComputeShaderDescriptorGenerator
             using (writer.WriteBlock())
             {
                 // Generate loading statements for each captured resource
-                foreach (FieldInfo fieldInfo in info.Fields)
+                foreach (ResourceInfo resource in info.Resources)
                 {
-                    if (fieldInfo is FieldInfo.Resource resource)
-                    {
-                        writer.WriteLine($"loader.LoadGraphicsResource(shader.{resource.FieldName}, {resource.Offset});");
-                    }
+                    writer.WriteLine($"loader.LoadGraphicsResource(shader.{resource.FieldName}, {resource.Offset});");
                 }
             }
         }

@@ -15,6 +15,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
 /// <param name="ResourceCount">The total number of captured resources in the shader.</param>
 /// <param name="Fields">The description on shader instance fields.</param>
+/// <param name="Resources">The description on shader captured resources.</param>
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
 /// <param name="HlslInfoKey">The key with processed info on the shader.</param>
 /// <param name="HlslInfo">The value with processed info on the shader.</param>
@@ -29,6 +30,7 @@ internal sealed record ShaderInfo(
     int ConstantBufferSizeInBytes,
     int ResourceCount,
     EquatableArray<FieldInfo> Fields,
+    EquatableArray<ResourceInfo> Resources,
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -30,79 +27,89 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="resourceCount">The total number of captured resources in the shader.</param>
-        /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
-        public static ImmutableArray<FieldInfo> GetInfo(
+        /// <param name="fields">The sequence of <see cref="FieldInfo"/> instances for all captured values.</param>
+        /// <param name="resources">The sequence of <see cref="ResourceInfo"/> instances for all captured resources.</param>
+        public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             ITypeSymbol structDeclarationSymbol,
             bool isPixelShaderLike,
             out int constantBufferSizeInBytes,
-            out int resourceCount)
+            out int resourceCount,
+            out ImmutableArray<FieldInfo> fields,
+            out ImmutableArray<ResourceInfo> resources)
         {
-            // Helper method that uses boxes instead of ref-s (illegal in enumerators)
-            static IEnumerable<FieldInfo> GetCapturedFieldInfos(
+            static void GetInfo(
                 ITypeSymbol currentTypeSymbol,
                 ImmutableArray<string> fieldPath,
-                StrongBox<int> resourceOffset,
-                StrongBox<int> rawDataOffset)
+                ref int resourceOffset,
+                ref int rawDataOffset,
+                ImmutableArrayBuilder<FieldInfo> fields,
+                ImmutableArrayBuilder<ResourceInfo> resources)
             {
                 bool isFirstField = true;
 
-                foreach (
-                   IFieldSymbol fieldSymbol in
-                   from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
-                   where fieldSymbol is { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
-                   select fieldSymbol)
+                foreach (ISymbol memberSymbol in currentTypeSymbol.GetMembers())
                 {
+                    // Only process fields
+                    if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                    {
+                        continue;
+                    }
+
                     string fieldName = fieldSymbol.Name;
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
 
                     // The first item in each nested struct needs to be aligned to 16 bytes
                     if (isFirstField && fieldPath.Length > 0)
                     {
-                        rawDataOffset.Value = AlignmentHelper.Pad(rawDataOffset.Value, 16);
+                        rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
 
                         isFirstField = false;
                     }
 
                     if (HlslKnownTypes.IsTypedResourceType(typeName))
                     {
-                        yield return new FieldInfo.Resource(fieldName, typeName, resourceOffset.Value++);
+                        resources.Add(new ResourceInfo(fieldName, typeName, resourceOffset++));
                     }
                     else if (HlslKnownTypes.IsKnownHlslType(typeName))
                     {
-                        yield return GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset.Value);
+                        fields.Add(GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset));
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), resourceOffset, rawDataOffset))
-                        {
-                            yield return fieldInfo;
-                        }
+                        GetInfo(fieldSymbol.Type, fieldPath.Add(fieldName), ref resourceOffset, ref rawDataOffset, fields, resources);
                     }
                 }
             }
 
             // Setup the resource and byte offsets for tracking. Pixel shaders have only two
             // implicitly captured int values, as they're always dispatched over a 2D texture.
-            int initialRawDataOffset = sizeof(int) * (isPixelShaderLike ? 2 : 3);
-            StrongBox<int> resourceOffsetAsBox = new();
-            StrongBox<int> rawDataOffsetAsBox = new(initialRawDataOffset);
+            int rawDataOffset = sizeof(int) * (isPixelShaderLike ? 2 : 3);
+            int resourceOffset = 0;
 
-            // Traverse all shader fields and gather info, and update the tracking offsets
-            ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
-                structDeclarationSymbol,
-                ImmutableArray<string>.Empty,
-                resourceOffsetAsBox,
-                rawDataOffsetAsBox).ToImmutableArray();
+            using (ImmutableArrayBuilder<FieldInfo> fieldBuilder = new())
+            using (ImmutableArrayBuilder<ResourceInfo> resourceBuilder = new())
+            {
+                // Traverse all shader fields and gather info, and update the tracking offsets
+                GetInfo(
+                    structDeclarationSymbol,
+                    ImmutableArray<string>.Empty,
+                    ref resourceOffset,
+                    ref rawDataOffset,
+                    fieldBuilder,
+                    resourceBuilder);
 
-            resourceCount = resourceOffsetAsBox.Value;
+                resourceCount = resourceOffset;
+                fields = fieldBuilder.ToImmutable();
+                resources = resourceBuilder.ToImmutable();
+            }
 
             // After all the captured fields have been processed, ensure the reported byte size for
             // the local variables is padded to a multiple of a 32 bit value. This is necessary to
             // enable loading all the dispatch data after reinterpreting it to a sequence of values
             // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-            constantBufferSizeInBytes = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int));
+            constantBufferSizeInBytes = AlignmentHelper.Pad(rawDataOffset, sizeof(int));
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
             // Loaded values in the root signature have the following costs:
@@ -118,8 +125,6 @@ partial class ComputeShaderDescriptorGenerator
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
-
-            return fieldInfos;
         }
 
         /// <summary>
