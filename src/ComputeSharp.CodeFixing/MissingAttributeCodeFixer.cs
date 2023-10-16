@@ -54,16 +54,16 @@ public abstract class MissingAttributeCodeFixer : CodeFixProvider
     }
 
     /// <inheritdoc/>
-    public override ImmutableArray<string> FixableDiagnosticIds { get; }
+    public sealed override ImmutableArray<string> FixableDiagnosticIds { get; }
 
     /// <inheritdoc/>
-    public override Microsoft.CodeAnalysis.CodeFixes.FixAllProvider? GetFixAllProvider()
+    public sealed override Microsoft.CodeAnalysis.CodeFixes.FixAllProvider? GetFixAllProvider()
     {
         return new FixAllProvider(this);
     }
 
     /// <inheritdoc/>
-    public override async Task RegisterCodeFixesAsync(CodeFixContext context)
+    public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
     {
         Diagnostic diagnostic = context.Diagnostics[0];
         TextSpan diagnosticSpan = context.Span;
