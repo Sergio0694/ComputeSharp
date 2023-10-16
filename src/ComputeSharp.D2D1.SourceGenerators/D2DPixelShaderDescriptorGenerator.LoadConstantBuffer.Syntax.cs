@@ -2,6 +2,7 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
+using ComputeSharp.SourceGeneration.Models;
 
 namespace ComputeSharp.D2D1.SourceGenerators;
 
