@@ -29,6 +29,7 @@ public partial class ThreadGroupSizeTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchXShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -41,6 +42,7 @@ public partial class ThreadGroupSizeTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchXYShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -53,6 +55,7 @@ public partial class ThreadGroupSizeTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchXYZShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -65,6 +68,7 @@ public partial class ThreadGroupSizeTests
 
     [AutoConstructor]
     [EmbeddedBytecode(11, 14, 6)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchCustomShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;

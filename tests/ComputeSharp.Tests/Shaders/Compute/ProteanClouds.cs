@@ -10,6 +10,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.XY)]
+[GeneratedComputeShaderDescriptor]
 internal readonly partial struct ProteanClouds : IComputeShader
 {
     /// <summary>

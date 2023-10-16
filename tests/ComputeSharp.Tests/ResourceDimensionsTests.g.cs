@@ -30,6 +30,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyBuffer_T1_AsReadOnlyBufferShader : IComputeShader
     {
         public readonly ReadOnlyBuffer<float> source;
@@ -63,6 +64,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteBuffer_T1_AsReadWriteBufferShader : IComputeShader
     {
         public readonly ReadWriteBuffer<float> source;
@@ -96,6 +98,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T1_AsReadOnlyTexture1DShader : IComputeShader
     {
         public readonly ReadOnlyTexture1D<float> source;
@@ -129,6 +132,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T1_AsReadWriteTexture1DShader : IComputeShader
     {
         public readonly ReadWriteTexture1D<float> source;
@@ -166,6 +170,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T1_AsIReadOnlyTexture1DShader : IComputeShader
     {
         public readonly IReadOnlyTexture1D<float> source;
@@ -199,6 +204,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T2_AsReadOnlyTexture1DShader : IComputeShader
     {
         public readonly ReadOnlyTexture1D<Rgba32, float4> source;
@@ -232,6 +238,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T2_AsIReadOnlyNormalizedTexture1DShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture1D<float4> source;
@@ -265,6 +272,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T2_AsReadWriteTexture1DShader : IComputeShader
     {
         public readonly ReadWriteTexture1D<Rgba32, float4> source;
@@ -298,6 +306,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T2_AsIReadWriteNormalizedTexture1DShader : IComputeShader
     {
         public readonly IReadWriteNormalizedTexture1D<float4> source;
@@ -331,6 +340,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T1_AsReadOnlyTexture2DShader : IComputeShader
     {
         public readonly ReadOnlyTexture2D<float> source;
@@ -365,6 +375,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T1_AsReadWriteTexture2DShader : IComputeShader
     {
         public readonly ReadWriteTexture2D<float> source;
@@ -403,6 +414,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T1_AsIReadOnlyTexture2DShader : IComputeShader
     {
         public readonly IReadOnlyTexture2D<float> source;
@@ -437,6 +449,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T2_AsReadOnlyTexture2DShader : IComputeShader
     {
         public readonly ReadOnlyTexture2D<Rgba32, float4> source;
@@ -471,6 +484,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T2_AsIReadOnlyNormalizedTexture2DShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
@@ -505,6 +519,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T2_AsReadWriteTexture2DShader : IComputeShader
     {
         public readonly ReadWriteTexture2D<Rgba32, float4> source;
@@ -539,6 +554,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T2_AsIReadWriteNormalizedTexture2DShader : IComputeShader
     {
         public readonly IReadWriteNormalizedTexture2D<float4> source;
@@ -573,6 +589,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T1_AsReadOnlyTexture3DShader : IComputeShader
     {
         public readonly ReadOnlyTexture3D<float> source;
@@ -608,6 +625,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T1_AsReadWriteTexture3DShader : IComputeShader
     {
         public readonly ReadWriteTexture3D<float> source;
@@ -647,6 +665,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T1_AsIReadOnlyTexture3DShader : IComputeShader
     {
         public readonly IReadOnlyTexture3D<float> source;
@@ -682,6 +701,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T2_AsReadOnlyTexture3DShader : IComputeShader
     {
         public readonly ReadOnlyTexture3D<Rgba32, float4> source;
@@ -717,6 +737,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T2_AsIReadOnlyNormalizedTexture3DShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture3D<float4> source;
@@ -752,6 +773,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T2_AsReadWriteTexture3DShader : IComputeShader
     {
         public readonly ReadWriteTexture3D<Rgba32, float4> source;
@@ -787,6 +809,7 @@ public partial class ResourceDimensionsTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T2_AsIReadWriteNormalizedTexture3DShader : IComputeShader
     {
         public readonly IReadWriteNormalizedTexture3D<float4> source;

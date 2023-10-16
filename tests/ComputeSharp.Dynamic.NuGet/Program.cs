@@ -35,6 +35,7 @@ Trace.Assert(shaderInfo.BoundResourceCount == 2);
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.X)]
+[GeneratedComputeShaderDescriptor]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {
     public readonly ReadWriteBuffer<float> buffer;

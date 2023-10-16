@@ -53,6 +53,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct NanAndInfiniteShader : IComputeShader
     {
         public readonly ReadWriteBuffer<float> buffer1;
@@ -114,6 +115,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ModAndComparisonOperatorsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<float> buffer;
@@ -176,6 +178,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BitwiseOperatorsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -229,6 +232,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BooleanOperatorsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -279,6 +283,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ToBooleanConversionIntrinsicsShader : IComputeShader
     {
         public readonly ReadOnlyBuffer<float> buffer1;
@@ -363,6 +368,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct FromBooleanConversionIntrinsicsShader : IComputeShader
     {
         public readonly ReadOnlyBuffer<int> source;
@@ -446,6 +452,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ConstantsInShaderConstantFieldsShader : IComputeShader
     {
         public const float rot_angle = (float)(137.2 / 180.0 * Math.PI);
@@ -524,6 +531,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DoubleConstantsInShaderConstantFieldsShader : IComputeShader
     {
         public const float DoubleToFloatConstant = (float)(1 / 255.0);
@@ -586,6 +594,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct InterlockedOperationsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<int> buffer;
@@ -631,6 +640,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GlslStyleMulOperatorsShader : IComputeShader
     {
         public readonly ReadOnlyBuffer<float> source1;
@@ -772,6 +782,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct CustomStructTypeShader : IComputeShader
     {
         public readonly ReadWriteBuffer<CustomStructType> source;
@@ -810,6 +821,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct MiscHlslIntrinsicsShader : IComputeShader
     {
         public readonly ReadWriteBuffer<float> buffer1;
@@ -853,6 +865,7 @@ public partial class ShaderRewriterTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadonlyModifierInMethodsShader : IComputeShader
     {
         private readonly ReadWriteBuffer<int> buffer;

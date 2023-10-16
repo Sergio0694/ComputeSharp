@@ -30,6 +30,7 @@ for (int i = 0; i < array.Length; i++)
 /// A sample kernel that is precompiled.
 /// </summary>
 [EmbeddedBytecode(DispatchAxis.X)]
+[GeneratedComputeShaderDescriptor]
 [AutoConstructor]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {

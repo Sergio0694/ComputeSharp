@@ -66,6 +66,7 @@ foreach (var (t, tPixel) in EnumerateTypes())
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
     {
         public readonly ReadOnlyTexture1D<<#=t#>, <#=tPixel#>> source;

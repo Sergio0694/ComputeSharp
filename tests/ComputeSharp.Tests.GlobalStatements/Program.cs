@@ -23,6 +23,7 @@ Console.WriteLine("Test passed successfully!");
 
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.X)]
+[GeneratedComputeShaderDescriptor]
 public readonly partial struct ApplyFunctionShader : IComputeShader
 {
     private readonly ReadWriteBuffer<float> sourceTexture;

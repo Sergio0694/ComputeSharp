@@ -90,6 +90,7 @@ partial class Texture1DTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.X)]
+    [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture1D<float4> source;

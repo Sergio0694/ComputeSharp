@@ -25,6 +25,7 @@ Formatting.PrintMatrix(array, 10, 10, "AFTER");
 /// </summary>
 [AutoConstructor]
 [EmbeddedBytecode(DispatchAxis.X)]
+[GeneratedComputeShaderDescriptor]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {
     private readonly ReadWriteBuffer<float> buffer;

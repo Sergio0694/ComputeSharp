@@ -25,8 +25,7 @@ partial class ComputeShaderDescriptorGenerator
 
                 return true;
             }
-            else if (interfaceSymbol is { IsGenericType: true } &&
-                     SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
+            else if (SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
             {
                 result = true;
 

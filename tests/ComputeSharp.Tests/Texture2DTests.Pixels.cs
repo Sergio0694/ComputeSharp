@@ -73,6 +73,7 @@ partial class Texture2DTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> source;
@@ -107,6 +108,7 @@ partial class Texture2DTests
 
     [AutoConstructor]
     [EmbeddedBytecode(DispatchAxis.XY)]
+    [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingPixelShader : IComputeShader<float4>
     {
         public readonly IReadOnlyNormalizedTexture2D<float4> texture;
