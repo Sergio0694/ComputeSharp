@@ -1,5 +1,6 @@
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
+using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Models;
 
 namespace ComputeSharp.SourceGenerators;
