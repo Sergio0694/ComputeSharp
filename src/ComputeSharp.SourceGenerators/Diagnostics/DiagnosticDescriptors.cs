@@ -759,7 +759,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The type {0} is not a valid target for the [GeneratedComputeShaderDescriptor] attribute (only types implementing the IComputeShader or IComputeShader&lt;TPixel&gt; interface are valid)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidGeneratedPixelShaderDescriptorAttributeTarget = new DiagnosticDescriptor(
         id: "CMPS0054",
         title: "Invalid [GeneratedComputeShaderDescriptor] attribute target",
         messageFormat: "The type {0} is not a valid target for the [GeneratedComputeShaderDescriptor] attribute (only types implementing the IComputeShader or IComputeShader<TPixel> interface are valid)",

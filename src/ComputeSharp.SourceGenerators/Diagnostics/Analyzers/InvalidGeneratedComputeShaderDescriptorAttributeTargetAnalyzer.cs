@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGeneratedPixelShaderDescriptorAttributeTarget);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -39,16 +39,27 @@ public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyz
                     return;
                 }
 
-                // Emit a diagnostic if the target type is using [GeneratedComputeShaderDescriptor] but does not implement IComputeShader nor IComputeShader<TPixel>
-                if (typeSymbol.TryGetAttributeWithType(generatedComputeShaderDescriptorAttributeSymbol, out AttributeData? attribute) &&
-                    !typeSymbol.HasInterfaceWithType(computeShaderSymbol) &&
-                    !typeSymbol.HasInterfaceWithType(pixelShaderSymbol))
+                // If the current type does not have [GeneratedComputeShaderDescriptor], there is nothing to do
+                if (!typeSymbol.TryGetAttributeWithType(generatedComputeShaderDescriptorAttributeSymbol, out AttributeData? attribute))
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget,
-                        attribute.GetLocation(),
-                        typeSymbol));
+                    return;
                 }
+
+                // If the type implements IComputeShader or IComputeShader<TPixel>, it is valid
+                foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
+                {
+                    if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol) ||
+                        SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
+                    {
+                        return;
+                    }
+                }
+
+                // If we got here, the type is not valid, so we can emit a diagnostic
+                context.ReportDiagnostic(Diagnostic.Create(
+                    InvalidGeneratedPixelShaderDescriptorAttributeTarget,
+                    attribute.GetLocation(),
+                    typeSymbol));
             }, SymbolKind.NamedType);
         });
     }
