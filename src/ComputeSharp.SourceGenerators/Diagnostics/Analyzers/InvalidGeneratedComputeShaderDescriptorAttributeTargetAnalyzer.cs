@@ -45,21 +45,14 @@ public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyz
                     return;
                 }
 
-                // If the type implements IComputeShader or IComputeShader<TPixel>, it is valid
-                foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
+                // If the type doesn't implement IComputeShader nor IComputeShader<TPixel>, we can emit a diagnostic
+                if (!MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
-                    if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol) ||
-                        SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
-                    {
-                        return;
-                    }
-                }
-
-                // If we got here, the type is not valid, so we can emit a diagnostic
-                context.ReportDiagnostic(Diagnostic.Create(
+                    context.ReportDiagnostic(Diagnostic.Create(
                     InvalidGeneratedPixelShaderDescriptorAttributeTarget,
                     attribute.GetLocation(),
                     typeSymbol));
+                }
             }, SymbolKind.NamedType);
         });
     }

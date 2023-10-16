@@ -42,8 +42,7 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
                 }
 
                 // If the type is not a compute shader type, immediately bail out
-                if (!typeSymbol.HasInterfaceWithType(computeShaderSymbol) &&
-                    !typeSymbol.HasInterfaceWithType(pixelShaderSymbol))
+                if (!IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
                     return;
                 }
@@ -59,5 +58,29 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderAnalyzer : Diag
                 }
             }, SymbolKind.NamedType);
         });
+    }
+
+    /// <summary>
+    /// Checks whether a given type is a compute shader type.
+    /// </summary>
+    /// <param name="typeSymbol">The type to check.</param>
+    /// <param name="computeShaderSymbol">The type symbol for <c>IComputeShader</c>.</param>
+    /// <param name="pixelShaderSymbol">The type symbol for <c>IComputeShader&lt;TPixel&gt;</c>.</param>
+    /// <returns></returns>
+    internal static bool IsComputeShaderType(
+        INamedTypeSymbol typeSymbol,
+        INamedTypeSymbol computeShaderSymbol,
+        INamedTypeSymbol pixelShaderSymbol)
+    {
+        foreach (INamedTypeSymbol interfaceSymbol in typeSymbol.AllInterfaces)
+        {
+            if (SymbolEqualityComparer.Default.Equals(interfaceSymbol, computeShaderSymbol) ||
+                SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, pixelShaderSymbol))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
