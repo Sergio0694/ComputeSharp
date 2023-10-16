@@ -97,4 +97,9 @@
 
   <!-- Shared projects with .NET Standard 2.0 polyfills -->
   <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
+
+  <!-- Give access to the code fixers project for the exported diagnostic ids and properties -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="ComputeSharp.CodeFixers, PublicKey=$(AssemblySignPublicKey)" />
+  </ItemGroup>
 </Project>
