@@ -7,10 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using ComputeSharp.Shaders.Translation;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGenerators.Dxc;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using TerraFX.Interop.DirectX;
@@ -63,7 +63,7 @@ partial class ComputeShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode
-                    using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
+                    using ComPtr<IDxcBlob> dxcBlobBytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
 
                     token.ThrowIfCancellationRequested();
 

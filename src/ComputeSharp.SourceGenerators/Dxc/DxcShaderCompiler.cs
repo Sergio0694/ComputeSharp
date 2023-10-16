@@ -5,19 +5,19 @@ using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Shaders.Translation;
+namespace ComputeSharp.SourceGenerators.Dxc;
 
 /// <summary>
 /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
 /// </summary>
-internal sealed unsafe class ShaderCompiler
+internal sealed unsafe class DxcShaderCompiler
 {
     /// <summary>
-    /// The thread local <see cref="ShaderCompiler"/> instance.
+    /// The thread local <see cref="DxcShaderCompiler"/> instance.
     /// This is necessary because the DXC library is strictly single-threaded.
     /// </summary>
     [ThreadStatic]
-    private static ShaderCompiler? instance;
+    private static DxcShaderCompiler? instance;
 
     /// <summary>
     /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
@@ -35,9 +35,9 @@ internal sealed unsafe class ShaderCompiler
     private readonly ComPtr<IDxcIncludeHandler> dxcIncludeHandler;
 
     /// <summary>
-    /// Creates a new <see cref="ShaderCompiler"/> instance.
+    /// Creates a new <see cref="DxcShaderCompiler"/> instance.
     /// </summary>
-    private ShaderCompiler()
+    private DxcShaderCompiler()
     {
         using ComPtr<IDxcCompiler> dxcCompiler = default;
         using ComPtr<IDxcLibrary> dxcLibrary = default;
@@ -61,9 +61,9 @@ internal sealed unsafe class ShaderCompiler
     }
 
     /// <summary>
-    /// Destroys the current <see cref="ShaderCompiler"/> instance.
+    /// Destroys the current <see cref="DxcShaderCompiler"/> instance.
     /// </summary>
-    ~ShaderCompiler()
+    ~DxcShaderCompiler()
     {
         this.dxcCompiler.Dispose();
         this.dxcLibrary.Dispose();
@@ -71,9 +71,9 @@ internal sealed unsafe class ShaderCompiler
     }
 
     /// <summary>
-    /// Gets a <see cref="ShaderCompiler"/> instance to use.
+    /// Gets a <see cref="DxcShaderCompiler"/> instance to use.
     /// </summary>
-    public static ShaderCompiler Instance => instance ??= new();
+    public static DxcShaderCompiler Instance => instance ??= new();
 
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
