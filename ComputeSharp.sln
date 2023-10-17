@@ -60,7 +60,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.SwapChain.Shad
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.DisableDynamicCompilation", "tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj", "{4A8FCE22-851C-442A-8BC9-3EC3FD00B637}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Dynamic", "src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj", "{76C66257-FDAA-47AB-85E7-EF757EAB10C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Dxc", "src\ComputeSharp.Dxc\ComputeSharp.Dxc.csproj", "{76C66257-FDAA-47AB-85E7-EF757EAB10C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1", "src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj", "{4D7D9BA8-A821-4B1C-9EE2-CBCF5849906E}"
 EndProject
@@ -82,10 +82,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.D2D1.Tests.Ass
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Pix", "src\ComputeSharp.Pix\ComputeSharp.Pix.csproj", "{14EF12A3-90E6-4683-BD71-9896AF87026B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Dynamic.NuGet", "ComputeSharp.Dynamic.NuGet", "{CBA545B4-31EF-4E9F-A1A8-2A1290B54046}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Dxc.NuGet", "ComputeSharp.Dxc.NuGet", "{CBA545B4-31EF-4E9F-A1A8-2A1290B54046}"
 	ProjectSection(SolutionItems) = preProject
-		tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj = tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj
-		tests\ComputeSharp.Dynamic.NuGet\Program.cs = tests\ComputeSharp.Dynamic.NuGet\Program.cs
+		tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj = tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj
+		tests\ComputeSharp.Dxc.NuGet\Program.cs = tests\ComputeSharp.Dxc.NuGet\Program.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComputeSharp.Pix.NuGet", "ComputeSharp.Pix.NuGet", "{C0B903AA-F32C-4760-B4B6-199AC4FE1C5A}"
@@ -148,7 +148,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win32", "Win32", "{D991153C
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.CodeFixing", "src\ComputeSharp.CodeFixing\ComputeSharp.CodeFixing.shproj", "{29F6E256-BA0E-4F3B-854E-50839D67C6DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.CodeFixers", "src\ComputeSharp.CodeFixers\ComputeSharp.CodeFixers.csproj", "{9B4448B1-200F-4966-8A13-A508691B3003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.CodeFixers", "src\ComputeSharp.CodeFixers\ComputeSharp.CodeFixers.csproj", "{9B4448B1-200F-4966-8A13-A508691B3003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

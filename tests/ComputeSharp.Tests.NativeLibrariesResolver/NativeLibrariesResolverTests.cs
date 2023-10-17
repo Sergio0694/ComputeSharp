@@ -18,7 +18,7 @@ public class NativeLibrariesResolverTests : NativeLibrariesResolverTestsBase
     [ClassInitialize]
     public static void InitializeDynamicDependencies(TestContext _)
     {
-        string path = Path.GetDirectoryName(typeof(DynamicNativeLibrariesResolverTests).Assembly.Location)!;
+        string path = Path.GetDirectoryName(typeof(DxcNativeLibrariesResolverTests).Assembly.Location)!;
 
         while (Path.GetFileName(path) is not "ComputeSharp")
         {

@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Dxc\ComputeSharp.Dxc.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
