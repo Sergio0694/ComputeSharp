@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -105,17 +106,30 @@ internal sealed unsafe class DxcShaderCompiler
         fixed (char* rowMajor = "-Zpr")
         fixed (char* warningsAsErrors = "-Werror")
         {
-            Span<PCWSTR> arguments = stackalloc PCWSTR[] { optimization, rowMajor, warningsAsErrors };
+            // We can't use stackalloc here, because the portable Span<T> type has a bug that causes
+            // the constructor taking a pointer to throw if T is a type that contains a pointer field.
+            // So we can just rent a buffer from the pool and use that instead, at least for now.
+            PCWSTR[] arguments = ArrayPool<PCWSTR>.Shared.Rent(3);
 
-            this.dxcCompiler.Get()->Compile(
+            arguments[0] = optimization;
+            arguments[1] = rowMajor;
+            arguments[2] = warningsAsErrors;
+
+            HRESULT hresult = this.dxcCompiler.Get()->Compile(
                 pSource: (IDxcBlob*)dxcBlobEncoding.Get(),
                 pSourceName: "",
                 pEntryPoint: "Execute",
                 pTargetProfile: "cs_6_0",
-                pArguments: arguments,
+                pArguments: arguments.AsSpan(0, 3),
                 pDefines: ReadOnlySpan<DxcDefine>.Empty,
                 pIncludeHandler: this.dxcIncludeHandler.Get(),
-                ppResult: dxcOperationResult.GetAddressOf()).Assert();
+                ppResult: dxcOperationResult.GetAddressOf());
+
+            ArrayPool<PCWSTR>.Shared.Return(arguments);
+
+            // Only assert the HRESULT after returning the array from the pool. Since the method itself
+            // can return a failure but doesn't actually throw, there's no need to throw the buffer away.
+            hresult.Assert();
         }
 
         token.ThrowIfCancellationRequested();
