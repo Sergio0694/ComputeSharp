@@ -10,7 +10,7 @@ using static TerraFX.Interop.DirectX.D3D12_SHADER_VISIBILITY;
 using static TerraFX.Interop.DirectX.D3D12_STATIC_BORDER_COLOR;
 using static TerraFX.Interop.DirectX.D3D12_TEXTURE_ADDRESS_MODE;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_STATIC_SAMPLER_DESC
 {

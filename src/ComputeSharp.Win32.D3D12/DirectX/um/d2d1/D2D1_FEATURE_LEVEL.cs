@@ -5,7 +5,7 @@
 
 using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal enum D2D1_FEATURE_LEVEL : uint
 {

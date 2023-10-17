@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_CPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_CPU_DESCRIPTOR_HANDLE>
 {

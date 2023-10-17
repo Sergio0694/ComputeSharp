@@ -7,7 +7,7 @@ using static TerraFX.Interop.DirectX.D3D12;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_TYPE;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_RESOURCE_BARRIER
 {

@@ -5,7 +5,7 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct DXGI_ADAPTER_DESC
 {

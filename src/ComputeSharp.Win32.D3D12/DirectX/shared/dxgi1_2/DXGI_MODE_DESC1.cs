@@ -5,7 +5,7 @@
 
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal partial struct DXGI_MODE_DESC1
 {

@@ -5,7 +5,7 @@
 
 using System.Runtime.Versioning;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows8.1")]
 internal partial struct DXGI_MATRIX_3X2_F

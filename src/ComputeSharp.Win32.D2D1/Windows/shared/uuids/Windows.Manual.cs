@@ -7,7 +7,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal static partial class Windows
 {

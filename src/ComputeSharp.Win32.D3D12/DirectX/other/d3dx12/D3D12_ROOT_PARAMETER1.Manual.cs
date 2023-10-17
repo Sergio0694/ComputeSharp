@@ -6,7 +6,7 @@
 using static TerraFX.Interop.DirectX.D3D12_ROOT_PARAMETER_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_SHADER_VISIBILITY;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_ROOT_PARAMETER1
 {

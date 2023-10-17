@@ -3,7 +3,7 @@
 // Ported from d3d12.h in Microsoft.Direct3D.D3D12 v1.600.10
 // Original source is Copyright © Microsoft. Licensed under the MIT license
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal enum D3D12_DRED_ENABLEMENT
 {

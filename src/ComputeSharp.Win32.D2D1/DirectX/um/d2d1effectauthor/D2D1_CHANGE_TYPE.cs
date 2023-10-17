@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Flags]
 internal enum D2D1_CHANGE_TYPE : uint

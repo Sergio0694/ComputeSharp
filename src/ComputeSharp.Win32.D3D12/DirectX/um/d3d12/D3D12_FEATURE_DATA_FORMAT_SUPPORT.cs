@@ -3,7 +3,7 @@
 // Ported from um/d3d12.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal partial struct D3D12_FEATURE_DATA_FORMAT_SUPPORT
 {

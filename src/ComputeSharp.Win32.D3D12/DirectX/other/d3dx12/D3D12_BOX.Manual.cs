@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal partial struct D3D12_BOX : IEquatable<D3D12_BOX>
 {

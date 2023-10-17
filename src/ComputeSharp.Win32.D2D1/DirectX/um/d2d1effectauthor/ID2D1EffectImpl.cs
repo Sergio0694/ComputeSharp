@@ -10,7 +10,7 @@ using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("A248FD3F-3E6C-4E63-9F03-7F68ECC91DB9")]
 [NativeTypeName("struct ID2D1EffectImpl : IUnknown")]

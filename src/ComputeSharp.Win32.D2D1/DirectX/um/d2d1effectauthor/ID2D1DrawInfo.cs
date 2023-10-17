@@ -11,7 +11,7 @@ using static TerraFX.Interop.DirectX.D2D1_PIXEL_OPTIONS;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("693CE632-7F2F-45DE-93FE-18D88B37AA21")]
 [NativeTypeName("struct ID2D1DrawInfo : ID2D1RenderInfo")]

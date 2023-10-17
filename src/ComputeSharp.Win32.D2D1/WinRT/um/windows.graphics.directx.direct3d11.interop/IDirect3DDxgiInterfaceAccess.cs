@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.WinRT;
+namespace ComputeSharp.Win32;
 
 [Guid("A9B3D012-3DF2-4EE3-B8D1-8695F457D3C1")]
 [NativeTypeName("struct IDirect3DDxgiInterfaceAccess : IUnknown")]

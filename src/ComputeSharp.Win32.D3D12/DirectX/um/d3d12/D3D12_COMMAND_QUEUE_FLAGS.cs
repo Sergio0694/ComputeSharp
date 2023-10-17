@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Flags]
 internal enum D3D12_COMMAND_QUEUE_FLAGS

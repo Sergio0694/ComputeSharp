@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 #pragma warning disable IDE1006
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal static partial class Windows
 {

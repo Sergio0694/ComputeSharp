@@ -5,7 +5,7 @@
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal struct RECT
 {

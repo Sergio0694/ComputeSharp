@@ -3,7 +3,7 @@
 using System;
 using System.Diagnostics;
 
-namespace TerraFX.Interop;
+namespace ComputeSharp.Win32;
 
 /// <summary>Defines the base type of a struct as it was in the native signature.</summary>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false, Inherited = true)]

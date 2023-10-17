@@ -6,7 +6,7 @@
 using static TerraFX.Interop.DirectX.D3D_ROOT_SIGNATURE_VERSION;
 using static TerraFX.Interop.DirectX.D3D12_ROOT_SIGNATURE_FLAGS;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_VERSIONED_ROOT_SIGNATURE_DESC
 {

@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using static TerraFX.Interop.Windows.Windows;
 using static TerraFX.Interop.Windows.S;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 /// <summary>
 /// Extensions for <see cref="ComPtr{T}"/> to operate on raw pointers as well.
