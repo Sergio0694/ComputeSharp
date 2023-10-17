@@ -287,7 +287,7 @@ partial class D2DPixelShaderDescriptorGenerator
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
                 bool isShaderEntryPoint =
-                    methodDeclarationSymbol.Name == nameof(ID2D1PixelShader.Execute) &&
+                    methodDeclarationSymbol.Name == "Execute" &&
                     methodDeclarationSymbol.ReturnType.HasFullyQualifiedMetadataName("ComputeSharp.Float4") &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
                     methodDeclarationSymbol.Parameters.Length == 0;
