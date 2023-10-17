@@ -161,7 +161,7 @@ public class ShadersTests
 
         string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{shaderType.Name}.png");
 
-        IImageInfo imageInfo = Image.Identify(expectedPath);
+        ImageInfo imageInfo = Image.Identify(expectedPath);
 
         using Image<ImageSharpRgba32> image = new(imageInfo.Width, imageInfo.Height);
 
@@ -237,7 +237,7 @@ public class ShadersTests
 
         string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{shaderType.Name}.png");
 
-        IImageInfo imageInfo = Image.Identify(expectedPath);
+        ImageInfo imageInfo = Image.Identify(expectedPath);
 
         using Image<ImageSharpRgba32> image = new(imageInfo.Width, imageInfo.Height);
 

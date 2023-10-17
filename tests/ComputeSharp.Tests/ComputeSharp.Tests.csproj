@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
   </ItemGroup>
 
@@ -40,9 +40,9 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\ComplexVector4.cs" Link="Imaging\Primitives\ComplexVector4.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor.cs" Link="Imaging\Processors\HlslBokehBlurProcessor.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor.Implementation.cs" Link="Imaging\Processors\HlslBokehBlurProcessor.Implementation.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.Implementation.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.Implementation.cs" />
   </ItemGroup>
 
   <ItemGroup>
