@@ -15,7 +15,7 @@
     <!-- When building locally for x64/ARM64, only support the non-UAP libraries -->
     <When Condition="'$(Platform)' == 'x64'">
       <ItemGroup>
-        <None Include="Libraries\x64\WinPixEventRuntime.dll"
+        <None Include="..\..\libs\x64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
               CopyToOutputDirectory="PreserveNewest"
               Visible="False" />
@@ -23,7 +23,7 @@
     </When>
     <When Condition="'$(Platform)' == 'ARM64'">
       <ItemGroup>
-        <None Include="Libraries\arm64\WinPixEventRuntime.dll"
+        <None Include="..\..\libs\arm64\WinPixEventRuntime.dll"
               Link="WinPixEventRuntime.dll"
               CopyToOutputDirectory="PreserveNewest"
               Visible="False" />
@@ -47,25 +47,25 @@
         <NoWarn>$(NoWarn);NU5100</NoWarn>
       </PropertyGroup>
       <ItemGroup>
-        <None Include="Libraries\x64\WinPixEventRuntime.dll"
+        <None Include="..\..\libs\x64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime.dll"
               CopyToOutputDirectory="PreserveNewest"
               Pack="true"
               PackagePath="$(WinPixEventRuntimeVersion)\x64"
               Visible="False" />
-        <None Include="Libraries\x64\WinPixEventRuntime_UAP.dll"
+        <None Include="..\..\libs\x64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\x64\WinPixEventRuntime_UAP.dll"
               CopyToOutputDirectory="PreserveNewest"
               Pack="true"
               PackagePath="$(WinPixEventRuntimeVersion)\x64"
               Visible="False" />
-        <None Include="Libraries\arm64\WinPixEventRuntime.dll"
+        <None Include="..\..\libs\arm64\WinPixEventRuntime.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime.dll"
               CopyToOutputDirectory="PreserveNewest"
               Pack="true"
               PackagePath="$(WinPixEventRuntimeVersion)\arm64"
               Visible="False" />
-        <None Include="Libraries\arm64\WinPixEventRuntime_UAP.dll"
+        <None Include="..\..\libs\arm64\WinPixEventRuntime_UAP.dll"
               Link="$(WinPixEventRuntimeVersion)\arm64\WinPixEventRuntime_UAP.dll"
               CopyToOutputDirectory="PreserveNewest"
               Pack="true"

@@ -79,10 +79,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
+    <EmbeddedResource Include="..\..\libs\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\..\libs\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
+    <EmbeddedResource Include="..\..\libs\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\..\libs\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
 
   <!-- Shared project with common helpers -->
