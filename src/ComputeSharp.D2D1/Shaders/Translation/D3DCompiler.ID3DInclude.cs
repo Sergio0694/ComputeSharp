@@ -1,13 +1,15 @@
+#if !SOURCE_GENERATOR
 using System;
+#endif
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-#if NET6_0_OR_GREATER
-using MemoryMarshal2 = System.Runtime.InteropServices.MemoryMarshal;
+#if SOURCE_GENERATOR
+using Windows.Win32.Graphics.Direct3D;
+using static Windows.Win32.Foundation.HRESULT;
 #else
-using MemoryMarshal2 = ComputeSharp.NetStandard.MemoryMarshal;
+using TerraFX.Interop.DirectX;
+using static TerraFX.Interop.Windows.S;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;
@@ -20,7 +22,7 @@ partial class D3DCompiler
     /// </summary>
     private unsafe struct ID3DIncludeForD2DHelpers
     {
-#if !NET6_0_OR_GREATER
+#if SOURCE_GENERATOR
         /// <inheritdoc cref="Open"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int OpenDelegate(ID3DIncludeForD2DHelpers* @this, D3D_INCLUDE_TYPE IncludeType, sbyte* pFileName, void* pParentData, void** ppData, uint* pBytes);
@@ -53,12 +55,12 @@ partial class D3DCompiler
         {
             void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 2);
 
-#if NET6_0_OR_GREATER
-            lpVtbl[0] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, D3D_INCLUDE_TYPE, sbyte*, void*, void**, uint*, int>)&Open;
-            lpVtbl[1] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, void*, int>)&Close;
-#else
+#if SOURCE_GENERATOR
             lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(OpenWrapper);
             lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(CloseWrapper);
+#else
+            lpVtbl[0] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, D3D_INCLUDE_TYPE, sbyte*, void*, void**, uint*, int>)&Open;
+            lpVtbl[1] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, void*, int>)&Close;
 #endif
 
             return lpVtbl;
@@ -73,37 +75,44 @@ partial class D3DCompiler
         /// Creates and initializes a new <see cref="ID3DIncludeForD2DHelpers"/> instance.
         /// </summary>
         /// <returns>A pointer to a new <see cref="ID3DIncludeForD2DHelpers"/> instance.</returns>
-        public static ID3DIncludeForD2DHelpers* Create()
+        public static ID3DInclude* Create()
         {
-            ID3DIncludeForD2DHelpers* @this = (ID3DIncludeForD2DHelpers*)NativeMemory.Alloc((nuint)sizeof(ID3DIncludeForD2DHelpers));
+            ID3DIncludeForD2DHelpers* @this =
+#if SOURCE_GENERATOR
+                (ID3DIncludeForD2DHelpers*)Marshal.AllocHGlobal(sizeof(ID3DIncludeForD2DHelpers));
+#else
+                (ID3DIncludeForD2DHelpers*)NativeMemory.Alloc((nuint)sizeof(ID3DIncludeForD2DHelpers));
+#endif
 
             @this->lpVtbl = Vtbl;
 
-            return @this;
+            return (ID3DInclude*)@this;
         }
 
         /// <inheritdoc cref="ID3DInclude.Open"/>
         [UnmanagedCallersOnly]
         public static int Open(ID3DIncludeForD2DHelpers* @this, D3D_INCLUDE_TYPE IncludeType, sbyte* pFileName, void* pParentData, void** ppData, uint* pBytes)
         {
-            ReadOnlySpan<byte> fileName = MemoryMarshal2.CreateReadOnlySpanFromNullTerminated((byte*)pFileName);
-
-            if (fileName.SequenceEqual("d2d1effecthelpers.hlsli"u8))
+#if SOURCE_GENERATOR
+            if (new string(pFileName) == "d2d1effecthelpers.hlsli")
+#else
+            if (MemoryMarshal.CreateReadOnlySpanFromNullTerminated((byte*)pFileName).SequenceEqual("d2d1effecthelpers.hlsli"u8))
+#endif
             {
                 *ppData = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(D2D1EffectHelpers.TextUtf8));
                 *pBytes = (uint)D2D1EffectHelpers.TextUtf8.Length;
 
-                return S.S_OK;
+                return S_OK;
             }
 
-            return S.S_FALSE;
+            return S_FALSE;
         }
 
         /// <inheritdoc cref="ID3DInclude.Close"/>
         [UnmanagedCallersOnly]
         public static int Close(ID3DIncludeForD2DHelpers* @this, void* pData)
         {
-            return S.S_OK;
+            return S_OK;
         }
     }
 }

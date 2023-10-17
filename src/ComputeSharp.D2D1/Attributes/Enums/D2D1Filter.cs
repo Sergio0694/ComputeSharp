@@ -1,4 +1,8 @@
+#if SOURCE_GENERATOR
+using static Windows.Win32.Graphics.Direct2D.D2D1_FILTER;
+#else
 using static TerraFX.Interop.DirectX.D2D1_FILTER;
+#endif
 
 namespace ComputeSharp.D2D1;
 

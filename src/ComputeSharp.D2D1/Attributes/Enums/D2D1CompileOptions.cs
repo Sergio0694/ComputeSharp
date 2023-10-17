@@ -1,8 +1,12 @@
 using System;
-#if !SOURCE_GENERATOR
+#if SOURCE_GENERATOR
+using D3DCOMPILE = Windows.Win32.PInvoke;
+#else
 using ComputeSharp.D2D1.Interop;
-#endif
 using TerraFX.Interop.DirectX;
+
+#pragma warning disable IDE0004
+#endif
 
 namespace ComputeSharp.D2D1;
 
@@ -21,7 +25,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_DEBUG</c> and <c>/Zi</c>.
     /// </remarks>
-    Debug = D3DCOMPILE.D3DCOMPILE_DEBUG,
+    Debug = (int)D3DCOMPILE.D3DCOMPILE_DEBUG,
 
     /// <summary>
     /// Directs the compiler not to validate the generated code against known capabilities and constraints.
@@ -31,7 +35,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_SKIP_VALIDATION</c> and <c>/Vd</c>.
     /// </remarks>
-    SkipValidation = D3DCOMPILE.D3DCOMPILE_SKIP_VALIDATION,
+    SkipValidation = (int)D3DCOMPILE.D3DCOMPILE_SKIP_VALIDATION,
 
     /// <summary>
     /// Directs the compiler to skip optimization steps during code generation.
@@ -40,7 +44,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_SKIP_OPTIMIZATION</c> and <c>/Od</c>.
     /// </remarks>
-    SkipOptimization = D3DCOMPILE.D3DCOMPILE_SKIP_OPTIMIZATION,
+    SkipOptimization = (int)D3DCOMPILE.D3DCOMPILE_SKIP_OPTIMIZATION,
 
     /// <summary>
     /// Directs the compiler to pack matrices in row-major order on input and output from the shader.
@@ -49,7 +53,7 @@ public enum D2D1CompileOptions
     /// <para>This value is needed to have the constant buffer loading from generated shaders map to compiled shaders.</para>
     /// <para>This flag maps to <c>D3DCOMPILE_PACK_MATRIX_ROW_MAJOR</c> and <c>/Zpr</c>.</para>
     /// </remarks>
-    PackMatrixRowMajor = D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
+    PackMatrixRowMajor = (int)D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_ROW_MAJOR,
 
     /// <summary>
     /// Directs the compiler to pack matrices in column-major order on input and output from the shader.
@@ -61,7 +65,7 @@ public enum D2D1CompileOptions
     /// <para>That is, trying to load a constant buffer from a shader processed by the source generator is undefined behavior.</para>
     /// <para>This flag maps to <c>D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR</c> and <c>/Zpc</c>.</para>
     /// </remarks>
-    PackMatrixColumnMajor = D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR,
+    PackMatrixColumnMajor = (int)D3DCOMPILE.D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR,
 
     /// <summary>
     /// Directs the compiler to perform all computations with partial precision.
@@ -70,7 +74,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_PARTIAL_PRECISION</c> and <c>/Gpp</c>.
     /// </remarks>
-    PartialPrecision = D3DCOMPILE.D3DCOMPILE_PARTIAL_PRECISION,
+    PartialPrecision = (int)D3DCOMPILE.D3DCOMPILE_PARTIAL_PRECISION,
 
     /// <summary>
     /// Directs the compiler to not use flow-control constructs where possible.	
@@ -78,7 +82,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_AVOID_FLOW_CONTROL</c> and <c>/Gfa</c>.
     /// </remarks>
-    AvoidFlowControl = D3DCOMPILE.D3DCOMPILE_AVOID_FLOW_CONTROL,
+    AvoidFlowControl = (int)D3DCOMPILE.D3DCOMPILE_AVOID_FLOW_CONTROL,
 
     /// <summary>
     /// Forces strict compile, which might not allow for legacy syntax.
@@ -87,7 +91,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_ENABLE_STRICTNESS</c> and <c>/Ges</c>.
     /// </remarks>
-    EnableStrictness = D3DCOMPILE.D3DCOMPILE_ENABLE_STRICTNESS,
+    EnableStrictness = (int)D3DCOMPILE.D3DCOMPILE_ENABLE_STRICTNESS,
 
     /// <summary>
     /// Forces the IEEE strict compile which avoids optimizations that may break IEEE rules.
@@ -95,7 +99,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_IEEE_STRICTNESS</c> and <c>/Gis</c>.
     /// </remarks>
-    IeeeStrictness = D3DCOMPILE.D3DCOMPILE_IEEE_STRICTNESS,
+    IeeeStrictness = (int)D3DCOMPILE.D3DCOMPILE_IEEE_STRICTNESS,
 
     /// <summary>
     /// Directs the compiler to enable older shaders to compile to 5_0 targets.
@@ -103,7 +107,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY</c> and <c>/Gec</c>.
     /// </remarks>
-    EnableBackwardsCompatibility = D3DCOMPILE.D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY,
+    EnableBackwardsCompatibility = (int)D3DCOMPILE.D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY,
 
     /// <summary>
     /// Directs the compiler to use the lowest optimization level. If this option is set, the compiler
@@ -113,7 +117,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_OPTIMIZATION_LEVEL0</c> and <c>/O0</c>.
     /// </remarks>
-    OptimizationLevel0 = D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL0,
+    OptimizationLevel0 = (int)D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL0,
 
     /// <summary>
     /// Directs the compiler to use the second lowest optimization level.
@@ -121,7 +125,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_OPTIMIZATION_LEVEL1</c> and <c>/O1</c>.
     /// </remarks>
-    OptimizationLevel1 = D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL1,
+    OptimizationLevel1 = (int)D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL1,
 
     /// <summary>
     /// Directs the compiler to use the second highest optimization level.
@@ -129,7 +133,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_OPTIMIZATION_LEVEL2</c> and <c>/O2</c>.
     /// </remarks>
-    OptimizationLevel2 = D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL2,
+    OptimizationLevel2 = (int)D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL2,
 
     /// <summary>
     /// Directs the compiler to use the highest optimization level. If this option is set, the compiler
@@ -139,7 +143,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_OPTIMIZATION_LEVEL3</c> and <c>/O3</c>.
     /// </remarks>
-    OptimizationLevel3 = D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3,
+    OptimizationLevel3 = (int)D3DCOMPILE.D3DCOMPILE_OPTIMIZATION_LEVEL3,
 
     /// <summary>
     /// Directs the compiler to treat all warnings as errors when it compiles the shader code. This 
@@ -149,7 +153,7 @@ public enum D2D1CompileOptions
     /// <remarks>
     /// This flag maps to <c>D3DCOMPILE_WARNINGS_ARE_ERRORS</c> and <c>/WX</c>.
     /// </remarks>
-    WarningsAreErrors = D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
+    WarningsAreErrors = (int)D3DCOMPILE.D3DCOMPILE_WARNINGS_ARE_ERRORS,
 
     /// <summary>
     /// This flag enables the support for shader linking. Specifically, when set, this flag causes the APIs from
