@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Extensions;
 

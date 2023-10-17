@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Interop.Effects;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 

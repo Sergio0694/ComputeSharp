@@ -3,7 +3,7 @@ using System;
 using D3DCOMPILE = Windows.Win32.PInvoke;
 #else
 using ComputeSharp.D2D1.Interop;
-using TerraFX.Interop.DirectX;
+using ComputeSharp.Win32;
 
 #pragma warning disable IDE0004
 #endif

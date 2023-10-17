@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 

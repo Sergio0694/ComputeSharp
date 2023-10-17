@@ -4,7 +4,6 @@
 // Original source is Copyright © Microsoft. Licensed under the MIT license
 
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 

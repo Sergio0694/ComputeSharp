@@ -8,8 +8,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using static TerraFX.Interop.Windows.Windows;
-using static TerraFX.Interop.Windows.S;
+using static ComputeSharp.Win32.Windows;
+using static ComputeSharp.Win32.S;
 
 namespace ComputeSharp.Win32;
 

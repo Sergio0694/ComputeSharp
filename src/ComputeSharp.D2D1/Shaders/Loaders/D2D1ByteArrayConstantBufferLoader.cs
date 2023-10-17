@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
-using TerraFX.Interop.DirectX;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Shaders.Loaders;
 

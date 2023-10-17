@@ -2,8 +2,7 @@ using System;
 using System.Buffers;
 using System.Text;
 using ComputeSharp.D2D1.Shaders.Translation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Interop;
 

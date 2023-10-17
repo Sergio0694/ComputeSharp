@@ -6,8 +6,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D2D1_PIXEL_OPTIONS;
+using static ComputeSharp.Win32.D2D1_PIXEL_OPTIONS;
 
 #pragma warning disable CS0649
 
