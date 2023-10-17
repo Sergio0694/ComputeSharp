@@ -4,7 +4,7 @@
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the MIT License (MIT).
 
 using System.Runtime.CompilerServices;
-using static TerraFX.Interop.DirectX.D3D12_TEXTURE_COPY_TYPE;
+using static ComputeSharp.Win32.D3D12_TEXTURE_COPY_TYPE;
 
 namespace ComputeSharp.Win32;
 

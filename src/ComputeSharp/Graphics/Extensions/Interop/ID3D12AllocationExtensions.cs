@@ -1,7 +1,6 @@
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.Graphics.Extensions;
 

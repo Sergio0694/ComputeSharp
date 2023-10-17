@@ -2,8 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Helpers;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.Core.Extensions;
 

@@ -9,7 +9,7 @@ using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
-using TerraFX.Interop.DirectX;
+using ComputeSharp.Win32;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp;

@@ -1,11 +1,10 @@
 using System;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMPARISON_FUNC;
-using static TerraFX.Interop.DirectX.D3D12_FILTER;
-using static TerraFX.Interop.DirectX.D3D12_PIPELINE_STATE_FLAGS;
-using static TerraFX.Interop.DirectX.D3D12_TEXTURE_ADDRESS_MODE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMPARISON_FUNC;
+using static ComputeSharp.Win32.D3D12_FILTER;
+using static ComputeSharp.Win32.D3D12_PIPELINE_STATE_FLAGS;
+using static ComputeSharp.Win32.D3D12_TEXTURE_ADDRESS_MODE;
 
 namespace ComputeSharp.Shaders.Extensions;
 

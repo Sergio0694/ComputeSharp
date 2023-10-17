@@ -1,4 +1,4 @@
-using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_RANGE_TYPE;
+using static ComputeSharp.Win32.D3D12_DESCRIPTOR_RANGE_TYPE;
 
 namespace ComputeSharp.Interop;
 

@@ -9,9 +9,8 @@ using System.Threading.Tasks.Sources;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp;
 

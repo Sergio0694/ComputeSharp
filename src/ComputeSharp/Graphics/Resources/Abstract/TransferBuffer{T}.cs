@@ -6,9 +6,8 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_FEATURE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 #pragma warning disable CA1063

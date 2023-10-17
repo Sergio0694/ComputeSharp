@@ -9,12 +9,11 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.Interop.Allocation;
 using ComputeSharp.Shaders.Loading;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.DirectX.D3D12_FEATURE;
-using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
-using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMMAND_LIST_TYPE;
+using static ComputeSharp.Win32.D3D12_FEATURE;
+using static ComputeSharp.Win32.D3D12_FORMAT_SUPPORT1;
+using static ComputeSharp.Win32.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp;
 

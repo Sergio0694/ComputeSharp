@@ -4,8 +4,8 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources.Interop;
-using TerraFX.Interop.DirectX;
-using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_SRV_DIMENSION;
 
 #pragma warning disable IDE0022
 

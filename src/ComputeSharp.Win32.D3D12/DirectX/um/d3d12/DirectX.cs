@@ -5,7 +5,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Win32;
 

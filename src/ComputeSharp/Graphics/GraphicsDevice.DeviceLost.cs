@@ -4,8 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp;
 

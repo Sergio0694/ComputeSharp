@@ -3,9 +3,9 @@
 // Ported from d3dx12.h in DirectX-Graphics-Samples commit a7a87f1853b5540f10920518021d91ae641033fb
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the MIT License (MIT).
 
-using static TerraFX.Interop.DirectX.D3D12;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_FLAGS;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_TYPE;
+using static ComputeSharp.Win32.D3D12;
+using static ComputeSharp.Win32.D3D12_RESOURCE_BARRIER_FLAGS;
+using static ComputeSharp.Win32.D3D12_RESOURCE_BARRIER_TYPE;
 
 namespace ComputeSharp.Win32;
 

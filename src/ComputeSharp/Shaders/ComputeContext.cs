@@ -8,7 +8,7 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Resources.Interop;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Loading;
-using TerraFX.Interop.DirectX;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp;
 

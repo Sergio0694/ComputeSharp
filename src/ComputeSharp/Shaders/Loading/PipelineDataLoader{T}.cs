@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_RANGE_FLAGS;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_DESCRIPTOR_RANGE_FLAGS;
 
 namespace ComputeSharp.Shaders.Loading;
 

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.Interop;
 

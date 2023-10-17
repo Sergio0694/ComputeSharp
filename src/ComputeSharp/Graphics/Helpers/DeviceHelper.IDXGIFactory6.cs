@@ -2,8 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 #pragma warning disable CA1416
 

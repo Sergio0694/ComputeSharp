@@ -1,8 +1,7 @@
 using System;
 using ComputeSharp.Graphics.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_TYPE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_DESCRIPTOR_HEAP_TYPE;
 
 namespace ComputeSharp.Graphics.Commands.Interop;
 

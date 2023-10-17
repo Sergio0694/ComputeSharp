@@ -1,5 +1,5 @@
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.Resources.Interop;
 

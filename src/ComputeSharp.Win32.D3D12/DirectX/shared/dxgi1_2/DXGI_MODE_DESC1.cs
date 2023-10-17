@@ -3,8 +3,6 @@
 // Ported from shared/dxgi1_2.h in the Windows SDK for Windows 10.0.22000.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using TerraFX.Interop.Windows;
-
 namespace ComputeSharp.Win32;
 
 internal partial struct DXGI_MODE_DESC1

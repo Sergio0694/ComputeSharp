@@ -3,8 +3,8 @@
 // Ported from d3dx12.h in DirectX-Graphics-Samples commit a7a87f1853b5540f10920518021d91ae641033fb
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the MIT License (MIT).
 
-using static TerraFX.Interop.DirectX.D3D12_ROOT_PARAMETER_TYPE;
-using static TerraFX.Interop.DirectX.D3D12_SHADER_VISIBILITY;
+using static ComputeSharp.Win32.D3D12_ROOT_PARAMETER_TYPE;
+using static ComputeSharp.Win32.D3D12_SHADER_VISIBILITY;
 
 namespace ComputeSharp.Win32;
 

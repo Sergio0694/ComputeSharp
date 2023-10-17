@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
-using static TerraFX.Interop.DirectX.D3D_SHADER_MODEL;
-using static TerraFX.Interop.DirectX.DXGI_GPU_PREFERENCE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D_FEATURE_LEVEL;
+using static ComputeSharp.Win32.D3D_SHADER_MODEL;
+using static ComputeSharp.Win32.DXGI_GPU_PREFERENCE;
 
 #pragma warning disable CA1416
 
