@@ -73,6 +73,9 @@
     <!-- ComPtr<T> and HRESULT extension from D3D12 generator -->
     <Compile Include="..\ComputeSharp.SourceGenerators\Dxc\Windows.Win32\ComPtr{T}.cs" Link="Fxc\Windows.Win32\ComPtr{T}.cs" />
     <Compile Include="..\ComputeSharp.SourceGenerators\Dxc\Windows.Win32\HRESULT.cs" Link="Fxc\Windows.Win32\HRESULT.cs" />
+
+    <!-- Shared JSON config for CsWin32 from D3D12 generator -->
+    <AdditionalFiles Include="..\ComputeSharp.SourceGenerators\NativeMethods.json" Link="NativeMethods.json" />
   </ItemGroup>
 
   <ItemGroup>
