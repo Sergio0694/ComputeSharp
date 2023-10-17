@@ -1,21 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NoWarn>$(NoWarn);CS1591;CS0649;CS1574</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CS0649;CS1574;CS0419;IDE0004</NoWarn>
   </PropertyGroup>
 
   <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->
   <ItemGroup>
 
     <!-- ComputeSharp.Core APIs -->
-    <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.Casts.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.Casts.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.g.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.Void.g.cs" />
-    <Compile Include="..\ComputeSharp.Core\Polyfills\Win32ExceptionExtensions.cs" Link="ComputeSharp.Core\Polyfills\Win32ExceptionExtensions.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool2.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Bool\Bool3.cs" Link="ComputeSharp.Core\Primitives\Bool\Bool3.cs" />
@@ -72,8 +70,6 @@
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DInputSimpleAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DInputSimpleAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DRequiresScenePositionAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DRequiresScenePositionAttribute.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Attributes\D2DPixelShaderSourceAttribute.cs" Link="ComputeSharp.D2D1\Attributes\D2DPixelShaderSourceAttribute.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" Link="ComputeSharp.D2D1\Extensions\ComPtrExtensions.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" Link="ComputeSharp.D2D1\Extensions\HRESULTExtensions.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" Link="ComputeSharp.D2D1\Interfaces\ID2D1PixelShader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1ConstantBufferLoader.cs" Link="ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1ConstantBufferLoader.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1PixelShaderDescriptor{T}.cs" Link="ComputeSharp.D2D1\Interfaces\Descriptors\ID2D1PixelShaderDescriptor{T}.cs" />
@@ -83,13 +79,18 @@
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1InputDescription.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1PixelShaderInputType.cs" />
     <Compile Include="..\ComputeSharp.D2D1\Shaders\Interop\D2D1ResourceTextureDescription.cs" Link="ComputeSharp.D2D1\Shaders\Interop\D2D1ResourceTextureDescription.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" />
-    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" Link="ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.cs" Link="Fxc\D3DCompiler.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\D3DCompiler.ID3DInclude.cs" Link="Fxc\D3DCompiler.ID3DInclude.cs" />
+    <Compile Include="..\ComputeSharp.D2D1\Shaders\Translation\Headers\d2d1effecthelpers.hlsli.cs" Link="Fxc\Headers\d2d1effecthelpers.hlsli.cs" />
+
+    <!-- ComPtr<T> and HRESULT extension from D3D12 generator -->
+    <Compile Include="..\ComputeSharp.SourceGenerators\Dxc\Windows.Win32\ComPtr{T}.cs" Link="Fxc\Windows.Win32\ComPtr{T}.cs" />
+    <Compile Include="..\ComputeSharp.SourceGenerators\Dxc\Windows.Win32\HRESULT.cs" Link="Fxc\Windows.Win32\HRESULT.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,12 +101,6 @@
   <!-- Shared projects with common helpers -->
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
-
-  <!-- Shared ComputeSharp.Win32.D2D1 with D2D1 bindings -->
-  <Import Project="..\ComputeSharp.Win32.D2D1\ComputeSharp.Win32.D2D1.projitems" Label="Shared" />
-
-  <!-- Shared project with .NET Standard 2.0 polyfills -->
-  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 
   <!-- Give access to the code fixers project for the exported diagnostic ids and properties -->
   <ItemGroup>

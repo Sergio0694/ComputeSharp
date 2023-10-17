@@ -1,5 +1,9 @@
 using System;
+#if SOURCE_GENERATOR
+using static Windows.Win32.Graphics.Direct2D.D2D1_PIXEL_OPTIONS;
+#else
 using static TerraFX.Interop.DirectX.D2D1_PIXEL_OPTIONS;
+#endif
 
 namespace ComputeSharp.D2D1;
 

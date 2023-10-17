@@ -4,9 +4,17 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+#if SOURCE_GENERATOR
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Direct3D;
+using Windows.Win32.Graphics.Direct3D.Fxc;
+using DirectX = Windows.Win32.PInvoke;
+#else
 using ComputeSharp.D2D1.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;
 
@@ -18,7 +26,7 @@ internal static unsafe partial class D3DCompiler
     /// <summary>
     /// The <see cref="ID3DInclude"/> instance to load <c>d2d1effecthelpers.hlsli</c>.
     /// </summary>
-    private static readonly ID3DIncludeForD2DHelpers* D3DIncludeForD2D1EffectHelpers = ID3DIncludeForD2DHelpers.Create();
+    private static readonly ID3DInclude* D3DIncludeForD2D1EffectHelpers = ID3DIncludeForD2DHelpers.Create();
 
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
@@ -31,7 +39,17 @@ internal static unsafe partial class D3DCompiler
     {
         int maxLength = Encoding.ASCII.GetMaxByteCount(source.Length);
         byte[] buffer = ArrayPool<byte>.Shared.Rent(maxLength);
-        int writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
+        int writtenBytes;
+
+#if SOURCE_GENERATOR
+        fixed (char* pSource = source)
+        fixed (byte* pBuffer = buffer)
+        {
+            writtenBytes = Encoding.ASCII.GetBytes(pSource, source.Length, pBuffer, buffer.Length);
+        }
+#else
+        writtenBytes = Encoding.ASCII.GetBytes(source, buffer);
+#endif
 
         try
         {
@@ -91,7 +109,7 @@ internal static unsafe partial class D3DCompiler
         using ComPtr<ID3DBlob> d3DBlobBytecode = default;
         using ComPtr<ID3DBlob> d3DBlobErrors = default;
 
-        int hResult;
+        HRESULT hResult;
 
         fixed (byte* sourcePtr = source)
         fixed (byte* macroPtr = macro)
@@ -108,13 +126,23 @@ internal static unsafe partial class D3DCompiler
             {
                 new()
                 {
+#if SOURCE_GENERATOR
+                    Name = new PCSTR(macroPtr),
+                    Definition = new PCSTR((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.NullTerminator)))
+#else
                     Name = (sbyte*)macroPtr,
                     Definition = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.NullTerminator))
+#endif
                 },
                 new()
                 {
+#if SOURCE_GENERATOR
+                    Name = new PCSTR((byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_ENTRY))),
+                    Definition = new PCSTR(d2DEntryPtr)
+#else
                     Name = (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(ASCII.D2D_ENTRY)),
                     Definition = (sbyte*)d2DEntryPtr
+#endif
                 },
                 new()
             };
@@ -123,11 +151,19 @@ internal static unsafe partial class D3DCompiler
             hResult = DirectX.D3DCompile(
                 pSrcData: sourcePtr,
                 SrcDataSize: (nuint)source.Length,
+#if SOURCE_GENERATOR
+                pSourceName: (PCSTR)null,
+                pDefines: macros,
+                pInclude: D3DIncludeForD2D1EffectHelpers,
+                pEntrypoint: new PCSTR(entryPointPtr),
+                pTarget: new PCSTR(targetPtr),
+#else
                 pSourceName: null,
                 pDefines: macros,
                 pInclude: D3DIncludeForD2D1EffectHelpers,
                 pEntrypoint: (sbyte*)entryPointPtr,
                 pTarget: (sbyte*)targetPtr,
+#endif
                 Flags1: flags,
                 Flags2: 0,
                 ppCode: d3DBlobBytecode.GetAddressOf(),

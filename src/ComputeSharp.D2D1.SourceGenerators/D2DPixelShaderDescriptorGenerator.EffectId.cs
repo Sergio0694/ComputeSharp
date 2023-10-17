@@ -76,7 +76,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// </summary>
         /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
         /// <returns>The resulting effect id.</returns>
-        private static ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
+        private static unsafe ImmutableArray<byte> CreateDefaultEffectId(INamedTypeSymbol typeSymbol)
         {
             try
             {
@@ -97,15 +97,25 @@ partial class D2DPixelShaderDescriptorGenerator
                 int maxEncodedByteCount = Math.Max(maxTypeNameByteCount, maxAssemblyNameByteCount);
 
                 byte[] bufferUtf8 = ArrayPool<byte>.Shared.Rent(maxEncodedByteCount);
+                int typeNameBytesWritten;
+                int assemblyNameBytesWritten;
 
                 // UTF8 encode the fully qualified name first
-                int typeNameBytesWritten = Encoding.UTF8.GetBytes(charBuffer.WrittenSpan, bufferUtf8.AsSpan());
+                fixed (char* pCharBuffer = charBuffer.WrittenSpan)
+                fixed (byte* pBufferUtf8 = bufferUtf8)
+                {
+                    typeNameBytesWritten = Encoding.UTF8.GetBytes(pCharBuffer, charBuffer.Count, pBufferUtf8, bufferUtf8.Length);
+                }
 
                 // Append the UTF8 fully qualified name to the MD5 hash
                 incrementalHash.AppendData(bufferUtf8, 0, typeNameBytesWritten);
 
                 // UTF8 encode the assembly name as well
-                int assemblyNameBytesWritten = Encoding.UTF8.GetBytes(assemblyName.AsSpan(), bufferUtf8.AsSpan());
+                fixed (char* pAssemblyName = assemblyName)
+                fixed (byte* pBufferUtf8 = bufferUtf8)
+                {
+                    assemblyNameBytesWritten = Encoding.UTF8.GetBytes(pAssemblyName, assemblyName.Length, pBufferUtf8, bufferUtf8.Length);
+                }
 
                 // Append the UTF8 assembly name to the MD5 hash
                 incrementalHash.AppendData(bufferUtf8, 0, assemblyNameBytesWritten);

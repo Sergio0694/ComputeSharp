@@ -10,8 +10,8 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
 using Microsoft.CodeAnalysis;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Windows.Win32;
+using Windows.Win32.Graphics.Direct3D;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.D2D1.SourceGenerators;

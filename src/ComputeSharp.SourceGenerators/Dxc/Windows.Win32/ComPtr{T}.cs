@@ -59,4 +59,20 @@ internal unsafe struct ComPtr<T> : IDisposable
     {
         return (T**)Unsafe.AsPointer(ref Unsafe.AsRef(in this));
     }
+
+    /// <summary>
+    /// Moves the current <see cref="ComPtr{T}"/> instance and resets it without releasing the reference.
+    /// </summary>
+    /// <returns>The moved <see cref="ComPtr{T}"/> instance.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ComPtr<T> Move()
+    {
+        ComPtr<T> other = default;
+
+        other.ptr = this.ptr;
+
+        this.ptr = null;
+
+        return other;
+    }
 }
