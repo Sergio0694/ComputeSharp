@@ -43,19 +43,19 @@ internal sealed unsafe class DxcShaderCompiler
         using ComPtr<IDxcCompiler> dxcCompiler = default;
         using ComPtr<IDxcLibrary> dxcLibrary = default;
 
-        _ = PInvoke.DxcCreateInstance(
+        PInvoke.DxcCreateInstance(
             PInvoke.CLSID_DxcCompiler,
             IDxcCompiler.IID_Guid,
-            out *(void**)dxcCompiler.GetAddressOf()).ThrowOnFailure();
+            out *(void**)dxcCompiler.GetAddressOf()).Assert();
 
-        _ = PInvoke.DxcCreateInstance(
+        PInvoke.DxcCreateInstance(
             PInvoke.CLSID_DxcLibrary,
             IDxcLibrary.IID_Guid,
-            out *(void**)dxcLibrary.GetAddressOf()).ThrowOnFailure();
+            out *(void**)dxcLibrary.GetAddressOf()).Assert();
 
         using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
 
-        _ = dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).ThrowOnFailure();
+        dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 
         this.dxcCompiler = new ComPtr<IDxcCompiler>(dxcCompiler.Get());
         this.dxcLibrary = new ComPtr<IDxcLibrary>(dxcLibrary.Get());
@@ -91,11 +91,11 @@ internal sealed unsafe class DxcShaderCompiler
         // Get the encoded blob from the source code
         fixed (char* p = source)
         {
-            _ = this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+            this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
                 pText: p,
                 size: (uint)source.Length * 2,
                 codePage: DXC_CP.DXC_CP_UTF16,
-                pBlobEncoding: dxcBlobEncoding.GetAddressOf()).ThrowOnFailure();
+                pBlobEncoding: dxcBlobEncoding.GetAddressOf()).Assert();
         }
 
         token.ThrowIfCancellationRequested();
@@ -107,7 +107,7 @@ internal sealed unsafe class DxcShaderCompiler
         {
             Span<PCWSTR> arguments = stackalloc PCWSTR[] { optimization, rowMajor, warningsAsErrors };
 
-            _ = this.dxcCompiler.Get()->Compile(
+            this.dxcCompiler.Get()->Compile(
                 pSource: (IDxcBlob*)dxcBlobEncoding.Get(),
                 pSourceName: "",
                 pEntryPoint: "Execute",
@@ -115,21 +115,21 @@ internal sealed unsafe class DxcShaderCompiler
                 pArguments: arguments,
                 pDefines: ReadOnlySpan<DxcDefine>.Empty,
                 pIncludeHandler: this.dxcIncludeHandler.Get(),
-                ppResult: dxcOperationResult.GetAddressOf()).ThrowOnFailure();
+                ppResult: dxcOperationResult.GetAddressOf()).Assert();
         }
 
         token.ThrowIfCancellationRequested();
 
         HRESULT status;
 
-        _ = dxcOperationResult.Get()->GetStatus(&status).ThrowOnFailure();
+        dxcOperationResult.Get()->GetStatus(&status).Assert();
 
         // The compilation was successful, so we can extract the shader bytecode
         if (status == 0)
         {
             using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
-            _ = dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).ThrowOnFailure();
+            dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
 
             byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
             int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
@@ -150,7 +150,7 @@ internal sealed unsafe class DxcShaderCompiler
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-        _ = dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).ThrowOnFailure();
+        dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
 
         string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
 
