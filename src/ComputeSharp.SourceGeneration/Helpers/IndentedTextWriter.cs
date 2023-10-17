@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -342,7 +343,7 @@ internal sealed class IndentedTextWriter : IDisposable
         {
             if (value is IFormattable)
             {
-                this.writer.Write(((IFormattable)value).ToString(format));
+                this.writer.Write(((IFormattable)value).ToString(format, CultureInfo.InvariantCulture));
             }
             else if (value is not null)
             {

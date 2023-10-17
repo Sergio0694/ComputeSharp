@@ -208,17 +208,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_TESSELLATOR_OUTPUT_PRIMITIVE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_TESSELLATOR_PARTITIONING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\ID3DBlob.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\CLSID.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DirectX.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DxcBuffer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DxcDefine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcBlob.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcBlobEncoding.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcCompiler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcIncludeHandler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcLibrary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcOperationResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\BOOL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HANDLE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HRESULT.cs" />

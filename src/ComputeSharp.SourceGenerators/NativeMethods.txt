@@ -1,0 +1,7 @@
+CLSID_DxcCompiler
+CLSID_DxcLibrary
+DxcCreateInstance
+IDxcCompiler
+IDxcLibrary
+IDxcIncludeHandler
+IUnknown

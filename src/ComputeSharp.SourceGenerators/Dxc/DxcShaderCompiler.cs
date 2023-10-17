@@ -1,10 +1,11 @@
 using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Direct3D.Dxc;
 
 namespace ComputeSharp.SourceGenerators.Dxc;
 
@@ -42,19 +43,20 @@ internal sealed unsafe class DxcShaderCompiler
     {
         using ComPtr<IDxcCompiler> dxcCompiler = default;
         using ComPtr<IDxcLibrary> dxcLibrary = default;
+
+        PInvoke.DxcCreateInstance(
+            PInvoke.CLSID_DxcCompiler,
+            IDxcCompiler.IID_Guid,
+            out *(void**)dxcCompiler.GetAddressOf()).Assert();
+
+        PInvoke.DxcCreateInstance(
+            PInvoke.CLSID_DxcLibrary,
+            IDxcLibrary.IID_Guid,
+            out *(void**)dxcLibrary.GetAddressOf()).Assert();
+
         using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
 
-        Marshal.ThrowExceptionForHR(DirectX.DxcCreateInstance(
-            (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcCompiler)),
-            Windows.__uuidof<IDxcCompiler>(),
-            (void**)dxcCompiler.GetAddressOf()));
-
-        Marshal.ThrowExceptionForHR(DirectX.DxcCreateInstance(
-            (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcLibrary)),
-            Windows.__uuidof<IDxcLibrary>(),
-            (void**)dxcLibrary.GetAddressOf()));
-
-        Marshal.ThrowExceptionForHR(dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()));
+        dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 
         this.dxcCompiler = new ComPtr<IDxcCompiler>(dxcCompiler.Get());
         this.dxcLibrary = new ComPtr<IDxcLibrary>(dxcLibrary.Get());
@@ -90,54 +92,58 @@ internal sealed unsafe class DxcShaderCompiler
         // Get the encoded blob from the source code
         fixed (char* p = source)
         {
-            int hresult = this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
-                p,
-                (uint)source.Length * 2,
-                1200,
-                dxcBlobEncoding.GetAddressOf());
-
-            Marshal.ThrowExceptionForHR(hresult);
+            this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+                pText: p,
+                size: (uint)source.Length * 2,
+                codePage: DXC_CP.DXC_CP_UTF16,
+                pBlobEncoding: dxcBlobEncoding.GetAddressOf()).Assert();
         }
 
         token.ThrowIfCancellationRequested();
 
         // Try to compile the new compute shader
-        fixed (char* shaderName = "")
-        fixed (char* entryPoint = nameof(IComputeShader.Execute))
-        fixed (char* shaderProfile = "cs_6_0")
         fixed (char* optimization = "-O3")
         fixed (char* rowMajor = "-Zpr")
         fixed (char* warningsAsErrors = "-Werror")
         {
-            char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
+            // We can't use stackalloc here, because the portable Span<T> type has a bug that causes
+            // the constructor taking a pointer to throw if T is a type that contains a pointer field.
+            // So we can just rent a buffer from the pool and use that instead, at least for now.
+            PCWSTR[] arguments = ArrayPool<PCWSTR>.Shared.Rent(3);
 
-            int hresult = this.dxcCompiler.Get()->Compile(
-                (IDxcBlob*)dxcBlobEncoding.Get(),
-                (ushort*)shaderName,
-                (ushort*)entryPoint,
-                (ushort*)shaderProfile,
-                (ushort**)arguments,
-                3,
-                null,
-                0,
-                this.dxcIncludeHandler.Get(),
-                dxcOperationResult.GetAddressOf());
+            arguments[0] = optimization;
+            arguments[1] = rowMajor;
+            arguments[2] = warningsAsErrors;
 
-            Marshal.ThrowExceptionForHR(hresult);
+            HRESULT hresult = this.dxcCompiler.Get()->Compile(
+                pSource: (IDxcBlob*)dxcBlobEncoding.Get(),
+                pSourceName: "",
+                pEntryPoint: "Execute",
+                pTargetProfile: "cs_6_0",
+                pArguments: arguments.AsSpan(0, 3),
+                pDefines: ReadOnlySpan<DxcDefine>.Empty,
+                pIncludeHandler: this.dxcIncludeHandler.Get(),
+                ppResult: dxcOperationResult.GetAddressOf());
+
+            ArrayPool<PCWSTR>.Shared.Return(arguments);
+
+            // Only assert the HRESULT after returning the array from the pool. Since the method itself
+            // can return a failure but doesn't actually throw, there's no need to throw the buffer away.
+            hresult.Assert();
         }
 
         token.ThrowIfCancellationRequested();
 
         HRESULT status;
 
-        Marshal.ThrowExceptionForHR(dxcOperationResult.Get()->GetStatus(&status));
+        dxcOperationResult.Get()->GetStatus(&status).Assert();
 
         // The compilation was successful, so we can extract the shader bytecode
         if (status == 0)
         {
             using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
-            Marshal.ThrowExceptionForHR(dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()));
+            dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
 
             byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
             int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
@@ -158,7 +164,7 @@ internal sealed unsafe class DxcShaderCompiler
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-        Marshal.ThrowExceptionForHR(dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()));
+        dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
 
         string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
 
