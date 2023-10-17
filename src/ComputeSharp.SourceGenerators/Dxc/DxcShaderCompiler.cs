@@ -1,23 +1,24 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using ComputeSharp.Core.Extensions;
+using System.Threading;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Shaders.Translation;
+namespace ComputeSharp.SourceGenerators.Dxc;
 
 /// <summary>
 /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
 /// </summary>
-internal sealed unsafe partial class ShaderCompiler
+internal sealed unsafe class DxcShaderCompiler
 {
     /// <summary>
-    /// The thread local <see cref="ShaderCompiler"/> instance.
+    /// The thread local <see cref="DxcShaderCompiler"/> instance.
     /// This is necessary because the DXC library is strictly single-threaded.
     /// </summary>
     [ThreadStatic]
-    private static ShaderCompiler? instance;
+    private static DxcShaderCompiler? instance;
 
     /// <summary>
     /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
@@ -35,35 +36,35 @@ internal sealed unsafe partial class ShaderCompiler
     private readonly ComPtr<IDxcIncludeHandler> dxcIncludeHandler;
 
     /// <summary>
-    /// Creates a new <see cref="ShaderCompiler"/> instance.
+    /// Creates a new <see cref="DxcShaderCompiler"/> instance.
     /// </summary>
-    private ShaderCompiler()
+    private DxcShaderCompiler()
     {
         using ComPtr<IDxcCompiler> dxcCompiler = default;
         using ComPtr<IDxcLibrary> dxcLibrary = default;
         using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
 
-        DirectX.DxcCreateInstance(
+        Marshal.ThrowExceptionForHR(DirectX.DxcCreateInstance(
             (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcCompiler)),
             Windows.__uuidof<IDxcCompiler>(),
-            (void**)dxcCompiler.GetAddressOf()).Assert();
+            (void**)dxcCompiler.GetAddressOf()));
 
-        DirectX.DxcCreateInstance(
+        Marshal.ThrowExceptionForHR(DirectX.DxcCreateInstance(
             (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcLibrary)),
             Windows.__uuidof<IDxcLibrary>(),
-            (void**)dxcLibrary.GetAddressOf()).Assert();
+            (void**)dxcLibrary.GetAddressOf()));
 
-        dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
+        Marshal.ThrowExceptionForHR(dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()));
 
-        this.dxcCompiler = dxcCompiler.Move();
-        this.dxcLibrary = dxcLibrary.Move();
-        this.dxcIncludeHandler = dxcIncludeHandler.Move();
+        this.dxcCompiler = new ComPtr<IDxcCompiler>(dxcCompiler.Get());
+        this.dxcLibrary = new ComPtr<IDxcLibrary>(dxcLibrary.Get());
+        this.dxcIncludeHandler = new ComPtr<IDxcIncludeHandler>(dxcIncludeHandler.Get());
     }
 
     /// <summary>
-    /// Destroys the current <see cref="ShaderCompiler"/> instance.
+    /// Destroys the current <see cref="DxcShaderCompiler"/> instance.
     /// </summary>
-    ~ShaderCompiler()
+    ~DxcShaderCompiler()
     {
         this.dxcCompiler.Dispose();
         this.dxcLibrary.Dispose();
@@ -71,30 +72,34 @@ internal sealed unsafe partial class ShaderCompiler
     }
 
     /// <summary>
-    /// Gets a <see cref="ShaderCompiler"/> instance to use.
+    /// Gets a <see cref="DxcShaderCompiler"/> instance to use.
     /// </summary>
-    public static ShaderCompiler Instance => instance ??= new();
+    public static DxcShaderCompiler Instance => instance ??= new();
 
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source)
+    public byte[] Compile(ReadOnlySpan<char> source, CancellationToken token)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
         using ComPtr<IDxcOperationResult> dxcOperationResult = default;
-        using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
         // Get the encoded blob from the source code
         fixed (char* p = source)
         {
-            this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+            int hresult = this.dxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
                 p,
                 (uint)source.Length * 2,
                 1200,
-                dxcBlobEncoding.GetAddressOf()).Assert();
+                dxcBlobEncoding.GetAddressOf());
+
+            Marshal.ThrowExceptionForHR(hresult);
         }
+
+        token.ThrowIfCancellationRequested();
 
         // Try to compile the new compute shader
         fixed (char* shaderName = "")
@@ -106,7 +111,7 @@ internal sealed unsafe partial class ShaderCompiler
         {
             char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
 
-            this.dxcCompiler.Get()->Compile(
+            int hresult = this.dxcCompiler.Get()->Compile(
                 (IDxcBlob*)dxcBlobEncoding.Get(),
                 (ushort*)shaderName,
                 (ushort*)entryPoint,
@@ -116,19 +121,28 @@ internal sealed unsafe partial class ShaderCompiler
                 null,
                 0,
                 this.dxcIncludeHandler.Get(),
-                dxcOperationResult.GetAddressOf()).Assert();
+                dxcOperationResult.GetAddressOf());
+
+            Marshal.ThrowExceptionForHR(hresult);
         }
+
+        token.ThrowIfCancellationRequested();
 
         HRESULT status;
 
-        dxcOperationResult.Get()->GetStatus(&status).Assert();
+        Marshal.ThrowExceptionForHR(dxcOperationResult.Get()->GetStatus(&status));
 
         // The compilation was successful, so we can extract the shader bytecode
         if (status == 0)
         {
-            dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
+            using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
-            return dxcBlobBytecode.Move();
+            Marshal.ThrowExceptionForHR(dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()));
+
+            byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
+            int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
+
+            return new ReadOnlySpan<byte>(buffer, length).ToArray();
         }
 
         return ThrowHslsCompilationException(dxcOperationResult.Get());
@@ -140,11 +154,11 @@ internal sealed unsafe partial class ShaderCompiler
     /// <param name="dxcOperationResult">The input (faulting) operation.</param>
     /// <returns>This method always throws and never actually returs.</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static ComPtr<IDxcBlob> ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
+    private static byte[] ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-        dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
+        Marshal.ThrowExceptionForHR(dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()));
 
         string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
 
@@ -158,8 +172,7 @@ internal sealed unsafe partial class ShaderCompiler
         message = Regex.Replace(message, @"^hlsl\.hlsl:\d+:\d+: (\w+:)", static m => m.Groups[1].Value, RegexOptions.Multiline);
 
         // Add a trailing '.' if not present
-        if (message is { Length: > 0 } &&
-            message[message.Length - 1] != '.')
+        if (message is [.., not '.'])
         {
             message += '.';
         }

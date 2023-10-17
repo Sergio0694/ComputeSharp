@@ -32,7 +32,7 @@ partial class ComputeShaderDescriptorGenerator
             out int threadsZ,
             out bool isCompilationEnabled)
         {
-            // Try to get the attribute that controls shader precompilation (has to be present when ComputeSharp.Dynamic is not referenced)
+            // Try to get the attribute that controls shader precompilation (this is always required)
             if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
             {
                 // Emit the diagnostics if dynamic shaders are not supported

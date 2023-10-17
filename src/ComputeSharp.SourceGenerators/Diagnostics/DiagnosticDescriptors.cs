@@ -640,7 +640,7 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader without the embedded bytecode attribute, when dynamic shaders are not supported.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader without the embedded bytecode attribute,.
     /// <para>
     /// Format: <c>"The shader of type {0} needs to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute), as dynamic shader compilation is not supported"</c>.
     /// </para>
@@ -652,7 +652,7 @@ partial class DiagnosticDescriptors
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "When dynamic shader compilation is not supported (ie. when ComputeSharp.Dynamic is not referenced), all shaders need to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute).",
+        description: "All shaders need to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

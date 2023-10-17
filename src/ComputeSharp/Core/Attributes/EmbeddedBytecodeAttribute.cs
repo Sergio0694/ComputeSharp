@@ -30,12 +30,12 @@ namespace ComputeSharp;
 /// <para>
 /// </para>
 /// The runtime compilation will automatically be skipped if the shader is invoked using matching thread count values,
-/// otherwise the usual runtime compilation will be used as fallback if the <c>ComputeSharp.Dynamic</c> library is
+/// otherwise the usual runtime compilation will be used as fallback if the <c>ComputeSharp.Dxc</c> library is
 /// referenced. If not, <see cref="NotSupportedException"/> will be thrown when trying to dispatch the shader.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Using this attribute is mandatory when not referencing <c>ComputeSharp.Dynamic</c>.
+/// Using this attribute is mandatory when not referencing <c>ComputeSharp.Dxc</c>.
 /// </para>
 /// <para>
 /// This attribute can only be used when the shader type being annotated does not require dynamic

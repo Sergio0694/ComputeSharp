@@ -1,3 +1,5 @@
+using System;
+
 namespace ComputeSharp.Interop;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace ComputeSharp.Interop;
 /// </summary>
 /// <param name="CompilerVersion">The compiler version used to build the shader.</param>
 /// <param name="HlslSource">The HLSL source code the shader was built from.</param>
+/// <param name="HlslBytecode">The HLSL bytecode for the shader.</param>
 /// <param name="ConstantBufferCount">The number of shader constant buffers.</param>
 /// <param name="BoundResourceCount">The number of resource (textures and buffers) bound to a shader.</param>
 /// <param name="InstructionCount">The number of intermediate-language instructions in the compiled shader.</param>
@@ -31,6 +34,7 @@ namespace ComputeSharp.Interop;
 public sealed record ShaderInfo(
     string CompilerVersion,
     string HlslSource,
+    ReadOnlyMemory<byte> HlslBytecode,
     uint ConstantBufferCount,
     uint BoundResourceCount,
     uint InstructionCount,

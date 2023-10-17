@@ -1,4 +1,5 @@
 using ComputeSharp;
+using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,6 +12,14 @@ namespace ComputeSharp.Tests
     [TestCategory("ShaderCompiler")]
     public partial class ShaderCompilerTests
     {
+        [TestMethod]
+        public void ReflectionBytecode()
+        {
+            ShaderInfo shaderInfo = ReflectionServices.GetShaderInfo<ReservedKeywordsShader>();
+
+            CollectionAssert.AreEqual(((IComputeShaderDescriptor<ReservedKeywordsShader>)default(ReservedKeywordsShader)).HlslBytecode.ToArray(), shaderInfo.HlslBytecode.ToArray());
+        }
+
         [TestMethod]
         public void ReservedKeywords()
         {

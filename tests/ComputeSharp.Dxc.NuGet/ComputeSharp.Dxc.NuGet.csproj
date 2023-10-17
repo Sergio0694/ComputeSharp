@@ -15,6 +15,6 @@
   <ItemGroup>
     <PackageReference Include="ComputeSharp.Core" Version="$(PackageVersion)" />
     <PackageReference Include="ComputeSharp" Version="$(PackageVersion)" />
-    <PackageReference Include="ComputeSharp.Dynamic" Version="$(PackageVersion)" />
+    <PackageReference Include="ComputeSharp.Dxc" Version="$(PackageVersion)" />
   </ItemGroup>
 </Project>

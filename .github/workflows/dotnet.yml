@@ -42,8 +42,8 @@ jobs:
       run: dotnet pack src\ComputeSharp.Core\ComputeSharp.Core.csproj -c Release
     - name: Build ComputeSharp package
       run: dotnet pack src\ComputeSharp\ComputeSharp.csproj -c Release
-    - name: Build ComputeSharp.Dynamic package
-      run: dotnet pack src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj -c Release
+    - name: Build ComputeSharp.Dxc package
+      run: dotnet pack src\ComputeSharp.Dxc\ComputeSharp.Dxc.csproj -c Release
     - name: Build ComputeSharp.D3D12MemoryAllocator package
       run: dotnet pack src\ComputeSharp.D3D12MemoryAllocator\ComputeSharp.D3D12MemoryAllocator.csproj -c Release
     - name: Build ComputeSharp.D2D1 package
@@ -68,7 +68,7 @@ jobs:
     needs: [build-solution]
     runs-on: windows-2022
 
-    # Set the environment variable which is then looked up in ComputeSharp.Dynamic.
+    # Set the environment variable which is then looked up in ComputeSharp.Dxc.
     # This is a workaround for https://github.com/actions/runner-images/issues/6531.
     env:
       CI_RUNNER_DOTNET_TEST_PLATFORM: x64
@@ -289,8 +289,8 @@ jobs:
         path: artifacts
     - name: Build and run ComputeSharp.NuGet
       run: dotnet run --project tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
-    - name: Build and run ComputeSharp.Dynamic.NuGet
-      run: dotnet run --project tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
+    - name: Build and run ComputeSharp.Dxc.NuGet
+      run: dotnet run --project tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
     - name: Build and run ComputeSharp.Pix.NuGet
       run: dotnet run --project tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -r win-x64 --no-self-contained -v n
     
@@ -306,11 +306,11 @@ jobs:
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
         dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -r win-x64 -v n;
         tests\ComputeSharp.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.NuGet.exe
-    - name: Publish and run ComputeSharp.Dynamic.NuGet with NativeAOT
+    - name: Publish and run ComputeSharp.Dxc.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.Dynamic.NuGet\ComputeSharp.Dynamic.NuGet.csproj -c Release -r win-x64 -v n;
-        tests\ComputeSharp.Dynamic.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.Dynamic.NuGet.exe
+        dotnet publish tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -c Release -r win-x64 -v n;
+        tests\ComputeSharp.Dxc.NuGet\bin\Release\net7.0\win-x64\publish\ComputeSharp.Dxc.NuGet.exe
     - name: Publish and run ComputeSharp.Pix.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';

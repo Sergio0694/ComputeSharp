@@ -8,7 +8,6 @@
   <ItemGroup>
 
     <!-- ComputeSharp.Core APIs -->
-    <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp.Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.Casts.g.cs" Link="ComputeSharp.Core\Intrinsics\Hlsl.Casts.g.cs" />
@@ -67,9 +66,6 @@
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader{TPixel}.cs" />
-    <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
-    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Exceptions\DxcCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\DxcCompilationException.cs" />
-    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,10 +78,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dxc\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
 
   <!-- Shared project with common helpers -->

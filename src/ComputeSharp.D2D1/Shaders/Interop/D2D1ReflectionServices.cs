@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
-using ComputeSharp.D2D1.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -31,33 +30,15 @@ public static class D2D1ReflectionServices
     {
         Unsafe.SkipInit(out T shader);
 
-        string hlslSource = shader.HlslSource;
+        ReadOnlyMemory<byte> hlslBytecode = D2D1PixelShader.LoadBytecode<T>();
 
         using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
 
-        // If the shader already has embedded bytecode, use that directly
-        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
+        fixed (byte* hlslBytecodePtr = hlslBytecode.Span)
         {
-            fixed (byte* hlslBytecodePtr = hlslBytecode.Span)
-            {
-                DirectX.D3DReflect(
-                    pSrcData: hlslBytecodePtr,
-                    SrcDataSize: (nuint)hlslBytecode.Length,
-                    pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
-                    ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
-            }
-        }
-        else
-        {
-            // Otherwise, compile it with default shader profile and compile options and use that.
-            // Note that we're intentionally retrieving an ID3DBlob instance here to avoid having
-            // to allocate a ReadOnlyMemory<byte> object to throw away immediately, as we don't
-            // actually need to keep the bytecode for later.
-            using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(hlslSource.AsSpan(), shader.ShaderProfile, shader.CompileOptions);
-
             DirectX.D3DReflect(
-                pSrcData: (byte*)dynamicBytecode.Get()->GetBufferPointer(),
-                SrcDataSize: dynamicBytecode.Get()->GetBufferSize(),
+                pSrcData: hlslBytecodePtr,
+                SrcDataSize: (nuint)hlslBytecode.Length,
                 pInterface: Windows.__uuidof<ID3D11ShaderReflection>(),
                 ppReflector: (void**)d3D11ShaderReflection.GetAddressOf()).Assert();
         }
@@ -72,7 +53,8 @@ public static class D2D1ReflectionServices
 
         return new(
             CompilerVersion: new string(d3D11ShaderDescription.Creator),
-            HlslSource: hlslSource,
+            HlslSource: shader.HlslSource,
+            HlslBytecode: hlslBytecode,
             ConstantBufferCount: d3D11ShaderDescription.ConstantBuffers,
             BoundResourceCount: d3D11ShaderDescription.BoundResources,
             InstructionCount: d3D11ShaderDescription.InstructionCount,
