@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
@@ -14,11 +15,6 @@ using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
-#if NET6_0_OR_GREATER
-using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
-#else
-using MemoryMarshal = ComputeSharp.NetStandard.MemoryMarshal;
-#endif
 
 #pragma warning disable CA1063
 

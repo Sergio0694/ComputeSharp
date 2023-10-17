@@ -1,14 +1,9 @@
 using System;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
-#if NET6_0_OR_GREATER
 using System.Numerics;
-#endif
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !NET6_0_OR_GREATER
-using BitOperations = ComputeSharp.NetStandard.BitOperations;
-#endif
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Buffers;
 

@@ -1,11 +1,7 @@
+using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
-#if NET6_0_OR_GREATER
-using Math = System.Math;
-#else
-using Math = ComputeSharp.NetStandard.Math;
-#endif
 
 namespace ComputeSharp.D2D1.Extensions;
 

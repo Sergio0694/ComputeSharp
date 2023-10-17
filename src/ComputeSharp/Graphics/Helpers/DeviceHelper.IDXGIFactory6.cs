@@ -1,13 +1,9 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
-#if NET6_0_OR_GREATER
-using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
-#else
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
-#endif
 
 #pragma warning disable CA1416
 

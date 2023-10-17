@@ -1,11 +1,7 @@
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
-#if NET6_0_OR_GREATER
-using Path = System.IO.Path;
-#else
-using Path = ComputeSharp.NetStandard.Path;
-#endif
 
 #pragma warning disable IDE0011
 

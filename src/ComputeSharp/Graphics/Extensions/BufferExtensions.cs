@@ -1,9 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.Resources;
-#if !NET6_0_OR_GREATER
-using GC = ComputeSharp.NetStandard.GC;
-#endif
 
 namespace ComputeSharp;
 
