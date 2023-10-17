@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Extensions;
-using TerraFX.Interop.Windows;
-using Win32 = TerraFX.Interop.Windows.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.WinUI.Extensions;
 
@@ -35,8 +34,8 @@ internal static unsafe class IUnknownExtensions
         using ComPtr<IUnknown> leftUnknown = default;
         using ComPtr<IUnknown> rightUnknown = default;
 
-        ((IUnknown*)Unsafe.AsPointer(ref left))->QueryInterface(Win32.__uuidof<IUnknown>(), (void**)leftUnknown.GetAddressOf()).Assert();
-        ((IUnknown*)right)->QueryInterface(Win32.__uuidof<IUnknown>(), (void**)rightUnknown.GetAddressOf()).Assert();
+        ((IUnknown*)Unsafe.AsPointer(ref left))->QueryInterface(Win32.Windows.__uuidof<IUnknown>(), (void**)leftUnknown.GetAddressOf()).Assert();
+        ((IUnknown*)right)->QueryInterface(Win32.Windows.__uuidof<IUnknown>(), (void**)rightUnknown.GetAddressOf()).Assert();
 
         return leftUnknown.Get() == rightUnknown.Get();
     }

@@ -1,8 +1,6 @@
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using Win32 = TerraFX.Interop.Windows.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.WinUI.Extensions;
 
@@ -23,14 +21,14 @@ internal static unsafe class ICanvasDeviceExtensions
 
         // Get the ICanvasResourceWrapperNative wrapper around the input device
         canvasDevice.QueryInterface(
-            riid: Win32.__uuidof<ICanvasResourceWrapperNative>(),
+            riid: Win32.Windows.__uuidof<ICanvasResourceWrapperNative>(),
             ppvObject: (void**)canvasDeviceResourceWrapperNative.GetAddressOf()).Assert();
 
         // Get the underlying ID2D1Device1 instance in use
         HRESULT hresult = canvasDeviceResourceWrapperNative.Get()->GetNativeResource(
             device: null,
             dpi: 0,
-            iid: Win32.__uuidof<ID2D1Device1>(),
+            iid: Win32.Windows.__uuidof<ID2D1Device1>(),
             resource: (void**)d2D1Device1);
 
         return hresult;
@@ -60,7 +58,7 @@ internal static unsafe class ICanvasDeviceExtensions
             {
                 // Get the ID2D1DeviceContextPool interface reference
                 canvasDevice.QueryInterface(
-                    riid: Win32.__uuidof<ID2D1DeviceContextPool>(),
+                    riid: Win32.Windows.__uuidof<ID2D1DeviceContextPool>(),
                     ppvObject: (void**)d2D1DeviceContextPool.GetAddressOf()).Assert();
 
                 // Get a new ID2D1DeviceContextLease object from the retrieved pool

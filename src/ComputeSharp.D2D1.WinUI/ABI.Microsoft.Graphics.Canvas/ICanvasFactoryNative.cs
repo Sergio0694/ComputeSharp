@@ -1,11 +1,10 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using WinRT;
 using WinRT.Interop;
-using IInspectable = TerraFX.Interop.WinRT.IInspectable;
+using IInspectable = ComputeSharp.Win32.IInspectable;
 
 #pragma warning disable CS0649, IDE1006
 
@@ -77,7 +76,7 @@ internal unsafe struct ICanvasFactoryNative
     /// was not previously registered, or <see cref="S.S_FALSE"/> if <paramref name="resource"/> was already registered.
     /// </returns>
     /// <remarks>
-    /// The method validates at runtime that <paramref name="resource"/> is an <see cref="TerraFX.Interop.DirectX.ID2D1Image"/>
+    /// The method validates at runtime that <paramref name="resource"/> is an <see cref="ComputeSharp.Win32.ID2D1Image"/>
     /// and that <paramref name="wrapper"/> is an <see cref="global::Microsoft.Graphics.Canvas.ICanvasImage"/>. Additionally,
     /// <paramref name="wrapper"/> has to implement <c>IWeakReferenceSource</c> for this method to be successful.
     /// </remarks>
@@ -100,7 +99,7 @@ internal unsafe struct ICanvasFactoryNative
     /// resource was previously registered and could be correctly unregistered, <see cref="S.S_FALSE"/> otherwise.
     /// </returns>
     /// <remarks>
-    /// The method validates at runtime that <paramref name="resource"/> is an <see cref="TerraFX.Interop.DirectX.ID2D1Image"/>.
+    /// The method validates at runtime that <paramref name="resource"/> is an <see cref="ComputeSharp.Win32.ID2D1Image"/>.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [VtblIndex(8)]

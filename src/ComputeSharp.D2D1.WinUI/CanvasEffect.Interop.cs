@@ -4,9 +4,8 @@ using System.Numerics;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
+using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 using Windows.Foundation;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
 

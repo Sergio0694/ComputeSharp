@@ -6,7 +6,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649, IDE1006
 

@@ -2,7 +2,7 @@ using System;
 using ComputeSharp.Interop;
 using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.WinUI.Helpers;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.WinUI;
 

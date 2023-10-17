@@ -1,9 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 #pragma warning disable CS0649, IDE1006
 
