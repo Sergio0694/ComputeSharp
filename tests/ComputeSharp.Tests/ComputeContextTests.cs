@@ -999,7 +999,7 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
-        IImageInfo imageInfo = Image.Identify(originalPath);
+        ImageInfo imageInfo = Image.Identify(originalPath);
 
         using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 
@@ -1051,7 +1051,7 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080.png");
 
-        IImageInfo imageInfo = Image.Identify(originalPath);
+        ImageInfo imageInfo = Image.Identify(originalPath);
 
         using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 
@@ -1130,7 +1130,7 @@ public partial class ComputeContextTests
         string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
         string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080AndDashing.png");
 
-        IImageInfo imageInfo = Image.Identify(originalPath);
+        ImageInfo imageInfo = Image.Identify(originalPath);
 
         using Image<ImageSharpRgba32> sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
 

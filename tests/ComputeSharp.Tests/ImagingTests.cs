@@ -62,7 +62,7 @@ public class ImagingTests
     {
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-        IImageInfo imageInfo = Image.Identify(path);
+        ImageInfo imageInfo = Image.Identify(path);
 
         using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
         using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);
@@ -102,7 +102,7 @@ public class ImagingTests
     {
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-        IImageInfo imageInfo = Image.Identify(path);
+        ImageInfo imageInfo = Image.Identify(path);
 
         using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
         using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);
@@ -144,7 +144,7 @@ public class ImagingTests
     {
         string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-        IImageInfo imageInfo = Image.Identify(path);
+        ImageInfo imageInfo = Image.Identify(path);
 
         using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
         using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);

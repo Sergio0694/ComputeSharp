@@ -39,9 +39,9 @@ internal static class TolerantImageComparer
     public static void AssertEqual<TPixel>(Image<TPixel> expected, Image<TPixel> actual, float threshold)
         where TPixel : unmanaged, IPixel<TPixel>
     {
-        if (expected.Size() != actual.Size())
+        if (expected.Size != actual.Size)
         {
-            Assert.Fail($"The input images have different sizes: {expected.Size()} and {actual.Size()}");
+            Assert.Fail($"The input images have different sizes: {expected.Size} and {actual.Size}");
         }
 
         if (expected.Frames.Count != actual.Frames.Count ||
