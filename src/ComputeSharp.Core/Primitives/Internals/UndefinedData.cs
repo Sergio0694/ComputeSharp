@@ -1,7 +1,5 @@
-#if NET6_0_OR_GREATER
+#if !SOURCE_GENERATOR
 using System.Runtime.CompilerServices;
-#else
-using RuntimeHelpers = ComputeSharp.NetStandard.RuntimeHelpers;
 #endif
 
 namespace ComputeSharp;
@@ -15,5 +13,10 @@ internal static class UndefinedData
     /// <summary>
     /// The shared memory with undefined data (has size of <see cref="Double4"/>, as it's the maximum needed at once).
     /// </summary>
-    public static readonly unsafe void* Memory = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(UndefinedData), sizeof(Double4));
+    public static readonly unsafe void* Memory =
+#if SOURCE_GENERATOR
+        null;
+#else
+        (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(UndefinedData), sizeof(Double4));
+#endif
 }

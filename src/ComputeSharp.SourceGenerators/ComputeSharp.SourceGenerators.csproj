@@ -70,6 +70,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,12 +88,6 @@
   <!-- Shared project with common helpers -->
   <Import Project="..\ComputeSharp.SourceGeneration\ComputeSharp.SourceGeneration.projitems" Label="Shared" />
   <Import Project="..\ComputeSharp.SourceGeneration.Hlsl\ComputeSharp.SourceGeneration.Hlsl.projitems" Label="Shared" />
-
-  <!-- Shared ComputeSharp.Win32.D3D12 with D3D12 bindings -->
-  <Import Project="..\ComputeSharp.Win32.D3D12\ComputeSharp.Win32.D3D12.projitems" Label="Shared" />
-
-  <!-- Shared projects with .NET Standard 2.0 polyfills -->
-  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
 
   <!-- Give access to the code fixers project for the exported diagnostic ids and properties -->
   <ItemGroup>
