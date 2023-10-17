@@ -18,6 +18,7 @@
 [Rr]elease/
 [Rr]eleases/
 x64/
+arm64/
 x86/
 bld/
 [Bb]in/
@@ -25,8 +26,8 @@ bld/
 [Ll]og/
 
 # Include the bundled libraries
-!**/Libraries/x64/
-!**/Libraries/arm64/
+!libs/x64/
+!libs/arm64/
 
 # Debug view types
 !**/Resources/Debug

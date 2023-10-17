@@ -146,6 +146,24 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.CodeFixing", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.CodeFixers", "src\ComputeSharp.CodeFixers\ComputeSharp.CodeFixers.csproj", "{9B4448B1-200F-4966-8A13-A508691B3003}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A5013F9B-92EC-419F-B0B3-3D6B721E7104}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "x64", "x64", "{79FD7862-4707-4DE0-8777-3872558E4C1C}"
+	ProjectSection(SolutionItems) = preProject
+		libs\x64\dxcompiler.dll = libs\x64\dxcompiler.dll
+		libs\x64\dxil.dll = libs\x64\dxil.dll
+		libs\x64\WinPixEventRuntime.dll = libs\x64\WinPixEventRuntime.dll
+		libs\x64\WinPixEventRuntime_UAP.dll = libs\x64\WinPixEventRuntime_UAP.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm64", "arm64", "{B4F6A41C-AA9A-4302-92B3-AC64CF2E30F5}"
+	ProjectSection(SolutionItems) = preProject
+		libs\arm64\dxcompiler.dll = libs\arm64\dxcompiler.dll
+		libs\arm64\dxil.dll = libs\arm64\dxil.dll
+		libs\arm64\WinPixEventRuntime.dll = libs\arm64\WinPixEventRuntime.dll
+		libs\arm64\WinPixEventRuntime_UAP.dll = libs\arm64\WinPixEventRuntime_UAP.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -461,6 +479,8 @@ Global
 		{9EA5AE9D-C39A-4F43-B03E-0A848EA2558A} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{73C32D0F-64DB-4674-84E9-8FCC41228474} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{59A17380-24A0-4BD7-9012-B105A9E7D46F} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{79FD7862-4707-4DE0-8777-3872558E4C1C} = {A5013F9B-92EC-419F-B0B3-3D6B721E7104}
+		{B4F6A41C-AA9A-4302-92B3-AC64CF2E30F5} = {A5013F9B-92EC-419F-B0B3-3D6B721E7104}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
