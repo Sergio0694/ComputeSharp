@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using ComputeSharp.SourceGenerators.Dxc.Interop;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Direct3D.Dxc;

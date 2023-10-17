@@ -7,7 +7,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Windows.Win32.System.Com;
 
-namespace ComputeSharp.SourceGenerators.Dxc.Interop;
+namespace Windows.Win32;
 
 /// <summary>A type that allows working with pointers to COM objects more securely.</summary>
 /// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
