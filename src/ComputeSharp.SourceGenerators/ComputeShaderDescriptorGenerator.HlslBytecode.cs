@@ -10,8 +10,6 @@ using ComputeSharp.SourceGeneration.Models;
 using ComputeSharp.SourceGenerators.Dxc;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
@@ -47,24 +45,19 @@ partial class ComputeShaderDescriptorGenerator
 
                 try
                 {
+                    token.ThrowIfCancellationRequested();
+
                     // Try to load dxcompiler.dll and dxil.dll
                     DxcLibraryLoader.LoadNativeDxcLibraries();
 
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode
-                    using ComPtr<IDxcBlob> dxcBlobBytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan());
+                    byte[] bytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan(), token);
 
                     token.ThrowIfCancellationRequested();
 
-                    byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
-                    int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
-
-                    byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
-
-                    ImmutableArray<byte> bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
-
-                    return new HlslBytecodeInfo.Success(bytecode);
+                    return new HlslBytecodeInfo.Success(Unsafe.As<byte[], ImmutableArray<byte>>(ref bytecode));
                 }
                 catch (Win32Exception e)
                 {

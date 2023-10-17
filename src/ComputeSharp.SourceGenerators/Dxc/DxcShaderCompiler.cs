@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -79,12 +80,12 @@ internal sealed unsafe class DxcShaderCompiler
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public ComPtr<IDxcBlob> Compile(ReadOnlySpan<char> source)
+    public byte[] Compile(ReadOnlySpan<char> source, CancellationToken token)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
         using ComPtr<IDxcOperationResult> dxcOperationResult = default;
-        using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
         // Get the encoded blob from the source code
         fixed (char* p = source)
@@ -95,6 +96,8 @@ internal sealed unsafe class DxcShaderCompiler
                 1200,
                 dxcBlobEncoding.GetAddressOf()).Assert();
         }
+
+        token.ThrowIfCancellationRequested();
 
         // Try to compile the new compute shader
         fixed (char* shaderName = "")
@@ -119,6 +122,8 @@ internal sealed unsafe class DxcShaderCompiler
                 dxcOperationResult.GetAddressOf()).Assert();
         }
 
+        token.ThrowIfCancellationRequested();
+
         HRESULT status;
 
         dxcOperationResult.Get()->GetStatus(&status).Assert();
@@ -126,9 +131,14 @@ internal sealed unsafe class DxcShaderCompiler
         // The compilation was successful, so we can extract the shader bytecode
         if (status == 0)
         {
+            using ComPtr<IDxcBlob> dxcBlobBytecode = default;
+
             dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
 
-            return dxcBlobBytecode.Move();
+            byte* buffer = (byte*)dxcBlobBytecode.Get()->GetBufferPointer();
+            int length = checked((int)dxcBlobBytecode.Get()->GetBufferSize());
+
+            return new ReadOnlySpan<byte>(buffer, length).ToArray();
         }
 
         return ThrowHslsCompilationException(dxcOperationResult.Get());
@@ -140,7 +150,7 @@ internal sealed unsafe class DxcShaderCompiler
     /// <param name="dxcOperationResult">The input (faulting) operation.</param>
     /// <returns>This method always throws and never actually returs.</returns>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static ComPtr<IDxcBlob> ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
+    private static byte[] ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
