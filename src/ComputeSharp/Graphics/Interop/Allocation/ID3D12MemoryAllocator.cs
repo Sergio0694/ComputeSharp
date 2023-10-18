@@ -11,10 +11,7 @@ namespace ComputeSharp.Interop.Allocation;
 /// An object that can allocate resources for a given <see cref="ID3D12Device"/> instance.
 /// </summary>
 [Guid("2D5E55D2-9244-431F-868E-0D90AAB6E575")]
-internal unsafe struct ID3D12MemoryAllocator
-#if NET6_0_OR_GREATER
-//: IUnknown.Interface
-#endif
+internal unsafe struct ID3D12MemoryAllocator //: IUnknown.Interface
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12MemoryAllocator"/> (<c>2D5E55D2-9244-431F-868E-0D90AAB6E575</c>).
@@ -40,10 +37,8 @@ internal unsafe struct ID3D12MemoryAllocator
         }
     }
 
-#if NET6_0_OR_GREATER
     ///// <inheritdoc/>
     //static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
-#endif
 
     /// <summary>
     /// The vtable for the current instance.

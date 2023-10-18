@@ -124,54 +124,6 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
     /// </summary>
     private static class ID2D1ResourceTextureManagerMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Initialize"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int InitializeDelegate(
-            D2D1ResourceTextureManagerImpl* @this,
-            Guid* resourceId,
-            D2D1_RESOURCE_TEXTURE_PROPERTIES* resourceTextureProperties,
-            byte* data,
-            uint* strides,
-            uint dataSize);
-
-        /// <inheritdoc cref="Update"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int UpdateDelegate(
-            D2D1ResourceTextureManagerImpl* @this,
-            uint* minimumExtents,
-            uint* maximimumExtents,
-            uint* strides,
-            uint dimensions,
-            byte* data,
-            uint dataCount);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
-        /// </summary>
-        public static readonly InitializeDelegate InitializeWrapper = Initialize;
-
-        /// <summary>
-        /// A cached <see cref="UpdateDelegate"/> instance wrapping <see cref="Update"/>.
-        /// </summary>
-        public static readonly UpdateDelegate UpdateWrapper = Update;
-#endif
-
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)

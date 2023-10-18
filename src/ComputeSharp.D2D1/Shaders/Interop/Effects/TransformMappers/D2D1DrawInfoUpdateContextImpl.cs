@@ -12,20 +12,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// </summary>
 internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 {
-#if !NET6_0_OR_GREATER
-    /// <inheritdoc cref="QueryInterface"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int QueryInterfaceDelegate(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject);
-
-    /// <inheritdoc cref="AddRef"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint AddRefDelegate(D2D1DrawInfoUpdateContextImpl* @this);
-
-    /// <inheritdoc cref="Release"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint ReleaseDelegate(D2D1DrawInfoUpdateContextImpl* @this);
-#endif
-
     /// <summary>
     /// The shared vtable pointer for <see cref="D2D1DrawInfoUpdateContextImpl"/> instance, for <see cref="ID2D1DrawInfoUpdateContext"/>.
     /// </summary>
@@ -45,34 +31,18 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
 
         // ID2D1ResourceTextureManager
-#if NET6_0_OR_GREATER
         lpVtbl[0] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextMethods.QueryInterface;
         lpVtbl[1] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.AddRef;
         lpVtbl[2] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextMethods.Release;
         lpVtbl[3] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint*, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSize;
         lpVtbl[4] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.GetConstantBuffer;
         lpVtbl[5] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, byte*, uint, int>)&ID2D1DrawInfoUpdateContextMethods.SetConstantBuffer;
-#else
-        lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.QueryInterfaceWrapper);
-        lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.AddRefWrapper);
-        lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.ReleaseWrapper);
-        lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.GetConstantBufferSizeWrapper);
-        lpVtbl[4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.GetConstantBufferWrapper);
-        lpVtbl[5] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextMethods.SetConstantBufferWrapper);
-#endif
 
         // ID2D1ResourceTextureManagerInternal
-#if NET6_0_OR_GREATER
         lpVtbl[6 + 0] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, Guid*, void**, int>)&ID2D1DrawInfoUpdateContextInternalMethods.QueryInterface;
         lpVtbl[6 + 1] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.AddRef;
         lpVtbl[6 + 2] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, uint>)&ID2D1DrawInfoUpdateContextInternalMethods.Release;
         lpVtbl[6 + 3] = (delegate* unmanaged<D2D1DrawInfoUpdateContextImpl*, int>)&ID2D1DrawInfoUpdateContextInternalMethods.Close;
-#else
-        lpVtbl[6 + 0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextInternalMethods.QueryInterfaceWrapper);
-        lpVtbl[6 + 1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextInternalMethods.AddRefWrapper);
-        lpVtbl[6 + 2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextInternalMethods.ReleaseWrapper);
-        lpVtbl[6 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1DrawInfoUpdateContextInternalMethods.CloseWrapper);
-#endif
 
         return lpVtbl;
     }

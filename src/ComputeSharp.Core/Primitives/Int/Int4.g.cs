@@ -4816,8 +4816,6 @@ public unsafe partial struct Int4
     [UnscopedRef]
     public readonly ref readonly Int4 AAAA => ref *(Int4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
@@ -4825,8 +4823,6 @@ public unsafe partial struct Int4
 
         return $"<{this.x}{separator} {this.y}{separator} {this.z}{separator} {this.w}>";
     }
-
-#endif
 
     /// <summary>
     /// Negates a <see cref="Int4"/> value.

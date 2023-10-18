@@ -4815,8 +4815,6 @@ public unsafe partial struct Double4
     [UnscopedRef]
     public readonly ref readonly Double4 AAAA => ref *(Double4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
@@ -4824,8 +4822,6 @@ public unsafe partial struct Double4
 
         return $"<{this.x}{separator} {this.y}{separator} {this.z}{separator} {this.w}>";
     }
-
-#endif
 
     /// <summary>
     /// Negates a <see cref="Double4"/> value.

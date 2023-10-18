@@ -1727,15 +1727,11 @@ public unsafe partial struct Bool3
     [UnscopedRef]
     public readonly ref readonly Bool4 BBBB => ref *(Bool4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
         return $"<{this.x != 0}, {this.y != 0}, {this.z != 0}>";
     }
-
-#endif
 
     /// <summary>
     /// Negates a <see cref="Bool3"/> value.

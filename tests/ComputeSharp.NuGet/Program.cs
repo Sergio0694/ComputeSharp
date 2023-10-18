@@ -1,13 +1,9 @@
 using System.Diagnostics;
 using System.Linq;
-#if NET6_0_OR_GREATER
 using System.Runtime.Versioning;
-#endif
 using ComputeSharp;
 
-#if NET6_0_OR_GREATER
 [assembly: SupportedOSPlatform("windows6.2")]
-#endif
 
 float[] array = Enumerable.Range(1, 100).Select(static i => (float)i).ToArray();
 

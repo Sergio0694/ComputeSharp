@@ -12,20 +12,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 /// </summary>
 internal unsafe partial struct D2D1ResourceTextureManagerImpl
 {
-#if !NET6_0_OR_GREATER
-    /// <inheritdoc cref="QueryInterface"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int QueryInterfaceDelegate(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject);
-
-    /// <inheritdoc cref="AddRef"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint AddRefDelegate(D2D1ResourceTextureManagerImpl* @this);
-
-    /// <inheritdoc cref="Release"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate uint ReleaseDelegate(D2D1ResourceTextureManagerImpl* @this);
-#endif
-
     /// <summary>
     /// The shared vtable pointer for <see cref="D2D1ResourceTextureManagerImpl"/> instance, for <see cref="ID2D1ResourceTextureManager"/>.
     /// </summary>
@@ -45,34 +31,18 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 10);
 
         // ID2D1ResourceTextureManager
-#if NET6_0_OR_GREATER
         lpVtbl[0] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, Guid*, void**, int>)&ID2D1ResourceTextureManagerMethods.QueryInterface;
         lpVtbl[1] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerMethods.AddRef;
         lpVtbl[2] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerMethods.Release;
         lpVtbl[3] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)&ID2D1ResourceTextureManagerMethods.Initialize;
         lpVtbl[4] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint*, uint*, uint*, uint, byte*, uint, int>)&ID2D1ResourceTextureManagerMethods.Update;
-#else
-        lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.QueryInterfaceWrapper);
-        lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.AddRefWrapper);
-        lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.ReleaseWrapper);
-        lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.InitializeWrapper);
-        lpVtbl[4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerMethods.UpdateWrapper);
-#endif
 
         // ID2D1ResourceTextureManagerInternal
-#if NET6_0_OR_GREATER
         lpVtbl[5 + 0] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, Guid*, void**, int>)&ID2D1ResourceTextureManagerInternalMethods.QueryInterface;
         lpVtbl[5 + 1] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.AddRef;
         lpVtbl[5 + 2] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, uint>)&ID2D1ResourceTextureManagerInternalMethods.Release;
         lpVtbl[5 + 3] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, ID2D1EffectContext*, uint*, int>)&ID2D1ResourceTextureManagerInternalMethods.Initialize;
         lpVtbl[5 + 4] = (delegate* unmanaged<D2D1ResourceTextureManagerImpl*, ID2D1ResourceTexture**, int>)&ID2D1ResourceTextureManagerInternalMethods.GetResourceTexture;
-#else
-        lpVtbl[5 + 0] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.QueryInterfaceWrapper);
-        lpVtbl[5 + 1] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.AddRefWrapper);
-        lpVtbl[5 + 2] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.ReleaseWrapper);
-        lpVtbl[5 + 3] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.InitializeWrapper);
-        lpVtbl[5 + 4] = (void*)Marshal.GetFunctionPointerForDelegate(ID2D1ResourceTextureManagerInternalMethods.GetResourceTextureWrapper);
-#endif
 
         return lpVtbl;
     }

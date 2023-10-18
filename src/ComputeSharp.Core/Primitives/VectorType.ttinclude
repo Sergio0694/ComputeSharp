@@ -229,10 +229,6 @@ public unsafe partial struct <#=typeName#>
     PopIndent();
     WriteLine("");
 
-#>
-#if !SOURCE_GENERATOR
-
-<#
     if (elementTypeName == "Bool")
     {
 #>
@@ -256,10 +252,6 @@ public unsafe partial struct <#=typeName#>
 <#
     }
 
-#>
-
-#endif
-<#
     // Generate the negation operator
     if (elementTypeName != "UInt")
     {

@@ -12,50 +12,6 @@ partial struct D2D1DrawInfoUpdateContextImpl
     /// </summary>
     private static unsafe class ID2D1DrawInfoUpdateContextMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="GetConstantBufferSize"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetConstantBufferSizeDelegate(D2D1DrawInfoUpdateContextImpl* @this, uint* size);
-
-        /// <inheritdoc cref="GetConstantBuffer"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetConstantBufferDelegate(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
-
-        /// <inheritdoc cref="SetConstantBuffer"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int SetConstantBufferDelegate(D2D1DrawInfoUpdateContextImpl* @this, byte* buffer, uint bufferCount);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="GetConstantBufferSizeDelegate"/> instance wrapping <see cref="GetConstantBufferSize"/>.
-        /// </summary>
-        public static readonly GetConstantBufferSizeDelegate GetConstantBufferSizeWrapper = GetConstantBufferSize;
-
-        /// <summary>
-        /// A cached <see cref="GetConstantBufferDelegate"/> instance wrapping <see cref="GetConstantBuffer"/>.
-        /// </summary>
-        public static readonly GetConstantBufferDelegate GetConstantBufferWrapper = GetConstantBuffer;
-
-        /// <summary>
-        /// A cached <see cref="SetConstantBufferDelegate"/> instance wrapping <see cref="SetConstantBuffer"/>.
-        /// </summary>
-        public static readonly SetConstantBufferDelegate SetConstantBufferWrapper = SetConstantBuffer;
-#endif
-
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)

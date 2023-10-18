@@ -2,10 +2,8 @@ using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if NET6_0_OR_GREATER
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
-#endif
 
 namespace ComputeSharp;
 
@@ -18,10 +16,7 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
-#if NET6_0_OR_GREATER
-    , ISpanFormattable
-#endif
+public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>, ISpanFormattable
 {
     /// <summary>
     /// The red component.
@@ -90,7 +85,6 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Float4 ToPixel()
     {
-#if NET6_0_OR_GREATER
         if (Sse2.IsSupported)
         {
             int pack = Unsafe.As<Rgba32, int>(ref Unsafe.AsRef(in this));
@@ -104,7 +98,7 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
 
             return vNorm.AsVector4();
         }
-#endif
+
         Vector4 linear = new(this.R, this.G, this.B, this.A);
         Vector4 normalized = linear / byte.MaxValue;
 
@@ -159,7 +153,6 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
         return $"{nameof(Rgba32)}({this.R}, {this.G}, {this.B}, {this.A})";
     }
 
-#if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -171,5 +164,4 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
     {
         return destination.TryWrite(provider, $"{nameof(Rgba32)}({this.R}, {this.G}, {this.B}, {this.A})", out charsWritten);
     }
-#endif
 }

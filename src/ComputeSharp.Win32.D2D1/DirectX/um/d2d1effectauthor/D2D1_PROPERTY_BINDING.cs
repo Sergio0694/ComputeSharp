@@ -13,16 +13,8 @@ internal unsafe partial struct D2D1_PROPERTY_BINDING
     public ushort* propertyName;
 
     [NativeTypeName("PD2D1_PROPERTY_SET_FUNCTION")]
-#if NET6_0_OR_GREATER
-    public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> setFunction;
-#else
-    public void* setFunction;
-#endif
+    public delegate* unmanaged<IUnknown*, byte*, uint, HRESULT> setFunction;
 
     [NativeTypeName("PD2D1_PROPERTY_GET_FUNCTION")]
-#if NET6_0_OR_GREATER
-    public delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> getFunction;
-#else
-    public void* getFunction;
-#endif
+    public delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT> getFunction;
 }

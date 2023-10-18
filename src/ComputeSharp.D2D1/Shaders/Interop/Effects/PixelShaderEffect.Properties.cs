@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
@@ -11,107 +10,9 @@ namespace ComputeSharp.D2D1.Interop.Effects;
 /// <inheritdoc/>
 unsafe partial struct PixelShaderEffect
 {
-#if !NET6_0_OR_GREATER
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int PropertyGetFunctionDelegate(IUnknown* effect, byte* data, uint dataSize, uint* actualSize);
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.setFunction"/>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate int PropertySetFunctionDelegate(IUnknown* effect, byte* data, uint dataSize);
-
-    /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetConstantBufferImpl"/>.
-    /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetConstantBufferWrapper = GetConstantBufferImpl;
-
-    /// <summary>
-    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetConstantBufferImpl"/>.
-    /// </summary>
-    private static readonly PropertySetFunctionDelegate SetConstantBufferWrapper = SetConstantBufferImpl;
-
-    /// <summary>
-    /// A cached <see cref="PropertyGetFunctionDelegate"/> instance wrapping <see cref="GetTransformMapperImpl"/>.
-    /// </summary>
-    private static readonly PropertyGetFunctionDelegate GetTransformMapperWrapper = GetTransformMapperImpl;
-
-    /// <summary>
-    /// A cached <see cref="PropertySetFunctionDelegate"/> instance wrapping <see cref="SetTransformMapperImpl"/>.
-    /// </summary>
-    private static readonly PropertySetFunctionDelegate SetTransformMapperWrapper = SetTransformMapperImpl;
-#endif
-
-    /// <summary>
-    /// Gets the get accessor for the constant buffer.
-    /// </summary>
-#if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetConstantBuffer
-#else
-    public static void* GetConstantBuffer
-#endif
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET6_0_OR_GREATER
-        get => &GetConstantBufferImpl;
-#else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(GetConstantBufferWrapper);
-#endif
-    }
-
-    /// <summary>
-    /// Gets the set accessor for the constant buffer.
-    /// </summary>
-#if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetConstantBuffer
-#else
-    public static void* SetConstantBuffer
-#endif
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET6_0_OR_GREATER
-        get => &SetConstantBufferImpl;
-#else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(SetConstantBufferWrapper);
-#endif
-    }
-
-    /// <summary>
-    /// Gets the get accessor for the transform mapper.
-    /// </summary>
-#if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetTransformMapper
-#else
-    public static void* GetTransformMapper
-#endif
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET6_0_OR_GREATER
-        get => &GetTransformMapperImpl;
-#else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(GetTransformMapperWrapper);
-#endif
-    }
-
-    /// <summary>
-    /// Gets the set accessor for the transform mapper.
-    /// </summary>
-#if NET6_0_OR_GREATER
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetTransformMapper
-#else
-    public static void* SetTransformMapper
-#endif
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET6_0_OR_GREATER
-        get => &SetTransformMapperImpl;
-#else
-        get => (void*)Marshal.GetFunctionPointerForDelegate(SetTransformMapperWrapper);
-#endif
-    }
-
-    /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT GetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -163,8 +64,8 @@ unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int SetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT SetConstantBufferImpl(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -196,8 +97,8 @@ unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int GetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT GetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 
@@ -229,8 +130,8 @@ unsafe partial struct PixelShaderEffect
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int SetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT SetTransformMapperImpl(IUnknown* effect, byte* data, uint dataSize)
     {
         PixelShaderEffect* @this = (PixelShaderEffect*)effect;
 

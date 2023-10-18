@@ -284,11 +284,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         {
             device.GetReferenceTracker().DangerousRelease();
 
-#if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
-#else
-            return new(Task.CompletedTask);
-#endif
         }
 
         try

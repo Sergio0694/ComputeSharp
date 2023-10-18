@@ -464,8 +464,6 @@ public unsafe partial struct Float2
     [UnscopedRef]
     public readonly ref readonly Float4 GGGG => ref *(Float4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
@@ -473,8 +471,6 @@ public unsafe partial struct Float2
 
         return $"<{this.x}{separator} {this.y}>";
     }
-
-#endif
 
     /// <summary>
     /// Negates a <see cref="Float2"/> value.
