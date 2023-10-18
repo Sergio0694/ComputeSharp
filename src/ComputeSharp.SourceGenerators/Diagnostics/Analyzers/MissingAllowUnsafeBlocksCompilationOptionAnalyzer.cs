@@ -1,33 +1,19 @@
-using System.Collections.Immutable;
-using ComputeSharp.SourceGeneration.Extensions;
+using ComputeSharp.SourceGeneration.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators;
 
-/// <summary>
-/// A diagnostic analyzer that generates an error if the <c>AllowUnsafeBlocks</c> compilation option is not set.
-/// </summary>
+/// <inheritdoc/>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class MissingAllowUnsafeBlocksCompilationOptionAnalyzer : DiagnosticAnalyzer
+public sealed class MissingAllowUnsafeBlocksCompilationOptionAnalyzer : MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase
 {
-    /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(MissingAllowUnsafeBlocksOption);
-
-    /// <inheritdoc/>
-    public override void Initialize(AnalysisContext context)
+    /// <summary>
+    /// Creates a new <see cref="MissingAllowUnsafeBlocksCompilationOptionAnalyzer"/> instance.
+    /// </summary>
+    public MissingAllowUnsafeBlocksCompilationOptionAnalyzer()
+        : base(MissingAllowUnsafeBlocksOption)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
-        context.EnableConcurrentExecution();
-
-        context.RegisterCompilationAction(static context =>
-        {
-            // Check whether unsafe blocks are available, and emit an error if they are not
-            if (!context.Compilation.IsAllowUnsafeBlocksEnabled())
-            {
-                context.ReportDiagnostic(Diagnostic.Create(MissingAllowUnsafeBlocksOption, location: null));
-            }
-        });
     }
 }
