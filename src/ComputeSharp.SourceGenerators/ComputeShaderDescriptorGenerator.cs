@@ -144,9 +144,9 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
         {
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> declaredMembers = new();
 
-            declaredMembers.Add(HlslBytecode.WriteThreadsXSyntax);
-            declaredMembers.Add(HlslBytecode.WriteThreadsYSyntax);
-            declaredMembers.Add(HlslBytecode.WriteThreadsZSyntax);
+            declaredMembers.Add(NumThreads.WriteThreadsXSyntax);
+            declaredMembers.Add(NumThreads.WriteThreadsYSyntax);
+            declaredMembers.Add(NumThreads.WriteThreadsZSyntax);
             declaredMembers.Add(MetadataProperties.WriteConstantBufferSizeSyntax);
             declaredMembers.Add(MetadataProperties.WriteIsStaticSamplerRequiredSyntax);
             declaredMembers.Add(ResourceDescriptorRanges.WriteSyntax);

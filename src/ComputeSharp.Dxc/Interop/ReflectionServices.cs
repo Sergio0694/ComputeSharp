@@ -43,9 +43,7 @@ public static partial class ReflectionServices
     private static unsafe ShaderInfo GetNonGenericShaderInfo<T>()
         where T : struct, IComputeShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        ReadOnlyMemory<byte> hlslBytecode = shader.HlslBytecode;
+        ReadOnlyMemory<byte> hlslBytecode = T.HlslBytecode;
 
         using ComPtr<IDxcUtils> dxcUtils = default;
 
@@ -77,7 +75,7 @@ public static partial class ReflectionServices
 
         return new(
             CompilerVersion: new string(d3D12ShaderDescription.Creator),
-            HlslSource: shader.HlslSource,
+            HlslSource: T.HlslSource,
             HlslBytecode: hlslBytecode,
             ConstantBufferCount: d3D12ShaderDescription.ConstantBuffers,
             BoundResourceCount: d3D12ShaderDescription.BoundResources,

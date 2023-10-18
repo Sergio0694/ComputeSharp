@@ -19,7 +19,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsX => {info.ThreadsX};");
+            writer.WriteLine($"static int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsX => {info.ThreadsX};");
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsY => {info.ThreadsY};");
+            writer.WriteLine($"static int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsY => {info.ThreadsY};");
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsZ => {info.ThreadsZ};");
+            writer.WriteLine($"static int global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ThreadsZ => {info.ThreadsZ};");
         }
     }
 }

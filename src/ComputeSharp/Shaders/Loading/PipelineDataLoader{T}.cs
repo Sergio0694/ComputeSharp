@@ -65,9 +65,7 @@ internal static unsafe class PipelineDataLoader<T>
     /// <param name="d3D12RootSignature">The allocated <see cref="ID3D12RootSignature"/> instance.</param>
     private static void CreateD3D12RootSignature(ID3D12Device* d3D12Device, ID3D12RootSignature** d3D12RootSignature)
     {
-        Unsafe.SkipInit(out T shader);
-
-        ReadOnlySpan<ResourceDescriptorRange> resourceDescriptorRanges = shader.ResourceDescriptorRanges.Span;
+        ReadOnlySpan<ResourceDescriptorRange> resourceDescriptorRanges = T.ResourceDescriptorRanges.Span;
 
         D3D12_DESCRIPTOR_RANGE1[]? d3D12DescriptorRangesArray = null;
 
@@ -94,13 +92,13 @@ internal static unsafe class PipelineDataLoader<T>
         }
 
         // Calculate the actual size of the constant buffer in DWORD values
-        int root32BitConstantCount = shader.ConstantBufferSize / sizeof(int);
+        int root32BitConstantCount = T.ConstantBufferSize / sizeof(int);
 
         // Create the D3D12 root signature
         d3D12Device->CreateRootSignature(
             root32BitConstantCount,
             d3D12DescriptorRanges,
-            shader.IsStaticSamplerRequired,
+            T.IsStaticSamplerRequired,
             d3D12RootSignature);
 
         // Return the array to the pool if no exceptions have been thrown
@@ -118,11 +116,9 @@ internal static unsafe class PipelineDataLoader<T>
     /// <param name="d3D12PipelineState">The resulting <see cref="ID3D12PipelineState"/> instance.</param>
     private static void CreateD3D12PipelineState(ID3D12Device* d3D12Device, ID3D12RootSignature* d3D12RootSignature, ID3D12PipelineState** d3D12PipelineState)
     {
-        Unsafe.SkipInit(out T shader);
-
-        fixed (byte* hlslBytecodePtr = shader.HlslBytecode.Span)
+        fixed (byte* hlslBytecodePtr = T.HlslBytecode.Span)
         {
-            D3D12_SHADER_BYTECODE d3D12ShaderBytecode = new(hlslBytecodePtr, (nuint)shader.HlslBytecode.Length);
+            D3D12_SHADER_BYTECODE d3D12ShaderBytecode = new(hlslBytecodePtr, (nuint)T.HlslBytecode.Length);
 
             d3D12Device->CreateComputePipelineState(d3D12RootSignature, d3D12ShaderBytecode, d3D12PipelineState);
         }
