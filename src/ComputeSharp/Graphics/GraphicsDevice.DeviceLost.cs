@@ -11,13 +11,6 @@ namespace ComputeSharp;
 /// <inheritdoc/>
 unsafe partial class GraphicsDevice
 {
-#if !NET6_0_OR_GREATER
-    /// <summary>
-    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallbackForRegisterDeviceLostCallback(void*, byte)"/>.
-    /// </summary>
-    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForRegisterDeviceLostCallbackWrapper = WaitForSingleObjectCallbackForRegisterDeviceLostCallback;
-#endif
-
     /// <summary>
     /// Throws an <see cref="InvalidOperationException"/> if the current device has been lost.
     /// </summary>
@@ -124,11 +117,7 @@ unsafe partial class GraphicsDevice
         _ = Windows.RegisterWaitForSingleObject(
             phNewWaitObject: &waitHandle,
             hObject: eventHandle,
-#if NET6_0_OR_GREATER
             Callback: &WaitForSingleObjectCallbackForRegisterDeviceLostCallback,
-#else
-            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackForRegisterDeviceLostCallbackWrapper),
-#endif
             Context: (void*)GCHandle.ToIntPtr(handle),
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);

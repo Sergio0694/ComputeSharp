@@ -17,21 +17,6 @@ namespace ComputeSharp;
 /// <inheritdoc/>
 unsafe partial class GraphicsDevice
 {
-#if !NET6_0_OR_GREATER
-    /// <summary>
-    /// A delegate for a callback to pass to <see cref="Windows.RegisterWaitForSingleObject(HANDLE*, HANDLE, void*, void*, uint, uint)"/>.
-    /// </summary>
-    /// <param name="pContext">The input context.</param>
-    /// <param name="timedOut">Whether the wait has timed out.</param>
-    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    private delegate void WaitForSingleObjectCallbackDelegate(void* pContext, byte timedOut);
-
-    /// <summary>
-    /// A cached <see cref="WaitForSingleObjectCallbackDelegate"/> instance wrapping <see cref="WaitForSingleObjectCallbackForWaitForFenceAsync(void*, byte)"/>.
-    /// </summary>
-    private static readonly WaitForSingleObjectCallbackDelegate WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper = WaitForSingleObjectCallbackForWaitForFenceAsync;
-#endif
-
     /// <summary>
     /// Executes a given command list and waits for the operation to be completed.
     /// </summary>
@@ -67,11 +52,7 @@ unsafe partial class GraphicsDevice
             d3D12CommandQueue->ExecuteCommandLists(1, d3D12CommandList);
         }
 
-#if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref d3D12FenceValue);
-#else
-        ulong updatedFenceValue = (ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref d3D12FenceValue));
-#endif
 
         // Signal to the target fence with the updated value. Note that incrementing the
         // target fence value to signal must be done after executing the command list.
@@ -101,11 +82,7 @@ unsafe partial class GraphicsDevice
             this.d3D12ComputeCommandQueue.Get()->ExecuteCommandLists(1, d3D12CommandList);
         }
 
-#if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref this.nextD3D12ComputeFenceValue);
-#else
-        ulong updatedFenceValue = (ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref this.nextD3D12ComputeFenceValue));
-#endif
 
         // Signal to the target fence with the updated value. Note that incrementing the
         // target fence value to signal must be done after executing the command list.
@@ -117,11 +94,7 @@ unsafe partial class GraphicsDevice
             // Return the rented command list and command allocator so that they can be reused
             this.computeCommandListPool.Return(commandList.DetachD3D12CommandList(), commandList.DetachD3D12CommandAllocator());
 
-#if NET6_0_OR_GREATER
             return ValueTask.CompletedTask;
-#else
-            return new(Task.CompletedTask);
-#endif
         }
 
         // Setup the awaitable task
@@ -198,11 +171,7 @@ unsafe partial class GraphicsDevice
         int result = Windows.RegisterWaitForSingleObject(
             phNewWaitObject: &waitHandle,
             hObject: eventHandle,
-#if NET6_0_OR_GREATER
             Callback: &WaitForSingleObjectCallbackForWaitForFenceAsync,
-#else
-            Callback: (void*)Marshal.GetFunctionPointerForDelegate(WaitForSingleObjectCallbackForWaitForFenceAsyncWrapper),
-#endif
             Context: callbackContext,
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);

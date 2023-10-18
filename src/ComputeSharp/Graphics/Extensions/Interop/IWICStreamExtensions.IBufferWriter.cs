@@ -35,141 +35,10 @@ unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping an <see cref="IBufferWriter{T}"/> instance.
     /// </summary>
-    private unsafe partial struct IBufferWriterWrapper
-#if NET6_0_OR_GREATER
-    //: IUnknown.Interface
-#endif
+    private unsafe partial struct IBufferWriterWrapper //: IUnknown.Interface
     {
-#if NET6_0_OR_GREATER
         ///// <inheritdoc/>
         //static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
-#else
-        /// <inheritdoc cref="QueryInterface"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int QueryInterfaceDelegate(IBufferWriterWrapper* @this, Guid* riid, void** ppvObject);
-
-        /// <inheritdoc cref="AddRef"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate uint AddRefDelegate(IBufferWriterWrapper* @this);
-
-        /// <inheritdoc cref="Release"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate uint ReleaseDelegate(IBufferWriterWrapper* @this);
-
-        /// <inheritdoc cref="Read"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT ReadDelegate(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbRead);
-
-        /// <inheritdoc cref="Write"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT WriteDelegate(IBufferWriterWrapper* @this, void* pv, uint cb, uint* pcbWritten);
-
-        /// <inheritdoc cref="Seek"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT SeekDelegate(IBufferWriterWrapper* @this, LARGE_INTEGER dlibMove, uint dwOrigin, ULARGE_INTEGER* plibNewPosition);
-
-        /// <inheritdoc cref="SetSize"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT SetSizeDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libNewSize);
-
-        /// <inheritdoc cref="CopyTo"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT CopyToDelegate(IBufferWriterWrapper* @this, IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten);
-
-        /// <inheritdoc cref="Commit"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT CommitDelegate(IBufferWriterWrapper* @this, uint grfCommitFlags);
-
-        /// <inheritdoc cref="Revert"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT RevertDelegate(IBufferWriterWrapper* @this);
-
-        /// <inheritdoc cref="LockRegion"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT LockRegionDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
-
-        /// <inheritdoc cref="UnlockRegion"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT UnlockRegionDelegate(IBufferWriterWrapper* @this, ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, uint dwLockType);
-
-        /// <inheritdoc cref="Stat"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT StatDelegate(IBufferWriterWrapper* @this, STATSTG* pstatstg, uint grfStatFlag);
-
-        /// <inheritdoc cref="Clone"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate HRESULT CloneDelegate(IBufferWriterWrapper* @this, IStream** ppstm);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        private static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        private static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        private static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="ReadDelegate"/> instance wrapping <see cref="Read"/>.
-        /// </summary>
-        private static readonly ReadDelegate ReadWrapper = Read;
-
-        /// <summary>
-        /// A cached <see cref="WriteDelegate"/> instance wrapping <see cref="Write"/>.
-        /// </summary>
-        private static readonly WriteDelegate WriteWrapper = Write;
-
-        /// <summary>
-        /// A cached <see cref="SeekDelegate"/> instance wrapping <see cref="Seek"/>.
-        /// </summary>
-        private static readonly SeekDelegate SeekWrapper = Seek;
-
-        /// <summary>
-        /// A cached <see cref="SetSizeDelegate"/> instance wrapping <see cref="SetSize"/>.
-        /// </summary>
-        private static readonly SetSizeDelegate SetSizeWrapper = SetSize;
-
-        /// <summary>
-        /// A cached <see cref="CopyToDelegate"/> instance wrapping <see cref="CopyTo"/>.
-        /// </summary>
-        private static readonly CopyToDelegate CopyToWrapper = CopyTo;
-
-        /// <summary>
-        /// A cached <see cref="CommitDelegate"/> instance wrapping <see cref="Commit"/>.
-        /// </summary>
-        private static readonly CommitDelegate CommitWrapper = Commit;
-
-        /// <summary>
-        /// A cached <see cref="RevertDelegate"/> instance wrapping <see cref="Revert"/>.
-        /// </summary>
-        private static readonly RevertDelegate RevertWrapper = Revert;
-
-        /// <summary>
-        /// A cached <see cref="LockRegionDelegate"/> instance wrapping <see cref="LockRegion"/>.
-        /// </summary>
-        private static readonly LockRegionDelegate LockRegionWrapper = LockRegion;
-
-        /// <summary>
-        /// A cached <see cref="UnlockRegionDelegate"/> instance wrapping <see cref="UnlockRegion"/>.
-        /// </summary>
-        private static readonly UnlockRegionDelegate UnlockRegionWrapper = UnlockRegion;
-
-        /// <summary>
-        /// A cached <see cref="StatDelegate"/> instance wrapping <see cref="Stat"/>.
-        /// </summary>
-        private static readonly StatDelegate StatWrapper = Stat;
-
-        /// <summary>
-        /// A cached <see cref="CloneDelegate"/> instance wrapping <see cref="Clone"/>.
-        /// </summary>
-        private static readonly CloneDelegate CloneWrapper = Clone;
-#endif
 
         /// <summary>
         /// The shared vtable pointer for <see cref="IBufferWriterWrapper"/> instances.
@@ -184,7 +53,6 @@ unsafe partial class IWICStreamExtensions
         {
             void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IBufferWriterWrapper), sizeof(void*) * 14);
 
-#if NET6_0_OR_GREATER
             lpVtbl[0] = (delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, int>)&QueryInterface;
             lpVtbl[1] = (delegate* unmanaged<IBufferWriterWrapper*, uint>)&AddRef;
             lpVtbl[2] = (delegate* unmanaged<IBufferWriterWrapper*, uint>)&Release;
@@ -199,22 +67,6 @@ unsafe partial class IWICStreamExtensions
             lpVtbl[11] = (delegate* unmanaged<IBufferWriterWrapper*, ULARGE_INTEGER, ULARGE_INTEGER, uint, HRESULT>)&UnlockRegion;
             lpVtbl[12] = (delegate* unmanaged<IBufferWriterWrapper*, STATSTG*, uint, HRESULT>)&Stat;
             lpVtbl[13] = (delegate* unmanaged<IBufferWriterWrapper*, IStream**, HRESULT>)&Clone;
-#else
-            lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(QueryInterfaceWrapper);
-            lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(AddRefWrapper);
-            lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ReleaseWrapper);
-            lpVtbl[3] = (void*)Marshal.GetFunctionPointerForDelegate(ReadWrapper);
-            lpVtbl[4] = (void*)Marshal.GetFunctionPointerForDelegate(WriteWrapper);
-            lpVtbl[5] = (void*)Marshal.GetFunctionPointerForDelegate(SeekWrapper);
-            lpVtbl[6] = (void*)Marshal.GetFunctionPointerForDelegate(SetSizeWrapper);
-            lpVtbl[7] = (void*)Marshal.GetFunctionPointerForDelegate(CopyToWrapper);
-            lpVtbl[8] = (void*)Marshal.GetFunctionPointerForDelegate(CommitWrapper);
-            lpVtbl[9] = (void*)Marshal.GetFunctionPointerForDelegate(RevertWrapper);
-            lpVtbl[10] = (void*)Marshal.GetFunctionPointerForDelegate(LockRegionWrapper);
-            lpVtbl[11] = (void*)Marshal.GetFunctionPointerForDelegate(UnlockRegionWrapper);
-            lpVtbl[12] = (void*)Marshal.GetFunctionPointerForDelegate(StatWrapper);
-            lpVtbl[13] = (void*)Marshal.GetFunctionPointerForDelegate(CloneWrapper);
-#endif
 
             return lpVtbl;
         }
@@ -260,25 +112,23 @@ unsafe partial class IWICStreamExtensions
             return Unsafe.As<IBufferWriter<byte>>(this.writerHandle.Target!);
         }
 
-#if NET6_0_OR_GREATER
         /// <inheritdoc/>
-        public HRESULT QueryInterface(Guid* riid, void** ppvObject)
+        private HRESULT QueryInterface(Guid* riid, void** ppvObject)
         {
             return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         /// <inheritdoc/>
-        public uint AddRef()
+        private uint AddRef()
         {
             return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
 
         /// <inheritdoc/>
-        public uint Release()
+        private uint Release()
         {
             return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
         }
-#endif
 
         /// <inheritdoc cref="IStream.QueryInterface(Guid*, void**)"/>
         [UnmanagedCallersOnly]

@@ -101,44 +101,6 @@ partial class DeviceHelper
     /// </summary>
     private unsafe struct IDXGIFactory4As6Backcompat
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Release"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate uint ReleaseDelegate(IDXGIFactory4As6Backcompat* @this);
-
-        /// <inheritdoc cref="EnumAdapters"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int EnumAdaptersDelegate(IDXGIFactory4As6Backcompat* @this, uint Adapter, IDXGIAdapter** ppAdapter);
-
-        /// <inheritdoc cref="EnumWarpAdapter"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int EnumWarpAdapterDelegate(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter);
-
-        /// <inheritdoc cref="EnumAdapterByGpuPreference"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        private delegate int EnumAdapterByGpuPreferenceDelegate(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter);
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        private static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="EnumAdaptersDelegate"/> instance wrapping <see cref="EnumAdapters"/>.
-        /// </summary>
-        private static readonly EnumAdaptersDelegate EnumAdaptersWrapper = EnumAdapters;
-
-        /// <summary>
-        /// A cached <see cref="EnumWarpAdapterDelegate"/> instance wrapping <see cref="EnumWarpAdapter"/>.
-        /// </summary>
-        private static readonly EnumWarpAdapterDelegate EnumWarpAdapterWrapper = EnumWarpAdapter;
-
-        /// <summary>
-        /// A cached <see cref="EnumAdapterByGpuPreferenceDelegate"/> instance wrapping <see cref="EnumAdapterByGpuPreference"/>.
-        /// </summary>
-        private static readonly EnumAdapterByGpuPreferenceDelegate EnumAdapterByGpuPreferenceWrapper = EnumAdapterByGpuPreference;
-#endif
-
         /// <summary>
         /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
         /// </summary>
@@ -154,17 +116,10 @@ partial class DeviceHelper
 
             new Span<IntPtr>(lpVtbl, 30).Clear();
 
-#if NET6_0_OR_GREATER
             lpVtbl[2] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint>)&Release;
             lpVtbl[7] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, IDXGIAdapter**, int>)&EnumAdapters;
             lpVtbl[27] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
             lpVtbl[29] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
-#else
-            lpVtbl[2] = (void*)Marshal.GetFunctionPointerForDelegate(ReleaseWrapper);
-            lpVtbl[7] = (void*)Marshal.GetFunctionPointerForDelegate(EnumAdaptersWrapper);
-            lpVtbl[27] = (void*)Marshal.GetFunctionPointerForDelegate(EnumWarpAdapterWrapper);
-            lpVtbl[29] = (void*)Marshal.GetFunctionPointerForDelegate(EnumAdapterByGpuPreferenceWrapper);
-#endif
 
             return lpVtbl;
         }

@@ -11,10 +11,7 @@ namespace ComputeSharp.Interop.Allocation;
 /// An allocation wrapper for a native <see cref="ID3D12Resource"/> object.
 /// </summary>
 [Guid("D42D5782-2DE7-4539-A817-482E3AA01E2E")]
-internal unsafe struct ID3D12Allocation
-#if NET6_0_OR_GREATER
-//: IUnknown.Interface
-#endif
+internal unsafe struct ID3D12Allocation //: IUnknown.Interface
 {
     /// <summary>
     /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12Allocation"/> (<c>D42D5782-2DE7-4539-A817-482E3AA01E2E</c>).
@@ -40,10 +37,8 @@ internal unsafe struct ID3D12Allocation
         }
     }
 
-#if NET6_0_OR_GREATER
     ///// <inheritdoc/>
     //static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
-#endif
 
     /// <summary>
     /// The vtable for the current instance.

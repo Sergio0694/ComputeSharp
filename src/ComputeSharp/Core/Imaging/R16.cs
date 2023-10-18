@@ -11,10 +11,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct R16 : IEquatable<R16>, IPixel<R16, float>
-#if NET6_0_OR_GREATER
-    , ISpanFormattable
-#endif
+public struct R16 : IEquatable<R16>, IPixel<R16, float>, ISpanFormattable
 {
     /// <summary>
     /// The red component.
@@ -97,7 +94,6 @@ public struct R16 : IEquatable<R16>, IPixel<R16, float>
         return $"{nameof(R16)}({this.R})";
     }
 
-#if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -109,5 +105,4 @@ public struct R16 : IEquatable<R16>, IPixel<R16, float>
     {
         return destination.TryWrite(provider, $"{nameof(R16)}({this.R})", out charsWritten);
     }
-#endif
 }
