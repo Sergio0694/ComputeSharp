@@ -17,9 +17,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>LoadConstantBuffer</c> method.
+    /// A helper with all logic to generate the <c>ConstantBuffer</c> methods and additional types.
     /// </summary>
-    private static partial class LoadConstantBuffer
+    private static partial class ConstantBuffer
     {
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
