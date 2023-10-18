@@ -6,7 +6,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("B4F34A19-2383-4D76-94F6-EC343657C3DC")]
 [NativeTypeName("struct ID2D1CommandList : ID2D1Image")]

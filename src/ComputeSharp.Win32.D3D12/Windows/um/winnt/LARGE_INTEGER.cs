@@ -5,7 +5,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 [StructLayout(LayoutKind.Explicit)]
 internal partial struct LARGE_INTEGER

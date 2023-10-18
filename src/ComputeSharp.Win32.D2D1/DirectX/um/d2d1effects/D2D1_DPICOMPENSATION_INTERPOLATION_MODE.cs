@@ -3,7 +3,7 @@
 // Ported from um/d2d1effects.h in the Windows SDK for Windows 10.0.22621.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal enum D2D1_DPICOMPENSATION_INTERPOLATION_MODE : uint
 {

@@ -3,8 +3,7 @@ using System.Runtime.CompilerServices;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using Windows.Graphics.Effects;
 
 namespace ComputeSharp.D2D1.WinUI.Buffers;

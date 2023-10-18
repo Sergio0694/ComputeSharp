@@ -2,7 +2,7 @@
 
 using System;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal readonly unsafe partial struct HRESULT : IComparable, IComparable<HRESULT>, IEquatable<HRESULT>, IFormattable
 {

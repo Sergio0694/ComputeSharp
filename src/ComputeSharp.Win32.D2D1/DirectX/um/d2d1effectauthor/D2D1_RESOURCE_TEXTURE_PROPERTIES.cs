@@ -5,7 +5,7 @@
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D2D1_RESOURCE_TEXTURE_PROPERTIES
 {

@@ -6,9 +6,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("2411E7E1-12AC-4CCF-BD14-9798E8534DC0")]
 [NativeTypeName("struct IDXGIAdapter : IDXGIObject")]

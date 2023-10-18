@@ -12,8 +12,7 @@ using Windows.Win32.Graphics.Direct3D.Fxc;
 using DirectX = Windows.Win32.PInvoke;
 #else
 using ComputeSharp.D2D1.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;

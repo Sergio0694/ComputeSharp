@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using WinRT;
-using IInspectable = TerraFX.Interop.WinRT.IInspectable;
+using IInspectable = ComputeSharp.Win32.IInspectable;
 
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 

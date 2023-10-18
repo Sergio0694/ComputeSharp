@@ -7,12 +7,10 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using Windows.Graphics.Effects;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_D2D_IMAGE_FLAGS;
 using static ABI.Microsoft.Graphics.Canvas.WIN2D_GET_DEVICE_ASSOCIATION_TYPE;
-using Win32 = TerraFX.Interop.Windows.Windows;
 
 namespace ComputeSharp.D2D1.WinUI;
 
@@ -64,7 +62,7 @@ unsafe partial class PixelShaderEffect<T>
         }
 
         // Set the association type if the copy was successful
-        if (Win32.SUCCEEDED(hresult))
+        if (Win32.Windows.SUCCEEDED(hresult))
         {
             *type = WIN2D_GET_DEVICE_ASSOCIATION_TYPE_REALIZATION_DEVICE;
         }

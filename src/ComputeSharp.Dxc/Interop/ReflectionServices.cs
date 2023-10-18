@@ -2,11 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Descriptors;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-#if !NET6_0_OR_GREATER
-using DirectX = TerraFX.Interop.DirectX.DirectX2;
-#endif
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.Interop;
 

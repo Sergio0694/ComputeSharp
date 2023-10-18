@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 [Guid("00000000-0000-0000-C000-000000000046")]
 internal unsafe partial struct IUnknown

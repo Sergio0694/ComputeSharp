@@ -1,4 +1,4 @@
-using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
+using static ComputeSharp.Win32.D3D_FEATURE_LEVEL;
 
 namespace ComputeSharp.D2D1.Interop;
 

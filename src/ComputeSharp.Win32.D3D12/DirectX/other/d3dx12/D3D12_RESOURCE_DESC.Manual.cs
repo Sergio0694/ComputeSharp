@@ -4,12 +4,12 @@
 // Original source is Copyright © Microsoft. All rights reserved. Licensed under the MIT License (MIT).
 
 using System;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_DIMENSION;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_FLAGS;
-using static TerraFX.Interop.DirectX.D3D12_TEXTURE_LAYOUT;
-using static TerraFX.Interop.DirectX.DXGI_FORMAT;
+using static ComputeSharp.Win32.D3D12_RESOURCE_DIMENSION;
+using static ComputeSharp.Win32.D3D12_RESOURCE_FLAGS;
+using static ComputeSharp.Win32.D3D12_TEXTURE_LAYOUT;
+using static ComputeSharp.Win32.DXGI_FORMAT;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D3D12_RESOURCE_DESC : IEquatable<D3D12_RESOURCE_DESC>
 {

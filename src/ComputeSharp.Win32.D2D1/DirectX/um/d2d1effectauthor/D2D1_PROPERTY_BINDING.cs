@@ -5,11 +5,7 @@
 
 #pragma warning disable CS0649
 
-#if NET6_0_OR_GREATER
-using TerraFX.Interop.Windows;
-#endif
-
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D2D1_PROPERTY_BINDING
 {

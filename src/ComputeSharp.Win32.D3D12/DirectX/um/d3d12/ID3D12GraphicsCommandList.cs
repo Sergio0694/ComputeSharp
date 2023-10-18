@@ -6,9 +6,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("5B160D0F-AC1B-4185-8BA8-B3AE42A5A455")]
 [NativeTypeName("struct ID3D12GraphicsCommandList : ID3D12CommandList")]

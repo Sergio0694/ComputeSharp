@@ -3,9 +3,9 @@
 // Ported from um/d2d1.h in the Windows SDK for Windows 10.0.20348.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
+using static ComputeSharp.Win32.D3D_FEATURE_LEVEL;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 internal enum D2D1_FEATURE_LEVEL : uint
 {

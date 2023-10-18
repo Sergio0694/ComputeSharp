@@ -3,7 +3,7 @@ using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
 using ComputeSharp.Interop;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using Windows.Foundation;
 using ICanvasResourceCreator = Microsoft.Graphics.Canvas.ICanvasResourceCreator;
 

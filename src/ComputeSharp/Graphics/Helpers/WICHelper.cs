@@ -4,7 +4,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.Graphics.Helpers;
 

@@ -2,8 +2,7 @@ using System.Runtime.CompilerServices;
 #if !NET6_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Interop.Effects;
 

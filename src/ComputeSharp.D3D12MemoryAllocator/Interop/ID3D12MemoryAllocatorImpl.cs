@@ -3,9 +3,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12MA_ALLOCATION_FLAGS;
+using ComputeSharp.Win32;
+using D3D12MA_Allocation = TerraFX.Interop.DirectX.D3D12MA_Allocation;
+using D3D12MA_ALLOCATION_DESC = TerraFX.Interop.DirectX.D3D12MA_ALLOCATION_DESC;
+using D3D12MA_ALLOCATION_FLAGS = TerraFX.Interop.DirectX.D3D12MA_ALLOCATION_FLAGS;
+using D3D12MA_Allocator = TerraFX.Interop.DirectX.D3D12MA_Allocator;
+using D3D12MA_Pool = TerraFX.Interop.DirectX.D3D12MA_Pool;
 
 namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 
@@ -180,10 +183,12 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
         BOOL clearAllocation,
         ID3D12Allocation** allocation)
     {
-        D3D12MA_ALLOCATION_FLAGS allocationFlags = clearAllocation ? D3D12MA_ALLOCATION_FLAG_COMMITTED : D3D12MA_ALLOCATION_FLAG_NONE;
+        D3D12MA_ALLOCATION_FLAGS allocationFlags = clearAllocation ?
+            D3D12MA_ALLOCATION_FLAGS.D3D12MA_ALLOCATION_FLAG_COMMITTED :
+            D3D12MA_ALLOCATION_FLAGS.D3D12MA_ALLOCATION_FLAG_NONE;
 
         D3D12MA_ALLOCATION_DESC allocationDesc = default;
-        allocationDesc.HeapType = heapType;
+        allocationDesc.HeapType = (TerraFX.Interop.DirectX.D3D12_HEAP_TYPE)heapType;
         allocationDesc.Flags = allocationFlags;
         allocationDesc.CustomPool = @this->pool;
 
@@ -191,16 +196,16 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Invoke D3D12MA and create an allocation and resource
-        HRESULT hresult = @this->allocator->CreateResource(
+        TerraFX.Interop.Windows.HRESULT hresult = @this->allocator->CreateResource(
             pAllocDesc: &allocationDesc,
-            pResourceDesc: resourceDescription,
-            InitialResourceState: resourceStates,
+            pResourceDesc: (TerraFX.Interop.DirectX.D3D12_RESOURCE_DESC*)resourceDescription,
+            InitialResourceState: (TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES)resourceStates,
             pOptimizedClearValue: null,
             ppAllocation: d3D12MA_allocation.GetAddressOf(),
             riidResource: Windows.__uuidof<ID3D12Resource>(),
             ppvResource: (void**)d3D12Resource.GetAddressOf());
 
-        if (!Windows.SUCCEEDED(hresult))
+        if (!TerraFX.Interop.Windows.Windows.SUCCEEDED(hresult))
         {
             return hresult;
         }

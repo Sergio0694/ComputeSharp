@@ -6,9 +6,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("310D36A0-D2E7-4C0A-AA04-6A9D23B8886A")]
 [NativeTypeName("struct IDXGISwapChain : IDXGIDeviceSubObject")]

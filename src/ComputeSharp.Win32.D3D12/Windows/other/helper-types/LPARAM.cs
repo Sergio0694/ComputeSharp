@@ -2,7 +2,7 @@
 
 using System;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal readonly unsafe partial struct LPARAM : IComparable, IComparable<LPARAM>, IEquatable<LPARAM>, IFormattable
 {

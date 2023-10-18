@@ -3,9 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Commands;
 

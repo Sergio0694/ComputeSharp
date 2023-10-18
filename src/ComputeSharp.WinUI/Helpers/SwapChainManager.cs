@@ -6,14 +6,11 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.WinUI.Extensions;
+using ComputeSharp.Win32;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using TerraFX.Interop.WinRT;
 using Windows.Foundation;
 using WinRT;
-using Win32 = TerraFX.Interop.Windows.Windows;
 
 namespace ComputeSharp.WinUI.Helpers;
 
@@ -234,7 +231,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            this.device.D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            this.device.D3D12Device->QueryInterface(Win32.Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -248,7 +245,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
 
             this.d3D12Device.Get()->CreateCommandQueue(
                 &d3D12CommandQueueDesc,
-                Win32.__uuidof<ID3D12CommandQueue>(),
+                Win32.Windows.__uuidof<ID3D12CommandQueue>(),
                 (void**)d3D12CommandQueue).Assert();
         }
 
@@ -258,7 +255,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
             this.d3D12Device.Get()->CreateFence(
                 0,
                 D3D12_FENCE_FLAGS.D3D12_FENCE_FLAG_NONE,
-                Win32.__uuidof<ID3D12Fence>(),
+                Win32.Windows.__uuidof<ID3D12Fence>(),
                 (void**)d3D12Fence).Assert();
         }
 
@@ -302,7 +299,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         {
             this.d3D12Device.Get()->CreateCommandAllocator(
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                Win32.__uuidof<ID3D12CommandAllocator>(),
+                Win32.Windows.__uuidof<ID3D12CommandAllocator>(),
                 (void**)d3D12CommandAllocator).Assert();
         }
 
@@ -314,7 +311,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
                 this.d3D12CommandAllocator.Get(),
                 null,
-                Win32.__uuidof<ID3D12GraphicsCommandList>(),
+                Win32.Windows.__uuidof<ID3D12GraphicsCommandList>(),
                 (void**)d3D12GraphicsCommandList).Assert();
         }
 
@@ -379,8 +376,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
             fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
             fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
             {
-                this.dxgiSwapChain3.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-                this.dxgiSwapChain3.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+                this.dxgiSwapChain3.Get()->GetBuffer(0, Win32.Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+                this.dxgiSwapChain3.Get()->GetBuffer(1, Win32.Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
             }
 
             // Get the index of the initial back buffer
@@ -396,7 +393,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
     /// <inheritdoc/>
     private unsafe partial void OnWaitForPresent()
     {
-        _ = Win32.WaitForSingleObjectEx(this.frameLatencyWaitableObject, Win32.INFINITE, true);
+        _ = Win32.Windows.WaitForSingleObjectEx(this.frameLatencyWaitableObject, Win32.Windows.INFINITE, true);
     }
 
     /// <inheritdoc/>
@@ -405,7 +402,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
-        this.texture!.D3D12Resource->QueryInterface(Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
+        this.texture!.D3D12Resource->QueryInterface(Win32.Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
 
         // Get the target back buffer to update
         ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
@@ -521,7 +518,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
                 // is needed to avoid a crash when disposing resources when disposing after stopping rendering.
                 @this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
 
-                _ = Win32.CloseHandle(@this.frameLatencyWaitableObject);
+                _ = Win32.Windows.CloseHandle(@this.frameLatencyWaitableObject);
 
                 @this.d3D12Device.Dispose();
                 @this.d3D12CommandQueue.Dispose();

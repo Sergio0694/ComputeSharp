@@ -3,8 +3,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Shaders.Loaders;
 using ComputeSharp.D2D1.Shaders.Translation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.Interop;
 

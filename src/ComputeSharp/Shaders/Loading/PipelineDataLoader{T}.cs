@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_RANGE_FLAGS;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_DESCRIPTOR_RANGE_FLAGS;
 
 namespace ComputeSharp.Shaders.Loading;
 
@@ -98,10 +97,11 @@ internal static unsafe class PipelineDataLoader<T>
         int root32BitConstantCount = shader.ConstantBufferSize / sizeof(int);
 
         // Create the D3D12 root signature
-        *d3D12RootSignature = d3D12Device->CreateRootSignature(
+        d3D12Device->CreateRootSignature(
             root32BitConstantCount,
             d3D12DescriptorRanges,
-            shader.IsStaticSamplerRequired).Get();
+            shader.IsStaticSamplerRequired,
+            d3D12RootSignature);
 
         // Return the array to the pool if no exceptions have been thrown
         if (d3D12DescriptorRangesArray is not null)
@@ -124,7 +124,7 @@ internal static unsafe class PipelineDataLoader<T>
         {
             D3D12_SHADER_BYTECODE d3D12ShaderBytecode = new(hlslBytecodePtr, (nuint)shader.HlslBytecode.Length);
 
-            *d3D12PipelineState = d3D12Device->CreateComputePipelineState(d3D12RootSignature, d3D12ShaderBytecode);
+            d3D12Device->CreateComputePipelineState(d3D12RootSignature, d3D12ShaderBytecode, d3D12PipelineState);
         }
     }
 }

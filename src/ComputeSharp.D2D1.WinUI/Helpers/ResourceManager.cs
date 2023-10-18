@@ -2,14 +2,14 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Extensions;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 using Windows.Graphics.Effects;
 using WinRT;
 
 namespace ComputeSharp.D2D1.WinUI.Helpers;
 
 using CanvasDevice = Microsoft.Graphics.Canvas.CanvasDevice;
-using IInspectable = TerraFX.Interop.WinRT.IInspectable;
+using IInspectable = Win32.IInspectable;
 
 /// <summary>
 /// A helper type to replicate Win2D's <c>ResourceManager</c> type.

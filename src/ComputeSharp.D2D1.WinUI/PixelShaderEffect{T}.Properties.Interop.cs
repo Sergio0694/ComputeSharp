@@ -2,8 +2,8 @@ using System;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.Interop;
+using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
-using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.D2D1.WinUI;
 

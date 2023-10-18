@@ -6,9 +6,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("696442BE-A72E-4059-BC79-5B5C98040FAD")]
 [NativeTypeName("struct ID3D12Resource : ID3D12Pageable")]

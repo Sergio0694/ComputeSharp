@@ -7,10 +7,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 
-namespace TerraFX.Interop.WinRT;
+namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows8.1")]
 [Guid("F92F19D2-3ADE-45A6-A20C-F6F1EA90554B")]

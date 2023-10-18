@@ -1,7 +1,7 @@
 #if SOURCE_GENERATOR
 using static Windows.Win32.Graphics.Direct2D.D2D1_BUFFER_PRECISION;
 #else
-using static TerraFX.Interop.DirectX.D2D1_BUFFER_PRECISION;
+using static ComputeSharp.Win32.D2D1_BUFFER_PRECISION;
 #endif
 
 namespace ComputeSharp.D2D1;

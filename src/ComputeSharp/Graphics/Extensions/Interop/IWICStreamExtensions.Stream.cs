@@ -3,17 +3,14 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-#if NET6_0_OR_GREATER
-using TerraFX.Interop;
-#endif
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.Windows.E;
-using static TerraFX.Interop.Windows.IID;
-using static TerraFX.Interop.Windows.S;
-using static TerraFX.Interop.Windows.STATFLAG;
-using static TerraFX.Interop.Windows.STG;
-using static TerraFX.Interop.Windows.STGM;
-using static TerraFX.Interop.Windows.STGTY;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.E;
+using static ComputeSharp.Win32.IID;
+using static ComputeSharp.Win32.S;
+using static ComputeSharp.Win32.STATFLAG;
+using static ComputeSharp.Win32.STG;
+using static ComputeSharp.Win32.STGM;
+using static ComputeSharp.Win32.STGTY;
 
 namespace ComputeSharp.Graphics.Extensions;
 
@@ -42,12 +39,12 @@ internal static unsafe partial class IWICStreamExtensions
     /// </summary>
     private unsafe partial struct IStreamWrapper
 #if NET6_0_OR_GREATER
-        : IUnknown.Interface
+    //: IUnknown.Interface
 #endif
     {
 #if NET6_0_OR_GREATER
-        /// <inheritdoc/>
-        static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
+        ///// <inheritdoc/>
+        //static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
 #else
         /// <inheritdoc cref="QueryInterface"/>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]

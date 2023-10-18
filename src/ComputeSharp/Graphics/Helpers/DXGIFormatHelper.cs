@@ -1,8 +1,8 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.DirectX;
-using static TerraFX.Interop.DirectX.DXGI_FORMAT;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.DXGI_FORMAT;
 
 #pragma warning disable IDE0011
 

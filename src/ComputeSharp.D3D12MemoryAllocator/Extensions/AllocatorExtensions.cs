@@ -1,9 +1,11 @@
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY;
-using static TerraFX.Interop.DirectX.D3D12_HEAP_TYPE;
-using static TerraFX.Interop.DirectX.D3D12_MEMORY_POOL;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_CPU_PAGE_PROPERTY;
+using static ComputeSharp.Win32.D3D12_HEAP_TYPE;
+using static ComputeSharp.Win32.D3D12_MEMORY_POOL;
+using D3D12MA_Allocator = TerraFX.Interop.DirectX.D3D12MA_Allocator;
+using D3D12MA_Pool = TerraFX.Interop.DirectX.D3D12MA_Pool;
+using D3D12MA_POOL_DESC = TerraFX.Interop.DirectX.D3D12MA_POOL_DESC;
 
 namespace ComputeSharp.D3D12MemoryAllocator.Extensions;
 
@@ -24,11 +26,11 @@ internal static unsafe class AllocatorExtensions
         D3D12MA_POOL_DESC poolDesc = default;
         poolDesc.HeapProperties.CreationNodeMask = 1;
         poolDesc.HeapProperties.VisibleNodeMask = 1;
-        poolDesc.HeapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
-        poolDesc.HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-        poolDesc.HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+        poolDesc.HeapProperties.Type = (TerraFX.Interop.DirectX.D3D12_HEAP_TYPE)D3D12_HEAP_TYPE_CUSTOM;
+        poolDesc.HeapProperties.CPUPageProperty = (TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY)D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+        poolDesc.HeapProperties.MemoryPoolPreference = (TerraFX.Interop.DirectX.D3D12_MEMORY_POOL)D3D12_MEMORY_POOL_L0;
 
-        allocator.CreatePool(&poolDesc, pool.GetAddressOf()).Assert();
+        ((HRESULT)(int)allocator.CreatePool(&poolDesc, pool.GetAddressOf())).Assert();
 
         return pool.Move();
     }

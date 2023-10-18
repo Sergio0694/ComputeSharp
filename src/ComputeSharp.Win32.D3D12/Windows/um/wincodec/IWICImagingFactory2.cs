@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows8.0")]
 [Guid("7B816B45-1996-4476-B132-DE9E247C8AF0")]

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.DirectX;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_RESOURCE_STATES;
 
 namespace ComputeSharp.Graphics.Resources.Helpers;
 

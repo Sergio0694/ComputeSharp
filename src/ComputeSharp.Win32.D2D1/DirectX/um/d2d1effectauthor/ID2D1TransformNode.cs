@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("B2EFE1E7-729F-4102-949F-505FA21BF666")]
 [NativeTypeName("struct ID2D1TransformNode : IUnknown")]

@@ -7,7 +7,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 [Guid("135FF860-22B7-4DDF-B0F6-218F4F299A43")]
 [NativeTypeName("struct IWICStream : IStream")]

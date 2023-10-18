@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.Windows;
+namespace ComputeSharp.Win32;
 
 internal unsafe partial struct STATSTG
 {

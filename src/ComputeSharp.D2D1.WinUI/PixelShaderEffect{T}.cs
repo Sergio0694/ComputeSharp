@@ -3,10 +3,9 @@ using ABI.Microsoft.Graphics.Canvas;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.Interop;
+using ComputeSharp.Win32;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.D2D1.WinUI;
 

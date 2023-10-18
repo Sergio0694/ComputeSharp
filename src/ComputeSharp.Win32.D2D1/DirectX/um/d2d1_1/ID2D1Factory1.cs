@@ -6,11 +6,10 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0649
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Guid("BB12D362-DAEE-4B9A-AA1D-14BA401CFA1F")]
 [NativeTypeName("struct ID2D1Factory1 : ID2D1Factory")]

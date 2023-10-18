@@ -1,11 +1,10 @@
 using System;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMPARISON_FUNC;
-using static TerraFX.Interop.DirectX.D3D12_FILTER;
-using static TerraFX.Interop.DirectX.D3D12_PIPELINE_STATE_FLAGS;
-using static TerraFX.Interop.DirectX.D3D12_TEXTURE_ADDRESS_MODE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMPARISON_FUNC;
+using static ComputeSharp.Win32.D3D12_FILTER;
+using static ComputeSharp.Win32.D3D12_PIPELINE_STATE_FLAGS;
+using static ComputeSharp.Win32.D3D12_TEXTURE_ADDRESS_MODE;
 
 namespace ComputeSharp.Shaders.Extensions;
 
@@ -21,17 +20,17 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="d3D12Root32BitConstantsCount">The number of 32 bit root constants to load.</param>
     /// <param name="d3D12DescriptorRanges1">The input descriptor ranges for the signature to create.</param>
     /// <param name="isStaticSamplerUsed">Indicates whether or not a static sampler is used.</param>
-    /// <returns>A pointer to the newly allocated <see cref="ID3D12RootSignature"/> instance.</returns>
+    /// <param name="d3D12RootSignature">The newly allocated <see cref="ID3D12RootSignature"/> instance.</param>
     /// <exception cref="Exception">Thrown when the creation of the root signature fails.</exception>
-    public static ComPtr<ID3D12RootSignature> CreateRootSignature(
+    public static void CreateRootSignature(
         this ref ID3D12Device d3D12Device,
         int d3D12Root32BitConstantsCount,
         ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1,
-        bool isStaticSamplerUsed)
+        bool isStaticSamplerUsed,
+        ID3D12RootSignature** d3D12RootSignature)
     {
         using ComPtr<ID3DBlob> d3D3Blob = default;
         using ComPtr<ID3DBlob> d3D3BlobError = default;
-        using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
 
         fixed (D3D12_DESCRIPTOR_RANGE1* d3D12DescriptorRange1 = d3D12DescriptorRanges1)
         {
@@ -83,9 +82,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D3Blob.Get()->GetBufferPointer(),
             d3D3Blob.Get()->GetBufferSize(),
             Windows.__uuidof<ID3D12RootSignature>(),
-            (void**)d3D12RootSignature.GetAddressOf()).Assert();
-
-        return d3D12RootSignature.Move();
+            (void**)d3D12RootSignature).Assert();
     }
 
     /// <summary>
@@ -94,15 +91,14 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the pipeline state.</param>
     /// <param name="d3D12RootSignature">The input root signature to use to create the pipeline state.</param>
     /// <param name="d3D12ShaderBytecode">The shader bytecode to use for the pipeline state.</param>
-    /// <returns>A pointer to the newly allocated <see cref="ID3D12PipelineState"/> instance.</returns>
+    /// <param name="d3D12PipelineState">The newly allocated <see cref="ID3D12PipelineState"/> instance.</param>
     /// <exception cref="Exception">Thrown when the creation of the pipeline state fails.</exception>
-    public static ComPtr<ID3D12PipelineState> CreateComputePipelineState(
+    public static void CreateComputePipelineState(
         this ref ID3D12Device d3D12Device,
         ID3D12RootSignature* d3D12RootSignature,
-        D3D12_SHADER_BYTECODE d3D12ShaderBytecode)
+        D3D12_SHADER_BYTECODE d3D12ShaderBytecode,
+        ID3D12PipelineState** d3D12PipelineState)
     {
-        using ComPtr<ID3D12PipelineState> d3D12PipelineState = default;
-
         D3D12_COMPUTE_PIPELINE_STATE_DESC d3D12ComputePipelineStateDescription;
         d3D12ComputePipelineStateDescription.pRootSignature = d3D12RootSignature;
         d3D12ComputePipelineStateDescription.CS = d3D12ShaderBytecode;
@@ -113,8 +109,6 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateComputePipelineState(
             &d3D12ComputePipelineStateDescription,
             Windows.__uuidof<ID3D12PipelineState>(),
-            (void**)d3D12PipelineState.GetAddressOf()).Assert();
-
-        return d3D12PipelineState.Move();
+            (void**)d3D12PipelineState).Assert();
     }
 }

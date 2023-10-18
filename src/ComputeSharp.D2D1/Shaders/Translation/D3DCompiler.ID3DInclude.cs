@@ -8,8 +8,8 @@ using ComputeSharp.D2D1.Interop;
 using Windows.Win32.Graphics.Direct3D;
 using static Windows.Win32.Foundation.HRESULT;
 #else
-using TerraFX.Interop.DirectX;
-using static TerraFX.Interop.Windows.S;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.S;
 #endif
 
 namespace ComputeSharp.D2D1.Shaders.Translation;

@@ -5,9 +5,7 @@ using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.WinUI.Extensions;
 using ComputeSharp.D2D1.WinUI.Helpers;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using TerraFX.Interop.WinRT;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D2D1.WinUI;
 

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 #pragma warning disable IDE0011
 

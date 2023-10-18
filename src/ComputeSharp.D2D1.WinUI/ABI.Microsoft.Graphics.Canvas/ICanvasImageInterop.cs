@@ -1,9 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using TerraFX.Interop;
+using ComputeSharp.Win32;
 using WinRT;
 using WinRT.Interop;
 

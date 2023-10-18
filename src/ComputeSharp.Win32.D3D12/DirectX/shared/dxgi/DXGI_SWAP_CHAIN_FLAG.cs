@@ -5,7 +5,7 @@
 
 using System;
 
-namespace TerraFX.Interop.DirectX;
+namespace ComputeSharp.Win32;
 
 [Flags]
 internal enum DXGI_SWAP_CHAIN_FLAG

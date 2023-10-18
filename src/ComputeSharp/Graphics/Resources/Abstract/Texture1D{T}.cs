@@ -9,12 +9,11 @@ using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using ComputeSharp.Interop.Allocation;
 using ComputeSharp.Resources.Interop;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
-using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
-using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_COMMAND_LIST_TYPE;
+using static ComputeSharp.Win32.D3D12_RESOURCE_STATES;
+using static ComputeSharp.Win32.D3D12_SRV_DIMENSION;
+using static ComputeSharp.Win32.D3D12_UAV_DIMENSION;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 #pragma warning disable CA1063

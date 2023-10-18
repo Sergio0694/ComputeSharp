@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
-using static TerraFX.Interop.DirectX.D3D12_MESSAGE_SEVERITY;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_MESSAGE_ID;
+using static ComputeSharp.Win32.D3D12_MESSAGE_SEVERITY;
 
 namespace ComputeSharp.Graphics.Helpers;
 
