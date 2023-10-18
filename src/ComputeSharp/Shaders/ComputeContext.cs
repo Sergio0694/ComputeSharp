@@ -157,9 +157,9 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(y);
         default(ArgumentOutOfRangeException).ThrowIfNegativeOrZero(z);
 
-        int groupsX = Math.DivRem(x, shader.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
-        int groupsY = Math.DivRem(y, shader.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
-        int groupsZ = Math.DivRem(z, shader.ThreadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
+        int groupsX = Math.DivRem(x, T.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, T.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int groupsZ = Math.DivRem(z, T.ThreadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
@@ -173,11 +173,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         D3D12GraphicsCommandListConstantBufferLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-        shader.LoadConstantBuffer(in shader, ref dataLoader, x, y, z);
+        T.LoadConstantBuffer(in shader, ref dataLoader, x, y, z);
 
         D3D12GraphicsCommandListGraphicsResourceLoader graphicsResourceLoader = new(commandList.D3D12GraphicsCommandList, this.device, rootParameterOffset: 1);
 
-        shader.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
+        T.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
 
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
     }
@@ -197,8 +197,8 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         int x = texture.Width;
         int y = texture.Height;
-        int groupsX = Math.DivRem(x, shader.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
-        int groupsY = Math.DivRem(y, shader.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int groupsX = Math.DivRem(x, T.ThreadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, T.ThreadsY, out int modY) + (modY == 0 ? 0 : 1);
 
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION);
         default(ArgumentOutOfRangeException).ThrowIfNotBetweenOrEqual(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
@@ -211,11 +211,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
 
         D3D12GraphicsCommandListConstantBufferLoader constantBufferLoader = new(commandList.D3D12GraphicsCommandList);
 
-        shader.LoadConstantBuffer(in shader, ref constantBufferLoader, x, y, 1);
+        T.LoadConstantBuffer(in shader, ref constantBufferLoader, x, y, 1);
 
         D3D12GraphicsCommandListGraphicsResourceLoader graphicsResourceLoader = new(commandList.D3D12GraphicsCommandList, this.device, rootParameterOffset: 2);
 
-        shader.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
+        T.LoadGraphicsResources(in shader, ref graphicsResourceLoader);
 
         // Load the implicit output texture
         commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(

@@ -1,3 +1,4 @@
+using System;
 using ComputeSharp;
 using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
@@ -15,9 +16,15 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void ReflectionBytecode()
         {
+            static ReadOnlyMemory<byte> GetHlslBytecode<T>()
+            where T : struct, IComputeShaderDescriptor<T>
+            {
+                return T.HlslBytecode;
+            }
+
             ShaderInfo shaderInfo = ReflectionServices.GetShaderInfo<ReservedKeywordsShader>();
 
-            CollectionAssert.AreEqual(((IComputeShaderDescriptor<ReservedKeywordsShader>)default(ReservedKeywordsShader)).HlslBytecode.ToArray(), shaderInfo.HlslBytecode.ToArray());
+            CollectionAssert.AreEqual(GetHlslBytecode<ReservedKeywordsShader>().ToArray(), shaderInfo.HlslBytecode.ToArray());
         }
 
         [TestMethod]

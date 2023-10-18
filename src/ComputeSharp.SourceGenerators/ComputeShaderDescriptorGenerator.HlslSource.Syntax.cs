@@ -19,7 +19,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslSource =>");
+            writer.WriteLine($"static string global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslSource =>");
             writer.IncreaseIndent();
             writer.WriteLine("\"\"\"");
             writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);

@@ -13,19 +13,19 @@ public interface IComputeShaderDescriptor<T>
     where T : struct
 {
     /// <summary>
-    /// The number of threads in each thread group for the X axis.
+    /// Gets the number of threads in each thread group for the X axis.
     /// </summary>
-    int ThreadsX { get; }
+    static abstract int ThreadsX { get; }
 
     /// <summary>
-    /// The number of threads in each thread group for the Y axis.
+    /// Gets the number of threads in each thread group for the Y axis.
     /// </summary>
-    int ThreadsY { get; }
+    static abstract int ThreadsY { get; }
 
     /// <summary>
-    /// The number of threads in each thread group for the Z axis.
+    /// Gets the number of threads in each thread group for the Z axis.
     /// </summary>
-    int ThreadsZ { get; }
+    static abstract int ThreadsZ { get; }
 
     /// <summary>
     /// Gets the size in bytes of the constant buffer for the current shader.
@@ -35,7 +35,7 @@ public interface IComputeShaderDescriptor<T>
     /// <see href="https://learn.microsoft.com/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-setcomputeroot32bitconstants"><c>ID3D12GraphicsCommandList::SetComputeRoot32BitConstants</c></see>,
     /// so the size must be a multiple of the size of a DWORD value (ie. 4 bytes).
     /// </remarks>
-    int ConstantBufferSize { get; }
+    static abstract int ConstantBufferSize { get; }
 
     /// <summary>
     /// Gets whether the shader requires a static sampler being declared and initialized.
@@ -43,22 +43,22 @@ public interface IComputeShaderDescriptor<T>
     /// <remarks>
     /// When requested, a static sampler with linear sampling and mirror addressing will be bound to <c>register(s)</c>.
     /// </remarks>
-    bool IsStaticSamplerRequired { get; }
+    static abstract bool IsStaticSamplerRequired { get; }
 
     /// <summary>
     /// Gets the resource descriptor ranges for all resources that should be bound to this shader.
     /// </summary>
-    ReadOnlyMemory<ResourceDescriptorRange> ResourceDescriptorRanges { get; }
+    static abstract ReadOnlyMemory<ResourceDescriptorRange> ResourceDescriptorRanges { get; }
 
     /// <summary>
     /// Gets the HLSL source code for the current shader instance.
     /// </summary>
-    string HlslSource { get; }
+    static abstract string HlslSource { get; }
 
     /// <summary>
     /// Gets the HLSL bytecode for the current shader.
     /// </summary>
-    ReadOnlyMemory<byte> HlslBytecode { get; }
+    static abstract ReadOnlyMemory<byte> HlslBytecode { get; }
 
     /// <summary>
     /// Loads the constant buffer of a given input shader.
@@ -69,7 +69,7 @@ public interface IComputeShaderDescriptor<T>
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
-    void LoadConstantBuffer<TLoader>(in T shader, ref TLoader loader, int x, int y, int z)
+    static abstract void LoadConstantBuffer<TLoader>(in T shader, ref TLoader loader, int x, int y, int z)
         where TLoader : struct, IConstantBufferLoader;
 
     /// <summary>
@@ -78,6 +78,6 @@ public interface IComputeShaderDescriptor<T>
     /// <typeparam name="TLoader">The type of graphics resource loader being used.</typeparam>
     /// <param name="shader">The input shader to load the graphics resources for.</param>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the data.</param>
-    void LoadGraphicsResources<TLoader>(in T shader, ref TLoader loader)
+    static abstract void LoadGraphicsResources<TLoader>(in T shader, ref TLoader loader)
         where TLoader : struct, IGraphicsResourceLoader;
 }

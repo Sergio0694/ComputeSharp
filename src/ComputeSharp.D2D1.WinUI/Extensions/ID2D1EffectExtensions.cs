@@ -25,7 +25,7 @@ internal static unsafe class ID2D1EffectExtensions
     public static T GetConstantBuffer<T>(this ref ID2D1Effect d2D1Effect)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        int constantBufferSize = D2D1PixelShader.GetConstantBufferSize<T>();
+        int constantBufferSize = T.ConstantBufferSize;
 
         // Special cases the constant buffer type being empty. If that's the case, there is no
         // need to try to retrieve the constant buffer from the underlying effect anyway, and
@@ -67,7 +67,7 @@ internal static unsafe class ID2D1EffectExtensions
         // avoid crashing when someone's just setting an empty constant buffer, which is
         // unnecessary but still valid (eg. a stateless shader). This could be the case if
         // someone was eg. binding or using some other automated system to set constant buffer.
-        if (D2D1PixelShader.GetConstantBufferSize<T>() == 0)
+        if (T.ConstantBufferSize == 0)
         {
             return;
         }

@@ -107,34 +107,34 @@ internal unsafe partial struct PixelShaderEffect
         public static Globals<T> Instance { get; } = new();
 
         /// <inheritdoc/>
-        public override ref readonly Guid EffectId => ref D2D1PixelShaderEffect.GetEffectId<T>();
+        public override ref readonly Guid EffectId => ref T.EffectId;
 
         /// <inheritdoc/>
-        public override int ConstantBufferSize => D2D1PixelShader.GetConstantBufferSize<T>();
+        public override int ConstantBufferSize => T.ConstantBufferSize;
 
         /// <inheritdoc/>
-        public override int InputCount => D2D1PixelShader.GetInputCount<T>();
+        public override int InputCount => T.InputCount;
 
         /// <inheritdoc/>
-        public override int ResourceTextureCount => D2D1PixelShader.GetResourceTextureCount<T>();
+        public override int ResourceTextureCount => T.ResourceTextureCount;
 
         /// <inheritdoc/>
-        public override ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes => D2D1PixelShader.GetInputTypes<T>();
+        public override ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes => T.InputTypes;
 
         /// <inheritdoc/>
-        public override ReadOnlyMemory<D2D1InputDescription> InputDescriptions => D2D1PixelShader.GetInputDescriptions<T>();
+        public override ReadOnlyMemory<D2D1InputDescription> InputDescriptions => T.InputDescriptions;
 
         /// <inheritdoc/>
-        public override ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions => D2D1PixelShader.GetResourceTextureDescriptions<T>();
+        public override ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions => T.ResourceTextureDescriptions;
 
         /// <inheritdoc/>
-        public override D2D1PixelOptions PixelOptions => D2D1PixelShader.GetPixelOptions<T>();
+        public override D2D1PixelOptions PixelOptions => T.PixelOptions;
 
         /// <inheritdoc/>
-        public override D2D1BufferPrecision BufferPrecision => D2D1PixelShader.GetOutputBufferPrecision<T>();
+        public override D2D1BufferPrecision BufferPrecision => T.BufferPrecision;
 
         /// <inheritdoc/>
-        public override D2D1ChannelDepth ChannelDepth => D2D1PixelShader.GetOutputBufferChannelDepth<T>();
+        public override D2D1ChannelDepth ChannelDepth => T.ChannelDepth;
 
         /// <inheritdoc/>
         public override ReadOnlyMemory<byte> HlslBytecode

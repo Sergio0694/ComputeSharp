@@ -19,7 +19,7 @@ partial class ComputeShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceDescriptorRanges => ");
+            writer.Write($"static global::System.ReadOnlyMemory<global::ComputeSharp.Interop.ResourceDescriptorRange> global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ResourceDescriptorRanges => ");
 
             // If there are no declared resources, just return an empty collection
             if (info.ResourceDescriptors.IsEmpty)

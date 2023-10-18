@@ -26,12 +26,12 @@ internal static unsafe class D2D1EffectXmlFactory
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         // Compute all necessary values first, outside of the lock
-        string? displayName = D2D1PixelShaderEffect.GetEffectDisplayName<T>();
-        string? description = D2D1PixelShaderEffect.GetEffectDescription<T>();
-        string? category = D2D1PixelShaderEffect.GetEffectCategory<T>();
-        string? author = D2D1PixelShaderEffect.GetEffectAuthor<T>();
-        int inputCount = D2D1PixelShader.GetInputCount<T>();
-        int resourceTextureCount = D2D1PixelShader.GetResourceTextureCount<T>();
+        string? displayName = T.EffectDisplayName;
+        string? description = T.EffectDescription;
+        string? category = T.EffectCategory;
+        string? author = T.EffectAuthor;
+        int inputCount = T.InputCount;
+        int resourceTextureCount = T.ResourceTextureCount;
 
         StringBuilder builder = XmlBuilder;
 
