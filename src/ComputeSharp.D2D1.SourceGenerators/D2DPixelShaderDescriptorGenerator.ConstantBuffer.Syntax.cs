@@ -78,13 +78,15 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <summary>
         /// Registers a callback to generate additional types, if needed.
         /// </summary>
-        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <typeparam name="TInfo">The type of model providing the necessary info.</typeparam>
+        /// <param name="info">The input <typeparamref name="TInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional types.</param>
         /// <param name="usingDirectives">The using directives needed by the generated code.</param>
-        public static void RegisterAdditionalTypesSyntax(
-            D2D1ShaderInfo info,
-            ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks,
+        public static void RegisterAdditionalTypesSyntax<TInfo>(
+            TInfo info,
+            ImmutableArrayBuilder<IndentedTextWriter.Callback<TInfo>> callbacks,
             ImmutableHashSetBuilder<string> usingDirectives)
+            where TInfo : class, IConstantBufferInfo
         {
             // If there are no fields, there is no need for a constant buffer type
             if (info.Fields.IsEmpty)
@@ -99,7 +101,7 @@ partial class D2DPixelShaderDescriptorGenerator
             _ = usingDirectives.Add("global::System.Runtime.InteropServices");
 
             // Declare the ConstantBuffer type
-            static void ConstantBufferCallback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            static void ConstantBufferCallback(TInfo info, IndentedTextWriter writer)
             {
                 string fullyQualifiedTypeName = info.Hierarchy.GetFullyQualifiedTypeName();
 
@@ -155,7 +157,7 @@ partial class D2DPixelShaderDescriptorGenerator
             }
 
             // Declare the ConstantBufferMarshaller type
-            static void ConstantBufferMarshallerCallback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            static void ConstantBufferMarshallerCallback(TInfo info, IndentedTextWriter writer)
             {
                 string fullyQualifiedTypeName = info.Hierarchy.GetFullyQualifiedTypeName();
 

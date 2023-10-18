@@ -34,4 +34,4 @@ internal sealed record ShaderInfo(
     EquatableArray<ResourceDescriptor> ResourceDescriptors,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
-    EquatableArray<DiagnosticInfo> Diagnostcs);
+    EquatableArray<DiagnosticInfo> Diagnostcs) : IConstantBufferInfo;
