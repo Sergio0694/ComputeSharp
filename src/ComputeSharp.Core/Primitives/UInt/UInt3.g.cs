@@ -1729,8 +1729,6 @@ public unsafe partial struct UInt3
     [UnscopedRef]
     public readonly ref readonly UInt4 BBBB => ref *(UInt4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
@@ -1738,8 +1736,6 @@ public unsafe partial struct UInt3
 
         return $"<{this.x}{separator} {this.y}{separator} {this.z}>";
     }
-
-#endif
 
     /// <summary>
     /// Sums two <see cref="UInt3"/> values.

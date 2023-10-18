@@ -1729,8 +1729,6 @@ public unsafe partial struct Double3
     [UnscopedRef]
     public readonly ref readonly Double4 BBBB => ref *(Double4*)UndefinedData.Memory;
 
-#if !SOURCE_GENERATOR
-
     /// <inheritdoc/>
     public override readonly string ToString()
     {
@@ -1738,8 +1736,6 @@ public unsafe partial struct Double3
 
         return $"<{this.x}{separator} {this.y}{separator} {this.z}>";
     }
-
-#endif
 
     /// <summary>
     /// Negates a <see cref="Double3"/> value.

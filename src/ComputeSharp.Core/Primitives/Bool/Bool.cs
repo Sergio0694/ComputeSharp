@@ -48,7 +48,7 @@ public readonly struct Bool
         return ((bool)this).ToString(formatProvider);
     }
 
-#if NET6_0_OR_GREATER
+#if !SOURCE_GENERATOR
     /// <inheritdoc cref="bool.TryFormat(Span{char}, out int)"/>
     public bool TryFormat(Span<char> destination, out int charsWritten)
     {
