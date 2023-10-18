@@ -1,9 +1,7 @@
 using System;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using Win32 = TerraFX.Interop.Windows.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.WinUI.Extensions;
 
@@ -22,7 +20,7 @@ internal static unsafe class IDXGIAdapterExtensions
     {
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-        dxgiAdapter.QueryInterface(Win32.__uuidof<IDXGIAdapter1>(), (void**)dxgiAdapter1.GetAddressOf()).Assert();
+        dxgiAdapter.QueryInterface(Win32.Windows.__uuidof<IDXGIAdapter1>(), (void**)dxgiAdapter1.GetAddressOf()).Assert();
 
         using ComPtr<IDXGIOutput> dxgiOutput = default;
 
