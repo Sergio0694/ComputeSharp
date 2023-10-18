@@ -1,7 +1,6 @@
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ output extension=".g.cs"#>
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
@@ -14,47 +13,16 @@ unsafe partial struct PixelShaderEffect
 for (int i = 0; i < 16; i++)
 {
 #>
-    /// <summary>
-    /// Gets the get accessor for the resource manager at index <#=i#>.
-    /// </summary>
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, uint*, int> GetResourceTextureManager<#=i#>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            return &GetResourceTextureManager<#=i#>Impl;
-        }
-    }
-
-    /// <summary>
-    /// Gets the set accessor for the resource manager at index <#=i#>.
-    /// </summary>
-    public static delegate* unmanaged[Stdcall]<IUnknown*, byte*, uint, int> SetResourceTextureManager<#=i#>
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            return &SetResourceTextureManager<#=i#>Impl;
-        }
-    }
-
-<#
-}
-#>
-<#
-for (int i = 0; i < 16; i++)
-{
-#>
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int GetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT GetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize, uint* actualSize)
     {
         return ((PixelShaderEffect*)effect)->GetResourceTextureManagerAtIndex(<#=i#>, data, dataSize, actualSize);
     }
 
     /// <inheritdoc cref="D2D1_PROPERTY_BINDING.getFunction"/>
-    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    private static int SetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize)
+    [UnmanagedCallersOnly]
+    public static HRESULT SetResourceTextureManager<#=i#>Impl(IUnknown* effect, byte* data, uint dataSize)
     {
         return ((PixelShaderEffect*)effect)->SetResourceTextureManagerAtIndex(<#=i#>, data, dataSize);
     }
