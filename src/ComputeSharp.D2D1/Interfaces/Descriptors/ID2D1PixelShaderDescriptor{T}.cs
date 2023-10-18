@@ -18,7 +18,7 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
     /// </remarks>
-    ref readonly Guid EffectId { get; }
+    static abstract ref readonly Guid EffectId { get; }
 
     /// <summary>
     /// Gets the display name of the D2D effect using this shader, if specified.
@@ -26,7 +26,7 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
     /// </remarks>
-    string? EffectDisplayName { get; }
+    static abstract string? EffectDisplayName { get; }
 
     /// <summary>
     /// Gets the description of the D2D effect using this shader, if specified.
@@ -34,7 +34,7 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
     /// </remarks>
-    string? EffectDescription { get; }
+    static abstract string? EffectDescription { get; }
 
     /// <summary>
     /// Gets the category of the D2D effect using this shader, if specified.
@@ -42,7 +42,7 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
     /// </remarks>
-    string? EffectCategory { get; }
+    static abstract string? EffectCategory { get; }
 
     /// <summary>
     /// Gets the author of the D2D effect using this shader, if specified.
@@ -50,52 +50,52 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This only applies to effects created from <see cref="D2D1PixelShaderEffect"/>.
     /// </remarks>
-    string? EffectAuthor { get; }
+    static abstract string? EffectAuthor { get; }
 
     /// <summary>
     /// Gets the size in bytes of the constant buffer for the current shader.
     /// </summary>
-    int ConstantBufferSize { get; }
+    static abstract int ConstantBufferSize { get; }
 
     /// <summary>
     /// Gets the number of inputs for the current shader.
     /// </summary>
-    int InputCount { get; }
+    static abstract int InputCount { get; }
 
     /// <summary>
     /// Gets the number of resource textures for the current shader.
     /// </summary>
-    int ResourceTextureCount { get; }
+    static abstract int ResourceTextureCount { get; }
 
     /// <summary>
     /// Gets the input types for the current shader.
     /// </summary>
-    ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes { get; }
+    static abstract ReadOnlyMemory<D2D1PixelShaderInputType> InputTypes { get; }
 
     /// <summary>
     /// Gets the input descriptions for the current shader.
     /// </summary>
-    ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
+    static abstract ReadOnlyMemory<D2D1InputDescription> InputDescriptions { get; }
 
     /// <summary>
     /// Gets the resource texture descriptions for the shader.
     /// </summary>
-    ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
+    static abstract ReadOnlyMemory<D2D1ResourceTextureDescription> ResourceTextureDescriptions { get; }
 
     /// <summary>
     /// Gets the pixel options for the current shader.
     /// </summary>
-    D2D1PixelOptions PixelOptions { get; }
+    static abstract D2D1PixelOptions PixelOptions { get; }
 
     /// <summary>
     /// Gets the buffer precision for the shader.
     /// </summary>
-    D2D1BufferPrecision BufferPrecision { get; }
+    static abstract D2D1BufferPrecision BufferPrecision { get; }
 
     /// <summary>
     /// Gets the channel depth for the shader.
     /// </summary>
-    D2D1ChannelDepth ChannelDepth { get; }
+    static abstract D2D1ChannelDepth ChannelDepth { get; }
 
     /// <summary>
     /// Gets the shader profile for the current shader.
@@ -103,7 +103,7 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This shader profile is either explicitly set by users, or the default one for D2D1 shaders.
     /// </remarks>
-    D2D1ShaderProfile ShaderProfile { get; }
+    static abstract D2D1ShaderProfile ShaderProfile { get; }
 
     /// <summary>
     /// Gets the compile options for the current shader.
@@ -111,12 +111,12 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// This compile options are either explicitly set by users, or the default one for D2D1 shaders.
     /// </remarks>
-    D2D1CompileOptions CompileOptions { get; }
+    static abstract D2D1CompileOptions CompileOptions { get; }
 
     /// <summary>
     /// Gets the HLSL source code for the current shader instance.
     /// </summary>
-    string HlslSource { get; }
+    static abstract string HlslSource { get; }
 
     /// <summary>
     /// Gets the HLSL bytecode for the current shader, if available.
@@ -124,14 +124,14 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <remarks>
     /// If no precompiled HLSL bytecode is available, the returned <see cref="ReadOnlyMemory{T}"/> instance will be empty.
     /// </remarks>
-    ReadOnlyMemory<byte> HlslBytecode { get; }
+    static abstract ReadOnlyMemory<byte> HlslBytecode { get; }
 
     /// <summary>
     /// Creates a new <typeparamref name="T"/> shader instance from a constant buffer.
     /// </summary>
     /// <param name="buffer">The input constant buffer to read.</param>
     /// <remarks>The input buffer must be retrieved from <see cref="LoadConstantBuffer"/>.</remarks>
-    T CreateFromConstantBuffer(ReadOnlySpan<byte> buffer);
+    static abstract T CreateFromConstantBuffer(ReadOnlySpan<byte> buffer);
 
     /// <summary>
     /// Loads the constant buffer of a given input shader.
@@ -139,6 +139,6 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// <typeparam name="TLoader">The type of data loader being used.</typeparam>
     /// <param name="shader">The input shader to load the constant buffer for.</param>
     /// <param name="loader">The <typeparamref name="TLoader"/> instance to use to load the constant buffer.</param>
-    void LoadConstantBuffer<TLoader>(in T shader, ref TLoader loader)
+    static abstract void LoadConstantBuffer<TLoader>(in T shader, ref TLoader loader)
         where TLoader : struct, ID2D1ConstantBufferLoader;
 }

@@ -1,5 +1,4 @@
 using System.Buffers;
-using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
@@ -45,9 +44,7 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
             this.d2D1DrawInfoUpdateContext->GetConstantBuffer(pBuffer, constantBufferSize).Assert();
         }
 
-        Unsafe.SkipInit(out T shader);
-
-        shader = shader.CreateFromConstantBuffer(buffer);
+        T shader = T.CreateFromConstantBuffer(buffer);
 
         ArrayPool<byte>.Shared.Return(buffer);
 
@@ -62,6 +59,6 @@ public readonly unsafe ref struct D2D1DrawInfoUpdateContext<T>
     {
         D2D1DrawInfoUpdateContextConstantBufferLoader dataLoader = new(this.d2D1DrawInfoUpdateContext);
 
-        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
+        T.LoadConstantBuffer(in shader, ref dataLoader);
     }
 }

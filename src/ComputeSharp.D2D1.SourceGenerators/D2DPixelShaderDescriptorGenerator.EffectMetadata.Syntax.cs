@@ -61,7 +61,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{qualifiedName}>.{propertyName} => ");
+            writer.Write($"static string? global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{qualifiedName}>.{propertyName} => ");
 
             // Append null or the metadata value as a string literal
             if (metadataValue is null)

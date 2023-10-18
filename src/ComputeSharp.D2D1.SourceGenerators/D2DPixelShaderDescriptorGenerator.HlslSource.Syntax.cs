@@ -19,7 +19,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslSource =>");
+            writer.WriteLine($"static string global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslSource =>");
             writer.IncreaseIndent();
             writer.WriteLine("\"\"\"");
             writer.Write(info.HlslInfoKey.HlslSource, isMultiline: true);

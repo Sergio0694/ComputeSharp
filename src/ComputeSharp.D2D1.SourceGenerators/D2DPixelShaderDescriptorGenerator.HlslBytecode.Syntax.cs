@@ -22,7 +22,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.ShaderProfile};");
+            writer.WriteLine($"static ComputeSharp.D2D1.D2D1ShaderProfile global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.ShaderProfile => global::ComputeSharp.D2D1.D2D1ShaderProfile.{info.HlslInfoKey.ShaderProfile};");
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.CompileOptions => {compileOptionsExpression};");
+            writer.WriteLine($"static ComputeSharp.D2D1.D2D1CompileOptions global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.CompileOptions => {compileOptionsExpression};");
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.Write($"readonly global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslBytecode => ");
+            writer.Write($"static global::System.ReadOnlyMemory<byte> global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.HlslBytecode => ");
 
             // If there is no bytecode, just return a default expression.
             // Otherwise, return the memory manager backed memory instance.

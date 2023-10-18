@@ -20,9 +20,7 @@ public static class D2D1PixelShader
     public static int GetConstantBufferSize<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ConstantBufferSize;
+        return T.ConstantBufferSize;
     }
 
     /// <summary>
@@ -33,9 +31,7 @@ public static class D2D1PixelShader
     public static int GetInputCount<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputCount;
+        return T.InputCount;
     }
 
     /// <summary>
@@ -46,9 +42,7 @@ public static class D2D1PixelShader
     public static int GetResourceTextureCount<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ResourceTextureCount;
+        return T.ResourceTextureCount;
     }
 
     /// <summary>
@@ -59,9 +53,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<D2D1PixelShaderInputType> GetInputTypes<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputTypes;
+        return T.InputTypes;
     }
 
     /// <summary>
@@ -72,9 +64,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<D2D1InputDescription> GetInputDescriptions<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.InputDescriptions;
+        return T.InputDescriptions;
     }
 
     /// <summary>
@@ -85,9 +75,7 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<D2D1ResourceTextureDescription> GetResourceTextureDescriptions<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ResourceTextureDescriptions;
+        return T.ResourceTextureDescriptions;
     }
 
     /// <summary>
@@ -98,9 +86,7 @@ public static class D2D1PixelShader
     public static D2D1PixelOptions GetPixelOptions<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.PixelOptions;
+        return T.PixelOptions;
     }
 
     /// <summary>
@@ -111,9 +97,7 @@ public static class D2D1PixelShader
     public static D2D1BufferPrecision GetOutputBufferPrecision<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.BufferPrecision;
+        return T.BufferPrecision;
     }
 
     /// <summary>
@@ -124,9 +108,7 @@ public static class D2D1PixelShader
     public static D2D1ChannelDepth GetOutputBufferChannelDepth<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.ChannelDepth;
+        return T.ChannelDepth;
     }
 
     /// <summary>
@@ -144,13 +126,11 @@ public static class D2D1PixelShader
     public static ReadOnlyMemory<byte> LoadBytecode<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
         // This method is the one used by the built-in ID2D1Effect, so it has special optimization
         // to help both performance and especially trimming. That is, we first check whether the
         // HLSL code is already available, which should get completely inlined when using the
         // generated code. This allows the entire fallback path below to be trimmed out.
-        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
+        if (T.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode)
         {
             return hlslBytecode;
         }
@@ -334,16 +314,12 @@ public static class D2D1PixelShader
         out D2D1CompileOptions effectiveCompileOptions)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        string hlslSource = shader.HlslSource;
-
         // Set the effective profile and option to the requested ones or the default values
-        effectiveShaderProfile = requestedShaderProfile ?? shader.ShaderProfile;
-        effectiveCompileOptions = requestedCompileOptions ?? shader.CompileOptions;
+        effectiveShaderProfile = requestedShaderProfile ?? T.ShaderProfile;
+        effectiveCompileOptions = requestedCompileOptions ?? T.CompileOptions;
 
         // Compile the shader with the current settings
-        using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(hlslSource.AsSpan(), effectiveShaderProfile, effectiveCompileOptions);
+        using ComPtr<ID3DBlob> dynamicBytecode = D3DCompiler.Compile(T.HlslSource, effectiveShaderProfile, effectiveCompileOptions);
 
         byte* bytecodePtr = (byte*)dynamicBytecode.Get()->GetBufferPointer();
         int bytecodeSize = (int)dynamicBytecode.Get()->GetBufferSize();
@@ -367,15 +343,13 @@ public static class D2D1PixelShader
         out D2D1CompileOptions effectiveCompileOptions)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
         // Check whether there is precompiled bytecode we can use
-        if (shader.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode &&
-            (requestedShaderProfile is null || shader.ShaderProfile == requestedShaderProfile.GetValueOrDefault()) &&
-            (requestedCompileOptions is null || shader.CompileOptions == requestedCompileOptions.GetValueOrDefault()))
+        if (T.HlslBytecode is ReadOnlyMemory<byte> { Length: > 0 } hlslBytecode &&
+            (requestedShaderProfile is null || T.ShaderProfile == requestedShaderProfile.GetValueOrDefault()) &&
+            (requestedCompileOptions is null || T.CompileOptions == requestedCompileOptions.GetValueOrDefault()))
         {
-            effectiveShaderProfile = shader.ShaderProfile;
-            effectiveCompileOptions = shader.CompileOptions;
+            effectiveShaderProfile = T.ShaderProfile;
+            effectiveCompileOptions = T.CompileOptions;
 
             return hlslBytecode;
         }
@@ -398,7 +372,7 @@ public static class D2D1PixelShader
     {
         D2D1ByteArrayConstantBufferLoader dataLoader = default;
 
-        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
+        T.LoadConstantBuffer(in shader, ref dataLoader);
 
         return dataLoader.GetResultingDispatchData();
     }
@@ -437,7 +411,7 @@ public static class D2D1PixelShader
         {
             D2D1ByteBufferConstantBufferLoader dataLoader = new(buffer, span.Length);
 
-            Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
+            T.LoadConstantBuffer(in shader, ref dataLoader);
 
             return dataLoader.TryGetWrittenBytes(out bytesWritten);
         }
@@ -458,7 +432,7 @@ public static class D2D1PixelShader
 
         D2D1DrawInfoConstantBufferLoader dataLoader = new((ID2D1DrawInfo*)d2D1DrawInfo);
 
-        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
+        T.LoadConstantBuffer(in shader, ref dataLoader);
     }
 
     /// <summary>
@@ -490,11 +464,9 @@ public static class D2D1PixelShader
     public static bool TryCreateFromConstantBuffer<T>(ReadOnlySpan<byte> span, out T shader)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out shader);
-
-        if (span.Length >= shader.ConstantBufferSize)
+        if (span.Length >= T.ConstantBufferSize)
         {
-            shader = shader.CreateFromConstantBuffer(span);
+            shader = T.CreateFromConstantBuffer(span);
 
             return true;
         }

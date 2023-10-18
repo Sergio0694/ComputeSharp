@@ -1,6 +1,5 @@
 using System;
 using System.Buffers;
-using System.Runtime.CompilerServices;
 using System.Text;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
@@ -26,9 +25,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static ref readonly Guid GetEffectId<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return ref shader.EffectId;
+        return ref T.EffectId;
     }
 
     /// <summary>
@@ -39,9 +36,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static string? GetEffectDisplayName<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.EffectDisplayName;
+        return T.EffectDisplayName;
     }
 
     /// <summary>
@@ -52,9 +47,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static string? GetEffectDescription<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.EffectDescription;
+        return T.EffectDescription;
     }
 
     /// <summary>
@@ -65,9 +58,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static string? GetEffectCategory<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.EffectCategory;
+        return T.EffectCategory;
     }
 
     /// <summary>
@@ -78,9 +69,7 @@ public static unsafe class D2D1PixelShaderEffect
     public static string? GetEffectAuthor<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
-        return shader.EffectAuthor;
+        return T.EffectAuthor;
     }
 
     /// <summary>
@@ -194,7 +183,7 @@ public static unsafe class D2D1PixelShaderEffect
                     classId: pGuid,
                     propertyXml: (ushort*)pXml,
                     bindings: d2D1PropertyBinding,
-                    bindingsCount: (uint)(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + D2D1PixelShader.GetResourceTextureCount<T>()),
+                    bindingsCount: (uint)(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + T.ResourceTextureCount),
                     effectFactory: PixelShaderEffect.Globals<T>.Instance.Factory).Assert();
             }
 
@@ -249,8 +238,8 @@ public static unsafe class D2D1PixelShaderEffect
         writer.Write(D2D1EffectRegistrationData.V1.BlobId);
 
         // Effect id and number of inputs
-        writer.Write(GetEffectId<T>());
-        writer.Write(D2D1PixelShader.GetInputCount<T>());
+        writer.Write(T.EffectId);
+        writer.Write(T.InputCount);
 
         // Retrieve the effect XML and include it into the registration blob
         using (D2D1EffectXmlFactory.EffectXml effectXml = D2D1EffectXmlFactory.GetXmlBuffer<T>())
@@ -272,7 +261,7 @@ public static unsafe class D2D1PixelShaderEffect
         }
 
         // Bindings
-        writer.Write(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + D2D1PixelShader.GetResourceTextureCount<T>());
+        writer.Write(D2D1PixelShaderEffectProperty.NumberOfAlwaysAvailableProperties + T.ResourceTextureCount);
         writer.Write("ConstantBuffer"u8);
         writer.Write((byte)'\0');
         writer.Write((nint)(delegate* unmanaged<IUnknown*, byte*, uint, uint*, HRESULT>)&PixelShaderEffect.GetConstantBufferImpl);
@@ -283,7 +272,7 @@ public static unsafe class D2D1PixelShaderEffect
         writer.Write((nint)(delegate* unmanaged<IUnknown*, byte*, uint, HRESULT>)&PixelShaderEffect.SetTransformMapperImpl);
 
         // Add all resource texture manager property bindings
-        for (int i = 0; i < D2D1PixelShader.GetResourceTextureCount<T>(); i++)
+        for (int i = 0; i < T.ResourceTextureCount; i++)
         {
             switch (i)
             {
@@ -441,7 +430,7 @@ public static unsafe class D2D1PixelShaderEffect
 
         D2D1EffectConstantBufferLoader dataLoader = new((ID2D1Effect*)d2D1Effect);
 
-        Unsafe.AsRef(in shader).LoadConstantBuffer(in shader, ref dataLoader);
+        T.LoadConstantBuffer(in shader, ref dataLoader);
     }
 
     /// <summary>

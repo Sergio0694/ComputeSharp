@@ -223,11 +223,9 @@ partial class PixelShaderEffect<T>
         /// <returns>The bitmask of indices for resource textures in the target shader.</returns>
         private static int GetIndexBitmask()
         {
-            Unsafe.SkipInit(out T shader);
-
             int indexBitmask = 0;
 
-            foreach (ref readonly D2D1ResourceTextureDescription description in shader.ResourceTextureDescriptions.Span)
+            foreach (ref readonly D2D1ResourceTextureDescription description in T.ResourceTextureDescriptions.Span)
             {
                 indexBitmask |= 1 << description.Index;
             }
@@ -241,9 +239,7 @@ partial class PixelShaderEffect<T>
         /// <returns>The collection of valid indices for the current effect.</returns>
         private static ImmutableArray<int> GetIndices()
         {
-            Unsafe.SkipInit(out T shader);
-
-            ReadOnlySpan<D2D1ResourceTextureDescription> descriptions = shader.ResourceTextureDescriptions.Span;
+            ReadOnlySpan<D2D1ResourceTextureDescription> descriptions = T.ResourceTextureDescriptions.Span;
 
             // Skip the array allocation if there are no resource texture descriptions
             if (descriptions.IsEmpty)

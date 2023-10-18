@@ -19,7 +19,7 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"readonly ref readonly global::System.Guid global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.EffectId");
+            writer.WriteLine($"static ref readonly global::System.Guid global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{info.Hierarchy.Hierarchy[0].QualifiedName}>.EffectId");
 
             using (writer.WriteBlock())
             {

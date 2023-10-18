@@ -250,7 +250,7 @@ unsafe partial class PixelShaderEffect<T>
     {
         fixed (ID2D1Effect** d2D1Effect = this.d2D1Effect)
         {
-            Guid effectId = D2D1PixelShaderEffect.GetEffectId<T>();
+            Guid effectId = T.EffectId;
 
             using ComPtr<ID2D1DeviceContext> d2D1DeviceContextEffective = default;
             using ComPtr<ID2D1DeviceContextLease> d2D1DeviceContextLease = default;

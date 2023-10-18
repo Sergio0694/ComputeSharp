@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using ComputeSharp.D2D1.Descriptors;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.Win32;
@@ -27,8 +26,6 @@ public static class D2D1ReflectionServices
     public static unsafe D2D1ShaderInfo GetShaderInfo<T>()
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        Unsafe.SkipInit(out T shader);
-
         ReadOnlyMemory<byte> hlslBytecode = D2D1PixelShader.LoadBytecode<T>();
 
         using ComPtr<ID3D11ShaderReflection> d3D11ShaderReflection = default;
@@ -52,7 +49,7 @@ public static class D2D1ReflectionServices
 
         return new(
             CompilerVersion: new string(d3D11ShaderDescription.Creator),
-            HlslSource: shader.HlslSource,
+            HlslSource: T.HlslSource,
             HlslBytecode: hlslBytecode,
             ConstantBufferCount: d3D11ShaderDescription.ConstantBuffers,
             BoundResourceCount: d3D11ShaderDescription.BoundResources,

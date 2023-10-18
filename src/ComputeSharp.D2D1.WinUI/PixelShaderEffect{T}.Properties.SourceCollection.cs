@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
-using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.WinUI.Buffers;
 using ComputeSharp.D2D1.WinUI.Collections;
 using Windows.Graphics.Effects;
@@ -41,7 +40,7 @@ partial class PixelShaderEffect<T>
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => D2D1PixelShader.GetInputCount<T>();
+            get => T.InputCount;
         }
 
         /// <inheritdoc/>
@@ -49,13 +48,13 @@ partial class PixelShaderEffect<T>
         {
             get
             {
-                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, T.InputCount, nameof(index));
 
                 return Owner.GetSource(index);
             }
             set
             {
-                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, D2D1PixelShader.GetInputCount<T>(), nameof(index));
+                default(ArgumentOutOfRangeException).ThrowIfNotInRange(index, 0, T.InputCount, nameof(index));
 
                 Owner.SetSource(value, index);
             }
@@ -210,7 +209,7 @@ partial class PixelShaderEffect<T>
         /// <returns>The collection of valid indices for the current effect.</returns>
         private static ImmutableArray<int> GetIndices()
         {
-            int inputCount = D2D1PixelShader.GetInputCount<T>();
+            int inputCount = T.InputCount;
 
             if (inputCount == 0)
             {
