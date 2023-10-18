@@ -149,7 +149,7 @@ jobs:
       run: >
         $vs_path = vswhere -latest -products * -requires Microsoft.VisualStudio.Workload.ManagedDesktop -requiresAny -property installationPath;
         $vstest_path = join-path $vs_path 'Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe';
-        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests\bin\x64\Release\net6.0-windows10.0.22621.0\win10-x64\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
+        & $vstest_path /Platform:x64 tests\ComputeSharp.D2D1.WinUI.Tests\bin\x64\Release\net7.0-windows10.0.22621.0\win10-x64\ComputeSharp.D2D1.WinUI.Tests.build.appxrecipe
 
   # Run all the local samples to ensure they build and run with no errors
   run-samples:
@@ -161,15 +161,15 @@ jobs:
     - name: Build and run ComputeSharp.Sample
       run: >
         dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample\bin\x64\Release\net6.0\win-x64\ComputeSharp.Sample.exe
+        samples\ComputeSharp.Sample\bin\x64\Release\net7.0\win-x64\ComputeSharp.Sample.exe
     - name: Build and run ComputeSharp.Sample.FSharp
       run: >
         dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\net6.0\win-x64\ComputeSharp.Sample.FSharp.exe
+        samples\ComputeSharp.Sample.FSharp\bin\x64\Release\net7.0\win-x64\ComputeSharp.Sample.FSharp.exe
     - name: Build and run ComputeSharp.ImageProcessing.csproj
       run: >
         dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -r win-x64 --no-self-contained -p:Platform=x64 -v n;
-        samples\ComputeSharp.ImageProcessing\bin\x64\Release\net6.0\win-x64\ComputeSharp.ImageProcessing.exe
+        samples\ComputeSharp.ImageProcessing\bin\x64\Release\net7.0\win-x64\ComputeSharp.ImageProcessing.exe
 
   # Run the NativeAOT samples as well
   run-samples-aot:

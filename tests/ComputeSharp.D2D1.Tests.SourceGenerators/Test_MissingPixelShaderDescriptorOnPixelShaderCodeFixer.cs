@@ -40,7 +40,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -101,7 +101,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -135,7 +135,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -193,7 +193,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -233,7 +233,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -285,7 +285,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -349,7 +349,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net60
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
