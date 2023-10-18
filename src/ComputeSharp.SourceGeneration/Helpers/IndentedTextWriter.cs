@@ -180,8 +180,14 @@ internal sealed class IndentedTextWriter : IDisposable
     /// <summary>
     /// Writes a line to the underlying buffer.
     /// </summary>
-    public void WriteLine()
+    /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
+    public void WriteLine(bool skipIfPresent = false)
     {
+        if (skipIfPresent && this.builder.WrittenSpan is [.., '\n', '\n'])
+        {
+            return;
+        }
+
         this.builder.Add(DefaultNewLine);
     }
 

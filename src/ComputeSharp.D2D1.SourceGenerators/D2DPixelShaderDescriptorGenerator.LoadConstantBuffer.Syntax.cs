@@ -1,3 +1,4 @@
+using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -35,41 +36,8 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
                 else
                 {
-                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer;");
-                    writer.WriteLine();
-
-                    // Generate loading statements for each captured field
-                    foreach (FieldInfo fieldInfo in info.Fields)
-                    {
-                        switch (fieldInfo)
-                        {
-                            case FieldInfo.Primitive primitive:
-
-                                // Assign a primitive value
-                                writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath)} = shader.{string.Join(".", primitive.FieldPath)};");
-                                break;
-
-                            case FieldInfo.NonLinearMatrix matrix:
-                                string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
-                                string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
-                                string fieldPath = string.Join(".", matrix.FieldPath);
-                                string fieldNamePrefix = string.Join("_", matrix.FieldPath);
-
-                                // Assign all rows of a given matrix type:
-                                //
-                                // buffer.<CONSTANT_BUFFER_ROW_0_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).M11);
-                                // buffer.<CONSTANT_BUFFER_ROW_1_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).M21);
-                                // ...
-                                // buffer.<CONSTANT_BUFFER_ROW_N_PATH> = Unsafe.As<<PRIMITIVE_TYPE_NAME>, <ROW_TYPE_NAME>>(ref Unsafe.AsRef(in shader.<FIELD_PATH>).MN1);
-                                for (int j = 0; j < matrix.Rows; j++)
-                                {
-                                    writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = global::System.Runtime.CompilerServices.Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in shader.{fieldPath}).M{j + 1}1);");
-                                }
-
-                                break;
-                        }
-                    }
-
+                    // Otherwise, pass a span into the marshalled native layout buffer
+                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);");
                     writer.WriteLine();
                     writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));");
                 }
@@ -77,12 +45,12 @@ partial class D2DPixelShaderDescriptorGenerator
         }
 
         /// <summary>
-        /// Registers a callback to generate an additional type, if needed.
+        /// Registers a callback to generate additional types, if needed.
         /// </summary>
         /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional types.</param>
         /// <param name="usingDirectives">The using directives needed by the generated code.</param>
-        public static void RegisterAdditionalTypeSyntax(
+        public static void RegisterAdditionalTypesSyntax(
             D2D1ShaderInfo info,
             ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> callbacks,
             ImmutableHashSetBuilder<string> usingDirectives)
@@ -96,19 +64,20 @@ partial class D2DPixelShaderDescriptorGenerator
             usingDirectives.Add("global::System.CodeDom.Compiler");
             usingDirectives.Add("global::System.Diagnostics");
             usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            usingDirectives.Add("global::System.Runtime.CompilerServices");
             usingDirectives.Add("global::System.Runtime.InteropServices");
 
             // Declare the ConstantBuffer type
-            static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            static void ConstantBufferCallback(D2D1ShaderInfo info, IndentedTextWriter writer)
             {
                 string fullyQualifiedTypeName = info.Hierarchy.GetFullyQualifiedTypeName();
 
-                writer.WriteLine($$"""/// <summary>""");
-                writer.WriteLine($$"""/// A type representing the constant buffer native layout for <see cref="{{fullyQualifiedTypeName}}"/>.""");
-                writer.WriteLine($$"""/// </summary>""");
+                writer.WriteLine($"""/// <summary>""");
+                writer.WriteLine($"""/// A type representing the constant buffer native layout for <see cref="{fullyQualifiedTypeName}"/>.""");
+                writer.WriteLine($"""/// </summary>""");
                 writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
-                writer.WriteLine($$"""[StructLayout(LayoutKind.Explicit, Size = {{info.ConstantBufferSizeInBytes}})]""");
-                writer.WriteLine($$"""file struct ConstantBuffer""");
+                writer.WriteLine($"""[StructLayout(LayoutKind.Explicit, Size = {info.ConstantBufferSizeInBytes})]""");
+                writer.WriteLine($"""file struct ConstantBuffer""");
 
                 using (writer.WriteBlock())
                 {
@@ -120,16 +89,16 @@ partial class D2DPixelShaderDescriptorGenerator
                             case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
 
                                 // Append a field as a global::ComputeSharp.Bool value (will use the implicit conversion from bool values)
-                                writer.WriteLine($$"""/// <inheritdoc cref="{{fullyQualifiedTypeName}}.{{string.Join(".", primitive.FieldPath)}}"/>""");
-                                writer.WriteLine($$"""[FieldOffset({{primitive.Offset}})]""");
-                                writer.WriteLine($$"""public global::ComputeSharp.Bool {{string.Join("_", primitive.FieldPath)}};""");
+                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath)}"/>""");
+                                writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
+                                writer.WriteLine($"""public global::ComputeSharp.Bool {string.Join("_", primitive.FieldPath)};""");
                                 break;
                             case FieldInfo.Primitive primitive:
 
                                 // Append primitive fields of other types with their mapped names
-                                writer.WriteLine($$"""/// <inheritdoc cref="{{fullyQualifiedTypeName}}.{{string.Join(".", primitive.FieldPath)}}"/>""");
-                                writer.WriteLine($$"""[FieldOffset({{primitive.Offset}})]""");
-                                writer.WriteLine($$"""public {{HlslKnownTypes.GetMappedName(primitive.TypeName)}} {{string.Join("_", primitive.FieldPath)}};""");
+                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath)}"/>""");
+                                writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
+                                writer.WriteLine($"""public {HlslKnownTypes.GetMappedName(primitive.TypeName)} {string.Join("_", primitive.FieldPath)};""");
                                 break;
 
                             case FieldInfo.NonLinearMatrix matrix:
@@ -140,9 +109,9 @@ partial class D2DPixelShaderDescriptorGenerator
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
                                     writer.WriteLineIf(j > 0);
-                                    writer.WriteLine($$"""/// <summary>Row {j} of <see cref="{{fullyQualifiedTypeName}}.{{string.Join(".", matrix.FieldPath)}}"/>.</summary>""");
-                                    writer.WriteLine($$"""[FieldOffset({{matrix.Offsets[j]}})]""");
-                                    writer.WriteLine($$"""public {{rowTypeName}} {{fieldNamePrefix}}_{{j}};""");
+                                    writer.WriteLine($"""/// <summary>Row {j} of <see cref="{fullyQualifiedTypeName}.{string.Join(".", matrix.FieldPath)}"/>.</summary>""");
+                                    writer.WriteLine($"""[FieldOffset({matrix.Offsets[j]})]""");
+                                    writer.WriteLine($"""public {rowTypeName} {fieldNamePrefix}_{j};""");
                                 }
 
                                 break;
@@ -151,7 +120,149 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
             }
 
-            callbacks.Add(Callback);
+            // Declare the ConstantBufferMarshaller type
+            static void ConstantBufferMarshallerCallback(D2D1ShaderInfo info, IndentedTextWriter writer)
+            {
+                string fullyQualifiedTypeName = info.Hierarchy.GetFullyQualifiedTypeName();
+
+                writer.WriteLine($"""/// <summary>""");
+                writer.WriteLine($"""/// A type containing marshalling logic for shaders of type <see cref="{fullyQualifiedTypeName}"/>.""");
+                writer.WriteLine($"""/// </summary>""");
+                writer.WriteGeneratedAttributes(GeneratorName, useFullyQualifiedTypeNames: false);
+                writer.WriteLine($"""file static class ConstantBufferMarshaller""");
+
+                using (writer.WriteBlock())
+                {
+                    // Define the ToManaged method (native constant buffer to managed shader type)
+                    writer.WriteLine($"""/// <summary>""");
+                    writer.WriteLine($"""/// Marshals native constant buffer data to managed <see cref="{fullyQualifiedTypeName}"/> instances.""");
+                    writer.WriteLine($"""/// </summary>""");
+                    writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
+                    writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
+                    writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
+                    writer.WriteLine($"""[SkipLocalsInit]""");
+                    writer.WriteLine($"public static {fullyQualifiedTypeName} ToManaged(in ConstantBuffer buffer)");
+
+                    using (writer.WriteBlock())
+                    {
+                        writer.WriteLine($"Unsafe.SkipInit(out {fullyQualifiedTypeName} shader);");
+                        writer.WriteLine();
+
+                        // Generate loading statements for each captured field
+                        foreach (FieldInfo fieldInfo in info.Fields)
+                        {
+                            switch (fieldInfo)
+                            {
+                                case FieldInfo.Primitive primitive:
+                                    string fieldName = primitive.FieldPath[0];
+
+                                    // Read a nested primitive value
+                                    writer.WriteLine($"{fieldName}(in shader){string.Join(".", primitive.FieldPath.Skip(1))} = buffer.{string.Join("_", primitive.FieldPath)};");
+                                    break;
+
+                                case FieldInfo.NonLinearMatrix matrix:
+                                    string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
+                                    string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
+                                    string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
+                                    string fieldPath = string.Join(".", matrix.FieldPath);
+                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath);
+
+                                    // Get a reference to the whole matrix field, just once for all rows
+                                    writer.WriteLine(skipIfPresent: true);
+                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(in shader){string.Join(".", matrix.FieldPath.Skip(1))};");
+                                    writer.WriteLine();
+
+                                    // Read all rows of a given matrix type
+                                    for (int j = 0; j < matrix.Rows; j++)
+                                    {
+                                        writer.WriteLine($"Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1) = buffer.{fieldNamePrefix}_{j};");
+                                    }
+
+                                    writer.WriteLine();
+                                    break;
+                            }
+                        }
+
+                        writer.WriteLine(skipIfPresent: true);
+                        writer.WriteLine("return shader;");
+                    }
+
+                    // Define the FromManaged method (managed shader type to native constant buffer)
+                    writer.WriteLine();
+                    writer.WriteLine($"""/// <summary>""");
+                    writer.WriteLine($"""/// Marshals managed <see cref="{fullyQualifiedTypeName}"/> instances to native constant buffer data.""");
+                    writer.WriteLine($"""/// </summary>""");
+                    writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
+                    writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
+                    writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
+                    writer.WriteLine($"""[SkipLocalsInit]""");
+                    writer.WriteLine($"public static void FromManaged(in {fullyQualifiedTypeName} shader, out ConstantBuffer buffer)");
+
+                    using (writer.WriteBlock())
+                    {
+                        // Generate loading statements for each captured field
+                        foreach (FieldInfo fieldInfo in info.Fields)
+                        {
+                            switch (fieldInfo)
+                            {
+                                case FieldInfo.Primitive primitive:
+
+                                    // Assign a primitive value
+                                    writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath)} = {primitive.FieldPath[0]}(in shader){string.Join(".", primitive.FieldPath.Skip(1))};");
+                                    break;
+
+                                case FieldInfo.NonLinearMatrix matrix:
+                                    string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
+                                    string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
+                                    string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
+                                    string fieldPath = string.Join(".", matrix.FieldPath);
+                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath);
+
+                                    // Get a reference to the whole matrix field, just once for all rows
+                                    writer.WriteLine(skipIfPresent: true);
+                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(in shader){string.Join(".", matrix.FieldPath.Skip(1))};");
+                                    writer.WriteLine();
+
+                                    // Assign all rows of a given matrix type
+                                    for (int j = 0; j < matrix.Rows; j++)
+                                    {
+                                        writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1);");
+                                    }
+
+                                    writer.WriteLine();
+                                    break;
+                            }
+                        }
+                    }
+
+                    // Define all field accessors
+                    foreach (FieldInfo fieldInfo in info.Fields)
+                    {
+                        // Only process top level fields (as the others must be publicly accessible)
+                        if (fieldInfo is not { FieldPath: [string fieldName] })
+                        {
+                            continue;
+                        }
+
+                        // Get the friendly type name for the field
+                        string typeName = fieldInfo.TypeName is "System.Boolean"
+                            ? "global::ComputeSharp.Bool"
+                            : HlslKnownTypes.GetMappedName(fieldInfo.TypeName);
+
+                        writer.WriteLine();
+                        writer.WriteLine($"""
+                            /// <inheritdoc cref="{fullyQualifiedTypeName}.{fieldName}"/>
+                            /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> shader instance.</param>
+                            /// <returns>A mutable reference to <see cref="{fullyQualifiedTypeName}.{fieldName}"/>.</returns>
+                            [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{fieldName}")]
+                            private static extern ref {typeName} {fieldName}(ref readonly {fullyQualifiedTypeName} shader);
+                            """, isMultiline: true);
+                    }
+                }
+            }
+
+            callbacks.Add(ConstantBufferCallback);
+            callbacks.Add(ConstantBufferMarshallerCallback);
         }
     }
 }
