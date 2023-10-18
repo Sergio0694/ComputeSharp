@@ -12,32 +12,6 @@ unsafe partial struct D2D1TransformMapperImpl
     /// </summary>
     private static class ID2D1TransformMapperInternalMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="ID2D1TransformMapperInternal.GetManagedWrapperHandle"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetManagedWrapperHandleDelegate(D2D1TransformMapperImpl* @this, void** ppvHandle);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="GetManagedWrapperHandleDelegate"/> instance wrapping <see cref="GetManagedWrapperHandle"/>.
-        /// </summary>
-        public static readonly GetManagedWrapperHandleDelegate GetManagedWrapperHandleWrapper = GetManagedWrapperHandle;
-#endif
-
         /// <inheritdoc cref="D2D1TransformMapperImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)

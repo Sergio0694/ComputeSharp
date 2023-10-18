@@ -20,32 +20,6 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// </summary>
     private static class ID2D1DrawInfoUpdateContextInternalMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Close"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int CloseDelegate(D2D1DrawInfoUpdateContextImpl* @this);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="CloseDelegate"/> instance wrapping <see cref="Close"/>.
-        /// </summary>
-        public static readonly CloseDelegate CloseWrapper = Close;
-#endif
-
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)

@@ -16,65 +16,6 @@ unsafe partial struct D2D1TransformMapperImpl
     /// </summary>
     private static class ID2D1TransformMapperMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="ID2D1TransformMapper.MapInputRectsToOutputRect"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int MapInputRectsToOutputRectDelegate(
-            D2D1TransformMapperImpl* @this,
-            ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
-            RECT* inputRects,
-            RECT* inputOpaqueSubRects,
-            uint inputRectCount,
-            RECT* outputRect,
-            RECT* outputOpaqueSubRect);
-
-        /// <inheritdoc cref="ID2D1TransformMapper.MapOutputRectToInputRects"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int MapOutputRectToInputRectsDelegate(
-            D2D1TransformMapperImpl* @this,
-            RECT* outputRect,
-            RECT* inputRects,
-            uint inputRectsCount);
-
-        /// <inheritdoc cref="ID2D1TransformMapper.MapInvalidRect"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int MapInvalidRectDelegate(
-            D2D1TransformMapperImpl* @this,
-            uint inputIndex,
-            RECT invalidInputRect,
-            RECT* invalidOutputRect);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="MapInputRectsToOutputRectDelegate"/> instance wrapping <see cref="MapInputRectsToOutputRect"/>.
-        /// </summary>
-        public static readonly MapInputRectsToOutputRectDelegate MapInputRectsToOutputRectWrapper = MapInputRectsToOutputRect;
-
-        /// <summary>
-        /// A cached <see cref="MapOutputRectToInputRectsDelegate"/> instance wrapping <see cref="MapOutputRectToInputRects"/>.
-        /// </summary>
-        public static readonly MapOutputRectToInputRectsDelegate MapOutputRectToInputRectsWrapper = MapOutputRectToInputRects;
-
-        /// <summary>
-        /// A cached <see cref="MapInvalidRectDelegate"/> instance wrapping <see cref="MapInvalidRect"/>.
-        /// </summary>
-        public static readonly MapInvalidRectDelegate MapInvalidRectWrapper = MapInvalidRect;
-#endif
-
         /// <inheritdoc cref="D2D1TransformMapperImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)

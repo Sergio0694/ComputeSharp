@@ -23,7 +23,7 @@ public sealed class FxcCompilationException : Exception
     /// <returns>A formatted error message for a new <see cref="FxcCompilationException"/> instance.</returns>
     private static string GetExceptionMessage(string error)
     {
-#if NET6_0_OR_GREATER
+#if !SOURCE_GENERATOR
         ReadOnlySpan<char> message = error.AsSpan().Trim();
 #else
         string message = error.Trim();

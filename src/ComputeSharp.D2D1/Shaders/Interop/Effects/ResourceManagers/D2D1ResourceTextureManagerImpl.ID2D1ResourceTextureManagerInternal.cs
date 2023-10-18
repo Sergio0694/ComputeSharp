@@ -13,41 +13,6 @@ partial struct D2D1ResourceTextureManagerImpl
     /// </summary>
     private static unsafe class ID2D1ResourceTextureManagerInternalMethods
     {
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Initialize"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int InitializeDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1EffectContext* effectContext, uint* dimensions);
-
-        /// <inheritdoc cref="GetResourceTexture"/>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate int GetResourceTextureDelegate(D2D1ResourceTextureManagerImpl* @this, ID2D1ResourceTexture** resourceTexture);
-
-        /// <summary>
-        /// A cached <see cref="QueryInterfaceDelegate"/> instance wrapping <see cref="QueryInterface"/>.
-        /// </summary>
-        public static readonly QueryInterfaceDelegate QueryInterfaceWrapper = QueryInterface;
-
-        /// <summary>
-        /// A cached <see cref="AddRefDelegate"/> instance wrapping <see cref="AddRef"/>.
-        /// </summary>
-        public static readonly AddRefDelegate AddRefWrapper = AddRef;
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        public static readonly ReleaseDelegate ReleaseWrapper = Release;
-
-        /// <summary>
-        /// A cached <see cref="InitializeDelegate"/> instance wrapping <see cref="Initialize"/>.
-        /// </summary>
-        public static readonly InitializeDelegate InitializeWrapper = Initialize;
-
-        /// <summary>
-        /// A cached <see cref="GetResourceTextureDelegate"/> instance wrapping <see cref="GetResourceTexture"/>.
-        /// </summary>
-        public static readonly GetResourceTextureDelegate GetResourceTextureWrapper = GetResourceTexture;
-#endif
-
         /// <inheritdoc cref="D2D1ResourceTextureManagerImpl.QueryInterface"/>
         [UnmanagedCallersOnly]
         public static int QueryInterface(D2D1ResourceTextureManagerImpl* @this, Guid* riid, void** ppvObject)
