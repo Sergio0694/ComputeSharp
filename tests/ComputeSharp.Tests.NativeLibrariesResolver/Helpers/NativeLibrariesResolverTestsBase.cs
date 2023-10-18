@@ -278,8 +278,8 @@ public enum PublishMode
 }
 
 /// <summary>
-/// Indicates how should the application be packaged. Notably, these tests employ .NET 6 style SingleFile,
-/// aka SuperHost. It does not affect native libraries packaging in .NET 6, but may in the future.
+/// Indicates how should the application be packaged. Notably, these tests employ .NET 7 style SingleFile,
+/// aka SuperHost. It does not affect native libraries packaging in .NET 7, but may in the future.
 /// </summary>
 public enum DeploymentMode
 {

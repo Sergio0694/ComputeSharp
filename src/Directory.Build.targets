@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <!--
-    Enable trimming support on .NET 6 (we need to use StartsWith since it
+    Enable trimming support on .NET 7 (we need to use StartsWith since it
     could be a Windows TFM too). This can't be in a target unlike the other
     properties set below, because if that is the case the trimmable attribute
     will be set but the analyzers will not run, so warnings will be skipped.

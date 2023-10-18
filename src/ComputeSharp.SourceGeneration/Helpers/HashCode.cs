@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 namespace System;
 
 /// <summary>
-/// A polyfill type that mirrors some methods from <see cref="HashCode"/> on .NET 6.
+/// A polyfill type that mirrors some methods from <see cref="HashCode"/> on .7.
 /// </summary>
 internal struct HashCode
 {
