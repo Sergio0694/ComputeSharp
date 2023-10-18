@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.D3D12MemoryAllocator.Interop;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
 
 namespace ComputeSharp.D3D12MemoryAllocator;
 

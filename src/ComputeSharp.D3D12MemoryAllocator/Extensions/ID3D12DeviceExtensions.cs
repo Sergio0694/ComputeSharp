@@ -1,9 +1,11 @@
-using ComputeSharp.Core.Extensions;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Core.Extensions;
+using ComputeSharp.Win32;
+using D3D12MA_Allocator = TerraFX.Interop.DirectX.D3D12MA_Allocator;
+using D3D12MA_ALLOCATOR_DESC = TerraFX.Interop.DirectX.D3D12MA_ALLOCATOR_DESC;
+using D3D12MemAlloc = TerraFX.Interop.DirectX.D3D12MemAlloc;
 
-namespace ComputeSharp.Graphics.Extensions;
+namespace ComputeSharp.D3D12MemoryAllocator.Extensions;
 
 /// <summary>
 /// A <see langword="class"/> with extensions for the <see cref="ID3D12Device"/> type.
@@ -21,10 +23,10 @@ internal static unsafe class ID3D12DeviceExtensions
         using ComPtr<D3D12MA_Allocator> allocator = default;
 
         D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
-        allocatorDesc.pDevice = (ID3D12Device*)Unsafe.AsPointer(ref d3D12Device);
-        allocatorDesc.pAdapter = dxgiAdapter;
+        allocatorDesc.pDevice = (TerraFX.Interop.DirectX.ID3D12Device*)Unsafe.AsPointer(ref d3D12Device);
+        allocatorDesc.pAdapter = (TerraFX.Interop.DirectX.IDXGIAdapter*)dxgiAdapter;
 
-        D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator.GetAddressOf()).Assert();
+        ((HRESULT)(int)D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator.GetAddressOf())).Assert();
 
         return allocator.Move();
     }

@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
+using ComputeSharp.Win32;
+using D3D12MA_Allocation = TerraFX.Interop.DirectX.D3D12MA_Allocation;
 
 namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 

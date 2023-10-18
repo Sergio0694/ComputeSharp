@@ -5,9 +5,10 @@ using System.Threading;
 using ComputeSharp.D3D12MemoryAllocator.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop.Allocation;
-using TerraFX.Interop.DirectX;
-using TerraFX.Interop.Windows;
-using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using ComputeSharp.Win32;
+using static ComputeSharp.Win32.D3D12_FEATURE;
+using D3D12MA_Allocator = TerraFX.Interop.DirectX.D3D12MA_Allocator;
+using D3D12MA_Pool = TerraFX.Interop.DirectX.D3D12MA_Pool;
 
 namespace ComputeSharp.D3D12MemoryAllocator.Interop;
 
