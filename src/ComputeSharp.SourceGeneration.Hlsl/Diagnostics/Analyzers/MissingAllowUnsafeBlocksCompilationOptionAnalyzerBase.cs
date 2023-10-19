@@ -19,7 +19,7 @@ public abstract class MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase : Di
     /// Creates a new <see cref="MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase"/> instance with the specified arguments.
     /// </summary>
     /// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
-    protected MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase(DiagnosticDescriptor diagnosticDescriptor)
+    private protected MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase(DiagnosticDescriptor diagnosticDescriptor)
     {
         this.diagnosticDescriptor = diagnosticDescriptor;
 
