@@ -491,7 +491,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
                     ArgumentSyntax coordinateSyntax = mapping switch
                     {
                         not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
-                        null => updatedNode.ArgumentList.Arguments[0]
+                        _ => updatedNode.ArgumentList.Arguments[0]
                     };
 
                     // Rewrite texture resource sampled accesses, if needed

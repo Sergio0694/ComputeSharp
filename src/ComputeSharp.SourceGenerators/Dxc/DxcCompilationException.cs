@@ -11,7 +11,7 @@ internal sealed class DxcCompilationException : Exception
     /// Creates a new <see cref="DxcCompilationException"/> instance.
     /// </summary>
     /// <param name="error">The error message produced by the DXC compiler.</param>
-    internal DxcCompilationException(string error)
+    public DxcCompilationException(string error)
         : base(GetExceptionMessage(error))
     {
     }

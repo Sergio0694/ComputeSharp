@@ -50,13 +50,13 @@ internal static class IndentedTextWriterExtensions
     public static void WriteSortedUsingDirectives(this IndentedTextWriter writer, IEnumerable<string> usingDirectives)
     {
         // Add the System directives first, in the correct order
-        foreach (string usingDirective in usingDirectives.Where(static name => name.StartsWith("global::System")).OrderBy(static name => name))
+        foreach (string usingDirective in usingDirectives.Where(static name => name.StartsWith("global::System", StringComparison.InvariantCulture)).OrderBy(static name => name))
         {
             writer.WriteLine($"using {usingDirective};");
         }
 
         // Add the other directives, also sorted in the correct order
-        foreach (string usingDirective in usingDirectives.Where(static name => !name.StartsWith("global::System")).OrderBy(static name => name))
+        foreach (string usingDirective in usingDirectives.Where(static name => !name.StartsWith("global::System", StringComparison.InvariantCulture)).OrderBy(static name => name))
         {
             writer.WriteLine($"using {usingDirective};");
         }

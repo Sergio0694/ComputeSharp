@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Globalization;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -48,7 +49,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
                 {
                     // The type name will be ComputeSharp.D2D1.D2D1ResourceTexture1D`1 or the 2D/3D versions
-                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 4, 1));
+                    int rank = int.Parse(metadataName.Substring(metadataName.Length - 4, 1), CultureInfo.InvariantCulture);
                     int? index = null;
 
                     // Get the index from the [D2DResourceTextureIndex] attribute over the field

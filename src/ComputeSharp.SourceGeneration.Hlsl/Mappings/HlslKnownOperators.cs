@@ -27,7 +27,7 @@ internal static partial class HlslKnownOperators
         foreach ((Type Type, MethodInfo Operator, string IntrinsicName, bool RequiresParametersMatching) item in
             from type in HlslKnownTypes.KnownVectorTypes.Concat(HlslKnownTypes.KnownMatrixTypes)
             from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-            where method.IsSpecialName && method.Name.StartsWith("op_")
+            where method.IsSpecialName && method.Name.StartsWith("op_", StringComparison.InvariantCulture)
             let attribute = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()
             where attribute is not null
             select (Type: type, Operator: method, IntrinsicName: attribute.Name, attribute.RequiresParametersMatching))

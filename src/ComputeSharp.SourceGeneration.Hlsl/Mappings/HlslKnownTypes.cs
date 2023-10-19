@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -140,8 +141,8 @@ internal static partial class HlslKnownTypes
             if (match.Success)
             {
                 elementName = match.Groups[1].Value;
-                rows = int.Parse(match.Groups[2].Value);
-                columns = int.Parse(match.Groups[3].Value);
+                rows = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+                columns = int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
 
                 return true;
             }
@@ -247,7 +248,7 @@ internal static partial class HlslKnownTypes
                 type.TypeKind is TypeKind.Enum ||
                 type.IsGenericType ||
                 type.IsRefLikeType ||
-                type.GetFullyQualifiedName().StartsWith("System."))
+                type.GetFullyQualifiedName().StartsWith("System.", StringComparison.InvariantCulture))
             {
                 _ = invalidTypes.Add(type);
 

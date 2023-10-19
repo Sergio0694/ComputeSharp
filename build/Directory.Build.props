@@ -9,10 +9,10 @@
       Enable the latest warning wave, which shows additional warnings for invalid language features that are disabled by default.
       For additional info, see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves.
     -->
-    <AnalysisLevel>7</AnalysisLevel>
+    <AnalysisLevel>latest</AnalysisLevel>
 
     <!-- Import the global configs from the CodeStyle package (enables all IDExxxx warnings)-->
-    <AnalysisLevelStyle>7-all</AnalysisLevelStyle>
+    <AnalysisLevelStyle>latest-all</AnalysisLevelStyle>
 
     <!-- Enforce all code style rules during build (this replaces referencing Microsoft.CodeAnalysis.CSharp.CodeStyle) -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>

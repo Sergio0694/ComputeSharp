@@ -76,8 +76,6 @@ internal static partial class HlslKnownMethods
             ["System.MathF.Exp"] = "exp",
             ["System.MathF.Log"] = "log",
             ["System.MathF.Log10"] = "log10",
-            ["System.MathF.Max"] = "max",
-            ["System.MathF.Min"] = "min",
             ["System.MathF.Round"] = "round",
             ["System.MathF.Sqrt"] = "sqrt",
             ["System.MathF.Sign"] = "sign",
