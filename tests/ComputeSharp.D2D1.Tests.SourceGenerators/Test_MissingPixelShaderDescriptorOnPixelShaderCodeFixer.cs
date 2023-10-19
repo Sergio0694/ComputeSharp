@@ -2,6 +2,7 @@ extern alias Core;
 extern alias D2D1;
 
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSharpCodeFixTest = Microsoft.CodeAnalysis.CSharp.Testing.CSharpCodeFixTest<
     ComputeSharp.D2D1.SourceGenerators.MissingPixelShaderDescriptorOnPixelShaderAnalyzer,
@@ -14,7 +15,6 @@ namespace ComputeSharp.D2D1.Tests.SourceGenerators;
 public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
 {
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task FileContainsComputeSharpD2D1UsingDirective()
     {
         string original = """
@@ -40,7 +40,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -51,7 +51,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task FileContainsComputeSharpD2D1UsingDirective_MultipleOccurrences()
     {
         string original = """
@@ -102,7 +101,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -113,7 +112,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task FileDoesNotContainComputeSharpD2D1UsingDirective()
     {
         string original = """
@@ -137,7 +135,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -148,7 +146,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task FileDoesNotContainComputeSharpD2D1UsingDirective_MultipleOccurrences()
     {
         string original = """
@@ -196,7 +193,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -207,7 +204,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task InsertsAttributeAfterAllOtherD2DAttributes()
     {
         string original = """
@@ -237,7 +233,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -248,7 +244,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task InsertsAttributeAfterAllOtherD2DAttributes_WithOtherNonD2DAttribute()
     {
         string original = """
@@ -290,7 +285,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
@@ -301,7 +296,6 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
     }
 
     [TestMethod]
-    [Ignore("Missing .NET 7 reference assemblies.")]
     public async Task InsertsAttributeAfterAllOtherD2DAttributes_WithFakeAttributes()
     {
         string original = """
@@ -355,7 +349,7 @@ public class Test_MissingPixelShaderDescriptorOnPixelShaderCodeFixer
         {
             TestCode = original,
             FixedCode = @fixed,
-            //ReferenceAssemblies = ReferenceAssemblies.Net.Net70
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net70
         };
 
         test.TestState.AdditionalReferences.Add(typeof(Core::ComputeSharp.Float4).Assembly);
