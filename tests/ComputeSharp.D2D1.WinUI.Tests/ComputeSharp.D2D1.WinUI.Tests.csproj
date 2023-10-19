@@ -56,9 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" ExcludeAssets="build" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" ExcludeAssets="build" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.22621.2" />
