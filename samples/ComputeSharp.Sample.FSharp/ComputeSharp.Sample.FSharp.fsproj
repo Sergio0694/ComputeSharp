@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="7.0.300" />
+    <PackageReference Update="FSharp.Core" Version="7.0.400" />
   </ItemGroup>
 
   <ItemGroup>
