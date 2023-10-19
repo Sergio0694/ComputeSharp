@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -188,7 +189,7 @@ partial class D2DPixelShaderDescriptorGenerator
                                     string fieldName = primitive.FieldPath[0];
 
                                     // Read a nested primitive value
-                                    writer.WriteLine($"{fieldName}(in shader){string.Join(".", primitive.FieldPath.Skip(1))} = buffer.{string.Join("_", primitive.FieldPath)};");
+                                    writer.WriteLine($"{fieldName}(ref shader){string.Join(".", primitive.FieldPath.Skip(1))} = buffer.{string.Join("_", primitive.FieldPath)};");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
@@ -200,7 +201,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                                     // Get a reference to the whole matrix field, just once for all rows
                                     writer.WriteLine(skipIfPresent: true);
-                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(in shader){string.Join(".", matrix.FieldPath.Skip(1))};");
+                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(ref shader){string.Join(".", matrix.FieldPath.Skip(1))};");
                                     writer.WriteLine();
 
                                     // Read all rows of a given matrix type
@@ -266,14 +267,22 @@ partial class D2DPixelShaderDescriptorGenerator
                         }
                     }
 
+                    using ImmutableArrayBuilder<string> topLevelFieldNames = new();
+
                     // Define all field accessors
                     foreach (FieldInfo fieldInfo in info.Fields)
                     {
-                        // Only process top level fields (as the others must be publicly accessible)
-                        if (fieldInfo is not { FieldPath: [string fieldName] })
+                        string fieldName = fieldInfo.FieldPath[0];
+
+                        // Only generate accessors for top level fields, just once. That is, if they have
+                        // multiple nested items, only generate one accessor for the top level field. We
+                        // can simply use a linear scan here, as we expect fields to not be that many.
+                        if (topLevelFieldNames.WrittenSpan.IndexOf(fieldName) >= 0)
                         {
                             continue;
                         }
+
+                        topLevelFieldNames.Add(fieldName);
 
                         // Get the friendly type name for the field
                         string typeName = fieldInfo.TypeName is "System.Boolean"
