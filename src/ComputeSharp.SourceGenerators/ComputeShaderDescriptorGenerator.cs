@@ -60,6 +60,7 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     // Get the fields info
                     DispatchDataLoading.GetInfo(
                         diagnostics,
+                        context.SemanticModel.Compilation,
                         typeSymbol,
                         isPixelShaderLike,
                         out int constantBufferSizeInBytes,

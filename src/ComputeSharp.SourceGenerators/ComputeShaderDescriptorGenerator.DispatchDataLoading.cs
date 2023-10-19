@@ -23,6 +23,7 @@ partial class ComputeShaderDescriptorGenerator
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
         /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
@@ -31,6 +32,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="resources">The sequence of <see cref="ResourceInfo"/> instances for all captured resources.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+            Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
             bool isPixelShaderLike,
             out int constantBufferSizeInBytes,
@@ -39,6 +41,7 @@ partial class ComputeShaderDescriptorGenerator
             out ImmutableArray<ResourceInfo> resources)
         {
             static void GetInfo(
+                Compilation compilation,
                 ITypeSymbol currentTypeSymbol,
                 ImmutableArray<string> fieldPath,
                 ref int resourceOffset,
@@ -52,6 +55,12 @@ partial class ComputeShaderDescriptorGenerator
                 {
                     // Only process fields
                     if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                    {
+                        continue;
+                    }
+
+                    // Skip fields of not accessible types (the analyzer will handle this)
+                    if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
                     {
                         continue;
                     }
@@ -78,7 +87,7 @@ partial class ComputeShaderDescriptorGenerator
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        GetInfo(fieldSymbol.Type, fieldPath.Add(fieldName), ref resourceOffset, ref rawDataOffset, fields, resources);
+                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldName), ref resourceOffset, ref rawDataOffset, fields, resources);
                     }
                 }
             }
@@ -93,6 +102,7 @@ partial class ComputeShaderDescriptorGenerator
             {
                 // Traverse all shader fields and gather info, and update the tracking offsets
                 GetInfo(
+                    compilation,
                     structDeclarationSymbol,
                     ImmutableArray<string>.Empty,
                     ref resourceOffset,

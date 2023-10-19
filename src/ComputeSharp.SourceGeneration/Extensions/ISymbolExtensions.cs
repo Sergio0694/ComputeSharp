@@ -35,6 +35,17 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
+    /// Checks whether a given symbol is accessible from the assembly of a given compilation (including eg. through nested types).
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
+    /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
+    /// <returns>Whether <paramref name="symbol"/> is accessible from the assembly for <paramref name="compilation"/>.</returns>
+    public static bool IsAccessibleFromCompilationAssembly(this ISymbol symbol, Compilation compilation)
+    {
+        return compilation.IsSymbolAccessibleWithin(symbol, compilation.Assembly);
+    }
+
+    /// <summary>
     /// Gets the fully qualified name for a given symbol.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>

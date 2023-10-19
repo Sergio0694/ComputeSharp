@@ -7,12 +7,12 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer : NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase
+public sealed class NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer : NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase
 {
     /// <summary>
-    /// Creates a new <see cref="NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer"/> instance.
+    /// Creates a new <see cref="NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer"/> instance.
     /// </summary>
-    public NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer()
+    public NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer()
         : base(NotAccessibleTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute, "ComputeSharp.D2D1.D2DGeneratedPixelShaderDescriptorAttribute")
     {
     }

@@ -1008,4 +1008,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The [D2DGeneratedPixelShaderDescriptor] attribute requires target types to be accessible from their containing assembly.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a field in a type using the <c>[D2DGeneratedPixelShaderDescriptor]</c> attribute has a type that is not accessible from its containing assembly.
+    /// <para>
+    /// Format: <c>"The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor NotAccessibleFieldTypeInTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new DiagnosticDescriptor(
+        id: "CMPSD2D0068",
+        title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
+        messageFormat: """The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)""",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
