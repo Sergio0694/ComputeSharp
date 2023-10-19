@@ -40,7 +40,7 @@ public abstract class MissingAttributeCodeFixer : CodeFixProvider
     /// <param name="codeActionTitle">The title to display for the code fixer.</param>
     /// <param name="attributeFullyQualifiedMetadataName">The fully qualified type name of the attribute to add.</param>
     /// <param name="leadingAttributeFullyQualifiedMetadataNames">The fully qualified type names of leading attributes to skip.</param>
-    protected MissingAttributeCodeFixer(
+    private protected MissingAttributeCodeFixer(
         string diagnosticId,
         string codeActionTitle,
         string attributeFullyQualifiedMetadataName,

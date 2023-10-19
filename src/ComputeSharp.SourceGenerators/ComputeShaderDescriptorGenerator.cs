@@ -43,6 +43,12 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         return default;
                     }
 
+                    // Immediately bail if the target type doesn't have internal accessibility
+                    if (!typeSymbol.IsAccessibleFromContainingAssembly(context.SemanticModel.Compilation))
+                    {
+                        return default;
+                    }
+
                     // Check whether type is a compute shader, and if so, if it's pixel shader like
                     if (!TryGetIsPixelShaderLike(typeSymbol, context.SemanticModel.Compilation, out bool isPixelShaderLike))
                     {

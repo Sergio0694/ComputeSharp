@@ -171,7 +171,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
-    private partial struct DummyShaderWithResourceTexture : ID2D1PixelShader
+    internal partial struct DummyShaderWithResourceTexture : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture2D<float4> source;
@@ -460,7 +460,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
-    private partial struct IndexFrom2DResourceTextureShader : ID2D1PixelShader
+    internal partial struct IndexFrom2DResourceTextureShader : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture2D<float4> source;
@@ -536,7 +536,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private partial struct IndexFrom3DResourceTextureShader : ID2D1PixelShader
+    internal partial struct IndexFrom3DResourceTextureShader : ID2D1PixelShader
     {
         private int height;
 
@@ -624,7 +624,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private partial struct CopyFromResourceTexture1DShader : ID2D1PixelShader
+    internal partial struct CopyFromResourceTexture1DShader : ID2D1PixelShader
     {
         private int width;
 
@@ -794,7 +794,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private partial struct CopyFromResourceTexture2DShader : ID2D1PixelShader
+    internal partial struct CopyFromResourceTexture2DShader : ID2D1PixelShader
     {
         private int width;
         private int height;
@@ -901,7 +901,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
+    internal partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
     {
         private int width;
         private int height;
@@ -946,7 +946,7 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
-    private partial struct NullResourceTextureShader : ID2D1PixelShader
+    internal partial struct NullResourceTextureShader : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture2D<float4> source;

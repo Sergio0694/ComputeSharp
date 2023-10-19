@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGeneratedPixelShaderDescriptorAttributeTarget);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(InvalidGeneratedComputeShaderDescriptorAttributeTarget);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -49,7 +49,7 @@ public sealed class InvalidGeneratedComputeShaderDescriptorAttributeTargetAnalyz
                 if (!MissingComputeShaderDescriptorOnComputeShaderAnalyzer.IsComputeShaderType(typeSymbol, computeShaderSymbol, pixelShaderSymbol))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                    InvalidGeneratedPixelShaderDescriptorAttributeTarget,
+                    InvalidGeneratedComputeShaderDescriptorAttributeTarget,
                     attribute.GetLocation(),
                     typeSymbol));
                 }

@@ -43,6 +43,12 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                         return default;
                     }
 
+                    // Immediately bail if the target type doesn't have internal accessibility
+                    if (!typeSymbol.IsAccessibleFromContainingAssembly(context.SemanticModel.Compilation))
+                    {
+                        return default;
+                    }
+
                     // Check that the shader implements the ID2D1PixelShader interface
                     if (!typeSymbol.HasInterfaceWithType(context.SemanticModel.Compilation.GetTypeByMetadataName("ComputeSharp.D2D1.ID2D1PixelShader")!))
                     {

@@ -18,6 +18,23 @@ internal static class ISymbolExtensions
         miscellaneousOptions: SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers);
 
     /// <summary>
+    /// Checks whether a given symbol is accessible from its containing assembly (including eg. through nested types).
+    /// </summary>
+    /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
+    /// <param name="compilation">The <see cref="Compilation"/> instance currently in use.</param>
+    /// <returns>Whether <paramref name="symbol"/> is accessible from its containing assembly.</returns>
+    public static bool IsAccessibleFromContainingAssembly(this ISymbol symbol, Compilation compilation)
+    {
+        // If the symbol is associated across multiple assemblies, it must be accessible
+        if (symbol.ContainingAssembly is not IAssemblySymbol assemblySymbol)
+        {
+            return true;
+        }
+
+        return compilation.IsSymbolAccessibleWithin(symbol, assemblySymbol);
+    }
+
+    /// <summary>
     /// Gets the fully qualified name for a given symbol.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>

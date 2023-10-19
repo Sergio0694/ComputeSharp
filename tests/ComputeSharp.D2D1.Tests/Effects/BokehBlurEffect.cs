@@ -482,7 +482,7 @@ public sealed partial class BokehBlurEffect
     /// <summary>
     /// The vertical convolution shader and transform.
     /// </summary>
-    private sealed partial class VerticalConvolution
+    internal sealed partial class VerticalConvolution
     {
         /// <summary>
         /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
@@ -530,7 +530,7 @@ public sealed partial class BokehBlurEffect
     /// <summary>
     /// The horizontal convolutin and partial accumulation effect and transform.
     /// </summary>
-    private sealed partial class HorizontalConvolutionAndAccumulatePartials
+    internal sealed partial class HorizontalConvolutionAndAccumulatePartials
     {
         /// <summary>
         /// The <see cref="D2D1TransformMapper{T}"/> for the shader.
