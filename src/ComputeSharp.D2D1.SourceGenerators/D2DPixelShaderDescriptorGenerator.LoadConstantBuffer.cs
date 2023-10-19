@@ -25,16 +25,19 @@ partial class D2DPixelShaderDescriptorGenerator
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
         public static ImmutableArray<FieldInfo> GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
+            Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
             out int constantBufferSizeInBytes)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
+                Compilation compilation,
                 ITypeSymbol currentTypeSymbol,
                 ImmutableArray<string> fieldPath,
                 StrongBox<int> rawDataOffset)
@@ -47,6 +50,12 @@ partial class D2DPixelShaderDescriptorGenerator
                    where fieldSymbol is { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
                    select fieldSymbol)
                 {
+                    // Skip fields of not accessible types (the analyzer will handle this)
+                    if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
+                    {
+                        continue;
+                    }
+
                     string fieldName = fieldSymbol.Name;
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
 
@@ -65,7 +74,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), rawDataOffset))
+                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(compilation, fieldSymbol.Type, fieldPath.Add(fieldName), rawDataOffset))
                         {
                             yield return fieldInfo;
                         }
@@ -78,6 +87,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
             // Traverse all shader fields and gather info, and update the tracking offsets
             ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
+                compilation,
                 structDeclarationSymbol,
                 ImmutableArray<string>.Empty,
                 rawDataOffsetAsBox).ToImmutableArray();

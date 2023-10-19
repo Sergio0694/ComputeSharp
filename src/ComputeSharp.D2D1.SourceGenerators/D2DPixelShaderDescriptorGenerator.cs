@@ -85,6 +85,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     // LoadDispatchData() info
                     ImmutableArray<FieldInfo> fieldInfos = LoadConstantBuffer.GetInfo(
                         diagnostics,
+                        context.SemanticModel.Compilation,
                         typeSymbol,
                         out int constantBufferSizeInBytes);
 
