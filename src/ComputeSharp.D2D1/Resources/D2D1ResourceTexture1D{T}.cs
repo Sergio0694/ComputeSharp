@@ -7,7 +7,6 @@ namespace ComputeSharp.D2D1;
 /// This can be used from D2D1 pixel shaders to be able to pass arbitrary inputs to them.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture (only <see langword="float"/> and <see cref="Float4"/> are supported).</typeparam>
-[AutoConstructorBehavior(AutoConstructorBehavior.IgnoreAndSetToDefault)]
 public readonly struct D2D1ResourceTexture1D<T>
     where T : unmanaged
 {
