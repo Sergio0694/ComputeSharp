@@ -10,7 +10,7 @@ namespace ComputeSharp.Tests.SourceGenerators;
 public class AnalyzerTests
 {
     [TestMethod]
-    public async Task InvalidShaderField()
+    public async Task NotAccessibleNestedShaderType()
     {
         const string source = """
             using ComputeSharp;
@@ -32,5 +32,36 @@ public class AnalyzerTests
             """;
 
         await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleGeneratedComputeShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [TestMethod]
+    public async Task NotAccessibleShaderFieldType()
+    {
+        const string source = """
+            using ComputeSharp;
+
+            namespace MyFancyApp.Sample;
+
+            public partial class Foo
+            {
+                [{|CMPS0056:GeneratedComputeShaderDescriptor|}]
+                private partial struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+                    public Bar bar;
+
+                    public void Execute()
+                    {
+                    }
+                }
+
+                private struct Bar
+                {
+                    public int X;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleFieldTypeInGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }
