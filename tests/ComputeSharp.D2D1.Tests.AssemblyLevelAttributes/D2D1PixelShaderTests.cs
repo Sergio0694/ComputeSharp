@@ -50,7 +50,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(1)]
     [D2DInputSimple(2)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithNoCompileAttributes : ID2D1PixelShader
+    internal readonly partial struct ShaderWithNoCompileAttributes : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -96,7 +96,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(2)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithOverriddenProfile : ID2D1PixelShader
+    internal readonly partial struct ShaderWithOverriddenProfile : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -142,7 +142,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(2)]
     [D2DCompileOptions(D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithOverriddenOptions : ID2D1PixelShader
+    internal readonly partial struct ShaderWithOverriddenOptions : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -179,7 +179,7 @@ public partial class D2D1PixelShaderTests
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DCompileOptions(D2D1CompileOptions.Debug | D2D1CompileOptions.AvoidFlowControl | D2D1CompileOptions.PartialPrecision)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithOverriddenProfileAndOptions : ID2D1PixelShader
+    internal readonly partial struct ShaderWithOverriddenProfileAndOptions : ID2D1PixelShader
     {
         public float4 Execute()
         {

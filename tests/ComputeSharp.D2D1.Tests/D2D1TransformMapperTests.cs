@@ -195,7 +195,7 @@ public partial class D2D1TransformMapperTests
 
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
-    private partial struct DummyShader : ID2D1PixelShader
+    internal partial struct DummyShader : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -286,7 +286,7 @@ public partial class D2D1TransformMapperTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private partial struct ShaderWithDispatchArea : ID2D1PixelShader
+    internal partial struct ShaderWithDispatchArea : ID2D1PixelShader
     {
         public int Width;
         public int Height;

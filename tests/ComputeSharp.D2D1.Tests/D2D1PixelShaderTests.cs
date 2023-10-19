@@ -67,7 +67,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputComplex(5)]
     [D2DInputSimple(6)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct ShaderWithMultipleInputs : ID2D1PixelShader
+    internal partial struct ShaderWithMultipleInputs : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -95,7 +95,7 @@ public partial class D2D1PixelShaderTests
 
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct EmptyShader : ID2D1PixelShader
+    internal partial struct EmptyShader : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -106,7 +106,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputCount(0)]
     [D2DOutputBuffer(D2D1BufferPrecision.UInt16Normalized)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct OnlyBufferPrecisionShader : ID2D1PixelShader
+    internal partial struct OnlyBufferPrecisionShader : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -117,7 +117,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputCount(0)]
     [D2DOutputBuffer(D2D1ChannelDepth.Four)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct OnlyChannelDepthShader : ID2D1PixelShader
+    internal partial struct OnlyChannelDepthShader : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -128,7 +128,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputCount(0)]
     [D2DOutputBuffer(D2D1BufferPrecision.UInt8NormalizedSrgb, D2D1ChannelDepth.One)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct CustomBufferOutputShader : ID2D1PixelShader
+    internal partial struct CustomBufferOutputShader : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -195,7 +195,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputDescription(5, D2D1Filter.MinMagPointMipLinear)]
     [D2DInputDescription(6, D2D1Filter.MinPointMagMipLinear, LevelOfDetailCount = 3)]
     [D2DGeneratedPixelShaderDescriptor]
-    partial struct ShaderWithInputDescriptions : ID2D1PixelShader
+    internal partial struct ShaderWithInputDescriptions : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -257,7 +257,7 @@ public partial class D2D1PixelShaderTests
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    partial struct ShaderWithoutResourceTextures : ID2D1PixelShader
+    internal partial struct ShaderWithoutResourceTextures : ID2D1PixelShader
     {
         public Float4 Execute()
         {
@@ -269,7 +269,7 @@ public partial class D2D1PixelShaderTests
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
+    internal partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
     {
         [D2DResourceTextureIndex(0)]
         D2D1ResourceTexture1D<float> myTexture;
@@ -288,7 +288,7 @@ public partial class D2D1PixelShaderTests
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    partial struct ShaderWithResourceTextures : ID2D1PixelShader
+    internal partial struct ShaderWithResourceTextures : ID2D1PixelShader
     {
         float number;
 
@@ -332,7 +332,7 @@ public partial class D2D1PixelShaderTests
 
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithoutEmbeddedBytecode : ID2D1PixelShader
+    internal readonly partial struct ShaderWithoutEmbeddedBytecode : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -404,7 +404,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(2)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithEmbeddedBytecode : ID2D1PixelShader
+    internal readonly partial struct ShaderWithEmbeddedBytecode : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -454,7 +454,7 @@ public partial class D2D1PixelShaderTests
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     [D2DCompileOptions(D2D1CompileOptions.IeeeStrictness | D2D1CompileOptions.OptimizationLevel2)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithEmbeddedBytecodeAndCompileOptions : ID2D1PixelShader
+    internal readonly partial struct ShaderWithEmbeddedBytecodeAndCompileOptions : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -486,7 +486,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(0)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct SimpleShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
+    internal readonly partial struct SimpleShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -498,7 +498,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputComplex(0)]
     [D2DShaderProfile(D2D1ShaderProfile.PixelShader40Level91)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ComplexShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
+    internal readonly partial struct ComplexShaderWithExplicitShaderProfileAndNoCompileOptions : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -524,7 +524,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputSimple(0)]
     [D2DCompileOptions(D2D1CompileOptions.OptimizationLevel2 | D2D1CompileOptions.IeeeStrictness)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithExplicitCompileOptionsAndNoShaderProfile : ID2D1PixelShader
+    internal readonly partial struct ShaderWithExplicitCompileOptionsAndNoShaderProfile : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -573,7 +573,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
     [D2DPixelOptions(D2D1PixelOptions.TrivialSampling)]
     [D2DGeneratedPixelShaderDescriptor]
-    private readonly partial struct ShaderWithNoCapturedValues : ID2D1PixelShader
+    internal readonly partial struct ShaderWithNoCapturedValues : ID2D1PixelShader
     {
         public float4 Execute()
         {
@@ -822,7 +822,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private readonly partial struct ShaderWithScalarVectorAndMatrixTypes : ID2D1PixelShader
+    internal readonly partial struct ShaderWithScalarVectorAndMatrixTypes : ID2D1PixelShader
     {
         public readonly int x;
         public readonly int y;
@@ -915,7 +915,7 @@ public partial class D2D1PixelShaderTests
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    private readonly partial struct ShaderWithScalarVectorAndMatrixTypesInNestedStructs : ID2D1PixelShader
+    internal readonly partial struct ShaderWithScalarVectorAndMatrixTypesInNestedStructs : ID2D1PixelShader
     {
         public readonly int x;
         public readonly int y;

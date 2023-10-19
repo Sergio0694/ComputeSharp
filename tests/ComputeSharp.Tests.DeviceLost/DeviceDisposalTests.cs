@@ -146,7 +146,7 @@ public partial class DeviceDisposalTests
     [EmbeddedBytecode(DispatchAxis.X)]
     [GeneratedComputeShaderDescriptor]
     [AutoConstructor]
-    private readonly partial struct InitializeShader : IComputeShader
+    internal readonly partial struct InitializeShader : IComputeShader
     {
         private readonly ReadWriteBuffer<float> buffer;
 
@@ -179,7 +179,7 @@ public partial class DeviceDisposalTests
 
     [EmbeddedBytecode(DispatchAxis.XY)]
     [GeneratedComputeShaderDescriptor]
-    private partial struct HelloWorldShader : IComputeShader<float4>
+    internal partial struct HelloWorldShader : IComputeShader<float4>
     {
         public float4 Execute()
         {
