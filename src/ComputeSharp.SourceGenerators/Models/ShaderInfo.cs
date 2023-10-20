@@ -13,7 +13,6 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="IsPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
 /// <param name="IsSamplerUsed">Whether or not the static sampler is used.</param>
 /// <param name="ConstantBufferSizeInBytes">The size of the shader constant buffer.</param>
-/// <param name="ResourceCount">The total number of captured resources in the shader.</param>
 /// <param name="Fields">The description on shader instance fields.</param>
 /// <param name="Resources">The description on shader captured resources.</param>
 /// <param name="ResourceDescriptors">The sequence of resource descriptors for the shader.</param>
@@ -28,7 +27,6 @@ internal sealed record ShaderInfo(
     bool IsPixelShaderLike,
     bool IsSamplerUsed,
     int ConstantBufferSizeInBytes,
-    int ResourceCount,
     EquatableArray<FieldInfo> Fields,
     EquatableArray<ResourceInfo> Resources,
     EquatableArray<ResourceDescriptor> ResourceDescriptors,

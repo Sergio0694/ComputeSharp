@@ -16,7 +16,7 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteHlslBytecodeSyntax(ShaderInfo info, IndentedTextWriter writer)
+        public static void WriteSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);

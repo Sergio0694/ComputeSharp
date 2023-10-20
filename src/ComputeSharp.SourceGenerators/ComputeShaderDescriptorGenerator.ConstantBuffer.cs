@@ -18,14 +18,12 @@ partial class ComputeShaderDescriptorGenerator
     private static class ConstantBuffer
     {
         /// <inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo"/>
-        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='compilation']/node()"/></param>
         /// <param name="structDeclarationSymbol"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='structDeclarationSymbol']/node()"/></param>
         /// <param name="isPixelShaderLike">Whether the compute shader is "pixel shader like", ie. outputting a pixel into a target texture.</param>
         /// <param name="constantBufferSizeInBytes"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='constantBufferSizeInBytes']/node()"/></param>
         /// <param name="fields"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='fields']/node()"/></param>
         public static void GetInfo(
-            ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
             bool isPixelShaderLike,
@@ -54,7 +52,7 @@ partial class ComputeShaderDescriptorGenerator
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteLoadConstantBufferSyntax(ShaderInfo info, IndentedTextWriter writer)
+        public static void WriteSyntax(ShaderInfo info, IndentedTextWriter writer)
         {
             string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
 
