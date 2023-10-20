@@ -265,18 +265,15 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     using ImmutableHashSetBuilder<(string ContainerType, string FieldName)> generatedAccessors = new();
 
-                    // Define all field accessors
+                    // Define all field accessors. Note that these are generated regardless of the accessibility
+                    // of the field they're getting the value for. This simplifies the rest of the code, and allows
+                    // stripping the readonly-ness of the field references, and has no binary size impact anyway.
+                    // This is because the fields are compiled to be exactly equivalent to direct field references.
                     foreach (FieldInfo fieldInfo in info.Fields)
                     {
                         for (int i = 0; i < fieldInfo.FieldPath.Length; i++)
                         {
                             FieldPathPart pathPart = fieldInfo.FieldPath[i];
-
-                            // Only generate field accessors for fields that are not accessible
-                            if (pathPart.IsAccessible)
-                            {
-                                continue;
-                            }
 
                             // Get the friendly type name for the field:
                             //   - If the part path is a nested struct, the type name is embedded
@@ -330,14 +327,10 @@ partial class D2DPixelShaderDescriptorGenerator
         {
             string fieldExpression = "shader";
 
-            // Format the field access expression, there's two options:
-            //   - If the field is accessible, just access it directly
-            //   - If the field is not accessible, use the unsafe accessor
+            // Invoke all generated field accessors to get to the target field
             foreach (FieldPathPart part in fieldInfo.FieldPath)
             {
-                fieldExpression = part.IsAccessible
-                    ? $"{fieldExpression}.{part.Name}"
-                    : $"{part.Name}(in {fieldExpression})";
+                fieldExpression = $"{part.Name}(in {fieldExpression})";
             }
 
             // Return a mutable ref if needed (the expression is always readonly here)

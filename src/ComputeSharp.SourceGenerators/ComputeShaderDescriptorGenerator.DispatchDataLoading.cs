@@ -82,13 +82,13 @@ partial class ComputeShaderDescriptorGenerator
                     }
                     else if (HlslKnownTypes.IsKnownHlslType(typeName))
                     {
-                        // TODO: share the logic and fix the field path parts (here they just always return accessible leaves for now)
-                        fields.Add(GetHlslKnownTypeFieldInfo(fieldPath.Add(new FieldPathPart.Leaf(fieldName, true)), typeName, ref rawDataOffset));
+                        // TODO: share the logic and fix the field path parts
+                        fields.Add(GetHlslKnownTypeFieldInfo(fieldPath.Add(new FieldPathPart.Leaf(fieldName)), typeName, ref rawDataOffset));
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(new FieldPathPart.Leaf(fieldName, true)), ref resourceOffset, ref rawDataOffset, fields, resources);
+                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(new FieldPathPart.Leaf(fieldName)), ref resourceOffset, ref rawDataOffset, fields, resources);
                     }
                 }
             }
