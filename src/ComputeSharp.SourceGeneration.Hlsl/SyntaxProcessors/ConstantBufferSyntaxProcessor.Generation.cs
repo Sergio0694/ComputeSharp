@@ -4,12 +4,10 @@ using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
 
-namespace ComputeSharp.SourceGeneration.SyntaxWriters;
+namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 
-/// <summary>
-/// A helper responsible for writing the constant buffer syntax for shader types.
-/// </summary>
-internal static partial class ConstantBufferSyntaxWriter
+/// <inheritdoc/>
+partial class ConstantBufferSyntaxProcessor
 {
     /// <summary>
     /// The name of generator to include in the generated code.
@@ -33,7 +31,7 @@ internal static partial class ConstantBufferSyntaxWriter
     {
         // Store the generator name for later. This avoids needing closures for each callback below.
         // It is assumed that all calls to this method will have the same argument in each assembly.
-        ConstantBufferSyntaxWriter.generatorName = generatorName;
+        ConstantBufferSyntaxProcessor.generatorName = generatorName;
 
         // If there are no fields, there is no need for a constant buffer type
         if (info.Fields.IsEmpty)
@@ -55,7 +53,7 @@ internal static partial class ConstantBufferSyntaxWriter
             writer.WriteLine($"""/// <summary>""");
             writer.WriteLine($"""/// A type representing the constant buffer native layout for <see cref="{fullyQualifiedTypeName}"/>.""");
             writer.WriteLine($"""/// </summary>""");
-            writer.WriteGeneratedAttributes(ConstantBufferSyntaxWriter.generatorName!, useFullyQualifiedTypeNames: false);
+            writer.WriteGeneratedAttributes(ConstantBufferSyntaxProcessor.generatorName!, useFullyQualifiedTypeNames: false);
             writer.WriteLine($"""[StructLayout(LayoutKind.Explicit, Size = {info.ConstantBufferSizeInBytes})]""");
             writer.WriteLine($"""file struct ConstantBuffer""");
 
@@ -111,7 +109,7 @@ internal static partial class ConstantBufferSyntaxWriter
             writer.WriteLine($"""/// <summary>""");
             writer.WriteLine($"""/// A type containing marshalling logic for shaders of type <see cref="{fullyQualifiedTypeName}"/>.""");
             writer.WriteLine($"""/// </summary>""");
-            writer.WriteGeneratedAttributes(ConstantBufferSyntaxWriter.generatorName!, useFullyQualifiedTypeNames: false);
+            writer.WriteGeneratedAttributes(ConstantBufferSyntaxProcessor.generatorName!, useFullyQualifiedTypeNames: false);
             writer.WriteLine($"""file static class ConstantBufferMarshaller""");
 
             using (writer.WriteBlock())

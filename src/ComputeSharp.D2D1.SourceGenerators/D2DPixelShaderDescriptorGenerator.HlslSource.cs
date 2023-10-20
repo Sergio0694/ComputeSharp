@@ -6,6 +6,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -117,7 +118,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 }
 
                 // Try to get the actual field name
-                if (!ConstantBuffer.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
+                if (!ConstantBufferSyntaxProcessor.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
                 {
                     continue;
                 }
@@ -411,7 +412,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     }
 
                     // Try to get the actual field name
-                    if (!ConstantBuffer.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
+                    if (!ConstantBufferSyntaxProcessor.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
                     {
                         continue;
                     }
