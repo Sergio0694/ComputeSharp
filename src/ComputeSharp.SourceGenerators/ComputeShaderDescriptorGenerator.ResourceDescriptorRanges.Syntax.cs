@@ -49,10 +49,10 @@ partial class ComputeShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::System.CodeDom.Compiler");
-            usingDirectives.Add("global::System.Diagnostics");
-            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
-            usingDirectives.Add("global::ComputeSharp.Interop");
+            _ = usingDirectives.Add("global::System.CodeDom.Compiler");
+            _ = usingDirectives.Add("global::System.Diagnostics");
+            _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            _ = usingDirectives.Add("global::ComputeSharp.Interop");
 
             // Declare the additional data type and the shared array with resource descriptor ranges
             static void Callback(ShaderInfo info, IndentedTextWriter writer)

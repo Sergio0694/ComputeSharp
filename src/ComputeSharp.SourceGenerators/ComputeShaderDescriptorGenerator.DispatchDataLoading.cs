@@ -43,7 +43,7 @@ partial class ComputeShaderDescriptorGenerator
             static void GetInfo(
                 Compilation compilation,
                 ITypeSymbol currentTypeSymbol,
-                ImmutableArray<string> fieldPath,
+                ImmutableArray<FieldPathPart> fieldPath,
                 ref int resourceOffset,
                 ref int rawDataOffset,
                 ImmutableArrayBuilder<FieldInfo> fields,
@@ -82,12 +82,13 @@ partial class ComputeShaderDescriptorGenerator
                     }
                     else if (HlslKnownTypes.IsKnownHlslType(typeName))
                     {
-                        fields.Add(GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset));
+                        // TODO: share the logic and fix the field path parts (here they just always return accessible leaves for now)
+                        fields.Add(GetHlslKnownTypeFieldInfo(fieldPath.Add(new FieldPathPart.Leaf(fieldName, true)), typeName, ref rawDataOffset));
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         // Custom struct type defined by the user
-                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldName), ref resourceOffset, ref rawDataOffset, fields, resources);
+                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(new FieldPathPart.Leaf(fieldName, true)), ref resourceOffset, ref rawDataOffset, fields, resources);
                     }
                 }
             }
@@ -104,7 +105,7 @@ partial class ComputeShaderDescriptorGenerator
                 GetInfo(
                     compilation,
                     structDeclarationSymbol,
-                    ImmutableArray<string>.Empty,
+                    ImmutableArray<FieldPathPart>.Empty,
                     ref resourceOffset,
                     ref rawDataOffset,
                     fieldBuilder,
@@ -144,7 +145,7 @@ partial class ComputeShaderDescriptorGenerator
         /// <param name="typeName">The type name currently being read.</param>
         /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
         private static FieldInfo GetHlslKnownTypeFieldInfo(
-            ImmutableArray<string> fieldPath,
+            ImmutableArray<FieldPathPart> fieldPath,
             string typeName,
             ref int rawDataOffset)
         {

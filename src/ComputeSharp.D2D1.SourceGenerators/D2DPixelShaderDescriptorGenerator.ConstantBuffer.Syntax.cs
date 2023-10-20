@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
@@ -93,11 +92,11 @@ partial class D2DPixelShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::System.CodeDom.Compiler");
-            usingDirectives.Add("global::System.Diagnostics");
-            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
-            usingDirectives.Add("global::System.Runtime.CompilerServices");
-            usingDirectives.Add("global::System.Runtime.InteropServices");
+            _ = usingDirectives.Add("global::System.CodeDom.Compiler");
+            _ = usingDirectives.Add("global::System.Diagnostics");
+            _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            _ = usingDirectives.Add("global::System.Runtime.CompilerServices");
+            _ = usingDirectives.Add("global::System.Runtime.InteropServices");
 
             // Declare the ConstantBuffer type
             static void ConstantBufferCallback(D2D1ShaderInfo info, IndentedTextWriter writer)
@@ -121,27 +120,27 @@ partial class D2DPixelShaderDescriptorGenerator
                             case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
 
                                 // Append a field as a global::ComputeSharp.Bool value (will use the implicit conversion from bool values)
-                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath)}"/>""");
+                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))}"/>""");
                                 writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
-                                writer.WriteLine($"""public global::ComputeSharp.Bool {string.Join("_", primitive.FieldPath)};""");
+                                writer.WriteLine($"""public global::ComputeSharp.Bool {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
                                 break;
                             case FieldInfo.Primitive primitive:
 
                                 // Append primitive fields of other types with their mapped names
-                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath)}"/>""");
+                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))}"/>""");
                                 writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
-                                writer.WriteLine($"""public {HlslKnownTypes.GetMappedName(primitive.TypeName)} {string.Join("_", primitive.FieldPath)};""");
+                                writer.WriteLine($"""public {HlslKnownTypes.GetMappedName(primitive.TypeName)} {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
                                 break;
 
                             case FieldInfo.NonLinearMatrix matrix:
                                 string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
-                                string fieldNamePrefix = string.Join("_", matrix.FieldPath);
+                                string fieldNamePrefix = string.Join("_", matrix.FieldPath.Select(static path => path.Name));
 
                                 // Declare a field for every row of the matrix type
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
                                     writer.WriteLineIf(j > 0);
-                                    writer.WriteLine($"""/// <summary>Row {j} of <see cref="{fullyQualifiedTypeName}.{string.Join(".", matrix.FieldPath)}"/>.</summary>""");
+                                    writer.WriteLine($"""/// <summary>Row {j} of <see cref="{fullyQualifiedTypeName}.{string.Join(".", matrix.FieldPath.Select(static path => path.Name))}"/>.</summary>""");
                                     writer.WriteLine($"""[FieldOffset({matrix.Offsets[j]})]""");
                                     writer.WriteLine($"""public {rowTypeName} {fieldNamePrefix}_{j};""");
                                 }
@@ -186,22 +185,20 @@ partial class D2DPixelShaderDescriptorGenerator
                             switch (fieldInfo)
                             {
                                 case FieldInfo.Primitive primitive:
-                                    string fieldName = primitive.FieldPath[0];
 
                                     // Read a nested primitive value
-                                    writer.WriteLine($"{fieldName}(ref shader){string.Join(".", primitive.FieldPath.Skip(1))} = buffer.{string.Join("_", primitive.FieldPath)};");
+                                    writer.WriteLine($"{GetFieldAccessExpression(fieldInfo, true)} = buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))};");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
                                     string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
                                     string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
                                     string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
-                                    string fieldPath = string.Join(".", matrix.FieldPath);
-                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath);
+                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath.Select(static path => path.Name));
 
                                     // Get a reference to the whole matrix field, just once for all rows
                                     writer.WriteLine(skipIfPresent: true);
-                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(ref shader){string.Join(".", matrix.FieldPath.Skip(1))};");
+                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {GetFieldAccessExpression(fieldInfo, true)};");
                                     writer.WriteLine();
 
                                     // Read all rows of a given matrix type
@@ -240,19 +237,18 @@ partial class D2DPixelShaderDescriptorGenerator
                                 case FieldInfo.Primitive primitive:
 
                                     // Assign a primitive value
-                                    writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath)} = {primitive.FieldPath[0]}(in shader){string.Join(".", primitive.FieldPath.Skip(1))};");
+                                    writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = {GetFieldAccessExpression(fieldInfo, false)};");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
                                     string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
                                     string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
                                     string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
-                                    string fieldPath = string.Join(".", matrix.FieldPath);
-                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath);
+                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath.Select(static path => path.Name));
 
                                     // Get a reference to the whole matrix field, just once for all rows
                                     writer.WriteLine(skipIfPresent: true);
-                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {matrix.FieldPath[0]}(in shader){string.Join(".", matrix.FieldPath.Skip(1))};");
+                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {GetFieldAccessExpression(fieldInfo, true)};");
                                     writer.WriteLine();
 
                                     // Assign all rows of a given matrix type
@@ -267,42 +263,90 @@ partial class D2DPixelShaderDescriptorGenerator
                         }
                     }
 
-                    using ImmutableArrayBuilder<string> topLevelFieldNames = new();
+                    using ImmutableHashSetBuilder<(string ContainerType, string FieldName)> generatedAccessors = new();
 
                     // Define all field accessors
                     foreach (FieldInfo fieldInfo in info.Fields)
                     {
-                        string fieldName = fieldInfo.FieldPath[0];
-
-                        // Only generate accessors for top level fields, just once. That is, if they have
-                        // multiple nested items, only generate one accessor for the top level field. We
-                        // can simply use a linear scan here, as we expect fields to not be that many.
-                        if (topLevelFieldNames.WrittenSpan.IndexOf(fieldName) >= 0)
+                        for (int i = 0; i < fieldInfo.FieldPath.Length; i++)
                         {
-                            continue;
+                            FieldPathPart pathPart = fieldInfo.FieldPath[i];
+
+                            // Only generate field accessors for fields that are not accessible
+                            if (pathPart.IsAccessible)
+                            {
+                                continue;
+                            }
+
+                            // Get the friendly type name for the field:
+                            //   - If the part path is a nested struct, the type name is embedded
+                            //   - Otherwise, get the correct HLSL mapped type name for the field
+                            string typeName = pathPart switch
+                            {
+                                FieldPathPart.Nested nested => nested.TypeName,
+                                FieldPathPart.Leaf when fieldInfo.TypeName is "System.Boolean" => "global::ComputeSharp.Bool",
+                                _ => HlslKnownTypes.GetMappedName(fieldInfo.TypeName)
+                            };
+
+                            // Get the friendly type name for the field. If this nested field is the
+                            // first path, then the parent is the shader type itself. Otherwise, the
+                            // container path is the type of the previous containing type of the field.
+                            string containingTypeName = i == 0
+                                ? fullyQualifiedTypeName
+                                : ((FieldPathPart.Nested)fieldInfo.FieldPath[i - 1]).TypeName;
+
+                            // Make sure to skip repeated field accessors. It's possible for some accessors to end up
+                            // being required, in case a shader type had multiple fields of the same nested struct type.
+                            // To avoid so, we just add the containing type and name to an hashset that we update.
+                            if (!generatedAccessors.Add((containingTypeName, pathPart.Name)))
+                            {
+                                continue;
+                            }
+
+                            writer.WriteLine();
+                            writer.WriteLine($"""
+                                /// <inheritdoc cref="{containingTypeName}.{pathPart.Name}"/>
+                                /// <param name="shader">The input <see cref="{containingTypeName}"/> shader instance.</param>
+                                /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
+                                [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.Name}")]
+                                private static extern ref readonly {typeName} {pathPart.Name}(ref readonly {containingTypeName} shader);
+                                """, isMultiline: true);
                         }
-
-                        topLevelFieldNames.Add(fieldName);
-
-                        // Get the friendly type name for the field
-                        string typeName = fieldInfo.TypeName is "System.Boolean"
-                            ? "global::ComputeSharp.Bool"
-                            : HlslKnownTypes.GetMappedName(fieldInfo.TypeName);
-
-                        writer.WriteLine();
-                        writer.WriteLine($"""
-                            /// <inheritdoc cref="{fullyQualifiedTypeName}.{fieldName}"/>
-                            /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> shader instance.</param>
-                            /// <returns>A mutable reference to <see cref="{fullyQualifiedTypeName}.{fieldName}"/>.</returns>
-                            [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{fieldName}")]
-                            private static extern ref {typeName} {fieldName}(ref readonly {fullyQualifiedTypeName} shader);
-                            """, isMultiline: true);
                     }
                 }
             }
 
             callbacks.Add(ConstantBufferCallback);
             callbacks.Add(ConstantBufferMarshallerCallback);
+        }
+
+        /// <summary>
+        /// Gets an expression to access a given field.
+        /// </summary>
+        /// <param name="fieldInfo">The input field to generate the expression for.</param>
+        /// <param name="isRef">Whether to return the expression as a mutable <see langword="ref"/>.</param>
+        /// <returns>An expression to access a given field.</returns>
+        private static string GetFieldAccessExpression(FieldInfo fieldInfo, bool isRef)
+        {
+            string fieldExpression = "shader";
+
+            // Format the field access expression, there's two options:
+            //   - If the field is accessible, just access it directly
+            //   - If the field is not accessible, use the unsafe accessor
+            foreach (FieldPathPart part in fieldInfo.FieldPath)
+            {
+                fieldExpression = part.IsAccessible
+                    ? $"{fieldExpression}.{part.Name}"
+                    : $"{part.Name}(in {fieldExpression})";
+            }
+
+            // Return a mutable ref if needed (the expression is always readonly here)
+            if (isRef)
+            {
+                return $"Unsafe.AsRef(in {fieldExpression})";
+            }
+
+            return fieldExpression;
         }
     }
 }

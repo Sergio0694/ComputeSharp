@@ -314,6 +314,7 @@ public partial class D2D1PixelShaderTests
             float4 pixel6 = this.myTexture3.Sample(0.4f, 0.5f, 0.6f);
             float number1 = this.myTexture4[0, 2];
             float number2 = this.myTexture4.Sample(0.4f, 0.6f);
+            float number3 = this.number;
 
             return 0;
         }

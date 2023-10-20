@@ -50,14 +50,14 @@ partial class D2DPixelShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::System");
-            usingDirectives.Add("global::System.Buffers");
-            usingDirectives.Add("global::System.CodeDom.Compiler");
-            usingDirectives.Add("global::System.Diagnostics");
-            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
-            usingDirectives.Add("global::System.Runtime.CompilerServices");
-            usingDirectives.Add("global::System.Runtime.InteropServices");
-            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
+            _ = usingDirectives.Add("global::System");
+            _ = usingDirectives.Add("global::System.Buffers");
+            _ = usingDirectives.Add("global::System.CodeDom.Compiler");
+            _ = usingDirectives.Add("global::System.Diagnostics");
+            _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            _ = usingDirectives.Add("global::System.Runtime.CompilerServices");
+            _ = usingDirectives.Add("global::System.Runtime.InteropServices");
+            _ = usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
 
             // Declare the InputTypesMemoryManager custom memory manager type
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)

@@ -50,13 +50,13 @@ partial class ComputeShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::System");
-            usingDirectives.Add("global::System.Buffers");
-            usingDirectives.Add("global::System.CodeDom.Compiler");
-            usingDirectives.Add("global::System.Diagnostics");
-            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
-            usingDirectives.Add("global::System.Runtime.CompilerServices");
-            usingDirectives.Add("global::System.Runtime.InteropServices");
+            _ = usingDirectives.Add("global::System");
+            _ = usingDirectives.Add("global::System.Buffers");
+            _ = usingDirectives.Add("global::System.CodeDom.Compiler");
+            _ = usingDirectives.Add("global::System.Diagnostics");
+            _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            _ = usingDirectives.Add("global::System.Runtime.CompilerServices");
+            _ = usingDirectives.Add("global::System.Runtime.InteropServices");
 
             // Declare the HlslBytecodeMemoryManager custom memory manager type
             static void Callback(ShaderInfo info, IndentedTextWriter writer)

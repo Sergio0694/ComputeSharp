@@ -44,9 +44,9 @@ internal struct ImmutableHashSetBuilder<T> : IDisposable
     }
 
     /// <inheritdoc cref="ImmutableArray{T}.Builder.Add(T)"/>
-    public readonly void Add(T item)
+    public readonly bool Add(T item)
     {
-        _ = this.set!.Add(item);
+        return this.set!.Add(item);
     }
 
     /// <summary>

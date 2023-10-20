@@ -39,7 +39,7 @@ partial class D2DPixelShaderDescriptorGenerator
             static IEnumerable<FieldInfo> GetCapturedFieldInfos(
                 Compilation compilation,
                 ITypeSymbol currentTypeSymbol,
-                ImmutableArray<string> fieldPath,
+                ImmutableArray<FieldPathPart> fieldPath,
                 StrongBox<int> rawDataOffset)
             {
                 bool isFirstField = true;
@@ -58,6 +58,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     string fieldName = fieldSymbol.Name;
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
+                    bool isAccessible = fieldSymbol.IsAccessibleFromCompilationAssembly(compilation);
 
                     // The first item in each nested struct needs to be aligned to 16 bytes
                     if (isFirstField && fieldPath.Length > 0)
@@ -69,12 +70,17 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     if (HlslKnownTypes.IsKnownHlslType(typeName))
                     {
-                        yield return GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset.Value);
+                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName, isAccessible));
+
+                        yield return GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset.Value);
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
+                        string nestedTypeName = fieldSymbol.Type.GetFullyQualifiedName(includeGlobal: true);
+                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Nested(fieldName, isAccessible, nestedTypeName));
+
                         // Custom struct type defined by the user
-                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(compilation, fieldSymbol.Type, fieldPath.Add(fieldName), rawDataOffset))
+                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(compilation, fieldSymbol.Type, nestedFieldPath, rawDataOffset))
                         {
                             yield return fieldInfo;
                         }
@@ -89,7 +95,7 @@ partial class D2DPixelShaderDescriptorGenerator
             ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
                 compilation,
                 structDeclarationSymbol,
-                ImmutableArray<string>.Empty,
+                ImmutableArray<FieldPathPart>.Empty,
                 rawDataOffsetAsBox).ToImmutableArray();
 
             constantBufferSizeInBytes = rawDataOffsetAsBox.Value;
@@ -114,7 +120,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="typeName">The type name currently being read.</param>
         /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
         private static FieldInfo GetHlslKnownTypeFieldInfo(
-            ImmutableArray<string> fieldPath,
+            ImmutableArray<FieldPathPart> fieldPath,
             string typeName,
             ref int rawDataOffset)
         {
