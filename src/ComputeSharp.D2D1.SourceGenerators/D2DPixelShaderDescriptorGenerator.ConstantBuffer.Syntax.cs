@@ -120,14 +120,16 @@ partial class D2DPixelShaderDescriptorGenerator
                             case FieldInfo.Primitive { TypeName: "System.Boolean" } primitive:
 
                                 // Append a field as a global::ComputeSharp.Bool value (will use the implicit conversion from bool values)
-                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))}"/>""");
+                                writer.WriteFieldXmlSummary(field, fullyQualifiedTypeName);
+                                writer.WriteFieldXmlRemarks(field);
                                 writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
                                 writer.WriteLine($"""public global::ComputeSharp.Bool {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
                                 break;
                             case FieldInfo.Primitive primitive:
 
                                 // Append primitive fields of other types with their mapped names
-                                writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))}"/>""");
+                                writer.WriteFieldXmlSummary(field, fullyQualifiedTypeName);
+                                writer.WriteFieldXmlRemarks(field);
                                 writer.WriteLine($"""[FieldOffset({primitive.Offset})]""");
                                 writer.WriteLine($"""public {HlslKnownTypes.GetMappedName(primitive.TypeName)} {string.Join("_", primitive.FieldPath.Select(static path => path.Name))};""");
                                 break;
@@ -140,7 +142,8 @@ partial class D2DPixelShaderDescriptorGenerator
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
                                     writer.WriteLineIf(j > 0);
-                                    writer.WriteLine($"""/// <summary>Row {j} of <see cref="{fullyQualifiedTypeName}.{string.Join(".", matrix.FieldPath.Select(static path => path.Name))}"/>.</summary>""");
+                                    writer.WriteFieldXmlSummary(field, fullyQualifiedTypeName);
+                                    writer.WriteFieldXmlRemarks(field, row: j);
                                     writer.WriteLine($"""[FieldOffset({matrix.Offsets[j]})]""");
                                     writer.WriteLine($"""public {rowTypeName} {fieldNamePrefix}_{j};""");
                                 }
@@ -346,10 +349,57 @@ partial class D2DPixelShaderDescriptorGenerator
 file static class IndentedTextWriterExtensions
 {
     /// <summary>
+    /// Writes the XML summary for a given field.
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="fieldInfo">The input field to write the XML summary for.</param>
+    /// <param name="fullyQualifiedTypeName">The fully qualified type name of the containing type.</param>
+    public static void WriteFieldXmlSummary(this IndentedTextWriter writer, FieldInfo fieldInfo, string fullyQualifiedTypeName)
+    {
+        if (fieldInfo.FieldPath[0].UnspeakableName is null)
+        {
+            writer.WriteLine($"""/// <inheritdoc cref="{fullyQualifiedTypeName}.{fieldInfo.FieldPath[0].Name}"/>""");
+        }
+        else
+        {
+            writer.WriteLine($"""/// <summary>The unspeakable field "{fieldInfo.FieldPath[0].Name}" of <see cref="{fullyQualifiedTypeName}"/>.</summary>""");
+        }
+    }
+
+    /// <summary>
+    /// Writes the XML remarks for a given field, if needed.
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="fieldInfo">The input field to write the XML remarks for, if needed.</param>
+    /// <param name="row">The row for the field, if this is a matrix type.</param>
+    public static void WriteFieldXmlRemarks(this IndentedTextWriter writer, FieldInfo fieldInfo, int? row = null)
+    {
+        // The remarks are only needed if the field is nested
+        if (fieldInfo.FieldPath is not [.., FieldPathPart.Nested nested, FieldPathPart.Leaf leaf])
+        {
+            return;
+        }
+
+        // Write the correct remarks depending on whether the field can be referenced directly
+        if (leaf.UnspeakableName is null)
+        {
+            writer.Write($"""/// <remarks>Serialized field mapping to""");
+            writer.WriteIf(row is not null, $""" row {row} of""");
+            writer.WriteLine($""" <see cref="{nested.TypeName}.{leaf.Name}"/>.</remarks>""");
+        }
+        else
+        {
+            writer.Write($"""/// <remarks>Serialized field mapping to""");
+            writer.WriteIf(row is not null, $""" row {row} of""");
+            writer.WriteLine($""" the unspeakable field "{leaf.Name}" of <see cref="{nested.TypeName}"/>.</remarks>""");
+        }
+    }
+
+    /// <summary>
     /// Writes an expression to access a given field.
     /// </summary>
     /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-    /// <param name="fieldInfo">The input field to generate the expression for.</param>
+    /// <param name="fieldInfo">The input field to write the expression for.</param>
     public static void WriteFieldAccessExpression(this IndentedTextWriter writer, FieldInfo fieldInfo)
     {
         writer.Write("shader");
