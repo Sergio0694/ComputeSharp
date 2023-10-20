@@ -31,5 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\HlslSourceRewriter.Diagnostics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\ShaderSourceRewriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntaxRewriters\StaticFieldRewriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxWriters\ConstantBufferSyntaxWriter.cs" />
   </ItemGroup>
 </Project>

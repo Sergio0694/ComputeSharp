@@ -4,6 +4,7 @@ using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxWriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -233,7 +234,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<D2D1ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
-            ConstantBuffer.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
+            ConstantBufferSyntaxWriter.RegisterAdditionalTypesSyntax(GeneratorName, item, additionalTypes, usingDirectives);
             InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
             HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
