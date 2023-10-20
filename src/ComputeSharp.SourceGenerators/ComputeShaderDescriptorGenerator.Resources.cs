@@ -33,8 +33,6 @@ partial class ComputeShaderDescriptorGenerator
             int constantBufferSizeInBytes,
             out ImmutableArray<ResourceInfo> resources)
         {
-            int resourceOffset = 0;
-
             using ImmutableArrayBuilder<ResourceInfo> resourceBuilder = new();
 
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
@@ -57,7 +55,7 @@ partial class ComputeShaderDescriptorGenerator
                 // Check if the field is a resource (note: resources can only be top level fields)
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
-                    resourceBuilder.Add(new ResourceInfo(fieldName, typeName, resourceOffset++));
+                    resourceBuilder.Add(new ResourceInfo(fieldName, typeName));
                 }
             }
 
@@ -71,7 +69,7 @@ partial class ComputeShaderDescriptorGenerator
             // So here we check whether the current signature respects that constraint,
             // and emit a build error otherwise. For more info on this, see the docs here:
             // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-            if ((constantBufferSizeInBytes / sizeof(int)) + resourceOffset > 64)
+            if ((constantBufferSizeInBytes / sizeof(int)) + resourceBuilder.Count > 64)
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
@@ -93,9 +91,9 @@ partial class ComputeShaderDescriptorGenerator
             using (writer.WriteBlock())
             {
                 // Generate loading statements for each captured resource
-                foreach (ResourceInfo resource in info.Resources)
+                for (int i = 0; i < info.Resources.Length; i++)
                 {
-                    writer.WriteLine($"loader.LoadGraphicsResource(shader.{resource.FieldName}, {resource.Offset});");
+                    writer.WriteLine($"loader.LoadGraphicsResource(shader.{info.Resources[i].FieldName}, {i});");
                 }
             }
         }
