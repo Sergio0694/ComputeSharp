@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -18,6 +20,14 @@ partial class D2DPixelShaderDescriptorGenerator
     /// </summary>
     private static partial class ConstantBuffer
     {
+        /// <summary>
+        /// A <see cref="Regex"/> to extract the parameter name of a primary constructor capture field.
+        /// </summary>
+        /// <remarks>
+        /// Temporary workaround until <see href="https://github.com/dotnet/roslyn/issues/70208"/> is available.
+        /// </remarks>
+        private static readonly Regex PrimaryConstructorNameRegex = new("^<([^>]+)>P$", RegexOptions.Compiled);
+
         /// <summary>
         /// Explores a given type hierarchy and generates statements to load fields.
         /// </summary>
@@ -46,7 +56,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 foreach (ISymbol memberSymbol in currentTypeSymbol.GetMembers())
                 {
                     // Only process fields of a valid shape/type
-                    if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                    if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false } fieldSymbol)
                     {
                         continue;
                     }
@@ -57,7 +67,12 @@ partial class D2DPixelShaderDescriptorGenerator
                         continue;
                     }
 
-                    string fieldName = fieldSymbol.Name;
+                    // Try to get the name to use for the field and the accessor
+                    if (!TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out string? unspeakableName))
+                    {
+                        continue;
+                    }
+
                     string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
 
                     // The first item in each nested struct needs to be aligned to 16 bytes
@@ -70,17 +85,17 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     if (HlslKnownTypes.IsKnownHlslType(typeName))
                     {
-                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName));
+                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName, unspeakableName));
 
                         fields.Add(GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset));
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
                         string nestedTypeName = fieldSymbol.Type.GetFullyQualifiedName(includeGlobal: true);
-                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Nested(fieldName, nestedTypeName));
+                        FieldPathPart fieldPathPart = new FieldPathPart.Nested(fieldName, unspeakableName, nestedTypeName);
 
                         // Custom struct type defined by the user
-                        GetInfo(compilation, fieldSymbol.Type, nestedFieldPath, ref rawDataOffset, fields);
+                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldPathPart), ref rawDataOffset, fields);
                     }
                 }
             }
@@ -111,6 +126,43 @@ partial class D2DPixelShaderDescriptorGenerator
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
+        }
+
+        /// <summary>
+        /// Tries to get the field name and the accessor name for a given field.
+        /// </summary>
+        /// <param name="fieldSymbol">The field symbol to analyze.</param>
+        /// <param name="referencedName">The name of the field that's referenced in code by users.</param>
+        /// <param name="unspeakableName">The real name of the field that should be accessed, when different.</param>
+        /// <returns>Whether the field is supported and the necessary info could be retrieved.</returns>
+        private static bool TryGetFieldAccessorName(
+            IFieldSymbol fieldSymbol,
+            [NotNullWhen(true)] out string? referencedName,
+            out string? unspeakableName)
+        {
+            // If the field can be referenced by name, we can just access it directly
+            if (fieldSymbol.CanBeReferencedByName)
+            {
+                referencedName = fieldSymbol.Name;
+                unspeakableName = null;
+
+                return true;
+            }
+
+            // If the field is a primary constructor capture field, get the original name
+            if (PrimaryConstructorNameRegex.Match(fieldSymbol.Name) is { Success: true, Groups: [_, { Value: string parameterName }] })
+            {
+                referencedName = parameterName;
+                unspeakableName = fieldSymbol.Name;
+
+                return true;
+            }
+
+            // The field is not recognized, so just invalid
+            referencedName = null;
+            unspeakableName = null;
+
+            return false;
         }
 
         /// <summary>

@@ -39,18 +39,21 @@ internal abstract record FieldInfo(EquatableArray<FieldPathPart> FieldPath, stri
 /// A model for a part of a field path, ie. the name of the immediate parent field, and whether it's accessible.
 /// </summary>
 /// <param name="Name">The name of the immediate parent field to access (or self).</param>
-internal abstract record FieldPathPart(string Name)
+/// <param name="UnspeakableName">The unspeakable name of the field, if present.</param>
+internal abstract record FieldPathPart(string Name, string? UnspeakableName)
 {
     /// <summary>
     /// A model for a leaf part of a field path.
     /// </summary>
-    /// <param name="Name"><inheritdoc cref="FieldPathPart(string, bool)" path="/param[@name='Name']/node()"/></param>
-    public sealed record Leaf(string Name) : FieldPathPart(Name);
+    /// <param name="Name"><inheritdoc cref="FieldPathPart(string, string?)" path="/param[@name='Name']/node()"/></param>
+    /// <param name="UnspeakableName"><inheritdoc cref="FieldPathPart(string, string?)" path="/param[@name='UnspeakableName']/node()"/></param>
+    public sealed record Leaf(string Name, string? UnspeakableName) : FieldPathPart(Name, UnspeakableName);
 
     /// <summary>
     /// A model for a nested field part path (ie. going through a nested struct type).
     /// </summary>
-    /// <param name="Name"><inheritdoc cref="FieldPathPart(string, bool)" path="/param[@name='Name']/node()"/></param>
+    /// <param name="Name"><inheritdoc cref="FieldPathPart(string, string?)" path="/param[@name='Name']/node()"/></param>
+    /// <param name="UnspeakableName"><inheritdoc cref="FieldPathPart(string, string?)" path="/param[@name='UnspeakableName']/node()"/></param>
     /// <param name="TypeName">The fully qualified type name of the containing type.</param>
-    public sealed record Nested(string Name, string TypeName) : FieldPathPart(Name);
+    public sealed record Nested(string Name, string? UnspeakableName, string TypeName) : FieldPathPart(Name, UnspeakableName);
 }

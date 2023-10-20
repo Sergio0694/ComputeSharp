@@ -308,13 +308,29 @@ partial class D2DPixelShaderDescriptorGenerator
                             }
 
                             writer.WriteLine();
-                            writer.WriteLine($"""
-                                /// <inheritdoc cref="{containingTypeName}.{pathPart.Name}"/>
-                                /// <param name="shader">The input <see cref="{containingTypeName}"/> shader instance.</param>
-                                /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
-                                [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.Name}")]
-                                private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} shader);
-                                """, isMultiline: true);
+
+                            // If there is no unspeakable name, we can reference the field directly. This means we can both
+                            // use that in XML docs to refer to it (and inherit the docs), and we don't need an explicit name.
+                            if (pathPart.UnspeakableName is null)
+                            {
+                                writer.WriteLine($"""
+                                    /// <inheritdoc cref="{containingTypeName}.{pathPart.Name}"/>
+                                    /// <param name="shader">The input <see cref="{containingTypeName}"/> value.</param>
+                                    /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
+                                    [UnsafeAccessor(UnsafeAccessorKind.Field)]
+                                    private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
+                                    """, isMultiline: true);
+                            }
+                            else
+                            {
+                                writer.WriteLine($"""
+                                    /// <summary>Gets a reference to the unspeakable field "{pathPart.Name}" of type <see cref="{containingTypeName}"/>.</summary>
+                                    /// <param name="shader">The input <see cref="{containingTypeName}"/> value.</param>
+                                    /// <returns>A mutable reference to the unspeakable field "{pathPart.Name}".</returns>
+                                    [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.UnspeakableName}")]
+                                    private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
+                                    """, isMultiline: true);
+                            }
                         }
                     }
                 }
