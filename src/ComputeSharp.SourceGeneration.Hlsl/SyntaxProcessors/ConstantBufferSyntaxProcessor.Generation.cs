@@ -68,6 +68,9 @@ partial class ConstantBufferSyntaxProcessor
 
             using (writer.WriteBlock())
             {
+                // Append any artificial fields, if needed
+                AppendArtificialFields(info, writer);
+
                 // Declare fields for every mapped item from the shader layout
                 writer.WriteLineSeparatedMembers(info.Fields.AsSpan(), (field, writer) =>
                 {
@@ -302,6 +305,14 @@ partial class ConstantBufferSyntaxProcessor
         callbacks.Add(ConstantBufferCallback);
         callbacks.Add(ConstantBufferMarshallerCallback);
     }
+
+    /// <summary>
+    /// Appends any artificial fields to the generated constant buffer type.
+    /// </summary>
+    /// <param name="info">The <see cref="IConstantBufferInfo"/> instance to use to extract info.</param>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <remarks>This method is responsible for leaving trailing blanklines, if it adds any fields.</remarks>
+    static partial void AppendArtificialFields(IConstantBufferInfo info, IndentedTextWriter writer);
 }
 
 /// <inheritdoc cref="Extensions.IndentedTextWriterExtensions"/>
