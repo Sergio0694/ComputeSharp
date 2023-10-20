@@ -83,11 +83,12 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
                     // Constant buffer info
-                    ImmutableArray<FieldInfo> fieldInfos = ConstantBuffer.GetInfo(
+                    ConstantBuffer.GetInfo(
                         diagnostics,
                         context.SemanticModel.Compilation,
                         typeSymbol,
-                        out int constantBufferSizeInBytes);
+                        out int constantBufferSizeInBytes,
+                        out ImmutableArray<FieldInfo> fieldInfos);
 
                     token.ThrowIfCancellationRequested();
 

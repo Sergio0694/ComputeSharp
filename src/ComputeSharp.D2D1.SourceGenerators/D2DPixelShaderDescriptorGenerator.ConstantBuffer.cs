@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -28,28 +25,32 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
-        /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
-        public static ImmutableArray<FieldInfo> GetInfo(
+        /// <param name="fields">The sequence of <see cref="FieldInfo"/> instances for all captured values.</param>
+        public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
-            out int constantBufferSizeInBytes)
+            out int constantBufferSizeInBytes,
+            out ImmutableArray<FieldInfo> fields)
         {
             // Helper method that uses boxes instead of ref-s (illegal in enumerators)
-            static IEnumerable<FieldInfo> GetCapturedFieldInfos(
+            static void GetInfo(
                 Compilation compilation,
                 ITypeSymbol currentTypeSymbol,
                 ImmutableArray<FieldPathPart> fieldPath,
-                StrongBox<int> rawDataOffset)
+                ref int rawDataOffset,
+                ImmutableArrayBuilder<FieldInfo> fields)
             {
                 bool isFirstField = true;
 
-                foreach (
-                   IFieldSymbol fieldSymbol in
-                   from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
-                   where fieldSymbol is { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false }
-                   select fieldSymbol)
+                foreach (ISymbol memberSymbol in currentTypeSymbol.GetMembers())
                 {
+                    // Only process fields of a valid shape/type
+                    if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                    {
+                        continue;
+                    }
+
                     // Skip fields of not accessible types (the analyzer will handle this)
                     if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
                     {
@@ -62,7 +63,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     // The first item in each nested struct needs to be aligned to 16 bytes
                     if (isFirstField && fieldPath.Length > 0)
                     {
-                        rawDataOffset.Value = AlignmentHelper.Pad(rawDataOffset.Value, 16);
+                        rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
 
                         isFirstField = false;
                     }
@@ -71,7 +72,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     {
                         ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName));
 
-                        yield return GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset.Value);
+                        fields.Add(GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset));
                     }
                     else if (fieldSymbol.Type.IsUnmanagedType)
                     {
@@ -79,25 +80,27 @@ partial class D2DPixelShaderDescriptorGenerator
                         ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Nested(fieldName, nestedTypeName));
 
                         // Custom struct type defined by the user
-                        foreach (FieldInfo fieldInfo in GetCapturedFieldInfos(compilation, fieldSymbol.Type, nestedFieldPath, rawDataOffset))
-                        {
-                            yield return fieldInfo;
-                        }
+                        GetInfo(compilation, fieldSymbol.Type, nestedFieldPath, ref rawDataOffset, fields);
                     }
                 }
             }
 
             // Setup the resource and byte offsets for tracking
-            StrongBox<int> rawDataOffsetAsBox = new();
+            int rawDataOffset = 0;
 
-            // Traverse all shader fields and gather info, and update the tracking offsets
-            ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
-                compilation,
-                structDeclarationSymbol,
-                ImmutableArray<FieldPathPart>.Empty,
-                rawDataOffsetAsBox).ToImmutableArray();
+            using (ImmutableArrayBuilder<FieldInfo> fieldBuilder = new())
+            {
+                // Traverse all shader fields and gather info, and update the tracking offsets
+                GetInfo(
+                    compilation,
+                    structDeclarationSymbol,
+                    ImmutableArray<FieldPathPart>.Empty,
+                    ref rawDataOffset,
+                    fieldBuilder);
 
-            constantBufferSizeInBytes = rawDataOffsetAsBox.Value;
+                constantBufferSizeInBytes = rawDataOffset;
+                fields = fieldBuilder.ToImmutable();
+            }
 
             // The maximum size for a constant buffer is 64KB
             const int D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT = 4096;
@@ -108,8 +111,6 @@ partial class D2DPixelShaderDescriptorGenerator
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
-
-            return fieldInfos;
         }
 
         /// <summary>
