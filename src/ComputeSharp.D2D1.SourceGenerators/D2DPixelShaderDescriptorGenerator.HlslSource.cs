@@ -108,9 +108,16 @@ partial class D2DPixelShaderDescriptorGenerator
             using ImmutableArrayBuilder<(string, string)> values = new();
             using ImmutableArrayBuilder<(string, string, int)> resourceTextures = new();
 
-            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                if (fieldSymbol.IsStatic)
+                // Skip constants and static fields, we only care about instance ones here
+                if (memberSymbol is not IFieldSymbol { IsConst: false, IsStatic: false } fieldSymbol)
+                {
+                    continue;
+                }
+
+                // Try to get the actual field name
+                if (!ConstantBuffer.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
                 {
                     continue;
                 }
@@ -118,7 +125,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
-                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldName, fieldSymbol.Type);
 
                     continue;
                 }
@@ -126,7 +133,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 string metadataName = typeSymbol.GetFullyQualifiedMetadataName();
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+                _ = HlslKnownKeywords.TryGetMappedName(fieldName, out string? mapping);
 
                 // Handle resource textures as a special case
                 if (HlslKnownTypes.IsResourceTextureType(metadataName))
@@ -140,7 +147,7 @@ partial class D2DPixelShaderDescriptorGenerator
                         diagnostics.Add(
                             InvalidResourceTextureElementType,
                             fieldSymbol,
-                            fieldSymbol.Name,
+                            fieldName,
                             structDeclarationSymbol,
                             fieldSymbol.Type);
                     }
@@ -155,7 +162,7 @@ partial class D2DPixelShaderDescriptorGenerator
                         _ = attributeData.TryGetConstructorArgument(0, out index);
                     }
 
-                    resourceTextures.Add((mapping ?? fieldSymbol.Name, typeName, index));
+                    resourceTextures.Add((mapping ?? fieldName, typeName, index));
                 }
                 else if (typeSymbol.IsUnmanagedType)
                 {
@@ -166,11 +173,11 @@ partial class D2DPixelShaderDescriptorGenerator
                         types.Add(typeSymbol);
                     }
 
-                    values.Add((mapping ?? fieldSymbol.Name, typeName));
+                    values.Add((mapping ?? fieldName, typeName));
                 }
                 else
                 {
-                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, typeSymbol);
+                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldName, typeSymbol);
                 }
             }
 
@@ -395,14 +402,21 @@ partial class D2DPixelShaderDescriptorGenerator
                 StructDeclarationSyntax structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
-                foreach (IFieldSymbol field in type.GetMembers().OfType<IFieldSymbol>())
+                foreach (ISymbol memberSymbol in type.GetMembers())
                 {
-                    if (field.IsStatic)
+                    // Once again, skip constants and staticv fields
+                    if (memberSymbol is not IFieldSymbol { IsConst: false, IsStatic: false } fieldSymbol)
                     {
                         continue;
                     }
 
-                    INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
+                    // Try to get the actual field name
+                    if (!ConstantBuffer.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
+                    {
+                        continue;
+                    }
+
+                    INamedTypeSymbol fieldType = (INamedTypeSymbol)fieldSymbol.Type;
 
                     // Convert the name to the fully qualified HLSL version
                     if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullyQualifiedMetadataName(), out string? mappedType))
@@ -411,9 +425,9 @@ partial class D2DPixelShaderDescriptorGenerator
                     }
 
                     // Get the field name as a valid HLSL identifier
-                    if (!HlslKnownKeywords.TryGetMappedName(field.Name, out string? mappedName))
+                    if (!HlslKnownKeywords.TryGetMappedName(fieldName, out string? mappedName))
                     {
-                        mappedName = field.Name;
+                        mappedName = fieldName;
                     }
 
                     structDeclaration = structDeclaration.AddMembers(

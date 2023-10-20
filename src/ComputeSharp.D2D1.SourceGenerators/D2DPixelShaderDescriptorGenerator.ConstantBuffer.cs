@@ -135,7 +135,7 @@ partial class D2DPixelShaderDescriptorGenerator
         /// <param name="referencedName">The name of the field that's referenced in code by users.</param>
         /// <param name="unspeakableName">The real name of the field that should be accessed, when different.</param>
         /// <returns>Whether the field is supported and the necessary info could be retrieved.</returns>
-        private static bool TryGetFieldAccessorName(
+        public static bool TryGetFieldAccessorName(
             IFieldSymbol fieldSymbol,
             [NotNullWhen(true)] out string? referencedName,
             out string? unspeakableName)
