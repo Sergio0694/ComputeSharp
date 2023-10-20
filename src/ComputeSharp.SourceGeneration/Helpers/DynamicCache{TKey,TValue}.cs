@@ -14,7 +14,7 @@ namespace ComputeSharp.SourceGeneration.Helpers;
 /// </summary>
 /// <typeparam name="TKey">The type of keys to use for the cache.</typeparam>
 /// <typeparam name="TValue">The type of values to store in the cache.</typeparam>
-public sealed class DynamicCache<TKey, TValue>
+internal sealed class DynamicCache<TKey, TValue>
     where TKey : class
 {
     /// <summary>
