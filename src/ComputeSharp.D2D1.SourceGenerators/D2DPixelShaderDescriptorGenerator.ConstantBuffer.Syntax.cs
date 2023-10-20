@@ -187,7 +187,8 @@ partial class D2DPixelShaderDescriptorGenerator
                                 case FieldInfo.Primitive primitive:
 
                                     // Read a nested primitive value
-                                    writer.WriteLine($"{GetFieldAccessExpression(fieldInfo)} = buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))};");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine($" = buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))};");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
@@ -198,7 +199,9 @@ partial class D2DPixelShaderDescriptorGenerator
 
                                     // Get a reference to the whole matrix field, just once for all rows
                                     writer.WriteLine(skipIfPresent: true);
-                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {GetFieldAccessExpression(fieldInfo)};");
+                                    writer.Write($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref ");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine(";");
                                     writer.WriteLine();
 
                                     // Read all rows of a given matrix type
@@ -237,7 +240,9 @@ partial class D2DPixelShaderDescriptorGenerator
                                 case FieldInfo.Primitive primitive:
 
                                     // Assign a primitive value
-                                    writer.WriteLine($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = {GetFieldAccessExpression(fieldInfo)};");
+                                    writer.Write($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = ");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine(";");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
@@ -248,7 +253,9 @@ partial class D2DPixelShaderDescriptorGenerator
 
                                     // Get a reference to the whole matrix field, just once for all rows
                                     writer.WriteLine(skipIfPresent: true);
-                                    writer.WriteLine($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref {GetFieldAccessExpression(fieldInfo)};");
+                                    writer.Write($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref ");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine(";");
                                     writer.WriteLine();
 
                                     // Assign all rows of a given matrix type
@@ -306,7 +313,7 @@ partial class D2DPixelShaderDescriptorGenerator
                                 /// <param name="shader">The input <see cref="{containingTypeName}"/> shader instance.</param>
                                 /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.Name}")]
-                                private static extern ref {typeName} {pathPart.Name}(ref readonly {containingTypeName} shader);
+                                private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} shader);
                                 """, isMultiline: true);
                         }
                     }
@@ -316,23 +323,27 @@ partial class D2DPixelShaderDescriptorGenerator
             callbacks.Add(ConstantBufferCallback);
             callbacks.Add(ConstantBufferMarshallerCallback);
         }
+    }
+}
 
-        /// <summary>
-        /// Gets an expression to access a given field.
-        /// </summary>
-        /// <param name="fieldInfo">The input field to generate the expression for.</param>
-        /// <returns>An expression to access a given field.</returns>
-        private static string GetFieldAccessExpression(FieldInfo fieldInfo)
+/// <inheritdoc cref="SourceGeneration.Extensions.IndentedTextWriterExtensions"/>
+file static class IndentedTextWriterExtensions
+{
+    /// <summary>
+    /// Writes an expression to access a given field.
+    /// </summary>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <param name="fieldInfo">The input field to generate the expression for.</param>
+    public static void WriteFieldAccessExpression(this IndentedTextWriter writer, FieldInfo fieldInfo)
+    {
+        writer.Write("shader");
+
+        // Invoke all generated field accessors to get to the target field.
+        // Because they're extension methods, we can chain them sequentially.
+        // This simplifies the formatting and makes the code easier to read.
+        foreach (FieldPathPart part in fieldInfo.FieldPath)
         {
-            string fieldExpression = "shader";
-
-            // Invoke all generated field accessors to get to the target field
-            foreach (FieldPathPart part in fieldInfo.FieldPath)
-            {
-                fieldExpression = $"{part.Name}(in {fieldExpression})";
-            }
-
-            return fieldExpression;
+            writer.Write($".{part.Name}()");
         }
     }
 }
