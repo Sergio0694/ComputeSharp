@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using ComputeSharp.SourceGeneration.Helpers;
 
 namespace ComputeSharp.SourceGeneration.Extensions;
@@ -64,50 +63,6 @@ internal static class IndentedTextWriterExtensions
         // Leave a trailing blank line if at least one using directive has been written.
         // This is so that any members will correctly have a leading blank line before.
         writer.WriteLineIf(usingDirectives.Any());
-    }
-
-    /// <summary>
-    /// Writes a new line into the target writer depending on an input condition.
-    /// </summary>
-    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-    /// <param name="condition">The condition to use to decide whether or not to write a new line.</param>
-    public static void WriteLineIf(this IndentedTextWriter writer, bool condition)
-    {
-        if (condition)
-        {
-            writer.WriteLine();
-        }
-    }
-
-    /// <summary>
-    /// Writes a new line into the target writer depending on an input condition.
-    /// </summary>
-    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-    /// <param name="content">The content to write.</param>
-    /// <param name="condition">The condition to use to decide whether or not to write a new line.</param>
-    public static void WriteLineIf(this IndentedTextWriter writer, string content, bool condition)
-    {
-        if (condition)
-        {
-            writer.WriteLine(content);
-        }
-    }
-
-    /// <summary>
-    /// Writes a new line into the target writer depending on an input condition.
-    /// </summary>
-    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-    /// <param name="handler">The interpolated string handler with content to write.</param>
-    /// <param name="condition">The condition to use to decide whether or not to write a new line.</param>
-    public static void WriteLineIf(
-        this IndentedTextWriter writer,
-        [InterpolatedStringHandlerArgument(nameof(writer))] ref IndentedTextWriter.WriteInterpolatedStringHandler handler,
-        bool condition)
-    {
-        if (condition)
-        {
-            writer.WriteLine(ref handler);
-        }
     }
 
     /// <summary>

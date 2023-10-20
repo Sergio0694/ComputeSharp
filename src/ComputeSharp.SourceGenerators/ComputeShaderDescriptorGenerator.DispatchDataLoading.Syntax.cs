@@ -33,7 +33,7 @@ partial class ComputeShaderDescriptorGenerator
                 // Append the statements for the dispatch ranges
                 writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[0]) = (uint)x;");
                 writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[4]) = (uint)y;");
-                writer.WriteLineIf("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[8]) = (uint)z;", !info.IsPixelShaderLike);
+                writer.WriteLineIf(!info.IsPixelShaderLike, "global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[8]) = (uint)z;");
 
                 // Generate loading statements for each captured field
                 foreach (FieldInfo fieldInfo in info.Fields)

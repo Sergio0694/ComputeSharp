@@ -178,6 +178,44 @@ internal sealed class IndentedTextWriter : IDisposable
     }
 
     /// <summary>
+    /// Writes content to the underlying buffer depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteIf(bool condition, string content, bool isMultiline = false)
+    {
+        if (condition)
+        {
+            Write(content.AsSpan(), isMultiline);
+        }
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteIf(bool condition, ReadOnlySpan<char> content, bool isMultiline = false)
+    {
+        if (condition)
+        {
+            Write(content, isMultiline);
+        }
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="handler">The interpolated string handler with content to write.</param>
+    public void WriteIf(bool condition, [InterpolatedStringHandlerArgument("", nameof(condition))] ref WriteIfInterpolatedStringHandler handler)
+    {
+        _ = this;
+    }
+
+    /// <summary>
     /// Writes a line to the underlying buffer.
     /// </summary>
     /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
@@ -219,6 +257,61 @@ internal sealed class IndentedTextWriter : IDisposable
     public void WriteLine([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
     {
         WriteLine();
+    }
+
+    /// <summary>
+    /// Writes a line to the underlying buffer depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
+    public void WriteLineIf(bool condition, bool skipIfPresent = false)
+    {
+        if (condition)
+        {
+            WriteLine(skipIfPresent);
+        }
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteLineIf(bool condition, string content, bool isMultiline = false)
+    {
+        if (condition)
+        {
+            WriteLine(content.AsSpan(), isMultiline);
+        }
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="content">The content to write.</param>
+    /// <param name="isMultiline">Whether the input content is multiline.</param>
+    public void WriteLineIf(bool condition, ReadOnlySpan<char> content, bool isMultiline = false)
+    {
+        if (condition)
+        {
+            Write(content, isMultiline);
+            WriteLine();
+        }
+    }
+
+    /// <summary>
+    /// Writes content to the underlying buffer and appends a trailing new line depending on an input condition.
+    /// </summary>
+    /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+    /// <param name="handler">The interpolated string handler with content to write.</param>
+    public void WriteLineIf(bool condition, [InterpolatedStringHandlerArgument("", nameof(condition))] ref WriteIfInterpolatedStringHandler handler)
+    {
+        if (condition)
+        {
+            WriteLine();
+        }
     }
 
     /// <inheritdoc/>
@@ -355,6 +448,70 @@ internal sealed class IndentedTextWriter : IDisposable
             {
                 this.writer.Write(value.ToString());
             }
+        }
+    }
+
+    /// <summary>
+    /// Provides a handler used by the language compiler to conditionally append interpolated strings into <see cref="IndentedTextWriter"/> instances.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [InterpolatedStringHandler]
+    public readonly ref struct WriteIfInterpolatedStringHandler
+    {
+        /// <summary>The associated <see cref="WriteInterpolatedStringHandler"/> to use.</summary>
+        private readonly WriteInterpolatedStringHandler handler;
+
+        /// <summary>Creates a handler used to append an interpolated string into a <see cref="StringBuilder"/>.</summary>
+        /// <param name="literalLength">The number of constant characters outside of interpolation expressions in the interpolated string.</param>
+        /// <param name="formattedCount">The number of interpolation expressions in the interpolated string.</param>
+        /// <param name="writer">The associated <see cref="IndentedTextWriter"/> to which to append.</param>
+        /// <param name="condition">The condition to use to decide whether or not to write content.</param>
+        /// <param name="shouldAppend">A value indicating whether formatting should proceed.</param>
+        /// <remarks>This is intended to be called only by compiler-generated code. Arguments are not validated as they'd otherwise be for members intended to be used directly.</remarks>
+        public WriteIfInterpolatedStringHandler(int literalLength, int formattedCount, IndentedTextWriter writer, bool condition, out bool shouldAppend)
+        {
+            if (condition)
+            {
+                this.handler = new WriteInterpolatedStringHandler(literalLength, formattedCount, writer);
+
+                shouldAppend = true;
+            }
+            else
+            {
+                this.handler = default;
+
+                shouldAppend = false;
+            }
+        }
+
+        /// <inheritdoc cref="WriteInterpolatedStringHandler.AppendLiteral(string)"/>
+        public void AppendLiteral(string value)
+        {
+            this.handler.AppendLiteral(value);
+        }
+
+        /// <inheritdoc cref="WriteInterpolatedStringHandler.AppendFormatted(string?)"/>
+        public void AppendFormatted(string? value)
+        {
+            this.handler.AppendFormatted(value);
+        }
+
+        /// <inheritdoc cref="WriteInterpolatedStringHandler.AppendFormatted(ReadOnlySpan{char})"/>
+        public void AppendFormatted(ReadOnlySpan<char> value)
+        {
+            this.handler.AppendFormatted(value);
+        }
+
+        /// <inheritdoc cref="WriteInterpolatedStringHandler.AppendFormatted{T}(T)"/>
+        public void AppendFormatted<T>(T value)
+        {
+            this.handler.AppendFormatted(value);
+        }
+
+        /// <inheritdoc cref="WriteInterpolatedStringHandler.AppendFormatted{T}(T, string?)"/>
+        public void AppendFormatted<T>(T value, string? format)
+        {
+            this.handler.AppendFormatted(value, format);
         }
     }
 }
