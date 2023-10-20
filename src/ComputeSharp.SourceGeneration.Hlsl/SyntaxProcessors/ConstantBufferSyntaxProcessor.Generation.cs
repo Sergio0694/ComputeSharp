@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
@@ -15,23 +16,31 @@ partial class ConstantBufferSyntaxProcessor
     private static string? generatorName;
 
     /// <summary>
+    /// The direction to generate marshalling code for.
+    /// </summary>
+    private static BindingDirection direction;
+
+    /// <summary>
     /// Registers a callback to generate additional types, if needed.
     /// </summary>
     /// <typeparam name="TInfo">The type of model providing the necessary info.</typeparam>
     /// <param name="generatorName">The name of generator to include in the generated code.</param>
+    /// <param name="direction">The direction to generate marshalling code for.</param>
     /// <param name="info">The input <typeparamref name="TInfo"/> instance with gathered shader info.</param>
     /// <param name="callbacks">The registered callbacks to generate additional types.</param>
     /// <param name="usingDirectives">The using directives needed by the generated code.</param>
     public static void RegisterAdditionalTypesSyntax<TInfo>(
         string generatorName,
+        BindingDirection direction,
         TInfo info,
         ImmutableArrayBuilder<IndentedTextWriter.Callback<TInfo>> callbacks,
         ImmutableHashSetBuilder<string> usingDirectives)
         where TInfo : class, IConstantBufferInfo
     {
-        // Store the generator name for later. This avoids needing closures for each callback below.
-        // It is assumed that all calls to this method will have the same argument in each assembly.
+        // Store the generator name and marshalling direction for later. This avoids needing closures for each
+        // callback below. It is assumed that all calls to this method will have the same arguments in each assembly.
         ConstantBufferSyntaxProcessor.generatorName = generatorName;
+        ConstantBufferSyntaxProcessor.direction = direction;
 
         // If there are no fields, there is no need for a constant buffer type
         if (info.Fields.IsEmpty)
@@ -169,53 +178,57 @@ partial class ConstantBufferSyntaxProcessor
                     writer.WriteLine("return shader;");
                 }
 
-                // Define the FromManaged method (managed shader type to native constant buffer)
-                writer.WriteLine();
-                writer.WriteLine($"""/// <summary>""");
-                writer.WriteLine($"""/// Marshals managed <see cref="{fullyQualifiedTypeName}"/> instances to native constant buffer data.""");
-                writer.WriteLine($"""/// </summary>""");
-                writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
-                writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
-                writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
-                writer.WriteLine($"""[SkipLocalsInit]""");
-                writer.WriteLine($"public static void FromManaged(in {fullyQualifiedTypeName} shader, out ConstantBuffer buffer)");
-
-                using (writer.WriteBlock())
+                // Only generate the other direction if requested
+                if (ConstantBufferSyntaxProcessor.direction == BindingDirection.TwoWay)
                 {
-                    // Generate loading statements for each captured field
-                    foreach (FieldInfo fieldInfo in info.Fields)
+                    // Define the FromManaged method (managed shader type to native constant buffer)
+                    writer.WriteLine();
+                    writer.WriteLine($"""/// <summary>""");
+                    writer.WriteLine($"""/// Marshals managed <see cref="{fullyQualifiedTypeName}"/> instances to native constant buffer data.""");
+                    writer.WriteLine($"""/// </summary>""");
+                    writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
+                    writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
+                    writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
+                    writer.WriteLine($"""[SkipLocalsInit]""");
+                    writer.WriteLine($"public static void FromManaged(in {fullyQualifiedTypeName} shader, out ConstantBuffer buffer)");
+
+                    using (writer.WriteBlock())
                     {
-                        switch (fieldInfo)
+                        // Generate loading statements for each captured field
+                        foreach (FieldInfo fieldInfo in info.Fields)
                         {
-                            case FieldInfo.Primitive primitive:
+                            switch (fieldInfo)
+                            {
+                                case FieldInfo.Primitive primitive:
 
-                                // Assign a primitive value
-                                writer.Write($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = ");
-                                writer.WriteFieldAccessExpression(fieldInfo);
-                                writer.WriteLine(";");
-                                break;
+                                    // Assign a primitive value
+                                    writer.Write($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = ");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine(";");
+                                    break;
 
-                            case FieldInfo.NonLinearMatrix matrix:
-                                string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
-                                string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
-                                string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
-                                string fieldNamePrefix = string.Join("_", matrix.FieldPath.Select(static path => path.Name));
+                                case FieldInfo.NonLinearMatrix matrix:
+                                    string primitiveTypeName = matrix.ElementName.ToLowerInvariant();
+                                    string matrixHlslTypeName = $"{primitiveTypeName}{matrix.Rows}x{matrix.Columns}";
+                                    string rowTypeName = HlslKnownTypes.GetMappedName($"ComputeSharp.{matrix.ElementName}{matrix.Columns}");
+                                    string fieldNamePrefix = string.Join("_", matrix.FieldPath.Select(static path => path.Name));
 
-                                // Get a reference to the whole matrix field, just once for all rows
-                                writer.WriteLine(skipIfPresent: true);
-                                writer.Write($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref ");
-                                writer.WriteFieldAccessExpression(fieldInfo);
-                                writer.WriteLine(";");
-                                writer.WriteLine();
+                                    // Get a reference to the whole matrix field, just once for all rows
+                                    writer.WriteLine(skipIfPresent: true);
+                                    writer.Write($"ref {matrixHlslTypeName} __{fieldNamePrefix} = ref ");
+                                    writer.WriteFieldAccessExpression(fieldInfo);
+                                    writer.WriteLine(";");
+                                    writer.WriteLine();
 
-                                // Assign all rows of a given matrix type
-                                for (int j = 0; j < matrix.Rows; j++)
-                                {
-                                    writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1);");
-                                }
+                                    // Assign all rows of a given matrix type
+                                    for (int j = 0; j < matrix.Rows; j++)
+                                    {
+                                        writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1);");
+                                    }
 
-                                writer.WriteLine();
-                                break;
+                                    writer.WriteLine();
+                                    break;
+                            }
                         }
                     }
                 }
