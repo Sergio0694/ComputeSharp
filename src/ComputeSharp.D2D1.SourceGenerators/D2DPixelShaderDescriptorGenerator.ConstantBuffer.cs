@@ -14,9 +14,9 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>ConstantBuffer</c> methods and additional types.
+    /// A helper with all logic to generate the constant buffer marshalling methods and additional types.
     /// </summary>
-    private static partial class ConstantBuffer
+    private static class ConstantBuffer
     {
         /// <inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo"/>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
@@ -31,10 +31,12 @@ partial class D2DPixelShaderDescriptorGenerator
             out int constantBufferSizeInBytes,
             out ImmutableArray<FieldInfo> fields)
         {
+            constantBufferSizeInBytes = 0;
+
             ConstantBufferSyntaxProcessor.GetInfo(
                 compilation,
                 structDeclarationSymbol,
-                out constantBufferSizeInBytes,
+                ref constantBufferSizeInBytes,
                 out fields);
 
             // The maximum size for a constant buffer is 64KB

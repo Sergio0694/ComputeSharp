@@ -33,7 +33,7 @@ internal static partial class ConstantBufferSyntaxProcessor
     public static void GetInfo(
         Compilation compilation,
         ITypeSymbol structDeclarationSymbol,
-        out int constantBufferSizeInBytes,
+        ref int constantBufferSizeInBytes,
         out ImmutableArray<FieldInfo> fields)
     {
         // Helper method that uses boxes instead of ref-s (illegal in enumerators)
@@ -41,7 +41,7 @@ internal static partial class ConstantBufferSyntaxProcessor
             Compilation compilation,
             ITypeSymbol currentTypeSymbol,
             ImmutableArray<FieldPathPart> fieldPath,
-            ref int rawDataOffset,
+            ref int constantBufferSizeInBytes,
             ImmutableArrayBuilder<FieldInfo> fields)
         {
             bool isFirstField = true;
@@ -71,7 +71,7 @@ internal static partial class ConstantBufferSyntaxProcessor
                 // The first item in each nested struct needs to be aligned to 16 bytes
                 if (isFirstField && fieldPath.Length > 0)
                 {
-                    rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+                    constantBufferSizeInBytes = AlignmentHelper.Pad(constantBufferSizeInBytes, 16);
 
                     isFirstField = false;
                 }
@@ -80,7 +80,7 @@ internal static partial class ConstantBufferSyntaxProcessor
                 {
                     ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName, unspeakableName));
 
-                    fields.Add(GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset));
+                    fields.Add(GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref constantBufferSizeInBytes));
                 }
                 else if (fieldSymbol.Type.IsUnmanagedType)
                 {
@@ -88,13 +88,10 @@ internal static partial class ConstantBufferSyntaxProcessor
                     FieldPathPart fieldPathPart = new FieldPathPart.Nested(fieldName, unspeakableName, nestedTypeName);
 
                     // Custom struct type defined by the user
-                    GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldPathPart), ref rawDataOffset, fields);
+                    GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldPathPart), ref constantBufferSizeInBytes, fields);
                 }
             }
         }
-
-        // Setup the resource and byte offsets for tracking
-        int rawDataOffset = 0;
 
         using ImmutableArrayBuilder<FieldInfo> fieldBuilder = new();
 
@@ -103,10 +100,9 @@ internal static partial class ConstantBufferSyntaxProcessor
             compilation,
             structDeclarationSymbol,
             ImmutableArray<FieldPathPart>.Empty,
-            ref rawDataOffset,
+            ref constantBufferSizeInBytes,
             fieldBuilder);
 
-        constantBufferSizeInBytes = rawDataOffset;
         fields = fieldBuilder.ToImmutable();
     }
 

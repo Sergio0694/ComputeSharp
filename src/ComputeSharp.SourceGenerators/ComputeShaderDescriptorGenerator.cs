@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -159,12 +161,13 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
             declaredMembers.Add(ResourceDescriptorRanges.WriteSyntax);
             declaredMembers.Add(HlslSource.WriteSyntax);
             declaredMembers.Add(HlslBytecode.WriteHlslBytecodeSyntax);
-            declaredMembers.Add(DispatchDataLoading.WriteLoadConstantBufferSyntax);
+            declaredMembers.Add(ConstantBuffer.WriteLoadConstantBufferSyntax);
             declaredMembers.Add(DispatchDataLoading.WriteLoadGraphicsResourcesSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
+            ConstantBufferSyntaxProcessor.RegisterAdditionalTypesSyntax(GeneratorName, BindingDirection.OneWay, item, additionalTypes, usingDirectives);
             ResourceDescriptorRanges.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
             HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 
