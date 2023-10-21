@@ -28,8 +28,8 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 using (writer.WriteBlock())
                 {
-                    writer.WriteLine("global::System.ReadOnlySpan<byte> bytes = new byte[]");
-                    writer.WriteLine("{");
+                    writer.WriteLine("global::System.ReadOnlySpan<byte> bytes =");
+                    writer.WriteLine("[");
                     writer.IncreaseIndent();
 
                     // Write the bytes like so:
@@ -60,7 +60,7 @@ partial class D2DPixelShaderDescriptorGenerator
                     writer.WriteLine($"{SyntaxFormattingHelper.GetByteExpression(info.EffectId[14])},");
                     writer.WriteLine(SyntaxFormattingHelper.GetByteExpression(info.EffectId[15]));
                     writer.DecreaseIndent();
-                    writer.WriteLine("};");
+                    writer.WriteLine("];");
 
                     writer.WriteLine();
                     writer.WriteLine("return ref global::System.Runtime.CompilerServices.Unsafe.As<byte, global::System.Guid>(ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));");

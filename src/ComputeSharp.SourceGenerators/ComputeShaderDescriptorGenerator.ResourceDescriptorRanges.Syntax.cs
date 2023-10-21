@@ -67,7 +67,7 @@ partial class ComputeShaderDescriptorGenerator
                 {
                     writer.WriteLine("""/// <summary>The singleton <see cref="ResourceDescriptorRange"/> array instance.</summary>""");
                     writer.WriteLine("""public static readonly ResourceDescriptorRange[] ResourceDescriptorRanges =""");
-                    writer.WriteLine("""{""");
+                    writer.WriteLine("""[""");
                     writer.IncreaseIndent();
 
                     // Initialize all resource descriptor ranges
@@ -85,7 +85,7 @@ partial class ComputeShaderDescriptorGenerator
 
                     writer.DecreaseIndent();
                     writer.WriteLine();
-                    writer.WriteLine("};");
+                    writer.WriteLine("];");
                 }
             }
 

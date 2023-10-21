@@ -77,8 +77,8 @@ partial class D2DPixelShaderDescriptorGenerator
                     // RVA field
                     writer.WriteLine();
                     writer.WriteLine("/// <summary>The RVA data with the input type info.</summary>");
-                    writer.WriteLine("private static ReadOnlySpan<D2D1PixelShaderInputType> Data => new[]");
-                    writer.WriteLine("{");
+                    writer.WriteLine("private static ReadOnlySpan<D2D1PixelShaderInputType> Data =>");
+                    writer.WriteLine("[");
                     writer.IncreaseIndent();
 
                     // Input types, one per line in the RVA field initializer
@@ -90,7 +90,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     writer.DecreaseIndent();
                     writer.WriteLine();
-                    writer.WriteLine("};");
+                    writer.WriteLine("];");
                     writer.WriteLine();
 
                     // Add the remaining members for the memory manager

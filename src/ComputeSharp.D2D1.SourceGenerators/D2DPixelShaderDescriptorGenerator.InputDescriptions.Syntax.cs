@@ -124,8 +124,8 @@ partial class D2DPixelShaderDescriptorGenerator
             static void Callback(D2D1ShaderInfo info, IndentedTextWriter writer)
             {
                 writer.WriteLine("""/// <summary>The singleton <see cref="D2D1InputDescription"/> array instance.</summary>""");
-                writer.WriteLine("""public static readonly D2D1InputDescription[] InputDescriptions = """);
-                writer.WriteLine("""{""");
+                writer.WriteLine("""public static readonly D2D1InputDescription[] InputDescriptions =""");
+                writer.WriteLine("""[""");
                 writer.IncreaseIndent();
 
                 // Initialize all input descriptions
@@ -136,7 +136,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 writer.DecreaseIndent();
                 writer.WriteLine();
-                writer.WriteLine("};");
+                writer.WriteLine("];");
             }
 
             callbacks.Add(Callback);

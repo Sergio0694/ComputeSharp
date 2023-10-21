@@ -76,11 +76,11 @@ partial class ComputeShaderDescriptorGenerator
                     // RVA field (with the compiled HLSL bytecode, on a single line)
                     writer.WriteLine();
                     writer.WriteLine("/// <summary>The RVA data with the HLSL bytecode.</summary>");
-                    writer.Write("private static ReadOnlySpan<byte> Data => new byte[] { ");
+                    writer.Write("private static ReadOnlySpan<byte> Data => [");
 
                     SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(((HlslBytecodeInfo.Success)info.HlslInfo).Bytecode.AsSpan(), writer);
 
-                    writer.WriteLine(" };");
+                    writer.WriteLine("];");
                     writer.WriteLine();
 
                     // Add the remaining members for the memory manager
