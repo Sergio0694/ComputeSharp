@@ -258,7 +258,6 @@ partial class ConstantBufferSyntaxProcessor
                         string typeName = pathPart switch
                         {
                             FieldPathPart.Nested nested => nested.TypeName,
-                            FieldPathPart.Leaf when fieldInfo.TypeName is "System.Boolean" => "global::ComputeSharp.Bool",
                             _ => HlslKnownTypes.GetMappedName(fieldInfo.TypeName)
                         };
 
