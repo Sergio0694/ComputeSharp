@@ -42,8 +42,8 @@ partial class ConstantBufferSyntaxProcessor
         ConstantBufferSyntaxProcessor.generatorName = generatorName;
         ConstantBufferSyntaxProcessor.direction = direction;
 
-        // If there are no fields, there is no need for a constant buffer type
-        if (info.Fields.IsEmpty)
+        // If there are no fields (including artificial ones), there is no need for a constant buffer type
+        if (info.Fields.IsEmpty && !HasArtificialFields())
         {
             return;
         }
@@ -307,8 +307,21 @@ partial class ConstantBufferSyntaxProcessor
         }
 
         callbacks.Add(ConstantBufferCallback);
-        callbacks.Add(ConstantBufferMarshallerCallback);
+
+        // Only emit the marshaller type if there are any non artificial fields.
+        // Otherwise, it's not needed, as there are either just no fields at all,
+        // or only artificial ones, which would be assigned directly by callers.
+        if (!info.Fields.IsEmpty)
+        {
+            callbacks.Add(ConstantBufferMarshallerCallback);
+        }
     }
+
+    /// <summary>
+    /// Checks whether any artificial fields are present.
+    /// </summary>
+    /// <returns>Whether any artificial fields are present.</returns>
+    private static partial bool HasArtificialFields();
 
     /// <summary>
     /// Appends any artificial fields to the generated constant buffer type.

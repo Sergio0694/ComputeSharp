@@ -8,6 +8,12 @@ namespace ComputeSharp.SourceGeneration.SyntaxProcessors;
 partial class ConstantBufferSyntaxProcessor
 {
     /// <inheritdoc/>
+    private static partial bool HasArtificialFields()
+    {
+        return true;
+    }
+
+    /// <inheritdoc/>
     static partial void AppendArtificialFields(IConstantBufferInfo info, IndentedTextWriter writer)
     {
         // The X and Y axes are always present
@@ -22,6 +28,7 @@ partial class ConstantBufferSyntaxProcessor
             """, isMultiline: true);
 
         // The Z axis is only present for non pixel-shader-like compute shaders
+        writer.WriteLineIf(!((ShaderInfo)info).IsPixelShaderLike);
         writer.WriteLineIf(
             condition: !((ShaderInfo)info).IsPixelShaderLike,
             """

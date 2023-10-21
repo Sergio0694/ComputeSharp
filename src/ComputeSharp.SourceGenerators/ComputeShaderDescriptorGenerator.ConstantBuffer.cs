@@ -63,23 +63,25 @@ partial class ComputeShaderDescriptorGenerator
 
             using (writer.WriteBlock())
             {
-                // If there are no fields, just load an empty buffer
+                // If there are no fields (ie. there are only artificial ones), just get an uninitialized instance.
+                // All fields (ie. the thread size values) will be assigned directly inline, with no marshalling.
                 if (info.Fields.IsEmpty)
                 {
-                    writer.WriteLine("loader.LoadConstantBuffer(default);");
+                    writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.SkipInit(out global::ComputeSharp.Generated.ConstantBuffer buffer);");
                 }
                 else
                 {
-                    // Otherwise, pass a span into the marshalled native layout buffer.
-                    // Also load the artificially created fields with dispatch data.
+                    // Otherwise, let the generated marshaller create an initialized instance of the constant buffer type
                     writer.WriteLine("global::ComputeSharp.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.Generated.ConstantBuffer buffer);");
-                    writer.WriteLine();
-                    writer.WriteLine("buffer.__x = x;");
-                    writer.WriteLine("buffer.__y = y;");
-                    writer.WriteLineIf(!info.IsPixelShaderLike, "buffer.__z = z;");
-                    writer.WriteLineIf(!info.IsPixelShaderLike);
-                    writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.Generated.ConstantBuffer)));");
                 }
+
+                // Initialize the artificial fields and finally pass a span over the constant buffer
+                writer.WriteLine();
+                writer.WriteLine("buffer.__x = x;");
+                writer.WriteLine("buffer.__y = y;");
+                writer.WriteLineIf(!info.IsPixelShaderLike, "buffer.__z = z;");
+                writer.WriteLineIf(!info.IsPixelShaderLike);
+                writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.Generated.ConstantBuffer)));");
             }
         }
     }
