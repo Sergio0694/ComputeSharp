@@ -1001,7 +1001,7 @@ partial class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor NotAccessibleTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new DiagnosticDescriptor(
         id: "CMPSD2D0067",
-        title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
+        title: "Not accessible type using the [D2DGeneratedPixelShaderDescriptor] attribute",
         messageFormat: "The [D2DGeneratedPixelShaderDescriptor] attribute requires target types to be accessible from their containing assembly (type {0} has less effective accessibility than internal)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -1017,7 +1017,7 @@ partial class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor NotAccessibleFieldTypeInTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new DiagnosticDescriptor(
         id: "CMPSD2D0068",
-        title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
+        title: "Not accessible field type in type using the [D2DGeneratedPixelShaderDescriptor] attribute",
         messageFormat: """The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,

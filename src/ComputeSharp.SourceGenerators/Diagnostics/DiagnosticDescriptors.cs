@@ -777,7 +777,7 @@ partial class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor NotAccessibleTargetTypeForGeneratedComputeShaderDescriptorAttribute = new DiagnosticDescriptor(
         id: "CMPS0055",
-        title: "Invalid [GeneratedComputeShaderDescriptor] attribute target",
+        title: "Not accessible type using the [GeneratedComputeShaderDescriptor] attribute",
         messageFormat: "The [GeneratedComputeShaderDescriptor] attribute requires target types to be accessible from their containing assembly (type {0} has less effective accessibility than internal)",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -793,7 +793,7 @@ partial class DiagnosticDescriptors
     /// </summary>
     public static readonly DiagnosticDescriptor NotAccessibleFieldTypeInTargetTypeForGeneratedComputeShaderDescriptorAttribute = new DiagnosticDescriptor(
         id: "CMPS0056",
-        title: "Invalid [GeneratedComputeShaderDescriptor] attribute target",
+        title: "Not accessible field type in type using the [GeneratedComputeShaderDescriptor] attribute",
         messageFormat: """The [GeneratedComputeShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
