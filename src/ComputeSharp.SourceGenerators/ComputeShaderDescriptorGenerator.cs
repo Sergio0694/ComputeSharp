@@ -69,16 +69,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the resources info
-                    Resources.GetInfo(
-                        diagnostics,
-                        context.SemanticModel.Compilation,
-                        typeSymbol,
-                        constantBufferSizeInBytes,
-                        out ImmutableArray<ResourceInfo> resourceInfo);
-
-                    token.ThrowIfCancellationRequested();
-
                     // Thread group size info
                     NumThreads.GetInfo(
                         diagnostics,
@@ -105,10 +95,15 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Resource descriptor ranges info
-                    ImmutableArray<ResourceDescriptor> resourceDescriptors = ResourceDescriptorRanges.GetInfo(
+                    // Get the resources info
+                    Resources.GetInfo(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeSymbol,
                         isImplicitTextureUsed,
-                        resourceInfo);
+                        constantBufferSizeInBytes,
+                        out ImmutableArray<ResourceInfo> resourceInfo,
+                        out ImmutableArray<ResourceDescriptor> resourceDescriptors);
 
                     token.ThrowIfCancellationRequested();
 

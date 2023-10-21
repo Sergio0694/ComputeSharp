@@ -20,21 +20,36 @@ partial class ComputeShaderDescriptorGenerator
     private static partial class Resources
     {
         /// <summary>
-        /// Explores a given type hierarchy and generates statements to load fields.
+        /// Gathers info on all resources captured by a given shader type.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
+        /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="resources">The sequence of <see cref="ResourceInfo"/> instances for all captured resources.</param>
+        /// <param name="resourceDescriptors">The sequence of <see cref="ResourceDescriptor"/> instances for all captured resources.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
+            bool isImplicitTextureUsed,
             int constantBufferSizeInBytes,
-            out ImmutableArray<ResourceInfo> resources)
+            out ImmutableArray<ResourceInfo> resources,
+            out ImmutableArray<ResourceDescriptor> resourceDescriptors)
         {
             using ImmutableArrayBuilder<ResourceInfo> resourceBuilder = new();
+            using ImmutableArrayBuilder<ResourceDescriptor> resourceDescriptorBuilder = new();
+
+            int constantBufferOffset = 1;
+            int readOnlyResourceOffset = 0;
+            int readWriteResourceOffset = 0;
+
+            // Add the implicit texture descriptor, if needed
+            if (isImplicitTextureUsed)
+            {
+                resourceDescriptorBuilder.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
+            }
 
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
@@ -61,11 +76,26 @@ partial class ComputeShaderDescriptorGenerator
                 // Check if the field is a resource (note: resources can only be top level fields)
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
-                    resourceBuilder.Add(new ResourceInfo(fieldName, unspeakableName, typeName));
+                    resourceBuilder.Add(new ResourceInfo(fieldName, unspeakableName));
+
+                    // Populate the resource descriptors as well
+                    if (HlslKnownTypes.IsConstantBufferType(typeName))
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(2, constantBufferOffset++));
+                    }
+                    else if (HlslKnownTypes.IsReadOnlyTypedResourceType(typeName))
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(0, readOnlyResourceOffset++));
+                    }
+                    else
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
+                    }
                 }
             }
 
             resources = resourceBuilder.ToImmutable();
+            resourceDescriptors = resourceDescriptorBuilder.ToImmutable();
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
             // Loaded values in the root signature have the following costs:

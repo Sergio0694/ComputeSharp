@@ -5,5 +5,4 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// </summary>
 /// <param name="FieldName">The name of the resource field.</param>
 /// <param name="UnspeakableName">The unspeakable name of the field, if present.</param>
-/// <param name="TypeName">The full metadata name for the resource type.</param>
-public sealed record ResourceInfo(string FieldName, string? UnspeakableName, string TypeName);
+public sealed record ResourceInfo(string FieldName, string? UnspeakableName);
