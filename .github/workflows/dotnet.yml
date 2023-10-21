@@ -1,5 +1,15 @@
 name: .NET
 
+# This workflow should trigger in the following cases:
+#   - The commit is any push in any branch in the repo
+#   - The commit is a published PR from anyone else
+#
+# This setup is done to avoid duplicate runs for the same exact commits, for cases when
+# the PR is done from a branch in this repo, which would already trigger the "push"
+# condition. This way, only PRs from forks will actually trigger the workflow.
+#
+# Because we can't really check these conditions from the global triggers here, they are
+# added to the two root jobs below instead. If canceled, the whole workflow will stop.
 on: [push, pull_request]
 
 env:
@@ -10,6 +20,9 @@ jobs:
 
   # Build the whole ComputeSharp solution
   build-solution:
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.user.login != github.repository_owner
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -32,6 +45,9 @@ jobs:
   # Pack all projects with dotnet/MSBuild to generate NuGet packages.
   # This workflow also uploads the resulting packages as artifacts.
   build-packages:
+    if: >-
+      github.event_name == 'push' ||
+      github.event.pull_request.user.login != github.repository_owner
     runs-on: windows-2022
     steps:
     - name: Git checkout
