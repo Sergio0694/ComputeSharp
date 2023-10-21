@@ -54,13 +54,13 @@ partial class ComputeShaderDescriptorGenerator
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Only process instance fields
-                if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false } typeSymbol, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false } fieldSymbol)
                 {
                     continue;
                 }
 
                 // Skip fields of not accessible types (the analyzer will handle this just like other fields)
-                if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
+                if (!typeSymbol.IsAccessibleFromCompilationAssembly(compilation))
                 {
                     continue;
                 }
@@ -71,12 +71,12 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
-                string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
+                string typeName = typeSymbol.GetFullyQualifiedMetadataName();
 
                 // Check if the field is a resource (note: resources can only be top level fields)
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
-                    resourceBuilder.Add(new ResourceInfo(fieldName, unspeakableName));
+                    resourceBuilder.Add(new ResourceInfo(fieldName, GetResourceTypeName(typeSymbol), unspeakableName));
 
                     // Populate the resource descriptors as well
                     if (HlslKnownTypes.IsConstantBufferType(typeName))
@@ -109,6 +109,38 @@ partial class ComputeShaderDescriptorGenerator
             {
                 diagnostics.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
+        }
+
+        /// <summary>
+        /// Gets the name of a given resource field type.
+        /// </summary>
+        /// <param name="typeSymbol">The input field type to inspect.</param>
+        /// <returns>The fully qualified resource type name, nicely formatted.</returns>
+        private static string GetResourceTypeName(INamedTypeSymbol typeSymbol)
+        {
+            using ImmutableArrayBuilder<char> builder = new();
+
+            // Add the type name (we'll add the ComputeSharp namespace, so no need for fully qualified type names)
+            builder.AddRange(typeSymbol.Name.AsSpan());
+            builder.Add('<');
+
+            _ = HlslKnownTypes.TryGetMappedName(typeSymbol.TypeArguments[0].GetFullyQualifiedMetadataName(), out string? mappedName);
+
+            // We always have at least one type argument, so first append it. We either append the mapped
+            // type name (ie. the friendly primitive or HLSL type name), or the fully qualified type name.
+            builder.AddRange((mappedName ?? typeSymbol.TypeArguments[0].GetFullyQualifiedName(includeGlobal: true)).AsSpan());
+
+            // If the resource also has a pixel type, append that too.
+            // We only need the name again, as the namespace is imported.
+            if (typeSymbol.TypeArguments is [_, INamedTypeSymbol pixelTypeSymbol])
+            {
+                builder.AddRange(", ".AsSpan());
+                builder.AddRange(pixelTypeSymbol.Name.AsSpan());
+            }
+
+            builder.Add('>');
+
+            return builder.ToString();
         }
     }
 }

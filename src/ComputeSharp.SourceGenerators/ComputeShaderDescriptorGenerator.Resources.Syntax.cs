@@ -75,7 +75,6 @@ partial class ComputeShaderDescriptorGenerator
                     // Define the FromManaged method (managed shader type to native constant buffer)
                     writer.WriteLine($$"""/// <inheritdoc cref="IComputeShaderDescriptor{T}.LoadGraphicsResources"/>""");
                     writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
-                    writer.WriteLine($"""[SkipLocalsInit]""");
                     writer.WriteLine($"public static void LoadGraphicsResources<TLoader>(in {fullyQualifiedTypeName} shader, ref TLoader loader)");
                     writer.WriteLine("    where TLoader : struct, IGraphicsResourceLoader");
 
@@ -102,7 +101,7 @@ partial class ComputeShaderDescriptorGenerator
                                 /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
                                 /// <returns>A reference to <see cref="{fullyQualifiedTypeName}.{resourceInfo.FieldName}"/>.</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field)]
-                                private static extern ref readonly IGraphicsResource {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
+                                private static extern ref readonly {resourceInfo.FieldType} {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
                                 """, isMultiline: true);
                         }
                         else
@@ -112,7 +111,7 @@ partial class ComputeShaderDescriptorGenerator
                                 /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
                                 /// <returns>A reference to the unspeakable field "{resourceInfo.FieldName}".</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{resourceInfo.UnspeakableName}")]
-                                private static extern ref readonly IGraphicsResource {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
+                                private static extern ref readonly {resourceInfo.FieldType} {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
                                 """, isMultiline: true);
                         }
                     }
