@@ -108,7 +108,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     // Resource descriptor ranges info
                     ImmutableArray<ResourceDescriptor> resourceDescriptors = ResourceDescriptorRanges.GetInfo(
                         isImplicitTextureUsed,
-                        isSamplerUsed,
                         resourceInfo);
 
                     token.ThrowIfCancellationRequested();

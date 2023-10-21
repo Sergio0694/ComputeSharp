@@ -17,12 +17,10 @@ partial class ComputeShaderDescriptorGenerator
         /// Gets the data related to the shader metadata for a given shader type.
         /// </summary>
         /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
-        /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
         /// <param name="resources">The sequence of captured resources for the shader.</param>
         /// <returns>The metadata info for the shader.</returns>
         public static ImmutableArray<ResourceDescriptor> GetInfo(
             bool isImplicitTextureUsed,
-            bool isSamplerUsed,
             ImmutableArray<ResourceInfo> resources)
         {
             using ImmutableArrayBuilder<ResourceDescriptor> descriptors = new();
