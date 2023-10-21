@@ -33,4 +33,14 @@ partial class ConstantBufferSyntaxProcessor
         // Leave a trailing blank line if the shader has any fields
         writer.WriteLineIf(!info.Fields.IsEmpty);
     }
+
+    /// <inheritdoc/>
+    static partial void InitializeArtificialFields(IConstantBufferInfo info, IndentedTextWriter writer)
+    {
+        // Ignore the artificial fields (they will be set separately)
+        writer.WriteLine("Unsafe.SkipInit(out buffer.__x);");
+        writer.WriteLine("Unsafe.SkipInit(out buffer.__y);");
+        writer.WriteLineIf(!((ShaderInfo)info).IsPixelShaderLike, "Unsafe.SkipInit(out buffer.__z);");
+        writer.WriteLineIf(!info.Fields.IsEmpty);
+    }
 }

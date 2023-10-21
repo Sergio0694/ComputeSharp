@@ -293,7 +293,7 @@ namespace ComputeSharp.Tests
 
             static int C() => 1;
 
-            int D() => A() + E() + F();
+            public int D() => A() + E() + F();
 
             int E() => 1;
 

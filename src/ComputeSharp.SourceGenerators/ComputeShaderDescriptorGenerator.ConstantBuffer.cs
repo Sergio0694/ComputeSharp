@@ -59,7 +59,7 @@ partial class ComputeShaderDescriptorGenerator
             writer.WriteLine("/// <inheritdoc/>");
             writer.WriteGeneratedAttributes(GeneratorName);
             writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
-            writer.WriteLine($"static void global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader, int x, int y, int z)");
+            writer.WriteLine($"static unsafe void global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader, int x, int y, int z)");
 
             using (writer.WriteBlock())
             {

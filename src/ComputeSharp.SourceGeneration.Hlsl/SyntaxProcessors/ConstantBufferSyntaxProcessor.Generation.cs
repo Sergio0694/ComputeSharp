@@ -126,20 +126,21 @@ partial class ConstantBufferSyntaxProcessor
 
             using (writer.WriteBlock())
             {
-                // Define the ToManaged method (native constant buffer to managed shader type)
+                // Define the FromManaged method (managed shader type to native constant buffer)
                 writer.WriteLine($"""/// <summary>""");
-                writer.WriteLine($"""/// Marshals native constant buffer data to managed <see cref="{fullyQualifiedTypeName}"/> instances.""");
+                writer.WriteLine($"""/// Marshals managed <see cref="{fullyQualifiedTypeName}"/> instances to native constant buffer data.""");
                 writer.WriteLine($"""/// </summary>""");
                 writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
                 writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
                 writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
                 writer.WriteLine($"""[SkipLocalsInit]""");
-                writer.WriteLine($"public static {fullyQualifiedTypeName} ToManaged(in ConstantBuffer buffer)");
+                writer.WriteLine($"public static void FromManaged(in {fullyQualifiedTypeName} shader, out ConstantBuffer buffer)");
 
                 using (writer.WriteBlock())
                 {
-                    writer.WriteLine($"Unsafe.SkipInit(out {fullyQualifiedTypeName} shader);");
-                    writer.WriteLine();
+                    // Initialize any artificial fields, if needed. This is necessary to avoid compiler errors due to
+                    // the resulting constant buffer not being fully initialized, in case it had some extra fields.
+                    InitializeArtificialFields(info, writer);
 
                     // Generate loading statements for each captured field
                     foreach (FieldInfo fieldInfo in info.Fields)
@@ -148,9 +149,10 @@ partial class ConstantBufferSyntaxProcessor
                         {
                             case FieldInfo.Primitive primitive:
 
-                                // Read a nested primitive value
+                                // Assign a primitive value
+                                writer.Write($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = ");
                                 writer.WriteFieldAccessExpression(fieldInfo);
-                                writer.WriteLine($" = buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))};");
+                                writer.WriteLine(";");
                                 break;
 
                             case FieldInfo.NonLinearMatrix matrix:
@@ -166,37 +168,37 @@ partial class ConstantBufferSyntaxProcessor
                                 writer.WriteLine(";");
                                 writer.WriteLine();
 
-                                // Read all rows of a given matrix type
+                                // Assign all rows of a given matrix type
                                 for (int j = 0; j < matrix.Rows; j++)
                                 {
-                                    writer.WriteLine($"Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1) = buffer.{fieldNamePrefix}_{j};");
+                                    writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1);");
                                 }
 
                                 writer.WriteLine();
                                 break;
                         }
                     }
-
-                    writer.WriteLine(skipIfPresent: true);
-                    writer.WriteLine("return shader;");
                 }
 
                 // Only generate the other direction if requested
                 if (ConstantBufferSyntaxProcessor.direction == BindingDirection.TwoWay)
                 {
-                    // Define the FromManaged method (managed shader type to native constant buffer)
+                    // Define the ToManaged method (native constant buffer to managed shader type)
                     writer.WriteLine();
                     writer.WriteLine($"""/// <summary>""");
-                    writer.WriteLine($"""/// Marshals managed <see cref="{fullyQualifiedTypeName}"/> instances to native constant buffer data.""");
+                    writer.WriteLine($"""/// Marshals native constant buffer data to managed <see cref="{fullyQualifiedTypeName}"/> instances.""");
                     writer.WriteLine($"""/// </summary>""");
                     writer.WriteLine($"""/// <param name="buffer">The input native constant buffer.</param>""");
                     writer.WriteLine($"""/// <returns>The marshalled <see cref="{fullyQualifiedTypeName}"/> instance.</returns>""");
                     writer.WriteLine($"""[MethodImpl(MethodImplOptions.AggressiveInlining)]""");
                     writer.WriteLine($"""[SkipLocalsInit]""");
-                    writer.WriteLine($"public static void FromManaged(in {fullyQualifiedTypeName} shader, out ConstantBuffer buffer)");
+                    writer.WriteLine($"public static {fullyQualifiedTypeName} ToManaged(in ConstantBuffer buffer)");
 
                     using (writer.WriteBlock())
                     {
+                        writer.WriteLine($"Unsafe.SkipInit(out {fullyQualifiedTypeName} shader);");
+                        writer.WriteLine();
+
                         // Generate loading statements for each captured field
                         foreach (FieldInfo fieldInfo in info.Fields)
                         {
@@ -204,10 +206,9 @@ partial class ConstantBufferSyntaxProcessor
                             {
                                 case FieldInfo.Primitive primitive:
 
-                                    // Assign a primitive value
-                                    writer.Write($"buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))} = ");
+                                    // Read a nested primitive value
                                     writer.WriteFieldAccessExpression(fieldInfo);
-                                    writer.WriteLine(";");
+                                    writer.WriteLine($" = buffer.{string.Join("_", primitive.FieldPath.Select(static path => path.Name))};");
                                     break;
 
                                 case FieldInfo.NonLinearMatrix matrix:
@@ -223,16 +224,19 @@ partial class ConstantBufferSyntaxProcessor
                                     writer.WriteLine(";");
                                     writer.WriteLine();
 
-                                    // Assign all rows of a given matrix type
+                                    // Read all rows of a given matrix type
                                     for (int j = 0; j < matrix.Rows; j++)
                                     {
-                                        writer.WriteLine($"buffer.{fieldNamePrefix}_{j} = Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1);");
+                                        writer.WriteLine($"Unsafe.As<{primitiveTypeName}, {rowTypeName}>(ref __{fieldNamePrefix}.M{j + 1}1) = buffer.{fieldNamePrefix}_{j};");
                                     }
 
                                     writer.WriteLine();
                                     break;
                             }
                         }
+
+                        writer.WriteLine(skipIfPresent: true);
+                        writer.WriteLine("return shader;");
                     }
                 }
 
@@ -313,6 +317,14 @@ partial class ConstantBufferSyntaxProcessor
     /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
     /// <remarks>This method is responsible for leaving trailing blanklines, if it adds any fields.</remarks>
     static partial void AppendArtificialFields(IConstantBufferInfo info, IndentedTextWriter writer);
+
+    /// <summary>
+    /// Initializes any artificial fields that have been generated into the constant buffer.
+    /// </summary>
+    /// <param name="info">The <see cref="IConstantBufferInfo"/> instance to use to extract info.</param>
+    /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+    /// <remarks>This method is responsible for leaving trailing blanklines, if it emits any statements.</remarks>
+    static partial void InitializeArtificialFields(IConstantBufferInfo info, IndentedTextWriter writer);
 }
 
 /// <inheritdoc cref="Extensions.IndentedTextWriterExtensions"/>
