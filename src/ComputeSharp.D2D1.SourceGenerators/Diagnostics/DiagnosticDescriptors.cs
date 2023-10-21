@@ -2,8 +2,6 @@ using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGeneration.Diagnostics;
 
-#pragma warning disable IDE0090 // Use 'new(...)'
-
 /// <inheritdoc/>
 partial class DiagnosticDescriptors
 {
@@ -18,7 +16,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The compute shader of type {0} contains a field "{1}" of an invalid type {2}"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidShaderField = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidShaderField = new(
         id: "CMPSD2D0001",
         title: "Invalid shader field",
         messageFormat: """The compute shader of type {0} contains a field "{1}" of an invalid type {2}""",
@@ -34,7 +32,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The type {0} cannot be created in a compute shader"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidObjectCreationExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidObjectCreationExpression = new(
         id: "CMPSD2D0002",
         title: "Invalid object creation expression",
         messageFormat: "The type {0} cannot be created in a compute shader (only unmanaged types are supported)",
@@ -47,7 +45,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an anonymous object creation expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor AnonymousObjectCreationExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor AnonymousObjectCreationExpression = new(
         id: "CMPSD2D0003",
         title: "Anonymous object creation expression",
         messageFormat: "An anonymous object cannot be created in a compute shader",
@@ -60,7 +58,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an async modifier on a method or function.
     /// </summary>
-    public static readonly DiagnosticDescriptor AsyncModifierOnMethodOrFunction = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor AsyncModifierOnMethodOrFunction = new(
         id: "CMPSD2D0004",
         title: "Async modifier on method or function",
         messageFormat: "The async modifier cannot be used in methods or functions used in a compute shader",
@@ -73,7 +71,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an await expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor AwaitExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor AwaitExpression = new(
         id: "CMPSD2D0005",
         title: "Await expression",
         messageFormat: "The await expression cannot be used in a compute shader",
@@ -86,7 +84,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a checked expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor CheckedExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor CheckedExpression = new(
         id: "CMPSD2D0006",
         title: "Checked expression",
         messageFormat: "A checked expression cannot be used in a compute shader",
@@ -99,7 +97,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a checked statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor CheckedStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor CheckedStatement = new(
         id: "CMPSD2D0007",
         title: "Checked statement",
         messageFormat: "A checked statement cannot be used in a compute shader",
@@ -112,7 +110,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a fixed statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor FixedStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor FixedStatement = new(
         id: "CMPSD2D0008",
         title: "Fixed statement",
         messageFormat: "A fixed statement cannot be used in a compute shader",
@@ -125,7 +123,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a foreach statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor ForEachStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor ForEachStatement = new(
         id: "CMPSD2D0009",
         title: "Foreach statement",
         messageFormat: "A foreach statement cannot be used in a compute shader",
@@ -138,7 +136,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a lock statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor LockStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor LockStatement = new(
         id: "CMPSD2D0010",
         title: "Foreach statement",
         messageFormat: "A lock statement cannot be used in a compute shader",
@@ -151,7 +149,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a query statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor QueryExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor QueryExpression = new(
         id: "CMPSD2D0011",
         title: "Foreach statement",
         messageFormat: "A LINQ query expression cannot be used in a compute shader",
@@ -164,7 +162,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a range expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor RangeExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RangeExpression = new(
         id: "CMPSD2D0012",
         title: "Range expression",
         messageFormat: "A range expression cannot be used in a compute shader",
@@ -177,7 +175,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a recursive pattern.
     /// </summary>
-    public static readonly DiagnosticDescriptor RecursivePattern = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RecursivePattern = new(
         id: "CMPSD2D0013",
         title: "Recursive pattern",
         messageFormat: "A recursive pattern cannot be used in a compute shader",
@@ -190,7 +188,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a ref type.
     /// </summary>
-    public static readonly DiagnosticDescriptor RefType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RefType = new(
         id: "CMPSD2D0014",
         title: "Ref type",
         messageFormat: "A compute shader cannot have a ref type declaration",
@@ -203,7 +201,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a relational pattern.
     /// </summary>
-    public static readonly DiagnosticDescriptor RelationalPattern = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RelationalPattern = new(
         id: "CMPSD2D0015",
         title: "Relational pattern",
         messageFormat: "A relational pattern cannot be used in a compute shader",
@@ -216,7 +214,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a sizeof expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor SizeOfExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor SizeOfExpression = new(
         id: "CMPSD2D0016",
         title: "Sizeof expression",
         messageFormat: "A sizeof expression cannot be used in a compute shader",
@@ -229,7 +227,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a stackalloc expression.
     /// </summary>
-    public static readonly DiagnosticDescriptor StackAllocArrayCreationExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor StackAllocArrayCreationExpression = new(
         id: "CMPSD2D0017",
         title: "Stackalloc expression",
         messageFormat: "A stackalloc expression cannot be used in a compute shader",
@@ -242,7 +240,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a throw expression or statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor ThrowExpressionOrStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor ThrowExpressionOrStatement = new(
         id: "CMPSD2D0018",
         title: "Throw expression or statement",
         messageFormat: "Throw expressions and statements cannot be used in a compute shader",
@@ -255,7 +253,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a try statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor TryStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor TryStatement = new(
         id: "CMPSD2D0019",
         title: "Try statement",
         messageFormat: "A try statement cannot be used in a compute shader",
@@ -268,7 +266,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a tuple type.
     /// </summary>
-    public static readonly DiagnosticDescriptor TupleType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor TupleType = new(
         id: "CMPSD2D0020",
         title: "Tuple type",
         messageFormat: "A compute shader cannot have a tuple type declaration",
@@ -281,7 +279,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a using statement or declaration.
     /// </summary>
-    public static readonly DiagnosticDescriptor UsingStatementOrDeclaration = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor UsingStatementOrDeclaration = new(
         id: "CMPSD2D0021",
         title: "Using statement or declaration",
         messageFormat: "Using statements and declarations cannot be used in a compute shader",
@@ -294,7 +292,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a yield statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor YieldStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor YieldStatement = new(
         id: "CMPSD2D0022",
         title: "Yield statement",
         messageFormat: "A yield statement cannot be used in a compute shader",
@@ -310,7 +308,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"A variable of type {0} cannot be declared in a compute shader"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidObjectDeclaration = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidObjectDeclaration = new(
         id: "CMPSD2D0023",
         title: "Invalid object declaration",
         messageFormat: "A variable of type {0} cannot be declared in a compute shader (only unmanaged types are supported)",
@@ -323,7 +321,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a pointer type.
     /// </summary>
-    public static readonly DiagnosticDescriptor PointerType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor PointerType = new(
         id: "CMPSD2D0024",
         title: "Pointer type",
         messageFormat: "A compute shader cannot have a pointer type declaration",
@@ -336,7 +334,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a function pointer type.
     /// </summary>
-    public static readonly DiagnosticDescriptor FunctionPointer = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor FunctionPointer = new(
         id: "CMPSD2D0025",
         title: "Function pointer type",
         messageFormat: "A compute shader cannot have a function pointer type declaration",
@@ -349,7 +347,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe statement.
     /// </summary>
-    public static readonly DiagnosticDescriptor UnsafeStatement = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor UnsafeStatement = new(
         id: "CMPSD2D0026",
         title: "Unsafe statement",
         messageFormat: "A compute shader cannot have an unsafe statement",
@@ -362,7 +360,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe modifier on a method or function.
     /// </summary>
-    public static readonly DiagnosticDescriptor UnsafeModifierOnMethodOrFunction = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor UnsafeModifierOnMethodOrFunction = new(
         id: "CMPSD2D0027",
         title: "Unsafe modifier on method or function",
         messageFormat: "The unsafe modifier cannot be used in methods or functions used in a compute shader",
@@ -375,7 +373,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for a string literal.
     /// </summary>
-    public static readonly DiagnosticDescriptor StringLiteralExpression = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor StringLiteralExpression = new(
         id: "CMPSD2D0028",
         title: "String literal expression",
         messageFormat: "String literal expressions cannot be used in a compute shader",
@@ -388,7 +386,7 @@ partial class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an incorrect matrix swizzling property argument.
     /// </summary>
-    public static readonly DiagnosticDescriptor NonConstantMatrixSwizzledIndex = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor NonConstantMatrixSwizzledIndex = new(
         id: "CMPSD2D0029",
         title: "Non constant matrix swizzled property argument",
         messageFormat: "The arguments in a swizzled indexer for a matrix type must be compile-time constants",
@@ -404,7 +402,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new(
         id: "CMPSD2D0030",
         title: "Invalid shader static readonly field type",
         messageFormat: """The compute shader of type {0} contains a static readonly field "{1}" of an invalid type {2} (only primitive, vector and matrix types are supported)""",
@@ -420,7 +418,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidPropertyDeclaration = new(
         id: "CMPSD2D0031",
         title: "Invalid property declaration",
         messageFormat: """The D2D1 shader of type {0} contains an invalid property "{1}" declaration (only stateless properties explicitly implementing an interface property can be used)""",
@@ -436,7 +434,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
         id: "CMPSD2D0032",
         title: "Shader dispatch data size exceeded",
         messageFormat: "The D2D1 shader of type {0} has exceeded the maximum allowed size for captured values",
@@ -452,7 +450,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new(
         id: "CMPSD2D0033",
         title: "Embedded bytecode compilation failed due to Win32 exception",
         messageFormat: """The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")""",
@@ -468,7 +466,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithFxcCompilationException = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithFxcCompilationException = new(
         id: "CMPSD2D0034",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
         messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
@@ -484,7 +482,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DInputCount = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DInputCount = new(
         id: "CMPSD2D0035",
         title: "Invalid D2D1 shader input count",
         messageFormat: "The D2D1 shader of type {0} is using an incorrect value for [D2DInputCount] (the number of inputs must be in the [0, 8] range)",
@@ -500,7 +498,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputSimple] attributes"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor RepeatedD2DInputSimpleIndices = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RepeatedD2DInputSimpleIndices = new(
         id: "CMPSD2D0036",
         title: "Repeated D2D1 shader simple input indices",
         messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputSimple] attributes",
@@ -516,7 +514,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputComplex] attributes"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor RepeatedD2DInputComplexIndices = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RepeatedD2DInputComplexIndices = new(
         id: "CMPSD2D0037",
         title: "Repeated D2D1 shader complex input indices",
         messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputComplex] attributes",
@@ -532,7 +530,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using some indices in common for simple and complex input indices"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidSimpleAndComplexIndicesCombination = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidSimpleAndComplexIndicesCombination = new(
         id: "CMPSD2D0038",
         title: "Invalid D2D1 shader simple and complex indices combination",
         messageFormat: "The D2D1 shader of type {0} is using some indices in common for simple and complex input indices",
@@ -548,7 +546,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using some out of range input indices"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor OutOfRangeInputIndex = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor OutOfRangeInputIndex = new(
         id: "CMPSD2D0039",
         title: "Out of range D2D1 shader input indices",
         messageFormat: "The D2D1 shader of type {0} is using some out of range input indices",
@@ -564,7 +562,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The method {0} cannot be used in a D2D1 shader (methods need to either be HLSL intrinsics or with source available for analysis)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidMethodCall = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidMethodCall = new(
         id: "CMPSD2D0040",
         title: "Invalid method invocation from a D2D1 shader",
         messageFormat: "The method {0} cannot be used in a D2D1 shader (methods need to either be HLSL intrinsics or with source available for analysis)",
@@ -580,7 +578,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} uses the invalid type {1}"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidDiscoveredType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidDiscoveredType = new(
         id: "CMPSD2D0041",
         title: "Invalid discovered type",
         messageFormat: "The D2D1 shader of type {0} uses the invalid type {1} (only some .NET primitives and vector types, HLSL primitive, vector and matrix types, and custom types containing these types can be used, and custom types containing these types can be used, and bool fields in custom struct types have to be replaced with the ComputeSharp.Bool type for alignment reasons)",
@@ -596,7 +594,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using some out of range input description indices"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor OutOfRangeInputDescriptionIndex = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor OutOfRangeInputDescriptionIndex = new(
         id: "CMPSD2D0042",
         title: "Out of range D2D1 shader input description indices",
         messageFormat: "The D2D1 shader of type {0} is using some out of range input description indices",
@@ -612,7 +610,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputDescription] attributes"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor RepeatedD2DInputDescriptionIndices = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RepeatedD2DInputDescriptionIndices = new(
         id: "CMPSD2D0043",
         title: "Repeated D2D1 shader input description indices",
         messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DInputDescription] attributes",
@@ -628,7 +626,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type (or assembly) {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidPackMatrixColumnMajorOption = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidPackMatrixColumnMajorOption = new(
         id: "CMPSD2D0044",
         title: "Invalid PackMatrixColumnMajor compile option",
         messageFormat: "The D2D1 shader of type (or assembly) {0} is using the PackMatrixColumnMajor option in its [D2DCompileOptions] attribute",
@@ -645,7 +643,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresScenePosition] attribute to be used (that is, D2D1.GetScenePosition() and D2D1.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingD2DRequiresScenePositionAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingD2DRequiresScenePositionAttribute = new(
         id: "CMPSD2D0045",
         title: "Missing [D2DRequiresScenePosition] attribute",
         messageFormat: "The D2D1 shader of type {0} is using D2D1 APIs that require the [D2DRequiresScenePosition] attribute to be used (that is, D2D.GetScenePosition() and D2D.SampleInputAtPosition(int, float2)), but the shader type is not annotated accordingly",
@@ -661,7 +659,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor ResourceTextureIndexOverlappingWithInputIndex = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor ResourceTextureIndexOverlappingWithInputIndex = new(
         id: "CMPSD2D0046",
         title: "D2D1 shader resource texture indices overlapping input indices",
         messageFormat: "The D2D1 shader of type {0} is using some resource texture indices that overlap with the shader input indices",
@@ -677,7 +675,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using some out of range resource texture indices"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor OutOfRangeResourceTextureIndex = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor OutOfRangeResourceTextureIndex = new(
         id: "CMPSD2D0047",
         title: "Out of range D2D1 shader resource texture indices",
         messageFormat: "The D2D1 shader of type {0} is using some out of range resource texture indices",
@@ -693,7 +691,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is using repeated indices for some of its [D2DResourceTextureIndex] attributes"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor RepeatedD2DResourceTextureIndices = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor RepeatedD2DResourceTextureIndices = new(
         id: "CMPSD2D0048",
         title: "Repeated D2D1 shader resource texture indices",
         messageFormat: "The D2D1 shader of type {0} is using repeated indices for some of its [D2DResourceTextureIndex] attributes",
@@ -709,7 +707,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeUse = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DResourceTextureIndexAttributeUse = new(
         id: "CMPSD2D0049",
         title: "Invalid [D2DResourceTextureIndex] use",
         messageFormat: """The field "{0}" (in type {1}) is using [D2DResourceTextureIndex] incorrectly (the attribute can only be used on D2D1 resource texture types, but the field is of type {2})""",
@@ -725,7 +723,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The field "{0}" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingD2DResourceTextureIndexAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingD2DResourceTextureIndexAttribute = new(
         id: "CMPSD2D0050",
         title: "Missing [D2DResourceTextureIndex] attribute",
         messageFormat: """The field "{0}" (in type {1}) is of a D2D1 resource texture type but is missing the [D2DResourceTextureIndex] attribute""",
@@ -741,7 +739,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The field "{0}" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidResourceTextureElementType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidResourceTextureElementType = new(
         id: "CMPSD2D0051",
         title: "Invalid D2D1 resource texture element type",
         messageFormat: """The field "{0}" (in type {1}) using a D2D1 resource texture of type {2} has an invalid element type (only float and float4 type arguments are supported)""",
@@ -757,7 +755,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSource = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSource = new(
         id: "CMPSD2D0052",
         title: "Invalid [D2DPixelShaderSource] HLSL source argument",
         messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] with an invalid HLSL source argument""",
@@ -773,7 +771,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"Compiling the HLSL source for method "{1}" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: "{3}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithWin32Exception = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithWin32Exception = new(
         id: "CMPSD2D0053",
         title: "D2D shader compilation failed due to Win32 exception",
         messageFormat: """Compiling the HLSL source for method "{1}" (in type {0}) failed due to a Win32 exception (HRESULT: {2:X8}, Message: "{3}")""",
@@ -789,7 +787,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"Compiling the HLSL source for method "{1}" (in type {0}) failed due to an HLSL compiler error (Message: "{2}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithFxcCompilationException = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor D2DPixelShaderSourceCompilationFailedWithFxcCompilationException = new(
         id: "CMPSD2D0054",
         title: "D2D shader compilation failed due to an HLSL compiler error",
         messageFormat: """Compiling the HLSL source for method "{1}" (in type {0}) failed due to an HLSL compiler error (Message: "{2}")""",
@@ -805,7 +803,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingShaderProfileForD2DPixelShaderSource = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingShaderProfileForD2DPixelShaderSource = new(
         id: "CMPSD2D0055",
         title: "Missing shader profile for D2D pixel shader source",
         messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the shader profile to use""",
@@ -821,7 +819,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingCompileOptionsForD2DPixelShaderSource = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingCompileOptionsForD2DPixelShaderSource = new(
         id: "CMPSD2D0056",
         title: "Missing compile options for D2D pixel shader source",
         messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has not specified the compile options to use""",
@@ -837,7 +835,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan&lt;byte&gt;)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSourceMethodReturnType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DPixelShaderSourceMethodReturnType = new(
         id: "CMPSD2D0057",
         title: "Missing compile options for D2D pixel shader source",
         messageFormat: """The method "{0}" (in type {1}) is using [D2DPixelShaderSource] but has an invalid return type {2} (it must return a ReadOnlySpan<byte>)""",
@@ -853,7 +851,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} is not annotated with the [D2DInputCount] attribute (it is mandatory for all D2D1 shader types)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingD2DInputCountAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingD2DInputCountAttribute = new(
         id: "CMPSD2D0058",
         title: "Missing [D2DResourceTextureIndex] attribute",
         messageFormat: "The D2D1 shader of type {0} is not annotated with the [D2DInputCount] attribute (it is mandatory for all D2D1 shader types)",
@@ -869,7 +867,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DEffectId] attribute is being used with an invalid value (the input text must be a valid GUID)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DEffectIdAttributeValue = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DEffectIdAttributeValue = new(
         id: "CMPSD2D0059",
         title: "Invalid [D2DEffectId] attribute value",
         messageFormat: "The [D2DEffectId] attribute is being used with an invalid value (the input text must be a valid GUID)",
@@ -885,7 +883,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DEffectDisplayName] attribute is being used with an invalid value"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DEffectDisplayNameAttributeValue = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DEffectDisplayNameAttributeValue = new(
         id: "CMPSD2D0060",
         title: "Invalid [D2DEffectDisplayName] attribute value",
         messageFormat: "The [D2DEffectDisplayName] attribute is being used with an invalid value",
@@ -901,7 +899,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DEffectDescription] attribute is being used with an invalid value"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DEffectDescriptionAttributeValue = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DEffectDescriptionAttributeValue = new(
         id: "CMPSD2D0061",
         title: "Invalid [D2DEffectDescription] attribute value",
         messageFormat: "The [D2DEffectDescription] attribute is being used with an invalid value",
@@ -917,7 +915,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DEffectDescription] attribute is being used with an invalid value"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DEffectCategoryAttributeValue = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DEffectCategoryAttributeValue = new(
         id: "CMPSD2D0062",
         title: "Invalid [D2DEffectCategory] attribute value",
         messageFormat: "The [D2DEffectCategory] attribute is being used with an invalid value",
@@ -933,7 +931,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DEffectAuthor] attribute is being used with an invalid value"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DEffectAuthorAttributeValue = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DEffectAuthorAttributeValue = new(
         id: "CMPSD2D0063",
         title: "Invalid [D2DEffectAuthor] attribute value",
         messageFormat: "The [D2DEffectAuthor] attribute is being used with an invalid value",
@@ -949,7 +947,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"Unsafe blocks must be enabled for the source generators to emit valid code (add &lt;AllowUnsafeBlocks&gt;true&lt;/AllowUnsafeBlocks&gt; to your .csproj/.props file)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingAllowUnsafeBlocksOption = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingAllowUnsafeBlocksOption = new(
         id: "CMPSD2D0064",
         title: "Missing 'AllowUnsafeBlocks' compilation option",
         messageFormat: "Unsafe blocks must be enabled for the source generators to emit valid code (add <AllowUnsafeBlocks>true</AllowUnsafeBlocks> to your .csproj/.props file)",
@@ -966,7 +964,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The D2D1 shader of type {0} does not have an associated descriptor (it can be autogenerated via the [D2DGeneratedPixelShaderDescriptor] attribute)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingPixelShaderDescriptorOnPixelShaderType = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor MissingPixelShaderDescriptorOnPixelShaderType = new(
         id: MissingPixelShaderDescriptorOnPixelShaderTypeId,
         title: "Missing descriptor for D2D1 pixel shader type",
         messageFormat: "The D2D1 shader of type {0} does not have an associated descriptor (it can be autogenerated via the [D2DGeneratedPixelShaderDescriptor] attribute)",
@@ -983,7 +981,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only types implementing the ID2D1PixelShader interface are valid)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidD2DGeneratedPixelShaderDescriptorAttributeTarget = new(
         id: "CMPSD2D0066",
         title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
         messageFormat: "The type {0} is not a valid target for the [D2DGeneratedPixelShaderDescriptor] attribute (only types implementing ID2D1PixelShader interface are valid)",
@@ -999,9 +997,9 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DGeneratedPixelShaderDescriptor] attribute requires target types to be accessible from their containing assembly (type {0} has less effective accessibility than internal)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor NotAccessibleTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor NotAccessibleTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new(
         id: "CMPSD2D0067",
-        title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
+        title: "Not accessible type using the [D2DGeneratedPixelShaderDescriptor] attribute",
         messageFormat: "The [D2DGeneratedPixelShaderDescriptor] attribute requires target types to be accessible from their containing assembly (type {0} has less effective accessibility than internal)",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -1015,9 +1013,9 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor NotAccessibleFieldTypeInTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor NotAccessibleFieldTypeInTargetTypeForD2DGeneratedPixelShaderDescriptorAttribute = new(
         id: "CMPSD2D0068",
-        title: "Invalid [D2DGeneratedPixelShaderDescriptor] attribute target",
+        title: "Not accessible field type in type using the [D2DGeneratedPixelShaderDescriptor] attribute",
         messageFormat: """The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly (type {0} has a field "{1}" of type {2} that has less effective accessibility than internal)""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
