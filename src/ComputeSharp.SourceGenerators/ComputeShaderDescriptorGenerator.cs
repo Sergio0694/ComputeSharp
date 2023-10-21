@@ -174,8 +174,9 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
             ConstantBufferSyntaxProcessor.RegisterAdditionalTypesSyntax(GeneratorName, BindingDirection.OneWay, item, additionalTypes, usingDirectives);
+            Resources.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
             ResourceDescriptorRanges.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
-            HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            HlslBytecode.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();
 

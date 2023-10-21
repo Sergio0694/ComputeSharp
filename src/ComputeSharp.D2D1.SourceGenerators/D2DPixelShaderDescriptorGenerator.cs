@@ -236,9 +236,9 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
             ConstantBufferSyntaxProcessor.RegisterAdditionalTypesSyntax(GeneratorName, BindingDirection.TwoWay, item, additionalTypes, usingDirectives);
-            InputDescriptions.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
-            InputTypes.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
-            HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            InputDescriptions.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
+            InputTypes.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
+            HlslBytecode.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();
 
