@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
+  </PropertyGroup>
+
+  <!-- NativeAOT configuration (same as in ComputeSharp.NativeLibrary, see notes there) -->
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <OptimizationPreference>Size</OptimizationPreference>
+    <StackTraceSupport>false</StackTraceSupport>
+    <IlcFoldIdenticalMethodBodies>false</IlcFoldIdenticalMethodBodies>
+    <IlcDisableReflection>false</IlcDisableReflection>
+    <IlcGenerateMstatFile>false</IlcGenerateMstatFile>
+    <IlcGenerateDgmlFile>false</IlcGenerateDgmlFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.Core\ComputeSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1.SourceGenerators\ComputeSharp.D2D1.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.D2D1\ComputeSharp.D2D1.csproj" />
+  </ItemGroup>
+</Project>
