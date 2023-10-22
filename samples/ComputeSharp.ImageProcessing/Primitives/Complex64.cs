@@ -11,28 +11,19 @@ namespace SixLabors.ImageSharp;
 /// <remarks>
 /// This is a more efficient version of the <see cref="Complex64"/> type.
 /// </remarks>
-internal readonly struct Complex64
+/// <param name="real">The real part in the complex number.</param>
+/// <param name="imaginary">The imaginary part in the complex number.</param>
+internal readonly struct Complex64(float real, float imaginary)
 {
     /// <summary>
     /// The real part of the complex number.
     /// </summary>
-    public readonly float Real;
+    public readonly float Real = real;
 
     /// <summary>
     /// The imaginary part of the complex number.
     /// </summary>
-    public readonly float Imaginary;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Complex64"/> struct.
-    /// </summary>
-    /// <param name="real">The real part in the complex number.</param>
-    /// <param name="imaginary">The imaginary part in the complex number.</param>
-    public Complex64(float real, float imaginary)
-    {
-        this.Real = real;
-        this.Imaginary = imaginary;
-    }
+    public readonly float Imaginary = imaginary;
 
     /// <summary>
     /// Performs the multiplication operation between a <see cref="Complex64"/> instance and a <see cref="float"/> scalar.

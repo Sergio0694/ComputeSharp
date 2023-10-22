@@ -56,27 +56,14 @@ internal abstract class PixelShaderEffect : CanvasEffect
     /// An effect for an animated pixel shader.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to render.</typeparam>
-    public sealed class For<T> : PixelShaderEffect
+    /// <param name="factory">The input <typeparamref name="T"/> factory.</param>
+    public sealed class For<T>(For<T>.Factory factory) : PixelShaderEffect
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
         /// <summary>
         /// The <see cref="PixelShaderEffect{T}"/> node in use.
         /// </summary>
         private static readonly EffectNode<PixelShaderEffect<T>> Effect = new();
-
-        /// <summary>
-        /// The <typeparamref name="T"/> factory to use.
-        /// </summary>
-        private readonly Factory factory;
-
-        /// <summary>
-        /// Creates a new <see cref="For{T}"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="factory">The input <typeparamref name="T"/> factory.</param>
-        public For(Factory factory)
-        {
-            this.factory = factory;
-        }
 
         /// <inheritdoc/>
         protected override void BuildEffectGraph(EffectGraph effectGraph)
@@ -87,7 +74,7 @@ internal abstract class PixelShaderEffect : CanvasEffect
         /// <inheritdoc/>
         protected override void ConfigureEffectGraph(EffectGraph effectGraph)
         {
-            effectGraph.GetNode(Effect).ConstantBuffer = this.factory(ElapsedTime, ScreenWidth, ScreenHeight);
+            effectGraph.GetNode(Effect).ConstantBuffer = factory(ElapsedTime, ScreenWidth, ScreenHeight);
         }
 
         /// <summary>

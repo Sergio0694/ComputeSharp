@@ -5,20 +5,12 @@ namespace ComputeSharp.Tests.Attributes;
 /// <summary>
 /// An attribute to use with <see cref="CombinatorialTestMethodAttribute"/> adding arbitrary input data.
 /// </summary>
+/// <param name="data">The input data.</param>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public sealed class DataAttribute : Attribute
+public sealed class DataAttribute(params object[] data) : Attribute
 {
-    /// <summary>
-    /// Creates a new <see cref="DataAttribute"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="data">The input data.</param>
-    public DataAttribute(params object[] data)
-    {
-        Data = data;
-    }
-
     /// <summary>
     /// Gets the input data for the current attribute.
     /// </summary>
-    public object[] Data { get; }
+    public object[] Data => data;
 }
