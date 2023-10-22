@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.SourceGeneration.Helpers;
@@ -64,7 +63,7 @@ internal struct ImmutableHashSetBuilder<T> : IDisposable
     /// <inheritdoc cref="ImmutableArray{T}.Builder.ToImmutable"/>
     public readonly ImmutableArray<T> ToImmutable()
     {
-        T[] array = this.set!.ToArray();
+        T[] array = [.. this.set!];
 
         return Unsafe.As<T[], ImmutableArray<T>>(ref array);
     }
@@ -72,7 +71,7 @@ internal struct ImmutableHashSetBuilder<T> : IDisposable
     /// <inheritdoc cref="ImmutableArray{T}.Builder.ToArray"/>
     public readonly T[] ToArray()
     {
-        return this.set!.ToArray();
+        return [.. this.set!];
     }
 
     /// <inheritdoc/>
