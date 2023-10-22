@@ -140,8 +140,8 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
               channelDepth,
               filter,
               extendModes,
-              ReadOnlySpan<byte>.Empty,
-              ReadOnlySpan<uint>.Empty)
+              [],
+              [])
     {
     }
 
@@ -180,8 +180,8 @@ public sealed unsafe class D2D1ResourceTextureManager : ICustomQueryInterface
               channelDepth,
               filter,
               extendModes,
-              ReadOnlySpan<byte>.Empty,
-              ReadOnlySpan<uint>.Empty)
+              [],
+              [])
     {
     }
 

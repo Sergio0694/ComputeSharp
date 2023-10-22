@@ -121,7 +121,7 @@ internal sealed unsafe class DxcShaderCompiler
                 pEntryPoint: "Execute",
                 pTargetProfile: "cs_6_0",
                 pArguments: arguments.AsSpan(0, 3),
-                pDefines: ReadOnlySpan<DxcDefine>.Empty,
+                pDefines: [],
                 pIncludeHandler: this.dxcIncludeHandler.Get(),
                 ppResult: dxcOperationResult.GetAddressOf());
 

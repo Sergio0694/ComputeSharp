@@ -158,8 +158,8 @@ public partial class D2D1ResourceTextureManagerTests
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
             extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
-            data: ReadOnlySpan<byte>.Empty,
-            strides: ReadOnlySpan<uint>.Empty);
+            data: [],
+            strides: []);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -596,7 +596,7 @@ public partial class D2D1ResourceTextureManagerTests
         resourceTextureManager.Update(
             minimumExtents: stackalloc uint[] { (uint)startOffset },
             maximimumExtents: stackalloc uint[] { (uint)(startOffset + updateLength) },
-            strides: ReadOnlySpan<uint>.Empty,
+            strides: [],
             data: data);
 
         data.CopyTo(texture.AsSpan(startOffset));

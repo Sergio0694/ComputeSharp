@@ -379,7 +379,7 @@ public sealed partial class BokehBlurEffect
                     filter: D2D1Filter.MinMagMipPoint,
                     extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
                     data: MemoryMarshal.AsBytes(this.kernels[i].Real.AsSpan()),
-                    strides: ReadOnlySpan<uint>.Empty);
+                    strides: []);
 
                 // Also create the one for the imaginary kernel
                 D2D1ResourceTextureManager kernelImaginary = new(
@@ -389,7 +389,7 @@ public sealed partial class BokehBlurEffect
                     filter: D2D1Filter.MinMagMipPoint,
                     extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
                     data: MemoryMarshal.AsBytes(this.kernels[i].Imaginary.AsSpan()),
-                    strides: ReadOnlySpan<uint>.Empty);
+                    strides: []);
 
                 kernels[i] = (kernelReals, kernelImaginary);
             }

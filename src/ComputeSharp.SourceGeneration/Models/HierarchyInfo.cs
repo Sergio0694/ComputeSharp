@@ -143,7 +143,7 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
     /// <returns>A <see cref="CompilationUnitSyntax"/> instance for the current hierarchy.</returns>
     public CompilationUnitSyntax GetSyntax(params MemberDeclarationSyntax[] memberDeclarations)
     {
-        return GetSyntax(memberDeclarations, Array.Empty<MemberDeclarationSyntax>());
+        return GetSyntax(memberDeclarations, []);
     }
 
     /// <summary>

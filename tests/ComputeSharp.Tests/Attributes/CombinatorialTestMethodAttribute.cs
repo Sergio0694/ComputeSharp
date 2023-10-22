@@ -33,7 +33,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
         }
         else
         {
-            devices = Array.Empty<Device>();
+            devices = [];
         }
 
         Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
@@ -272,6 +272,6 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
     /// <inheritdoc/>
     string? ITestDataSource.GetDisplayName(MethodInfo methodInfo, object?[]? data)
     {
-        return $"{methodInfo.Name} ({string.Join(", ", data ?? Array.Empty<object?>())})";
+        return $"{methodInfo.Name} ({string.Join(", ", data ?? [])})";
     }
 }

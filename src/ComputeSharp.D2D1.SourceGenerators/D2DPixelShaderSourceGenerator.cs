@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using ComputeSharp.D2D1.SourceGenerators.Models;
@@ -94,7 +93,7 @@ public sealed partial class D2DPixelShaderSourceGenerator : IIncrementalGenerato
             item.Hierarchy.WriteSyntax(
                 state: item,
                 writer: writer,
-                baseTypes: ReadOnlySpan<string>.Empty,
+                baseTypes: [],
                 memberCallbacks: new IndentedTextWriter.Callback<D2D1PixelShaderSourceInfo>[] { Execute.WriteSyntax });
 
             context.AddSource($"{item.Hierarchy.FullyQualifiedMetadataName}.{item.MethodName}.g.cs", writer.ToString());
