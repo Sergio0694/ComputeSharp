@@ -16,7 +16,7 @@ public sealed partial class MainWindow : Window
     /// <summary>
     /// The mapping of currently alive shader panels.
     /// </summary>
-    private readonly ConditionalWeakTable<AnimatedComputeShaderPanel, object?> shaderPanels = new();
+    private readonly ConditionalWeakTable<AnimatedComputeShaderPanel, object?> shaderPanels = [];
 
     public MainWindow()
     {

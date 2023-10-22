@@ -170,7 +170,7 @@ public sealed unsafe partial class GraphicsDevice : IReferenceTrackedObject
         IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
 
         this.deviceRemovedReason = S.S_OK;
-        this.cachedPipelineData = new List<PipelineData>();
+        this.cachedPipelineData = [];
 
         RegisterDeviceLostCallback(this, out this.deviceHandle, out this.deviceRemovedEvent, out this.deviceRemovedWaitHandle);
     }

@@ -166,7 +166,7 @@ internal static partial class HlslKnownMethods
     {
         ILookup<string, MethodInfo> methodsLookup = typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static).ToLookup(static method => method.Name);
 
-        Dictionary<string, string> knownMethods = new();
+        Dictionary<string, string> knownMethods = [];
 
         // Go through the previously discovered methods to find the ones requiring parameters mapping
         foreach (KeyValuePair<string, string> pair in KnownMethods)

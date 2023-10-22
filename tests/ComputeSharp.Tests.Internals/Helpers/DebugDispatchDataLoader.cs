@@ -17,7 +17,7 @@ internal struct DebugDispatchDataLoader : IConstantBufferLoader, IGraphicsResour
     /// <summary>
     /// The list of loaded resources.
     /// </summary>
-    private readonly List<(IGraphicsResource Resource, uint Index)> graphicsResources = new();
+    private readonly List<(IGraphicsResource Resource, uint Index)> graphicsResources = [];
 
     /// <summary>
     /// Creates a new <see cref="DebugDispatchDataLoader"/> instance.

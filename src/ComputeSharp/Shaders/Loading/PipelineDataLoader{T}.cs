@@ -19,7 +19,7 @@ internal static unsafe class PipelineDataLoader<T>
     /// <summary>
     /// The map of cached <see cref="PipelineData"/> instances for each GPU in use.
     /// </summary>
-    private static readonly ConditionalWeakTable<GraphicsDevice, PipelineData> CachedPipelines = new();
+    private static readonly ConditionalWeakTable<GraphicsDevice, PipelineData> CachedPipelines = [];
 
     /// <summary>
     /// Gets the <see cref="PipelineData"/> instance for a given shader.

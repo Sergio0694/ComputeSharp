@@ -24,7 +24,7 @@ public class DeviceLostTests
         {
             GraphicsDeviceHelper.GetD3D12Device(graphicsDevice, in d3D12Device);
 
-            List<(object? Sender, DeviceLostEventArgs Args)> args = new();
+            List<(object? Sender, DeviceLostEventArgs Args)> args = [];
 
             // Register the device lost callback
             graphicsDevice.DeviceLost += (s, e) => args.Add((s, e));

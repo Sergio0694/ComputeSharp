@@ -12,7 +12,7 @@ internal sealed class SemanticModelProvider(Compilation compilation)
     /// <summary>
     /// The map of loaded <see cref="SemanticModel"/> instances.
     /// </summary>
-    private readonly Dictionary<SyntaxTree, SemanticModel> semanticModelsMap = new();
+    private readonly Dictionary<SyntaxTree, SemanticModel> semanticModelsMap = [];
 
     /// <summary>
     /// Gets a <see cref="SemanticModel"/> instance with info on a given <see cref="SyntaxNode"/>.

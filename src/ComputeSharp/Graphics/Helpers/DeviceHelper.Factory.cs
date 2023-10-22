@@ -14,12 +14,12 @@ unsafe partial class DeviceHelper
     /// <summary>
     /// The local cache of <see cref="GraphicsDevice"/> instances that are currently usable.
     /// </summary>
-    internal static readonly Dictionary<Luid, GraphicsDevice> DevicesCache = new();
+    internal static readonly Dictionary<Luid, GraphicsDevice> DevicesCache = [];
 
     /// <summary>
     /// The local map of <see cref="ID3D12InfoQueue"/> instances for the existing devices.
     /// </summary>
-    private static readonly Dictionary<Luid, ComPtr<ID3D12InfoQueue>> D3D12InfoQueueMap = new();
+    private static readonly Dictionary<Luid, ComPtr<ID3D12InfoQueue>> D3D12InfoQueueMap = [];
 
     /// <summary>
     /// The cached default <see cref="GraphicsDevice"/> instance, if any.

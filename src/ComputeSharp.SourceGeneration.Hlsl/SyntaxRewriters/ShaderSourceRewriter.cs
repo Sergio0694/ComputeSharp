@@ -87,8 +87,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
-        this.localFunctions = new();
-        this.implicitVariables = new();
+        this.localFunctions = [];
+        this.implicitVariables = [];
         this.isEntryPoint = isEntryPoint;
     }
 
@@ -112,8 +112,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     {
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
-        this.implicitVariables = new();
-        this.localFunctions = new();
+        this.implicitVariables = [];
+        this.localFunctions = [];
     }
 
     /// <summary>

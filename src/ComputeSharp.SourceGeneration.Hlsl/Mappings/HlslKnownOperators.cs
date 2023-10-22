@@ -21,7 +21,7 @@ internal static partial class HlslKnownOperators
     /// </summary>
     private static IReadOnlyDictionary<string, string> BuildKnownOperatorsMap()
     {
-        Dictionary<string, string> knownOperators = new();
+        Dictionary<string, string> knownOperators = [];
 
         // Programmatically load mappings for the intrinsic operators on each HLSL primitive type
         foreach ((Type Type, MethodInfo Operator, string IntrinsicName, bool RequiresParametersMatching) item in

@@ -17,7 +17,7 @@ public abstract partial class CanvasEffect : ICanvasImage, ICanvasImageInterop.I
     /// <remarks>
     /// When not empty (ie. when an effect graph has been built), this will always also include <see cref="canvasImage"/>.
     /// </remarks>
-    private readonly Dictionary<object, ICanvasImage> transformNodes = new();
+    private readonly Dictionary<object, ICanvasImage> transformNodes = [];
 
     /// <summary>
     /// The current cached result for <see cref="GetCanvasImage"/>, if available.
