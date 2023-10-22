@@ -10,7 +10,7 @@ using ComputeSharp.Win32;
 using static ComputeSharp.Win32.D3D12_FEATURE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
-#pragma warning disable CA1063
+#pragma warning disable CA1063, CA2213
 
 namespace ComputeSharp.Resources;
 
@@ -147,21 +147,13 @@ public abstract unsafe partial class TransferBuffer<T> : IReferenceTrackedObject
     /// <summary>
     /// A <see cref="MemoryManager{T}"/> implementation wrapping a <see cref="TransferBuffer{T}"/> instance.
     /// </summary>
-    private sealed class MemoryManager : MemoryManager<T>
+    /// <param name="buffer">The <see cref="TransferBuffer{T}"/> in use.</param>
+    private sealed class MemoryManager(TransferBuffer<T> buffer) : MemoryManager<T>
     {
         /// <summary>
         /// The <see cref="TransferBuffer{T}"/> in use.
         /// </summary>
-        private readonly TransferBuffer<T> buffer;
-
-        /// <summary>
-        /// Creates a new <see cref="MemoryManager"/> instance for a given buffer.
-        /// </summary>
-        /// <param name="buffer">The <see cref="TransferBuffer{T}"/> in use.</param>
-        public MemoryManager(TransferBuffer<T> buffer)
-        {
-            this.buffer = buffer;
-        }
+        private readonly TransferBuffer<T> buffer = buffer;
 
         /// <inheritdoc/>
         public override Memory<T> Memory

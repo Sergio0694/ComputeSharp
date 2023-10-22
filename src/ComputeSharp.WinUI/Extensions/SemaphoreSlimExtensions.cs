@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, IDE0290
 
 namespace ComputeSharp.WinUI.Extensions;
 

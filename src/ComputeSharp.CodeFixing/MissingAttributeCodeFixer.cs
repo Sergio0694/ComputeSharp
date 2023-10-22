@@ -184,22 +184,9 @@ public abstract class MissingAttributeCodeFixer : CodeFixProvider
     /// <summary>
     /// A custom <see cref="FixAllProvider"/> with the logic from <see cref="MissingAttributeCodeFixer"/>.
     /// </summary>
-    private sealed class FixAllProvider : DocumentBasedFixAllProvider
+    /// <param name="codeFixer">The owning <see cref="MissingAttributeCodeFixer"/> instance.</param>
+    private sealed class FixAllProvider(MissingAttributeCodeFixer codeFixer) : DocumentBasedFixAllProvider
     {
-        /// <summary>
-        /// The owning <see cref="MissingAttributeCodeFixer"/> instance.
-        /// </summary>
-        private readonly MissingAttributeCodeFixer codeFixer;
-
-        /// <summary>
-        /// Creates a new <see cref="FixAllProvider"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="codeFixer">The owning <see cref="MissingAttributeCodeFixer"/> instance.</param>
-        public FixAllProvider(MissingAttributeCodeFixer codeFixer)
-        {
-            this.codeFixer = codeFixer;
-        }
-
         /// <inheritdoc/>
         protected override async Task<Document?> FixAllAsync(FixAllContext fixAllContext, Document document, ImmutableArray<Diagnostic> diagnostics)
         {
@@ -220,7 +207,7 @@ public abstract class MissingAttributeCodeFixer : CodeFixProvider
                 }
 
                 // Get the syntax node with the updated declaration
-                SyntaxNode updatedStructDeclaration = await this.codeFixer.AddMissingAttribute(
+                SyntaxNode updatedStructDeclaration = await codeFixer.AddMissingAttribute(
                     document,
                     structDeclaration,
                     fixAllContext.CancellationToken);

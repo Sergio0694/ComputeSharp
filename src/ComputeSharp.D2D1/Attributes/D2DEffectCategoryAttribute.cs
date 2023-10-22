@@ -8,20 +8,12 @@ namespace ComputeSharp.D2D1;
 /// <remarks>
 /// This only applies to effects created from <see cref="Interop.D2D1PixelShaderEffect"/>.
 /// </remarks>
+/// <param name="value">The value for the category.</param>
 [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly, AllowMultiple = false)]
-public sealed class D2DEffectCategoryAttribute : Attribute
+public sealed class D2DEffectCategoryAttribute(string value) : Attribute
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="D2DEffectCategoryAttribute"/> type with the specified arguments.
-    /// </summary>
-    /// <param name="value">The value for the category.</param>
-    public D2DEffectCategoryAttribute(string value)
-    {
-        Value = value;
-    }
-
     /// <summary>
     /// Gets the category value.
     /// </summary>
-    public string Value { get; }
+    public string Value => value;
 }

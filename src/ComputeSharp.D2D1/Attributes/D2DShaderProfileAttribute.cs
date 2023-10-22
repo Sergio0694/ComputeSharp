@@ -24,20 +24,12 @@ namespace ComputeSharp.D2D1;
 /// This attribute can also be added to a whole assembly, and will be used by default if not overridden by a shader type.
 /// </para>
 /// </summary>
+/// <param name="shaderProfile">The target shader profile to use to compile the shader.</param>
 [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Assembly | AttributeTargets.Method, AllowMultiple = false)]
-public sealed class D2DShaderProfileAttribute : Attribute
+public sealed class D2DShaderProfileAttribute(D2D1ShaderProfile shaderProfile) : Attribute
 {
-    /// <summary>
-    /// Creates a new <see cref="D2DShaderProfileAttribute"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="shaderProfile">The target shader profile to use to compile the shader.</param>
-    public D2DShaderProfileAttribute(D2D1ShaderProfile shaderProfile)
-    {
-        ShaderProfile = shaderProfile;
-    }
-
     /// <summary>
     /// The shader profile used to compile the annotated D2D1 pixel shader.
     /// </summary>
-    public D2D1ShaderProfile ShaderProfile { get; }
+    public D2D1ShaderProfile ShaderProfile => shaderProfile;
 }

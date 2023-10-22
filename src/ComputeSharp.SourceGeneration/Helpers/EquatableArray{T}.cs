@@ -34,22 +34,14 @@ internal static class EquatableArray
 /// An imutable, equatable array. This is equivalent to <see cref="ImmutableArray{T}"/> but with value equality support.
 /// </summary>
 /// <typeparam name="T">The type of values in the array.</typeparam>
-internal readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnumerable<T>
+/// <param name="array">The input <see cref="ImmutableArray{T}"/> to wrap.</param>
+internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable<EquatableArray<T>>, IEnumerable<T>
     where T : IEquatable<T>
 {
     /// <summary>
     /// The underlying <typeparamref name="T"/> array.
     /// </summary>
-    private readonly T[]? array;
-
-    /// <summary>
-    /// Creates a new <see cref="EquatableArray{T}"/> instance.
-    /// </summary>
-    /// <param name="array">The input <see cref="ImmutableArray{T}"/> to wrap.</param>
-    public EquatableArray(ImmutableArray<T> array)
-    {
-        this.array = Unsafe.As<ImmutableArray<T>, T[]?>(ref array);
-    }
+    private readonly T[]? array = Unsafe.As<ImmutableArray<T>, T[]?>(ref array);
 
     /// <summary>
     /// Gets a reference to an item at a specified position within the array.

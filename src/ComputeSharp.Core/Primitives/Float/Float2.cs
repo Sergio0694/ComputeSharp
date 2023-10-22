@@ -1,6 +1,6 @@
 using System.Numerics;
 
-#pragma warning disable CS0660, CS0661
+#pragma warning disable CS0660, CS0661, IDE0290
 
 namespace ComputeSharp;
 

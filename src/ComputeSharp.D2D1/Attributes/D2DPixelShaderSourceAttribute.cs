@@ -32,20 +32,12 @@ namespace ComputeSharp.D2D1;
 /// to further customize the shader profile to use when compiling the HLSL source, and the compile options to use.
 /// </para>
 /// </summary>
+/// <param name="hlslSource">The number of texture inputs for the shader.</param>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public sealed class D2DPixelShaderSourceAttribute : Attribute
+public sealed class D2DPixelShaderSourceAttribute([StringSyntax("Hlsl")] string hlslSource) : Attribute
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="D2DPixelShaderSourceAttribute"/> type with the specified arguments.
-    /// </summary>
-    /// <param name="hlslSource">The number of texture inputs for the shader.</param>
-    public D2DPixelShaderSourceAttribute([StringSyntax("Hlsl")] string hlslSource)
-    {
-        HlslSource = hlslSource;
-    }
-
     /// <summary>
     /// Gets the number of texture inputs for the shader.
     /// </summary>
-    public string HlslSource { get; }
+    public string HlslSource => hlslSource;
 }

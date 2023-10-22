@@ -10,27 +10,13 @@ namespace ComputeSharp.Graphics.Commands.Interop;
 /// <summary>
 /// A type that acts as a pool to get new <see cref="ID3D12CommandList"/> instances wheen needed.
 /// </summary>
-internal readonly unsafe struct ID3D12CommandListPool : IDisposable
+/// <param name="d3D12CommandListType">The command list type to use.</param>
+internal readonly unsafe struct ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE d3D12CommandListType) : IDisposable
 {
-    /// <summary>
-    /// The command list type being used by the current instance.
-    /// </summary>
-    private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
-
     /// <summary>
     /// The queue of <see cref="D3D12CommandListBundle"/> items with the available command lists.
     /// </summary>
-    private readonly Queue<D3D12CommandListBundle> d3D12CommandListBundleQueue;
-
-    /// <summary>
-    /// Creates a new <see cref="ID3D12CommandListPool"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="d3D12CommandListType">The command list type to use.</param>
-    public ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE d3D12CommandListType)
-    {
-        this.d3D12CommandListType = d3D12CommandListType;
-        this.d3D12CommandListBundleQueue = new Queue<D3D12CommandListBundle>();
-    }
+    private readonly Queue<D3D12CommandListBundle> d3D12CommandListBundleQueue = new();
 
     /// <summary>
     /// Rents a <see cref="ID3D12GraphicsCommandList"/> and <see cref="ID3D12CommandAllocator"/> pair.
@@ -107,8 +93,8 @@ internal readonly unsafe struct ID3D12CommandListPool : IDisposable
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void CreateCommandListAndAllocator(ID3D12Device* d3D12Device, ID3D12PipelineState* d3D12PipelineState, out ID3D12GraphicsCommandList* d3D12CommandList, out ID3D12CommandAllocator* d3D12CommandAllocator)
     {
-        using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocatorComPtr = d3D12Device->CreateCommandAllocator(this.d3D12CommandListType);
-        using ComPtr<ID3D12GraphicsCommandList> d3D12CommandListComPtr = d3D12Device->CreateCommandList(this.d3D12CommandListType, d3D12CommandAllocatorComPtr.Get(), d3D12PipelineState);
+        using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocatorComPtr = d3D12Device->CreateCommandAllocator(d3D12CommandListType);
+        using ComPtr<ID3D12GraphicsCommandList> d3D12CommandListComPtr = d3D12Device->CreateCommandList(d3D12CommandListType, d3D12CommandAllocatorComPtr.Get(), d3D12PipelineState);
 
         fixed (ID3D12GraphicsCommandList** d3D12CommandListPtr = &d3D12CommandList)
         fixed (ID3D12CommandAllocator** d3D12CommandAllocatorPtr = &d3D12CommandAllocator)
@@ -121,27 +107,18 @@ internal readonly unsafe struct ID3D12CommandListPool : IDisposable
     /// <summary>
     /// A type representing a bundle of a cached command list and related allocator.
     /// </summary>
-    private readonly struct D3D12CommandListBundle
+    /// <param name="d3D12CommandList">The <see cref="ID3D12GraphicsCommandList"/> value to wrap.</param>
+    /// <param name="d3D12CommandAllocator">The <see cref="ID3D12CommandAllocator"/> value to wrap.</param>
+    private readonly struct D3D12CommandListBundle(ID3D12GraphicsCommandList* d3D12CommandList, ID3D12CommandAllocator* d3D12CommandAllocator)
     {
         /// <summary>
         /// The <see cref="ID3D12GraphicsCommandList"/> value for the current entry.
         /// </summary>
-        public readonly ID3D12GraphicsCommandList* D3D12CommandList;
+        public readonly ID3D12GraphicsCommandList* D3D12CommandList = d3D12CommandList;
 
         /// <summary>
         /// The <see cref="ID3D12CommandAllocator"/> value for the current entry.
         /// </summary>
-        public readonly ID3D12CommandAllocator* D3D12CommandAllocator;
-
-        /// <summary>
-        /// Creates a new <see cref="D3D12CommandListBundle"/> instance with the given parameters.
-        /// </summary>
-        /// <param name="d3D12CommandList">The <see cref="ID3D12GraphicsCommandList"/> value to wrap.</param>
-        /// <param name="d3D12CommandAllocator">The <see cref="ID3D12CommandAllocator"/> value to wrap.</param>
-        public D3D12CommandListBundle(ID3D12GraphicsCommandList* d3D12CommandList, ID3D12CommandAllocator* d3D12CommandAllocator)
-        {
-            this.D3D12CommandList = d3D12CommandList;
-            this.D3D12CommandAllocator = d3D12CommandAllocator;
-        }
+        public readonly ID3D12CommandAllocator* D3D12CommandAllocator = d3D12CommandAllocator;
     }
 }

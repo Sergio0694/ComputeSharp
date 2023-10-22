@@ -10,20 +10,12 @@ namespace ComputeSharp.D2D1;
 /// <para>This attribute directly maps to <c>#define D2D_INPUT&lt;N&gt;_SIMPLE</c>.</para>
 /// <para>For more info, see <see href="https://docs.microsoft.com/en-us/windows/win32/direct2d/hlsl-helpers"/>.</para>
 /// </remarks>
+/// <param name="index">The index of the resource to declare as using simple sampling.</param>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = true)]
-public sealed class D2DInputSimpleAttribute : Attribute
+public sealed class D2DInputSimpleAttribute(int index) : Attribute
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="D2DInputSimpleAttribute"/> type with the specified arguments.
-    /// </summary>
-    /// <param name="index">The index of the resource to declare as using simple sampling.</param>
-    public D2DInputSimpleAttribute(int index)
-    {
-        Index = index;
-    }
-
     /// <summary>
     /// Gets the index of the resource declared as using simple sampling.
     /// </summary>
-    public int Index { get; }
+    public int Index => index;
 }

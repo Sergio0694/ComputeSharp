@@ -148,17 +148,18 @@ internal sealed class DynamicCache<TKey, TValue>
     /// <summary>
     /// An entry to use in <see cref="DynamicCache{TKey, TValue}"/>.
     /// </summary>
-    private sealed class Entry
+    /// <param name="key">The key to use for the entry.</param>
+    private sealed class Entry(TKey key)
     {
         /// <summary>
         /// A weak reference to the actual entry instance.
         /// </summary>
-        private readonly WeakReference<TKey> reference;
+        private readonly WeakReference<TKey> reference = new(key);
 
         /// <summary>
         /// The hashcode of the target key (so it's available even after the key is gone).
         /// </summary>
-        private readonly int hashCode;
+        private readonly int hashCode = EqualityComparer<TKey>.Default.GetHashCode(key);
 
         /// <summary>
         /// The last key matched from <see cref="Equals(object?)"/>, if available.
@@ -169,16 +170,6 @@ internal sealed class DynamicCache<TKey, TValue>
         /// Indicates whether the entry is currently in lookup mode.
         /// </summary>
         private bool isPerformingLookup;
-
-        /// <summary>
-        /// Creates a new <see cref="Entry"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="key">The key to use for the entry.</param>
-        public Entry(TKey key)
-        {
-            this.reference = new WeakReference<TKey>(key);
-            this.hashCode = EqualityComparer<TKey>.Default.GetHashCode(key);
-        }
 
         /// <summary>
         /// Gets whether or not the current entry is alive.
@@ -265,33 +256,19 @@ internal sealed class DynamicCache<TKey, TValue>
     /// <summary>
     /// An object reponsible for removing dead <see cref="Entry"/> instance from the table.
     /// </summary>
-    private sealed class EntryRemover
+    /// <remarks>
+    /// Creates a new <see cref="EntryRemover"/> instance with the specified parameters.
+    /// </remarks>
+    /// <param name="map"><inheritdoc cref="DynamicCache{TKey, TValue}.map" path="/node()"/></param>
+    /// <param name="entry">The target <see cref="Entry"/> instance to remove from <see cref="map"/>.</param>
+    private sealed class EntryRemover(ConcurrentDictionary<Entry, TValue> map, Entry entry)
     {
-        /// <inheritdoc cref="DynamicCache{TKey, TValue}.map"/>
-        private readonly ConcurrentDictionary<Entry, TValue> map;
-
         /// <summary>
-        /// The target <see cref="Entry"/> instance to remove from <see cref="map"/>.
-        /// </summary>
-        private readonly Entry entry;
-
-        /// <summary>
-        /// Creates a new <see cref="EntryRemover"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="map"><inheritdoc cref="DynamicCache{TKey, TValue}.map" path="/node()"/></param>
-        /// <param name="entry"><inheritdoc cref="entry" path="/node()"/></param>
-        public EntryRemover(ConcurrentDictionary<Entry, TValue> map, Entry entry)
-        {
-            this.map = map;
-            this.entry = entry;
-        }
-
-        /// <summary>
-        /// Removes <see cref="entry"/> from <see cref="map"/> when the current instance is finalized.
+        /// Removes the target entry from the map when the current instance is finalized.
         /// </summary>
         ~EntryRemover()
         {
-            _ = this.map.TryRemove(this.entry, out _);
+            _ = map.TryRemove(entry, out _);
         }
     }
 }

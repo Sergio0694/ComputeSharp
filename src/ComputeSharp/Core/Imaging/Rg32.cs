@@ -2,6 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0290
+
 namespace ComputeSharp;
 
 /// <summary>

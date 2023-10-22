@@ -9,20 +9,12 @@ namespace ComputeSharp.D2D1;
 /// <remarks>
 /// <para>For more info, see <see href="https://docs.microsoft.com/windows/win32/api/d2d1effectauthor/nf-d2d1effectauthor-id2d1drawinfo-setresourcetexture"/>.</para>
 /// </remarks>
+/// <param name="index">The index of the annotated resource field.</param>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-public sealed class D2DResourceTextureIndexAttribute : Attribute
+public sealed class D2DResourceTextureIndexAttribute(int index) : Attribute
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="D2DResourceTextureIndexAttribute"/> type with the specified arguments.
-    /// </summary>
-    /// <param name="index">The index of the annotated resource field.</param>
-    public D2DResourceTextureIndexAttribute(int index)
-    {
-        Index = index;
-    }
-
     /// <summary>
     /// Gets the index of the annotated resource field.
     /// </summary>
-    public int Index { get; }
+    public int Index => index;
 }

@@ -8,6 +8,8 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+#pragma warning disable IDE0290
+
 namespace ComputeSharp.SourceGeneration.Helpers;
 
 /// <summary>
@@ -351,21 +353,13 @@ internal sealed class IndentedTextWriter : IDisposable
     /// <summary>
     /// Represents an indented block that needs to be closed.
     /// </summary>
-    public struct Block : IDisposable
+    /// <param name="writer">The input <see cref="IndentedTextWriter"/> instance to wrap.</param>
+    public struct Block(IndentedTextWriter writer) : IDisposable
     {
         /// <summary>
         /// The <see cref="IndentedTextWriter"/> instance to write to.
         /// </summary>
-        private IndentedTextWriter? writer;
-
-        /// <summary>
-        /// Creates a new <see cref="Block"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="writer">The input <see cref="IndentedTextWriter"/> instance to wrap.</param>
-        public Block(IndentedTextWriter writer)
-        {
-            this.writer = writer;
-        }
+        private IndentedTextWriter? writer = writer;
 
         /// <inheritdoc/>
         public void Dispose()

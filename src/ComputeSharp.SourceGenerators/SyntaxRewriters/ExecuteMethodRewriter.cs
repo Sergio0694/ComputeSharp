@@ -9,21 +9,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters;
 /// <summary>
 /// A custom <see cref="CSharpSyntaxRewriter"/> type that does postprocessing fixups on the shader main method.
 /// </summary>
-internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
+/// <param name="shaderSourceRewriter">The <see cref="SourceGeneration.SyntaxRewriters.ShaderSourceRewriter"/> instance used to process the input tree.</param>
+internal abstract class ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter) : CSharpSyntaxRewriter
 {
-    /// <summary>
-    /// Creates a new <see cref="Compute"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
-    public ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter)
-    {
-        ShaderSourceRewriter = shaderSourceRewriter;
-    }
-
     /// <summary>
     /// Gets the <see cref="ShaderSourceRewriter"/> instance used to process the input tree.
     /// </summary>
-    protected ShaderSourceRewriter ShaderSourceRewriter { get; }
+    protected ShaderSourceRewriter ShaderSourceRewriter => shaderSourceRewriter;
 
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public TNode? Visit<TNode>(TNode? node)
@@ -60,17 +52,12 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
     /// <summary>
     /// A custom <see cref="ExecuteMethodRewriter"/> type specialized for compute shaders.
     /// </summary>
-    public sealed class Compute : ExecuteMethodRewriter
+    /// <remarks>
+    /// Creates a new <see cref="Compute"/> instance with the specified parameters.
+    /// </remarks>
+    /// <param name="shaderSourceRewriter">The <see cref="SourceGeneration.SyntaxRewriters.ShaderSourceRewriter"/> instance used to process the input tree.</param>
+    public sealed class Compute(ShaderSourceRewriter shaderSourceRewriter) : ExecuteMethodRewriter(shaderSourceRewriter)
     {
-        /// <summary>
-        /// Creates a new <see cref="Compute"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
-        public Compute(ShaderSourceRewriter shaderSourceRewriter)
-            : base(shaderSourceRewriter)
-        {
-        }
-
         /// <inheritdoc/>
         public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
@@ -115,17 +102,9 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
     /// <summary>
     /// A custom <see cref="ExecuteMethodRewriter"/> type specialized for compute shaders.
     /// </summary>
-    public sealed class Pixel : ExecuteMethodRewriter
+    /// <param name="shaderSourceRewriter">The <see cref="SourceGeneration.SyntaxRewriters.ShaderSourceRewriter"/> instance used to process the input tree.</param>
+    public sealed class Pixel(ShaderSourceRewriter shaderSourceRewriter) : ExecuteMethodRewriter(shaderSourceRewriter)
     {
-        /// <summary>
-        /// Creates a new <see cref="Pixel"/> instance with the specified parameters.
-        /// </summary>
-        /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
-        public Pixel(ShaderSourceRewriter shaderSourceRewriter)
-            : base(shaderSourceRewriter)
-        {
-        }
-
         /// <inheritdoc/>
         public override SyntaxNode? VisitReturnStatement(ReturnStatementSyntax node)
         {
