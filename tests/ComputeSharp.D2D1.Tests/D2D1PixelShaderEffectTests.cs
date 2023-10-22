@@ -69,11 +69,11 @@ public partial class D2D1PixelShaderEffectTests
     public unsafe void SetResourceTextureManagerForD2D1Effect_RCW_NullD2D1Effect()
     {
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc uint[] { 64 },
+            extents: [64],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinLinearMagMipPoint,
-            extendModes: stackalloc D2D1ExtendMode[] { D2D1ExtendMode.Clamp });
+            extendModes: [D2D1ExtendMode.Clamp]);
 
         D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(null, resourceTextureManager, 0);
     }

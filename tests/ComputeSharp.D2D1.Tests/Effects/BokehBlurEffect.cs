@@ -377,7 +377,7 @@ public sealed partial class BokehBlurEffect
                     bufferPrecision: D2D1BufferPrecision.Float32,
                     channelDepth: D2D1ChannelDepth.One,
                     filter: D2D1Filter.MinMagMipPoint,
-                    extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
+                    extendModes: [D2D1ExtendMode.Clamp],
                     data: MemoryMarshal.AsBytes(this.kernels[i].Real.AsSpan()),
                     strides: []);
 
@@ -387,7 +387,7 @@ public sealed partial class BokehBlurEffect
                     bufferPrecision: D2D1BufferPrecision.Float32,
                     channelDepth: D2D1ChannelDepth.One,
                     filter: D2D1Filter.MinMagMipPoint,
-                    extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
+                    extendModes: [D2D1ExtendMode.Clamp],
                     data: MemoryMarshal.AsBytes(this.kernels[i].Imaginary.AsSpan()),
                     strides: []);
 
