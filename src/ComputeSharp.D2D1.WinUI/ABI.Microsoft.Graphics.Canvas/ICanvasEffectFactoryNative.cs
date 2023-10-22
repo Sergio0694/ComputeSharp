@@ -118,7 +118,7 @@ internal unsafe struct ICanvasEffectFactoryNative
             private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
 
             /// <inheritdoc cref="Interface.CreateWrapper"/>
-            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
             [return: NativeTypeName("HRESULT")]
             private static int CreateWrapperFromAbi(IntPtr thisPtr, ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
             {

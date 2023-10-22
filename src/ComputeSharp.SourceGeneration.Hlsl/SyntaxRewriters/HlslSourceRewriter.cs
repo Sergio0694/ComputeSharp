@@ -24,7 +24,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <summary>
     /// An array with the <c>'.'</c> and <c>'E'</c> characters.
     /// </summary>
-    private static readonly char[] FloatLiteralSpecialCharacters = { '.', 'E' };
+    private static readonly char[] FloatLiteralSpecialCharacters = ['.', 'E'];
 
     /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.

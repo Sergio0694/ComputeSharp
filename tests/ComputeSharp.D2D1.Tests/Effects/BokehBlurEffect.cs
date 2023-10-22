@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -22,7 +21,61 @@ public sealed partial class BokehBlurEffect
     /// <summary>
     /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="BokehBlurEffect"/> instances.
     /// </summary>
-    private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels)> Cache = new();
+    private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, (float[] Real, float[] Imaginary)[] Kernels)> Cache = [];
+
+    /// <summary>
+    /// The kernel scales to adjust the component values in each kernel.
+    /// </summary>
+    private static readonly float[] KernelScales = [1.4f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f];
+
+    /// <summary>
+    /// The available bokeh blur kernel parameters.
+    /// </summary>
+    private static readonly Vector4[][] KernelComponents =
+    [
+        // 1 component
+        [new Vector4(0.862325f, 1.624835f, 0.767583f, 1.862321f)],
+
+        // 2 components
+        [
+            new Vector4(0.886528f, 5.268909f, 0.411259f, -0.548794f),
+            new Vector4(1.960518f, 1.558213f, 0.513282f, 4.56111f)
+        ],
+
+        // 3 components
+        [
+            new Vector4(2.17649f, 5.043495f, 1.621035f, -2.105439f),
+            new Vector4(1.019306f, 9.027613f, -0.28086f, -0.162882f),
+            new Vector4(2.81511f, 1.597273f, -0.366471f, 10.300301f)
+        ],
+
+        // 4 components
+        [
+            new Vector4(4.338459f, 1.553635f, -5.767909f, 46.164397f),
+            new Vector4(3.839993f, 4.693183f, 9.795391f, -15.227561f),
+            new Vector4(2.791880f, 8.178137f, -3.048324f, 0.302959f),
+            new Vector4(1.342190f, 12.328289f, 0.010001f, 0.244650f)
+        ],
+
+        // 5 components
+        [
+            new Vector4(4.892608f, 1.685979f, -22.356787f, 85.91246f),
+            new Vector4(4.71187f, 4.998496f, 35.918936f, -28.875618f),
+            new Vector4(4.052795f, 8.244168f, -13.212253f, -1.578428f),
+            new Vector4(2.929212f, 11.900859f, 0.507991f, 1.816328f),
+            new Vector4(1.512961f, 16.116382f, 0.138051f, -0.01f)
+        ],
+
+        // 6 components
+        [
+            new Vector4(5.143778f, 2.079813f, -82.326596f, 111.231024f),
+            new Vector4(5.612426f, 6.153387f, 113.878661f, 58.004879f),
+            new Vector4(5.982921f, 9.802895f, 39.479083f, -162.028887f),
+            new Vector4(6.505167f, 11.059237f, -71.286026f, 95.027069f),
+            new Vector4(3.869579f, 14.81052f, 1.405746f, -3.704914f),
+            new Vector4(2.201904f, 19.032909f, -0.152784f, -0.107988f)
+        ]
+    ];
 
     /// <summary>
     /// The kernel radius.
@@ -91,71 +144,12 @@ public sealed partial class BokehBlurEffect
     }
 
     /// <summary>
-    /// Gets the kernel scales to adjust the component values in each kernel.
-    /// </summary>
-    private static IReadOnlyList<float> KernelScales { get; } = new[] { 1.4f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f };
-
-    /// <summary>
-    /// Gets the available bokeh blur kernel parameters.
-    /// </summary>
-    private static IReadOnlyList<Vector4[]> KernelComponents { get; } = new[]
-    {
-        // 1 component
-        new[] { new Vector4(0.862325f, 1.624835f, 0.767583f, 1.862321f) },
-
-        // 2 components
-        new[]
-        {
-            new Vector4(0.886528f, 5.268909f, 0.411259f, -0.548794f),
-            new Vector4(1.960518f, 1.558213f, 0.513282f, 4.56111f)
-        },
-
-        // 3 components
-        new[]
-        {
-            new Vector4(2.17649f, 5.043495f, 1.621035f, -2.105439f),
-            new Vector4(1.019306f, 9.027613f, -0.28086f, -0.162882f),
-            new Vector4(2.81511f, 1.597273f, -0.366471f, 10.300301f)
-        },
-
-        // 4 components
-        new[]
-        {
-            new Vector4(4.338459f, 1.553635f, -5.767909f, 46.164397f),
-            new Vector4(3.839993f, 4.693183f, 9.795391f, -15.227561f),
-            new Vector4(2.791880f, 8.178137f, -3.048324f, 0.302959f),
-            new Vector4(1.342190f, 12.328289f, 0.010001f, 0.244650f)
-        },
-
-        // 5 components
-        new[]
-        {
-            new Vector4(4.892608f, 1.685979f, -22.356787f, 85.91246f),
-            new Vector4(4.71187f, 4.998496f, 35.918936f, -28.875618f),
-            new Vector4(4.052795f, 8.244168f, -13.212253f, -1.578428f),
-            new Vector4(2.929212f, 11.900859f, 0.507991f, 1.816328f),
-            new Vector4(1.512961f, 16.116382f, 0.138051f, -0.01f)
-        },
-
-        // 6 components
-        new[]
-        {
-            new Vector4(5.143778f, 2.079813f, -82.326596f, 111.231024f),
-            new Vector4(5.612426f, 6.153387f, 113.878661f, 58.004879f),
-            new Vector4(5.982921f, 9.802895f, 39.479083f, -162.028887f),
-            new Vector4(6.505167f, 11.059237f, -71.286026f, 95.027069f),
-            new Vector4(3.869579f, 14.81052f, 1.405746f, -3.704914f),
-            new Vector4(2.201904f, 19.032909f, -0.152784f, -0.107988f)
-        }
-    };
-
-    /// <summary>
     /// Gets the kernel parameters and scaling factor for the current count value in the current instance.
     /// </summary>
     private (Vector4[] Parameters, float Scale) GetParameters()
     {
         // Prepare the kernel components
-        int index = Math.Max(0, Math.Min(this.componentsCount - 1, KernelComponents.Count));
+        int index = Math.Max(0, Math.Min(this.componentsCount - 1, KernelComponents.Length));
 
         return (KernelComponents[index], KernelScales[index]);
     }

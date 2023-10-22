@@ -90,14 +90,14 @@ partial class ComputeShaderDescriptorGenerator
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithWin32Exception,
                     structDeclarationSymbol,
-                    new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
+                    [structDeclarationSymbol, win32Error.HResult, win32Error.Message]);
             }
             else if (info is HlslBytecodeInfo.CompilerError dxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithDxcCompilationException,
                     structDeclarationSymbol,
-                    new object[] { structDeclarationSymbol, dxcError.Message });
+                    [structDeclarationSymbol, dxcError.Message]);
             }
 
             if (diagnostic is not null)

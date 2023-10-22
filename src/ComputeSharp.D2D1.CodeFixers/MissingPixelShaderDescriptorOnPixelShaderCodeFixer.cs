@@ -16,8 +16,8 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : Missing
     /// <summary>
     /// The set of type names for all D2D attributes that can be over shader types.
     /// </summary>
-    private static readonly string[] D2DAttributeTypeNames = new[]
-    {
+    private static readonly string[] D2DAttributeTypeNames =
+    [
         "ComputeSharp.D2D1.D2DCompileOptionsAttribute",
         "ComputeSharp.D2D1.D2DEffectAuthorAttribute",
         "ComputeSharp.D2D1.D2DEffectCategoryAttribute",
@@ -32,7 +32,7 @@ public sealed class MissingPixelShaderDescriptorOnPixelShaderCodeFixer : Missing
         "ComputeSharp.D2D1.D2DPixelOptionsAttribute",
         "ComputeSharp.D2D1.D2DRequiresScenePositionAttribute",
         "ComputeSharp.D2D1.D2DShaderProfileAttribute"
-    };
+    ];
 
     /// <summary>
     /// Creates a new <see cref="MissingAttributeCodeFixer"/> instance with the specified parameters.
