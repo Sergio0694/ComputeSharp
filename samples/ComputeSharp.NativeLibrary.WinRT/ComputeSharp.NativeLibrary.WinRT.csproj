@@ -3,6 +3,7 @@
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <CsWinRTComponent>true</CsWinRTComponent>
   </PropertyGroup>
 
   <!-- NativeAOT configuration (same as in ComputeSharp.NativeLibrary, see notes there) -->
@@ -17,6 +18,10 @@
     <IlcGenerateMstatFile>false</IlcGenerateMstatFile>
     <IlcGenerateDgmlFile>false</IlcGenerateDgmlFile>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.0.4" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp.Core.SourceGenerators\ComputeSharp.Core.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
