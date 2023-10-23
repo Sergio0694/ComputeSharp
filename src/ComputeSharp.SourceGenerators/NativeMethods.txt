@@ -1,7 +1,7 @@
 CLSID_DxcCompiler
 CLSID_DxcLibrary
 DxcCreateInstance
-IDxcCompiler
-IDxcLibrary
-IDxcIncludeHandler
+IDxcCompiler3
+IDxcUtils
+IDxcResult
 IUnknown
