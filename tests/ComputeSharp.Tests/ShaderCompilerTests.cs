@@ -550,13 +550,13 @@ namespace ComputeSharp.Tests
             /// <inheritdoc/>
             public void Execute()
             {
-                float number = this.number;
+                float x = this.number + ThreadIds.X;
 
-                Foo(ref this.buffer[ThreadIds.X], ref number);
-                Bar(ref this.buffer[ThreadIds.X], ref number);
-                HelpersForPixelShaderWithScopedParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref number);
+                Foo(ref this.buffer[ThreadIds.X], ref x);
+                Bar(ref this.buffer[ThreadIds.X], ref x);
+                HelpersForPixelShaderWithScopedParameterInMethods.Baz(in this.buffer[ThreadIds.X], ref x);
 
-                this.buffer[ThreadIds.X] *= number;
+                this.buffer[ThreadIds.X] *= x;
             }
         }
     }
