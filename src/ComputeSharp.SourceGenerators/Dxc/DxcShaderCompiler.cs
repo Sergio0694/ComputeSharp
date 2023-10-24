@@ -77,29 +77,35 @@ internal sealed unsafe class DxcShaderCompiler
     {
         using ComPtr<IDxcResult> dxcResult = default;
 
+        // We can't use stackalloc here, because the portable Span<T> type has a bug that causes
+        // the constructor taking a pointer to throw if T is a type that contains a pointer field.
+        // So we can just rent a buffer from the pool and use that instead, at least for now.
+        PCWSTR[] arguments = ArrayPool<PCWSTR>.Shared.Rent(3);
+
         // Try to compile the new compute shader
+        fixed (char* pSourceName = "")
+        fixed (char* pEntryPoint = "Execute")
+        fixed (char* pTargetProfile = "cs_6_0")
         fixed (char* optimization = "-O3")
         fixed (char* rowMajor = "-Zpr")
         fixed (char* warningsAsErrors = "-Werror")
+        fixed (PCWSTR* pArguments = arguments)
         {
-            // We can't use stackalloc here, because the portable Span<T> type has a bug that causes
-            // the constructor taking a pointer to throw if T is a type that contains a pointer field.
-            // So we can just rent a buffer from the pool and use that instead, at least for now.
-            PCWSTR[] arguments = ArrayPool<PCWSTR>.Shared.Rent(3);
-
-            arguments[0] = optimization;
-            arguments[1] = rowMajor;
-            arguments[2] = warningsAsErrors;
+            pArguments[0] = optimization;
+            pArguments[1] = rowMajor;
+            pArguments[2] = warningsAsErrors;
 
             using ComPtr<IDxcCompilerArgs> dxcCompilerArgs = default;
 
             // Create the arguments to append others to
             this.dxcUtils.Get()->BuildArguments(
-                pSourceName: "",
-                pEntryPoint: "Execute",
-                pTargetProfile: "cs_6_0",
-                pArguments: arguments.AsSpan(0, 3),
-                pDefines: [],
+                pSourceName: pSourceName,
+                pEntryPoint: pEntryPoint,
+                pTargetProfile: pTargetProfile,
+                pArguments: pArguments,
+                argCount: 3,
+                pDefines: null,
+                defineCount: 0,
                 ppArgs: dxcCompilerArgs.GetAddressOf()).Assert();
 
             fixed (char* pSource = source)
@@ -110,13 +116,16 @@ internal sealed unsafe class DxcShaderCompiler
                 dxcBuffer.Size = (uint)(source.Length * sizeof(char));
                 dxcBuffer.Encoding = (uint)DXC_CP.DXC_CP_UTF16;
 
+                Guid dxcResultIid = IDxcResult.IID_Guid;
+
                 // Try to actually compile the HLSL source
                 HRESULT hresult = this.dxcCompiler3.Get()->Compile(
-                    pSource: in dxcBuffer,
-                    pArguments: new ReadOnlySpan<PCWSTR>(dxcCompilerArgs.Get()->GetArguments(), (int)dxcCompilerArgs.Get()->GetCount()),
+                    pSource: &dxcBuffer,
+                    pArguments: dxcCompilerArgs.Get()->GetArguments(),
+                    argCount: dxcCompilerArgs.Get()->GetCount(),
                     pIncludeHandler: null,
-                    riid: in IDxcResult.IID_Guid,
-                    ppResult: out *(void**)dxcResult.GetAddressOf());
+                    riid: &dxcResultIid,
+                    ppResult: (void**)dxcResult.GetAddressOf());
 
                 ArrayPool<PCWSTR>.Shared.Return(arguments);
 
