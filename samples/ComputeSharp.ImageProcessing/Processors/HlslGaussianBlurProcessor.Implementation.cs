@@ -118,7 +118,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// Kernel for the vertical convolution pass.
         /// </summary>
         [AutoConstructor]
-        [EmbeddedBytecode(DispatchAxis.XY)]
+        [ThreadGroupSize(DispatchAxis.XY)]
         [GeneratedComputeShaderDescriptor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
@@ -152,7 +152,7 @@ public sealed partial class HlslGaussianBlurProcessor
         /// Kernel for the horizontal convolution pass.
         /// </summary>
         [AutoConstructor]
-        [EmbeddedBytecode(DispatchAxis.XY)]
+        [ThreadGroupSize(DispatchAxis.XY)]
         [GeneratedComputeShaderDescriptor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {

@@ -16,9 +16,9 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderCodeFixer : Mis
     /// <summary>
     /// The set of type names for all attributes that can be over shader types.
     /// </summary>
-    private static readonly string[] D2DAttributeTypeNames =
+    private static readonly string[] AttributeTypeNames =
     [
-        "ComputeSharp.EmbeddedBytecodeAttribute",
+        "ComputeSharp.ThreadGroupSizeAttribute",
         "ComputeSharp.GroupSharedAttribute"
     ];
 
@@ -30,7 +30,7 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderCodeFixer : Mis
             diagnosticId: MissingComputeShaderDescriptorOnComputeShaderTypeId,
             codeActionTitle: "Add [GeneratedComputeShaderDescriptor] attribute",
             attributeFullyQualifiedMetadataName: "ComputeSharp.GeneratedComputeShaderDescriptorAttribute",
-            leadingAttributeFullyQualifiedMetadataNames: D2DAttributeTypeNames)
+            leadingAttributeFullyQualifiedMetadataNames: AttributeTypeNames)
     {
     }
 }

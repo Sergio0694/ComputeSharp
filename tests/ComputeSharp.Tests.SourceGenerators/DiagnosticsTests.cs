@@ -1210,7 +1210,7 @@ public class DiagnosticsTests
     [DataRow(1050, 1, 1)]
     [DataRow(1, 1050, 1)]
     [DataRow(1, 1, 70)]
-    public void InvalidEmbeddedBytecodeThreadIds(int threadsX, int threadsY, int threadsZ)
+    public void InvalidThreadGroupSizeValues(int threadsX, int threadsY, int threadsZ)
     {
         string source = $$"""
             using System;
@@ -1218,7 +1218,7 @@ public class DiagnosticsTests
 
             namespace MyFancyApp.Sample;
 
-            [EmbeddedBytecode({{threadsX}}, {{threadsY}}, {{threadsZ}})]
+            [ThreadGroupSize({{threadsX}}, {{threadsY}}, {{threadsZ}})]
             [GeneratedComputeShaderDescriptor]
             public partial struct MyShader : IComputeShader
             {
@@ -1234,7 +1234,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InvalidEmbeddedBytecodeDispatchSize_Flags()
+    public void InvalidThreadGroupSizeDispatchSize_Flags()
     {
         const string source = """
             using System;
@@ -1242,7 +1242,7 @@ public class DiagnosticsTests
 
             namespace MyFancyApp.Sample;
 
-            [EmbeddedBytecode(DispatchAxis.XYZ | DispatchAxis.Y)]
+            [ThreadGroupSize(DispatchAxis.XYZ | DispatchAxis.Y)]
             [GeneratedComputeShaderDescriptor]
             public partial struct MyShader : IComputeShader
             {
@@ -1258,7 +1258,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InvalidEmbeddedBytecodeDispatchSize_ExplicitValue()
+    public void InvalidThreadGroupSizeDispatchSize_ExplicitValue()
     {
         const string source = """
             using System;
@@ -1266,7 +1266,7 @@ public class DiagnosticsTests
 
             namespace MyFancyApp.Sample;
 
-            [EmbeddedBytecode((DispatchAxis)243712)]
+            [ThreadGroupSize((DispatchAxis)243712)]
             [GeneratedComputeShaderDescriptor]
             public partial struct MyShader : IComputeShader
             {
@@ -1282,7 +1282,7 @@ public class DiagnosticsTests
     }
 
     [TestMethod]
-    public void InvalidEmbeddedBytecodeDispatchSize_ExplicitValue_Negative()
+    public void InvalidThreadGroupSizeDispatchSize_ExplicitValue_Negative()
     {
         const string source = """
             using System;
@@ -1290,7 +1290,7 @@ public class DiagnosticsTests
 
             namespace MyFancyApp.Sample;
 
-            [EmbeddedBytecode((DispatchAxis)(-289))]
+            [ThreadGroupSize((DispatchAxis)(-289))]
             [GeneratedComputeShaderDescriptor]
             public partial struct MyShader : IComputeShader
             {

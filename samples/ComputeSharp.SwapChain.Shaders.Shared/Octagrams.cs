@@ -6,7 +6,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by whisky_shusuky.</para>
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.XY)]
+[ThreadGroupSize(DispatchAxis.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct Octagrams : IComputeShader<float4>
 {

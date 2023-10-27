@@ -4,7 +4,7 @@ namespace ComputeSharp.Sample.FSharp.Shaders;
 /// A sample shader thaat just multiplies items in a buffer by two.
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.X)]
+[ThreadGroupSize(DispatchAxis.X)]
 [GeneratedComputeShaderDescriptor]
 public readonly partial struct MultiplyByTwo : IComputeShader
 {

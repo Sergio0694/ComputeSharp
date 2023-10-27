@@ -31,7 +31,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(32, 1, 1)]
+    [ThreadGroupSize(32, 1, 1)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ComputeShader : IComputeShader
     {
@@ -76,7 +76,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(8, 8, 1)]
+    [ThreadGroupSize(8, 8, 1)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct PixelShader : IComputeShader<float4>
     {

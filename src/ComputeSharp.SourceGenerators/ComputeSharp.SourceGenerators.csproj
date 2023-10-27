@@ -59,9 +59,9 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\MatrixIndex.cs" Link="ComputeSharp.Core\Primitives\MatrixIndex.cs" />
 
     <!-- ComputeSharp APIs -->
-    <Compile Include="..\ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" Link="ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\Enums\CompileOptions.cs" Link="ComputeSharp\Core\Attributes\Enums\CompileOptions.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\ThreadGroupSizeAttribute.cs" Link="ComputeSharp\Core\Attributes\ThreadGroupSizeAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchAxis.cs" Link="ComputeSharp\Core\Dispatch\DispatchAxis.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="ComputeSharp\Core\Dispatch\DispatchSize.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="ComputeSharp\Core\Dispatch\GridIds.cs" />

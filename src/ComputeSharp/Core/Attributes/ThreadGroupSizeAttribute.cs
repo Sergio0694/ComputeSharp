@@ -3,21 +3,20 @@ using System;
 namespace ComputeSharp;
 
 /// <summary>
-/// An attribute that indicates that a given shader should be precompiled at build time and embedded
-/// directly into the containing assembly as static bytecode, to avoid compiling it at runtime.
+/// An attribute that indicates the size of the thread groups to use to dispatch a given compute shader.
 /// <para>
 /// This attribute can be used to annotate shader types as follows:
 /// <code>
 /// // A compute shader that is dispatched on a target buffer
-/// [EmbeddedBytecode(DispatchAxis.X)]
+/// [ThreadGroupSize(DispatchAxis.X)]
 /// struct MyShader : IComputeShader
 /// {
 /// }
 /// </code>
-/// Or similarly, for a pixel shader:
+/// Or similarly, for a pixel-like compute shader:
 /// <code>
-/// // A pixel shader that is dispatched on a target texture
-/// [EmbeddedBytecode(DispatchAxis.XY)]
+/// // A compute shader that is dispatched on a target texture
+/// [ThreadGroupSize(DispatchAxis.XY)]
 /// struct MyShader : IComputeShader&lt;float4&gt;
 /// {
 /// }
@@ -25,31 +24,17 @@ namespace ComputeSharp;
 /// </para>
 /// <para>
 /// Using <see cref="DispatchAxis"/> is an easier way to precompile shaders when dispatching them over known dimensions. For more
-/// fine grained control over the thread size values when dispatching, use <see cref="EmbeddedBytecodeAttribute(int, int, int)"/>.
+/// fine grained control over the thread size values when dispatching, use <see cref="ThreadGroupSizeAttribute(int, int, int)"/>.
 /// </para>
-/// <para>
-/// </para>
-/// The runtime compilation will automatically be skipped if the shader is invoked using matching thread count values,
-/// otherwise the usual runtime compilation will be used as fallback if the <c>ComputeSharp.Dxc</c> library is
-/// referenced. If not, <see cref="NotSupportedException"/> will be thrown when trying to dispatch the shader.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Using this attribute is mandatory when not referencing <c>ComputeSharp.Dxc</c>.
-/// </para>
-/// <para>
-/// This attribute can only be used when the shader type being annotated does not require dynamic
-/// features. Specifically, this attribute is not supported if the shader captures any delegates.
-/// </para>
-/// </remarks>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
-public sealed class EmbeddedBytecodeAttribute : Attribute
+public sealed class ThreadGroupSizeAttribute : Attribute
 {
     /// <summary>
-    /// Creates a new <see cref="EmbeddedBytecodeAttribute"/> instance with the specified parameters.
+    /// Creates a new <see cref="ThreadGroupSizeAttribute"/> instance with the specified parameters.
     /// </summary>
     /// <param name="dispatchAxis">The target dispatch axes for the shader to run.</param>
-    public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis)
+    public ThreadGroupSizeAttribute(DispatchAxis dispatchAxis)
     {
 #if !SOURCE_GENERATOR
         (ThreadsX, ThreadsY, ThreadsZ) = dispatchAxis switch
@@ -67,12 +52,12 @@ public sealed class EmbeddedBytecodeAttribute : Attribute
     }
 
     /// <summary>
-    /// Creates a new <see cref="EmbeddedBytecodeAttribute"/> instance with the specified parameters.
+    /// Creates a new <see cref="ThreadGroupSizeAttribute"/> instance with the specified parameters.
     /// </summary>
     /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-    public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ)
+    public ThreadGroupSizeAttribute(int threadsX, int threadsY, int threadsZ)
     {
         ThreadsX = threadsX;
         ThreadsY = threadsY;
@@ -80,17 +65,17 @@ public sealed class EmbeddedBytecodeAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the number of threads in each thread group for the X axis
+    /// Gets the number of threads in each thread group for the X axis.
     /// </summary>
     public int ThreadsX { get; }
 
     /// <summary>
-    /// Gets the number of threads in each thread group for the Y axis
+    /// Gets the number of threads in each thread group for the Y axis.
     /// </summary>
     public int ThreadsY { get; }
 
     /// <summary>
-    /// Gets the number of threads in each thread group for the Z axis
+    /// Gets the number of threads in each thread group for the Z axis.
     /// </summary>
     public int ThreadsZ { get; }
 }

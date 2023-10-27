@@ -33,10 +33,9 @@ partial class ComputeShaderDescriptorGenerator
             out bool isCompilationEnabled)
         {
             // Try to get the attribute that controls shader precompilation (this is always required)
-            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(ThreadGroupSizeAttribute).FullName, out AttributeData? attribute))
             {
-                // Emit the diagnostics if dynamic shaders are not supported
-                diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(MissingThreadGroupSizeAttribute, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;
@@ -64,7 +63,7 @@ partial class ComputeShaderDescriptorGenerator
                 // Validate the dispatch axis argument
                 if ((threadsX, threadsY, threadsZ) is (0, 0, 0))
                 {
-                    diagnostics.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
+                    diagnostics.Add(InvalidThreadGroupSizeAttributeDefaultThreadGroupSize, structDeclarationSymbol, structDeclarationSymbol);
 
                     threadsX = threadsY = threadsZ = 0;
                     isCompilationEnabled = false;
@@ -84,7 +83,7 @@ partial class ComputeShaderDescriptorGenerator
                 explicitThreadsZ is < 1 or > 64)
             {
                 // Failed to validate the thread number arguments
-                diagnostics.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(InvalidThreadGroupSizeAttributeValues, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;

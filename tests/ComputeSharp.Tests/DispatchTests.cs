@@ -57,7 +57,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DispatchAxis.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ThreadIdsShader : IComputeShader
     {
@@ -113,7 +113,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DispatchAxis.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ThreadIdsNormalizedShader : IComputeShader
     {
@@ -156,7 +156,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DispatchAxis.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GroupIdsShader : IComputeShader
     {
@@ -188,7 +188,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(4, 15, 7)]
+    [ThreadGroupSize(4, 15, 7)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GroupSizeShader : IComputeShader
     {
@@ -222,7 +222,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(32, 1, 1)]
+    [ThreadGroupSize(32, 1, 1)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GridIdsShader : IComputeShader
     {
@@ -255,7 +255,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DispatchAxis.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchSizeShader : IComputeShader
     {
@@ -296,7 +296,7 @@ public partial class DispatchTests
         }
     }
 
-    [EmbeddedBytecode(DispatchAxis.XY)]
+    [ThreadGroupSize(DispatchAxis.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchPixelShader : IComputeShader<float4>
     {
@@ -327,7 +327,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DispatchAxis.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct FixedGroupSharedPixelShader : IComputeShader
     {
@@ -372,7 +372,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(32, 1, 1)]
+    [ThreadGroupSize(32, 1, 1)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DynamicGroupSharedPixelShader : IComputeShader
     {

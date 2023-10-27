@@ -8,7 +8,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// <para>Created by Syntopia.</para>
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.XY)]
+[ThreadGroupSize(DispatchAxis.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct MengerJourney : IComputeShader
 {

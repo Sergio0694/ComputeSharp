@@ -7,7 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.XY)]
+[ThreadGroupSize(DispatchAxis.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct FourColorGradient : IComputeShader<float4>
 {
