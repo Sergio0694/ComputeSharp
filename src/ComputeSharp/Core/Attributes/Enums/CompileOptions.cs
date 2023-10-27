@@ -131,8 +131,8 @@ public enum CompileOptions
     ResourcesMayAlias = 1 << 13,
 
     /// <summary>
-    /// Strips the reflection data from the generated shader bytecode. The bytecode size will be significantly lower,
-    /// but trying to perform reflection on the shader will fail at runtime. Recommend if not reflection is done.
+    /// Strips the reflection data from the generated shader bytecode. The bytecode size will be significantly lower, but
+    /// trying to perform reflection on the shader will return inaccurate results. Recommend if not reflection is done.
     /// </summary>
     /// <remarks>
     /// This flag maps to <c>-Qstrip_reflect</c>.
