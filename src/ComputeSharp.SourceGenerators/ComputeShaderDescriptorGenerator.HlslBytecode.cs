@@ -53,7 +53,7 @@ partial class ComputeShaderDescriptorGenerator
                     token.ThrowIfCancellationRequested();
 
                     // Compile the shader bytecode
-                    byte[] bytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan(), token);
+                    byte[] bytecode = DxcShaderCompiler.Instance.Compile(key.HlslSource.AsSpan(), key.CompileOptions, token);
 
                     token.ThrowIfCancellationRequested();
 
@@ -70,6 +70,24 @@ partial class ComputeShaderDescriptorGenerator
             }
 
             return HlslBytecodeCache.GetOrCreate(ref key, GetInfo, token);
+        }
+
+        /// <summary>
+        /// Extracts the compile options for the current shader.
+        /// </summary>
+        /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <returns>The requested compile options to use to compile the shader, if present.</returns>
+        public static CompileOptions GetCompileOptions(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, INamedTypeSymbol structDeclarationSymbol)
+        {
+            // If a [CompileOptions] annotation is present, return the explicit options
+            if (structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.CompileOptionsAttribute", out AttributeData? attributeData) ||
+                structDeclarationSymbol.ContainingAssembly.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.CompileOptionsAttribute", out attributeData))
+            {
+                return (CompileOptions)attributeData.ConstructorArguments[0].Value!;
+            }
+
+            return CompileOptions.Default;
         }
 
         /// <summary>

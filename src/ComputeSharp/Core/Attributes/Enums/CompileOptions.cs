@@ -56,7 +56,7 @@ public enum CompileOptions
     /// By default, the compiler disables strictness on deprecated syntax.
     /// </summary>
     /// <remarks>
-    /// This flag maps to <c>-Ges</c>.W
+    /// This flag maps to <c>-Ges</c>.
     /// </remarks>
     EnableStrictness = 1 << 5,
 
@@ -134,6 +134,9 @@ public enum CompileOptions
     /// Strips the reflection data from the generated shader bytecode. The bytecode size will be significantly lower,
     /// but trying to perform reflection on the shader will fail at runtime. Recommend if not reflection is done.
     /// </summary>
+    /// <remarks>
+    /// This flag maps to <c>-Qstrip_reflect</c>.
+    /// </remarks>
     StripReflectionData = 1 << 14,
 
     /// <summary>

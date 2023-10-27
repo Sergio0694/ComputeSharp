@@ -107,8 +107,13 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
+                    // Get the compile options as well
+                    CompileOptions compileOptions = HlslBytecode.GetCompileOptions(diagnostics, typeSymbol);
+
+                    token.ThrowIfCancellationRequested();
+
                     // Prepare the lookup key for the HLSL shader bytecode
-                    HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, isCompilationEnabled);
+                    HlslBytecodeInfoKey hlslInfoKey = new(hlslSource, compileOptions, isCompilationEnabled);
 
                     // Try to get the HLSL bytecode
                     HlslBytecodeInfo hlslInfo = HlslBytecode.GetBytecode(ref hlslInfoKey, token);
