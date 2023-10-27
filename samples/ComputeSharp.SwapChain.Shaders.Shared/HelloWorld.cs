@@ -5,7 +5,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/new"/>.
 /// </summary>
 [AutoConstructor]
-[ThreadGroupSize(DispatchAxis.XY)]
+[ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct HelloWorld : IComputeShader<float4>
 {

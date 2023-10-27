@@ -8,7 +8,7 @@ namespace ComputeSharp;
 /// This attribute can be used to annotate shader types as follows:
 /// <code>
 /// // A compute shader that is dispatched on a target buffer
-/// [ThreadGroupSize(DispatchAxis.X)]
+/// [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 /// struct MyShader : IComputeShader
 /// {
 /// }
@@ -16,14 +16,14 @@ namespace ComputeSharp;
 /// Or similarly, for a pixel-like compute shader:
 /// <code>
 /// // A compute shader that is dispatched on a target texture
-/// [ThreadGroupSize(DispatchAxis.XY)]
+/// [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 /// struct MyShader : IComputeShader&lt;float4&gt;
 /// {
 /// }
 /// </code>
 /// </para>
 /// <para>
-/// Using <see cref="DispatchAxis"/> is an easier way to precompile shaders when dispatching them over known dimensions. For more
+/// Using <see cref="DefaultThreadGroupSizes"/> is an easier way to precompile shaders when dispatching them over known dimensions. For more
 /// fine grained control over the thread size values when dispatching, use <see cref="ThreadGroupSizeAttribute(int, int, int)"/>.
 /// </para>
 /// </summary>
@@ -33,20 +33,20 @@ public sealed class ThreadGroupSizeAttribute : Attribute
     /// <summary>
     /// Creates a new <see cref="ThreadGroupSizeAttribute"/> instance with the specified parameters.
     /// </summary>
-    /// <param name="dispatchAxis">The target dispatch axes for the shader to run.</param>
-    public ThreadGroupSizeAttribute(DispatchAxis dispatchAxis)
+    /// <param name="size">The default thread group size to use.</param>
+    public ThreadGroupSizeAttribute(DefaultThreadGroupSizes size)
     {
 #if !SOURCE_GENERATOR
-        (ThreadsX, ThreadsY, ThreadsZ) = dispatchAxis switch
+        (ThreadsX, ThreadsY, ThreadsZ) = size switch
         {
-            DispatchAxis.X => (64, 1, 1),
-            DispatchAxis.Y => (1, 64, 1),
-            DispatchAxis.Z => (1, 1, 64),
-            DispatchAxis.XY => (8, 8, 1),
-            DispatchAxis.XZ => (8, 1, 8),
-            DispatchAxis.YZ => (1, 8, 8),
-            DispatchAxis.XYZ => (4, 4, 4),
-            _ => default(ArgumentException).Throw<(int, int, int)>(nameof(dispatchAxis))
+            DefaultThreadGroupSizes.X => (64, 1, 1),
+            DefaultThreadGroupSizes.Y => (1, 64, 1),
+            DefaultThreadGroupSizes.Z => (1, 1, 64),
+            DefaultThreadGroupSizes.XY => (8, 8, 1),
+            DefaultThreadGroupSizes.XZ => (8, 1, 8),
+            DefaultThreadGroupSizes.YZ => (1, 8, 8),
+            DefaultThreadGroupSizes.XYZ => (4, 4, 4),
+            _ => default(ArgumentException).Throw<(int, int, int)>(nameof(size))
         };
 #endif
     }

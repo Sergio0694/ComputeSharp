@@ -1,9 +1,12 @@
+using System;
+
 namespace ComputeSharp;
 
 /// <summary>
-/// A <see langword="enum"/> to be used with <see cref="ThreadGroupSizeAttribute"/> to indicate the dispatch axis to precompile a shader for.
+/// A <see langword="enum"/> to be used with <see cref="ThreadGroupSizeAttribute"/> to more easily set default values for the thread group size.
 /// </summary>
-public enum DispatchAxis
+[Flags]
+public enum DefaultThreadGroupSizes
 {
     /// <summary>
     /// Indicates a shader dispatch only along the X axis.
@@ -11,7 +14,7 @@ public enum DispatchAxis
     /// <remarks>
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, in T)"/>.
     /// </remarks>
-    X,
+    X = 1 << 0,
 
     /// <summary>
     /// Indicates a shader dispatch only along the Y axis.
@@ -20,7 +23,7 @@ public enum DispatchAxis
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, int, in T)"/>,
     /// but only as long as the input dispatch size on both the X and Z axes is <c>1</c>. Using any other combination will not be able to leverage the precompiled shader bytecode.
     /// </remarks>
-    Y,
+    Y = 1 << 1,
 
     /// <summary>
     /// Indicates a shader dispatch only along the Z axis.
@@ -29,7 +32,7 @@ public enum DispatchAxis
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, int, in T)"/>,
     /// but only as long as the input dispatch size on both the X and Y axes is <c>1</c>. Using any other combination will not be able to leverage the precompiled shader bytecode.
     /// </remarks>
-    Z,
+    Z = 1 << 2,
 
     /// <summary>
     /// Indicates a shader dispatch along the X and Y axes.
@@ -39,7 +42,7 @@ public enum DispatchAxis
     /// <see cref="GraphicsDeviceExtensions.ForEach{T, TPixel}(GraphicsDevice, IReadWriteNormalizedTexture2D{TPixel}, in T)"/>, <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, in T)"/>,
     /// <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteNormalizedTexture2D{TPixel})"/> or <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteNormalizedTexture2D{TPixel}, in T)"/>.
     /// </remarks>
-    XY,
+    XY = X | Y,
 
     /// <summary>
     /// Indicates a shader dispatch along the X and Z axes.
@@ -48,7 +51,7 @@ public enum DispatchAxis
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, int, in T)"/>,
     /// but only as long as the input dispatch size on the Y axis <c>1</c>. Using any other combination will not be able to leverage the precompiled shader bytecode.
     /// </remarks>
-    XZ,
+    XZ = X | Z,
 
     /// <summary>
     /// Indicates a shader dispatch along the Y and Z axes.
@@ -57,7 +60,7 @@ public enum DispatchAxis
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, int, in T)"/>,
     /// but only as long as the input dispatch size on the X axis <c>1</c>. Using any other combination will not be able to leverage the precompiled shader bytecode.
     /// </remarks>
-    YZ,
+    YZ = Y | Z,
 
     /// <summary>
     /// Indicates a shader dispatch along the X, Y and Z axes.
@@ -65,5 +68,5 @@ public enum DispatchAxis
     /// <remarks>
     /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, int, in T)"/> or <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, int, in T)"/>.
     /// </remarks>
-    XYZ
+    XYZ = X | Y | Z
 }

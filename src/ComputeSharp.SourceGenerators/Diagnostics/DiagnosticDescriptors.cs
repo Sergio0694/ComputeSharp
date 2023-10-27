@@ -654,19 +654,19 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with an invalid dispatch axis value.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for shaders shader with an invalid DefaultThreadGroupSizes value.
     /// <para>
-    /// Format: <c>"The shader of type {0} is using an invalid DefaultThreadGroupSize value in its [ThreadGroupSize] attribute"</c>.
+    /// Format: <c>"The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeDefaultThreadGroupSize = new(
+    public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes = new(
         id: "CMPS0048",
-        title: "Invalid DefaultThreadGroupSize value for [ThreadGroupSize] use",
-        messageFormat: "The shader of type {0} is using an invalid DefaultThreadGroupSize value in its [ThreadGroupSize] attribute",
+        title: "Invalid DefaultThreadGroupSizes value for [ThreadGroupSize] use",
+        messageFormat: "The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The DefaultThreadGroupSize value for [ThreadGroupSize] attributes have to be valid.",
+        description: "The DefaultThreadGroupSizes value for [ThreadGroupSize] attributes have to be valid.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>

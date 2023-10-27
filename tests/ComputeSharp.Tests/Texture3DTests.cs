@@ -533,7 +533,7 @@ public partial class Texture3DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3DKernel : IComputeShader
     {
@@ -565,7 +565,7 @@ public partial class Texture3DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3DKernel : IComputeShader
     {

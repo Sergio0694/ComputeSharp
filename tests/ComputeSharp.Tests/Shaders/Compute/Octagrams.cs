@@ -8,7 +8,7 @@ namespace ComputeSharp.SwapChain.Shaders.Compute;
 /// <para>Created by whisky_shusuky.</para>
 /// </summary>
 [AutoConstructor]
-[ThreadGroupSize(DispatchAxis.XY)]
+[ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct Octagrams : IComputeShader
 {

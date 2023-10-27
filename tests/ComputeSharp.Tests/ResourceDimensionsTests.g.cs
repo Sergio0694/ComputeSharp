@@ -29,7 +29,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyBuffer_T1_AsReadOnlyBufferShader : IComputeShader
     {
@@ -63,7 +63,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteBuffer_T1_AsReadWriteBufferShader : IComputeShader
     {
@@ -97,7 +97,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T1_AsReadOnlyTexture1DShader : IComputeShader
     {
@@ -131,7 +131,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T1_AsReadWriteTexture1DShader : IComputeShader
     {
@@ -169,7 +169,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T1_AsIReadOnlyTexture1DShader : IComputeShader
     {
@@ -203,7 +203,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T2_AsReadOnlyTexture1DShader : IComputeShader
     {
@@ -237,7 +237,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture1D_T2_AsIReadOnlyNormalizedTexture1DShader : IComputeShader
     {
@@ -271,7 +271,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T2_AsReadWriteTexture1DShader : IComputeShader
     {
@@ -305,7 +305,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture1D_T2_AsIReadWriteNormalizedTexture1DShader : IComputeShader
     {
@@ -339,7 +339,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T1_AsReadOnlyTexture2DShader : IComputeShader
     {
@@ -374,7 +374,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T1_AsReadWriteTexture2DShader : IComputeShader
     {
@@ -413,7 +413,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T1_AsIReadOnlyTexture2DShader : IComputeShader
     {
@@ -448,7 +448,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T2_AsReadOnlyTexture2DShader : IComputeShader
     {
@@ -483,7 +483,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2D_T2_AsIReadOnlyNormalizedTexture2DShader : IComputeShader
     {
@@ -518,7 +518,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T2_AsReadWriteTexture2DShader : IComputeShader
     {
@@ -553,7 +553,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2D_T2_AsIReadWriteNormalizedTexture2DShader : IComputeShader
     {
@@ -588,7 +588,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T1_AsReadOnlyTexture3DShader : IComputeShader
     {
@@ -624,7 +624,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T1_AsReadWriteTexture3DShader : IComputeShader
     {
@@ -664,7 +664,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T1_AsIReadOnlyTexture3DShader : IComputeShader
     {
@@ -700,7 +700,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T2_AsReadOnlyTexture3DShader : IComputeShader
     {
@@ -736,7 +736,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture3D_T2_AsIReadOnlyNormalizedTexture3DShader : IComputeShader
     {
@@ -772,7 +772,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T2_AsReadWriteTexture3DShader : IComputeShader
     {
@@ -808,7 +808,7 @@ public partial class ResourceDimensionsTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture3D_T2_AsIReadWriteNormalizedTexture3DShader : IComputeShader
     {

@@ -7,7 +7,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
 [AutoConstructor]
-[ThreadGroupSize(DispatchAxis.XY)]
+[ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct ProteanClouds : IComputeShader<float4>
 {

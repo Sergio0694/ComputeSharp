@@ -428,7 +428,7 @@ public partial class Texture2DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyTexture2DKernel : IComputeShader
     {
@@ -460,7 +460,7 @@ public partial class Texture2DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteTexture2DKernel : IComputeShader
     {

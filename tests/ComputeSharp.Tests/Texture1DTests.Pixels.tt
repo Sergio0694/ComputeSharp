@@ -65,7 +65,7 @@ foreach (var (t, tPixel) in EnumerateTypes())
 #>
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
     {

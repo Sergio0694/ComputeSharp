@@ -31,7 +31,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct StaticConstantsShader : IComputeShader
     {
@@ -72,7 +72,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GlobalVariableShader : IComputeShader
     {
@@ -108,7 +108,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BoolInstanceFieldsShader : IComputeShader
     {
@@ -173,7 +173,7 @@ public partial class ShaderMembersTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BoolInstanceFieldInCustomStructShader : IComputeShader
     {

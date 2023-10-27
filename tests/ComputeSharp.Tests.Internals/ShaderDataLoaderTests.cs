@@ -12,7 +12,7 @@ namespace ComputeSharp.Tests.Internals;
 public partial class ShaderDataLoaderTests
 {
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct CapturedResourceShader : IComputeShader
     {
@@ -48,7 +48,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct MultipleResourcesAndPrimitivesShader : IComputeShader
     {
@@ -94,7 +94,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct ScalarAndVectorTypesShader : IComputeShader
     {
@@ -145,7 +145,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
     {
@@ -231,7 +231,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct FlatCustomTypeShader : IComputeShader
     {
@@ -323,7 +323,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct NestedCustomTypesShader : IComputeShader
     {
@@ -415,7 +415,7 @@ public partial class ShaderDataLoaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public partial struct AmbiguousNamesShader : IComputeShader
     {

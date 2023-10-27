@@ -25,7 +25,7 @@ for (int i = 0; i < array.Length; i++)
 /// <summary>
 /// A sample kernel that is precompiled.
 /// </summary>
-[ThreadGroupSize(DispatchAxis.X)]
+[ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
 [AutoConstructor]
 internal readonly partial struct MultiplyByTwo : IComputeShader

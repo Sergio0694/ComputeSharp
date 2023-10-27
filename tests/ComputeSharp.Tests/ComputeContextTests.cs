@@ -1294,7 +1294,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct OffsetComputeShader : IComputeShader
     {
@@ -1309,7 +1309,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ClearPixelShader : IComputeShader<float4>
     {
@@ -1321,7 +1321,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ColorPixelShader : IComputeShader<float4>
     {
@@ -1335,7 +1335,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSampling2DPixelShader : IComputeShader<float4>
     {
@@ -1349,7 +1349,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSampling3DComputeShader : IComputeShader
     {
@@ -1369,7 +1369,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSamplingFromNormalized2DPixelShader : IComputeShader<float4>
     {
@@ -1383,7 +1383,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct CopyToOutputPixelShader : IComputeShader<float4>
     {
@@ -1397,7 +1397,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct InvertPixelShader : IComputeShader<float4>
     {
@@ -1411,7 +1411,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct LinearSamplingFromNormalized3DComputeShader : IComputeShader
     {
@@ -1431,7 +1431,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Dotted2DPixelShader : IComputeShader
     {
@@ -1461,7 +1461,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Dotted3DPixelShader : IComputeShader
     {
@@ -1491,7 +1491,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ConvertToNonNormalized2DShader : IComputeShader
     {

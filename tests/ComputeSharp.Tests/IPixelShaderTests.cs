@@ -35,7 +35,7 @@ public partial class IPixelShaderTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct EarlyReturnShader : IComputeShader<float4>
     {

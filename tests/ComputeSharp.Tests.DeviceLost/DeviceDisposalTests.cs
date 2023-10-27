@@ -143,7 +143,7 @@ public partial class DeviceDisposalTests
         Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(d3D12Device));
     }
 
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     [AutoConstructor]
     internal readonly partial struct InitializeShader : IComputeShader
@@ -177,7 +177,7 @@ public partial class DeviceDisposalTests
         Assert.AreEqual(1u, GraphicsDeviceHelper.GetD3D12DeviceRefCount(d3D12Device));
     }
 
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal partial struct HelloWorldShader : IComputeShader<float4>
     {

@@ -278,7 +278,7 @@ public partial class BufferTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ConstantBufferKernel : IComputeShader
     {
@@ -308,7 +308,7 @@ public partial class BufferTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadOnlyBufferKernel : IComputeShader
     {
@@ -338,7 +338,7 @@ public partial class BufferTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadWriteBufferKernel : IComputeShader
     {
@@ -375,7 +375,7 @@ public partial class BufferTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct DoublePrecisionSupportShader : IComputeShader
     {

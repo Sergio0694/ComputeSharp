@@ -69,7 +69,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_Bgra32_Float4 : IComputeShader
     {
@@ -83,7 +83,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_R16_float : IComputeShader
     {
@@ -97,7 +97,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_R8_float : IComputeShader
     {
@@ -111,7 +111,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_Rg16_Float2 : IComputeShader
     {
@@ -125,7 +125,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_Rg32_Float2 : IComputeShader
     {
@@ -139,7 +139,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_Rgba32_Float4 : IComputeShader
     {
@@ -153,7 +153,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct Shader_Unorm_Rgba64_Float4 : IComputeShader
     {

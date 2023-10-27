@@ -57,7 +57,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ThreadIdsShader : IComputeShader
     {
@@ -113,7 +113,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ThreadIdsNormalizedShader : IComputeShader
     {
@@ -156,7 +156,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GroupIdsShader : IComputeShader
     {
@@ -255,7 +255,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.XYZ)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchSizeShader : IComputeShader
     {
@@ -296,7 +296,7 @@ public partial class DispatchTests
         }
     }
 
-    [ThreadGroupSize(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DispatchPixelShader : IComputeShader<float4>
     {
@@ -327,7 +327,7 @@ public partial class DispatchTests
     }
 
     [AutoConstructor]
-    [ThreadGroupSize(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct FixedGroupSharedPixelShader : IComputeShader
     {

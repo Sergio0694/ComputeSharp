@@ -22,7 +22,7 @@ if (!numbers.SequenceEqual(result))
 Console.WriteLine("Test passed successfully!");
 
 [AutoConstructor]
-[ThreadGroupSize(DispatchAxis.X)]
+[ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
 public readonly partial struct ApplyFunctionShader : IComputeShader
 {
