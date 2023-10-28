@@ -217,10 +217,13 @@ jobs:
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
-        $process.CloseMainWindow() | Out-Null;
-        $process.WaitForExit();
-        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
-        return $process.ExitCode;
+        try
+        {
+            $process.CloseMainWindow() | Out-Null;
+            $process.WaitForExit();
+        }
+        catch { }
+        if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
 
       # Upload the binary (to track binary size trends)
     - if: matrix.platform == 'x64'
@@ -246,10 +249,13 @@ jobs:
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe -PassThru);
         sleep -Seconds 2;
-        $process.CloseMainWindow() | Out-Null;
-        $process.WaitForExit();
-        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
-        return $process.ExitCode;
+        try
+        {
+            $process.CloseMainWindow() | Out-Null;
+            $process.WaitForExit();
+        }
+        catch { }
+        if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
 
       # Upload the binary again (with a different name)
     - if: matrix.platform == 'x64'
@@ -275,10 +281,13 @@ jobs:
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net8.0-windows10.0.22621\win-x64\publish\computesharp.d2d1.cli.exe -PassThru);
         sleep -Seconds 2;
-        $process.CloseMainWindow() | Out-Null;
-        $process.WaitForExit();
-        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
-        return $process.ExitCode;
+        try
+        {
+            $process.CloseMainWindow() | Out-Null;
+            $process.WaitForExit();
+        }
+        catch { }
+        if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
       
       # Publish the Win2D sample again (with NativeAOT)
     - name: Publish ComputeSharp.SwapChain.D2D1.Cli (NativeAOT)
@@ -295,10 +304,13 @@ jobs:
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net8.0-windows10.0.22621\win-x64\publish\computesharp.d2d1.cli.exe -PassThru);
         sleep -Seconds 2;
-        $process.CloseMainWindow() | Out-Null;
-        $process.WaitForExit();
-        if ($process.ExitCode -lt 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
-        return $process.ExitCode;
+        try
+        {
+            $process.CloseMainWindow() | Out-Null;
+            $process.WaitForExit();
+        }
+        catch { }
+        if ($process.ExitCode -ne 0 -and $process.ExitCode -ne -1073741510) { throw $process.ExitCode; }
 
       # Publish the native library as a NativeAOT shared library
     - name: Publish ComputeSharp.NativeLibrary
