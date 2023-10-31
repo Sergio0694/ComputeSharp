@@ -129,7 +129,7 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
 
                 // Group shared fields must be static
                 if (attribute is not null)
@@ -224,7 +224,7 @@ partial class ComputeShaderDescriptorGenerator
                         continue;
                     }
 
-                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
+                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
 
                     if (attribute is not null)
                     {
@@ -284,7 +284,7 @@ partial class ComputeShaderDescriptorGenerator
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == "ComputeSharp.GroupSharedAttribute");
 
                 if (attribute is null)
                 {
