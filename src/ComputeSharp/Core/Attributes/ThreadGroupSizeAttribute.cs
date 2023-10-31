@@ -36,7 +36,6 @@ public sealed class ThreadGroupSizeAttribute : Attribute
     /// <param name="size">The default thread group size to use.</param>
     public ThreadGroupSizeAttribute(DefaultThreadGroupSizes size)
     {
-#if !SOURCE_GENERATOR
         (ThreadsX, ThreadsY, ThreadsZ) = size switch
         {
             DefaultThreadGroupSizes.X => (64, 1, 1),
@@ -48,7 +47,6 @@ public sealed class ThreadGroupSizeAttribute : Attribute
             DefaultThreadGroupSizes.XYZ => (4, 4, 4),
             _ => default(ArgumentException).Throw<(int, int, int)>(nameof(size))
         };
-#endif
     }
 
     /// <summary>

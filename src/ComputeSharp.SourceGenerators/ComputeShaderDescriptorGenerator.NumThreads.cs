@@ -33,7 +33,7 @@ partial class ComputeShaderDescriptorGenerator
             out bool isCompilationEnabled)
         {
             // Try to get the attribute that controls shader precompilation (this is always required)
-            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(ThreadGroupSizeAttribute).FullName, out AttributeData? attribute))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.ThreadGroupSizeAttribute", out AttributeData? attribute))
             {
                 diagnostics.Add(MissingThreadGroupSizeAttribute, structDeclarationSymbol, structDeclarationSymbol);
 
