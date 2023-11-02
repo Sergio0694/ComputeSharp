@@ -10,7 +10,8 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
     public int Close()
     {
-        this.d2D1DrawInfo = null;
+        // No need to call Release on the ID2D1DrawInfo object (see notes in the Factory method)
+        this.d2D1DrawInfo = default;
 
         return S.S_OK;
     }

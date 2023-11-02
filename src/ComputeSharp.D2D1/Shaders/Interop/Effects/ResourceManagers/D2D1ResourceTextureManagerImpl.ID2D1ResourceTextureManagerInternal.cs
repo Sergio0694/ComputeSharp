@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Extensions;
 using ComputeSharp.Win32;
 
@@ -70,7 +71,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 // If this is the first time the method is called, just store the context.
                 // Before doing so, get an ID2D1Multithread instance, to ensure thread safety.
                 // For additional info, see docs on ID2D1EffectFactoryExtensions.GetD2D1Multithread.
-                if (@this->d2D1EffectContext is null)
+                if (@this->d2D1EffectContext.Get() is null)
                 {
                     using ComPtr<ID2D1Multithread> d2D1Multithread = default;
 
@@ -88,9 +89,9 @@ partial struct D2D1ResourceTextureManagerImpl
                         // Now, the effect context can actually be stored safely while holding the lock.
                         // This is guaranteed to be the case here, as this method is only called (as per
                         // contact of the COM interface) from ID2D1EffectImpl, which holds the D2D lock.
-                        ComPtr.WriteTo(effectContext, out @this->d2D1EffectContext);
-
-                        @this->d2D1Multithread = d2D1Multithread.Detach();
+                        // Also store the actual multithread object after storing the effect context.
+                        @this->d2D1EffectContext.Attach(new ComPtr<ID2D1EffectContext>(effectContext).Get());
+                        @this->d2D1Multithread.Attach(d2D1Multithread.Detach());
                     }
 
                     return hresult;
@@ -117,15 +118,15 @@ partial struct D2D1ResourceTextureManagerImpl
             lock (@this->lockHandle.Target!)
             {
                 // If the effect context is null, it means Initialize has not been called yet
-                if (@this->d2D1EffectContext is null)
+                if (@this->d2D1EffectContext.Get() is null)
                 {
                     return E.E_NOT_VALID_STATE;
                 }
 
                 // If the texture has already been created, just return it
-                if (@this->d2D1ResourceTexture is not null)
+                if (@this->d2D1ResourceTexture.Get() is not null)
                 {
-                    ComPtr.WriteTo(@this->d2D1ResourceTexture, out *resourceTexture);
+                    @this->d2D1ResourceTexture.CopyTo(resourceTexture).Assert();
 
                     return S.S_OK;
                 }
@@ -139,7 +140,7 @@ partial struct D2D1ResourceTextureManagerImpl
                 using ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture = default;
 
                 // Create the resource now, as it hasn't been created yet
-                int result = @this->d2D1EffectContext->CreateResourceTexture(
+                int result = @this->d2D1EffectContext.Get()->CreateResourceTexture(
                     resourceId: @this->resourceId,
                     resourceTextureProperties: &@this->resourceTextureProperties,
                     data: @this->data,

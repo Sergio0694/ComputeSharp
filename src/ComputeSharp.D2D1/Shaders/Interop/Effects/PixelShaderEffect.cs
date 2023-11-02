@@ -80,17 +80,17 @@ internal unsafe partial struct PixelShaderEffect
     /// <summary>
     /// The <see cref="ID2D1TransformMapper"/> instance to use, if any.
     /// </summary>
-    private ID2D1TransformMapper* d2D1TransformMapper;
+    private ComPtr<ID2D1TransformMapper> d2D1TransformMapper;
 
     /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
     /// </summary>
-    private ID2D1DrawInfo* d2D1DrawInfo;
+    private ComPtr<ID2D1DrawInfo> d2D1DrawInfo;
 
     /// <summary>
     /// The <see cref="ID2D1EffectContext"/> instance currently in use.
     /// </summary>
-    private ID2D1EffectContext* d2D1EffectContext;
+    private ComPtr<ID2D1EffectContext> d2D1EffectContext;
 
     /// <summary>
     /// The resource texture managers for the current instance.
@@ -118,9 +118,9 @@ internal unsafe partial struct PixelShaderEffect
             @this->referenceCount = 1;
             @this->globalsHandle = globalsHandle;
             @this->constantBuffer = null;
-            @this->d2D1TransformMapper = null;
-            @this->d2D1DrawInfo = null;
-            @this->d2D1EffectContext = null;
+            @this->d2D1TransformMapper = default;
+            @this->d2D1DrawInfo = default;
+            @this->d2D1EffectContext = default;
             @this->resourceTextureManagerBuffer = default;
 
             *effectImpl = (IUnknown*)@this;
@@ -197,9 +197,9 @@ internal unsafe partial struct PixelShaderEffect
 
             NativeMemory.Free(this.constantBuffer);
 
-            ComPtr.Dispose(this.d2D1TransformMapper);
-            ComPtr.Dispose(this.d2D1DrawInfo);
-            ComPtr.Dispose(this.d2D1EffectContext);
+            this.d2D1TransformMapper.Dispose();
+            this.d2D1DrawInfo.Dispose();
+            this.d2D1EffectContext.Dispose();
 
             // Retrieve all possible resource texture managers in use and release the ones that had been
             // assigned (from one of the property bindings). We just try to dispose all of them here and

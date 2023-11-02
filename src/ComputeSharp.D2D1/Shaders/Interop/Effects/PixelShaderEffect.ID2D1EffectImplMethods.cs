@@ -70,7 +70,7 @@ internal unsafe partial struct PixelShaderEffect
                 transformGraph->SetSingleTransformNode((ID2D1TransformNode*)&@this->lpVtblForID2D1DrawTransform).Assert();
 
                 // Store the new ID2D1EffectContext object
-                ComPtr.CopyTo(effectContext, ref @this->d2D1EffectContext);
+                @this->d2D1EffectContext.Attach(new ComPtr<ID2D1EffectContext>(effectContext).Get());
 
                 return S.S_OK;
             }
@@ -99,7 +99,7 @@ internal unsafe partial struct PixelShaderEffect
                 // First, set the constant buffer, if available
                 if (@this->constantBuffer is not null)
                 {
-                    @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(
+                    @this->d2D1DrawInfo.Get()->SetPixelShaderConstantBuffer(
                         buffer: @this->constantBuffer,
                         bufferCount: (uint)@this->GetGlobals().ConstantBufferSize).Assert();
                 }
@@ -131,7 +131,7 @@ internal unsafe partial struct PixelShaderEffect
                     ref readonly D2D1ResourceTextureDescription resourceTextureDescription = ref resourceTextureDescriptions[i];
 
                     // Set the ID2D1ResourceTexture object to the current index in the ID2D1DrawInfo object in use
-                    @this->d2D1DrawInfo->SetResourceTexture(
+                    @this->d2D1DrawInfo.Get()->SetResourceTexture(
                         textureIndex: (uint)resourceTextureDescription.Index,
                         resourceTexture: d2D1ResourceTexture.Get()).Assert();
                 }

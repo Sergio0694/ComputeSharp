@@ -132,7 +132,7 @@ partial class DeviceHelper
         /// <summary>
         /// The wrapped <see cref="IDXGIFactory4"/> instance.
         /// </summary>
-        private IDXGIFactory4* dxgiFactory4;
+        private ComPtr<IDXGIFactory4> dxgiFactory4;
 
         /// <summary>
         /// Creates and initializes a new <see cref="IDXGIFactory4As6Backcompat"/> instance.
@@ -144,9 +144,7 @@ partial class DeviceHelper
             IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)NativeMemory.Alloc((nuint)sizeof(IDXGIFactory4As6Backcompat));
 
             @this->lpVtbl = Vtbl;
-            @this->dxgiFactory4 = dxgiFactory4;
-
-            _ = dxgiFactory4->AddRef();
+            @this->dxgiFactory4 = new ComPtr<IDXGIFactory4>(dxgiFactory4);
 
             *dxgiFactory6 = (IDXGIFactory6*)@this;
         }
@@ -155,7 +153,7 @@ partial class DeviceHelper
         [UnmanagedCallersOnly]
         private static uint Release(IDXGIFactory4As6Backcompat* @this)
         {
-            _ = @this->dxgiFactory4->Release();
+            @this->dxgiFactory4.Dispose();
 
             NativeMemory.Free(@this);
 
@@ -166,21 +164,21 @@ partial class DeviceHelper
         [UnmanagedCallersOnly]
         private static int EnumAdapters(IDXGIFactory4As6Backcompat* @this, uint Adapter, IDXGIAdapter** ppAdapter)
         {
-            return @this->dxgiFactory4->EnumAdapters(Adapter, ppAdapter);
+            return @this->dxgiFactory4.Get()->EnumAdapters(Adapter, ppAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
         [UnmanagedCallersOnly]
         private static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
         {
-            return @this->dxgiFactory4->EnumWarpAdapter(riid, ppvAdapter);
+            return @this->dxgiFactory4.Get()->EnumWarpAdapter(riid, ppvAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
         [UnmanagedCallersOnly]
         private static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
         {
-            return @this->dxgiFactory4->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);
+            return @this->dxgiFactory4.Get()->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);
         }
     }
 }

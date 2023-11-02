@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop.Allocation;
 using ComputeSharp.Win32;
 using D3D12MA_Allocation = TerraFX.Interop.DirectX.D3D12MA_Allocation;
@@ -47,17 +48,17 @@ internal unsafe struct ID3D12AllocationImpl
     /// <summary>
     /// The parent <see cref="ID3D12MemoryAllocatorImpl"/> instance.
     /// </summary>
-    private ID3D12MemoryAllocatorImpl* allocatorImpl;
+    private ComPtr<ID3D12MemoryAllocatorImpl> allocatorImpl;
 
     /// <summary>
     /// The wrapped <see cref="D3D12MA_Allocation"/> instance.
     /// </summary>
-    private D3D12MA_Allocation* allocation;
+    private ComPtr<D3D12MA_Allocation> allocation;
 
     /// <summary>
     /// The underlying <see cref="ID3D12Resource"/> instance.
     /// </summary>
-    private ID3D12Resource* d3D12Resource;
+    private ComPtr<ID3D12Resource> d3D12Resource;
 
     /// <summary>
     /// The factory method for <see cref="ID3D12AllocationImpl"/> instances.
@@ -86,15 +87,11 @@ internal unsafe struct ID3D12AllocationImpl
             return E.E_OUTOFMEMORY;
         }
 
-        _ = allocatorImpl->AddRef();
-        _ = allocation->AddRef();
-        _ = d3D12Resource->AddRef();
-
         @this->lpVtbl = Vtbl;
         @this->referenceCount = 1;
-        @this->allocatorImpl = allocatorImpl;
-        @this->allocation = allocation;
-        @this->d3D12Resource = d3D12Resource;
+        @this->allocatorImpl = new ComPtr<ID3D12MemoryAllocatorImpl>(allocatorImpl);
+        @this->allocation = new ComPtr<D3D12MA_Allocation>(allocation);
+        @this->d3D12Resource = new ComPtr<ID3D12Resource>(d3D12Resource);
 
         *allocationImpl = @this;
 
@@ -140,15 +137,15 @@ internal unsafe struct ID3D12AllocationImpl
 
         if (referenceCount == 0)
         {
-            _ = @this->allocation->Release();
-            _ = @this->d3D12Resource->Release();
+            @this->allocation.Dispose();
+            @this->d3D12Resource.Dispose();
 
             // Release the parent allocator as well as last thing. This is needed because the D3D12MA allocator
             // will fail if an allocator is released while there are still outstanding allocations. So here we
             // increment the reference count of the allocator when creating a new allocation object, and then we
             // decrement it after the underlying allocation has been released. This means that if this allocation
             // is the last thing keeping the allocator alive, it'll be disposed correctly after this last object.
-            _ = @this->allocatorImpl->Release();
+            @this->allocatorImpl.Dispose();
 
             NativeMemory.Free(@this);
         }
@@ -165,9 +162,7 @@ internal unsafe struct ID3D12AllocationImpl
             return E.E_POINTER;
         }
 
-        _ = @this->d3D12Resource->AddRef();
-
-        *resource = @this->d3D12Resource;
+        @this->d3D12Resource.CopyTo(resource).Assert();
 
         return S.S_OK;
     }
