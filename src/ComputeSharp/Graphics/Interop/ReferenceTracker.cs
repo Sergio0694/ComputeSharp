@@ -115,15 +115,7 @@ internal struct ReferenceTracker : IDisposable
     {
         Lease lease = TryGetLease(out bool leaseTaken);
 
-        if (!leaseTaken)
-        {
-            // We can't use a throw helper here as we only want to invoke ToString if we
-            // are about to throw an exception. The JIT will recognize this pattern
-            // as this method has a single basic block that always throws an exception.
-            static void Throw(object trackedObject) => throw new ObjectDisposedException(trackedObject.ToString());
-
-            Throw(this);
-        }
+        default(ObjectDisposedException).ThrowIf(!leaseTaken, this.trackedObject);
 
         return lease;
     }
