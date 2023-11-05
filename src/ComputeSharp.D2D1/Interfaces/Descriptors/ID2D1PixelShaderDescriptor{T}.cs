@@ -130,7 +130,9 @@ public interface ID2D1PixelShaderDescriptor<T>
     /// Creates a new <typeparamref name="T"/> shader instance from a constant buffer.
     /// </summary>
     /// <param name="buffer">The input constant buffer to read.</param>
+    /// <returns>The resulting <typeparamref name="T"/> instance.</returns>
     /// <remarks>The input buffer must be retrieved from <see cref="LoadConstantBuffer"/>.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="buffer"/> is not large enough for the current shader type.</exception>
     static abstract T CreateFromConstantBuffer(ReadOnlySpan<byte> buffer);
 
     /// <summary>
