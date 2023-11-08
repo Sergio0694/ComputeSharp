@@ -59,7 +59,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dcommon\D2D_VECTOR_2F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HSTRING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\uuids\Windows.Manual.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)WinRT\um\windows.graphics.directx.direct3d11.interop\IDirect3DDxgiInterfaceAccess.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Win32.D3D12\ComPtr`1.cs" Link="ComPtr`1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1effectauthor\ID2D1DrawInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Win32.D3D12\Windows\other\helper-types\HRESULT.cs" Link="Windows\other\helper-types\HRESULT.cs" />
