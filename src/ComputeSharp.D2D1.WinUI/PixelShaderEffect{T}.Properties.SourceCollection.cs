@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.WinUI.Buffers;
 using ComputeSharp.D2D1.WinUI.Collections;
 using Windows.Graphics.Effects;
@@ -223,7 +224,7 @@ partial class PixelShaderEffect<T>
                 indices[i] = i;
             }
 
-            return Unsafe.As<int[], ImmutableArray<int>>(ref indices);
+            return ImmutableCollectionsMarshal.AsImmutableArray(indices);
         }
     }
 }
