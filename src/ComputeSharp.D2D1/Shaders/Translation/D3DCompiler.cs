@@ -169,12 +169,16 @@ internal static unsafe partial class D3DCompiler
                 ppErrorMsgs: d3DBlobErrors.GetAddressOf());
         }
 
-        // Throw if an error was retrieved, then also double check the HRESULT
-        if (d3DBlobErrors.Get() is not null)
+        // Throw an exception with the input messages, if the compilation fails.
+        // If compilation succeeds with warnings, we just ignore the messages.
+        if (hResult.Value < 0 && d3DBlobErrors.Get() is not null)
         {
             ThrowHslsCompilationException(d3DBlobErrors.Get());
         }
 
+        // Also just assert the HRESULT in general after checking messages. Not entirely
+        // clear if this is reachable in case the compilation fails (one would assume
+        // there would always be a message), but better safe than sorry.
         hResult.Assert();
 
         return d3DBlobBytecode.Move();
