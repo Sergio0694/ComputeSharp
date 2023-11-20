@@ -1,3 +1,4 @@
+using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
@@ -32,7 +33,7 @@ partial class ComputeShaderDescriptorGenerator
                 // Append the statements for the dispatch ranges
                 writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[0]) = (uint)x;");
                 writer.WriteLine("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[4]) = (uint)y;");
-                writer.WriteLineIf("global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[8]) = (uint)z;", !info.IsPixelShaderLike);
+                writer.WriteLineIf(!info.IsPixelShaderLike, "global::System.Runtime.CompilerServices.Unsafe.As<byte, uint>(ref span[8]) = (uint)z;");
 
                 // Generate loading statements for each captured field
                 foreach (FieldInfo fieldInfo in info.Fields)
@@ -44,19 +45,19 @@ partial class ComputeShaderDescriptorGenerator
                             // Read a boolean value and cast it to Bool first, which will apply the correct size expansion
                             writer.WriteLine(
                                 $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::ComputeSharp.Bool>(ref span[{primitive.Offset}]) = " +
-                                $"(global::ComputeSharp.Bool)shader.{string.Join(".", primitive.FieldPath)};");
+                                $"(global::ComputeSharp.Bool)shader.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))};");
                             break;
                         case FieldInfo.Primitive primitive:
 
                             // Read a primitive value and serialize it into the target buffer
                             writer.WriteLine(
                                 $"global::System.Runtime.CompilerServices.Unsafe.As<byte, global::{primitive.TypeName}>(ref span[{primitive.Offset}]) = " +
-                                $"shader.{string.Join(".", primitive.FieldPath)};");
+                                $"shader.{string.Join(".", primitive.FieldPath.Select(static path => path.Name))};");
                             break;
 
                         case FieldInfo.NonLinearMatrix matrix:
                             string rowTypeName = $"global::ComputeSharp.{matrix.ElementName}{matrix.Columns}";
-                            string rowLocalName = $"__{string.Join("_", matrix.FieldPath)}__row0";
+                            string rowLocalName = $"__{string.Join("_", matrix.FieldPath.Select(static path => path.Name))}__row0";
 
                             // Declare a local to index into individual rows. This will generate:
                             //
@@ -64,7 +65,7 @@ partial class ComputeShaderDescriptorGenerator
                             //     ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in <FIELD_PATH>));
                             writer.WriteLine(
                                 $"ref {rowTypeName} {rowLocalName} = ref global::System.Runtime.CompilerServices.Unsafe.As<global::{matrix.TypeName}, {rowTypeName}>(" +
-                                $"ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in shader.{string.Join(".", matrix.FieldPath)}));");
+                                $"ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in shader.{string.Join(".", matrix.FieldPath.Select(static path => path.Name))}));");
 
                             // Generate the loading code for each individual row, with proper alignment.
                             // This will result in the following (assuming Float2x3 m):

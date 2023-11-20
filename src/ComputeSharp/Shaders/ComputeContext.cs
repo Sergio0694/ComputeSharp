@@ -121,11 +121,10 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, ref T shader)
+    internal readonly unsafe void Run<T>(int x, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
-
-        Run(x, 1, 1, ref shader);
+        Run(x, 1, 1, in shader);
     }
 
     /// <summary>
@@ -134,11 +133,10 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="x">The number of iterations to run on the X axis.</param>
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, int y, ref T shader)
+    internal readonly unsafe void Run<T>(int x, int y, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
-
-        Run(x, y, 1, ref shader);
+        Run(x, y, 1, in shader);
     }
 
     /// <summary>
@@ -149,7 +147,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
+    internal readonly unsafe void Run<T>(int x, int y, int z, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
         default(InvalidOperationException).ThrowIf(this.device is null);
@@ -189,7 +187,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <typeparam name="TPixel">The type of pixel to work on.</typeparam>
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-    internal readonly unsafe void Run<T, TPixel>(IReadWriteNormalizedTexture2D<TPixel> texture, ref T shader)
+    internal readonly unsafe void Run<T, TPixel>(IReadWriteNormalizedTexture2D<TPixel> texture, in T shader)
         where T : struct, IComputeShader<TPixel>, IComputeShaderDescriptor<T>
         where TPixel : unmanaged
     {

@@ -53,9 +53,9 @@ partial class D2DPixelShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::System.CodeDom.Compiler");
-            usingDirectives.Add("global::System.Diagnostics");
-            usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
+            _ = usingDirectives.Add("global::System.CodeDom.Compiler");
+            _ = usingDirectives.Add("global::System.Diagnostics");
+            _ = usingDirectives.Add("global::System.Diagnostics.CodeAnalysis");
 
             AddAdditionalDataMemberUsingDirectives(info, usingDirectives);
             ResourceTextureDescriptions.AddAdditionalDataMemberUsingDirectives(info, usingDirectives);
@@ -103,8 +103,8 @@ partial class D2DPixelShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::ComputeSharp.D2D1");
-            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
+            _ = usingDirectives.Add("global::ComputeSharp.D2D1");
+            _ = usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
         }
 
         /// <summary>

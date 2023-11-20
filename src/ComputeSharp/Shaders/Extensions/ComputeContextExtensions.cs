@@ -487,7 +487,7 @@ public static class ComputeContextExtensions
     public static void For<T>(this in ComputeContext context, int x, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
-        context.Run(x, ref Unsafe.AsRef(in shader));
+        context.Run(x, in shader);
     }
 
     /// <summary>
@@ -501,7 +501,7 @@ public static class ComputeContextExtensions
     public static void For<T>(this in ComputeContext context, int x, int y, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
-        context.Run(x, y, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, in shader);
     }
 
     /// <summary>
@@ -516,7 +516,7 @@ public static class ComputeContextExtensions
     public static void For<T>(this in ComputeContext context, int x, int y, int z, in T shader)
         where T : struct, IComputeShader, IComputeShaderDescriptor<T>
     {
-        context.Run(x, y, z, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, z, in shader);
     }
 
     /// <summary>
@@ -532,9 +532,7 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        Unsafe.SkipInit(out T shader);
-
-        context.Run(texture, ref shader);
+        context.Run(texture, default(T));
     }
 
     /// <summary>
@@ -551,7 +549,7 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        context.Run(texture, ref Unsafe.AsRef(in shader));
+        context.Run(texture, in shader);
     }
 
     /// <summary>

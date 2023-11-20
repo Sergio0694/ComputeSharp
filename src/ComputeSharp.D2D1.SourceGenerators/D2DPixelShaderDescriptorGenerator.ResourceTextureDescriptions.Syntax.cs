@@ -47,7 +47,7 @@ partial class D2DPixelShaderDescriptorGenerator
                 return;
             }
 
-            usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
+            _ = usingDirectives.Add("global::ComputeSharp.D2D1.Interop");
         }
 
         /// <summary>

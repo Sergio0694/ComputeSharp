@@ -49,10 +49,13 @@ internal static class ISymbolExtensions
     /// Gets the fully qualified name for a given symbol.
     /// </summary>
     /// <param name="symbol">The input <see cref="ISymbol"/> instance.</param>
+    /// <param name="includeGlobal">Whether to include the <c>global::</c> prefix.</param>
     /// <returns>The fully qualified name for <paramref name="symbol"/>.</returns>
-    public static string GetFullyQualifiedName(this ISymbol symbol)
+    public static string GetFullyQualifiedName(this ISymbol symbol, bool includeGlobal = false)
     {
-        return symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+        return includeGlobal
+            ? symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+            : symbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
     }
 
     /// <summary>

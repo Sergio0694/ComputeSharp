@@ -118,9 +118,16 @@ internal sealed partial record HierarchyInfo(string FullyQualifiedMetadataName, 
         using ImmutableArrayBuilder<char> fullyQualifiedTypeName = new();
 
         fullyQualifiedTypeName.AddRange("global::".AsSpan());
-        fullyQualifiedTypeName.AddRange(Namespace.AsSpan());
 
-        for (int i = Hierarchy.Length - 1; i >= 0; i--)
+        if (Namespace.Length > 0)
+        {
+            fullyQualifiedTypeName.AddRange(Namespace.AsSpan());
+            fullyQualifiedTypeName.Add('.');
+        }
+
+        fullyQualifiedTypeName.AddRange(Hierarchy[^1].QualifiedName.AsSpan());
+
+        for (int i = Hierarchy.Length - 2; i >= 0; i--)
         {
             fullyQualifiedTypeName.Add('.');
             fullyQualifiedTypeName.AddRange(Hierarchy[i].QualifiedName.AsSpan());

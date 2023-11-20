@@ -574,7 +574,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture1DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        CopyFromResourceTexture1DShader shader = new(width);
+        CopyFromResourceTexture1DShader shader = new();
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
@@ -626,8 +626,6 @@ public partial class D2D1ResourceTextureManagerTests
     [AutoConstructor]
     internal partial struct CopyFromResourceTexture1DShader : ID2D1PixelShader
     {
-        private int width;
-
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture1D<float> source;
 
@@ -663,7 +661,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture2DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        CopyFromResourceTexture2DShader shader = new(width, height);
+        CopyFromResourceTexture2DShader shader = new();
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
@@ -735,7 +733,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture2DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        CopyFromResourceTexture2DShader shader = new(width, height);
+        CopyFromResourceTexture2DShader shader = new();
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
@@ -796,9 +794,6 @@ public partial class D2D1ResourceTextureManagerTests
     [AutoConstructor]
     internal partial struct CopyFromResourceTexture2DShader : ID2D1PixelShader
     {
-        private int width;
-        private int height;
-
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture2D<float> source;
 
@@ -839,7 +834,7 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1PixelShaderEffect.CreateFromD2D1DeviceContext<CopyFromResourceTexture3DShader>(d2D1DeviceContext.Get(), (void**)d2D1Effect.GetAddressOf());
 
-        CopyFromResourceTexture3DShader shader = new(width, height, depth);
+        CopyFromResourceTexture3DShader shader = new(height);
 
         D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect(d2D1Effect.Get(), in shader);
 
@@ -903,9 +898,7 @@ public partial class D2D1ResourceTextureManagerTests
     [AutoConstructor]
     internal partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
     {
-        private int width;
         private int height;
-        private int depth;
 
         [D2DResourceTextureIndex(0)]
         private D2D1ResourceTexture3D<float> source;

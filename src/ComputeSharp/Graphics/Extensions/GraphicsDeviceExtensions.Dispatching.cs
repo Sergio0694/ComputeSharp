@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using ComputeSharp.Descriptors;
 using ComputeSharp.Interop;
 
@@ -24,7 +23,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(x, ref Unsafe.AsRef(in shader));
+        context.Run(x, in shader);
     }
 
     /// <summary>
@@ -42,7 +41,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(x, y, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, in shader);
     }
 
     /// <summary>
@@ -61,7 +60,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(x, y, z, ref Unsafe.AsRef(in shader));
+        context.Run(x, y, z, in shader);
     }
 
     /// <summary>
@@ -80,9 +79,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        Unsafe.SkipInit(out T shader);
-
-        context.Run(texture, ref shader);
+        context.Run(texture, default(T));
     }
 
     /// <summary>
@@ -102,7 +99,7 @@ public static partial class GraphicsDeviceExtensions
 
         using ComputeContext context = device.CreateComputeContext();
 
-        context.Run(texture, ref Unsafe.AsRef(in shader));
+        context.Run(texture, in shader);
     }
 
     /// <summary>
