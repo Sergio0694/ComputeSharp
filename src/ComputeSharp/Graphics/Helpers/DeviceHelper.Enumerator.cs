@@ -19,21 +19,13 @@ partial class DeviceHelper
     /// <summary>
     /// A custom query type that iterates through devices matching a given predicate.
     /// </summary>
-    public sealed unsafe class DeviceQuery : IEnumerable<GraphicsDevice>
+    /// <param name="predicate">The input predicate to select devices to create.</param>
+    public sealed unsafe class DeviceQuery(Predicate<GraphicsDeviceInfo>? predicate) : IEnumerable<GraphicsDevice>
     {
         /// <summary>
         /// The <see cref="Predicate{T}"/> instance to use to select devices to create.
         /// </summary>
-        private readonly Predicate<GraphicsDeviceInfo>? predicate;
-
-        /// <summary>
-        /// Creates a new <see cref="Enumerator"/> instance for the given predicate.
-        /// </summary>
-        /// <param name="predicate">The input predicate to select devices to create.</param>
-        public DeviceQuery(Predicate<GraphicsDeviceInfo>? predicate)
-        {
-            this.predicate = predicate;
-        }
+        private readonly Predicate<GraphicsDeviceInfo>? predicate = predicate;
 
         /// <inheritdoc/>
         public IEnumerator<GraphicsDevice> GetEnumerator()
@@ -50,12 +42,13 @@ partial class DeviceHelper
         /// <summary>
         /// The enumerator type for a <see cref="DeviceQuery"/> instance.
         /// </summary>
-        private sealed unsafe class Enumerator : ReferenceTrackedObject, IEnumerator<GraphicsDevice>
+        /// <param name="predicate">The input predicate to select devices to create.</param>
+        private sealed unsafe class Enumerator(Predicate<GraphicsDeviceInfo>? predicate) : ReferenceTrackedObject, IEnumerator<GraphicsDevice>
         {
             /// <summary>
             /// The <see cref="Predicate{T}"/> instance to use to select devices to create, if present.
             /// </summary>
-            private readonly Predicate<GraphicsDeviceInfo>? predicate;
+            private readonly Predicate<GraphicsDeviceInfo>? predicate = predicate;
 
             /// <summary>
             /// The <see cref="IDXGIFactory6"/> instance used to enumerate devices.
@@ -81,15 +74,6 @@ partial class DeviceHelper
             /// The current <see cref="GraphicsDevice"/> instance to return.
             /// </summary>
             private GraphicsDevice? graphicsDevice;
-
-            /// <summary>
-            /// Creates a new <see cref="Enumerator"/> instance for the given predicate.
-            /// </summary>
-            /// <param name="predicate">The input predicate to select devices to create.</param>
-            public Enumerator(Predicate<GraphicsDeviceInfo>? predicate)
-            {
-                this.predicate = predicate;
-            }
 
             /// <inheritdoc/>
             public GraphicsDevice Current => this.graphicsDevice!;

@@ -5,6 +5,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
+#pragma warning disable IDE0290
+
 namespace ComputeSharp.BokehBlur.Processors;
 
 /// <summary>

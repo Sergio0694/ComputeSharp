@@ -2,9 +2,9 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace ComputeSharp.Interop;
+#pragma warning disable CS0618, IDE0290
 
-#pragma warning disable CS0618
+namespace ComputeSharp.Interop;
 
 /// <summary>
 /// An object acting as reference tracked for a given managed object.

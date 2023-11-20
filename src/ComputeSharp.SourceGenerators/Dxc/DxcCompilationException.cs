@@ -1,5 +1,7 @@
 using System;
 
+#pragma warning disable IDE0290
+
 namespace ComputeSharp.SourceGenerators.Dxc;
 
 /// <summary>

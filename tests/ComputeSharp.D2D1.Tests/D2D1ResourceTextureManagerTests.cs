@@ -66,11 +66,11 @@ public partial class D2D1ResourceTextureManagerTests
     public unsafe void VerifyInterfaces_RCW()
     {
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc uint[] { 64 },
+            extents: [64],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinLinearMagMipPoint,
-            extendModes: stackalloc D2D1ExtendMode[] { D2D1ExtendMode.Clamp });
+            extendModes: [D2D1ExtendMode.Clamp]);
 
         using ComPtr<IUnknown> unknown = default;
         using ComPtr<IUnknown> resourceTextureManager2 = default;
@@ -153,13 +153,13 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1PixelShaderEffect.RegisterForD2D1Factory1<DummyShaderWithResourceTexture>(d2D1Factory2.Get(), out _);
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc uint[] { 128, 128 },
+            extents: [128, 128],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
-            data: ReadOnlySpan<byte>.Empty,
-            strides: ReadOnlySpan<uint>.Empty);
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
+            data: [],
+            strides: []);
 
         using ComPtr<ID2D1Effect> d2D1Effect = default;
 
@@ -218,13 +218,13 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager.Get(),
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected.Width, (uint)expected.Height },
+            extents: [(uint)expected.Width, (uint)expected.Height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
+            strides: [(uint)(sizeof(Rgba32) * expected.Width)]);
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
 
@@ -277,13 +277,13 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager.Get(),
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected.Width, (uint)expected.Height },
+            extents: [(uint)expected.Width, (uint)expected.Height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
+            strides: [(uint)(sizeof(Rgba32) * expected.Width)]);
 
         for (int i = 0; i < drawCount; i++)
         {
@@ -334,13 +334,13 @@ public partial class D2D1ResourceTextureManagerTests
 
         D2D1ResourceTextureManager resourceTextureManager = new(
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected.Width, (uint)expected.Height },
+            extents: [(uint)expected.Width, (uint)expected.Height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width) });
+            strides: [(uint)(sizeof(Rgba32) * expected.Width)]);
 
         using ComPtr<IUnknown> unknown = default;
 
@@ -399,24 +399,24 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager0.Get(),
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected0.Width, (uint)expected0.Height },
+            extents: [(uint)expected0.Width, (uint)expected0.Height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels0.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected0.Width) });
+            strides: [(uint)(sizeof(Rgba32) * expected0.Width)]);
 
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager1.Get(),
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected0.Width, (uint)expected0.Height },
+            extents: [(uint)expected0.Width, (uint)expected0.Height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels1.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected0.Width) });
+            strides: [(uint)(sizeof(Rgba32) * expected0.Width)]);
 
         using (ComPtr<ID2D1Effect> d2D1Effect = default)
         {
@@ -509,13 +509,13 @@ public partial class D2D1ResourceTextureManagerTests
         D2D1ResourceTextureManager.Initialize(
             resourceTextureManager: resourceTextureManager.Get(),
             resourceId: Guid.NewGuid(),
-            extents: stackalloc[] { (uint)expected.Width, (uint)(expected.Height / 4), 4u },
+            extents: [(uint)expected.Width, (uint)(expected.Height / 4), 4u],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: MemoryMarshal.AsBytes(pixels.Span),
-            strides: stackalloc[] { (uint)(sizeof(Rgba32) * expected.Width), (uint)(sizeof(Rgba32) * expected.Width * (expected.Height / 4)) });
+            strides: [(uint)(sizeof(Rgba32) * expected.Width), (uint)(sizeof(Rgba32) * expected.Width * (expected.Height / 4))]);
 
         using ComPtr<ID2D1Bitmap> d2D1BitmapTarget = D2D1Helper.CreateD2D1BitmapAndSetAsTarget(d2D1DeviceContext.Get(), (uint)expected.Width, (uint)expected.Height);
 
@@ -581,11 +581,11 @@ public partial class D2D1ResourceTextureManagerTests
         byte[] texture = new byte[width];
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc[] { (uint)width },
+            extents: [(uint)width],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp],
             data: texture,
             strides: null);
 
@@ -594,9 +594,9 @@ public partial class D2D1ResourceTextureManagerTests
         RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
-            minimumExtents: stackalloc uint[] { (uint)startOffset },
-            maximimumExtents: stackalloc uint[] { (uint)(startOffset + updateLength) },
-            strides: ReadOnlySpan<uint>.Empty,
+            minimumExtents: [(uint)startOffset],
+            maximimumExtents: [(uint)(startOffset + updateLength)],
+            strides: [],
             data: data);
 
         data.CopyTo(texture.AsSpan(startOffset));
@@ -668,22 +668,22 @@ public partial class D2D1ResourceTextureManagerTests
         byte[] texture = new byte[width * height];
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc[] { (uint)width, (uint)height },
+            extents: [(uint)width, (uint)height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: texture,
-            strides: stackalloc uint[] { (uint)width });
+            strides: [(uint)width]);
 
         byte[] data = new byte[updateLengthX * updateLengthY];
 
         RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
-            minimumExtents: stackalloc uint[] { (uint)startOffsetX, (uint)startOffsetY },
-            maximimumExtents: stackalloc uint[] { (uint)(startOffsetX + updateLengthX), (uint)(startOffsetY + updateLengthY) },
-            strides: stackalloc uint[] { (uint)updateLengthX },
+            minimumExtents: [(uint)startOffsetX, (uint)startOffsetY],
+            maximimumExtents: [(uint)(startOffsetX + updateLengthX), (uint)(startOffsetY + updateLengthY)],
+            strides: [(uint)updateLengthX],
             data: data);
 
         for (int y = 0; y < updateLengthY; y++)
@@ -740,13 +740,13 @@ public partial class D2D1ResourceTextureManagerTests
         byte[] texture = new byte[width * height];
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc[] { (uint)width, (uint)height },
+            extents: [(uint)width, (uint)height],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: texture,
-            strides: stackalloc uint[] { width });
+            strides: [width]);
 
         D2D1PixelShaderEffect.SetResourceTextureManagerForD2D1Effect(d2D1Effect.Get(), resourceTextureManager, 0);
 
@@ -755,9 +755,9 @@ public partial class D2D1ResourceTextureManagerTests
         // Thread As are constantly updating the resource texture
         void UpdateResourceTexture()
         {
-            ReadOnlySpan<uint> minimumExtents = stackalloc uint[] { 0, 0 };
-            ReadOnlySpan<uint> maximumExtents = stackalloc uint[] { width, height };
-            ReadOnlySpan<uint> strides = stackalloc uint[] { width };
+            ReadOnlySpan<uint> minimumExtents = [0, 0];
+            ReadOnlySpan<uint> maximumExtents = [width, height];
+            ReadOnlySpan<uint> strides = [width];
 
             while (!cancellationTokenSource.IsCancellationRequested)
             {
@@ -841,22 +841,22 @@ public partial class D2D1ResourceTextureManagerTests
         byte[] texture = new byte[width * height * depth];
 
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc[] { (uint)width, (uint)height, (uint)depth },
+            extents: [(uint)width, (uint)height, (uint)depth],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.One,
             filter: D2D1Filter.MinMagMipPoint,
-            extendModes: stackalloc[] { D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp },
+            extendModes: [D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp, D2D1ExtendMode.Clamp],
             data: texture,
-            strides: stackalloc uint[] { (uint)width, (uint)(width * height) });
+            strides: [(uint)width, (uint)(width * height)]);
 
         byte[] data = new byte[updateLengthX * updateLengthY * updateLengthZ];
 
         RandomNumberGenerator.Create().GetBytes(data);
 
         resourceTextureManager.Update(
-            minimumExtents: stackalloc uint[] { (uint)startOffsetX, (uint)startOffsetY, (uint)startOffsetZ },
-            maximimumExtents: stackalloc uint[] { (uint)(startOffsetX + updateLengthX), (uint)(startOffsetY + updateLengthY), (uint)(startOffsetZ + updateLengthZ) },
-            strides: stackalloc uint[] { (uint)updateLengthX, (uint)(updateLengthX * updateLengthY) },
+            minimumExtents: [(uint)startOffsetX, (uint)startOffsetY, (uint)startOffsetZ],
+            maximimumExtents: [(uint)(startOffsetX + updateLengthX), (uint)(startOffsetY + updateLengthY), (uint)(startOffsetZ + updateLengthZ)],
+            strides: [(uint)updateLengthX, (uint)(updateLengthX * updateLengthY)],
             data: data);
 
         for (int z = 0; z < updateLengthZ; z++)

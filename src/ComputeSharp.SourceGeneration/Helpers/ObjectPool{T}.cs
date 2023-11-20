@@ -37,19 +37,19 @@ namespace ComputeSharp.SourceGeneration.Helpers;
 /// </para>
 /// </summary>
 /// <typeparam name="T">The type of objects to pool.</typeparam>
-internal sealed class ObjectPool<T>
+/// <param name="factory">The input factory to produce <typeparamref name="T"/> items.</param>
+/// <remarks>
+/// The factory is stored for the lifetime of the pool. We will call this only when pool needs to
+/// expand. compared to "new T()", Func gives more flexibility to implementers and faster than "new T()".
+/// </remarks>
+/// <param name="size">The pool size to use.</param>
+internal sealed class ObjectPool<T>(Func<T> factory, int size)
     where T : class
 {
     /// <summary>
-    /// The factory is stored for the lifetime of the pool. We will call this only when pool needs to
-    /// expand. compared to "new T()", Func gives more flexibility to implementers and faster than "new T()".
-    /// </summary>
-    private readonly Func<T> factory;
-
-    /// <summary>
     /// The array of cached items.
     /// </summary>
-    private readonly Element[] items;
+    private readonly Element[] items = new Element[size - 1];
 
     /// <summary>
     /// Storage for the pool objects. The first item is stored in a dedicated field
@@ -64,17 +64,6 @@ internal sealed class ObjectPool<T>
     public ObjectPool(Func<T> factory)
         : this(factory, Environment.ProcessorCount * 2)
     {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ObjectPool{T}"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="factory">The input factory to produce <typeparamref name="T"/> items.</param>
-    /// <param name="size">The pool size to use.</param>
-    public ObjectPool(Func<T> factory, int size)
-    {
-        this.factory = factory;
-        this.items = new Element[size - 1];
     }
 
     /// <summary>
@@ -131,7 +120,7 @@ internal sealed class ObjectPool<T>
             }
         }
 
-        return this.factory();
+        return factory();
     }
 
     /// <summary>

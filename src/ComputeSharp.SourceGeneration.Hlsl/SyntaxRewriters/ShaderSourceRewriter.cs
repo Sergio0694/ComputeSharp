@@ -87,8 +87,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
-        this.localFunctions = new();
-        this.implicitVariables = new();
+        this.localFunctions = [];
+        this.implicitVariables = [];
         this.isEntryPoint = isEntryPoint;
     }
 
@@ -112,8 +112,8 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
     {
         this.staticMethods = staticMethods;
         this.instanceMethods = instanceMethods;
-        this.implicitVariables = new();
-        this.localFunctions = new();
+        this.implicitVariables = [];
+        this.localFunctions = [];
     }
 
     /// <summary>
@@ -150,7 +150,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
             BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
             // Add the tracked implicit declarations (at the start of the body)
-            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
+            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements([.. updatedNode.Body!.Statements]);
         }
 
         return updatedNode;
@@ -184,7 +184,7 @@ internal sealed partial class ShaderSourceRewriter : HlslSourceRewriter
         {
             BlockSyntax implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
 
-            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
+            updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements([.. updatedNode.Body!.Statements]);
         }
 
         return updatedNode;

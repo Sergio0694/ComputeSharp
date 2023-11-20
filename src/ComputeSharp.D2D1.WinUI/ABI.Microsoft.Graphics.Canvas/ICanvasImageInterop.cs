@@ -142,7 +142,7 @@ internal unsafe struct ICanvasImageInterop
             private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
 
             /// <inheritdoc cref="Interface.GetDevice"/>
-            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
             [return: NativeTypeName("HRESULT")]
             private static int GetDeviceFromAbi(IntPtr thisPtr, ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
             {
@@ -159,7 +159,7 @@ internal unsafe struct ICanvasImageInterop
             }
 
             /// <inheritdoc cref="Interface.GetDevice"/>
-            [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
             [return: NativeTypeName("HRESULT")]
             private static int GetD2DImageFromAbi(
                 IntPtr thisPtr,

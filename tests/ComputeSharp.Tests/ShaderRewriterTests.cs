@@ -95,7 +95,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void CustomHlslOperators(Device device)
     {
-        float[] data = { 1, 6, 7, 3, 5, 2, 8, 4 };
+        float[] data = [1, 6, 7, 3, 5, 2, 8, 4];
 
         using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer(data);
 
@@ -143,7 +143,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void BitwiseHlslOperators(Device device)
     {
-        int[] data = { 186456131, 215486738, unchecked((int)416439712738), unchecked((int)1437124371243), 0, 0, 0, 0, 0, 0, 0, 0 };
+        int[] data = [186456131, 215486738, unchecked((int)416439712738), unchecked((int)1437124371243), 0, 0, 0, 0, 0, 0, 0, 0];
 
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
 
@@ -217,7 +217,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void BooleanHlslOperators(Device device)
     {
-        int[] data = { 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        int[] data = [1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
 
@@ -265,8 +265,8 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void ToBooleanConversionHlslIntrinsics(Device device)
     {
-        float[] data1 = new[] { 3.14f, 0, 1.44f, 0, 0, 0.4445f };
-        int[] data2 = new[] { 3, 0, 1, 0, 0, 156 };
+        float[] data1 = [3.14f, 0, 1.44f, 0, 0, 0.4445f];
+        int[] data2 = [3, 0, 1, 0, 0, 156];
 
         using ReadOnlyBuffer<float> buffer1 = device.Get().AllocateReadOnlyBuffer(data1);
         using ReadOnlyBuffer<int> buffer2 = device.Get().AllocateReadOnlyBuffer(data2);
@@ -340,7 +340,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void FromBooleanConversionHlslIntrinsics(Device device)
     {
-        int[] data = new[] { 1, 0, 1, 0, 0, 1 };
+        int[] data = [1, 0, 1, 0, 0, 1];
 
         using ReadOnlyBuffer<int> buffer1 = device.Get().AllocateReadOnlyBuffer(data);
         using ReadWriteBuffer<float> buffer2 = device.Get().AllocateReadWriteBuffer<float>(6, AllocationMode.Clear);
@@ -616,8 +616,8 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void GlslStyleMulOperators(Device device)
     {
-        float[] data1 = { 0.727829933f, 0.6413954f, 0.9373726f, 0.7044427f, 0.46349f, 0.8098116f, 0.604649544f, 0.309247822f, 0.470999569f, 0.7374923f, 0.6993038f, 0.518516064f, 0.44598946f };
-        int[] data2 = { 287, 295, 953, 465, 1011, 308, 982, 186, 323, 325, 156, 454, 580 };
+        float[] data1 = [0.727829933f, 0.6413954f, 0.9373726f, 0.7044427f, 0.46349f, 0.8098116f, 0.604649544f, 0.309247822f, 0.470999569f, 0.7374923f, 0.6993038f, 0.518516064f, 0.44598946f];
+        int[] data2 = [287, 295, 953, 465, 1011, 308, 982, 186, 323, 325, 156, 454, 580];
 
         using ReadOnlyBuffer<float> buffer1 = device.Get().AllocateReadOnlyBuffer(data1);
         using ReadOnlyBuffer<int> buffer2 = device.Get().AllocateReadOnlyBuffer(data2);
@@ -798,8 +798,8 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void MiscHlslIntrinsics(Device device)
     {
-        float[] data1 = { 1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 0, 0 };
-        int[] data2 = { 111, 222, 333, 2, 4, 8, 63, 42, 77, 0, 0, 0 };
+        float[] data1 = [1, 2, 0.4f, 3.14f, 2.4f, 0.8f, 0, 0];
+        int[] data2 = [111, 222, 333, 2, 4, 8, 63, 42, 77, 0, 0, 0];
 
         using ReadWriteBuffer<float> buffer1 = device.Get().AllocateReadWriteBuffer(data1);
         using ReadWriteBuffer<int> buffer2 = device.Get().AllocateReadWriteBuffer(data2);
@@ -852,7 +852,7 @@ public partial class ShaderRewriterTests
     [AllDevices]
     public void ReadonlyModifierInMethods(Device device)
     {
-        int[] data = { 0 };
+        int[] data = [0];
 
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(data);
 

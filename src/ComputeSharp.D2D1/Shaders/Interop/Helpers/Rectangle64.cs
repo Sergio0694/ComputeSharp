@@ -7,42 +7,21 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Rectangle"/> type.
 /// </summary>
-internal struct Rectangle64
+/// <param name="x">The left coordinate of the rectangle.</param>
+/// <param name="y">The top coordinate of the rectangle.</param>
+/// <param name="width">The width of the rectangle.</param>
+/// <param name="height">The height of the rectangle.</param>
+internal struct Rectangle64(long x, long y, long width, long height)
 {
     /// <summary>
     /// The left coordinate of the current rectangle.
     /// </summary>
-    private long x;
+    private long x = x;
 
     /// <summary>
     /// The top coordinate of the current rectangle.
     /// </summary>
-    private long y;
-
-    /// <summary>
-    /// The width of the current rectangle.
-    /// </summary>
-    private long width;
-
-    /// <summary>
-    /// The height of the current rectangle.
-    /// </summary>
-    private long height;
-
-    /// <summary>
-    /// Creates a new <see cref="Rectangle64"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="x">The left coordinate of the rectangle.</param>
-    /// <param name="y">The top coordinate of the rectangle.</param>
-    /// <param name="width">The width of the rectangle.</param>
-    /// <param name="height">The height of the rectangle.</param>
-    public Rectangle64(long x, long y, long width, long height)
-    {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+    private long y = y;
 
     /// <summary>
     /// Gets the left coordinate of the current rectangle.
@@ -68,7 +47,7 @@ internal struct Rectangle64
     public readonly long Right
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.x + this.width;
+        get => this.x + width;
     }
 
     /// <summary>
@@ -77,7 +56,7 @@ internal struct Rectangle64
     public readonly long Bottom
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.y + this.height;
+        get => this.y + height;
     }
 
     /// <summary>
@@ -102,8 +81,9 @@ internal struct Rectangle64
 
         this.x = left;
         this.y = top;
-        this.width = right - left;
-        this.height = bottom - top;
+
+        width = right - left;
+        height = bottom - top;
     }
 
     /// <summary>
@@ -119,8 +99,9 @@ internal struct Rectangle64
 
         this.x = left;
         this.y = top;
-        this.width = Math.Max(right - left, 0);
-        this.height = Math.Max(bottom - top, 0);
+
+        width = Math.Max(right - left, 0);
+        height = Math.Max(bottom - top, 0);
     }
 
     /// <summary>
@@ -134,8 +115,9 @@ internal struct Rectangle64
     {
         this.x -= left;
         this.y -= top;
-        this.width += left + right;
-        this.height += top + bottom;
+
+        width += left + right;
+        height += top + bottom;
     }
 
     /// <summary>
@@ -146,7 +128,7 @@ internal struct Rectangle64
     {
         Intersect(new Rectangle64(int.MinValue / 2, int.MinValue / 2, int.MaxValue, int.MaxValue));
 
-        return new((int)this.x, (int)this.y, (int)this.width, (int)this.height);
+        return new((int)this.x, (int)this.y, (int)width, (int)height);
     }
 
     /// <summary>

@@ -216,14 +216,14 @@ partial class D2DPixelShaderDescriptorGenerator
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithWin32Exception,
                     structDeclarationSymbol,
-                    new object[] { structDeclarationSymbol, win32Error.HResult, win32Error.Message });
+                    [structDeclarationSymbol, win32Error.HResult, win32Error.Message]);
             }
             else if (info is HlslBytecodeInfo.CompilerError fxcError)
             {
                 diagnostic = DiagnosticInfo.Create(
                     EmbeddedBytecodeFailedWithFxcCompilationException,
                     structDeclarationSymbol,
-                    new object[] { structDeclarationSymbol, fxcError.Message });
+                    [structDeclarationSymbol, fxcError.Message]);
             }
 
             if (diagnostic is not null)

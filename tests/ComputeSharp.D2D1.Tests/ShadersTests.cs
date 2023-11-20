@@ -94,13 +94,13 @@ public class ShadersTests
             }
 
             resourceTextureManager = new D2D1ResourceTextureManager(
-                extents: stackalloc uint[] { (uint)texture.Width, (uint)texture.Height },
+                extents: [(uint)texture.Width, (uint)texture.Height],
                 bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
                 channelDepth: D2D1ChannelDepth.Four,
                 filter: D2D1Filter.MinMagMipLinear,
-                extendModes: stackalloc D2D1ExtendMode[] { D2D1ExtendMode.Mirror, D2D1ExtendMode.Mirror },
+                extendModes: [D2D1ExtendMode.Mirror, D2D1ExtendMode.Mirror],
                 data: MemoryMarshal.AsBytes(pixels.Span),
-                strides: stackalloc uint[] { (uint)(texture.Width * sizeof(Rgba32)) });
+                strides: [(uint)(texture.Width * sizeof(Rgba32))]);
         }
 
         ContouredLayers shader = new(0f, new int2(1280, 720));

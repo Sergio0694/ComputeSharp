@@ -87,31 +87,17 @@ internal static class TolerantImageComparer
     /// <summary>
     /// A simple model repressenting info about a difference between two pixels.
     /// </summary>
-    private readonly struct PixelDifference
+    private readonly struct PixelDifference(Point position, Color expected, Color actual)
     {
-        public PixelDifference(Point position, Color expected, Color actual)
-        {
-            this.Position = position;
-            this.RedDifference = actual.R - expected.R;
-            this.GreenDifference = actual.G - expected.G;
-            this.BlueDifference = actual.B - expected.B;
-            this.AlphaDifference = actual.A - expected.A;
-        }
-
-        public readonly Point Position;
-
-        public readonly int RedDifference;
-
-        public readonly int GreenDifference;
-
-        public readonly int BlueDifference;
-
-        public readonly int AlphaDifference;
+        private readonly int redDifference = actual.R - expected.R;
+        private readonly int greenDifference = actual.G - expected.G;
+        private readonly int blueDifference = actual.B - expected.B;
+        private readonly int alphaDifference = actual.A - expected.A;
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[delta({this.RedDifference},{this.GreenDifference},{this.BlueDifference},{this.AlphaDifference}) @ ({this.Position.X},{this.Position.Y})]";
+            return $"[delta({this.redDifference},{this.greenDifference},{this.blueDifference},{this.alphaDifference}) @ ({position.X},{position.Y})]";
         }
     }
 }

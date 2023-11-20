@@ -40,13 +40,13 @@ public sealed class D2D1ContouredLayersEffect : PixelShaderEffect
 
         // Create the resource texture manager to use in the shader
         D2D1ResourceTextureManager resourceTextureManager = new(
-            extents: stackalloc uint[] { (uint)readBackTexture.Height, (uint)readBackTexture.Width },
+            extents: [(uint)readBackTexture.Height, (uint)readBackTexture.Width],
             bufferPrecision: D2D1BufferPrecision.UInt8Normalized,
             channelDepth: D2D1ChannelDepth.Four,
             filter: D2D1Filter.MinMagMipLinear,
-            extendModes: stackalloc D2D1ExtendMode[] { D2D1ExtendMode.Mirror, D2D1ExtendMode.Mirror },
+            extendModes: [D2D1ExtendMode.Mirror, D2D1ExtendMode.Mirror],
             data: new ReadOnlySpan<byte>(dataBuffer, bufferSize),
-            strides: stackalloc uint[] { (uint)strideInBytes });
+            strides: [(uint)strideInBytes]);
 
         // Create the new pixel shader effect
         PixelShaderEffect<ContouredLayers> pixelShaderEffect = new() { ResourceTextureManagers = { [0] = resourceTextureManager } };

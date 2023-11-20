@@ -1,7 +1,6 @@
 extern alias Core;
 extern alias D3D12;
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -1421,19 +1420,13 @@ public class DiagnosticsTests
     private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
         where TGenerator : class, IIncrementalGenerator, new()
     {
-        // Ensure ComputeSharp.Core and ComputeSharp are loaded
-        Type hlslType = typeof(Core::ComputeSharp.Hlsl);
-        Type computeShaderType = typeof(D3D12::ComputeSharp.IComputeShader);
-
-        // Prepare the two additional metadata references
-        IEnumerable<MetadataReference> additionalReferences = new[]
-        {
-            MetadataReference.CreateFromFile(hlslType.Assembly.Location),
-            MetadataReference.CreateFromFile(computeShaderType.Assembly.Location)
-        };
-
-        // Get all assembly references for the loaded assemblies (easy way to pull in all necessary dependencies)
-        IEnumerable<MetadataReference> metadataReferences = Net80.References.All.Concat(additionalReferences);
+        // Get all assembly references for the .NET TFM and ComputeSharp
+        IEnumerable<MetadataReference> metadataReferences =
+        [
+            .. Net80.References.All,
+            MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location)
+        ];
 
         // Parse the source text (C# 11)
         SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
@@ -1466,8 +1459,5 @@ public class DiagnosticsTests
 
             Assert.IsTrue(outputCompilationDiagnostics.Count == 0, $"resultingIds: {string.Join(", ", outputCompilationDiagnostics)}");
         }
-
-        GC.KeepAlive(hlslType);
-        GC.KeepAlive(computeShaderType);
     }
 }

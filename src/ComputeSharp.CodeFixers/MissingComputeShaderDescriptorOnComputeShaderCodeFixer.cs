@@ -16,11 +16,11 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderCodeFixer : Mis
     /// <summary>
     /// The set of type names for all attributes that can be over shader types.
     /// </summary>
-    private static readonly string[] D2DAttributeTypeNames = new[]
-    {
+    private static readonly string[] D2DAttributeTypeNames =
+    [
         "ComputeSharp.EmbeddedBytecodeAttribute",
         "ComputeSharp.GroupSharedAttribute"
-    };
+    ];
 
     /// <summary>
     /// Creates a new <see cref="MissingAttributeCodeFixer"/> instance with the specified parameters.

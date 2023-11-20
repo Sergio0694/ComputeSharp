@@ -8,13 +8,9 @@ namespace ComputeSharp.SwapChain.Backend;
 /// <summary>
 /// A class representing a simple Win32 application.
 /// </summary>
-internal sealed unsafe class Win32Application
+/// <param name="shaderCallback">The function pointer used to run a shader on a target texture.</param>
+internal sealed unsafe class Win32Application(delegate*<IReadWriteNormalizedTexture2D<float4>, TimeSpan, void> shaderCallback)
 {
-    /// <summary>
-    /// The function pointer used to run a shader on a target texture.
-    /// </summary>
-    private readonly delegate*<IReadWriteNormalizedTexture2D<float4>, TimeSpan, void> shaderCallback;
-
     /// <summary>
     /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
     /// </summary>
@@ -74,15 +70,6 @@ internal sealed unsafe class Win32Application
     /// Whether or not the window has been resized and requires the buffers to be updated.
     /// </summary>
     private volatile bool isResizePending;
-
-    /// <summary>
-    /// Creates a new <see cref="Win32Application"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="shaderCallback">The function pointer used to run a shader on a target texture.</param>
-    public Win32Application(delegate*<IReadWriteNormalizedTexture2D<float4>, TimeSpan, void> shaderCallback)
-    {
-        this.shaderCallback = shaderCallback;
-    }
 
     /// <summary>
     /// Initializes the current application.
@@ -241,7 +228,7 @@ internal sealed unsafe class Win32Application
         }
 
         // Generate the new frame by invoking the callback
-        this.shaderCallback(this.texture!, time);
+        shaderCallback(this.texture!, time);
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 

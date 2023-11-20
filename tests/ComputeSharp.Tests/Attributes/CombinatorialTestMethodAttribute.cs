@@ -29,17 +29,17 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
         }
         else if (methodInfo.GetCustomAttributes<DeviceAttribute>().ToArray() is { Length: > 0 } values)
         {
-            devices = values.Select(static value => value.Device).ToArray();
+            devices = [.. values.Select(static value => value.Device)];
         }
         else
         {
-            devices = Array.Empty<Device>();
+            devices = [];
         }
 
-        Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
-        Type[] additionalResources = methodInfo.GetCustomAttributes<AdditionalResourceAttribute>().Select(static value => value.Type).ToArray();
-        object[][] data = methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data).ToArray();
-        object[][] additionalData = methodInfo.GetCustomAttributes<AdditionalDataAttribute>().Select(static value => value.Data).ToArray();
+        Type[] resources = [.. methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type)];
+        Type[] additionalResources = [.. methodInfo.GetCustomAttributes<AdditionalResourceAttribute>().Select(static value => value.Type)];
+        object[][] data = [.. methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data)];
+        object[][] additionalData = [.. methodInfo.GetCustomAttributes<AdditionalDataAttribute>().Select(static value => value.Data)];
 
         if (devices.Length > 0)
         {
@@ -60,7 +60,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                         Assert.Fail("Invalid usage of [AdditionalData]");
                                     }
 
-                                    yield return new object[] { device, type, additionalType };
+                                    yield return [device, type, additionalType];
                                 }
                                 else
                                 {
@@ -70,7 +70,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                         {
                                             foreach (object[] additionalItems in additionalData)
                                             {
-                                                yield return new object[] { device, type, additionalType }.Concat(items).Concat(additionalItems).ToArray();
+                                                yield return [device, type, additionalType, .. items, .. additionalItems];
                                             }
                                         }
                                     }
@@ -78,7 +78,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                     {
                                         foreach (object[] items in data)
                                         {
-                                            yield return new object[] { device, type, additionalType }.Concat(items).ToArray();
+                                            yield return [device, type, additionalType, .. items];
                                         }
                                     }
                                 }
@@ -93,7 +93,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                     Assert.Fail("Invalid usage of [AdditionalData]");
                                 }
 
-                                yield return new object[] { device, type };
+                                yield return [device, type];
                             }
                             else
                             {
@@ -103,7 +103,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                     {
                                         foreach (object[] additionalItems in additionalData)
                                         {
-                                            yield return new object[] { device, type }.Concat(items).Concat(additionalItems).ToArray();
+                                            yield return [device, type, .. items, .. additionalItems];
                                         }
                                     }
                                 }
@@ -111,7 +111,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                 {
                                     foreach (object[] items in data)
                                     {
-                                        yield return new object[] { device, type }.Concat(items).ToArray();
+                                        yield return [device, type, .. items];
                                     }
                                 }
                             }
@@ -132,7 +132,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             Assert.Fail("Invalid usage of [AdditionalData]");
                         }
 
-                        yield return new object[] { device };
+                        yield return [device];
                     }
                     else
                     {
@@ -142,7 +142,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             {
                                 foreach (object[] additionalItems in additionalData)
                                 {
-                                    yield return new object[] { device }.Concat(items).Concat(additionalItems).ToArray();
+                                    yield return [device, .. items, .. additionalItems];
                                 }
                             }
                         }
@@ -150,7 +150,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                         {
                             foreach (object[] items in data)
                             {
-                                yield return new object[] { device }.Concat(items).ToArray();
+                                yield return [device, .. items];
                             }
                         }
                     }
@@ -172,7 +172,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                 Assert.Fail("Invalid usage of [AdditionalData]");
                             }
 
-                            yield return new object[] { type, additionalType };
+                            yield return [type, additionalType];
                         }
                         else
                         {
@@ -182,7 +182,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                                 {
                                     foreach (object[] additionalItems in additionalData)
                                     {
-                                        yield return new object[] { type, additionalType }.Concat(items).Concat(additionalItems).ToArray();
+                                        yield return [type, additionalType, .. items, .. additionalItems];
                                     }
                                 }
                             }
@@ -190,7 +190,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             {
                                 foreach (object[] items in data)
                                 {
-                                    yield return new object[] { type, additionalType }.Concat(items).ToArray();
+                                    yield return [type, additionalType, .. items];
                                 }
                             }
                         }
@@ -205,7 +205,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             Assert.Fail("Invalid usage of [AdditionalData]");
                         }
 
-                        yield return new object[] { type };
+                        yield return [type];
                     }
                     else
                     {
@@ -215,7 +215,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             {
                                 foreach (object[] additionalItems in additionalData)
                                 {
-                                    yield return new object[] { type }.Concat(items).Concat(additionalItems).ToArray();
+                                    yield return [type, .. items, .. additionalItems];
                                 }
                             }
                         }
@@ -223,7 +223,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                         {
                             foreach (object[] items in data)
                             {
-                                yield return new object[] { type }.Concat(items).ToArray();
+                                yield return [type, .. items];
                             }
                         }
                     }
@@ -244,7 +244,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                     Assert.Fail("Invalid usage of [AdditionalData]");
                 }
 
-                yield return Array.Empty<object>();
+                yield return [];
             }
             else
             {
@@ -254,7 +254,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                     {
                         foreach (object[] additionalItems in additionalData)
                         {
-                            yield return items.Concat(additionalItems).ToArray();
+                            yield return [.. items, .. additionalItems];
                         }
                     }
                 }
@@ -272,6 +272,6 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
     /// <inheritdoc/>
     string? ITestDataSource.GetDisplayName(MethodInfo methodInfo, object?[]? data)
     {
-        return $"{methodInfo.Name} ({string.Join(", ", data ?? Array.Empty<object?>())})";
+        return $"{methodInfo.Name} ({string.Join(", ", data ?? [])})";
     }
 }

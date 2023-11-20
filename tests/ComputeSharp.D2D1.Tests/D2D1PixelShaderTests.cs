@@ -629,9 +629,7 @@ namespace ComputeSharp.D2D1.Tests
         {
             ShaderWithNoCapturedValues shader = default;
 
-            byte[] buffer = Array.Empty<byte>();
-
-            int bytesWritten = D2D1PixelShader.GetConstantBuffer(in shader, buffer);
+            int bytesWritten = D2D1PixelShader.GetConstantBuffer(in shader, []);
 
             Assert.AreEqual(bytesWritten, 0);
         }

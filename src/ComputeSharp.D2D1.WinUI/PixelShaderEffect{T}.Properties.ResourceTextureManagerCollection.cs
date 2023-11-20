@@ -244,7 +244,7 @@ partial class PixelShaderEffect<T>
             // Skip the array allocation if there are no resource texture descriptions
             if (descriptions.IsEmpty)
             {
-                return ImmutableArray<int>.Empty;
+                return [];
             }
 
             int[] indices = new int[descriptions.Length];

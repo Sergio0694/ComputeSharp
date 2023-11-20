@@ -644,9 +644,9 @@ public partial class CanvasEffectTests
         private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode1 = new();
         private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode2 = new();
         private static readonly EffectNode<DummyCanvasImageTrackingDisposal> EffectNode3 = new();
-        public readonly List<DummyCanvasImageTrackingDisposal> Effects1 = new();
-        public readonly List<DummyCanvasImageTrackingDisposal> Effects2 = new();
-        public readonly List<DummyCanvasImageTrackingDisposal> Effects3 = new();
+        public readonly List<DummyCanvasImageTrackingDisposal> Effects1 = [];
+        public readonly List<DummyCanvasImageTrackingDisposal> Effects2 = [];
+        public readonly List<DummyCanvasImageTrackingDisposal> Effects3 = [];
 
         public void InvalidateCreation()
         {

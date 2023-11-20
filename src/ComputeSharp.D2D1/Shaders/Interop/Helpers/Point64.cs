@@ -8,36 +8,17 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Helpers;
 /// <summary>
 /// A 64-bit version of the <see cref="Point"/> type.
 /// </summary>
-internal readonly struct Point64
+/// <param name="x">The horizontal coordinate of the point.</param>
+/// <param name="y">The vertical coordinate of the point.</param>
+internal readonly struct Point64(long x, long y)
 {
-    /// <summary>
-    /// The left coordinate of the current point.
-    /// </summary>
-    private readonly long x;
-
-    /// <summary>
-    /// The top coordinate of the current point.
-    /// </summary>
-    private readonly long y;
-
-    /// <summary>
-    /// Creates a new <see cref="Point64"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="x">The horizontal coordinate of the point.</param>
-    /// <param name="y">The vertical coordinate of the point.</param>
-    public Point64(long x, long y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
     /// <summary>
     /// Gets the horizontal coordinate of the current point.
     /// </summary>
     public readonly long X
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.x;
+        get => x;
     }
 
     /// <summary>
@@ -46,7 +27,7 @@ internal readonly struct Point64
     public readonly long Y
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this.y;
+        get => y;
     }
 
     /// <summary>
@@ -77,7 +58,7 @@ internal readonly struct Point64
         //         [ M21, M22 ]
         // [ x, y] [ M31, M32 ] = [ x * M11 + y * M21 + M31, x * M12 + y * M22 + m32]
         return (
-            Math.Round(((double)this.x * matrix.M11) + ((double)this.y * matrix.M21) + matrix.M31),
-            Math.Round(((double)this.x * matrix.M12) + ((double)this.y * matrix.M22) + matrix.M32));
+            Math.Round(((double)x * matrix.M11) + ((double)y * matrix.M21) + matrix.M31),
+            Math.Round(((double)x * matrix.M12) + ((double)y * matrix.M22) + matrix.M32));
     }
 }

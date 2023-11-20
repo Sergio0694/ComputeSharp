@@ -213,7 +213,7 @@ partial class PixelShaderEffect<T>
 
             if (inputCount == 0)
             {
-                return ImmutableArray<int>.Empty;
+                return [];
             }
 
             int[] indices = new int[inputCount];

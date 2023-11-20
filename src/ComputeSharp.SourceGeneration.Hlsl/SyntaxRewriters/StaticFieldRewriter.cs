@@ -19,24 +19,16 @@ namespace ComputeSharp.SourceGeneration.SyntaxRewriters;
 /// <summary>
 /// A custom <see cref="CSharpSyntaxRewriter"/> type that processes C# static field to convert to HLSL static fields (possibly constant).
 /// </summary>
-internal sealed partial class StaticFieldRewriter : HlslSourceRewriter
+/// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
+/// <param name="discoveredTypes">The set of discovered custom types.</param>
+/// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+/// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
+internal sealed partial class StaticFieldRewriter(
+    SemanticModelProvider semanticModel,
+    ICollection<INamedTypeSymbol> discoveredTypes,
+    IDictionary<IFieldSymbol, string> constantDefinitions,
+    ImmutableArrayBuilder<DiagnosticInfo> diagnostics) : HlslSourceRewriter(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
 {
-    /// <summary>
-    /// Creates a new <see cref="StaticFieldRewriter"/> instance with the specified parameters.
-    /// </summary>
-    /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
-    /// <param name="discoveredTypes">The set of discovered custom types.</param>
-    /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-    public StaticFieldRewriter(
-        SemanticModelProvider semanticModel,
-        ICollection<INamedTypeSymbol> discoveredTypes,
-        IDictionary<IFieldSymbol, string> constantDefinitions,
-        ImmutableArrayBuilder<DiagnosticInfo> diagnostics)
-        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
-    {
-    }
-
     /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
     public ExpressionSyntax? Visit(VariableDeclaratorSyntax? node)
     {

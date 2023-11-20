@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, IDE0300
 
 namespace ComputeSharp.Core.SourceGenerators;
 
