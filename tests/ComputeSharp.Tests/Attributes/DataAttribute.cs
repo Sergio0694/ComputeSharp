@@ -12,5 +12,5 @@ public sealed class DataAttribute(params object[] data) : Attribute
     /// <summary>
     /// Gets the input data for the current attribute.
     /// </summary>
-    public object[] Data => data;
+    public object[] Data { get; } = data;
 }

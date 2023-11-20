@@ -15,5 +15,5 @@ public sealed class D2DEffectDescriptionAttribute(string value) : Attribute
     /// <summary>
     /// Gets the description value.
     /// </summary>
-    public string Value => value;
+    public string Value { get; } = value;
 }

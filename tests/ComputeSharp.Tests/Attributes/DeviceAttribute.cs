@@ -13,5 +13,5 @@ public sealed class DeviceAttribute(Device device) : Attribute
     /// <summary>
     /// Gets the <see cref="Extensions.Device"/> target to use.
     /// </summary>
-    public Device Device => device;
+    public Device Device { get; } = device;
 }

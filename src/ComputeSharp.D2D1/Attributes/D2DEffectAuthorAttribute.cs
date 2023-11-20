@@ -15,5 +15,5 @@ public sealed class D2DEffectAuthorAttribute(string value) : Attribute
     /// <summary>
     /// Gets the author value.
     /// </summary>
-    public string Value => value;
+    public string Value { get; } = value;
 }

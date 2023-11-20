@@ -16,5 +16,5 @@ public sealed class D2DResourceTextureIndexAttribute(int index) : Attribute
     /// <summary>
     /// Gets the index of the annotated resource field.
     /// </summary>
-    public int Index => index;
+    public int Index { get; } = index;
 }

@@ -31,5 +31,5 @@ public sealed class D2DCompileOptionsAttribute(D2D1CompileOptions options) : Att
     /// <summary>
     /// Gets the number of threads in each thread group for the X axis
     /// </summary>
-    public D2D1CompileOptions Options => options;
+    public D2D1CompileOptions Options { get; } = options;
 }

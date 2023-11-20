@@ -16,5 +16,5 @@ public sealed class D2DPixelOptionsAttribute(D2D1PixelOptions options) : Attribu
     /// <summary>
     /// Gets the options to specify for the shader.
     /// </summary>
-    public D2D1PixelOptions Options => options;
+    public D2D1PixelOptions Options { get; } = options;
 }

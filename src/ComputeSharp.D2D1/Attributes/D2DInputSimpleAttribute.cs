@@ -17,5 +17,5 @@ public sealed class D2DInputSimpleAttribute(int index) : Attribute
     /// <summary>
     /// Gets the index of the resource declared as using simple sampling.
     /// </summary>
-    public int Index => index;
+    public int Index { get; } = index;
 }

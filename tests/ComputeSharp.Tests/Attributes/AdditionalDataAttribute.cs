@@ -12,5 +12,5 @@ public sealed class AdditionalDataAttribute(params object[] data) : Attribute
     /// <summary>
     /// Gets the additional input data for the current attribute.
     /// </summary>
-    public object[] Data => data;
+    public object[] Data { get; } = data;
 }

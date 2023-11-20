@@ -31,5 +31,5 @@ public sealed class D2DShaderProfileAttribute(D2D1ShaderProfile shaderProfile) :
     /// <summary>
     /// The shader profile used to compile the annotated D2D1 pixel shader.
     /// </summary>
-    public D2D1ShaderProfile ShaderProfile => shaderProfile;
+    public D2D1ShaderProfile ShaderProfile { get; } = shaderProfile;
 }

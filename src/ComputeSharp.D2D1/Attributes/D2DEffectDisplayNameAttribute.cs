@@ -15,5 +15,5 @@ public sealed class D2DEffectDisplayNameAttribute(string value) : Attribute
     /// <summary>
     /// Gets the display name value.
     /// </summary>
-    public string Value => value;
+    public string Value { get; } = value;
 }

@@ -15,5 +15,5 @@ public sealed class D2DEffectCategoryAttribute(string value) : Attribute
     /// <summary>
     /// Gets the category value.
     /// </summary>
-    public string Value => value;
+    public string Value { get; } = value;
 }

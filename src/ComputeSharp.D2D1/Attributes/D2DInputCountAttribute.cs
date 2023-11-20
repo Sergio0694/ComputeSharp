@@ -17,5 +17,5 @@ public sealed class D2DInputCountAttribute(int count) : Attribute
     /// <summary>
     /// Gets the number of texture inputs for the shader.
     /// </summary>
-    public int Count => count;
+    public int Count { get; } = count;
 }

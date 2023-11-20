@@ -14,7 +14,7 @@ internal sealed class HlslIntrinsicNameAttribute(string name) : Attribute
     /// <summary>
     /// Gets the name of the HLSL intrinsic.
     /// </summary>
-    public string Name => name;
+    public string Name { get; } = name;
 
     /// <summary>
     /// Gets whether or not matching parameters is also required to extract the name of this intrinsic.

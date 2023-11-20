@@ -12,5 +12,5 @@ public sealed class ResourceAttribute(Type type) : Attribute
     /// <summary>
     /// Gets the resource type for the current attribute.
     /// </summary>
-    public Type Type => type;
+    public Type Type { get; } = type;
 }

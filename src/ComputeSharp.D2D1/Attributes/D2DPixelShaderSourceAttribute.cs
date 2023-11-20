@@ -39,5 +39,5 @@ public sealed class D2DPixelShaderSourceAttribute([StringSyntax("Hlsl")] string 
     /// <summary>
     /// Gets the number of texture inputs for the shader.
     /// </summary>
-    public string HlslSource => hlslSource;
+    public string HlslSource { get; } = hlslSource;
 }

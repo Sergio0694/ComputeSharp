@@ -18,12 +18,12 @@ public sealed class D2DInputDescriptionAttribute(int index, D2D1Filter filter) :
     /// <summary>
     /// Gets the index of the resource to declare the description for.
     /// </summary>
-    public int Index => index;
+    public int Index { get; } = index;
 
     /// <summary>
     /// Gets the type of filter to apply to the input texture.
     /// </summary>
-    public D2D1Filter Filter => filter;
+    public D2D1Filter Filter { get; } = filter;
 
     /// <summary>
     /// Gets the mip level to retrieve from the upstream transform, if specified.

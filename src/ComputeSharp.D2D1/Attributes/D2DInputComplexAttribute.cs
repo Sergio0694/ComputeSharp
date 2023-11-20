@@ -17,5 +17,5 @@ public sealed class D2DInputComplexAttribute(int index) : Attribute
     /// <summary>
     /// Gets the index of the resource declared as using complex sampling.
     /// </summary>
-    public int Index => index;
+    public int Index { get; } = index;
 }
