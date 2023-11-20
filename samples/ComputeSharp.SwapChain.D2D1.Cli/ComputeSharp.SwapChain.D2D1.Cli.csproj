@@ -9,6 +9,9 @@
     <NoWarn>$(NoWarn);IDE0065</NoWarn>
     <AssemblyName>computesharp.d2d1.cli</AssemblyName>
     <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
+
+    <!-- Temporary workaround for RID graph change in .NET 8 (see https://github.com/microsoft/Win2D/issues/935) -->
+    <UseRidGraph>true</UseRidGraph>
   </PropertyGroup>
 
   <PropertyGroup>
