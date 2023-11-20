@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using ComputeSharp.Core.Helpers;
+using ComputeSharp.D2D1.SourceGenerators.Models;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
-using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
@@ -16,26 +14,16 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 partial class D2DPixelShaderDescriptorGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>ConstantBuffer</c> methods and additional types.
+    /// A helper with all logic to generate the constant buffer marshalling methods and additional types.
     /// </summary>
-    private static partial class ConstantBuffer
+    private static class ConstantBuffer
     {
-        /// <summary>
-        /// A <see cref="Regex"/> to extract the parameter name of a primary constructor capture field.
-        /// </summary>
-        /// <remarks>
-        /// Temporary workaround until <see href="https://github.com/dotnet/roslyn/issues/70208"/> is available.
-        /// </remarks>
-        private static readonly Regex PrimaryConstructorNameRegex = new("^<([^>]+)>P$", RegexOptions.Compiled);
-
-        /// <summary>
-        /// Explores a given type hierarchy and generates statements to load fields.
-        /// </summary>
+        /// <inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo"/>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
-        /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
-        /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
-        /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
-        /// <param name="fields">The sequence of <see cref="FieldInfo"/> instances for all captured values.</param>
+        /// <param name="compilation"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='compilation']/node()"/></param>
+        /// <param name="structDeclarationSymbol"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='structDeclarationSymbol']/node()"/></param>
+        /// <param name="constantBufferSizeInBytes"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='constantBufferSizeInBytes']/node()"/></param>
+        /// <param name="fields"><inheritdoc cref="ConstantBufferSyntaxProcessor.GetInfo" path="/param[@name='fields']/node()"/></param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
@@ -43,79 +31,13 @@ partial class D2DPixelShaderDescriptorGenerator
             out int constantBufferSizeInBytes,
             out ImmutableArray<FieldInfo> fields)
         {
-            // Helper method that uses boxes instead of ref-s (illegal in enumerators)
-            static void GetInfo(
-                Compilation compilation,
-                ITypeSymbol currentTypeSymbol,
-                ImmutableArray<FieldPathPart> fieldPath,
-                ref int rawDataOffset,
-                ImmutableArrayBuilder<FieldInfo> fields)
-            {
-                bool isFirstField = true;
+            constantBufferSizeInBytes = 0;
 
-                foreach (ISymbol memberSymbol in currentTypeSymbol.GetMembers())
-                {
-                    // Only process fields of a valid shape/type
-                    if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false } fieldSymbol)
-                    {
-                        continue;
-                    }
-
-                    // Skip fields of not accessible types (the analyzer will handle this)
-                    if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
-                    {
-                        continue;
-                    }
-
-                    // Try to get the name to use for the field and the accessor
-                    if (!TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out string? unspeakableName))
-                    {
-                        continue;
-                    }
-
-                    string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
-
-                    // The first item in each nested struct needs to be aligned to 16 bytes
-                    if (isFirstField && fieldPath.Length > 0)
-                    {
-                        rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
-                        isFirstField = false;
-                    }
-
-                    if (HlslKnownTypes.IsKnownHlslType(typeName))
-                    {
-                        ImmutableArray<FieldPathPart> nestedFieldPath = fieldPath.Add(new FieldPathPart.Leaf(fieldName, unspeakableName));
-
-                        fields.Add(GetHlslKnownTypeFieldInfo(nestedFieldPath, typeName, ref rawDataOffset));
-                    }
-                    else if (fieldSymbol.Type.IsUnmanagedType)
-                    {
-                        string nestedTypeName = fieldSymbol.Type.GetFullyQualifiedName(includeGlobal: true);
-                        FieldPathPart fieldPathPart = new FieldPathPart.Nested(fieldName, unspeakableName, nestedTypeName);
-
-                        // Custom struct type defined by the user
-                        GetInfo(compilation, fieldSymbol.Type, fieldPath.Add(fieldPathPart), ref rawDataOffset, fields);
-                    }
-                }
-            }
-
-            // Setup the resource and byte offsets for tracking
-            int rawDataOffset = 0;
-
-            using (ImmutableArrayBuilder<FieldInfo> fieldBuilder = new())
-            {
-                // Traverse all shader fields and gather info, and update the tracking offsets
-                GetInfo(
-                    compilation,
-                    structDeclarationSymbol,
-                    ImmutableArray<FieldPathPart>.Empty,
-                    ref rawDataOffset,
-                    fieldBuilder);
-
-                constantBufferSizeInBytes = rawDataOffset;
-                fields = fieldBuilder.ToImmutable();
-            }
+            ConstantBufferSyntaxProcessor.GetInfo(
+                compilation,
+                structDeclarationSymbol,
+                ref constantBufferSizeInBytes,
+                out fields);
 
             // The maximum size for a constant buffer is 64KB
             const int D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT = 4096;
@@ -129,95 +51,64 @@ partial class D2DPixelShaderDescriptorGenerator
         }
 
         /// <summary>
-        /// Tries to get the field name and the accessor name for a given field.
+        /// Writes the <c>LoadConstantBuffer</c> method.
         /// </summary>
-        /// <param name="fieldSymbol">The field symbol to analyze.</param>
-        /// <param name="referencedName">The name of the field that's referenced in code by users.</param>
-        /// <param name="unspeakableName">The real name of the field that should be accessed, when different.</param>
-        /// <returns>Whether the field is supported and the necessary info could be retrieved.</returns>
-        public static bool TryGetFieldAccessorName(
-            IFieldSymbol fieldSymbol,
-            [NotNullWhen(true)] out string? referencedName,
-            out string? unspeakableName)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteLoadConstantBufferSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            // If the field can be referenced by name, we can just access it directly
-            if (fieldSymbol.CanBeReferencedByName)
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
+            writer.WriteLine($"static unsafe void global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.LoadConstantBuffer<TLoader>(in {typeName} shader, ref TLoader loader)");
+
+            using (writer.WriteBlock())
             {
-                referencedName = fieldSymbol.Name;
-                unspeakableName = null;
-
-                return true;
+                // If there are no fields, just load an empty buffer
+                if (info.Fields.IsEmpty)
+                {
+                    writer.WriteLine("loader.LoadConstantBuffer(default);");
+                }
+                else
+                {
+                    // Otherwise, pass a span into the marshalled native layout buffer
+                    writer.WriteLine("global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.FromManaged(in shader, out global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer);");
+                    writer.WriteLine();
+                    writer.WriteLine("loader.LoadConstantBuffer(new global::System.ReadOnlySpan<byte>(&buffer, sizeof(global::ComputeSharp.D2D1.Generated.ConstantBuffer)));");
+                }
             }
-
-            // If the field is a primary constructor capture field, get the original name
-            if (PrimaryConstructorNameRegex.Match(fieldSymbol.Name) is { Success: true, Groups: [_, { Value: string parameterName }] })
-            {
-                referencedName = parameterName;
-                unspeakableName = fieldSymbol.Name;
-
-                return true;
-            }
-
-            // The field is not recognized, so just invalid
-            referencedName = null;
-            unspeakableName = null;
-
-            return false;
         }
 
         /// <summary>
-        /// Gets info on a given captured HLSL primitive type (either a scalar, a vector or a matrix).
+        /// Writes the <c>CreateFromConstantBuffer</c> method.
         /// </summary>
-        /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
-        /// <param name="typeName">The type name currently being read.</param>
-        /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
-        private static FieldInfo GetHlslKnownTypeFieldInfo(
-            ImmutableArray<FieldPathPart> fieldPath,
-            string typeName,
-            ref int rawDataOffset)
+        /// <param name="info">The input <see cref="D2D1ShaderInfo"/> instance with gathered shader info.</param>
+        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
+        public static void WriteCreateFromConstantBufferSyntax(D2D1ShaderInfo info, IndentedTextWriter writer)
         {
-            // For scalar, vector and linear matrix types, serialize the value normally.
-            // Only the initial alignment needs to be considered, while data is packed.
-            (int fieldSize, int fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
+            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
 
-            // Check if the current type is a matrix type with more than one row. In this
-            // case, each row is aligned as if it was a separate array, so the start of
-            // each row needs to be at a multiple of 16 bytes (a float4 register).
-            if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
+            writer.WriteLine("/// <inheritdoc/>");
+            writer.WriteGeneratedAttributes(GeneratorName);
+            writer.WriteLine("[global::System.Runtime.CompilerServices.SkipLocalsInit]");
+            writer.WriteLine($"static unsafe {typeName} global::ComputeSharp.D2D1.Descriptors.ID2D1PixelShaderDescriptor<{typeName}>.CreateFromConstantBuffer(global::System.ReadOnlySpan<byte> data)");
+
+            using (writer.WriteBlock())
             {
-                using ImmutableArrayBuilder<int> builder = new();
-
-                for (int j = 0; j < rows; j++)
+                // If there are no fields, just return an empty shader
+                if (info.Fields.IsEmpty)
                 {
-                    int startingRawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+                    writer.WriteLine("return default;");
 
-                    builder.Add(startingRawDataOffset);
-
-                    rawDataOffset = startingRawDataOffset + (fieldPack * columns);
+                    return;
                 }
 
-                return new FieldInfo.NonLinearMatrix(
-                    fieldPath,
-                    typeName,
-                    elementName!,
-                    rows,
-                    columns,
-                    builder.ToImmutable());
-            }
-            else
-            {
-                // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
-                // Since we're in a constant buffer, we need to both pad the starting offset
-                // to be aligned to the packing size of the type, and also to align the initial
-                // offset to ensure that values do not cross 16 bytes boundaries either.
-                int startingRawDataOffset = AlignmentHelper.AlignToBoundary(
-                    AlignmentHelper.Pad(rawDataOffset, fieldPack),
-                    fieldSize,
-                    16);
-
-                rawDataOffset = startingRawDataOffset + fieldSize;
-
-                return new FieldInfo.Primitive(fieldPath, typeName, startingRawDataOffset);
+                // Get a reference to the data through the generated native layout type and define the shader
+                writer.WriteLine("ref readonly global::ComputeSharp.D2D1.Generated.ConstantBuffer buffer = ref global::System.Runtime.InteropServices.MemoryMarshal.AsRef<global::ComputeSharp.D2D1.Generated.ConstantBuffer>(data);");
+                writer.WriteLine();
+                writer.WriteLine("return global::ComputeSharp.D2D1.Generated.ConstantBufferMarshaller.ToManaged(in buffer);");
             }
         }
     }

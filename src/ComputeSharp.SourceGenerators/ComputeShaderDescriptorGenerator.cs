@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -58,14 +60,21 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                     using ImmutableArrayBuilder<DiagnosticInfo> diagnostics = new();
 
                     // Get the fields info
-                    DispatchDataLoading.GetInfo(
-                        diagnostics,
+                    ConstantBuffer.GetInfo(
                         context.SemanticModel.Compilation,
                         typeSymbol,
                         isPixelShaderLike,
                         out int constantBufferSizeInBytes,
-                        out int resourceCount,
-                        out ImmutableArray<FieldInfo> fieldInfos,
+                        out ImmutableArray<FieldInfo> fieldInfos);
+
+                    token.ThrowIfCancellationRequested();
+
+                    // Get the resources info
+                    Resources.GetInfo(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeSymbol,
+                        constantBufferSizeInBytes,
                         out ImmutableArray<ResourceInfo> resourceInfo);
 
                     token.ThrowIfCancellationRequested();
@@ -129,7 +138,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
                         IsPixelShaderLike: isPixelShaderLike,
                         IsSamplerUsed: isSamplerUsed,
                         ConstantBufferSizeInBytes: constantBufferSizeInBytes,
-                        ResourceCount: resourceCount,
                         Fields: fieldInfos,
                         Resources: resourceInfo,
                         ResourceDescriptors: resourceDescriptors,
@@ -158,13 +166,14 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
             declaredMembers.Add(MetadataProperties.WriteIsStaticSamplerRequiredSyntax);
             declaredMembers.Add(ResourceDescriptorRanges.WriteSyntax);
             declaredMembers.Add(HlslSource.WriteSyntax);
-            declaredMembers.Add(HlslBytecode.WriteHlslBytecodeSyntax);
-            declaredMembers.Add(DispatchDataLoading.WriteLoadConstantBufferSyntax);
-            declaredMembers.Add(DispatchDataLoading.WriteLoadGraphicsResourcesSyntax);
+            declaredMembers.Add(HlslBytecode.WriteSyntax);
+            declaredMembers.Add(ConstantBuffer.WriteSyntax);
+            declaredMembers.Add(Resources.WriteSyntax);
 
             using ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> additionalTypes = new();
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
+            ConstantBufferSyntaxProcessor.RegisterAdditionalTypesSyntax(GeneratorName, BindingDirection.OneWay, item, additionalTypes, usingDirectives);
             ResourceDescriptorRanges.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
             HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
 

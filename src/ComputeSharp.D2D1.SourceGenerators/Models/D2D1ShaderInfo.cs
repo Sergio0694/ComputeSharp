@@ -40,4 +40,4 @@ internal sealed record D2D1ShaderInfo(
     D2D1PixelOptions PixelOptions,
     HlslBytecodeInfoKey HlslInfoKey,
     HlslBytecodeInfo HlslInfo,
-    EquatableArray<DiagnosticInfo> Diagnostcs);
+    EquatableArray<DiagnosticInfo> Diagnostcs) : IConstantBufferInfo;
