@@ -34,12 +34,12 @@ partial class ComputeShaderDescriptorGenerator
         }
 
         /// <summary>
-        /// Registers a callback to generate an additional type, if needed.
+        /// Registers a callback to generate additional types, if needed.
         /// </summary>
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
         /// <param name="callbacks">The registered callbacks to generate additional types.</param>
         /// <param name="usingDirectives">The using directives needed by the generated code.</param>
-        public static void RegisterAdditionalTypeSyntax(
+        public static void RegisterAdditionalTypesSyntax(
             ShaderInfo info,
             ImmutableArrayBuilder<IndentedTextWriter.Callback<ShaderInfo>> callbacks,
             ImmutableHashSetBuilder<string> usingDirectives)

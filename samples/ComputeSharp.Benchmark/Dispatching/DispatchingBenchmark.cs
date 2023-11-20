@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 
-#pragma warning disable CA1063
+#pragma warning disable CA1063, IDE0052
 
 namespace ComputeSharp.Benchmark.Blas;
 

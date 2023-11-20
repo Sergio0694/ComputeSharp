@@ -119,7 +119,7 @@ partial class ConstantBufferSyntaxProcessor
             string fullyQualifiedTypeName = info.Hierarchy.GetFullyQualifiedTypeName();
 
             writer.WriteLine($"""/// <summary>""");
-            writer.WriteLine($"""/// A type containing marshalling logic for shaders of type <see cref="{fullyQualifiedTypeName}"/>.""");
+            writer.WriteLine($"""/// A type containing marshalling logic for the constant buffer in shaders of type <see cref="{fullyQualifiedTypeName}"/>.""");
             writer.WriteLine($"""/// </summary>""");
             writer.WriteGeneratedAttributes(ConstantBufferSyntaxProcessor.generatorName!, useFullyQualifiedTypeNames: false);
             writer.WriteLine($"""file static class ConstantBufferMarshaller""");

@@ -5,6 +5,7 @@ namespace ComputeSharp;
 /// </summary>
 /// <typeparam name="T">The pixel type, when stored in memory (either on the CPU or the GPU side).</typeparam>
 /// <typeparam name="TPixel">The type of pixel when normalized and used within a shader.</typeparam>
+/// <remarks>This interface is not meant to be implemented by user defined types.</remarks>
 public interface IPixel<T, TPixel>
     where T : unmanaged, IPixel<T, TPixel>
     where TPixel : unmanaged

@@ -69,16 +69,6 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Get the resources info
-                    Resources.GetInfo(
-                        diagnostics,
-                        context.SemanticModel.Compilation,
-                        typeSymbol,
-                        constantBufferSizeInBytes,
-                        out ImmutableArray<ResourceInfo> resourceInfo);
-
-                    token.ThrowIfCancellationRequested();
-
                     // Thread group size info
                     NumThreads.GetInfo(
                         diagnostics,
@@ -105,11 +95,15 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
 
                     token.ThrowIfCancellationRequested();
 
-                    // Resource descriptor ranges info
-                    ImmutableArray<ResourceDescriptor> resourceDescriptors = ResourceDescriptorRanges.GetInfo(
+                    // Get the resources info
+                    Resources.GetInfo(
+                        diagnostics,
+                        context.SemanticModel.Compilation,
+                        typeSymbol,
                         isImplicitTextureUsed,
-                        isSamplerUsed,
-                        resourceInfo);
+                        constantBufferSizeInBytes,
+                        out ImmutableArray<ResourceInfo> resourceInfo,
+                        out ImmutableArray<ResourceDescriptor> resourceDescriptors);
 
                     token.ThrowIfCancellationRequested();
 
@@ -174,8 +168,9 @@ public sealed partial class ComputeShaderDescriptorGenerator : IIncrementalGener
             using ImmutableHashSetBuilder<string> usingDirectives = new();
 
             ConstantBufferSyntaxProcessor.RegisterAdditionalTypesSyntax(GeneratorName, BindingDirection.OneWay, item, additionalTypes, usingDirectives);
+            Resources.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
             ResourceDescriptorRanges.RegisterAdditionalDataMemberSyntax(item, additionalTypes, usingDirectives);
-            HlslBytecode.RegisterAdditionalTypeSyntax(item, additionalTypes, usingDirectives);
+            HlslBytecode.RegisterAdditionalTypesSyntax(item, additionalTypes, usingDirectives);
 
             using IndentedTextWriter writer = new();
 

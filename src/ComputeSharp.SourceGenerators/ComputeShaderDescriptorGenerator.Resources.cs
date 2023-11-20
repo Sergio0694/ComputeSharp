@@ -4,6 +4,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
@@ -16,50 +17,85 @@ partial class ComputeShaderDescriptorGenerator
     /// <summary>
     /// A helper with all logic to generate the resources loading code.
     /// </summary>
-    private static class Resources
+    private static partial class Resources
     {
         /// <summary>
-        /// Explores a given type hierarchy and generates statements to load fields.
+        /// Gathers info on all resources captured by a given shader type.
         /// </summary>
         /// <param name="diagnostics">The collection of produced <see cref="DiagnosticInfo"/> instances.</param>
         /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
         /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
+        /// <param name="isImplicitTextureUsed">Indicates whether the current shader uses an implicit texture.</param>
         /// <param name="constantBufferSizeInBytes">The size of the shader constant buffer.</param>
         /// <param name="resources">The sequence of <see cref="ResourceInfo"/> instances for all captured resources.</param>
+        /// <param name="resourceDescriptors">The sequence of <see cref="ResourceDescriptor"/> instances for all captured resources.</param>
         public static void GetInfo(
             ImmutableArrayBuilder<DiagnosticInfo> diagnostics,
             Compilation compilation,
             ITypeSymbol structDeclarationSymbol,
+            bool isImplicitTextureUsed,
             int constantBufferSizeInBytes,
-            out ImmutableArray<ResourceInfo> resources)
+            out ImmutableArray<ResourceInfo> resources,
+            out ImmutableArray<ResourceDescriptor> resourceDescriptors)
         {
             using ImmutableArrayBuilder<ResourceInfo> resourceBuilder = new();
+            using ImmutableArrayBuilder<ResourceDescriptor> resourceDescriptorBuilder = new();
+
+            int constantBufferOffset = 1;
+            int readOnlyResourceOffset = 0;
+            int readWriteResourceOffset = 0;
+
+            // Add the implicit texture descriptor, if needed
+            if (isImplicitTextureUsed)
+            {
+                resourceDescriptorBuilder.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
+            }
 
             foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
                 // Only process instance fields
-                if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false }, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false, IsImplicitlyDeclared: false } fieldSymbol)
+                if (memberSymbol is not IFieldSymbol { Type: INamedTypeSymbol { IsStatic: false } typeSymbol, IsConst: false, IsStatic: false, IsFixedSizeBuffer: false } fieldSymbol)
                 {
                     continue;
                 }
 
                 // Skip fields of not accessible types (the analyzer will handle this just like other fields)
-                if (!fieldSymbol.Type.IsAccessibleFromCompilationAssembly(compilation))
+                if (!typeSymbol.IsAccessibleFromCompilationAssembly(compilation))
                 {
                     continue;
                 }
 
-                string fieldName = fieldSymbol.Name;
-                string typeName = fieldSymbol.Type.GetFullyQualifiedMetadataName();
+                // Try to get the name to use for the field and the accessor
+                if (!ConstantBufferSyntaxProcessor.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out string? unspeakableName))
+                {
+                    continue;
+                }
+
+                string typeName = typeSymbol.GetFullyQualifiedMetadataName();
 
                 // Check if the field is a resource (note: resources can only be top level fields)
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
-                    resourceBuilder.Add(new ResourceInfo(fieldName, typeName));
+                    resourceBuilder.Add(new ResourceInfo(fieldName, GetResourceTypeName(typeSymbol), unspeakableName));
+
+                    // Populate the resource descriptors as well
+                    if (HlslKnownTypes.IsConstantBufferType(typeName))
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(2, constantBufferOffset++));
+                    }
+                    else if (HlslKnownTypes.IsReadOnlyTypedResourceType(typeName))
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(0, readOnlyResourceOffset++));
+                    }
+                    else
+                    {
+                        resourceDescriptorBuilder.Add(new ResourceDescriptor(1, readWriteResourceOffset++));
+                    }
                 }
             }
 
             resources = resourceBuilder.ToImmutable();
+            resourceDescriptors = resourceDescriptorBuilder.ToImmutable();
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
             // Loaded values in the root signature have the following costs:
@@ -76,26 +112,35 @@ partial class ComputeShaderDescriptorGenerator
         }
 
         /// <summary>
-        /// Writes the <c>LoadGraphicsResources</c> method.
+        /// Gets the name of a given resource field type.
         /// </summary>
-        /// <param name="info">The input <see cref="ShaderInfo"/> instance with gathered shader info.</param>
-        /// <param name="writer">The <see cref="IndentedTextWriter"/> instance to write into.</param>
-        public static void WriteSyntax(ShaderInfo info, IndentedTextWriter writer)
+        /// <param name="typeSymbol">The input field type to inspect.</param>
+        /// <returns>The fully qualified resource type name, nicely formatted.</returns>
+        private static string GetResourceTypeName(INamedTypeSymbol typeSymbol)
         {
-            string typeName = info.Hierarchy.Hierarchy[0].QualifiedName;
+            using ImmutableArrayBuilder<char> builder = new();
 
-            writer.WriteLine("/// <inheritdoc/>");
-            writer.WriteGeneratedAttributes(GeneratorName);
-            writer.WriteLine($"static void global::ComputeSharp.Descriptors.IComputeShaderDescriptor<{typeName}>.LoadGraphicsResources<TLoader>(in {typeName} shader, ref TLoader loader)");
+            // Add the type name (we'll add the ComputeSharp namespace, so no need for fully qualified type names)
+            builder.AddRange(typeSymbol.Name.AsSpan());
+            builder.Add('<');
 
-            using (writer.WriteBlock())
+            _ = HlslKnownTypes.TryGetMappedName(typeSymbol.TypeArguments[0].GetFullyQualifiedMetadataName(), out string? mappedName);
+
+            // We always have at least one type argument, so first append it. We either append the mapped
+            // type name (ie. the friendly primitive or HLSL type name), or the fully qualified type name.
+            builder.AddRange((mappedName ?? typeSymbol.TypeArguments[0].GetFullyQualifiedName(includeGlobal: true)).AsSpan());
+
+            // If the resource also has a pixel type, append that too.
+            // We only need the name again, as the namespace is imported.
+            if (typeSymbol.TypeArguments is [_, INamedTypeSymbol pixelTypeSymbol])
             {
-                // Generate loading statements for each captured resource
-                for (int i = 0; i < info.Resources.Length; i++)
-                {
-                    writer.WriteLine($"loader.LoadGraphicsResource(shader.{info.Resources[i].FieldName}, {i});");
-                }
+                builder.AddRange(", ".AsSpan());
+                builder.AddRange(pixelTypeSymbol.Name.AsSpan());
             }
+
+            builder.Add('>');
+
+            return builder.ToString();
         }
     }
 }
