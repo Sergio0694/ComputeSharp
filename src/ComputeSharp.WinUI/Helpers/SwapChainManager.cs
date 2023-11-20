@@ -223,9 +223,9 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : ReferenceTracked
 
             swapChainPanel.Attach((IUnknown*)((IWinRTObject)owner).NativeObject.GetRef());
 
-            swapChainPanel.CopyTo(
-                (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(new Guid(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25))),
-                (void**)swapChainPanelNative).Assert();
+            Guid guid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
+
+            swapChainPanel.CopyTo(&guid, (void**)swapChainPanelNative).Assert();
         }
 
         // Get the underlying ID3D12Device in use

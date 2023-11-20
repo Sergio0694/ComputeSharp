@@ -46,7 +46,7 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
     {
         CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> test = new(languageVersion) { TestCode = source };
 
-        test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net70;
+        test.TestState.ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(Core::ComputeSharp.Hlsl).Assembly.Location));
         test.TestState.AdditionalReferences.Add(MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location));
 

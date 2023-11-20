@@ -43,20 +43,17 @@
   </ItemGroup>
 
   <!--
-    Enable trimming support on .NET 7 (we need to use StartsWith since it
+    Enable trimming support on .NET 8 (we need to use StartsWith since it
     could be a Windows TFM too). This can't be in a target unlike the other
     properties set below, because if that is the case the trimmable attribute
     will be set but the analyzers will not run, so warnings will be skipped.
   -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net7.0'))">
-    <IsTrimmable>true</IsTrimmable>
-    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <EnableAotAnalyzer>true</EnableAotAnalyzer>
-    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
-  <!-- Emit the [DisableRuntimeMarshalling] attribute for all .NET 7 projects -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0'))">
+  <!-- Emit the [DisableRuntimeMarshalling] attribute for all .NET 8 projects -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.DisableRuntimeMarshallingAttribute" />
   </ItemGroup>
 
@@ -71,7 +68,7 @@
   </Target>
 
   <!-- Emit the [ComVisible(false)] attribute for WinUI targets -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0-windows'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-windows'))">
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
       <_Parameter1>false</_Parameter1>
     </AssemblyAttribute>

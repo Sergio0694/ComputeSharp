@@ -532,7 +532,9 @@ public static class ComputeContextExtensions
     {
         default(ArgumentNullException).ThrowIfNull(texture);
 
-        context.Run(texture, ref Unsafe.AsRef(default(T)));
+        Unsafe.SkipInit(out T shader);
+
+        context.Run(texture, ref shader);
     }
 
     /// <summary>
