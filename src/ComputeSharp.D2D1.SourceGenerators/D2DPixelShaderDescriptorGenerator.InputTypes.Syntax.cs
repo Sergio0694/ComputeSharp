@@ -76,9 +76,9 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     // RVA field
                     writer.WriteLine();
-                    writer.WriteLine("/// <summary>The data with the input type info.</summary>");
-                    writer.WriteLine("private static D2D1PixelShaderInputType[] Data = new[]");
-                    writer.WriteLine("{");
+                    writer.WriteLine("/// <summary>The RVA data with the input type info.</summary>");
+                    writer.WriteLine("private static ReadOnlySpan<D2D1PixelShaderInputType> Data =>");
+                    writer.WriteLine("[");
                     writer.IncreaseIndent();
 
                     // Input types, one per line in the RVA field initializer
@@ -90,7 +90,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                     writer.DecreaseIndent();
                     writer.WriteLine();
-                    writer.WriteLine("};");
+                    writer.WriteLine("];");
                     writer.WriteLine();
 
                     // Add the remaining members for the memory manager
@@ -98,7 +98,7 @@ partial class D2DPixelShaderDescriptorGenerator
                         /// <inheritdoc/>
                         public override unsafe Span<D2D1PixelShaderInputType> GetSpan()
                         {
-                            return Data;
+                            return new(Unsafe.AsPointer(ref MemoryMarshal.GetReference(Data)), Data.Length);
                         }
 
                         /// <inheritdoc/>
@@ -111,9 +111,7 @@ partial class D2DPixelShaderDescriptorGenerator
                         /// <inheritdoc/>
                         public override unsafe MemoryHandle Pin(int elementIndex)
                         {
-                            GCHandle handle = GCHandle.Alloc(Data, GCHandleType.Pinned);
-
-                            return new(Unsafe.AsPointer(ref Data[elementIndex]), handle);
+                            return new(Unsafe.AsPointer(ref Unsafe.AsRef(in Data[elementIndex])), pinnable: this);
                         }
 
                         /// <inheritdoc/>

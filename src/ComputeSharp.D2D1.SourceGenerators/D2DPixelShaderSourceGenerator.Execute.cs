@@ -25,13 +25,13 @@ partial class D2DPixelShaderSourceGenerator
         /// <returns>The HLSL source to compile, if present.</returns>
         public static string? GetInvalidReturnType(ImmutableArrayBuilder<DiagnosticInfo> diagnostics, IMethodSymbol methodSymbol)
         {
-            if (!(methodSymbol.ReturnType is INamedTypeSymbol
+            if (methodSymbol.ReturnType is not INamedTypeSymbol
                 {
                     Name: "ReadOnlySpan",
                     ContainingNamespace.Name: "System",
                     IsGenericType: true,
-                    TypeParameters.Length: 1
-                } returnType && returnType.TypeArguments[0].SpecialType == SpecialType.System_Byte))
+                    TypeArguments: [{ SpecialType: SpecialType.System_Byte }]
+                })
             {
                 diagnostics.Add(
                     InvalidD2DPixelShaderSourceMethodReturnType,
@@ -191,11 +191,11 @@ partial class D2DPixelShaderSourceGenerator
             {
                 if (info.HlslInfo is HlslBytecodeInfo.Success success)
                 {
-                    writer.Write("return new byte[] { ");
+                    writer.Write("return [");
 
                     SyntaxFormattingHelper.WriteByteArrayInitializationExpressions(success.Bytecode.AsSpan(), writer);
 
-                    writer.WriteLine(" };");
+                    writer.WriteLine("];");
                 }
                 else
                 {

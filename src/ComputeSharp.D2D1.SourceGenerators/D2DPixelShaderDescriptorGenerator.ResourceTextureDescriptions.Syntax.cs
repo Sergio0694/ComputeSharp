@@ -68,7 +68,7 @@ partial class D2DPixelShaderDescriptorGenerator
             {
                 writer.WriteLine("""/// <summary>The singleton <see cref="D2D1ResourceTextureDescription"/> array instance.</summary>""");
                 writer.WriteLine("""public static readonly D2D1ResourceTextureDescription[] ResourceTextureDescriptions =""");
-                writer.WriteLine("""{""");
+                writer.WriteLine("""[""");
                 writer.IncreaseIndent();
 
                 // Initialize all resource texture descriptions
@@ -79,7 +79,7 @@ partial class D2DPixelShaderDescriptorGenerator
 
                 writer.DecreaseIndent();
                 writer.WriteLine();
-                writer.WriteLine("};");
+                writer.WriteLine("];");
             }
 
             callbacks.Add(Callback);
