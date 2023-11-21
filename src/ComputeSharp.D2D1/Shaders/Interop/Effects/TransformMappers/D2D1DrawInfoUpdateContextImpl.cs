@@ -75,7 +75,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
     /// <summary>
     /// The <see cref="ID2D1DrawInfo"/> instance currently in use.
     /// </summary>
-    private ID2D1DrawInfo* d2D1DrawInfo;
+    private ComPtr<ID2D1DrawInfo> d2D1DrawInfo;
 
     /// <summary>
     /// The factory method for <see cref="D2D1DrawInfoUpdateContextImpl"/> instances.
@@ -109,7 +109,13 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         @this->referenceCount = 1;
         @this->constantBuffer = constantBuffer;
         @this->constantBufferSize = constantBufferSize;
-        @this->d2D1DrawInfo = d2D1DrawInfo;
+
+        // This ID2D1DrawInfo manager instance is short lived, and the contract guarantees that it will not remain
+        // alive after the underlying ID2D1DrawInfo instance has been invalidated. As such, we can optimize the
+        // initialization by skipping the AddRef/Release calls on the ID2D1DrawInfo object, and simply storing the
+        // pointer to the object. When this instance is closed, that will just be set to null again.
+        @this->d2D1DrawInfo = default;
+        @this->d2D1DrawInfo.Attach(d2D1DrawInfo);
 
         *drawInfoUpdateContext = @this;
 

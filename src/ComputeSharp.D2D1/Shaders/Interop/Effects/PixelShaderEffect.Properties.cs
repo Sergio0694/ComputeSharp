@@ -107,14 +107,7 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentNullException).ThrowIfNull(data);
             default(ArgumentOutOfRangeException).ThrowIfLessThan((int)dataSize, sizeof(void*), nameof(dataSize));
 
-            if (@this->d2D1TransformMapper is null)
-            {
-                *(void**)data = null;
-            }
-            else
-            {
-                ((IUnknown*)@this->d2D1TransformMapper)->QueryInterface(Windows.__uuidof<ID2D1TransformMapper>(), (void**)data).Assert();
-            }
+            @this->d2D1TransformMapper.CopyTo((ID2D1TransformMapper**)data).Assert();
 
             if (actualSize is not null)
             {
@@ -150,11 +143,8 @@ unsafe partial struct PixelShaderEffect
             // Check that the input object implements ID2D1TransformMapper
             unknown.CopyTo(transformMapper.GetAddressOf()).Assert();
 
-            // If there's already an existing manager, release it
-            ComPtr.Dispose(@this->d2D1TransformMapper);
-
             // Store the transform mapper manager into the effect
-            @this->d2D1TransformMapper = transformMapper.Detach();
+            @this->d2D1TransformMapper.Attach(transformMapper.Detach());
 
             return S.S_OK;
         }
@@ -226,7 +216,7 @@ unsafe partial struct PixelShaderEffect
             unknown.CopyTo(resourceTextureManagerInternal.GetAddressOf()).Assert();
 
             // Initialize the resource texture manager, if an effect context is available
-            if (this.d2D1EffectContext is not null)
+            if (this.d2D1EffectContext.Get() is not null)
             {
                 uint dimensions = (uint)GetGlobals().ResourceTextureDescriptions.Span[index].Dimensions;
 
@@ -235,7 +225,7 @@ unsafe partial struct PixelShaderEffect
                 // enable sharing resource texture managers across different source textures and effects), or
                 // E_INVALIDARG if the manager has already been initialized through the public interface,
                 // and the stored dimensions for that don't match the ones for this resource texture index.
-                resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions).Assert();
+                resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext.Get(), &dimensions).Assert();
             }
 
             // Store the resource texture manager into the buffer

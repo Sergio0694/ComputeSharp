@@ -74,17 +74,17 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
     /// <summary>
     /// The <see cref="ID2D1EffectContext"/> object currently wrapped by the current instance.
     /// </summary>
-    private ID2D1EffectContext* d2D1EffectContext;
+    private ComPtr<ID2D1EffectContext> d2D1EffectContext;
 
     /// <summary>
     /// The <see cref="ID2D1Multithread"/> instance used to lock accesses to <see cref="d2D1EffectContext"/> and <see cref="d2D1ResourceTexture"/>.
     /// </summary>
-    private ID2D1Multithread* d2D1Multithread;
+    private ComPtr<ID2D1Multithread> d2D1Multithread;
 
     /// <summary>
     /// The <see cref="ID2D1ResourceTexture"/> object, if one was created already.
     /// </summary>
-    private ID2D1ResourceTexture* d2D1ResourceTexture;
+    private ComPtr<ID2D1ResourceTexture> d2D1ResourceTexture;
 
     /// <summary>
     /// The <see cref="Guid"/> to identify the resource, if available.
@@ -142,9 +142,9 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         @this->lpVtblForID2D1ResourceTextureManager = VtblForID2D1ResourceTextureManager;
         @this->lpVtblForID2D1ResourceTextureManagerInternal = VtblForID2D1ResourceTextureManagerInternal;
         @this->referenceCount = 1;
-        @this->d2D1EffectContext = null;
-        @this->d2D1Multithread = null;
-        @this->d2D1ResourceTexture = null;
+        @this->d2D1EffectContext = default;
+        @this->d2D1Multithread = default;
+        @this->d2D1ResourceTexture = default;
         @this->requiresMultithread = requiresMultithread ? 1 : 0;
         @this->resourceId = null;
         @this->resourceTextureProperties = default;
@@ -211,24 +211,25 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
             this.lockHandle.Free();
 
             // Synchronize on the ID2D1Multithread instance before touching D2D objects
-            if (this.d2D1Multithread is not null)
+            if (this.d2D1Multithread.Get() is not null)
             {
                 // Enter the lock, and then free the effect context. That is guaranteed to
                 // not be null here, as it is only ever set if ID2D1Multithread is retrieved.
-                this.d2D1Multithread->Enter();
+                this.d2D1Multithread.Get()->Enter();
 
                 // Release the resource too if it has been created
-                ComPtr.Dispose(this.d2D1ResourceTexture);
+                this.d2D1ResourceTexture.Dispose();
 
                 // Now that the resource, if any, has been released, the effect context can also
                 // be released. This must be done only after any associated resource textures have
                 // been released. Releasing an effect context first, in case it was the last reference
                 // to it, will otherwise cause the Release() call on the resource texture to explode.
-                _ = this.d2D1EffectContext->Release();
+                this.d2D1EffectContext.Dispose();
 
-                this.d2D1Multithread->Leave();
+                this.d2D1Multithread.Get()->Leave();
 
-                _ = this.d2D1Multithread->Release();
+                // Finally release the multithread object after exiting the lock and releasing all other D2D objects
+                this.d2D1Multithread.Dispose();
             }
 
             NativeMemory.Free(this.resourceId);

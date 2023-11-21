@@ -69,10 +69,10 @@ partial struct PixelShaderEffect
             {
                 default(ArgumentOutOfRangeException).ThrowIfNotEqual((int)inputRectsCount, @this->GetGlobals().InputCount, nameof(inputRectsCount));
 
-                if (@this->d2D1TransformMapper is not null)
+                if (@this->d2D1TransformMapper.Get() is not null)
                 {
                     // Forward to the current ID2D1TransformMapper instance
-                    @this->d2D1TransformMapper->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount).Assert();
+                    @this->d2D1TransformMapper.Get()->MapOutputRectToInputRects(outputRect, inputRects, inputRectsCount).Assert();
                 }
                 else
                 {
@@ -117,7 +117,7 @@ partial struct PixelShaderEffect
             {
                 default(ArgumentOutOfRangeException).ThrowIfNotEqual((int)inputRectCount, @this->GetGlobals().InputCount, nameof(inputRectCount));
 
-                if (@this->d2D1TransformMapper is not null)
+                if (@this->d2D1TransformMapper.Get() is not null)
                 {
                     using ComPtr<D2D1DrawInfoUpdateContextImpl> d2D1DrawInfoUpdateContext = default;
 
@@ -126,10 +126,10 @@ partial struct PixelShaderEffect
                         drawInfoUpdateContext: d2D1DrawInfoUpdateContext.GetAddressOf(),
                         constantBuffer: @this->constantBuffer,
                         constantBufferSize: @this->GetGlobals().ConstantBufferSize,
-                        d2D1DrawInfo: @this->d2D1DrawInfo).Assert();
+                        d2D1DrawInfo: @this->d2D1DrawInfo.Get()).Assert();
 
                     // Forward the call to the input ID2D1TransformMapper instance
-                    HRESULT hresult = @this->d2D1TransformMapper->MapInputRectsToOutputRect(
+                    HRESULT hresult = @this->d2D1TransformMapper.Get()->MapInputRectsToOutputRect(
                         updateContext: (ID2D1DrawInfoUpdateContext*)d2D1DrawInfoUpdateContext.Get(),
                         inputRects: inputRects,
                         inputOpaqueSubRects: inputOpaqueSubRects,
@@ -209,10 +209,10 @@ partial struct PixelShaderEffect
             {
                 default(ArgumentOutOfRangeException).ThrowIfGreaterThanOrEqual((int)inputIndex, @this->GetGlobals().InputCount, nameof(inputIndex));
 
-                if (@this->d2D1TransformMapper is not null)
+                if (@this->d2D1TransformMapper.Get() is not null)
                 {
                     // Forward to the current ID2D1TransformMapper instance
-                    @this->d2D1TransformMapper->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect).Assert();
+                    @this->d2D1TransformMapper.Get()->MapInvalidRect(inputIndex, invalidInputRect, invalidOutputRect).Assert();
                 }
                 else
                 {
@@ -248,7 +248,7 @@ partial struct PixelShaderEffect
             try
             {
                 // Store the new ID2D1DrawInfo object
-                ComPtr.CopyTo(drawInfo, ref @this->d2D1DrawInfo);
+                @this->d2D1DrawInfo.Attach(new ComPtr<ID2D1DrawInfo>(drawInfo).Get());
 
                 Guid shaderId = @this->GetGlobals().EffectId;
                 D2D1PixelOptions pixelOptions = @this->GetGlobals().PixelOptions;

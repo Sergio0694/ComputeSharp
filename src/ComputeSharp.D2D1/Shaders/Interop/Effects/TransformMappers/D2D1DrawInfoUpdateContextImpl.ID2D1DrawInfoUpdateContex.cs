@@ -42,7 +42,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
                 return E.E_POINTER;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo.Get() is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -71,7 +71,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
                 return E.E_NOT_VALID_STATE;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo.Get() is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -98,7 +98,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
                 return E.E_INVALIDARG;
             }
 
-            if (@this->d2D1DrawInfo is null)
+            if (@this->d2D1DrawInfo.Get() is null)
             {
                 return RO.RO_E_CLOSED;
             }
@@ -113,7 +113,7 @@ partial struct D2D1DrawInfoUpdateContextImpl
             Buffer.MemoryCopy(buffer, @this->constantBuffer, bufferCount, bufferCount);
 
             // Propagate it to the ID2D1DrawInfo object in use as well
-            return @this->d2D1DrawInfo->SetPixelShaderConstantBuffer(buffer, bufferCount);
+            return @this->d2D1DrawInfo.Get()->SetPixelShaderConstantBuffer(buffer, bufferCount);
         }
     }
 }

@@ -19,7 +19,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
         lock (@this->lockHandle.Target!)
         {
             // If the method has already been called, fail
-            if (@this->d2D1ResourceTexture is not null ||
+            if (@this->d2D1ResourceTexture.Get() is not null ||
                 @this->data is not null)
             {
                 return E.E_NOT_VALID_STATE;
@@ -35,20 +35,20 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             }
 
             // If the method has already been called, just forward the call
-            if (@this->d2D1EffectContext is not null)
+            if (@this->d2D1EffectContext.Get() is not null)
             {
-                @this->d2D1Multithread->Enter();
+                @this->d2D1Multithread.Get()->Enter();
 
                 // Create the resource after taking a D2D lock
-                int hresult = @this->d2D1EffectContext->CreateResourceTexture(
+                int hresult = @this->d2D1EffectContext.Get()->CreateResourceTexture(
                     resourceId: resourceId,
                     resourceTextureProperties: resourceTextureProperties,
                     data: data,
                     strides: strides,
                     dataSize: dataSize,
-                    resourceTexture: &@this->d2D1ResourceTexture);
+                    resourceTexture: @this->d2D1ResourceTexture.GetAddressOf());
 
-                @this->d2D1Multithread->Leave();
+                @this->d2D1Multithread.Get()->Leave();
 
                 return hresult;
             }
@@ -76,14 +76,14 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
     {
         lock (@this->lockHandle.Target!)
         {
-            if (@this->d2D1ResourceTexture is null &&
+            if (@this->d2D1ResourceTexture.Get() is null &&
                 @this->data is null)
             {
                 return E.E_NOT_VALID_STATE;
             }
 
             // If no resource texture already exists, update the staging buffer
-            if (@this->d2D1ResourceTexture is null)
+            if (@this->d2D1ResourceTexture.Get() is null)
             {
                 return ID2D1ResourceTextureManagerMethods.UpdateWithStagingBuffer(
                     @this: @this,
@@ -103,10 +103,10 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
         // checked for this while taking the instance lock). So we can now take the D2D
         // lock and update the texture directly. We need to take this when we're not also
         // taking the instance lock, or we might trigger an AB/BA deadlock across threads.
-        @this->d2D1Multithread->Enter();
+        @this->d2D1Multithread.Get()->Enter();
 
         // Take a D2D lock here too to ensure thread safety
-        int hresult = @this->d2D1ResourceTexture->Update(
+        int hresult = @this->d2D1ResourceTexture.Get()->Update(
             minimumExtents: minimumExtents,
             maximimumExtents: maximimumExtents,
             strides: strides,
@@ -114,7 +114,7 @@ unsafe partial struct D2D1ResourceTextureManagerImpl
             data: data,
             dataCount: dataCount);
 
-        @this->d2D1Multithread->Leave();
+        @this->d2D1Multithread.Get()->Leave();
 
         return hresult;
     }

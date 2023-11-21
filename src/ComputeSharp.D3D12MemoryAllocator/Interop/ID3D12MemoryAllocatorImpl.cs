@@ -51,12 +51,12 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
     /// <summary>
     /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
     /// </summary>
-    private D3D12MA_Allocator* allocator;
+    private ComPtr<D3D12MA_Allocator> allocator;
 
     /// <summary>
     /// The <see cref="D3D12MA_Pool"/> instance in use, if the device is using cache coherent UMA.
     /// </summary>
-    private D3D12MA_Pool* pool;
+    private ComPtr<D3D12MA_Pool> pool;
 
     /// <summary>
     /// The factory method for <see cref="ID3D12MemoryAllocatorImpl"/> instances.
@@ -83,19 +83,10 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
             return E.E_OUTOFMEMORY;
         }
 
-        _ = allocator->AddRef();
-
-        // The pool is not necessarily available (it's only used for UMA devices), as it allows creating
-        // resources in a CPU readable memory region. With non UMA devices, we use the default behavior.
-        if (pool is not null)
-        {
-            _ = pool->AddRef();
-        }
-
         @this->lpVtbl = Vtbl;
         @this->referenceCount = 1;
-        @this->allocator = allocator;
-        @this->pool = pool;
+        @this->allocator = new ComPtr<D3D12MA_Allocator>(allocator);
+        @this->pool = new ComPtr<D3D12MA_Pool>(pool);
 
         *allocatorImpl = @this;
 
@@ -122,12 +113,8 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
             // must have been disposed already before the allocator is released. This is done by
             // having the allocator also increment the reference count of their associated allocator.
             // So here we just have to release first the pool, if present, and then the allocator.
-            if (this.pool is not null)
-            {
-                _ = this.pool->Release();
-            }
-
-            _ = this.allocator->Release();
+            this.pool.Dispose();
+            this.allocator.Dispose();
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));
         }
@@ -190,13 +177,13 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
         D3D12MA_ALLOCATION_DESC allocationDesc = default;
         allocationDesc.HeapType = (TerraFX.Interop.DirectX.D3D12_HEAP_TYPE)heapType;
         allocationDesc.Flags = allocationFlags;
-        allocationDesc.CustomPool = @this->pool;
+        allocationDesc.CustomPool = @this->pool.Get();
 
         using ComPtr<D3D12MA_Allocation> d3D12MA_allocation = default;
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Invoke D3D12MA and create an allocation and resource
-        TerraFX.Interop.Windows.HRESULT hresult = @this->allocator->CreateResource(
+        TerraFX.Interop.Windows.HRESULT hresult = @this->allocator.Get()->CreateResource(
             pAllocDesc: &allocationDesc,
             pResourceDesc: (TerraFX.Interop.DirectX.D3D12_RESOURCE_DESC*)resourceDescription,
             InitialResourceState: (TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES)resourceStates,
