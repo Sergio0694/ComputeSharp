@@ -8,7 +8,7 @@ using ComputeSharp.D2D1.Interop;
 using ComputeSharp.D2D1.Tests.Effects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#pragma warning disable IDE0059, IDE0161, IDE0044
+#pragma warning disable IDE0044, IDE0059, IDE0161
 
 [D2DInputCount(0)]
 [D2DGeneratedPixelShaderDescriptor]
@@ -597,6 +597,28 @@ namespace ComputeSharp.D2D1.Tests
             public float4 Execute()
             {
                 return D2D.GetInput(0);
+            }
+        }
+
+        [TestMethod]
+        public void LoadBytecode_ShaderWithSuppressedFxcWarning()
+        {
+            ReadOnlyMemory<byte> hlslBytecode = D2D1PixelShader.LoadBytecode<ShaderWithSuppressedFxcWarning>(out _, out D2D1CompileOptions compileOptions);
+
+            Assert.AreEqual(D2D1CompileOptions.OptimizationLevel3 | D2D1CompileOptions.PackMatrixRowMajor, compileOptions);
+            Assert.IsTrue(hlslBytecode.Length > 0);
+        }
+
+        // See https://github.com/Sergio0694/ComputeSharp/issues/647
+        [D2DInputCount(0)]
+        [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
+        [D2DGeneratedPixelShaderDescriptor]
+        [D2DCompileOptions(D2D1CompileOptions.Default & ~D2D1CompileOptions.WarningsAreErrors)]
+        public readonly partial struct ShaderWithSuppressedFxcWarning(int a) : ID2D1PixelShader
+        {
+            public float4 Execute()
+            {
+                return a / 4;
             }
         }
 

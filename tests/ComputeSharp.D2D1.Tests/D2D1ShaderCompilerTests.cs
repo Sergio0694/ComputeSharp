@@ -9,7 +9,7 @@ namespace ComputeSharp.D2D1.Tests;
 public partial class D2D1ShaderCompilerTests
 {
     [TestMethod]
-    public unsafe void CompileInvertEffectWithDefaultOptions()
+    public void CompileInvertEffectWithDefaultOptions()
     {
         const string source = """
             #define D2D_INPUT_COUNT 1
@@ -35,7 +35,7 @@ public partial class D2D1ShaderCompilerTests
     }
 
     [TestMethod]
-    public unsafe void CompileInvertEffectWithDefaultOptions_Utf8()
+    public void CompileInvertEffectWithDefaultOptions_Utf8()
     {
         ReadOnlySpan<byte> sourceUtf8 = """
             #define D2D_INPUT_COUNT 1
@@ -61,7 +61,7 @@ public partial class D2D1ShaderCompilerTests
     }
 
     [TestMethod]
-    public unsafe void CompileInvertEffectWithDefaultOptionsAndLinking()
+    public void CompileInvertEffectWithDefaultOptionsAndLinking()
     {
         const string source = """
             #define D2D_INPUT_COUNT 1
@@ -88,7 +88,7 @@ public partial class D2D1ShaderCompilerTests
 
     [TestMethod]
     [ExpectedException(typeof(FxcCompilationException))]
-    public unsafe void CompileInvertEffectWithInvalidEntryPoint()
+    public void CompileInvertEffectWithInvalidEntryPoint()
     {
         const string source = """
             #define D2D_INPUT_COUNT 1
@@ -104,18 +104,18 @@ public partial class D2D1ShaderCompilerTests
             }
             """;
 
-        ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
+        _ = D2D1ShaderCompiler.Compile(
             source.AsSpan(),
             "Execute".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default);
 
-        Assert.IsTrue(bytecode.Length > 0);
+        Assert.Fail();
     }
 
     [TestMethod]
     [ExpectedException(typeof(FxcCompilationException))]
-    public unsafe void CompileInvertEffectWithErrors()
+    public void CompileInvertEffectWithErrors()
     {
         const string source = """
             #define D2D_INPUT_COUNT 1
@@ -131,17 +131,17 @@ public partial class D2D1ShaderCompilerTests
             }
             """;
 
-        ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
+        _ = D2D1ShaderCompiler.Compile(
             source.AsSpan(),
             "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40Level93,
             D2D1CompileOptions.Default);
 
-        Assert.IsTrue(bytecode.Length > 0);
+        Assert.Fail();
     }
 
     [TestMethod]
-    public unsafe void CompilePixelateEffectWithDefaultOptions()
+    public void CompilePixelateEffectWithDefaultOptions()
     {
         const string source = """
             #define D2D_INPUT_COUNT 1
@@ -184,6 +184,70 @@ public partial class D2D1ShaderCompilerTests
             "PSMain".AsSpan(),
             D2D1ShaderProfile.PixelShader40,
             D2D1CompileOptions.Default);
+
+        Assert.IsTrue(bytecode.Length > 0);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(FxcCompilationException))]
+    public void CompileShaderWithWarning()
+    {
+        const string source = """
+            // ================================================
+            //                  AUTO GENERATED
+            // ================================================
+            // This shader was created by ComputeSharp.
+            // See: https://github.com/Sergio0694/ComputeSharp.
+
+            #define D2D_INPUT_COUNT 0
+
+            #include "d2d1effecthelpers.hlsli"
+
+            int a;
+
+            D2D_PS_ENTRY(Execute)
+            {
+                return a / 4;
+            }
+            """;
+
+        _ = D2D1ShaderCompiler.Compile(
+            source.AsSpan(),
+            "Execute".AsSpan(),
+            D2D1ShaderProfile.PixelShader40,
+            D2D1CompileOptions.Default);
+
+        Assert.Fail();
+    }
+
+    // See https://github.com/Sergio0694/ComputeSharp/issues/647
+    [TestMethod]
+    public void CompileShaderWithWarning_Suppressed()
+    {
+        const string source = """
+            // ================================================
+            //                  AUTO GENERATED
+            // ================================================
+            // This shader was created by ComputeSharp.
+            // See: https://github.com/Sergio0694/ComputeSharp.
+
+            #define D2D_INPUT_COUNT 0
+
+            #include "d2d1effecthelpers.hlsli"
+
+            int a;
+
+            D2D_PS_ENTRY(Execute)
+            {
+                return a / 4;
+            }
+            """;
+
+        ReadOnlyMemory<byte> bytecode = D2D1ShaderCompiler.Compile(
+            source.AsSpan(),
+            "Execute".AsSpan(),
+            D2D1ShaderProfile.PixelShader40,
+            D2D1CompileOptions.Default & ~D2D1CompileOptions.WarningsAreErrors);
 
         Assert.IsTrue(bytecode.Length > 0);
     }
