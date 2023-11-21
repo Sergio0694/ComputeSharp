@@ -559,6 +559,54 @@ namespace ComputeSharp.Tests
                 this.buffer[ThreadIds.X] *= x;
             }
         }
+
+        [TestMethod]
+        public void ShaderWithStrippedReflectionData()
+        {
+            ShaderInfo info1 = ReflectionServices.GetShaderInfo<ShaderWithStrippedReflectionData1>();
+
+            // With no reflection data available, the instruction count is just 0
+            Assert.AreEqual(0u, info1.InstructionCount);
+
+            ShaderInfo info2 = ReflectionServices.GetShaderInfo<ShaderWithStrippedReflectionData2>();
+
+            // Sanity check, here instead we should have some valid count
+            Assert.AreNotEqual(0u, info2.InstructionCount);
+
+            // Verify that the bytecode with stripped reflection is much smaller
+            Assert.IsTrue(info1.HlslBytecode.Length < 1800);
+            Assert.IsTrue(info2.HlslBytecode.Length > 3300);
+        }
+
+        [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.X)]
+        [CompileOptions(CompileOptions.Default | CompileOptions.StripReflectionData)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ShaderWithStrippedReflectionData1 : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                this.buffer[ThreadIds.X] = ThreadIds.X;
+            }
+        }
+
+        [AutoConstructor]
+        [EmbeddedBytecode(DispatchAxis.X)]
+        [CompileOptions(CompileOptions.Default)]
+        [GeneratedComputeShaderDescriptor]
+        internal readonly partial struct ShaderWithStrippedReflectionData2 : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                this.buffer[ThreadIds.X] = ThreadIds.X;
+            }
+        }
     }
 }
 

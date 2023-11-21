@@ -1,5 +1,4 @@
 using System;
-using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -71,42 +70,136 @@ internal sealed unsafe class DxcShaderCompiler
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
+    /// <param name="compileOptions">The compile options to use.</param>
     /// <param name="token">The <see cref="CancellationToken"/> used to cancel the operation, if needed.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    public byte[] Compile(ReadOnlySpan<char> source, CancellationToken token)
+    public byte[] Compile(ReadOnlySpan<char> source, CompileOptions compileOptions, CancellationToken token)
     {
         using ComPtr<IDxcResult> dxcResult = default;
 
-        // We can't use stackalloc here, because the portable Span<T> type has a bug that causes
-        // the constructor taking a pointer to throw if T is a type that contains a pointer field.
-        // So we can just rent a buffer from the pool and use that instead, at least for now.
-        PCWSTR[] arguments = ArrayPool<PCWSTR>.Shared.Rent(3);
-
-        // Try to compile the new compute shader
-        fixed (char* pSourceName = "")
-        fixed (char* pEntryPoint = "Execute")
-        fixed (char* pTargetProfile = "cs_6_0")
-        fixed (char* optimization = "-O3")
-        fixed (char* rowMajor = "-Zpr")
-        fixed (char* warningsAsErrors = "-Werror")
-        fixed (PCWSTR* pArguments = arguments)
+        using (ComPtr<IDxcCompilerArgs> dxcCompilerArgs = default)
         {
-            pArguments[0] = optimization;
-            pArguments[1] = rowMajor;
-            pArguments[2] = warningsAsErrors;
-
-            using ComPtr<IDxcCompilerArgs> dxcCompilerArgs = default;
-
             // Create the arguments to append others to
-            this.dxcUtils.Get()->BuildArguments(
-                pSourceName: pSourceName,
-                pEntryPoint: pEntryPoint,
-                pTargetProfile: pTargetProfile,
-                pArguments: pArguments,
-                argCount: 3,
-                pDefines: null,
-                defineCount: 0,
-                ppArgs: dxcCompilerArgs.GetAddressOf()).Assert();
+            fixed (char* pSourceName = "")
+            fixed (char* pEntryPoint = "Execute")
+            fixed (char* pTargetProfile = "cs_6_0")
+            fixed (char* pRowMajor = "-Zpr")
+            {
+                // The row major argument is the only one always set automatically.
+                // All the others are dynamically added based on the selected options.
+                PCWSTR rowMajorArgument = pRowMajor;
+
+                this.dxcUtils.Get()->BuildArguments(
+                    pSourceName: pSourceName,
+                    pEntryPoint: pEntryPoint,
+                    pTargetProfile: pTargetProfile,
+                    pArguments: &rowMajorArgument,
+                    argCount: 1,
+                    pDefines: null,
+                    defineCount: 0,
+                    ppArgs: dxcCompilerArgs.GetAddressOf()).Assert();
+            }
+
+            // Add any other optional arguments
+            fixed (char* pAllResourcesBound = "-all-resources-bound")
+            fixed (char* pDisableValidation = "-Vd")
+            fixed (char* pDisableOptimization = "-Od")
+            fixed (char* pAvoidFlowControl = "-Gfa")
+            fixed (char* pPreferFlowControl = "-Gfp")
+            fixed (char* pEnableStrictness = "-Ges")
+            fixed (char* pIeeeStrictness = "-Gis")
+            fixed (char* pEnableBackwardsCompatibility = "-Gec")
+            fixed (char* pOptimizationLevel0 = "-O0")
+            fixed (char* pOptimizationLevel1 = "-O1")
+            fixed (char* pOptimizationLevel2 = "-O2")
+            fixed (char* pOptimizationLevel3 = "-O3")
+            fixed (char* pWarningsAreErrors = "-WX")
+            fixed (char* pResourcesMayAlias = "-res-may-alias")
+            fixed (char* pStripReflectionData = "-Qstrip_reflect")
+            {
+                // Helper to add a new argument
+                static void AddArgument(IDxcCompilerArgs* args, char* pArgument)
+                {
+                    PCWSTR argument = pArgument;
+
+                    args->AddArguments(&argument, 1).Assert();
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.AllResourcesBound))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pAllResourcesBound);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.DisableValidation))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pDisableValidation);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.DisableOptimization))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pDisableOptimization);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.AvoidFlowControl))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pAvoidFlowControl);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.PreferFlowControl))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pPreferFlowControl);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.EnableStrictness))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pEnableStrictness);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.IeeeStrictness))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pIeeeStrictness);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.EnableBackwardsCompatibility))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pEnableBackwardsCompatibility);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.OptimizationLevel0))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pOptimizationLevel0);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.OptimizationLevel1))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pOptimizationLevel1);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.OptimizationLevel2))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pOptimizationLevel2);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.OptimizationLevel3))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pOptimizationLevel3);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.WarningsAreErrors))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pWarningsAreErrors);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.ResourcesMayAlias))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pResourcesMayAlias);
+                }
+
+                if (compileOptions.HasFlag(CompileOptions.StripReflectionData))
+                {
+                    AddArgument(dxcCompilerArgs.Get(), pStripReflectionData);
+                }
+            }
 
             fixed (char* pSource = source)
             {
@@ -126,8 +219,6 @@ internal sealed unsafe class DxcShaderCompiler
                     pIncludeHandler: null,
                     riid: &dxcResultIid,
                     ppResult: (void**)dxcResult.GetAddressOf());
-
-                ArrayPool<PCWSTR>.Shared.Return(arguments);
 
                 // Only assert the HRESULT after returning the array from the pool. Since the method itself
                 // can return a failure but doesn't actually throw, there's no need to throw the buffer away.
