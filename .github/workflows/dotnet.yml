@@ -270,8 +270,9 @@ jobs:
         msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish
         /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
       
-      # Just like for the DX12 sample, run it on x64 to validate it works correctly
-    - if: matrix.platform == 'x64'
+      # Just like for the DX12 sample, run it on x64 to validate it works correctly.
+      # Temporarily disabled due to https://github.com/microsoft/Win2D/issues/935.
+    - if: false # matrix.platform == 'x64'
       name: Run ComputeSharp.SwapChain.D2D1.Cli
       run: >
         $process = (Start-Process samples\ComputeSharp.SwapChain.D2D1.Cli\bin\x64\Release\net8.0-windows10.0.22621\win-x64\publish\computesharp.d2d1.cli.exe -PassThru);
