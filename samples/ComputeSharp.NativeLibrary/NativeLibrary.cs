@@ -37,7 +37,7 @@ public static unsafe class Library
     /// Sets the constant buffer for the input <c>ID2D1Effect</c> (assumed to be <see cref="HelloWorld"/>).
     /// </summary>
     /// <param name="d2D1Effect"><inheritdoc cref="D2D1PixelShaderEffect.SetConstantBufferForD2D1Effect" path="/param[@name='d2D1Effect']/node()"/></param>
-    /// <param name="time"><inheritdoc cref="HelloWorld.time" path="/node()"/></param>
+    /// <param name="time"><inheritdoc cref="HelloWorld(float, Int2)" path="/param[@name='time']/node()"/></param>
     /// <param name="dispatchWidth">The horizontal dispatch size for the current output.</param>
     /// <param name="dispatchHeight">The vertical dispatch size for the current output.</param>
     /// <returns></returns>
@@ -57,6 +57,11 @@ public static unsafe class Library
     }
 }
 
+/// <summary>
+/// A hello world effect that displays a color gradient.
+/// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DEffectDisplayName(nameof(HelloWorld))]
 [D2DEffectDescription("A hello world effect that displays a color gradient.")]
 [D2DEffectCategory("Render")]
@@ -65,25 +70,14 @@ public static unsafe class Library
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct HelloWorld : ID2D1PixelShader
+internal readonly partial struct HelloWorld(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     /// <inheritdoc/>
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        float2 uv = xy / (float2)this.dispatchSize;
-        float3 color = 0.5f + (0.5f * Hlsl.Cos(this.time + new float3(uv, uv.X) + new float3(0, 2, 4)));
+        float2 uv = xy / (float2)dispatchSize;
+        float3 color = 0.5f + (0.5f * Hlsl.Cos(time + new float3(uv, uv.X) + new float3(0, 2, 4)));
 
         return new(color, 1f);
     }
