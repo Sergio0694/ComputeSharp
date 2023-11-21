@@ -164,6 +164,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm64", "arm64", "{B4F6A41C
 		libs\arm64\WinPixEventRuntime_UAP.dll = libs\arm64\WinPixEventRuntime_UAP.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.NativeLibrary", "samples\ComputeSharp.NativeLibrary\ComputeSharp.NativeLibrary.csproj", "{1A3E20B3-F711-41C0-82EA-3B53A575955C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -444,6 +446,14 @@ Global
 		{9B4448B1-200F-4966-8A13-A508691B3003}.Release|ARM64.Build.0 = Release|Any CPU
 		{9B4448B1-200F-4966-8A13-A508691B3003}.Release|x64.ActiveCfg = Release|Any CPU
 		{9B4448B1-200F-4966-8A13-A508691B3003}.Release|x64.Build.0 = Release|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Debug|x64.Build.0 = Debug|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Release|ARM64.Build.0 = Release|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -481,6 +491,7 @@ Global
 		{59A17380-24A0-4BD7-9012-B105A9E7D46F} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{79FD7862-4707-4DE0-8777-3872558E4C1C} = {A5013F9B-92EC-419F-B0B3-3D6B721E7104}
 		{B4F6A41C-AA9A-4302-92B3-AC64CF2E30F5} = {A5013F9B-92EC-419F-B0B3-3D6B721E7104}
+		{1A3E20B3-F711-41C0-82EA-3B53A575955C} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
