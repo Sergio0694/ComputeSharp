@@ -738,7 +738,7 @@ namespace ComputeSharp.D2D1.Tests
         [DataRow(0)]
         [DataRow(4)]
         [DataRow(27)]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GetConstantBuffer_BufferTooShort(int size)
         {
             byte[] buffer = new byte[size];

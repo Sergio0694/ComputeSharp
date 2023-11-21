@@ -441,17 +441,11 @@ public static class D2D1PixelShader
     /// <typeparam name="T">The type of D2D1 pixel shader value to create.</typeparam>
     /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the constant buffer data.</param>
     /// <returns>The resulting <typeparamref name="T"/> instance.</returns>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="span"/> is not large enough to contain the constant buffer.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="span"/> is not large enough for the current shader type.</exception>
     public static T CreateFromConstantBuffer<T>(ReadOnlySpan<byte> span)
         where T : unmanaged, ID2D1PixelShader, ID2D1PixelShaderDescriptor<T>
     {
-        if (!TryCreateFromConstantBuffer(span, out T shader))
-        {
-            default(ArgumentException).Throw(nameof(span));
-        }
-
-        return shader;
-
+        return T.CreateFromConstantBuffer(span);
     }
 
     /// <summary>
