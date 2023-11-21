@@ -6,7 +6,7 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by Shane.</para>
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.XY)]
+[ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct TerracedHills : IComputeShader<float4>
 {

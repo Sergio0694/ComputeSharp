@@ -52,7 +52,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct NanAndInfiniteShader : IComputeShader
     {
@@ -114,7 +114,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ModAndComparisonOperatorsShader : IComputeShader
     {
@@ -177,7 +177,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BitwiseOperatorsShader : IComputeShader
     {
@@ -231,7 +231,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct BooleanOperatorsShader : IComputeShader
     {
@@ -282,7 +282,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ToBooleanConversionIntrinsicsShader : IComputeShader
     {
@@ -367,7 +367,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct FromBooleanConversionIntrinsicsShader : IComputeShader
     {
@@ -451,7 +451,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ConstantsInShaderConstantFieldsShader : IComputeShader
     {
@@ -530,7 +530,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct DoubleConstantsInShaderConstantFieldsShader : IComputeShader
     {
@@ -593,7 +593,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct InterlockedOperationsShader : IComputeShader
     {
@@ -639,7 +639,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct GlslStyleMulOperatorsShader : IComputeShader
     {
@@ -781,7 +781,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct CustomStructTypeShader : IComputeShader
     {
@@ -820,7 +820,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct MiscHlslIntrinsicsShader : IComputeShader
     {
@@ -864,7 +864,7 @@ public partial class ShaderRewriterTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct ReadonlyModifierInMethodsShader : IComputeShader
     {

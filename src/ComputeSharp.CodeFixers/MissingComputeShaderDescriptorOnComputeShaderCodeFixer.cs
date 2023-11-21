@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
-namespace ComputeSharp.D2D1.CodeFixers;
+namespace ComputeSharp.CodeFixers;
 
 /// <summary>
 /// A code fixer that adds the <c>[GeneratedComputeShaderDescriptor]</c> to compute shader types with no descriptor.
@@ -16,9 +16,9 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderCodeFixer : Mis
     /// <summary>
     /// The set of type names for all attributes that can be over shader types.
     /// </summary>
-    private static readonly string[] D2DAttributeTypeNames =
+    private static readonly string[] AttributeTypeNames =
     [
-        "ComputeSharp.EmbeddedBytecodeAttribute",
+        "ComputeSharp.ThreadGroupSizeAttribute",
         "ComputeSharp.GroupSharedAttribute"
     ];
 
@@ -30,7 +30,7 @@ public sealed class MissingComputeShaderDescriptorOnComputeShaderCodeFixer : Mis
             diagnosticId: MissingComputeShaderDescriptorOnComputeShaderTypeId,
             codeActionTitle: "Add [GeneratedComputeShaderDescriptor] attribute",
             attributeFullyQualifiedMetadataName: "ComputeSharp.GeneratedComputeShaderDescriptorAttribute",
-            leadingAttributeFullyQualifiedMetadataNames: D2DAttributeTypeNames)
+            leadingAttributeFullyQualifiedMetadataNames: AttributeTypeNames)
     {
     }
 }

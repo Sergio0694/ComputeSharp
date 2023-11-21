@@ -72,7 +72,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {
@@ -107,7 +107,7 @@ partial class Texture2DTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.XY)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingPixelShader : IComputeShader<float4>
     {

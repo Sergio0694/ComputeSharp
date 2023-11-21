@@ -109,7 +109,7 @@ public partial class DispatchingBenchmark : IDisposable
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct TestShader : IComputeShader
     {

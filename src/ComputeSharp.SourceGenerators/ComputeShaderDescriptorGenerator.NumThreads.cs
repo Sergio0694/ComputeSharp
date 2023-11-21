@@ -33,10 +33,9 @@ partial class ComputeShaderDescriptorGenerator
             out bool isCompilationEnabled)
         {
             // Try to get the attribute that controls shader precompilation (this is always required)
-            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName(typeof(EmbeddedBytecodeAttribute).FullName, out AttributeData? attribute))
+            if (!structDeclarationSymbol.TryGetAttributeWithFullyQualifiedMetadataName("ComputeSharp.ThreadGroupSizeAttribute", out AttributeData? attribute))
             {
-                // Emit the diagnostics if dynamic shaders are not supported
-                diagnostics.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(MissingThreadGroupSizeAttribute, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;
@@ -47,24 +46,24 @@ partial class ComputeShaderDescriptorGenerator
             // Check for a dispatch axis argument first
             if (attribute.ConstructorArguments.Length == 1)
             {
-                int dispatchAxis = (int)attribute.ConstructorArguments[0].Value!;
+                int defaultSize = (int)attribute.ConstructorArguments[0].Value!;
 
-                (threadsX, threadsY, threadsZ) = (DispatchAxis)dispatchAxis switch
+                (threadsX, threadsY, threadsZ) = (DefaultThreadGroupSizes)defaultSize switch
                 {
-                    DispatchAxis.X => (64, 1, 1),
-                    DispatchAxis.Y => (1, 64, 1),
-                    DispatchAxis.Z => (1, 1, 64),
-                    DispatchAxis.XY => (8, 8, 1),
-                    DispatchAxis.XZ => (8, 1, 8),
-                    DispatchAxis.YZ => (1, 8, 8),
-                    DispatchAxis.XYZ => (4, 4, 4),
+                    DefaultThreadGroupSizes.X => (64, 1, 1),
+                    DefaultThreadGroupSizes.Y => (1, 64, 1),
+                    DefaultThreadGroupSizes.Z => (1, 1, 64),
+                    DefaultThreadGroupSizes.XY => (8, 8, 1),
+                    DefaultThreadGroupSizes.XZ => (8, 1, 8),
+                    DefaultThreadGroupSizes.YZ => (1, 8, 8),
+                    DefaultThreadGroupSizes.XYZ => (4, 4, 4),
                     _ => (0, 0, 0)
                 };
 
                 // Validate the dispatch axis argument
                 if ((threadsX, threadsY, threadsZ) is (0, 0, 0))
                 {
-                    diagnostics.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
+                    diagnostics.Add(InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes, structDeclarationSymbol, structDeclarationSymbol);
 
                     threadsX = threadsY = threadsZ = 0;
                     isCompilationEnabled = false;
@@ -84,7 +83,7 @@ partial class ComputeShaderDescriptorGenerator
                 explicitThreadsZ is < 1 or > 64)
             {
                 // Failed to validate the thread number arguments
-                diagnostics.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
+                diagnostics.Add(InvalidThreadGroupSizeAttributeValues, structDeclarationSymbol, structDeclarationSymbol);
 
                 threadsX = threadsY = threadsZ = 0;
                 isCompilationEnabled = false;

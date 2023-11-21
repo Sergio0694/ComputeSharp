@@ -73,7 +73,7 @@ public partial class InitializationTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     internal readonly partial struct SampleShader : IComputeShader
     {

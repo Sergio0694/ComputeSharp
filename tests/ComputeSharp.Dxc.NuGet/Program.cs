@@ -34,7 +34,7 @@ Trace.Assert(shaderInfo.BoundResourceCount == 2);
 /// A sample kernel that requires dynamic compilation, as it's not precompiled.
 /// </summary>
 [AutoConstructor]
-[EmbeddedBytecode(DispatchAxis.X)]
+[ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
 internal readonly partial struct MultiplyByTwo : IComputeShader
 {

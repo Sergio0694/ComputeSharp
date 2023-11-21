@@ -89,7 +89,7 @@ partial class Texture1DTests
     }
 
     [AutoConstructor]
-    [EmbeddedBytecode(DispatchAxis.X)]
+    [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {

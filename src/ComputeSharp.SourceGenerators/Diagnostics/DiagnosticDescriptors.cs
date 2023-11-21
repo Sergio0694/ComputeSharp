@@ -590,83 +590,83 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with invalid thread ids values.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for invalid thread group sizes.
     /// <para>
-    /// Format: <c>"The shader of type {0} is annotated with invalid thread ids values"</c>.
+    /// Format: <c>"The shader of type {0} is annotated with invalid [ThreadGroupSize] values"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeThreadIds = new(
+    public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeValues = new(
         id: "CMPS0044",
-        title: "Invalid thread ids for shader with embedded bytecode",
-        messageFormat: "The shader of type {0} is annotated with invalid thread ids values",
+        title: "Invalid values for [ThreadGroupSize] attribute",
+        messageFormat: "The shader of type {0} is annotated with invalid [ThreadGroupSize] values",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The thread ids values for a shader marked as embedded bytecode have to be in the valid range.",
+        description: "The thread group sizes for [ThreadGroupSize] have to be in the valid range.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to a Win32 exception.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for HLSL bytecode shader failed due to a Win32 exception.
     /// <para>
     /// Format: <c>"The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithWin32Exception = new(
         id: "CMPS0045",
-        title: "Embedded bytecode compilation failed due to Win32 exception",
+        title: "HLSL bytecode compilation failed due to Win32 exception",
         messageFormat: """The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The embedded bytecode for a shader failed to be compiled due to a Win32 exception.",
+        description: "The HLSL bytecode for a shader failed to be compiled due to a Win32 exception.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to an HLSL compilation exception.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for HLSL bytecode shader failed due to an HLSL compilation exception.
     /// <para>
-    /// Format: <c>"The shader of type {{0}} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
+    /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithDxcCompilationException = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithDxcCompilationException = new(
         id: "CMPS0046",
-        title: "Embedded bytecode compilation failed due to an HLSL compiler error",
+        title: "HLSL bytecode compilation failed due to an HLSL compiler error",
         messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The embedded bytecode for a shader failed to be compiled due to an HLSL compiler error.",
+        description: "The HLSL bytecode for a shader failed to be compiled due to an HLSL compiler error.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader without the embedded bytecode attribute,.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader without the thread group size attribute.
     /// <para>
-    /// Format: <c>"The shader of type {0} needs to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute), as dynamic shader compilation is not supported"</c>.
+    /// Format: <c>"The shader of type {0} needs to be annotated with [ThreadGroupSize], as dynamic shader compilation is not supported"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported = new(
+    public static readonly DiagnosticDescriptor MissingThreadGroupSizeAttribute = new(
         id: "CMPS0047",
-        title: "Embedded bytecode compilation failed due to an HLSL compiler error",
-        messageFormat: "The shader of type {0} needs to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute), as dynamic shader compilation is not supported",
+        title: "Missing [ThreadGroupSize] attribute on shader type",
+        messageFormat: "The shader of type {0} needs to be annotated with [ThreadGroupSize] to be compiled at build time, as dynamic shader compilation is not supported",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "All shaders need to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute).",
+        description: "All shaders need to be annotated with the [ThreadGroupSize] attribute to be compiled at build time.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with an invalid dispatch axis value.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for shaders shader with an invalid DefaultThreadGroupSizes value.
     /// <para>
-    /// Format: <c>"The shader of type {0} is annotated with an invalid dispatch axis value"</c>.
+    /// Format: <c>"The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeDispatchAxis = new(
+    public static readonly DiagnosticDescriptor InvalidThreadGroupSizeAttributeDefaultThreadGroupSizes = new(
         id: "CMPS0048",
-        title: "Invalid dispatch axis for shader with embedded bytecode",
-        messageFormat: "The shader of type {0} is annotated with with an invalid dispatch axis value",
+        title: "Invalid DefaultThreadGroupSizes value for [ThreadGroupSize] use",
+        messageFormat: "The shader of type {0} is using an invalid DefaultThreadGroupSizes value in its [ThreadGroupSize] attribute",
         category: "ComputeSharp.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
-        description: "The dispatch axis value for a shader marked as embedded bytecode have to be valid (flags are not supported).",
+        description: "The DefaultThreadGroupSizes value for [ThreadGroupSize] attributes have to be valid.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
