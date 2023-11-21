@@ -180,9 +180,7 @@ unsafe partial struct PixelShaderEffect
             default(ArgumentOutOfRangeException).ThrowIfLessThan((int)dataSize, sizeof(void*), nameof(dataSize));
             default(ArgumentOutOfRangeException).ThrowIfGreaterThanOrEqual(index, GetGlobals().ResourceTextureCount);
 
-            using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = new(this.resourceTextureManagerBuffer[index]);
-
-            resourceTextureManager.CopyTo((ID2D1ResourceTextureManager**)data).Assert();
+            this.resourceTextureManagerBuffer[index].CopyTo((ID2D1ResourceTextureManager**)data).Assert();
 
             if (actualSize is not null)
             {
@@ -240,13 +238,8 @@ unsafe partial struct PixelShaderEffect
                 resourceTextureManagerInternal.Get()->Initialize(this.d2D1EffectContext, &dimensions).Assert();
             }
 
-            ref ID2D1ResourceTextureManager* currentResourceTextureManager = ref this.resourceTextureManagerBuffer[index];
-
-            // If there's already an existing manager at this index, release it
-            ComPtr.Dispose(currentResourceTextureManager);
-
             // Store the resource texture manager into the buffer
-            currentResourceTextureManager = resourceTextureManager.Detach();
+            this.resourceTextureManagerBuffer[index].Attach(resourceTextureManager.Detach());
 
             return S.S_OK;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 using ComputeSharp.Win32;
 
@@ -201,11 +202,11 @@ internal unsafe partial struct PixelShaderEffect
             ComPtr.Dispose(this.d2D1EffectContext);
 
             // Retrieve all possible resource texture managers in use and release the ones that had been
-            // assigned (from one of the property bindings). We just hardcode 16 here and dont access
-            // the globals, as technically invoking APIs on it might throw an exception.
-            for (int i = 0; i < 16; i++)
+            // assigned (from one of the property bindings). We just try to dispose all of them here and
+            // don't access the globals, as technically invoking APIs on it might throw an exception.
+            foreach (ref ComPtr<ID2D1ResourceTextureManager> resourceTextureManager in (Span<ComPtr<ID2D1ResourceTextureManager>>)this.resourceTextureManagerBuffer)
             {
-                ComPtr.Dispose(this.resourceTextureManagerBuffer[i]);
+                resourceTextureManager.Dispose();
             }
 
             NativeMemory.Free(Unsafe.AsPointer(ref this));

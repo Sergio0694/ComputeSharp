@@ -108,7 +108,7 @@ internal unsafe partial struct PixelShaderEffect
 
                 for (int i = 0; i < resourceTextureDescriptions.Length; i++)
                 {
-                    using ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = new(@this->resourceTextureManagerBuffer[i]);
+                    ref readonly ComPtr<ID2D1ResourceTextureManager> resourceTextureManager = ref @this->resourceTextureManagerBuffer[i];
 
                     // If the current resource texture manager is not set, we cannot render, as there's an unbound resource texture
                     if (resourceTextureManager.Get() is null)
