@@ -8,8 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static ComputeSharp.Win32.D2D1_PIXEL_OPTIONS;
 
-#pragma warning disable CS0649
-
 namespace ComputeSharp.Win32;
 
 [Guid("693CE632-7F2F-45DE-93FE-18D88B37AA21")]

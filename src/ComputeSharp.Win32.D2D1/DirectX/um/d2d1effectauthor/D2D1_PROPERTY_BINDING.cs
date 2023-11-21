@@ -3,8 +3,6 @@
 // Ported from um/d2d1effectauthor.h in the Windows SDK for Windows 10.0.22000.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-#pragma warning disable CS0649
-
 namespace ComputeSharp.Win32;
 
 internal unsafe partial struct D2D1_PROPERTY_BINDING

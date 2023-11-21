@@ -6,8 +6,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-#pragma warning disable CS0649
-
 namespace ComputeSharp.Win32;
 
 [Guid("B2EFE1E7-729F-4102-949F-505FA21BF666")]

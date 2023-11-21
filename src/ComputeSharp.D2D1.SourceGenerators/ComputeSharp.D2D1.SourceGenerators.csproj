@@ -1,7 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NoWarn>$(NoWarn);CS1591;CS0649;CS1574;CS0419;IDE0004</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+
+    <!-- Ignore warnings for ambiguous XML cref attributes (due to some CSharpLang/CsWin32 signature differences) -->
+    <NoWarn>$(NoWarn);CS0419</NoWarn>
+    
+    <!-- Ignore warnings for unresolved XML cref attributes (for imported types, same as in the D3D12 generator) -->
+    <NoWarn>$(NoWarn);CS1574</NoWarn>
+
+    <!-- Ignore warnings for redundant casts (needed in some imported enum types due to CSharpLang/CsWin32 type differences) -->
+    <NoWarn>$(NoWarn);IDE0004</NoWarn>
   </PropertyGroup>
 
   <!-- Same setup as ComputeSharp.Core.SourceGenerators, just with also APIs from ComputeSharp -->

@@ -5,8 +5,6 @@
 
 using System.Runtime.CompilerServices;
 
-#pragma warning disable CS0649
-
 namespace ComputeSharp.Win32;
 
 internal unsafe partial struct ID3DInclude
