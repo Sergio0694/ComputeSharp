@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using static ComputeSharp.SourceGeneration.Diagnostics.DiagnosticDescriptors;
 
-namespace ComputeSharp.D2D1.CodeFixers;
+namespace ComputeSharp.CodeFixers;
 
 /// <summary>
 /// A code fixer that adds the <c>[GeneratedComputeShaderDescriptor]</c> to compute shader types with no descriptor.
