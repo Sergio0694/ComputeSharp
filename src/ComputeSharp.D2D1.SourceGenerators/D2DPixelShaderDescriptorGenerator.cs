@@ -145,7 +145,7 @@ public sealed partial class D2DPixelShaderDescriptorGenerator : IIncrementalGene
                     token.ThrowIfCancellationRequested();
 
                     // Get the shader profile and linking info for LoadBytecode()
-                    bool isLinkingSupported = HlslBytecode.IsSimpleInputShader(typeSymbol, inputCount);
+                    bool isLinkingSupported = HlslBytecode.IsSimpleInputShader(context.SemanticModel.Compilation, typeSymbol, inputCount);
                     D2D1ShaderProfile? requestedShaderProfile = HlslBytecode.GetRequestedShaderProfile(typeSymbol);
                     D2D1CompileOptions? requestedCompileOptions = HlslBytecode.GetRequestedCompileOptions(diagnostics, typeSymbol);
                     D2D1ShaderProfile effectiveShaderProfile = HlslBytecode.GetEffectiveShaderProfile(requestedShaderProfile, out bool isCompilationEnabled);

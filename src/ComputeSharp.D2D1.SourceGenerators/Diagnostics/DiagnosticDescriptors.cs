@@ -1022,4 +1022,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The [D2DGeneratedPixelShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid use of <c>[D2DCompileOptions]</c> requesting to enable linking.
+    /// <para>
+    /// Format: <c>"The D2D1 shader of type {0} cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute, as it doesn't support linking (only D2D1 shaders with no complex inputs can use this option)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidD2D1CompileOptionsEnableLinkingOnShaderType = new(
+        id: "CMPSD2D0069",
+        title: "Invalid [D2DResourceTextureIndex] use",
+        messageFormat: """The D2D1 shader of type {0} cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute, as it doesn't support linking (only D2D1 shaders with no complex inputs can use this option)""",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "A D2D1 shader cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute if it doesn't support linking (only D2D1 shaders with no complex inputs can use this option).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
