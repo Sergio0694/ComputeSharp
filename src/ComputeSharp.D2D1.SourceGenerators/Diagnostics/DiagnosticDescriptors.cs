@@ -445,14 +445,14 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to a Win32 exception.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for HLSL bytecode shader failed due to a Win32 exception.
     /// <para>
     /// Format: <c>"The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithWin32Exception = new(
         id: "CMPSD2D0033",
-        title: "Embedded bytecode compilation failed due to Win32 exception",
+        title: "HLSL bytecode compilation failed due to Win32 exception",
         messageFormat: """The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
@@ -461,14 +461,14 @@ partial class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to an HLSL compilation exception.
+    /// Gets a <see cref="DiagnosticDescriptor"/> for HLSL bytecode shader failed due to an HLSL compilation exception.
     /// <para>
     /// Format: <c>"The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithFxcCompilationException = new(
+    public static readonly DiagnosticDescriptor HlslBytecodeFailedWithFxcCompilationException = new(
         id: "CMPSD2D0034",
-        title: "Embedded bytecode compilation failed due to an HLSL compiler error",
+        title: "HLSL bytecode compilation failed due to an HLSL compiler error",
         messageFormat: """The shader of type {0} failed to compile due to an HLSL compiler error (Message: "{1}")""",
         category: "ComputeSharp.D2D1.Shaders",
         defaultSeverity: DiagnosticSeverity.Error,
