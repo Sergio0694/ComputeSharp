@@ -1428,10 +1428,10 @@ public class DiagnosticsTests
             MetadataReference.CreateFromFile(typeof(D3D12::ComputeSharp.IComputeShader).Assembly.Location)
         ];
 
-        // Parse the source text (C# 11)
+        // Parse the source text (C# 12)
         SyntaxTree sourceTree = CSharpSyntaxTree.ParseText(
             source,
-            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp11));
+            CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12));
 
         // Create the original compilation
         CSharpCompilation compilation = CSharpCompilation.Create(
