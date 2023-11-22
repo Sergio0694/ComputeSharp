@@ -9,9 +9,6 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-
-    <!-- Temporary workaround for RID graph change in .NET 8 (see https://github.com/microsoft/Win2D/issues/935) -->
-    <UseRidGraph>true</UseRidGraph>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,15 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-    <!--
-      The Win2D package is directly referenced as a temporary workaround for the native binaries
-      using the non-portable RID (ie. "win10-"). If this is only pulled in transitively by the
-      ComputeSharp.WinUI dependency, <UseRidGraph> will not actually work correctly. So, using
-      an explicit reference until Win2D is updated to use the portable RID instead (ie. "win-").
-    -->
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />

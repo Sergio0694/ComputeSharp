@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

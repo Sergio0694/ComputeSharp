@@ -9,9 +9,6 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-
-    <!-- Temporary workaround for RID graph change in .NET 8 (see https://github.com/microsoft/Win2D/issues/935) -->
-    <UseRidGraph>true</UseRidGraph>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -59,9 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-    <!-- Temporary Win2D package reference (see notes in the WinUI sample app .csproj file) -->
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" ExcludeAssets="build" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
