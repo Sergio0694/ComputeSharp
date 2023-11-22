@@ -284,7 +284,7 @@ partial class ConstantBufferSyntaxProcessor
                         {
                             writer.WriteLine($"""
                                 /// <inheritdoc cref="{containingTypeName}.{pathPart.Name}"/>
-                                /// <param name="shader">The input <see cref="{containingTypeName}"/> value.</param>
+                                /// <param name="value">The input <see cref="{containingTypeName}"/> value.</param>
                                 /// <returns>A mutable reference to <see cref="{containingTypeName}.{pathPart.Name}"/>.</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field)]
                                 private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
@@ -294,7 +294,7 @@ partial class ConstantBufferSyntaxProcessor
                         {
                             writer.WriteLine($"""
                                 /// <summary>Gets a reference to the unspeakable field "{pathPart.Name}" of type <see cref="{containingTypeName}"/>.</summary>
-                                /// <param name="shader">The input <see cref="{containingTypeName}"/> value.</param>
+                                /// <param name="value">The input <see cref="{containingTypeName}"/> value.</param>
                                 /// <returns>A mutable reference to the unspeakable field "{pathPart.Name}".</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{pathPart.UnspeakableName}")]
                                 private static extern ref {typeName} {pathPart.Name}(this ref readonly {containingTypeName} value);
