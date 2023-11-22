@@ -206,7 +206,7 @@ jobs:
     - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT (speed)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
-        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -r win-${{matrix.platform}} -v n
+        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -r win-${{matrix.platform}} -v n
       
       # If on x64, also run it (this script will launch it and let it run for 2 seconds, before closing it).
       # Note: for this and all other equivalent tests below, we're only throwing on failures that are not
@@ -239,7 +239,7 @@ jobs:
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         $env:COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED='true';
         git clean -fdx;
-        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -c Release -r win-${{matrix.platform}} -v n
+        dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -r win-${{matrix.platform}} -v n
       
       # Again only on x64, also run the sample and validate it works correctly
     - if: matrix.platform == 'x64'
@@ -268,7 +268,7 @@ jobs:
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_R2R='true';
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='false';
         msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish
-        /p:Configuration=Release /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
+        /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
       
       # Just like for the DX12 sample, run it on x64 to validate it works correctly.
       # Temporarily disabled due to https://github.com/microsoft/Win2D/issues/935.
@@ -289,7 +289,7 @@ jobs:
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_R2R='false';
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='true';
         git clean -fdx;
-        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish /p:Configuration=Release
+        msbuild samples\ComputeSharp.SwapChain.D2D1.Cli\ComputeSharp.SwapChain.D2D1.Cli.csproj /restore -t:publish
         /p:Platform=${{matrix.platform}} /p:RuntimeIdentifier=win-${{matrix.platform}}
 
       # Publish the native library as a NativeAOT shared library
@@ -329,17 +329,17 @@ jobs:
     - name: Publish and run ComputeSharp.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -c Release -r win-x64 -v n;
+        dotnet publish tests\ComputeSharp.NuGet\ComputeSharp.NuGet.csproj -r win-x64 -v n;
         tests\ComputeSharp.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.NuGet.exe
     - name: Publish and run ComputeSharp.Dxc.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -c Release -r win-x64 -v n;
+        dotnet publish tests\ComputeSharp.Dxc.NuGet\ComputeSharp.Dxc.NuGet.csproj -r win-x64 -v n;
         tests\ComputeSharp.Dxc.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.Dxc.NuGet.exe
     - name: Publish and run ComputeSharp.Pix.NuGet with NativeAOT
       run: >
         $env:COMPUTESHARP_NUGET_TESTS_PUBLISH_AOT='true';
-        dotnet publish tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -c Release -r win-x64 -v n;
+        dotnet publish tests\ComputeSharp.Pix.NuGet\ComputeSharp.Pix.NuGet.csproj -r win-x64 -v n;
         tests\ComputeSharp.Pix.NuGet\bin\Release\net8.0\win-x64\publish\ComputeSharp.Pix.NuGet.exe
 
   # Publish the packages to GitHub packages
