@@ -805,7 +805,7 @@ partial class DiagnosticDescriptors
     /// Format: <c>"The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor NotReadonlyShaderType = new(
+    public static readonly DiagnosticDescriptor NotReadOnlyShaderType = new(
         id: "CMPS0057",
         title: "Not readonly shader type (using IComputeShader or IComputeShader<T>)",
         messageFormat: "The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)",

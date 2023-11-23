@@ -8,13 +8,13 @@ namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class NotReadonlyComputeShaderTypeAnalyzer : NotReadonlyShaderTypeAnalyzerBase
+public sealed class NotReadOnlyComputeShaderTypeWithFieldsAnalyzer : NotReadOnlyShaderTypeWithFieldsAnalyzerBase
 {
     /// <summary>
-    /// Creates a new <see cref="NotReadonlyComputeShaderTypeAnalyzer"/> instance.
+    /// Creates a new <see cref="NotReadOnlyComputeShaderTypeWithFieldsAnalyzer"/> instance.
     /// </summary>
-    public NotReadonlyComputeShaderTypeAnalyzer()
-        : base(NotReadonlyShaderType, ImmutableArray.Create("ComputeSharp.IComputeShader", "ComputeSharp.IComputeShader`1"))
+    public NotReadOnlyComputeShaderTypeWithFieldsAnalyzer()
+        : base(NotReadOnlyShaderType, ImmutableArray.Create("ComputeSharp.IComputeShader", "ComputeSharp.IComputeShader`1"))
     {
     }
 }

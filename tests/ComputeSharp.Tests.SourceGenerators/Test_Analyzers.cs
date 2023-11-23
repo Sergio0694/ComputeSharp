@@ -66,7 +66,7 @@ public class Test_Analyzers
     }
 
     [TestMethod]
-    public async Task NotReadonlyShaderType()
+    public async Task NotReadOnlyShaderType()
     {
         const string source = """
             using ComputeSharp;
@@ -83,6 +83,6 @@ public class Test_Analyzers
             }
             """;
 
-        await CSharpAnalyzerWithLanguageVersionTest<NotReadonlyComputeShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<NotReadOnlyComputeShaderTypeWithFieldsAnalyzer>.VerifyAnalyzerAsync(source);
     }
 }

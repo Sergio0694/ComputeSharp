@@ -8,12 +8,12 @@ namespace ComputeSharp.D2D1.SourceGenerators;
 
 /// <inheritdoc/>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class NotReadonlyPixelShaderTypeAnalyzer : NotReadonlyShaderTypeAnalyzerBase
+public sealed class NotReadOnlyPixelShaderTypeWithFieldsAnalyzer : NotReadOnlyShaderTypeWithFieldsAnalyzerBase
 {
     /// <summary>
-    /// Creates a new <see cref="NotReadonlyPixelShaderTypeAnalyzer"/> instance.
+    /// Creates a new <see cref="NotReadOnlyPixelShaderTypeWithFieldsAnalyzer"/> instance.
     /// </summary>
-    public NotReadonlyPixelShaderTypeAnalyzer()
+    public NotReadOnlyPixelShaderTypeWithFieldsAnalyzer()
         : base(NotReadOnlyShaderType, ImmutableArray.Create("ComputeSharp.D2D1.ID2D1PixelShader"))
     {
     }

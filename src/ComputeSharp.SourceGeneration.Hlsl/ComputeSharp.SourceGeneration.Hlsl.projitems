@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\NotAccessibleFieldTypeInGeneratedShaderDescriptorAttributeTargetAnalyzerBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\NotReadonlyShaderTypeAnalyzerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\NotReadOnlyShaderTypeWithFieldsAnalyzerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Analyzers\MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\DiagnosticDescriptors.cs" />

@@ -11,7 +11,7 @@ namespace ComputeSharp.SourceGeneration.Diagnostics;
 /// </summary>
 /// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
 /// <param name="shaderInterfaceTypeFullyQualifiedMetadataNames">The fully qualified metadata names of all candidate shader interface types.</param>
-public abstract class NotReadonlyShaderTypeAnalyzerBase(
+public abstract class NotReadOnlyShaderTypeWithFieldsAnalyzerBase(
     DiagnosticDescriptor diagnosticDescriptor,
     ImmutableArray<string> shaderInterfaceTypeFullyQualifiedMetadataNames) : DiagnosticAnalyzer
 {
@@ -36,6 +36,13 @@ public abstract class NotReadonlyShaderTypeAnalyzerBase(
             {
                 // Only struct types that are not readonly are possible targets
                 if (context.Symbol is not INamedTypeSymbol { TypeKind: TypeKind.Struct, IsReadOnly: false } typeSymbol)
+                {
+                    return;
+                }
+
+                // In order to trigger the analyzer, we must have at least one field.
+                // If not (eg. shaders that just return a constant color), no need.
+                if (!typeSymbol.GetMembers().Any(static m => m is IFieldSymbol { IsStatic: false, IsConst: false, IsFixedSizeBuffer: false }))
                 {
                     return;
                 }
