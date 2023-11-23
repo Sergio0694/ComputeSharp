@@ -8,23 +8,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// <para>Created by nimitz (twitter: @stormoid).</para>
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct ProteanClouds : ID2D1PixelShader
+internal readonly partial struct ProteanClouds(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     private static readonly float3x3 M3 = new float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
 
     private static float2x2 Rotate(in float a)
@@ -50,7 +41,7 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
         float3 p2 = p;
 
         p2.XY -= Disp(p.Z).XY;
-        p.XY = Hlsl.Mul(p.XY, Rotate((Hlsl.Sin(p.Z + this.time) * (0.1f + (prm1 * 0.05f))) + (this.time * 0.09f)));
+        p.XY = Hlsl.Mul(p.XY, Rotate((Hlsl.Sin(p.Z + time) * (0.1f + (prm1 * 0.05f))) + (time * 0.09f)));
 
         float cl = Hlsl.Dot(p2.XY, p2.XY);
         float d = 0.0f;
@@ -63,7 +54,7 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
 
         for (int i = 0; i < 5; i++)
         {
-            p += Hlsl.Sin((p.ZXY * 0.75f * trk) + (this.time * trk * 0.8f)) * dspAmp;
+            p += Hlsl.Sin((p.ZXY * 0.75f * trk) + (time * trk * 0.8f)) * dspAmp;
             d -= Hlsl.Abs(Hlsl.Dot(Hlsl.Cos(p), Hlsl.Sin(p.YZX)) * z);
             z *= 0.57f;
             trk *= 1.4f;
@@ -144,13 +135,13 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        float2 q = (float2)xy / this.dispatchSize;
-        float2 p = (xy - (0.5f * (float2)this.dispatchSize)) / this.dispatchSize.Y;
-        float2 bsMo = -0.5f * (float2)this.dispatchSize / this.dispatchSize.Y;
-        float scaledTime = this.time * 3.0f;
+        float2 q = (float2)xy / dispatchSize;
+        float2 p = (xy - (0.5f * (float2)dispatchSize)) / dispatchSize.Y;
+        float2 bsMo = -0.5f * (float2)dispatchSize / dispatchSize.Y;
+        float scaledTime = time * 3.0f;
         float3 ro = new(0, 0, scaledTime);
 
-        ro += new float3(Hlsl.Sin(this.time) * 0.5f, Hlsl.Sin(this.time * 1.0f) * 0.0f, 0);
+        ro += new float3(Hlsl.Sin(time) * 0.5f, Hlsl.Sin(time * 1.0f) * 0.0f, 0);
 
         float dspAmp = 0.85f;
 
@@ -170,7 +161,7 @@ internal readonly partial struct ProteanClouds : ID2D1PixelShader
 
         rd.XY = Hlsl.Mul(rd.XY, Rotate((-Disp(scaledTime + 3.5f).X * 0.2f) + bsMo.X));
 
-        float prm1 = Hlsl.SmoothStep(-0.4f, 0.4f, Hlsl.Sin(this.time * 0.3f));
+        float prm1 = Hlsl.SmoothStep(-0.4f, 0.4f, Hlsl.Sin(time * 0.3f));
         float4 scn = Render(ro, rd, scaledTime, prm1, bsMo);
         float3 col = scn.RGB;
 

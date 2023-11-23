@@ -7,23 +7,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/Mdf3z7"/>.
 /// <para>Created by Syntopia.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct MengerJourney : ID2D1PixelShader
+internal readonly partial struct MengerJourney(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     private const int MaxSteps = 30;
     private const float MinimumDistance = 0.0009f;
     private const float NormalDistance = 0.0002f;
@@ -85,7 +76,7 @@ internal readonly partial struct MengerJourney : ID2D1PixelShader
 
         for (int n = 0; n < Iterations; n++)
         {
-            z.XY = Rotate(z.XY, 4.0f + (2.0f * Hlsl.Cos(this.time / 8.0f)));
+            z.XY = Rotate(z.XY, 4.0f + (2.0f * Hlsl.Cos(time / 8.0f)));
             z = Hlsl.Abs(z);
 
             if (z.X < z.Y) { z.XY = z.YX; }
@@ -131,7 +122,7 @@ internal readonly partial struct MengerJourney : ID2D1PixelShader
             return Hlsl.Frac(Hlsl.Cos(Hlsl.Dot(co, new float2(4.898f, 7.23f))) * 23421.631f);
         }
 
-        float totalDistance = Jitter * Rand(fragCoord.XY + this.time);
+        float totalDistance = Jitter * Rand(fragCoord.XY + time);
         float3 dir2 = dir;
         float distance = 0;
         int steps = 0;
@@ -139,7 +130,7 @@ internal readonly partial struct MengerJourney : ID2D1PixelShader
 
         for (int i = 0; i < MaxSteps; i++)
         {
-            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(this.time / 4.0f) * NonLinearPerspective);
+            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(time / 4.0f) * NonLinearPerspective);
             pos = from + (totalDistance * dir);
             distance = DE(pos) * FudgeFactor;
             totalDistance += distance;
@@ -167,17 +158,17 @@ internal readonly partial struct MengerJourney : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        float3 camPos = 0.5f * this.time * new float3(1.0f, 0.0f, 0.0f);
-        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(this.time), 0.0f * Hlsl.Sin(0.4f * this.time));
+        float3 camPos = 0.5f * time * new float3(1.0f, 0.0f, 0.0f);
+        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
         float3 camDir = Hlsl.Normalize(target - camPos);
         float3 camUp = new(0.0f, 1.0f, 0.0f);
 
         camUp = Hlsl.Normalize(camUp - (Hlsl.Dot(camDir, camUp) * camDir));
 
         float3 camRight = Hlsl.Normalize(Hlsl.Cross(camDir, camUp));
-        float2 coord = -1.0f + (2.0f * (float2)xy / (float2)this.dispatchSize);
+        float2 coord = -1.0f + (2.0f * (float2)xy / (float2)dispatchSize);
 
-        coord.X *= this.dispatchSize.X / (float)this.dispatchSize.Y;
+        coord.X *= dispatchSize.X / (float)dispatchSize.Y;
 
         float3 rayDir = Hlsl.Normalize(camDir + (((coord.X * camRight) + (coord.Y * camUp)) * FieldOfView));
 
