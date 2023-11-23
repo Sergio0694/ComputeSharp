@@ -10,7 +10,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// The updater for <see cref="ID2D1DrawInfo"/> type to use with built-in effects.
 /// </summary>
-[Guid("430C5B40-AE16-485F-90E6-4FA4915144B6")]
 internal unsafe struct ID2D1DrawInfoUpdateContext
 {
     /// <summary>

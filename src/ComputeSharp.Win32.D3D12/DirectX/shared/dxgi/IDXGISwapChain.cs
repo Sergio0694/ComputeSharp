@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("310D36A0-D2E7-4C0A-AA04-6A9D23B8886A")]
 [NativeTypeName("struct IDXGISwapChain : IDXGIDeviceSubObject")]
 [NativeInheritance("IDXGIDeviceSubObject")]
 internal unsafe partial struct IDXGISwapChain : IComObject

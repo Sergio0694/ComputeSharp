@@ -10,7 +10,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 /// <summary>
 /// The internal resource texture manager type to use with built-in effects.
 /// </summary>
-[Guid("5CBB1024-8EA1-4689-81BF-8AD190B5EF5D")]
 internal unsafe struct ID2D1ResourceTextureManagerInternal : IComObject
 {
     /// <inheritdoc/>

@@ -10,7 +10,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// An interface for an object that provides access to pooled <see cref="ID2D1DeviceContext"/> objects.
 /// </summary>
-[Guid("454A82A1-F024-40DB-BD5B-8F527FD58AD0")]
 [NativeTypeName("class ID2D1DeviceContextPool : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct ID2D1DeviceContextPool : IComObject

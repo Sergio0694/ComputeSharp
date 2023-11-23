@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("3B16811B-6A43-4EC9-A813-3D930C13B940")]
 [NativeTypeName("struct IWICBitmapFrameDecode : IWICBitmapSource")]
 [NativeInheritance("IWICBitmapSource")]
 internal unsafe partial struct IWICBitmapFrameDecode

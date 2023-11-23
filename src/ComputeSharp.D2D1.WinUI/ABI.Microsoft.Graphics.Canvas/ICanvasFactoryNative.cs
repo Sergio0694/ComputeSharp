@@ -13,7 +13,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// The activation factory for <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/>.
 /// </summary>
-[Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
 [NativeTypeName("class ICanvasFactoryNative : public IInspectable")]
 [NativeInheritance("IInspectable")]
 internal unsafe struct ICanvasFactoryNative

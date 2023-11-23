@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("36BFDCB6-9739-435D-A30D-A653BEFF6A6F")]
 [NativeTypeName("struct ID2D1DrawTransform : ID2D1Transform")]
 [NativeInheritance("ID2D1Transform")]
 internal unsafe partial struct ID2D1DrawTransform : IComObject

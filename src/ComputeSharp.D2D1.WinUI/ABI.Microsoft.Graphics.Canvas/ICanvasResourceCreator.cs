@@ -10,7 +10,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.ICanvasResourceCreator"/> objects.
 /// </summary>
-[Guid("8F6D8AA8-492F-4BC6-B3D0-E7F5EAE84B11")]
 [NativeTypeName("class ICanvasResourceCreator : IInspectable")]
 [NativeInheritance("IInspectable")]
 internal unsafe struct ICanvasResourceCreator : IComObject

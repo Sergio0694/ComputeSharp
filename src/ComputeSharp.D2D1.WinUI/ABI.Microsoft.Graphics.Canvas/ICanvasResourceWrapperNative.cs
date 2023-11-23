@@ -10,7 +10,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// An interop wrapper type for Win2D objects (see <see href="https://microsoft.github.io/Win2D/WinUI3/html/Interop.htm"/>).
 /// </summary>
-[Guid("5F10688D-EA55-4D55-A3B0-4DDB55C0C20A")]
 [NativeTypeName("class ICanvasResourceWrapperNative : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct ICanvasResourceWrapperNative : IComObject

@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("00CDDEA8-939B-4B83-A340-A685226666CC")]
 [NativeTypeName("struct IDXGIOutput1 : IDXGIOutput")]
 [NativeInheritance("IDXGIOutput")]
 internal unsafe partial struct IDXGIOutput1 : IComObject

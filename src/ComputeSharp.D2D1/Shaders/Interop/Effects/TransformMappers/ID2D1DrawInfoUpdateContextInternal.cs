@@ -10,7 +10,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// An internal version of <see cref="ID2D1DrawInfoUpdateContext"/> that supports being closed, to manage lifetime scopes.
 /// </summary>
-[Guid("CF2F5BB0-3F5E-4D6E-8FF1-D9A7EB6C0250")]
 internal unsafe struct ID2D1DrawInfoUpdateContextInternal
 {
     /// <summary>

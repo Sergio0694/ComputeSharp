@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("0742A90B-C387-483F-B946-30A7E4E61458")]
 [NativeTypeName("struct ID3D12InfoQueue : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ID3D12InfoQueue : IComObject

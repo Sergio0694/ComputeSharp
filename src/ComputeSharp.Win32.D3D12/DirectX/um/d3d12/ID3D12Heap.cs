@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("6B3B2502-6E51-45B3-90EE-9884265E8DF3")]
 [NativeTypeName("struct ID3D12Heap : ID3D12Pageable")]
 [NativeInheritance("ID3D12Pageable")]
 internal unsafe partial struct ID3D12Heap

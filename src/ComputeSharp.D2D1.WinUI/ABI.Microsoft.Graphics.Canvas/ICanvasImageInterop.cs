@@ -12,7 +12,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// An interop Win2D interface for all images and effects that can be drawn.
 /// </summary>
-[Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
 [NativeTypeName("class ICanvasImageInterop : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct ICanvasImageInterop : IComObject

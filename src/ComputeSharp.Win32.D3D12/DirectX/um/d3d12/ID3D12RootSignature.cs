@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("C54A6B66-72DF-4EE8-8BE5-A946A1429214")]
 [NativeTypeName("struct ID3D12RootSignature : ID3D12DeviceChild")]
 [NativeInheritance("ID3D12DeviceChild")]
 internal unsafe partial struct ID3D12RootSignature : IComObject

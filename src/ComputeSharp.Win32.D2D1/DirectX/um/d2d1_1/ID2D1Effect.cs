@@ -3,13 +3,10 @@
 // Ported from um/d2d1_1.h in the Windows SDK for Windows 10.0.22000.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("28211A43-7D89-476F-8181-2D6159B220AD")]
 [NativeTypeName("struct ID2D1Effect : ID2D1Properties")]
 [NativeInheritance("ID2D1Properties")]
 internal unsafe partial struct ID2D1Effect

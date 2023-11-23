@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("6102DEE4-AF59-4B09-B999-B44D73F09B24")]
 [NativeTypeName("struct ID3D12CommandAllocator : ID3D12Pageable")]
 [NativeInheritance("ID3D12Pageable")]
 internal unsafe partial struct ID3D12CommandAllocator : IComObject

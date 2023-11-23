@@ -10,7 +10,6 @@ namespace ComputeSharp.Interop.Allocation;
 /// <summary>
 /// An object that can allocate resources for a given <see cref="ID3D12Device"/> instance.
 /// </summary>
-[Guid("2D5E55D2-9244-431F-868E-0D90AAB6E575")]
 internal unsafe struct ID3D12MemoryAllocator : IComObject
 {
     /// <inheritdoc/>

@@ -10,7 +10,6 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// <summary>
 /// The transform mapper manager type to use with built-in effects.
 /// </summary>
-[Guid("02E6D48D-B892-4FBC-AA54-119203BAB802")]
 internal unsafe struct ID2D1TransformMapper : IComObject
 {
     /// <inheritdoc/>

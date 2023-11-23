@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("DBD5AE51-3317-4F0A-ADF9-1D7CEDCAAE0B")]
 [NativeTypeName("struct ID3D12DeviceRemovedExtendedDataSettings1 : ID3D12DeviceRemovedExtendedDataSettings")]
 [NativeInheritance("ID3D12DeviceRemovedExtendedDataSettings")]
 internal unsafe partial struct ID3D12DeviceRemovedExtendedDataSettings1 : IComObject

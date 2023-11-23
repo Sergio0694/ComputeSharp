@@ -13,7 +13,6 @@ using System.Runtime.Versioning;
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows10.0")]
-[Guid("94D99BDB-F1F8-4AB0-B236-7DA0170EDAB1")]
 [NativeTypeName("struct IDXGISwapChain3 : IDXGISwapChain2")]
 [NativeInheritance("IDXGISwapChain2")]
 internal unsafe partial struct IDXGISwapChain3 : IComObject

@@ -10,7 +10,6 @@ namespace ComputeSharp.Interop.Allocation;
 /// <summary>
 /// A factory type for <see cref="ID3D12MemoryAllocator"/> objects.
 /// </summary>
-[Guid("CC1E74A7-786D-40F4-8AE2-F8B7A255587E")]
 internal unsafe struct ID3D12MemoryAllocatorFactory : IComObject
 {
     /// <inheritdoc/>

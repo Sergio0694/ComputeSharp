@@ -5,7 +5,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649, IDE1006
 
@@ -14,7 +13,6 @@ namespace ComputeSharp.Win32;
 /// <summary>
 /// The native WinRT interface for <see href="https://learn.microsoft.com/windows/win32/api/inspectable/nn-inspectable-iinspectable"><c>IInspectable</c></see> objects.
 /// </summary>
-[Guid("AF86E2E0-B12D-4C6A-9C5A-D7AA65101E90")]
 [NativeTypeName("struct IInspectable : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct IInspectable

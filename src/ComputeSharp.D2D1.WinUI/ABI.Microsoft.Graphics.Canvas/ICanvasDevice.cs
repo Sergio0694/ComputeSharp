@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
 #pragma warning disable CS0649, IDE1006
@@ -10,7 +9,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.CanvasDevice"/> objects.
 /// </summary>
-[Guid("A27F0B5D-EC2C-4D4F-948F-0AA1E95E33E6")]
 [NativeTypeName("class ICanvasDevice : IInspectable")]
 [NativeInheritance("IInspectable")]
 internal unsafe struct ICanvasDevice

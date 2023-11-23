@@ -13,7 +13,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// The interop Win2D interface for factories of external effects.
 /// </summary>
-[Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
 [NativeTypeName("class ICanvasEffectFactoryNative : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct ICanvasEffectFactoryNative : IComObject

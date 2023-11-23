@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("0EC870A6-5D7E-4C22-8CFC-5BAAE07616ED")]
 [NativeTypeName("struct ID3D12CommandQueue : ID3D12Pageable")]
 [NativeInheritance("ID3D12Pageable")]
 internal unsafe partial struct ID3D12CommandQueue : IComObject

@@ -10,7 +10,6 @@ namespace ABI.Microsoft.Graphics.Canvas.Effects;
 /// <summary>
 /// The native WinRT interface for <see cref="global::Microsoft.Graphics.Canvas.Effects.ICanvasEffect"/> objects.
 /// </summary>
-[Guid("0EF96F8C-9B5E-4BF0-A399-AAD8CE53DB55")]
 [NativeTypeName("class ICanvasEffect : IInspectable")]
 [NativeInheritance("IInspectable")]
 internal unsafe struct ICanvasEffect : IComObject

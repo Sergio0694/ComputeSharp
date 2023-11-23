@@ -13,7 +13,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// Raw bindings for the interop interface for the <see cref="CanvasDevice"/> activation factory.
 /// </summary>
-[Guid("695C440D-04B3-4EDD-BFD9-63E51E9F7202")]
 internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
 {
     public void** lpVtbl;

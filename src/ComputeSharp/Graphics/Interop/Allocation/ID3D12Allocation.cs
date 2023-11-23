@@ -10,7 +10,6 @@ namespace ComputeSharp.Interop.Allocation;
 /// <summary>
 /// An allocation wrapper for a native <see cref="ID3D12Resource"/> object.
 /// </summary>
-[Guid("D42D5782-2DE7-4539-A817-482E3AA01E2E")]
 internal unsafe struct ID3D12Allocation : IComObject
 {
     /// <inheritdoc/>

@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("5A58797D-A72C-478D-8BA2-EFC6B0EFE88E")]
 [NativeTypeName("struct ID3D12ShaderReflection : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ID3D12ShaderReflection : IComObject

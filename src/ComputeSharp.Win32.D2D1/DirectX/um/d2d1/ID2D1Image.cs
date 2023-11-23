@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("65019F75-8DA2-497C-B32C-DFA34E48EDE6")]
 [NativeTypeName("struct ID2D1Image : ID2D1Resource")]
 [NativeInheritance("ID2D1Resource")]
 internal unsafe partial struct ID2D1Image : IComObject

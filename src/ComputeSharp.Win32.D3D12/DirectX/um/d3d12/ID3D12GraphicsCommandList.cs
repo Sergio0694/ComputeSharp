@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("5B160D0F-AC1B-4185-8BA8-B3AE42A5A455")]
 [NativeTypeName("struct ID3D12GraphicsCommandList : ID3D12CommandList")]
 [NativeInheritance("ID3D12CommandList")]
 internal unsafe partial struct ID3D12GraphicsCommandList : IComObject

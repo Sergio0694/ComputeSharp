@@ -3,13 +3,10 @@
 // Ported from um/d2d1effectauthor.h in the Windows SDK for Windows 10.0.22000.0
 // Original source is Copyright © Microsoft. All rights reserved.
 
-using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("13D29038-C3E6-4034-9081-13B53A417992")]
 [NativeTypeName("struct ID2D1TransformGraph : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ID2D1TransformGraph
