@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
 #pragma warning disable CS0649, IDE1006
@@ -10,7 +9,6 @@ namespace ABI.Microsoft.Graphics.Canvas;
 /// <summary>
 /// An interface for a COM object that provides access to a pooled <see cref="ID2D1DeviceContext"/> object.
 /// </summary>
-[Guid("A0928F38-F7D5-44DD-A5C9-E23D94734BBB")]
 [NativeTypeName("class ID2D1DeviceContextLease : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe struct ID2D1DeviceContextLease

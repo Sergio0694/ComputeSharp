@@ -11,11 +11,35 @@ using System.Runtime.Versioning;
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows10.0.17134.0")]
-[Guid("C1B6694F-FF09-44A9-B03C-77900A0A1D17")]
 [NativeTypeName("struct IDXGIFactory6 : IDXGIFactory5")]
 [NativeInheritance("IDXGIFactory5")]
-internal unsafe partial struct IDXGIFactory6
+internal unsafe partial struct IDXGIFactory6 : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x4F, 0x69, 0xB6, 0xC1,
+                0x09, 0xFF,
+                0xA9, 0x44,
+                0xB0,
+                0x3C,
+                0x77,
+                0x90,
+                0x0A,
+                0x0A,
+                0x1D,
+                0x17
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

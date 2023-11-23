@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("8BA5FB08-5195-40E2-AC58-0D989C3A0102")]
 [NativeTypeName("struct ID3D10Blob : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ID3DBlob

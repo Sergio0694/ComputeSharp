@@ -215,6 +215,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\BOOL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HANDLE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HRESULT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\IComObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeInheritanceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeTypeNameAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\VtblIndexAttribute.cs" />
@@ -237,7 +238,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\objidlbase\STGTY.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\handleapi\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\synchapi\Windows.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\um\Unknwnbase\IID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\Unknwnbase\IUnknown.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\WinBase\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\wincodec\CLSID.cs" />

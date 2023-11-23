@@ -3,18 +3,42 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
 /// An interop wrapper type for Win2D objects (see <see href="https://microsoft.github.io/Win2D/WinUI3/html/Interop.htm"/>).
 /// </summary>
-[Guid("5F10688D-EA55-4D55-A3B0-4DDB55C0C20A")]
 [NativeTypeName("class ICanvasResourceWrapperNative : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe struct ICanvasResourceWrapperNative
+internal unsafe struct ICanvasResourceWrapperNative : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x8D, 0x68, 0x10, 0x5F,
+                0x55, 0xEA,
+                0x55, 0x4D,
+                0xA3,
+                0xB0,
+                0x4D,
+                0xDB,
+                0x55,
+                0xC0,
+                0xC2,
+                0x0A
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>

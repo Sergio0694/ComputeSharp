@@ -132,7 +132,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
 
         // ID2D1DrawInfoUpdateContext
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID2D1DrawInfoUpdateContext.Guid))
+            riid->Equals(Windows.__uuidof<ID2D1DrawInfoUpdateContext>()))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 
@@ -142,7 +142,7 @@ internal unsafe partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         // ID2D1DrawInfoUpdateContextInternal
-        if (riid->Equals(ID2D1DrawInfoUpdateContextInternal.Guid))
+        if (riid->Equals(Windows.__uuidof<ID2D1DrawInfoUpdateContextInternal>()))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 

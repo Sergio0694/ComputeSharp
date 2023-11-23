@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("688D15C3-02B0-438D-B13A-D1B44C32C39A")]
 [NativeTypeName("struct ID2D1ResourceTexture : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ID2D1ResourceTexture

@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("AE02EEDB-C735-4690-8D52-5A8DC20213AA")]
 [NativeTypeName("struct IDXGIOutput : IDXGIObject")]
 [NativeInheritance("IDXGIObject")]
 internal unsafe partial struct IDXGIOutput

@@ -9,11 +9,35 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("4605C4CB-2019-492A-ADA4-65F20BB7D67F")]
 [NativeTypeName("struct IDxcUtils : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe partial struct IDxcUtils
+internal unsafe partial struct IDxcUtils : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xCB, 0xC4, 0x05, 0x46,
+                0x19, 0x20,
+                0x2A, 0x49,
+                0xAD,
+                0xA4,
+                0x65,
+                0xF2,
+                0x0B,
+                0xB7,
+                0xD6,
+                0x7F
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

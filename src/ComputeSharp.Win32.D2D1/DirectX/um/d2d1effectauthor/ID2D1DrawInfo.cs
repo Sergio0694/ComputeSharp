@@ -5,12 +5,10 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using static ComputeSharp.Win32.D2D1_PIXEL_OPTIONS;
 
 namespace ComputeSharp.Win32;
 
-[Guid("693CE632-7F2F-45DE-93FE-18D88B37AA21")]
 [NativeTypeName("struct ID2D1DrawInfo : ID2D1RenderInfo")]
 [NativeInheritance("ID2D1RenderInfo")]
 internal unsafe partial struct ID2D1DrawInfo

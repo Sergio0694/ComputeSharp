@@ -11,11 +11,35 @@ using System.Runtime.Versioning;
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows8.0")]
-[Guid("7B816B45-1996-4476-B132-DE9E247C8AF0")]
 [NativeTypeName("struct IWICImagingFactory2 : IWICImagingFactory")]
 [NativeInheritance("IWICImagingFactory")]
-internal unsafe partial struct IWICImagingFactory2
+internal unsafe partial struct IWICImagingFactory2 : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x45, 0x6B, 0x81, 0x7B,
+                0x96, 0x19,
+                0x76, 0x44,
+                0xB1,
+                0x32,
+                0xDE,
+                0x9E,
+                0x24,
+                0x7C,
+                0x8A,
+                0xF0
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

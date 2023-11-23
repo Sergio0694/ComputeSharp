@@ -14,9 +14,11 @@ internal static partial class IID
 {
     public static ref readonly Guid IID_ISequentialStream
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x30, 0x3A, 0x73, 0x0C,
                 0x1C, 0x2A,
                 0xCE, 0x11,
@@ -28,7 +30,7 @@ internal static partial class IID
                 0x44,
                 0x77,
                 0x3D
-            };
+            ];
 
             Debug.Assert(data.Length == Unsafe.SizeOf<Guid>());
             return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
@@ -37,9 +39,11 @@ internal static partial class IID
 
     public static ref readonly Guid IID_IStream
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x0C, 0x00, 0x00, 0x00,
                 0x00, 0x00,
                 0x00, 0x00,
@@ -51,7 +55,7 @@ internal static partial class IID
                 0x00,
                 0x00,
                 0x46
-            };
+            ];
 
             Debug.Assert(data.Length == Unsafe.SizeOf<Guid>());
             return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));

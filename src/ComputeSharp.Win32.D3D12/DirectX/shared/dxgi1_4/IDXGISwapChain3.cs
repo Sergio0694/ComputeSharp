@@ -11,11 +11,35 @@ using System.Runtime.Versioning;
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows10.0")]
-[Guid("94D99BDB-F1F8-4AB0-B236-7DA0170EDAB1")]
 [NativeTypeName("struct IDXGISwapChain3 : IDXGISwapChain2")]
 [NativeInheritance("IDXGISwapChain2")]
-internal unsafe partial struct IDXGISwapChain3
+internal unsafe partial struct IDXGISwapChain3 : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xDB, 0x9B, 0xD9, 0x94,
+                0xF8, 0xF1,
+                0xB0, 0x4A,
+                0xB2,
+                0x36,
+                0x7D,
+                0xA0,
+                0x17,
+                0x0E,
+                0xDA,
+                0xB1
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

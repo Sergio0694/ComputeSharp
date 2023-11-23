@@ -3,24 +3,23 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE0055
 
 namespace ComputeSharp.Interop.Allocation;
 
 /// <summary>
 /// A factory type for <see cref="ID3D12MemoryAllocator"/> objects.
 /// </summary>
-[Guid("CC1E74A7-786D-40F4-8AE2-F8B7A255587E")]
-internal unsafe struct ID3D12MemoryAllocatorFactory //: IUnknown.Interface
+internal unsafe struct ID3D12MemoryAllocatorFactory : IComObject
 {
-    /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID3D12MemoryAllocatorFactory"/> (<c>CC1E74A7-786D-40F4-8AE2-F8B7A255587E</c>).
-    /// </summary>
-    public static ref readonly Guid Guid
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0xA7, 0x74, 0x1E, 0xCC,
                 0x6D, 0x78,
                 0xF4, 0x40,
@@ -31,14 +30,11 @@ internal unsafe struct ID3D12MemoryAllocatorFactory //: IUnknown.Interface
                 0x55,
                 0x58,
                 0x7E
-            };
+            ];
 
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
+            return (Guid*) Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
         }
     }
-
-    ///// <inheritdoc/>
-    //static Guid* INativeGuid.NativeGuid => (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in Guid));
 
     /// <summary>
     /// The vtable for the current instance.

@@ -5,11 +5,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("E8F7FE7A-191C-466D-AD95-975678BDA998")]
 [NativeTypeName("struct ID2D1DeviceContext : ID2D1RenderTarget")]
 [NativeInheritance("ID2D1RenderTarget")]
 internal unsafe partial struct ID2D1DeviceContext

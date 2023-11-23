@@ -3,18 +3,42 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
 /// <summary>
 /// An interface for an object that provides access to pooled <see cref="ID2D1DeviceContext"/> objects.
 /// </summary>
-[Guid("454A82A1-F024-40DB-BD5B-8F527FD58AD0")]
 [NativeTypeName("class ID2D1DeviceContextPool : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe struct ID2D1DeviceContextPool
+internal unsafe struct ID2D1DeviceContextPool : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xA1, 0x82, 0x4A, 0x45,
+                0x24, 0xF0,
+                0xDB, 0x40,
+                0xBD,
+                0x5B,
+                0x8F,
+                0x52,
+                0x7F,
+                0xD5,
+                0x8A,
+                0xD0
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>

@@ -35,11 +35,8 @@ unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping an <see cref="IBufferWriter{T}"/> instance.
     /// </summary>
-    private unsafe partial struct IBufferWriterWrapper //: IUnknown.Interface
+    private unsafe partial struct IBufferWriterWrapper
     {
-        ///// <inheritdoc/>
-        //static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
-
         /// <summary>
         /// The shared vtable pointer for <see cref="IBufferWriterWrapper"/> instances.
         /// </summary>
@@ -139,7 +136,7 @@ unsafe partial class IWICStreamExtensions
                 return E_POINTER;
             }
 
-            if (riid->Equals(IID_IUnknown) ||
+            if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
                 riid->Equals(IID_ISequentialStream) ||
                 riid->Equals(IID_IStream))
             {

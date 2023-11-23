@@ -9,11 +9,35 @@ using System.Runtime.InteropServices;
 
 namespace ComputeSharp.Win32;
 
-[Guid("310D36A0-D2E7-4C0A-AA04-6A9D23B8886A")]
 [NativeTypeName("struct IDXGISwapChain : IDXGIDeviceSubObject")]
 [NativeInheritance("IDXGIDeviceSubObject")]
-internal unsafe partial struct IDXGISwapChain
+internal unsafe partial struct IDXGISwapChain : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xA0, 0x36, 0x0D, 0x31,
+                0xE7, 0xD2,
+                0x0A, 0x4C,
+                0xAA,
+                0x04,
+                0x6A,
+                0x9D,
+                0x23,
+                0xB8,
+                0x88,
+                0x6A
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

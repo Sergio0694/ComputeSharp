@@ -5,13 +5,11 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows8.1")]
-[Guid("F92F19D2-3ADE-45A6-A20C-F6F1EA90554B")]
 [NativeTypeName("struct ISwapChainPanelNative : IUnknown")]
 [NativeInheritance("IUnknown")]
 internal unsafe partial struct ISwapChainPanelNative
