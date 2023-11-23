@@ -6,20 +6,15 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by Inigo Quilez.</para>
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct FractalTiling : IComputeShader<float4>
+internal readonly partial struct FractalTiling(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float2 position = (((float2)(256 * ThreadIds.XY)) / DispatchSize.X) + this.time;
+        float2 position = (((float2)(256 * ThreadIds.XY)) / DispatchSize.X) + time;
         float4 color = 0;
 
         for (int i = 0; i < 6; i++)
@@ -27,7 +22,7 @@ internal readonly partial struct FractalTiling : IComputeShader<float4>
             float2 a = Hlsl.Floor(position);
             float2 b = Hlsl.Frac(position);
             float4 w = Hlsl.Frac(
-                (Hlsl.Sin((a.X * 7) + (31.0f * a.Y) + (0.01f * this.time)) +
+                (Hlsl.Sin((a.X * 7) + (31.0f * a.Y) + (0.01f * time)) +
                  new float4(0.035f, 0.01f, 0, 0.7f))
                  * 13.545317f);
 

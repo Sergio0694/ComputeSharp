@@ -6,16 +6,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// <para>Created by Inigo Quilez.</para>
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct FourColorGradient : IComputeShader<float4>
+internal readonly partial struct FourColorGradient(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     // Colors to blend together
     private static readonly float3 ColorOne = new(0.999f, 0.999f, 0.999f);
     private static readonly float3 ColorTwo = new(0.999f, 0f, 0f);
@@ -82,7 +77,7 @@ internal readonly partial struct FourColorGradient : IComputeShader<float4>
         tuv -= 0.5f;
 
         // Rotate with noise
-        float degree = Noise(new float2(this.time * 0.1f, tuv.X * tuv.Y));
+        float degree = Noise(new float2(time * 0.1f, tuv.X * tuv.Y));
 
         tuv.Y *= 1.0f / ratio;
         tuv.XY = Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(((degree - 0.5f) * 720.0f) + 180.0f)));
@@ -91,7 +86,7 @@ internal readonly partial struct FourColorGradient : IComputeShader<float4>
         // Wave warp with sin
         float frequency = 5.0f;
         float amplitude = 30.0f;
-        float speed = this.time * 2.0f;
+        float speed = time * 2.0f;
 
         tuv.X += Hlsl.Sin((tuv.Y * frequency) + speed) / amplitude;
         tuv.Y += Hlsl.Sin((tuv.X * frequency * 1.5f) + speed) / (amplitude * 0.5f);

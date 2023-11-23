@@ -5,21 +5,14 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/3lj3zt"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time Hlsl.Since the start of the application.</param>
+/// <param name="texture">The background texture to sample.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct ContouredLayers : IComputeShader<float4>
+internal readonly partial struct ContouredLayers(
+    float time,
+    IReadOnlyNormalizedTexture2D<float4> texture) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The background texture to sample.
-    /// </summary>
-    private readonly IReadOnlyNormalizedTexture2D<float4> texture;
-
     // float3 to float hash.
     private static float Hash21(float2 p)
     {
@@ -33,7 +26,7 @@ internal readonly partial struct ContouredLayers : IComputeShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin((p * 6.2831853f) + this.time);
+        return Hlsl.Sin((p * 6.2831853f) + time);
     }
 
     // float2 to float2 hash.
@@ -110,7 +103,7 @@ internal readonly partial struct ContouredLayers : IComputeShader<float4>
     // Layer color. Based on the shade, layer number and smoothing factor.
     private float3 GetColor(float2 p, float sh, float fi)
     {
-        float3 tx = this.texture.Sample(p + Hash21(new float2(sh, fi))).XYZ;
+        float3 tx = texture.Sample(p + Hash21(new float2(sh, fi))).XYZ;
 
         tx *= tx;
 

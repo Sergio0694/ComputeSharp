@@ -5,16 +5,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/Mdf3z7"/>.
 /// <para>Created by Syntopia.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct MengerJourney : IComputeShader<float4>
+internal readonly partial struct MengerJourney(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     private const int MaxSteps = 30;
     private const float MinimumDistance = 0.0009f;
     private const float NormalDistance = 0.0002f;
@@ -76,7 +71,7 @@ internal readonly partial struct MengerJourney : IComputeShader<float4>
 
         for (int n = 0; n < Iterations; n++)
         {
-            z.XY = Rotate(z.XY, 4.0f + (2.0f * Hlsl.Cos(this.time / 8.0f)));
+            z.XY = Rotate(z.XY, 4.0f + (2.0f * Hlsl.Cos(time / 8.0f)));
             z = Hlsl.Abs(z);
 
             if (z.X < z.Y) { z.XY = z.YX; }
@@ -122,7 +117,7 @@ internal readonly partial struct MengerJourney : IComputeShader<float4>
             return Hlsl.Frac(Hlsl.Cos(Hlsl.Dot(co, new float2(4.898f, 7.23f))) * 23421.631f);
         }
 
-        float totalDistance = Jitter * Rand(fragCoord.XY + this.time);
+        float totalDistance = Jitter * Rand(fragCoord.XY + time);
         float3 dir2 = dir;
         float distance = 0;
         int steps = 0;
@@ -130,7 +125,7 @@ internal readonly partial struct MengerJourney : IComputeShader<float4>
 
         for (int i = 0; i < MaxSteps; i++)
         {
-            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(this.time / 4.0f) * NonLinearPerspective);
+            dir.ZY = Rotate(dir2.ZY, totalDistance * Hlsl.Cos(time / 4.0f) * NonLinearPerspective);
             pos = from + (totalDistance * dir);
             distance = DE(pos) * FudgeFactor;
             totalDistance += distance;
@@ -157,8 +152,8 @@ internal readonly partial struct MengerJourney : IComputeShader<float4>
     /// <inheritdoc/>
     public float4 Execute()
     {
-        float3 camPos = 0.5f * this.time * new float3(1.0f, 0.0f, 0.0f);
-        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(this.time), 0.0f * Hlsl.Sin(0.4f * this.time));
+        float3 camPos = 0.5f * time * new float3(1.0f, 0.0f, 0.0f);
+        float3 target = camPos + new float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
         float3 camDir = Hlsl.Normalize(target - camPos);
         float3 camUp = new(0.0f, 1.0f, 0.0f);
 

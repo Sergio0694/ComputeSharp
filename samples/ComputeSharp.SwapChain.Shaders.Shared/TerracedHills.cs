@@ -5,16 +5,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/MtdSRn"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct TerracedHills : IComputeShader<float4>
+internal readonly partial struct TerracedHills(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     // 2x2 matrix rotation. Angle vector, courtesy of Fabrice
     private static float2x2 Rot2(float th)
     {
@@ -91,7 +86,7 @@ internal readonly partial struct TerracedHills : IComputeShader<float4>
 
         rd.YZ = Rot2(0.35f) * rd.YZ;
 
-        float3 ro = new(this.time * 0.4f, 0.5f, this.time * 0.2f);
+        float3 ro = new(time * 0.4f, 0.5f, time * 0.2f);
 
         float t = 0, d;
         for (int i = 0; i < 96; i++)
