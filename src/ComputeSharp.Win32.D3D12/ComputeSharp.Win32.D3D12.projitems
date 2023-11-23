@@ -215,13 +215,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\BOOL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HANDLE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HRESULT.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HWND.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\LPARAM.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\LRESULT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeInheritanceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeTypeNameAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\VtblIndexAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\WPARAM.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\minwindef\FILETIME.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\minwindef\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\uuids\Windows.Manual.cs" />
