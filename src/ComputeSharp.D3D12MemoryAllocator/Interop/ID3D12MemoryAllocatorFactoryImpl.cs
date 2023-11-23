@@ -86,7 +86,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactoryImpl
         }
 
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID3D12MemoryAllocatorFactory.Guid))
+            riid->Equals(Windows.__uuidof<ID3D12MemoryAllocatorFactory>()))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 
