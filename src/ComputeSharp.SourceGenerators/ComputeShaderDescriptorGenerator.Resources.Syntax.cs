@@ -98,7 +98,7 @@ partial class ComputeShaderDescriptorGenerator
                         {
                             writer.WriteLine($"""
                                 /// <inheritdoc cref="{fullyQualifiedTypeName}.{resourceInfo.FieldName}"/>
-                                /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
+                                /// <param name="value">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
                                 /// <returns>A reference to <see cref="{fullyQualifiedTypeName}.{resourceInfo.FieldName}"/>.</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field)]
                                 private static extern ref readonly {resourceInfo.FieldType} {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
@@ -108,7 +108,7 @@ partial class ComputeShaderDescriptorGenerator
                         {
                             writer.WriteLine($"""
                                 /// <summary>Gets a reference to the unspeakable field "{resourceInfo.FieldName}" of type <see cref="{fullyQualifiedTypeName}"/>.</summary>
-                                /// <param name="shader">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
+                                /// <param name="value">The input <see cref="{fullyQualifiedTypeName}"/> value.</param>
                                 /// <returns>A reference to the unspeakable field "{resourceInfo.FieldName}".</returns>
                                 [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "{resourceInfo.UnspeakableName}")]
                                 private static extern ref readonly {resourceInfo.FieldType} {resourceInfo.FieldName}(this ref readonly {fullyQualifiedTypeName} value);
