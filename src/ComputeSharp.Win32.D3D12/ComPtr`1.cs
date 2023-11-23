@@ -87,7 +87,7 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <param name="ptr">The target raw pointer to copy the address of the current COM object to.</param>
     /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target type <typeparamref name="U"/>.</returns>
     public readonly HRESULT CopyTo<U>(U** ptr)
-        where U : unmanaged
+        where U : unmanaged, IComObject
     {
         return ((IUnknown*)ptr_)->QueryInterface(__uuidof<U>(), (void**)ptr);
     }
@@ -96,7 +96,7 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <param name="p">The target raw pointer to copy the address of the current COM object to.</param>
     /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target type <typeparamref name="U"/>.</returns>
     public readonly HRESULT CopyTo<U>(ComPtr<U>* p)
-        where U : unmanaged
+        where U : unmanaged, IComObject
     {
         return ((IUnknown*)ptr_)->QueryInterface(__uuidof<U>(), (void**)p->ReleaseAndGetAddressOf());
     }
@@ -105,7 +105,7 @@ internal unsafe struct ComPtr<T> : IDisposable
     /// <param name="other">The target reference to copy the address of the current COM object to.</param>
     /// <returns>The result of <see cref="IUnknown.QueryInterface"/> for the target type <typeparamref name="U"/>.</returns>
     public readonly HRESULT CopyTo<U>(ref ComPtr<U> other)
-        where U : unmanaged
+        where U : unmanaged, IComObject
     {
         U* ptr;
         HRESULT result = ((IUnknown*)ptr_)->QueryInterface(__uuidof<U>(), (void**)&ptr);

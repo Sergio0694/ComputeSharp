@@ -215,6 +215,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\BOOL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HANDLE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\HRESULT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\IComObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeInheritanceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\NativeTypeNameAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\other\helper-types\VtblIndexAttribute.cs" />
