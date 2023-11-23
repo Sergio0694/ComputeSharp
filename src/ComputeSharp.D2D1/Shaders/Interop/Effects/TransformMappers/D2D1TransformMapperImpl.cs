@@ -139,7 +139,7 @@ internal unsafe partial struct D2D1TransformMapperImpl
 
         // ID2D1TransformMapper
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID2D1TransformMapper.Guid))
+            riid->Equals(Windows.__uuidof<ID2D1TransformMapper>()))
         {
             this.referenceCount++;
 
@@ -149,7 +149,7 @@ internal unsafe partial struct D2D1TransformMapperImpl
         }
 
         // ID2D1TransformMapperInternal
-        if (riid->Equals(ID2D1TransformMapperInternal.Guid))
+        if (riid->Equals(Windows.__uuidof<ID2D1TransformMapperInternal>()))
         {
             this.referenceCount++;
 

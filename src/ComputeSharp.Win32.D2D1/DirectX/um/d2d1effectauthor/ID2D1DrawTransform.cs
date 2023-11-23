@@ -7,13 +7,40 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.Win32;
 
 [Guid("36BFDCB6-9739-435D-A30D-A653BEFF6A6F")]
 [NativeTypeName("struct ID2D1DrawTransform : ID2D1Transform")]
 [NativeInheritance("ID2D1Transform")]
-internal unsafe partial struct ID2D1DrawTransform
+internal unsafe partial struct ID2D1DrawTransform : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xB6, 0xDC, 0xBF, 0x36,
+                0x39, 0x97,
+                0x5D, 0x43,
+                0xA3,
+                0x0D,
+                0xA6,
+                0x53,
+                0xBE,
+                0xFF,
+                0x6A,
+                0x6F
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

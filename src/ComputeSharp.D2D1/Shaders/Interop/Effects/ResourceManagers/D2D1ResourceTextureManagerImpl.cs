@@ -167,7 +167,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
 
         // ID2D1ResourceTextureManager
         if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
-            riid->Equals(ID2D1ResourceTextureManager.Guid))
+            riid->Equals(Windows.__uuidof<ID2D1ResourceTextureManager>()))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 
@@ -177,7 +177,7 @@ internal unsafe partial struct D2D1ResourceTextureManagerImpl
         }
 
         // ID2D1ResourceTextureManagerInternal
-        if (riid->Equals(ID2D1ResourceTextureManagerInternal.Guid))
+        if (riid->Equals(Windows.__uuidof<ID2D1ResourceTextureManagerInternal>()))
         {
             _ = Interlocked.Increment(ref this.referenceCount);
 

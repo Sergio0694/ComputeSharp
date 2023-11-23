@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE0055
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 
@@ -11,16 +11,16 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.ResourceManagers;
 /// The internal resource texture manager type to use with built-in effects.
 /// </summary>
 [Guid("5CBB1024-8EA1-4689-81BF-8AD190B5EF5D")]
-internal unsafe struct ID2D1ResourceTextureManagerInternal
+internal unsafe struct ID2D1ResourceTextureManagerInternal : IComObject
 {
-    /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1ResourceTextureManagerInternal"/> (<c>5CBB1024-8EA1-4689-81BF-8AD190B5EF5D</c>).
-    /// </summary>
-    public static ref readonly Guid Guid
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x24, 0x10, 0xBB, 0x5C,
                 0xA1, 0x8E,
                 0x89, 0x46,
@@ -31,9 +31,9 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal
                 0xB5,
                 0xEF,
                 0x5D
-            };
+            ];
 
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
         }
     }
 

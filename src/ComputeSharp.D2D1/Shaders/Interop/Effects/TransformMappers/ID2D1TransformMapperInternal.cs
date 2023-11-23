@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE0055
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
@@ -11,16 +11,16 @@ namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 /// The internal transform mapper manager interface.
 /// </summary>
 [Guid("C5D8FC65-FB86-4C2D-9EF5-95AEC639C952")]
-internal unsafe struct ID2D1TransformMapperInternal
+internal unsafe struct ID2D1TransformMapperInternal : IComObject
 {
-    /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1TransformMapper"/> (<c>C5D8FC65-FB86-4C2D-9EF5-95AEC639C952</c>).
-    /// </summary>
-    public static ref readonly Guid Guid
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x65, 0xFC, 0xD8, 0xC5,
                 0x86, 0xFB,
                 0x2D, 0x4C,
@@ -31,9 +31,9 @@ internal unsafe struct ID2D1TransformMapperInternal
                 0x39,
                 0xC9,
                 0x52
-            };
+            ];
 
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
         }
     }
 

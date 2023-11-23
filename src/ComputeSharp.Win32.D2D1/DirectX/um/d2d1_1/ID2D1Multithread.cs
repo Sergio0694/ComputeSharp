@@ -7,13 +7,40 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.Win32;
 
 [Guid("31E6E7BC-E0FF-4D46-8C64-A0A8C41C15D3")]
 [NativeTypeName("struct ID2D1Multithread : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe partial struct ID2D1Multithread
+internal unsafe partial struct ID2D1Multithread : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xBC, 0xE7, 0xE6, 0x31,
+                0xFF, 0xE0,
+                0x46, 0x4D,
+                0x8C,
+                0x64,
+                0xA0,
+                0xA8,
+                0xC4,
+                0x1C,
+                0x15,
+                0xD3
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <inheritdoc cref="IUnknown.QueryInterface" />
