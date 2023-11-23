@@ -7,13 +7,40 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.Win32;
 
 [Guid("344488B7-6846-474B-B989-F027448245E0")]
 [NativeTypeName("struct ID3D12Debug : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe partial struct ID3D12Debug
+internal unsafe partial struct ID3D12Debug : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xB7, 0x88, 0x44, 0x34,
+                0x46, 0x68,
+                0x4B, 0x47,
+                0xB9,
+                0x89,
+                0xF0,
+                0x27,
+                0x44,
+                0x82,
+                0x45,
+                0xE0
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

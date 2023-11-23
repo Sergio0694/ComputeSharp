@@ -37,11 +37,8 @@ internal static unsafe partial class IWICStreamExtensions
     /// <summary>
     /// A manual CCW implementation for an <see cref="IStream"/> object wrapping a <see cref="Stream"/> instance.
     /// </summary>
-    private unsafe partial struct IStreamWrapper //: IUnknown.Interface
+    private unsafe partial struct IStreamWrapper
     {
-        ///// <inheritdoc/>
-        //static Guid* INativeGuid.NativeGuid => (Guid*)default(NotSupportedException).Throw<nint>();
-
         /// <summary>
         /// The shared vtable pointer for <see cref="IStreamWrapper"/> instances.
         /// </summary>

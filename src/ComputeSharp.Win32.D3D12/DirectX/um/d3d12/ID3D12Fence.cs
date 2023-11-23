@@ -7,13 +7,40 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.Win32;
 
 [Guid("0A753DCF-C4D8-4B91-ADF6-BE5A60D95A76")]
 [NativeTypeName("struct ID3D12Fence : ID3D12Pageable")]
 [NativeInheritance("ID3D12Pageable")]
-internal unsafe partial struct ID3D12Fence
+internal unsafe partial struct ID3D12Fence : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xCF, 0x3D, 0x75, 0x0A,
+                0xD8, 0xC4,
+                0x91, 0x4B,
+                0xAD,
+                0xF6,
+                0xBE,
+                0x5A,
+                0x60,
+                0xD9,
+                0x5A,
+                0x76
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
