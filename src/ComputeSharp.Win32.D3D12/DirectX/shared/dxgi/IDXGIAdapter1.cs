@@ -7,8 +7,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#pragma warning disable IDE0055
-
 namespace ComputeSharp.Win32;
 
 [NativeTypeName("struct IDXGIAdapter1 : IDXGIAdapter")]

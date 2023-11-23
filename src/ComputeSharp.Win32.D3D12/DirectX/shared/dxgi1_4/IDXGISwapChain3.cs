@@ -8,8 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-#pragma warning disable IDE0055
-
 namespace ComputeSharp.Win32;
 
 [SupportedOSPlatform("windows10.0")]
