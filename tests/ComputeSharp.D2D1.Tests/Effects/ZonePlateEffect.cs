@@ -6,23 +6,21 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-public readonly partial struct ZonePlateEffect : ID2D1PixelShader
+public readonly partial struct ZonePlateEffect(
+    int width,
+    int height,
+    float diameter) : ID2D1PixelShader
 {
-    private readonly int width;
-    private readonly int height;
-    private readonly float diameter;
-
     /// <inheritdoc/>
     public float4 Execute()
     {
         float2 scenePos = D2D.GetScenePosition().XY;
 
-        float xo = scenePos.X - (this.width >> 1);
-        float yo = scenePos.Y - (this.height >> 1);
+        float xo = scenePos.X - (width >> 1);
+        float yo = scenePos.Y - (height >> 1);
 
-        float rm = 0.5f * this.diameter;
-        float km = 0.7f / this.diameter * MathF.PI;
+        float rm = 0.5f * diameter;
+        float km = 0.7f / diameter * MathF.PI;
         float w = rm / 10.0f;
 
         float yd = yo * yo;

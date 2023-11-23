@@ -52,7 +52,7 @@ public class EffectsTests
     [TestMethod]
     public void CheckerboardClip()
     {
-        D2D1TestRunner.RunAndCompareShader(new CheckerboardClipEffect(1280, 840, 32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
+        D2D1TestRunner.RunAndCompareShader(new CheckerboardClipEffect(32), null, "Landscape.png", "Landscape_CheckerboardClip.png");
     }
 
     [TestMethod]

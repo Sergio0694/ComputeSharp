@@ -5,13 +5,8 @@ namespace ComputeSharp.D2D1.Tests.Effects;
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-public partial struct CheckerboardClipEffect : ID2D1PixelShader
+public readonly partial struct CheckerboardClipEffect(int cellSize) : ID2D1PixelShader
 {
-    public int width;
-    public int height;
-    public int cellSize;
-
     /// <inheritdoc/>
     public float4 Execute()
     {
@@ -19,8 +14,8 @@ public partial struct CheckerboardClipEffect : ID2D1PixelShader
         uint x = (uint)Hlsl.Floor(position.X);
         uint y = (uint)Hlsl.Floor(position.Y);
 
-        uint cellX = (uint)(int)Hlsl.Floor(x / this.cellSize);
-        uint cellY = (uint)(int)Hlsl.Floor(y / this.cellSize);
+        uint cellX = (uint)(int)Hlsl.Floor(x / cellSize);
+        uint cellY = (uint)(int)Hlsl.Floor(y / cellSize);
 
         if ((cellX % 2 == 0 && cellY % 2 == 0) ||
             (cellX % 2 == 1 && cellY % 2 == 1))

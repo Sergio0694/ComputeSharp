@@ -261,8 +261,7 @@ public partial class D2D1TransformMapperTests
             Assert.AreEqual(shader.Width, this.ExpectedWidth);
             Assert.AreEqual(shader.Height, this.ExpectedHeight);
 
-            shader.Width = inputs[0].Width;
-            shader.Height = inputs[0].Height;
+            shader = new ShaderWithDispatchArea(inputs[0].Width, inputs[0].Height);
 
             drawInfoUpdateContext.SetConstantBuffer(in shader);
 
@@ -286,10 +285,10 @@ public partial class D2D1TransformMapperTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct ShaderWithDispatchArea : ID2D1PixelShader
+    internal readonly partial struct ShaderWithDispatchArea : ID2D1PixelShader
     {
-        public int Width;
-        public int Height;
+        public readonly int Width;
+        public readonly int Height;
 
         public float4 Execute()
         {
