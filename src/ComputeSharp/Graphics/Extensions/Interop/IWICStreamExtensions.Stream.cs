@@ -138,7 +138,7 @@ internal static unsafe partial class IWICStreamExtensions
                 return E_POINTER;
             }
 
-            if (riid->Equals(IID_IUnknown) ||
+            if (riid->Equals(Windows.__uuidof<IUnknown>()) ||
                 riid->Equals(IID_ISequentialStream) ||
                 riid->Equals(IID_IStream))
             {
