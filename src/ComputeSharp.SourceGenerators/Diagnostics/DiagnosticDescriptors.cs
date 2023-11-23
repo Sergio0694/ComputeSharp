@@ -798,4 +798,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The [GeneratedComputeShaderDescriptor] attribute requires the type of all fields of target types to be accessible from their containing assembly.",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a shader type with any fields is not readonly.
+    /// <para>
+    /// Format: <c>"The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor NotReadonlyShaderType = new(
+        id: "CMPS0057",
+        title: "Not readonly shader type (using IComputeShader or IComputeShader<T>)",
+        messageFormat: "The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)",
+        category: "ComputeSharp.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Shader types should be readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }

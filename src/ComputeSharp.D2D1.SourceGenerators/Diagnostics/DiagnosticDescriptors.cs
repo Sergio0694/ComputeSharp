@@ -1038,4 +1038,20 @@ partial class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "A D2D1 shader cannot use D2D1CompileOptions.EnableLinking in its [D2DCompileOptions] attribute if it doesn't support linking (only D2D1 shaders with no complex inputs can use this option).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for when a shader type with any fields is not readonly.
+    /// <para>
+    /// Format: <c>"The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor NotReadOnlyShaderType = new(
+        id: "CMPSD2D0070",
+        title: "Not readonly shader type (using ID2D1PixelShader)",
+        messageFormat: "The shader of type {0} is not readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone)",
+        category: "ComputeSharp.D2D1.Shaders",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Shader types should be readonly (shaders cannot mutate their instance state while running, so shader types not being readonly makes them error prone).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
