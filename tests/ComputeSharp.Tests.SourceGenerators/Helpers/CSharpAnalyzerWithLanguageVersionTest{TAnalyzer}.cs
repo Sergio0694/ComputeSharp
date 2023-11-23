@@ -46,7 +46,7 @@ internal sealed class CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> : CSharpA
     /// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.VerifyAnalyzerAsync"/>
     /// <param name="source">The source code to analyze.</param>
     /// <param name="languageVersion">The language version to use to run the test.</param>
-    public static Task VerifyAnalyzerAsync(string source, LanguageVersion languageVersion = LanguageVersion.CSharp11)
+    public static Task VerifyAnalyzerAsync(string source, LanguageVersion languageVersion = LanguageVersion.CSharp12)
     {
         CSharpAnalyzerWithLanguageVersionTest<TAnalyzer> test = new(languageVersion) { TestCode = source };
 

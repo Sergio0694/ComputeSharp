@@ -80,31 +80,29 @@ internal static partial class BlasHelpers
     /// <summary>
     /// Kernel for <see cref="FullyConnectedForwardGpu"/>.
     /// </summary>
-    [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.XYZ)]
     [GeneratedComputeShaderDescriptor]
-    public readonly partial struct FullyConnectedForwardKernel : IComputeShader
+    public readonly partial struct FullyConnectedForwardKernel(
+        int n,
+        int m,
+        int p,
+        ReadOnlyBuffer<float> x,
+        ReadOnlyBuffer<float> w,
+        ReadOnlyBuffer<float> b,
+        ReadWriteBuffer<float> y) : IComputeShader
     {
-        private readonly int n;
-        private readonly int m;
-        private readonly int p;
-        private readonly ReadOnlyBuffer<float> x;
-        private readonly ReadOnlyBuffer<float> w;
-        private readonly ReadOnlyBuffer<float> b;
-        private readonly ReadWriteBuffer<float> y;
-
         /// <inheritdoc/>
         public void Execute()
         {
-            int x_offset = (ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.m);
+            int x_offset = (ThreadIds.X * n * p) + (ThreadIds.Y * m);
             float result = 0f;
 
-            for (int k = 0; k < this.m; k++)
+            for (int k = 0; k < m; k++)
             {
-                result += this.x[x_offset + k] * this.w[(k * this.p) + ThreadIds.Z];
+                result += x[x_offset + k] * w[(k * p) + ThreadIds.Z];
             }
 
-            this.y[(ThreadIds.X * this.n * this.p) + (ThreadIds.Y * this.p) + ThreadIds.Z] = result + this.b[ThreadIds.Z];
+            y[(ThreadIds.X * n * p) + (ThreadIds.Y * p) + ThreadIds.Z] = result + b[ThreadIds.Z];
         }
     }
 }
