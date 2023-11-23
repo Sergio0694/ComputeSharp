@@ -1812,6 +1812,7 @@ public class Test_D2DPixelShaderSourceGenerator
         await CSharpAnalyzerWithLanguageVersionTest<MissingPixelShaderDescriptorOnPixelShaderAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleD2DGeneratedPixelShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
         await CSharpAnalyzerWithLanguageVersionTest<NotAccessibleFieldTypeInD2DGeneratedShaderDescriptorAttributeTargetAnalyzer>.VerifyAnalyzerAsync(source);
+        await CSharpAnalyzerWithLanguageVersionTest<NotReadonlyPixelShaderTypeAnalyzer>.VerifyAnalyzerAsync(source);
 
         // Get all assembly references for the .NET TFM and ComputeSharp
         IEnumerable<MetadataReference> metadataReferences =
