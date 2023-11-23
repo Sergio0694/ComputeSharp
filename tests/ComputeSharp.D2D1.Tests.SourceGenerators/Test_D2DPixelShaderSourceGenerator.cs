@@ -35,7 +35,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DInputCount(0)]
             [D2DRequiresScenePosition]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader : ID2D1PixelShader
+            internal readonly partial struct MyShader : ID2D1PixelShader
             {
                 private readonly float time;
                 private readonly int2 dispatchSize;
@@ -337,7 +337,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DRequiresScenePosition]
             [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader : ID2D1PixelShader
+            internal readonly partial struct MyShader : ID2D1PixelShader
             {
                 private readonly float time;
                 private readonly int2 dispatchSize;
@@ -689,7 +689,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DInputCount(0)]
             [D2DRequiresScenePosition]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader : ID2D1PixelShader
+            internal readonly partial struct MyShader : ID2D1PixelShader
             {
                 private readonly float time;
                 private readonly int2 dispatchSize;
@@ -990,7 +990,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DInputCount(0)]
             [D2DRequiresScenePosition]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader(float time, int2 dispatchSize) : ID2D1PixelShader
+            internal readonly partial struct MyShader(float time, int2 dispatchSize) : ID2D1PixelShader
             {
                 public float4 Execute()
                 {
@@ -1288,7 +1288,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DInputDescription(0, D2D1Filter.MinMagMipPoint)]
             [D2DInputDescription(1, D2D1Filter.Anisotropic)]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader : ID2D1PixelShader
+            internal readonly partial struct MyShader : ID2D1PixelShader
             {
                 public float4 Execute()
                 {
@@ -1571,7 +1571,7 @@ public class Test_D2DPixelShaderSourceGenerator
             [D2DInputCount(0)]
             [D2DRequiresScenePosition]
             [D2DGeneratedPixelShaderDescriptor]
-            public partial struct MyShader : ID2D1PixelShader
+            internal readonly partial struct MyShader : ID2D1PixelShader
             {
                 [D2DResourceTextureIndex(0)]
                 private readonly D2D1ResourceTexture2D<float> texture;
