@@ -117,68 +117,64 @@ public sealed partial class HlslGaussianBlurProcessor
         /// <summary>
         /// Kernel for the vertical convolution pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
+        internal readonly partial struct VerticalConvolutionProcessor(
+            IReadWriteNormalizedTexture2D<float4> source,
+            IReadWriteNormalizedTexture2D<float4> target,
+            ReadOnlyBuffer<float> kernel) : IComputeShader
         {
-            private readonly IReadWriteNormalizedTexture2D<float4> source;
-            private readonly IReadWriteNormalizedTexture2D<float4> target;
-            private readonly ReadOnlyBuffer<float> kernel;
-
             /// <inheritdoc/>
             public void Execute()
             {
                 float4 result = float4.Zero;
-                int maxY = this.source.Height - 1;
-                int maxX = this.source.Width - 1;
-                int kernelLength = this.kernel.Length;
+                int maxY = source.Height - 1;
+                int maxX = source.Width - 1;
+                int kernelLength = kernel.Length;
                 int radiusY = kernelLength >> 1;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    float4 color = this.source[offsetX, offsetY];
+                    float4 color = source[offsetX, offsetY];
 
-                    result += this.kernel[i] * color;
+                    result += kernel[i] * color;
                 }
 
-                this.target[ThreadIds.XY] = result;
+                target[ThreadIds.XY] = result;
             }
         }
 
         /// <summary>
         /// Kernel for the horizontal convolution pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
+        internal readonly partial struct HorizontalConvolutionProcessor(
+            IReadWriteNormalizedTexture2D<float4> source,
+            IReadWriteNormalizedTexture2D<float4> target,
+            ReadOnlyBuffer<float> kernel) : IComputeShader
         {
-            private readonly IReadWriteNormalizedTexture2D<float4> source;
-            private readonly IReadWriteNormalizedTexture2D<float4> target;
-            private readonly ReadOnlyBuffer<float> kernel;
-
             /// <inheritdoc/>
             public void Execute()
             {
                 float4 result = float4.Zero;
-                int maxY = this.source.Height - 1;
-                int maxX = this.source.Width - 1;
-                int kernelLength = this.kernel.Length;
+                int maxY = source.Height - 1;
+                int maxX = source.Width - 1;
+                int kernelLength = kernel.Length;
                 int radiusX = kernelLength >> 1;
                 int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    float4 color = this.source[offsetX, offsetY];
+                    float4 color = source[offsetX, offsetY];
 
-                    result += this.kernel[i] * color;
+                    result += kernel[i] * color;
                 }
 
-                this.target[ThreadIds.XY] = result;
+                target[ThreadIds.XY] = result;
             }
         }
     }

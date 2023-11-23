@@ -5,16 +5,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/tsSfWK"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct TwoTiledTruchet : IComputeShader<float4>
+internal readonly partial struct TwoTiledTruchet(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     /// <summary>
     /// Calculates the Truchet distance field.
     /// </summary>
@@ -105,7 +100,7 @@ internal readonly partial struct TwoTiledTruchet : IComputeShader<float4>
             ang *= 2.0f;
         }
 
-        ang = Hlsl.Frac(ang + (this.time / 4.0f));
+        ang = Hlsl.Frac(ang + (time / 4.0f));
 
         return d;
     }
@@ -115,7 +110,7 @@ internal readonly partial struct TwoTiledTruchet : IComputeShader<float4>
     {
         float2 uv = (ThreadIds.XY - ((float2)DispatchSize.XY * 0.5f)) / DispatchSize.Y;
         float gSc = 7.0f;
-        float2 p = (uv * gSc) - (new float2(-1, -0.5f) * this.time / 2.0f);
+        float2 p = (uv * gSc) - (new float2(-1, -0.5f) * time / 2.0f);
         float sf = 2.0f / DispatchSize.Y * gSc;
         float lSc = 6.0f;
         float lw = 1.0f / lSc / gSc;
@@ -125,7 +120,7 @@ internal readonly partial struct TwoTiledTruchet : IComputeShader<float4>
         for (int i = 0; i < 2; i++)
         {
             float di = d[i] - (lw / 4.0f);
-            float tracks = Hlsl.Clamp(Hlsl.Sin((ang[i] * 6.2831f) + (this.time * 6.0f)) * 4.0f, 0.0f, 1.0f);
+            float tracks = Hlsl.Clamp(Hlsl.Sin((ang[i] * 6.2831f) + (time * 6.0f)) * 4.0f, 0.0f, 1.0f);
             float gap = 1.0f + lw;
 
             col = Hlsl.Lerp(col, 0, (1.0f - Hlsl.SmoothStep(0.0f, sf * 6.0f, di)) * 0.35f);

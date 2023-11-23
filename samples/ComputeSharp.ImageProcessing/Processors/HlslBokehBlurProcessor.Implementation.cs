@@ -307,64 +307,59 @@ public sealed partial class HlslBokehBlurProcessor
         /// <summary>
         /// Kernel for the vertical convolution pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
+        internal readonly partial struct VerticalConvolutionProcessor(
+            IReadWriteNormalizedTexture2D<float4> source,
+            ReadWriteTexture2D<float4> reals,
+            ReadWriteTexture2D<float4> imaginaries,
+            ReadOnlyBuffer<Complex64> kernel) : IComputeShader
         {
-            private readonly IReadWriteNormalizedTexture2D<float4> source;
-            private readonly ReadWriteTexture2D<float4> reals;
-            private readonly ReadWriteTexture2D<float4> imaginaries;
-            private readonly ReadOnlyBuffer<Complex64> kernel;
-
             /// <inheritdoc/>
             public void Execute()
             {
                 float4 real = float4.Zero;
                 float4 imaginary = float4.Zero;
-                int maxY = this.source.Height;
-                int maxX = this.source.Width;
-                int kernelLength = this.kernel.Length;
+                int maxY = source.Height;
+                int maxX = source.Width;
+                int kernelLength = kernel.Length;
                 int radiusY = kernelLength >> 1;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    float4 color = this.source[offsetX, offsetY];
-                    Complex64 factors = this.kernel[i];
+                    float4 color = source[offsetX, offsetY];
+                    Complex64 factors = kernel[i];
 
                     real += factors.Real * color;
                     imaginary += factors.Imaginary * color;
                 }
 
-                this.reals[ThreadIds.XY] = real;
-                this.imaginaries[ThreadIds.XY] = imaginary;
+                reals[ThreadIds.XY] = real;
+                imaginaries[ThreadIds.XY] = imaginary;
             }
         }
 
         /// <summary>
         /// Kernel for the horizontal convolution pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
+        internal readonly partial struct HorizontalConvolutionAndAccumulatePartialsProcessor(
+            float z,
+            float w,
+            ReadWriteTexture2D<float4> reals,
+            ReadWriteTexture2D<float4> imaginaries,
+            ReadWriteTexture2D<float4> target,
+            ReadOnlyBuffer<Complex64> kernel) : IComputeShader
         {
-            private readonly float z;
-            private readonly float w;
-
-            private readonly ReadWriteTexture2D<float4> reals;
-            private readonly ReadWriteTexture2D<float4> imaginaries;
-            private readonly ReadWriteTexture2D<float4> target;
-            private readonly ReadOnlyBuffer<Complex64> kernel;
-
             /// <inheritdoc/>
             public void Execute()
             {
-                int maxY = this.target.Height;
-                int maxX = this.target.Width;
-                int kernelLength = this.kernel.Length;
+                int maxY = target.Height;
+                int maxX = target.Width;
+                int kernelLength = kernel.Length;
                 int radiusX = kernelLength >> 1;
                 int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
                 ComplexVector4 result = default;
@@ -372,40 +367,37 @@ public sealed partial class HlslBokehBlurProcessor
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    float4 sourceReal = this.reals[offsetX, offsetY];
-                    float4 sourceImaginary = this.imaginaries[offsetX, offsetY];
-                    Complex64 factors = this.kernel[i];
+                    float4 sourceReal = reals[offsetX, offsetY];
+                    float4 sourceImaginary = imaginaries[offsetX, offsetY];
+                    Complex64 factors = kernel[i];
 
                     result.Real += (Vector4)((factors.Real * sourceReal) - (factors.Imaginary * sourceImaginary));
                     result.Imaginary += (Vector4)((factors.Real * sourceImaginary) + (factors.Imaginary * sourceReal));
                 }
 
-                this.target[ThreadIds.XY] += (float4)result.WeightedSum(this.z, this.w);
+                target[ThreadIds.XY] += (float4)result.WeightedSum(z, w);
             }
         }
 
         /// <summary>
         /// Kernel for the gamma highlight pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.X)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct GammaHighlightProcessor : IComputeShader
+        internal readonly partial struct GammaHighlightProcessor(IReadWriteNormalizedTexture2D<float4> source) : IComputeShader
         {
-            private readonly IReadWriteNormalizedTexture2D<float4> source;
-
             /// <inheritdoc/>
             public void Execute()
             {
-                int width = this.source.Width;
+                int width = source.Width;
 
                 for (int i = 0; i < width; i++)
                 {
-                    float4 v = this.source[i, ThreadIds.X];
+                    float4 v = source[i, ThreadIds.X];
 
                     v.XYZ = v.XYZ * v.XYZ * v.XYZ;
 
-                    this.source[i, ThreadIds.X] = v;
+                    source[i, ThreadIds.X] = v;
                 }
             }
         }
@@ -413,27 +405,25 @@ public sealed partial class HlslBokehBlurProcessor
         /// <summary>
         /// Kernel for the inverse gamma highlight pass.
         /// </summary>
-        [AutoConstructor]
         [ThreadGroupSize(DefaultThreadGroupSizes.X)]
         [GeneratedComputeShaderDescriptor]
-        internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
+        internal readonly partial struct InverseGammaHighlightProcessor(
+            ReadWriteTexture2D<float4> source,
+            IReadWriteNormalizedTexture2D<float4> target) : IComputeShader
         {
-            private readonly ReadWriteTexture2D<float4> source;
-            private readonly IReadWriteNormalizedTexture2D<float4> target;
-
             /// <inheritdoc/>
             public void Execute()
             {
-                int width = this.source.Width;
+                int width = source.Width;
 
                 for (int i = 0; i < width; i++)
                 {
-                    float4 v = this.source[i, ThreadIds.X];
+                    float4 v = source[i, ThreadIds.X];
 
                     v = Hlsl.Clamp(v, 0, float.MaxValue);
                     v.XYZ = Hlsl.Pow(v.XYZ, 1 / 3f);
 
-                    this.target[i, ThreadIds.X] = v;
+                    target[i, ThreadIds.X] = v;
                 }
             }
         }

@@ -7,23 +7,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/tlVGDt"/>.
 /// <para>Created by whisky_shusuky.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct Octagrams : ID2D1PixelShader
+internal readonly partial struct Octagrams(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     private static float2x2 Rotate(float a)
     {
         float c = Hlsl.Cos(a);
@@ -98,12 +89,12 @@ internal readonly partial struct Octagrams : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        float2 p = (((float2)xy * 2.0f) - this.dispatchSize) / Hlsl.Min(this.dispatchSize.X, this.dispatchSize.Y);
-        float3 ro = new(0.0f, -0.2f, this.time * 4.0f);
+        float2 p = (((float2)xy * 2.0f) - dispatchSize) / Hlsl.Min(dispatchSize.X, dispatchSize.Y);
+        float3 ro = new(0.0f, -0.2f, time * 4.0f);
         float3 ray = Hlsl.Normalize(new float3(p, 1.5f));
 
-        ray.XY = Hlsl.Mul(ray.XY, Rotate(Hlsl.Sin(this.time * 0.03f) * 5.0f));
-        ray.YZ = Hlsl.Mul(ray.YZ, Rotate(Hlsl.Sin(this.time * 0.05f) * 0.2f));
+        ray.XY = Hlsl.Mul(ray.XY, Rotate(Hlsl.Sin(time * 0.03f) * 5.0f));
+        ray.YZ = Hlsl.Mul(ray.YZ, Rotate(Hlsl.Sin(time * 0.05f) * 0.2f));
 
         float t = 0.1f;
         float ac = 0.0f;
@@ -119,7 +110,7 @@ internal readonly partial struct Octagrams : ID2D1PixelShader
 
             pos = Mod(pos - 2.0f, 4.0f) - 2.0f;
 
-            float gTime = this.time - (i * 0.01f);
+            float gTime = time - (i * 0.01f);
             float d = BoxSet(pos, gTime);
 
             d = Hlsl.Max(Hlsl.Abs(d), 0.01f);
@@ -127,7 +118,7 @@ internal readonly partial struct Octagrams : ID2D1PixelShader
             t += d * 0.55f;
         }
 
-        float3 col = (ac * 0.02f) + new float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(this.time)), 0.5f + (Hlsl.Sin(this.time) * 0.2f));
+        float3 col = (ac * 0.02f) + new float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(time)), 0.5f + (Hlsl.Sin(time) * 0.2f));
         float4 color = new(col, 1);
 
         return color;

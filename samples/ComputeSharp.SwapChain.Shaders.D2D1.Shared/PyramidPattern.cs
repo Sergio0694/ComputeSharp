@@ -8,23 +8,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/wlscWX"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct PyramidPattern : ID2D1PixelShader
+internal readonly partial struct PyramidPattern(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
@@ -92,7 +83,7 @@ internal readonly partial struct PyramidPattern : ID2D1PixelShader
 
         p -= ip + 0.5f;
 
-        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (this.time / 3.0f)) * 6.2831f * 2.0f);
+        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (time / 3.0f)) * 6.2831f * 2.0f);
 
         float2 offs = new float2(Hlsl.Cos(ang), Hlsl.Sin(ang)) * 0.35f;
 
@@ -158,12 +149,12 @@ internal readonly partial struct PyramidPattern : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        int2 coordinate = new(xy.X, this.dispatchSize.Y - xy.Y);
-        float iRes = Hlsl.Min(this.dispatchSize.Y, 800.0f);
-        float2 uv = (coordinate - ((float2)this.dispatchSize * 0.5f)) / iRes;
+        int2 coordinate = new(xy.X, dispatchSize.Y - xy.Y);
+        float iRes = Hlsl.Min(dispatchSize.Y, 800.0f);
+        float2 uv = (coordinate - ((float2)dispatchSize * 0.5f)) / iRes;
         float3 rd = Hlsl.Normalize(new float3(uv, 0.5f));
         const float gSc = 10.0f;
-        float2 p = (uv * gSc) + new float2(0, this.time / 2.0f);
+        float2 p = (uv * gSc) + new float2(0, time / 2.0f);
         float2 oP = p;
         float m = BMap(p);
         float3 n = new(0, 0, -1);
@@ -172,7 +163,7 @@ internal readonly partial struct PyramidPattern : ID2D1PixelShader
 
         n = DoBumpMap(p, n, bumpFactor, ref edge);
 
-        float3 lp = new float3(-0.0f + (Hlsl.Sin(this.time) * 0.3f), 0.0f + (Hlsl.Cos(this.time * 1.3f) * 0.3f), -1) - new float3(uv, 0);
+        float3 lp = new float3(-0.0f + (Hlsl.Sin(time) * 0.3f), 0.0f + (Hlsl.Cos(time * 1.3f) * 0.3f), -1) - new float3(uv, 0);
         float lDist = Hlsl.Max(Hlsl.Length(lp), 0.001f);
         float3 ld = lp / lDist;
         float diff = Hlsl.Max(Hlsl.Dot(n, ld), 0.0f);

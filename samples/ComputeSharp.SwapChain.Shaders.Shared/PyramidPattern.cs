@@ -6,16 +6,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/wlscWX"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time Hlsl.Since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct PyramidPattern : IComputeShader<float4>
+internal readonly partial struct PyramidPattern(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
@@ -83,7 +78,7 @@ internal readonly partial struct PyramidPattern : IComputeShader<float4>
 
         p -= ip + 0.5f;
 
-        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (this.time / 3.0f)) * 6.2831f * 2.0f);
+        float ang = (-3.14159f * 3.0f / 5.0f) + (FBM((ip / 8.0f) + (time / 3.0f)) * 6.2831f * 2.0f);
 
         float2 offs = new float2(Hlsl.Cos(ang), Hlsl.Sin(ang)) * 0.35f;
 
@@ -153,7 +148,7 @@ internal readonly partial struct PyramidPattern : IComputeShader<float4>
         float2 uv = (coordinate - ((float2)DispatchSize.XY * 0.5f)) / iRes;
         float3 rd = Hlsl.Normalize(new float3(uv, 0.5f));
         const float gSc = 10.0f;
-        float2 p = (uv * gSc) + new float2(0, this.time / 2.0f);
+        float2 p = (uv * gSc) + new float2(0, time / 2.0f);
         float2 oP = p;
         float m = BMap(p);
         float3 n = new(0, 0, -1);
@@ -162,7 +157,7 @@ internal readonly partial struct PyramidPattern : IComputeShader<float4>
 
         n = DoBumpMap(p, n, bumpFactor, ref edge);
 
-        float3 lp = new float3(-0.0f + (Hlsl.Sin(this.time) * 0.3f), 0.0f + (Hlsl.Cos(this.time * 1.3f) * 0.3f), -1) - new float3(uv, 0);
+        float3 lp = new float3(-0.0f + (Hlsl.Sin(time) * 0.3f), 0.0f + (Hlsl.Cos(time * 1.3f) * 0.3f), -1) - new float3(uv, 0);
         float lDist = Hlsl.Max(Hlsl.Length(lp), 0.001f);
         float3 ld = lp / lDist;
         float diff = Hlsl.Max(Hlsl.Dot(n, ld), 0.0f);

@@ -108,12 +108,11 @@ public partial class DispatchingBenchmark : IDisposable
         context.For(64, new TestShader(this.buffer!));
     }
 
-    [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    internal readonly partial struct TestShader : IComputeShader
+    internal readonly partial struct TestShader(ReadWriteBuffer<float> buffer) : IComputeShader
     {
-        private readonly ReadWriteBuffer<float> buffer;
+        private readonly ReadWriteBuffer<float> buffer = buffer;
 
         /// <inheritdoc/>
         public void Execute()

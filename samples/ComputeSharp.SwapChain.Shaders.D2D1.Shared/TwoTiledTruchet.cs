@@ -7,23 +7,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/tsSfWK"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct TwoTiledTruchet : ID2D1PixelShader
+internal readonly partial struct TwoTiledTruchet(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     /// <summary>
     /// Calculates the Truchet distance field.
     /// </summary>
@@ -114,7 +105,7 @@ internal readonly partial struct TwoTiledTruchet : ID2D1PixelShader
             ang *= 2.0f;
         }
 
-        ang = Hlsl.Frac(ang + (this.time / 4.0f));
+        ang = Hlsl.Frac(ang + (time / 4.0f));
 
         return d;
     }
@@ -123,10 +114,10 @@ internal readonly partial struct TwoTiledTruchet : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        float2 uv = (xy - ((float2)this.dispatchSize * 0.5f)) / this.dispatchSize.Y;
+        float2 uv = (xy - ((float2)dispatchSize * 0.5f)) / dispatchSize.Y;
         float gSc = 7.0f;
-        float2 p = (uv * gSc) - (new float2(-1, -0.5f) * this.time / 2.0f);
-        float sf = 2.0f / this.dispatchSize.Y * gSc;
+        float2 p = (uv * gSc) - (new float2(-1, -0.5f) * time / 2.0f);
+        float sf = 2.0f / dispatchSize.Y * gSc;
         float lSc = 6.0f;
         float lw = 1.0f / lSc / gSc;
         float2 d = DistanceField(p, out float2 ang) - (2.5f / lSc);
@@ -135,7 +126,7 @@ internal readonly partial struct TwoTiledTruchet : ID2D1PixelShader
         for (int i = 0; i < 2; i++)
         {
             float di = d[i] - (lw / 4.0f);
-            float tracks = Hlsl.Clamp(Hlsl.Sin((ang[i] * 6.2831f) + (this.time * 6.0f)) * 4.0f, 0.0f, 1.0f);
+            float tracks = Hlsl.Clamp(Hlsl.Sin((ang[i] * 6.2831f) + (time * 6.0f)) * 4.0f, 0.0f, 1.0f);
             float gap = 1.0f + lw;
 
             col = Hlsl.Lerp(col, 0, (1.0f - Hlsl.SmoothStep(0.0f, sf * 6.0f, di)) * 0.35f);

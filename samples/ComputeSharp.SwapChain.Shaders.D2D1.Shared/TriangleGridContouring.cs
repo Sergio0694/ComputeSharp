@@ -7,23 +7,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/WtfGDX"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
+internal readonly partial struct TriangleGridContouring(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
@@ -40,7 +31,7 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin((p * 6.2831853f) + this.time);
+        return Hlsl.Sin((p * 6.2831853f) + time);
     }
 
     // Based on IQ's gradient noise formula.
@@ -298,12 +289,12 @@ internal readonly partial struct TriangleGridContouring : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        int2 coordinate = new(xy.X, this.dispatchSize.Y - xy.Y);
-        float2 uv = (coordinate - ((float2)this.dispatchSize * 0.5f)) / Hlsl.Min(650.0f, this.dispatchSize.Y);
-        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * this.time / 16.0f);
+        int2 coordinate = new(xy.X, dispatchSize.Y - xy.Y);
+        float2 uv = (coordinate - ((float2)dispatchSize * 0.5f)) / Hlsl.Min(650.0f, dispatchSize.Y);
+        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * time / 16.0f);
         float3 col = SimplexContour(p);
 
-        uv = coordinate / (float2)this.dispatchSize;
+        uv = coordinate / (float2)dispatchSize;
         col *= Hlsl.Pow(Hlsl.Abs(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y)), 0.0625f) + 0.1f;
 
         return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);

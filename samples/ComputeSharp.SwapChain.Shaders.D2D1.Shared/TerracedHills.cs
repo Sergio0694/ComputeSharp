@@ -7,23 +7,14 @@ namespace ComputeSharp.SwapChain.Shaders.D2D1;
 /// Ported from <see href="https://www.shadertoy.com/view/MtdSRn"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
+/// <param name="time">The current time since the start of the application.</param>
+/// <param name="dispatchSize">The dispatch size for the current output.</param>
 [D2DInputCount(0)]
 [D2DRequiresScenePosition]
 [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
 [D2DGeneratedPixelShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct TerracedHills : ID2D1PixelShader
+internal readonly partial struct TerracedHills(float time, int2 dispatchSize) : ID2D1PixelShader
 {
-    /// <summary>
-    /// The current time since the start of the application.
-    /// </summary>
-    private readonly float time;
-
-    /// <summary>
-    /// The dispatch size for the current output.
-    /// </summary>
-    private readonly int2 dispatchSize;
-
     // 2x2 matrix rotation. Angle vector, courtesy of Fabrice
     private static float2x2 Rot2(float th)
     {
@@ -96,13 +87,13 @@ internal readonly partial struct TerracedHills : ID2D1PixelShader
     public float4 Execute()
     {
         int2 xy = (int2)D2D.GetScenePosition().XY;
-        int2 coordinate = new(xy.X, this.dispatchSize.Y - xy.Y);
+        int2 coordinate = new(xy.X, dispatchSize.Y - xy.Y);
 
-        float3 rd = Hlsl.Normalize(new float3((float2)coordinate - (this.dispatchSize.Y * 0.5f), this.dispatchSize.Y));
+        float3 rd = Hlsl.Normalize(new float3((float2)coordinate - (dispatchSize.Y * 0.5f), dispatchSize.Y));
 
         rd.YZ = Rot2(0.35f) * rd.YZ;
 
-        float3 ro = new(this.time * 0.4f, 0.5f, this.time * 0.2f);
+        float3 ro = new(time * 0.4f, 0.5f, time * 0.2f);
 
         float t = 0, d;
         for (int i = 0; i < 96; i++)
@@ -120,7 +111,7 @@ internal readonly partial struct TerracedHills : ID2D1PixelShader
         float3 sp = ro + (rd * t);
         float3 ld = new(-0.676f, 0.408f, 0.613f);
         float edge = 0;
-        float3 n = Normal(sp, ref edge, this.dispatchSize.Y);
+        float3 n = Normal(sp, ref edge, dispatchSize.Y);
         float dif = Hlsl.Max(Hlsl.Dot(ld, n), 0.0f);
         float spe = Hlsl.Pow(Hlsl.Max(Hlsl.Dot(Hlsl.Reflect(rd, n), ld), 0.0f), 16.0f);
         float sh = HMap(sp.XZ);

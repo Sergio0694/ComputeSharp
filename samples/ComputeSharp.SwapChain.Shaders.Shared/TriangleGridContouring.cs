@@ -5,16 +5,11 @@ namespace ComputeSharp.SwapChain.Shaders;
 /// Ported from <see href="https://www.shadertoy.com/view/WtfGDX"/>.
 /// <para>Created by Shane.</para>
 /// </summary>
-[AutoConstructor]
+/// <param name="time">The current time Hlsl.Since the start of the application.</param>
 [ThreadGroupSize(DefaultThreadGroupSizes.XY)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct TriangleGridContouring : IComputeShader<float4>
+internal readonly partial struct TriangleGridContouring(float time) : IComputeShader<float4>
 {
-    /// <summary>
-    /// The current time Hlsl.Since the start of the application.
-    /// </summary>
-    private readonly float time;
-
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
@@ -31,7 +26,7 @@ internal readonly partial struct TriangleGridContouring : IComputeShader<float4>
 
         p = Hlsl.Frac(new float2(262144, 32768) * n);
 
-        return Hlsl.Sin((p * 6.2831853f) + this.time);
+        return Hlsl.Sin((p * 6.2831853f) + time);
     }
 
     // Based on IQ's gradient noise formula.
@@ -290,7 +285,7 @@ internal readonly partial struct TriangleGridContouring : IComputeShader<float4>
     {
         int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float2 uv = (coordinate - ((float2)DispatchSize.XY * 0.5f)) / Hlsl.Min(650.0f, DispatchSize.Y);
-        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * this.time / 16.0f);
+        float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + (new float2(0.8660254f, 0.5f) * time / 16.0f);
         float3 col = SimplexContour(p);
 
         uv = coordinate / (float2)DispatchSize.XY;
