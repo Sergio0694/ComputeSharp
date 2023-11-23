@@ -6,7 +6,7 @@ using TerraFX.Interop;
 using WinRT;
 using WinRT.Interop;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
@@ -22,7 +22,8 @@ internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
     {
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x0D, 0x44, 0x5C, 0x69,
                 0xB3, 0x04,
                 0xDD, 0x4E,
@@ -33,7 +34,7 @@ internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
                 0x9F,
                 0x72,
                 0x02
-            };
+            ];
 
             return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
         }

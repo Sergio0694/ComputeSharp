@@ -3,23 +3,23 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
-#pragma warning disable CS0649
+#pragma warning disable CS0649, IDE0055
 
 namespace ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
 
 /// <summary>
 /// The updater for <see cref="ID2D1DrawInfo"/> type to use with built-in effects.
 /// </summary>
-internal unsafe struct ID2D1DrawInfoUpdateContext
+internal unsafe struct ID2D1DrawInfoUpdateContext : IComObject
 {
-    /// <summary>
-    /// Gets the <see cref="System.Guid"/> for <see cref="ID2D1DrawInfoUpdateContext"/> (<c>430C5B40-AE16-485F-90E6-4FA4915144B6</c>).
-    /// </summary>
-    public static ref readonly Guid Guid
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ReadOnlySpan<byte> data = new byte[] {
+            ReadOnlySpan<byte> data =
+            [
                 0x40, 0x5B, 0x0C, 0x43,
                 0x16, 0xAE,
                 0x5F, 0x48,
@@ -30,9 +30,9 @@ internal unsafe struct ID2D1DrawInfoUpdateContext
                 0x51,
                 0x44,
                 0xB6
-            };
+            ];
 
-            return ref Unsafe.As<byte, Guid>(ref MemoryMarshal.GetReference(data));
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
         }
     }
 
