@@ -8,26 +8,11 @@ namespace ComputeSharp.SourceGeneration.Diagnostics;
 /// <summary>
 /// A diagnostic analyzer that generates an error if the <c>AllowUnsafeBlocks</c> compilation option is not set.
 /// </summary>
-public abstract class MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase : DiagnosticAnalyzer
+/// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
+public abstract class MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase(DiagnosticDescriptor diagnosticDescriptor) : DiagnosticAnalyzer
 {
-    /// <summary>
-    /// The <see cref="DiagnosticDescriptor"/> instance to use.
-    /// </summary>
-    private readonly DiagnosticDescriptor diagnosticDescriptor;
-
-    /// <summary>
-    /// Creates a new <see cref="MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase"/> instance with the specified arguments.
-    /// </summary>
-    /// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
-    private protected MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase(DiagnosticDescriptor diagnosticDescriptor)
-    {
-        this.diagnosticDescriptor = diagnosticDescriptor;
-
-        SupportedDiagnostics = ImmutableArray.Create(diagnosticDescriptor);
-    }
-
     /// <inheritdoc/>
-    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
+    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(diagnosticDescriptor);
 
     /// <inheritdoc/>
     public sealed override void Initialize(AnalysisContext context)
@@ -40,7 +25,7 @@ public abstract class MissingAllowUnsafeBlocksCompilationOptionAnalyzerBase : Di
             // Check whether unsafe blocks are available, and emit an error if they are not
             if (!context.Compilation.IsAllowUnsafeBlocksEnabled())
             {
-                context.ReportDiagnostic(Diagnostic.Create(this.diagnosticDescriptor, location: null));
+                context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, location: null));
             }
         });
     }

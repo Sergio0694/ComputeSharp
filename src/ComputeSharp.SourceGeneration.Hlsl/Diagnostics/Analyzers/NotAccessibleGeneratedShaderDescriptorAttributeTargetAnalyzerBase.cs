@@ -8,35 +8,14 @@ namespace ComputeSharp.SourceGeneration.Diagnostics;
 /// <summary>
 /// A diagnostic analyzer that generates an error if a target shader type is not accessible from its containing assembly.
 /// </summary>
-public abstract class NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase : DiagnosticAnalyzer
+/// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
+/// <param name="generatedShaderDescriptorFullyQualifiedTypeName">The fully qualified type name of the target attribute.</param>
+public abstract class NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase(
+    DiagnosticDescriptor diagnosticDescriptor,
+    string generatedShaderDescriptorFullyQualifiedTypeName) : DiagnosticAnalyzer
 {
-    /// <summary>
-    /// The <see cref="DiagnosticDescriptor"/> instance to use.
-    /// </summary>
-    private readonly DiagnosticDescriptor diagnosticDescriptor;
-
-    /// <summary>
-    /// The fully qualified type name of the target attribute.
-    /// </summary>
-    private readonly string generatedShaderDescriptorFullyQualifiedTypeName;
-
-    /// <summary>
-    /// Creates a new <see cref="NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase"/> instance with the specified arguments.
-    /// </summary>
-    /// <param name="diagnosticDescriptor">The <see cref="DiagnosticDescriptor"/> instance to use.</param>
-    /// <param name="generatedShaderDescriptorFullyQualifiedTypeName">The fully qualified type name of the target attribute.</param>
-    private protected NotAccessibleGeneratedShaderDescriptorAttributeTargetAnalyzerBase(
-        DiagnosticDescriptor diagnosticDescriptor,
-        string generatedShaderDescriptorFullyQualifiedTypeName)
-    {
-        this.diagnosticDescriptor = diagnosticDescriptor;
-        this.generatedShaderDescriptorFullyQualifiedTypeName = generatedShaderDescriptorFullyQualifiedTypeName;
-
-        SupportedDiagnostics = ImmutableArray.Create(diagnosticDescriptor);
-    }
-
     /// <inheritdoc/>
-    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; }
+    public sealed override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(diagnosticDescriptor);
 
     /// <inheritdoc/>
     public sealed override void Initialize(AnalysisContext context)
@@ -47,7 +26,7 @@ public abstract class NotAccessibleGeneratedShaderDescriptorAttributeTargetAnaly
         context.RegisterCompilationStartAction(context =>
         {
             // Get the symbol for the target attribute type
-            if (context.Compilation.GetTypeByMetadataName(this.generatedShaderDescriptorFullyQualifiedTypeName) is not { } generatedShaderDescriptorAttributeSymbol)
+            if (context.Compilation.GetTypeByMetadataName(generatedShaderDescriptorFullyQualifiedTypeName) is not { } generatedShaderDescriptorAttributeSymbol)
             {
                 return;
             }
@@ -65,7 +44,7 @@ public abstract class NotAccessibleGeneratedShaderDescriptorAttributeTargetAnaly
                     !typeSymbol.IsAccessibleFromContainingAssembly(context.Compilation))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        this.diagnosticDescriptor,
+                        diagnosticDescriptor,
                         attribute.GetLocation(),
                         typeSymbol));
                 }
