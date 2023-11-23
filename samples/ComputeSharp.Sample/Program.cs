@@ -23,16 +23,13 @@ Formatting.PrintMatrix(array, 10, 10, "AFTER");
 /// <summary>
 /// The sample kernel that multiples all items by two.
 /// </summary>
-[AutoConstructor]
 [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
-internal readonly partial struct MultiplyByTwo : IComputeShader
+internal readonly partial struct MultiplyByTwo(ReadWriteBuffer<float> buffer) : IComputeShader
 {
-    private readonly ReadWriteBuffer<float> buffer;
-
     /// <inheritdoc/>
     public void Execute()
     {
-        this.buffer[ThreadIds.X] *= 2;
+        buffer[ThreadIds.X] *= 2;
     }
 }

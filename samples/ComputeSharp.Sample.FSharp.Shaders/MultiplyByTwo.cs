@@ -3,16 +3,13 @@ namespace ComputeSharp.Sample.FSharp.Shaders;
 /// <summary>
 /// A sample shader thaat just multiplies items in a buffer by two.
 /// </summary>
-[AutoConstructor]
 [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
-public readonly partial struct MultiplyByTwo : IComputeShader
+public readonly partial struct MultiplyByTwo(ReadWriteBuffer<float> buffer) : IComputeShader
 {
-    private readonly ReadWriteBuffer<float> buffer;
-
     /// <inheritdoc/>
     public void Execute()
     {
-        this.buffer[ThreadIds.X] *= 2;
+        buffer[ThreadIds.X] *= 2;
     }
 }
