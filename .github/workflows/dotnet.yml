@@ -231,13 +231,12 @@ jobs:
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
 
-      # Publish the NativeAOT CLI sample (optimized for size, and reflection-free).
-      # Temporarily skip COMPUTESHARP_SWAPCHAIN_CLI_DISABLE_REFLECTION unti code is
-      # refactored to replace typeof(T).GUID with hardcoded IIDs, or it won't work.
+      # Publish the NativeAOT CLI sample (optimized for size, and reflection-free)
     - name: Publish ComputeSharp.SwapChain.Cli with NativeAOT (size)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_CLI_PUBLISH_AOT='true';
         $env:COMPUTESHARP_SWAPCHAIN_CLI_SIZE_OPTIMIZED='true';
+        $env:COMPUTESHARP_SWAPCHAIN_CLI_DISABLE_REFLECTION='true';
         git clean -fdx;
         dotnet publish samples\ComputeSharp.SwapChain.Cli\ComputeSharp.SwapChain.Cli.csproj -r win-${{matrix.platform}} -v n
       
