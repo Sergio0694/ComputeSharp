@@ -70,7 +70,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Win32.D3D12\Windows\other\helper-types\VtblIndexAttribute.cs" Link="Windows\other\helper-types\VtblIndexAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\windef\RECT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\D2DERR.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\E.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\ComputeSharp.Win32.D3D12\Windows\shared\winerror\E.cs" Link="Windows\shared\winerror\E.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\RO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\winerror\Windows.cs" />
   </ItemGroup>
