@@ -6,6 +6,7 @@ using ComputeSharp.SourceGeneration.Extensions;
 using ComputeSharp.SourceGeneration.Helpers;
 using ComputeSharp.SourceGeneration.Mappings;
 using ComputeSharp.SourceGeneration.Models;
+using ComputeSharp.SourceGeneration.SyntaxProcessors;
 using ComputeSharp.SourceGeneration.SyntaxRewriters;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
@@ -122,9 +123,16 @@ partial class ComputeShaderDescriptorGenerator
 
             bool hlslResourceFound = false;
 
-            foreach (IFieldSymbol fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (ISymbol memberSymbol in structDeclarationSymbol.GetMembers())
             {
-                if (fieldSymbol.IsStatic)
+                // Skip constants and static fields, we only care about instance ones here
+                if (memberSymbol is not IFieldSymbol { IsConst: false, IsStatic: false } fieldSymbol)
+                {
+                    continue;
+                }
+
+                // Try to get the actual field name
+                if (!ConstantBufferSyntaxProcessor.TryGetFieldAccessorName(fieldSymbol, out string? fieldName, out _))
                 {
                     continue;
                 }
@@ -134,13 +142,13 @@ partial class ComputeShaderDescriptorGenerator
                 // Group shared fields must be static
                 if (attribute is not null)
                 {
-                    diagnostics.Add(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name);
+                    diagnostics.Add(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldName);
                 }
 
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
-                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldName, fieldSymbol.Type);
 
                     continue;
                 }
@@ -148,7 +156,7 @@ partial class ComputeShaderDescriptorGenerator
                 string metadataName = typeSymbol.GetFullyQualifiedMetadataName();
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+                _ = HlslKnownKeywords.TryGetMappedName(fieldName, out string? mapping);
 
                 // Allowed fields must be either resources, unmanaged values or delegates
                 if (HlslKnownTypes.IsTypedResourceType(metadataName))
@@ -162,13 +170,13 @@ partial class ComputeShaderDescriptorGenerator
                     }
 
                     // Add the current mapping for the name (if the name used a reserved keyword)
-                    resources.Add((metadataName, mapping ?? fieldSymbol.Name, typeName));
+                    resources.Add((metadataName, mapping ?? fieldName, typeName));
                 }
                 else if (!typeSymbol.IsUnmanagedType &&
                          typeSymbol.TypeKind != TypeKind.Delegate)
                 {
                     // Shaders can only capture valid HLSL resource types or unmanaged types
-                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, typeSymbol);
+                    diagnostics.Add(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldName, typeSymbol);
 
                     continue;
                 }
@@ -180,7 +188,7 @@ partial class ComputeShaderDescriptorGenerator
                         types.Add(typeSymbol);
                     }
 
-                    values.Add((mapping ?? fieldSymbol.Name, typeName));
+                    values.Add((mapping ?? fieldName, typeName));
                 }
             }
 
