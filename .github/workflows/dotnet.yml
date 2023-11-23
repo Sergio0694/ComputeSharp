@@ -261,10 +261,8 @@ jobs:
         path: samples\ComputeSharp.SwapChain.Cli\bin\Release\net8.0\win-x64\publish\computesharp.cli.exe
         if-no-files-found: error
 
-      # Also publish the Win2D sample (with R2R).
-      # Only doing this on x64 (to avoid a Roslyn issue).
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.SwapChain.D2D1.Cli (R2R)
+      # Also publish the Win2D sample (with R2R)
+    - name: Publish ComputeSharp.SwapChain.D2D1.Cli (R2R)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_R2R='true';
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='false';
@@ -284,8 +282,7 @@ jobs:
         return $process.ExitCode;
       
       # Publish the Win2D sample again (with NativeAOT)
-    - if: matrix.platform == 'x64'
-      name: Publish ComputeSharp.SwapChain.D2D1.Cli (NativeAOT)
+    - name: Publish ComputeSharp.SwapChain.D2D1.Cli (NativeAOT)
       run: >
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_R2R='false';
         $env:COMPUTESHARP_SWAPCHAIN_D2D1_PUBLISH_AOT='true';
