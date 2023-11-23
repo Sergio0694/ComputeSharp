@@ -155,8 +155,12 @@ internal sealed class IndentedTextWriter : IDisposable
                 }
                 else
                 {
-                    // Write the current line
-                    WriteRawText(content[..newLineIndex]);
+                    ReadOnlySpan<char> line = content[..newLineIndex];
+
+                    // Write the current line (if it's empty, we can skip writing the text entirely).
+                    // This ensures that raw multiline string literals with blank lines don't have
+                    // extra whitespace at the start of those lines, which would otherwise happen.
+                    WriteIf(!line.IsEmpty, line);
                     WriteLine();
 
                     // Move past the new line character (the result could be an empty span)
