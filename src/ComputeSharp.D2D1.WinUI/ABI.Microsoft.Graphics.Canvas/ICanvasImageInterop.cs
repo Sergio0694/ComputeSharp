@@ -5,7 +5,7 @@ using ComputeSharp.Win32;
 using WinRT;
 using WinRT.Interop;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
@@ -15,8 +15,32 @@ namespace ABI.Microsoft.Graphics.Canvas;
 [Guid("E042D1F7-F9AD-4479-A713-67627EA31863")]
 [NativeTypeName("class ICanvasImageInterop : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe struct ICanvasImageInterop
+internal unsafe struct ICanvasImageInterop : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0xF7, 0xD1, 0x42, 0xE0,
+                0xAD, 0xF9,
+                0x79, 0x44,
+                0xA7, 0x13,
+                0x67,
+                0x62,
+                0x7E,
+                0xA3,
+                0x18,
+                0x63
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <summary>

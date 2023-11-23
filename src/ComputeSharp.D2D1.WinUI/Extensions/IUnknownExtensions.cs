@@ -71,7 +71,7 @@ internal static unsafe class IUnknownExtensions
     /// <returns>The <see cref="HRESULT"/> for the operation.</returns>
     public static HRESULT CopyTo<T, U>(this ref T source, U** destination)
         where T : unmanaged // IUnknown
-        where U : unmanaged // IUnknown
+        where U : unmanaged, IComObject
     {
         using ComPtr<T> temporary = new((T*)Unsafe.AsPointer(ref source));
 

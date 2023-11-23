@@ -6,7 +6,7 @@ using WinRT;
 using WinRT.Interop;
 using IInspectable = ComputeSharp.Win32.IInspectable;
 
-#pragma warning disable CS0649, IDE1006
+#pragma warning disable CS0649, IDE0055, IDE1006
 
 namespace ABI.Microsoft.Graphics.Canvas;
 
@@ -16,8 +16,32 @@ namespace ABI.Microsoft.Graphics.Canvas;
 [Guid("29BA1A1F-1CFE-44C3-984D-426D61B51427")]
 [NativeTypeName("class ICanvasEffectFactoryNative : IUnknown")]
 [NativeInheritance("IUnknown")]
-internal unsafe struct ICanvasEffectFactoryNative
+internal unsafe struct ICanvasEffectFactoryNative : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x1F, 0x1A, 0xBA, 0x29,
+                0xFE, 0x1C,
+                0xC3, 0x44,
+                0x98, 0x4D,
+                0x42,
+                0x6D,
+                0x61,
+                0xB5,
+                0x14,
+                0x27
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>

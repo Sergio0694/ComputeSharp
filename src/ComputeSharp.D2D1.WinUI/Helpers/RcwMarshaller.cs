@@ -48,7 +48,7 @@ internal static unsafe class RcwMarshaller
     /// <remarks>This method should only be called with <typeparamref name="TFrom"/> being a projected interface type.</remarks>
     public static HRESULT GetNativeInterface<TFrom, TTo>(TFrom managedObject, TTo** nativeObject)
         where TFrom : class
-        where TTo : unmanaged // IUnknown
+        where TTo : unmanaged, IComObject
     {
         using ComPtr<IUnknown> unknownObject = default;
 

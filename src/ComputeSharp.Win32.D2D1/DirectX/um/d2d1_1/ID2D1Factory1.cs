@@ -7,13 +7,40 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#pragma warning disable IDE0055
+
 namespace ComputeSharp.Win32;
 
 [Guid("BB12D362-DAEE-4B9A-AA1D-14BA401CFA1F")]
 [NativeTypeName("struct ID2D1Factory1 : ID2D1Factory")]
 [NativeInheritance("ID2D1Factory")]
-internal unsafe partial struct ID2D1Factory1
+internal unsafe partial struct ID2D1Factory1 : IComObject
 {
+    /// <inheritdoc/>
+    static Guid* IComObject.IID
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            ReadOnlySpan<byte> data =
+            [
+                0x62, 0xD3, 0x12, 0xBB,
+                0xEE, 0xDA,
+                0x9A, 0x4B,
+                0xAA,
+                0x1D,
+                0x14,
+                0xBA,
+                0x40,
+                0x1C,
+                0xFA,
+                0x1F
+            ];
+
+            return (Guid*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(data));
+        }
+    }
+
     public void** lpVtbl;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
