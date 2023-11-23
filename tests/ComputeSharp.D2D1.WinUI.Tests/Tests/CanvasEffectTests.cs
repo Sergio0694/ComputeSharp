@@ -701,9 +701,9 @@ public partial class CanvasEffectTests
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct ShaderWithNoInputs : ID2D1PixelShader
+    internal readonly partial struct ShaderWithNoInputs : ID2D1PixelShader
     {
-        public int Value;
+        public readonly int Value;
 
         public float4 Execute()
         {
