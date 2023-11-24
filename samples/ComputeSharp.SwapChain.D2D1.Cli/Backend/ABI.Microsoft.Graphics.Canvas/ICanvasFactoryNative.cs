@@ -44,21 +44,21 @@ internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT QueryInterface(Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged<ICanvasFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint AddRef()
     {
-        return ((delegate* unmanaged<ICanvasFactoryNative*, uint>)this.lpVtbl[1])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, uint>)this.lpVtbl[1])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint Release()
     {
-        return ((delegate* unmanaged<ICanvasFactoryNative*, uint>)this.lpVtbl[2])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, uint>)this.lpVtbl[2])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ internal unsafe struct ICanvasFactoryNative : IUnknown.Interface
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetOrCreate(IUnknown* device, IUnknown* resource, float dpi, void** wrapper)
     {
-        return ((delegate* unmanaged<ICanvasFactoryNative*, IUnknown*, IUnknown*, float, void**, int>)this.lpVtbl[6])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, IUnknown*, IUnknown*, float, void**, int>)this.lpVtbl[6])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             device,
             resource,

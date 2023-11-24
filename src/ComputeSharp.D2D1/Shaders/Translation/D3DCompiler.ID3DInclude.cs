@@ -59,8 +59,8 @@ partial class D3DCompiler
             lpVtbl[0] = (void*)Marshal.GetFunctionPointerForDelegate(OpenWrapper);
             lpVtbl[1] = (void*)Marshal.GetFunctionPointerForDelegate(CloseWrapper);
 #else
-            lpVtbl[0] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, D3D_INCLUDE_TYPE, sbyte*, void*, void**, uint*, int>)&Open;
-            lpVtbl[1] = (delegate* unmanaged<ID3DIncludeForD2DHelpers*, void*, int>)&Close;
+            lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3DIncludeForD2DHelpers*, D3D_INCLUDE_TYPE, sbyte*, void*, void**, uint*, int>)&Open;
+            lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3DIncludeForD2DHelpers*, void*, int>)&Close;
 #endif
 
             return lpVtbl;
@@ -90,7 +90,9 @@ partial class D3DCompiler
         }
 
         /// <inheritdoc cref="ID3DInclude.Open"/>
-        [UnmanagedCallersOnly]
+#if !SOURCE_GENERATOR
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+#endif
         public static int Open(ID3DIncludeForD2DHelpers* @this, D3D_INCLUDE_TYPE IncludeType, sbyte* pFileName, void* pParentData, void** ppData, uint* pBytes)
         {
 #if SOURCE_GENERATOR
@@ -109,7 +111,9 @@ partial class D3DCompiler
         }
 
         /// <inheritdoc cref="ID3DInclude.Close"/>
-        [UnmanagedCallersOnly]
+#if !SOURCE_GENERATOR
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
+#endif
         public static int Close(ID3DIncludeForD2DHelpers* @this, void* pData)
         {
             return S_OK;

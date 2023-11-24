@@ -17,6 +17,6 @@ internal unsafe partial struct ID2D1TransformGraph
     [VtblIndex(4)]
     public HRESULT SetSingleTransformNode(ID2D1TransformNode* node)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformGraph*, ID2D1TransformNode*, int>)(lpVtbl[4]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), node);
+        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformGraph*, ID2D1TransformNode*, int>)(lpVtbl[4]))((ID2D1TransformGraph*)Unsafe.AsPointer(ref this), node);
     }
 }

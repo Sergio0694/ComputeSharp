@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.D2D1.Extensions;
 using ComputeSharp.D2D1.Shaders.Interop.Effects.TransformMappers;
@@ -15,7 +16,7 @@ partial struct PixelShaderEffect
     private static unsafe class ID2D1DrawTransformMethods
     {
         /// <inheritdoc cref="ID2D1DrawTransform.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(PixelShaderEffect* @this, Guid* riid, void** ppvObject)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -24,7 +25,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(PixelShaderEffect* @this)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -33,7 +34,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(PixelShaderEffect* @this)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -42,7 +43,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.GetInputCount"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint GetInputCount(PixelShaderEffect* @this)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -60,7 +61,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapOutputRectToInputRects"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapOutputRectToInputRects(PixelShaderEffect* @this, RECT* outputRect, RECT* inputRects, uint inputRectsCount)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -108,7 +109,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapInputRectsToOutputRect"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInputRectsToOutputRect(PixelShaderEffect* @this, RECT* inputRects, RECT* inputOpaqueSubRects, uint inputRectCount, RECT* outputRect, RECT* outputOpaqueSubRect)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -200,7 +201,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.MapInvalidRect"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInvalidRect(PixelShaderEffect* @this, uint inputIndex, RECT invalidInputRect, RECT* invalidOutputRect)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];
@@ -240,7 +241,7 @@ partial struct PixelShaderEffect
         }
 
         /// <inheritdoc cref="ID2D1DrawTransform.SetDrawInfo"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int SetDrawInfo(PixelShaderEffect* @this, ID2D1DrawInfo* drawInfo)
         {
             @this = (PixelShaderEffect*)&((void**)@this)[-1];

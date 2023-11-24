@@ -60,7 +60,7 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT* outputRect,
         RECT* outputOpaqueSubRect)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, ID2D1DrawInfoUpdateContext*, RECT*, RECT*, uint, RECT*, RECT*, int>)this.lpVtbl[3])(
             (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             updateContext,
             inputRects,
@@ -83,7 +83,7 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT* inputRects,
         uint inputRectsCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, RECT*, RECT*, uint, int>)this.lpVtbl[4])(
             (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             outputRect,
             inputRects,
@@ -103,7 +103,7 @@ internal unsafe struct ID2D1TransformMapper : IComObject
         RECT invalidInputRect,
         RECT* invalidOutputRect)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapper*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapper*, uint, RECT, RECT*, int>)this.lpVtbl[5])(
             (ID2D1TransformMapper*)Unsafe.AsPointer(ref this),
             inputIndex,
             invalidInputRect,

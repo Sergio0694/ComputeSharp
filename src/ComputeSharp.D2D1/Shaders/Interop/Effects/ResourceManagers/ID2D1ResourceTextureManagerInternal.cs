@@ -50,7 +50,7 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT Initialize(ID2D1EffectContext* effectContext, uint* dimensions)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManagerInternal*, ID2D1EffectContext*, uint*, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1ResourceTextureManagerInternal*, ID2D1EffectContext*, uint*, int>)this.lpVtbl[3])(
             (ID2D1ResourceTextureManagerInternal*)Unsafe.AsPointer(ref this),
             effectContext,
             dimensions);
@@ -64,7 +64,7 @@ internal unsafe struct ID2D1ResourceTextureManagerInternal : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetResourceTexture(ID2D1ResourceTexture** resourceTexture)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManagerInternal*, ID2D1ResourceTexture**, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1ResourceTextureManagerInternal*, ID2D1ResourceTexture**, int>)this.lpVtbl[4])(
             (ID2D1ResourceTextureManagerInternal*)Unsafe.AsPointer(ref this),
             resourceTexture);
     }

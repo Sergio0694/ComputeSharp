@@ -116,10 +116,10 @@ partial class DeviceHelper
 
             new Span<IntPtr>(lpVtbl, 30).Clear();
 
-            lpVtbl[2] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint>)&Release;
-            lpVtbl[7] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, IDXGIAdapter**, int>)&EnumAdapters;
-            lpVtbl[27] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
-            lpVtbl[29] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
+            lpVtbl[2] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint>)&Release;
+            lpVtbl[7] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, IDXGIAdapter**, int>)&EnumAdapters;
+            lpVtbl[27] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
+            lpVtbl[29] = (delegate* unmanaged[MemberFunction]<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
 
             return lpVtbl;
         }
@@ -150,7 +150,7 @@ partial class DeviceHelper
         }
 
         /// <inheritdoc cref="IUnknown.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static uint Release(IDXGIFactory4As6Backcompat* @this)
         {
             @this->dxgiFactory4.Dispose();
@@ -161,21 +161,21 @@ partial class DeviceHelper
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapters(uint, IDXGIAdapter**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int EnumAdapters(IDXGIFactory4As6Backcompat* @this, uint Adapter, IDXGIAdapter** ppAdapter)
         {
             return @this->dxgiFactory4.Get()->EnumAdapters(Adapter, ppAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4.Get()->EnumWarpAdapter(riid, ppvAdapter);
         }
 
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4.Get()->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);

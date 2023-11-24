@@ -24,7 +24,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -33,7 +33,7 @@ internal unsafe struct ICanvasFactoryNative
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, uint>)this.lpVtbl[1])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, uint>)this.lpVtbl[1])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -42,7 +42,7 @@ internal unsafe struct ICanvasFactoryNative
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, uint>)this.lpVtbl[2])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, uint>)this.lpVtbl[2])((ICanvasFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(6)]
     public HRESULT GetOrCreate(ICanvasDevice* device, IUnknown* resource, float dpi, IInspectable** wrapper)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, ICanvasDevice*, IUnknown*, float, IInspectable**, int>)this.lpVtbl[6])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, ICanvasDevice*, IUnknown*, float, IInspectable**, int>)this.lpVtbl[6])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             device,
             resource,
@@ -83,7 +83,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(7)]
     public HRESULT RegisterWrapper(IUnknown* resource, IInspectable* wrapper)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, IUnknown*, IInspectable*, int>)this.lpVtbl[7])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, IUnknown*, IInspectable*, int>)this.lpVtbl[7])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             resource,
             wrapper);
@@ -104,7 +104,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(8)]
     public HRESULT UnregisterWrapper(IUnknown* resource)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, IUnknown*, int>)this.lpVtbl[8])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, IUnknown*, int>)this.lpVtbl[8])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             resource);
     }
@@ -122,7 +122,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(9)]
     public HRESULT RegisterEffectFactory([NativeTypeName("const IID &")] Guid* effectId, ICanvasEffectFactoryNative* factory)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, Guid*, ICanvasEffectFactoryNative*, int>)this.lpVtbl[9])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, Guid*, ICanvasEffectFactoryNative*, int>)this.lpVtbl[9])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             effectId,
             factory);
@@ -140,7 +140,7 @@ internal unsafe struct ICanvasFactoryNative
     [VtblIndex(10)]
     public HRESULT UnregisterEffectFactory([NativeTypeName("const IID &")] Guid* effectId)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasFactoryNative*, Guid*, int>)this.lpVtbl[10])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasFactoryNative*, Guid*, int>)this.lpVtbl[10])(
             (ICanvasFactoryNative*)Unsafe.AsPointer(ref this),
             effectId);
     }

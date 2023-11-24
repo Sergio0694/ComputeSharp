@@ -32,22 +32,22 @@ internal unsafe partial struct PixelShaderEffect
         void** lpVtbl = (void**)D2D1AssemblyAssociatedMemory.Allocate(sizeof(void*) * 14);
 
         // ID2D1EffectImpl
-        lpVtbl[0] = (delegate* unmanaged<PixelShaderEffect*, Guid*, void**, int>)&ID2D1EffectImplMethods.QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.AddRef;
-        lpVtbl[2] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.Release;
-        lpVtbl[3] = (delegate* unmanaged<PixelShaderEffect*, ID2D1EffectContext*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.Initialize;
-        lpVtbl[4] = (delegate* unmanaged<PixelShaderEffect*, D2D1_CHANGE_TYPE, int>)&ID2D1EffectImplMethods.PrepareForRender;
-        lpVtbl[5] = (delegate* unmanaged<PixelShaderEffect*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.SetGraph;
+        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, Guid*, void**, int>)&ID2D1EffectImplMethods.QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.AddRef;
+        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1EffectImplMethods.Release;
+        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1EffectContext*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.Initialize;
+        lpVtbl[4] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, D2D1_CHANGE_TYPE, int>)&ID2D1EffectImplMethods.PrepareForRender;
+        lpVtbl[5] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1TransformGraph*, int>)&ID2D1EffectImplMethods.SetGraph;
 
         // ID2D1DrawTransform
-        lpVtbl[6 + 0] = (delegate* unmanaged<PixelShaderEffect*, Guid*, void**, int>)&ID2D1DrawTransformMethods.QueryInterface;
-        lpVtbl[6 + 1] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.AddRef;
-        lpVtbl[6 + 2] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.Release;
-        lpVtbl[6 + 3] = (delegate* unmanaged<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.GetInputCount;
-        lpVtbl[6 + 4] = (delegate* unmanaged<PixelShaderEffect*, RECT*, RECT*, uint, int>)&ID2D1DrawTransformMethods.MapOutputRectToInputRects;
-        lpVtbl[6 + 5] = (delegate* unmanaged<PixelShaderEffect*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1DrawTransformMethods.MapInputRectsToOutputRect;
-        lpVtbl[6 + 6] = (delegate* unmanaged<PixelShaderEffect*, uint, RECT, RECT*, int>)&ID2D1DrawTransformMethods.MapInvalidRect;
-        lpVtbl[6 + 7] = (delegate* unmanaged<PixelShaderEffect*, ID2D1DrawInfo*, int>)&ID2D1DrawTransformMethods.SetDrawInfo;
+        lpVtbl[6 + 0] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, Guid*, void**, int>)&ID2D1DrawTransformMethods.QueryInterface;
+        lpVtbl[6 + 1] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.AddRef;
+        lpVtbl[6 + 2] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.Release;
+        lpVtbl[6 + 3] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint>)&ID2D1DrawTransformMethods.GetInputCount;
+        lpVtbl[6 + 4] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, RECT*, RECT*, uint, int>)&ID2D1DrawTransformMethods.MapOutputRectToInputRects;
+        lpVtbl[6 + 5] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, RECT*, RECT*, uint, RECT*, RECT*, int>)&ID2D1DrawTransformMethods.MapInputRectsToOutputRect;
+        lpVtbl[6 + 6] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, uint, RECT, RECT*, int>)&ID2D1DrawTransformMethods.MapInvalidRect;
+        lpVtbl[6 + 7] = (delegate* unmanaged[MemberFunction]<PixelShaderEffect*, ID2D1DrawInfo*, int>)&ID2D1DrawTransformMethods.SetDrawInfo;
 
         return lpVtbl;
     }

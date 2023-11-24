@@ -17,28 +17,28 @@ unsafe partial struct D2D1TransformMapperImpl
     private static class ID2D1TransformMapperMethods
     {
         /// <inheritdoc cref="D2D1TransformMapperImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)
         {
             return @this->QueryInterface(riid, ppvObject);
         }
 
         /// <inheritdoc cref="D2D1TransformMapperImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1TransformMapperImpl* @this)
         {
             return @this->AddRef();
         }
 
         /// <inheritdoc cref="D2D1TransformMapperImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1TransformMapperImpl* @this)
         {
             return @this->Release();
         }
 
         /// <inheritdoc cref="ID2D1TransformMapper.MapInputRectsToOutputRect"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInputRectsToOutputRect(
             D2D1TransformMapperImpl* @this,
             ID2D1DrawInfoUpdateContext* d2D1DrawInfoUpdateContext,
@@ -82,7 +82,7 @@ unsafe partial struct D2D1TransformMapperImpl
         }
 
         /// <inheritdoc cref="ID2D1TransformMapper.MapOutputRectToInputRects"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapOutputRectToInputRects(
             D2D1TransformMapperImpl* @this,
             RECT* outputRect,
@@ -116,7 +116,7 @@ unsafe partial struct D2D1TransformMapperImpl
         }
 
         /// <inheritdoc cref="ID2D1TransformMapper.MapInvalidRect"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int MapInvalidRect(
             D2D1TransformMapperImpl* @this,
             uint inputIndex,

@@ -45,21 +45,21 @@ internal unsafe struct ID3D12Allocation : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT QueryInterface(Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12Allocation*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ID3D12Allocation*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12Allocation*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, uint>)this.lpVtbl[1])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12Allocation*, uint>)this.lpVtbl[1])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, uint>)this.lpVtbl[2])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12Allocation*, uint>)this.lpVtbl[2])((ID3D12Allocation*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ internal unsafe struct ID3D12Allocation : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetD3D12Resource(ID3D12Resource** resource)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12Allocation*, ID3D12Resource**, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID3D12Allocation*, ID3D12Resource**, int>)this.lpVtbl[3])(
             (ID3D12Allocation*)Unsafe.AsPointer(ref this),
             resource);
     }

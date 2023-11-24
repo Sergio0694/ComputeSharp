@@ -46,7 +46,7 @@ internal unsafe struct ICanvasResourceWrapperNative : IComObject
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceWrapperNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasResourceWrapperNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -55,7 +55,7 @@ internal unsafe struct ICanvasResourceWrapperNative : IComObject
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceWrapperNative*, uint>)this.lpVtbl[1])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasResourceWrapperNative*, uint>)this.lpVtbl[1])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -64,7 +64,7 @@ internal unsafe struct ICanvasResourceWrapperNative : IComObject
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceWrapperNative*, uint>)this.lpVtbl[2])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasResourceWrapperNative*, uint>)this.lpVtbl[2])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -74,6 +74,6 @@ internal unsafe struct ICanvasResourceWrapperNative : IComObject
     [VtblIndex(3)]
     public HRESULT GetNativeResource(ICanvasDevice* device, float dpi, [NativeTypeName("REFIID")] Guid* iid, void** resource)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasResourceWrapperNative*, ICanvasDevice*, float, Guid*, void**, int>)this.lpVtbl[3])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this), device, dpi, iid, resource);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasResourceWrapperNative*, ICanvasDevice*, float, Guid*, void**, int>)this.lpVtbl[3])((ICanvasResourceWrapperNative*)Unsafe.AsPointer(ref this), device, dpi, iid, resource);
     }
 }

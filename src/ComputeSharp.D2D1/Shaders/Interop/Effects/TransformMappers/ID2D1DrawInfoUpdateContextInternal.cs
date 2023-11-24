@@ -48,6 +48,6 @@ internal unsafe struct ID2D1DrawInfoUpdateContextInternal : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT Close()
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, int>)this.lpVtbl[3])((ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawInfoUpdateContext*, int>)this.lpVtbl[3])((ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this));
     }
 }

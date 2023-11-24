@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
@@ -13,7 +14,7 @@ unsafe partial struct D2D1TransformMapperImpl
     private static class ID2D1TransformMapperInternalMethods
     {
         /// <inheritdoc cref="D2D1TransformMapperImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1TransformMapperImpl* @this, Guid* riid, void** ppvObject)
         {
             @this = (D2D1TransformMapperImpl*)&((void**)@this)[-1];
@@ -22,7 +23,7 @@ unsafe partial struct D2D1TransformMapperImpl
         }
 
         /// <inheritdoc cref="D2D1TransformMapperImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1TransformMapperImpl* @this)
         {
             @this = (D2D1TransformMapperImpl*)&((void**)@this)[-1];
@@ -31,7 +32,7 @@ unsafe partial struct D2D1TransformMapperImpl
         }
 
         /// <inheritdoc cref="D2D1TransformMapperImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1TransformMapperImpl* @this)
         {
             @this = (D2D1TransformMapperImpl*)&((void**)@this)[-1];
@@ -40,7 +41,7 @@ unsafe partial struct D2D1TransformMapperImpl
         }
 
         /// <inheritdoc cref="ID2D1TransformMapperInternal.GetManagedWrapperHandle"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int GetManagedWrapperHandle(D2D1TransformMapperImpl* @this, void** ppvHandle)
         {
             @this = (D2D1TransformMapperImpl*)&((void**)@this)[-1];

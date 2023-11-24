@@ -49,7 +49,7 @@ internal unsafe struct ID2D1DrawInfoUpdateContext : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBufferSize(uint* size)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, uint*, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawInfoUpdateContext*, uint*, int>)this.lpVtbl[3])(
             (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             size);
     }
@@ -63,7 +63,7 @@ internal unsafe struct ID2D1DrawInfoUpdateContext : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[4])(
             (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);
@@ -78,7 +78,7 @@ internal unsafe struct ID2D1DrawInfoUpdateContext : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT SetConstantBuffer(byte* buffer, uint bufferCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[5])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DrawInfoUpdateContext*, byte*, uint, int>)this.lpVtbl[5])(
             (ID2D1DrawInfoUpdateContext*)Unsafe.AsPointer(ref this),
             buffer,
             bufferCount);

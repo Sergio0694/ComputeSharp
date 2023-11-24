@@ -48,7 +48,7 @@ internal unsafe struct ICanvasEffectFactoryNative : IComObject
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffectFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffectFactoryNative*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -57,7 +57,7 @@ internal unsafe struct ICanvasEffectFactoryNative : IComObject
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffectFactoryNative*, uint>)this.lpVtbl[1])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffectFactoryNative*, uint>)this.lpVtbl[1])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -66,7 +66,7 @@ internal unsafe struct ICanvasEffectFactoryNative : IComObject
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffectFactoryNative*, uint>)this.lpVtbl[2])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffectFactoryNative*, uint>)this.lpVtbl[2])((ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ internal unsafe struct ICanvasEffectFactoryNative : IComObject
     [VtblIndex(3)]
     public HRESULT CreateWrapper(ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffectFactoryNative*, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffectFactoryNative*, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int>)this.lpVtbl[3])(
             (ICanvasEffectFactoryNative*)Unsafe.AsPointer(ref this),
             device,
             resource,
@@ -138,10 +138,10 @@ internal unsafe struct ICanvasEffectFactoryNative : IComObject
             /// <summary>
             /// Function pointer for <see cref="CreateWrapperFromAbi"/>.
             /// </summary>
-            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
+            private delegate* unmanaged[MemberFunction]<IntPtr, ICanvasDevice*, ID2D1Effect*, float, IInspectable**, int> CreateWrapper;
 
             /// <inheritdoc cref="Interface.CreateWrapper"/>
-            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
             [return: NativeTypeName("HRESULT")]
             private static int CreateWrapperFromAbi(IntPtr thisPtr, ICanvasDevice* device, ID2D1Effect* resource, float dpi, IInspectable** wrapper)
             {

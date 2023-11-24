@@ -24,7 +24,7 @@ internal unsafe struct IInspectable
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<IInspectable*, Guid*, void**, int>)this.lpVtbl[0])((IInspectable*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<IInspectable*, Guid*, void**, int>)this.lpVtbl[0])((IInspectable*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef" />
@@ -33,7 +33,7 @@ internal unsafe struct IInspectable
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<IInspectable*, uint>)this.lpVtbl[1])((IInspectable*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<IInspectable*, uint>)this.lpVtbl[1])((IInspectable*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release" />
@@ -42,6 +42,6 @@ internal unsafe struct IInspectable
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<IInspectable*, uint>)this.lpVtbl[2])((IInspectable*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<IInspectable*, uint>)this.lpVtbl[2])((IInspectable*)Unsafe.AsPointer(ref this));
     }
 }

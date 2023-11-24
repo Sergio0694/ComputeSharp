@@ -30,10 +30,10 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
     {
         void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(ID3D12MemoryAllocator), sizeof(void*) * 4);
 
-        lpVtbl[0] = (delegate* unmanaged<ID3D12MemoryAllocatorImpl*, Guid*, void**, int>)&QueryInterface;
-        lpVtbl[1] = (delegate* unmanaged<ID3D12MemoryAllocatorImpl*, uint>)&AddRef;
-        lpVtbl[2] = (delegate* unmanaged<ID3D12MemoryAllocatorImpl*, uint>)&Release;
-        lpVtbl[3] = (delegate* unmanaged<ID3D12MemoryAllocatorImpl*, D3D12_RESOURCE_DESC*, D3D12_HEAP_TYPE, D3D12_RESOURCE_STATES, BOOL, ID3D12Allocation**, int>)&AllocateResource;
+        lpVtbl[0] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, Guid*, void**, int>)&QueryInterface;
+        lpVtbl[1] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, uint>)&AddRef;
+        lpVtbl[2] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, uint>)&Release;
+        lpVtbl[3] = (delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorImpl*, D3D12_RESOURCE_DESC*, D3D12_HEAP_TYPE, D3D12_RESOURCE_STATES, BOOL, ID3D12Allocation**, int>)&AllocateResource;
 
         return lpVtbl;
     }
@@ -123,7 +123,7 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
     }
 
     /// <inheritdoc cref="IUnknown.QueryInterface"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static int QueryInterface(ID3D12MemoryAllocatorImpl* @this, Guid* riid, void** ppvObject)
     {
         if (ppvObject is null)
@@ -147,21 +147,21 @@ internal unsafe struct ID3D12MemoryAllocatorImpl
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static uint AddRef(ID3D12MemoryAllocatorImpl* @this)
     {
         return @this->AddRef();
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static uint Release(ID3D12MemoryAllocatorImpl* @this)
     {
         return @this->Release();
     }
 
     /// <inheritdoc cref="ID3D12MemoryAllocator.AllocateResource"/>
-    [UnmanagedCallersOnly]
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
     private static int AllocateResource(
         ID3D12MemoryAllocatorImpl* @this,
         D3D12_RESOURCE_DESC* resourceDescription,

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Win32;
 
@@ -22,7 +23,7 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
     private static class ID2D1DrawInfoUpdateContextInternalMethods
     {
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.QueryInterface"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int QueryInterface(D2D1DrawInfoUpdateContextImpl* @this, Guid* riid, void** ppvObject)
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
@@ -31,7 +32,7 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.AddRef"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint AddRef(D2D1DrawInfoUpdateContextImpl* @this)
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
@@ -40,7 +41,7 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         /// <inheritdoc cref="D2D1DrawInfoUpdateContextImpl.Release"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static uint Release(D2D1DrawInfoUpdateContextImpl* @this)
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
@@ -49,7 +50,7 @@ unsafe partial struct D2D1DrawInfoUpdateContextImpl
         }
 
         /// <inheritdoc cref="ID2D1DrawInfoUpdateContextInternal.Close"/>
-        [UnmanagedCallersOnly]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         public static int Close(D2D1DrawInfoUpdateContextImpl* @this)
         {
             @this = (D2D1DrawInfoUpdateContextImpl*)&((void**)@this)[-1];
