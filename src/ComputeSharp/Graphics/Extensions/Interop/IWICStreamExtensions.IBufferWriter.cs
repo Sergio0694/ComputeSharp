@@ -109,24 +109,6 @@ unsafe partial class IWICStreamExtensions
             return Unsafe.As<IBufferWriter<byte>>(this.writerHandle.Target!);
         }
 
-        /// <inheritdoc/>
-        private HRESULT QueryInterface(Guid* riid, void** ppvObject)
-        {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
-        }
-
-        /// <inheritdoc/>
-        private uint AddRef()
-        {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[1])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
-        }
-
-        /// <inheritdoc/>
-        private uint Release()
-        {
-            return ((delegate* unmanaged<IBufferWriterWrapper*, uint>)this.lpVtbl[2])((IBufferWriterWrapper*)Unsafe.AsPointer(ref this));
-        }
-
         /// <inheritdoc cref="IStream.QueryInterface(Guid*, void**)"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IBufferWriterWrapper* @this, Guid* riid, void** ppvObject)

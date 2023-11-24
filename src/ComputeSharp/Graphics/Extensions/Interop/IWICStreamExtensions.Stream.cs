@@ -111,24 +111,6 @@ internal static unsafe partial class IWICStreamExtensions
             return Unsafe.As<Stream>(this.streamHandle.Target!);
         }
 
-        /// <inheritdoc/>
-        private HRESULT QueryInterface(Guid* riid, void** ppvObject)
-        {
-            return ((delegate* unmanaged<IStreamWrapper*, Guid*, void**, HRESULT>)this.lpVtbl[0])((IStreamWrapper*)Unsafe.AsPointer(ref this), riid, ppvObject);
-        }
-
-        /// <inheritdoc/>
-        private uint AddRef()
-        {
-            return ((delegate* unmanaged<IStreamWrapper*, uint>)this.lpVtbl[1])((IStreamWrapper*)Unsafe.AsPointer(ref this));
-        }
-
-        /// <inheritdoc/>
-        private uint Release()
-        {
-            return ((delegate* unmanaged<IStreamWrapper*, uint>)this.lpVtbl[2])((IStreamWrapper*)Unsafe.AsPointer(ref this));
-        }
-
         /// <inheritdoc cref="IStream.QueryInterface(Guid*, void**)"/>
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
         private static int QueryInterface(IStreamWrapper* @this, Guid* riid, void** ppvObject)
