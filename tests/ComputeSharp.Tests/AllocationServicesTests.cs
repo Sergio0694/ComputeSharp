@@ -150,7 +150,7 @@ public unsafe class AllocationServicesTests
         using ComPtr<IUnknown> wrappedD3D12ResourcePtr = default;
 
         // Invoke ID3D12Allocation::GetD3D12Resource (manually, as the type definition is internal)
-        HRESULT hresult = ((delegate* unmanaged[Stdcall]<IUnknown*, IUnknown**, int>)(*(void***)allocationPtr.Get())[3])(
+        HRESULT hresult = ((delegate* unmanaged[MemberFunction]<IUnknown*, IUnknown**, int>)(*(void***)allocationPtr.Get())[3])(
             allocationPtr.Get(),
             wrappedD3D12ResourcePtr.GetAddressOf());
 

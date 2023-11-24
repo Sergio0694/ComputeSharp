@@ -46,7 +46,7 @@ internal unsafe struct ID2D1DeviceContextPool : IComObject
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContextPool*, Guid*, void**, int>)this.lpVtbl[0])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DeviceContextPool*, Guid*, void**, int>)this.lpVtbl[0])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -55,7 +55,7 @@ internal unsafe struct ID2D1DeviceContextPool : IComObject
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContextPool*, uint>)this.lpVtbl[1])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DeviceContextPool*, uint>)this.lpVtbl[1])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -64,7 +64,7 @@ internal unsafe struct ID2D1DeviceContextPool : IComObject
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContextPool*, uint>)this.lpVtbl[2])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DeviceContextPool*, uint>)this.lpVtbl[2])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -76,6 +76,6 @@ internal unsafe struct ID2D1DeviceContextPool : IComObject
     [VtblIndex(3)]
     public HRESULT GetDeviceContextLease(ID2D1DeviceContextLease** lease)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1DeviceContextPool*, ID2D1DeviceContextLease**, int>)this.lpVtbl[3])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this), lease);
+        return ((delegate* unmanaged[MemberFunction]<ID2D1DeviceContextPool*, ID2D1DeviceContextLease**, int>)this.lpVtbl[3])((ID2D1DeviceContextPool*)Unsafe.AsPointer(ref this), lease);
     }
 }

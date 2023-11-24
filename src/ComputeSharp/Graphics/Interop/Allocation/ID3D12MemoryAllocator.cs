@@ -45,21 +45,21 @@ internal unsafe struct ID3D12MemoryAllocator : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT QueryInterface(Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocator*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocator*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ internal unsafe struct ID3D12MemoryAllocator : IComObject
         BOOL clearAllocation,
         ID3D12Allocation** allocation)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocator*, D3D12_RESOURCE_DESC*, D3D12_HEAP_TYPE, D3D12_RESOURCE_STATES, BOOL, ID3D12Allocation**, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocator*, D3D12_RESOURCE_DESC*, D3D12_HEAP_TYPE, D3D12_RESOURCE_STATES, BOOL, ID3D12Allocation**, int>)this.lpVtbl[3])(
             (ID3D12MemoryAllocator*)Unsafe.AsPointer(ref this),
             resourceDescription,
             heapType,

@@ -120,7 +120,7 @@ public partial class D2D1TransformMapperTests
         IntPtr handlePtr;
 
         // Invoke GetManagedWrapperHandle
-        hresult = ((delegate* unmanaged[Stdcall]<IUnknown*, void**, int>)(*(void***)transformMapperInternal.Get())[3])(
+        hresult = ((delegate* unmanaged[MemberFunction]<IUnknown*, void**, int>)(*(void***)transformMapperInternal.Get())[3])(
             transformMapperInternal.Get(),
             (void**)&handlePtr);
 

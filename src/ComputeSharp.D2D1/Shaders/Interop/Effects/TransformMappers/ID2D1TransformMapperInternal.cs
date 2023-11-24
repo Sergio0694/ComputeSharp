@@ -49,7 +49,7 @@ internal unsafe struct ID2D1TransformMapperInternal : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT GetManagedWrapperHandle(void** ppvHandle)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1TransformMapperInternal*, void**, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1TransformMapperInternal*, void**, int>)this.lpVtbl[3])(
             (ID2D1TransformMapperInternal*)Unsafe.AsPointer(ref this),
             ppvHandle);
     }

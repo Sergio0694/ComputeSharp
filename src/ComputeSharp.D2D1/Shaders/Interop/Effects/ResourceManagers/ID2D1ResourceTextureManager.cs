@@ -59,7 +59,7 @@ internal unsafe struct ID2D1ResourceTextureManager : IComObject
         uint* strides,
         uint dataSize)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1ResourceTextureManager*, Guid*, D2D1_RESOURCE_TEXTURE_PROPERTIES*, byte*, uint*, uint, int>)this.lpVtbl[3])(
             (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
             resourceId,
             resourceTextureProperties,
@@ -87,7 +87,7 @@ internal unsafe struct ID2D1ResourceTextureManager : IComObject
         byte* data,
         uint dataCount)
     {
-        return ((delegate* unmanaged[Stdcall]<ID2D1ResourceTextureManager*, uint*, uint*, uint*, uint, byte*, uint, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[MemberFunction]<ID2D1ResourceTextureManager*, uint*, uint*, uint*, uint, byte*, uint, int>)this.lpVtbl[4])(
             (ID2D1ResourceTextureManager*)Unsafe.AsPointer(ref this),
             minimumExtents,
             maximimumExtents,

@@ -56,7 +56,7 @@ internal static class Win2DHelper
         using ComPtr<IUnknown> wrapperUnknown = default;
 
         // Invoke GetOrCreate to get the inspectable wrapper
-        hresult = ((delegate* unmanaged[Stdcall]<IUnknown*, IUnknown*, IUnknown*, float, IUnknown**, int>)(*(void***)canvasFactoryNativeUnknown.Get())[6])(
+        hresult = ((delegate* unmanaged[MemberFunction]<IUnknown*, IUnknown*, IUnknown*, float, IUnknown**, int>)(*(void***)canvasFactoryNativeUnknown.Get())[6])(
             canvasFactoryNativeUnknown.Get(),
             canvasDeviceInterfaceUnknown.Get(),
             (IUnknown*)d2D1Image,
@@ -104,7 +104,7 @@ internal static class Win2DHelper
         Marshal.ThrowExceptionForHR(hresult);
 
         // Invoke GetD2DImage (passing NEVER_INSERT_DPI_COMPENSATION | MINIMAL_REALIZATION | ALLOW_NULL_EFFECT_INPUTS)
-        hresult = ((delegate* unmanaged[Stdcall]<IUnknown*, IUnknown*, IUnknown*, uint, float, float*, ID2D1Image**, int>)(*(void***)canvasImageInteropUnknown.Get())[4])(
+        hresult = ((delegate* unmanaged[MemberFunction]<IUnknown*, IUnknown*, IUnknown*, uint, float, float*, ID2D1Image**, int>)(*(void***)canvasImageInteropUnknown.Get())[4])(
             canvasImageInteropUnknown.Get(),
             canvasDeviceInterfaceUnknown.Get(),
             null,

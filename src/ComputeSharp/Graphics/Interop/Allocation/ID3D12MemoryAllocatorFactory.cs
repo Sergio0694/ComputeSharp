@@ -45,21 +45,21 @@ internal unsafe struct ID3D12MemoryAllocatorFactory : IComObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public HRESULT QueryInterface(Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactory*, Guid*, void**, int>)this.lpVtbl[0])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[1])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactory*, uint>)this.lpVtbl[2])((ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this));
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ internal unsafe struct ID3D12MemoryAllocatorFactory : IComObject
         IDXGIAdapter* adapter,
         ID3D12MemoryAllocator** allocator)
     {
-        return ((delegate* unmanaged[Stdcall]<ID3D12MemoryAllocatorFactory*, ID3D12Device*, IDXGIAdapter*, ID3D12MemoryAllocator**, int>)this.lpVtbl[3])(
+        return ((delegate* unmanaged[MemberFunction]<ID3D12MemoryAllocatorFactory*, ID3D12Device*, IDXGIAdapter*, ID3D12MemoryAllocator**, int>)this.lpVtbl[3])(
             (ID3D12MemoryAllocatorFactory*)Unsafe.AsPointer(ref this),
             device,
             adapter,

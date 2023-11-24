@@ -46,7 +46,7 @@ internal unsafe struct ICanvasEffect : IComObject
     [VtblIndex(0)]
     public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasEffect*)Unsafe.AsPointer(ref this), riid, ppvObject);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffect*, Guid*, void**, int>)this.lpVtbl[0])((ICanvasEffect*)Unsafe.AsPointer(ref this), riid, ppvObject);
     }
 
     /// <inheritdoc cref="IUnknown.AddRef"/>
@@ -55,7 +55,7 @@ internal unsafe struct ICanvasEffect : IComObject
     [return: NativeTypeName("ULONG")]
     public uint AddRef()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, uint>)this.lpVtbl[1])((ICanvasEffect*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffect*, uint>)this.lpVtbl[1])((ICanvasEffect*)Unsafe.AsPointer(ref this));
     }
 
     /// <inheritdoc cref="IUnknown.Release"/>
@@ -64,6 +64,6 @@ internal unsafe struct ICanvasEffect : IComObject
     [return: NativeTypeName("ULONG")]
     public uint Release()
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasEffect*, uint>)this.lpVtbl[2])((ICanvasEffect*)Unsafe.AsPointer(ref this));
+        return ((delegate* unmanaged[MemberFunction]<ICanvasEffect*, uint>)this.lpVtbl[2])((ICanvasEffect*)Unsafe.AsPointer(ref this));
     }
 }

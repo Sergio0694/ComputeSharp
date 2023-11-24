@@ -52,7 +52,7 @@ internal unsafe struct ICanvasImageInterop : IComObject
     [VtblIndex(3)]
     public HRESULT GetDevice(ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int>)this.lpVtbl[3])((ICanvasImageInterop*)Unsafe.AsPointer(ref this), device, type);
+        return ((delegate* unmanaged[MemberFunction]<ICanvasImageInterop*, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int>)this.lpVtbl[3])((ICanvasImageInterop*)Unsafe.AsPointer(ref this), device, type);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ internal unsafe struct ICanvasImageInterop : IComObject
         float* realizeDpi,
         ID2D1Image** ppImage)
     {
-        return ((delegate* unmanaged[Stdcall]<ICanvasImageInterop*, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int>)this.lpVtbl[4])(
+        return ((delegate* unmanaged[MemberFunction]<ICanvasImageInterop*, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int>)this.lpVtbl[4])(
             (ICanvasImageInterop*)Unsafe.AsPointer(ref this),
             device,
             deviceContext,
@@ -157,15 +157,15 @@ internal unsafe struct ICanvasImageInterop : IComObject
             /// <summary>
             /// Function pointer for <see cref="GetDeviceFromAbi"/>.
             /// </summary>
-            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int> GetDevice;
+            private delegate* unmanaged[MemberFunction]<IntPtr, ICanvasDevice**, WIN2D_GET_DEVICE_ASSOCIATION_TYPE*, int> GetDevice;
 
             /// <summary>
             /// Function pointer for <see cref="GetD2DImageFromAbi"/>.
             /// </summary>
-            private delegate* unmanaged[Stdcall]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
+            private delegate* unmanaged[MemberFunction]<IntPtr, ICanvasDevice*, ID2D1DeviceContext*, WIN2D_GET_D2D_IMAGE_FLAGS, float, float*, ID2D1Image**, int> GetD2DImage;
 
             /// <inheritdoc cref="Interface.GetDevice"/>
-            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
             [return: NativeTypeName("HRESULT")]
             private static int GetDeviceFromAbi(IntPtr thisPtr, ICanvasDevice** device, WIN2D_GET_DEVICE_ASSOCIATION_TYPE* type)
             {
@@ -182,7 +182,7 @@ internal unsafe struct ICanvasImageInterop : IComObject
             }
 
             /// <inheritdoc cref="Interface.GetDevice"/>
-            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvMemberFunction)])]
             [return: NativeTypeName("HRESULT")]
             private static int GetD2DImageFromAbi(
                 IntPtr thisPtr,
