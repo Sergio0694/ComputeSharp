@@ -456,13 +456,13 @@ public partial class PixelShaderEffectTests
     [D2DInputCount(0)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct ShaderWithSomeProperties : ID2D1PixelShader
+    internal readonly partial struct ShaderWithSomeProperties : ID2D1PixelShader
     {
-        public float A;
-        public int B;
-        public int2 C;
-        public uint2x2 D;
-        public float2 E;
+        public readonly float A;
+        public readonly int B;
+        public readonly int2 C;
+        public readonly uint2x2 D;
+        public readonly float2 E;
 
         public float4 Execute()
         {
@@ -473,9 +473,9 @@ public partial class PixelShaderEffectTests
     [D2DInputCount(1)]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct ShaderWithSomePropertiesAndInputs : ID2D1PixelShader
+    internal readonly partial struct ShaderWithSomePropertiesAndInputs : ID2D1PixelShader
     {
-        public int Number;
+        public readonly int Number;
 
         public float4 Execute()
         {

@@ -122,9 +122,9 @@ public partial class D2D1PixelShaderEffectTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct NullConstantBufferShader : ID2D1PixelShader
+    internal readonly partial struct NullConstantBufferShader : ID2D1PixelShader
     {
-        private float dummy;
+        private readonly float dummy;
 
         public float4 Execute()
         {
@@ -154,13 +154,13 @@ public partial class D2D1PixelShaderEffectTests
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
     [AutoConstructor]
-    internal partial struct ConstantBufferSizeTestShader : ID2D1PixelShader
+    internal readonly partial struct ConstantBufferSizeTestShader : ID2D1PixelShader
     {
-        private float a;
-        private float b;
-        private float3 c;
-        private int d;
-        private int e;
+        private readonly float a;
+        private readonly float b;
+        private readonly float3 c;
+        private readonly int d;
+        private readonly int e;
 
         public float4 Execute()
         {

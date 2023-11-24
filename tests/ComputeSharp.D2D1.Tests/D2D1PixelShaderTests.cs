@@ -336,10 +336,10 @@ namespace ComputeSharp.D2D1.Tests
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DGeneratedPixelShaderDescriptor]
         [AutoConstructor]
-        internal partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
+        internal readonly partial struct ShaderWithJustOneResourceTextures : ID2D1PixelShader
         {
             [D2DResourceTextureIndex(0)]
-            D2D1ResourceTexture1D<float> myTexture;
+            readonly D2D1ResourceTexture1D<float> myTexture;
 
             public Float4 Execute()
             {
@@ -355,21 +355,21 @@ namespace ComputeSharp.D2D1.Tests
         [D2DShaderProfile(D2D1ShaderProfile.PixelShader50)]
         [D2DGeneratedPixelShaderDescriptor]
         [AutoConstructor]
-        internal partial struct ShaderWithResourceTextures : ID2D1PixelShader
+        internal readonly partial struct ShaderWithResourceTextures : ID2D1PixelShader
         {
-            float number;
+            readonly float number;
 
             [D2DResourceTextureIndex(4)]
-            D2D1ResourceTexture1D<float4> myTexture1;
+            readonly D2D1ResourceTexture1D<float4> myTexture1;
 
             [D2DResourceTextureIndex(5)]
-            D2D1ResourceTexture2D<float4> myTexture2;
+            readonly D2D1ResourceTexture2D<float4> myTexture2;
 
             [D2DResourceTextureIndex(6)]
-            D2D1ResourceTexture3D<float4> myTexture3;
+            readonly D2D1ResourceTexture3D<float4> myTexture3;
 
             [D2DResourceTextureIndex(7)]
-            D2D1ResourceTexture2D<float> myTexture4;
+            readonly D2D1ResourceTexture2D<float> myTexture4;
 
             public Float4 Execute()
             {

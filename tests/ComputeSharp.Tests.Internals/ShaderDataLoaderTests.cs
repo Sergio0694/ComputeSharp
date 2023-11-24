@@ -14,9 +14,9 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct CapturedResourceShader : IComputeShader
+    public readonly partial struct CapturedResourceShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _;
+        public readonly ReadWriteBuffer<float> _;
 
         public void Execute()
         {
@@ -50,13 +50,13 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct MultipleResourcesAndPrimitivesShader : IComputeShader
+    public readonly partial struct MultipleResourcesAndPrimitivesShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _0;
-        public ReadWriteBuffer<float> _1;
-        public int a;
-        public int b;
-        public int c;
+        public readonly ReadWriteBuffer<float> _0;
+        public readonly ReadWriteBuffer<float> _1;
+        public readonly int a;
+        public readonly int b;
+        public readonly int c;
 
         public void Execute()
         {
@@ -96,15 +96,15 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct ScalarAndVectorTypesShader : IComputeShader
+    public readonly partial struct ScalarAndVectorTypesShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _;
-        public float3 f3;
-        public int a;
-        public int b;
-        public double2 d2;
-        public int c;
-        public int d;
+        public readonly ReadWriteBuffer<float> _;
+        public readonly float3 f3;
+        public readonly int a;
+        public readonly int b;
+        public readonly double2 d2;
+        public readonly int c;
+        public readonly int d;
 
         public void Execute()
         {
@@ -147,17 +147,17 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
+    public readonly partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _;
-        public float2x3 f2x3;
-        public int a;
-        public Int1x3 i1x3;
-        public double2 d2;
-        public int c;
-        public Int1x2 i1x2;
-        public int2x2 i2x2;
-        public int d;
+        public readonly ReadWriteBuffer<float> _;
+        public readonly float2x3 f2x3;
+        public readonly int a;
+        public readonly Int1x3 i1x3;
+        public readonly double2 d2;
+        public readonly int c;
+        public readonly Int1x2 i1x2;
+        public readonly int2x2 i2x2;
+        public readonly int d;
 
         public void Execute()
         {
@@ -233,10 +233,10 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct FlatCustomTypeShader : IComputeShader
+    public readonly partial struct FlatCustomTypeShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _0;
-        public SimpleTypes a;
+        public readonly ReadWriteBuffer<float> _0;
+        public readonly SimpleTypes a;
 
         public void Execute()
         {
@@ -325,10 +325,10 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct NestedCustomTypesShader : IComputeShader
+    public readonly partial struct NestedCustomTypesShader : IComputeShader
     {
-        public ReadWriteBuffer<float> _0;
-        public CustomType1 a;
+        public readonly ReadWriteBuffer<float> _0;
+        public readonly CustomType1 a;
 
         public void Execute()
         {
@@ -417,17 +417,17 @@ public partial class ShaderDataLoaderTests
     [AutoConstructor]
     [ThreadGroupSize(DefaultThreadGroupSizes.X)]
     [GeneratedComputeShaderDescriptor]
-    public partial struct AmbiguousNamesShader : IComputeShader
+    public readonly partial struct AmbiguousNamesShader : IComputeShader
     {
-        public ReadWriteBuffer<float> a;
-        public ReadWriteBuffer<float> b;
-        public ReadWriteBuffer<float> c;
-        public ReadWriteBuffer<float> x;
-        public ReadWriteBuffer<float> y;
-        public ReadWriteBuffer<float> z;
-        public int dataLoader;
-        public int device;
-        public int dummy;
+        public readonly ReadWriteBuffer<float> a;
+        public readonly ReadWriteBuffer<float> b;
+        public readonly ReadWriteBuffer<float> c;
+        public readonly ReadWriteBuffer<float> x;
+        public readonly ReadWriteBuffer<float> y;
+        public readonly ReadWriteBuffer<float> z;
+        public readonly int dataLoader;
+        public readonly int device;
+        public readonly int dummy;
 
         public void Execute()
         {
