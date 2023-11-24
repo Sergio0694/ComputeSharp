@@ -22,7 +22,7 @@ namespace ComputeSharp;
 public sealed class GroupSharedAttribute : Attribute
 {
     /// <summary>
-    /// Creates a new <see cref="GroupSharedAttribute"/> instance with the specified parameters.
+    /// Creates a new <see cref="GroupSharedAttribute"/> instance.
     /// </summary>
     public GroupSharedAttribute()
     {
