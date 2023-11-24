@@ -33,11 +33,8 @@ for (int i = 0; i < array.Length; i++)
 /// </summary>
 [ThreadGroupSize(DefaultThreadGroupSizes.X)]
 [GeneratedComputeShaderDescriptor]
-[AutoConstructor]
-internal readonly partial struct MultiplyByTwo : IComputeShader
+internal readonly partial struct MultiplyByTwo(ReadWriteBuffer<float> buffer) : IComputeShader
 {
-    public readonly ReadWriteBuffer<float> buffer;
-
     /// <inheritdoc/>
     public void Execute()
     {

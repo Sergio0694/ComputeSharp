@@ -4,8 +4,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-#pragma warning disable IDE0022
-
 namespace SixLabors.ImageSharp;
 
 /// <summary>
@@ -30,5 +28,8 @@ internal struct ComplexVector4
     /// <param name="b">The 'b' parameter, for the imaginary component</param>
     /// <returns>The resulting <see cref="Vector4"/> value</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Vector4 WeightedSum(float a, float b) => (this.Real * a) + (this.Imaginary * b);
+    public readonly Vector4 WeightedSum(float a, float b)
+    {
+        return (this.Real * a) + (this.Imaginary * b);
+    }
 }

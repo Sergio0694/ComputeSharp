@@ -535,11 +535,8 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
-    [AutoConstructor]
-    internal readonly partial struct IndexFrom3DResourceTextureShader : ID2D1PixelShader
+    internal readonly partial struct IndexFrom3DResourceTextureShader(float height) : ID2D1PixelShader
     {
-        private readonly int height;
-
         [D2DResourceTextureIndex(0)]
         private readonly D2D1ResourceTexture3D<float4> source;
 
@@ -548,8 +545,8 @@ public partial class D2D1ResourceTextureManagerTests
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
             int x = xy.X;
-            int y = (int)((uint)xy.Y % (uint)this.height);
-            int z = (int)((uint)xy.Y / (uint)this.height);
+            int y = (int)((uint)xy.Y % (uint)height);
+            int z = (int)((uint)xy.Y / (uint)height);
 
             return this.source[x, y, z];
         }
@@ -895,11 +892,8 @@ public partial class D2D1ResourceTextureManagerTests
     [D2DInputCount(0)]
     [D2DRequiresScenePosition]
     [D2DGeneratedPixelShaderDescriptor]
-    [AutoConstructor]
-    internal readonly partial struct CopyFromResourceTexture3DShader : ID2D1PixelShader
+    internal readonly partial struct CopyFromResourceTexture3DShader(float height) : ID2D1PixelShader
     {
-        private readonly int height;
-
         [D2DResourceTextureIndex(0)]
         private readonly D2D1ResourceTexture3D<float> source;
 
@@ -908,8 +902,8 @@ public partial class D2D1ResourceTextureManagerTests
             int2 xy = (int2)D2D.GetScenePosition().XY;
 
             int x = xy.X;
-            int y = (int)((uint)xy.Y % (uint)this.height);
-            int z = (int)((uint)xy.Y / (uint)this.height);
+            int y = (int)((uint)xy.Y % (uint)height);
+            int z = (int)((uint)xy.Y / (uint)height);
 
             return this.source[x, y, z];
         }
